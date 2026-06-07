@@ -1,0 +1,122 @@
+---
+layer: governance
+type: spec
+last_verified: 2026-06-07
+teaches: "fx-ui 的文档分工边界、SSOT 规则——一条信息该写进哪个文件"
+use_when: "不确定一条新信息该记录到哪份文档时，先查这里的 SSOT 表和判断示例"
+---
+
+# 文档编写规范
+
+> 用途：定义文档边界、命名方式和更新规则，让 AI 和人快速判断"这条信息该写进哪个文件"。
+> 不要写什么：当前项目状态、交接流水、具体业务实现。
+
+---
+
+## SSOT 原则
+
+同一类信息只在一个文件里维护，其他地方只引用。冲突时按下表定主：
+
+| 问题 | SSOT |
+|------|------|
+| 怎么开始用 | `README.md` |
+| 产品定位和设计方向 | `PRODUCT.md` |
+| AI 怎么行动 | `AGENTS.md` |
+| 项目当前状态、当前优先级 | `PROJECT.md` |
+| 交接 / 接手 | `HANDOFF.md` |
+| 三层架构、模块职责 | `docs/ARCHITECTURE.md` |
+| 设计规则总览（指向 token/布局） | `docs/DESIGN_STANDARDS.md` |
+| token 具体取值 | `docs/TOKENS.md` |
+| 布局规范 | `docs/LAYOUTS.md` |
+| 技术栈版本和约束 | `docs/TECH_STACK.md` |
+| 文档/文件命名规范 | `docs/NAMING.md` |
+| 架构/技术决策及原因 | `docs/DECISIONS.md` |
+| 结构性变更 | `docs/CHANGELOG.md` |
+| 错误复盘 | `docs/LESSONS.md` |
+
+---
+
+## 核心文件边界
+
+每个文件只回答一类问题。以下是最简判断依据：
+
+### README.md
+回答"这是什么、怎么装、怎么开始"。不写 AI 规则、交接流水。
+
+### AGENTS.md
+回答"AI 进来后怎么判断请求、哪些行为禁止"。不写产品介绍、项目进度。
+
+### PROJECT.md
+回答"项目现在是什么阶段、当前优先级、已知问题"。不写交接细节、变更历史。
+
+### HANDOFF.md
+回答"这轮做了什么、风险是什么、下一步干什么"。不写长期路线图、产品介绍。
+
+### docs/DESIGN_STANDARDS.md
+回答"UI 规则总览、token 怎么用、设计边界"。具体值不在这里列，指向 TOKENS/LAYOUTS。
+
+### docs/TECH_STACK.md
+回答"用了什么技术、什么版本、AI 能不能假设它已落地"。不写产品路线。
+
+### docs/DECISIONS.md
+回答"为什么这么定、放弃了什么方案"。不写当前 TODO。
+
+### docs/CHANGELOG.md
+回答"这次改动影响了什么层"。不写当前状态、纯文案小修。
+
+### docs/LESSONS.md
+回答"犯了什么错、新增了什么约束"。误判、杜撰、用户指出"又编了"时更新。
+
+### docs/ARCHITECTURE.md
+回答"模块职责、三层边界、目录结构"。不写运行规则、当前进度。
+
+---
+
+## 快速判断示例
+
+> 场景：给 Button 文档加场景示例时，编了一个 shadcn 不存在的"文字按钮"概念，被用户指出"一切都不要杜撰"，改名为 ghost 并修正。
+
+| 该写到 | 写什么 |
+|--------|--------|
+| `docs/LESSONS.md` | LES-001：杜撰了"文字按钮"概念，根本原因是没先查源码核实，新增"落笔前必须核实"的规则 |
+| `docs/CHANGELOG.md` | 场景示例数据结构改动（如果同时触发了结构性重构，比如改成数据派生） |
+| `HANDOFF.md` | 这轮把场景示例改对了、踩了这个坑（给下一轮提醒） |
+| 不该写到 `docs/DECISIONS.md` | 这是"犯错改正"，不是"权衡后选择方案"——除非改正过程中确立了新的长期规则 |
+| 不该写到 `PROJECT.md` | 除非这件事改变了项目的当前优先级 |
+
+---
+
+## 文档头部规范
+
+每个 .md 顶部应有 frontmatter（`teaches` / `use_when`）和一段简介：
+
+```md
+---
+layer: knowledge | governance
+type: spec | status | log | architecture
+last_verified: YYYY-MM-DD
+teaches: "这份文档回答什么问题"
+use_when: "什么场景下应该先查这份文档"
+---
+```
+
+这样 AI 不需要读全文就能判断"该不该来这里查、该不该往这里写"。
+
+---
+
+## 反模式
+
+- 每次改动都把 PROJECT / HANDOFF / CHANGELOG / DECISIONS 全更新一遍（按实际影响更新，不是凑齐）
+- `PROJECT.md` 写成流水账
+- `HANDOFF.md` 写成永久历史（应该是"这轮做了什么"，不是项目编年史）
+- `CHANGELOG.md` 写成 TODO 清单
+- 把"为什么这么选"写进 `CHANGELOG.md`（应该去 `DECISIONS.md`）
+- 把"犯过的错"写进 `DECISIONS.md`（应该去 `LESSONS.md`，除非错误本身催生了新的方案决策）
+
+## 相关文件
+
+| 文件 | 关系 |
+|------|------|
+| `docs/NAMING.md` | 文件命名和放置位置 |
+| `AGENTS.md` | AI 的文档职责定义 |
+| `PRODUCT.md` | 产品方向（文档内容需对齐产品定位） |

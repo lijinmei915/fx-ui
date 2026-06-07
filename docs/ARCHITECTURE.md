@@ -1,7 +1,7 @@
 ---
 layer: knowledge
-type: architecture
-last_verified: 2026-06-06
+type: spec
+last_verified: 2026-06-07
 teaches: "fx-ui 的三层生产体系：基础组件、公司组合组件、页面 Blocks/布局规范"
 use_when: "AI 要判断 fx-ui 未来如何统一公司组件、生成页面、沉淀布局规范时"
 ---
@@ -71,6 +71,19 @@ fx-ui 的目标不是重新手写一套 UI 组件库，而是建立一套公司�
 
 这一层解决：页面快速起步、页面模式复用、公司布局规范沉淀。
 
+## 模块职责
+
+| 目录 / 文件 | 职责 | 备注 |
+|-------------|------|------|
+| `src/components/ui/` | shadcn 原子组件，CLI 拉取 | 不手写，open-code 可读可改 |
+| `src/components/fx/` | 公司组合组件 | 必须由 shadcn 组件组合而成，不做黑盒 |
+| `src/blocks/` | 公司页面模板 | 从真实页面里抽出来，不预先设计 |
+| `src/layouts/` | 页面壳、侧边栏、主内容布局 | |
+| `theme/fx-theme.css` | 公司 token 真相源 | 改它 = 全局换肤 |
+| `registry/fx-theme.json` | shadcn 官方 `registry:theme` 分发格式 | 对外分发主题用 |
+| `docs/components/` | 组件文档资产 | 给人和 AI 共同消费 |
+| `docs/LAYOUTS.md` | 布局规范 | 来自真实页面沉淀 |
+
 ## 推荐目录边界
 
 ```txt
@@ -110,3 +123,12 @@ docs/
 - token 真相源仍然是 `theme/fx-theme.css`
 - 对外分发主题时使用 shadcn 官方 `registry:theme` 格式：`registry/fx-theme.json`
 - 布局规范来自真实页面沉淀，不凭空制定
+
+## 相关文件
+
+| 文件 | 关系 |
+|------|------|
+| `PRODUCT.md` | 产品定位决定架构方向 |
+| `PROJECT.md` | 当前进度（本文件只记长期方向，不记当前做到哪） |
+| `docs/LAYOUTS.md` | 三层体系第三层的具体布局规范产出 |
+| `docs/TOKENS.md` | token 真相源的具体取值表 |

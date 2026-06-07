@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: status
-last_verified: 2026-06-06
+last_verified: 2026-06-07
 teaches: "fx-ui 的项目定位、技术栈、当前进度和下一步"
 use_when: "AI 需要判断 fx-ui 现在该做什么、处于什么阶段时"
 ---
@@ -48,7 +48,12 @@ React + TypeScript + Tailwind CSS v4 + shadcn/ui
 - 已完成：标准后台列表页 demo（标题区 + 筛选区 + 表格区 + 新建弹窗 + 删除确认）
 - 已完成：抽出第一批公司组合组件：`PageShell`、`PageHeader`、`SearchToolbar`、`ConfirmDangerDialog`
 - 已完成：沉淀第一版布局规范：`docs/LAYOUTS.md`
-- 下一步：继续基于列表页 demo 抽内部 Blocks，补详情页 / 编辑页 / 设置页样板
+- 已完成：补全 Button 场景示例（类型/尺寸/状态/图标/组合），组件总览矩阵改为从场景数据派生避免漏同步
+- 已完成：拉取 ButtonGroup 组件并补充按钮组合场景
+
+## 当前优先级
+
+继续基于列表页 demo 抽内部 Blocks，补详情页 / 编辑页 / 设置页样板
 
 ## 已知边界
 

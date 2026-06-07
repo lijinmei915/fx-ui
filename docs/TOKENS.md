@@ -10,6 +10,7 @@ use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadc
 
 > 用途：公司视觉规范的查询表和 AI 生成规则。
 > 真相源：`theme/fx-theme.css`。改那里 = 全局换肤，必须先说明影响。
+> 改完 `fx-theme.css` 后，跑 `bash scripts/check-tokens-sync.sh` 校验本表的色值有没有漏抄/抄漂——脚本只查不改，发现差异要手动同步本表。
 
 fx-ui 的组件源码来自 shadcn/ui，公司的视觉统一不靠重写组件，而靠 token 注入。
 
@@ -39,6 +40,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `card` | `#FFFFFF` | `bg-card text-card-foreground` | 卡片、浮层、内容容器 |
 | `muted` | `#F2F3F5` | `bg-muted` | 次级背景、弱按钮、代码块 |
 | `muted-foreground` | `#91959E` | `text-muted-foreground` | 辅助说明、弱信息 |
+| `accent` | `#F2F4FB` | `bg-accent text-accent-foreground` | 悬浮态、轻量高亮背景 |
 | `border` | `#DEE1E8` | `border-border` | 边框、分割线 |
 | `input` | `#C1C5CE` | `border-input` | 表单边框 |
 | `ring` | `#FF8000` | `ring-ring` | 键盘焦点和可访问性焦点环 |

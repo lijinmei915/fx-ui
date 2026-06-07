@@ -55,6 +55,12 @@ use_when: "需要回溯某次跨层改动的原因和影响范围时"
 - **影响**：减少一份"内容会过期但没人会去看"的文件；`PRODUCT.md`/`PROJECT.md` 的角色区分仍然保留在 SSOT 表里，靠职责说明区分而不是靠多一份文件做缓冲
 - **相关文件**：`AGENTS.md`、`scripts/check-docs-routing.sh`
 
+## 2026-06-07 — AGENTS.md 补上指向文档路由表的入口
+
+- **改动**：`AGENTS.md` 之前完全没提 `docs/DOCUMENTATION.md`——而 AI 在这个项目里最常做的事之一就是"写东西"（记 CHANGELOG/DECISIONS/LESSONS、建新文档），却没有指引去查路由表，导致"新建文档必须登记路由表"这条规则即便写在 DOCUMENTATION.md 里，AI 进来也未必会主动翻到。现在在"必读文件"和"你该做的"里都补上了指向
+- **影响**：补上路由设计的最后一环——"规则本身完善"和"AI 知道去哪查规则"是两件事，前者有了不代表后者也有
+- **相关文件**：`AGENTS.md`、`docs/DOCUMENTATION.md`
+
 ## 相关文件
 
 | 文件 | 关系 |

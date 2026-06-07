@@ -31,6 +31,7 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 - 需要新组件 → 查 shadcn 有没有现成的 → `npx shadcn add` 拉
 - 需要改某个组件样式 → 改它的 Tailwind class 或 token，不重写
 - 不确定用什么颜色/圆角 → 查 `docs/TOKENS.md`，用公司 token，别写死十六进制
+- 不确定一条信息该写进哪份文档（CHANGELOG / DECISIONS / LESSONS / 新建文档…）→ 先查 `docs/DOCUMENTATION.md` 的 SSOT 路由表；新建 `docs/*.md` 时必须同时在该表里登记一行，否则会变成孤岛文档
 
 ---
 
@@ -59,6 +60,7 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 2. `docs/ARCHITECTURE.md` — 三层体系：基础组件、公司组合组件、页面 Blocks / 布局规范
 3. `theme/fx-theme.css` — 公司 token（改这里要谨慎）
 4. `docs/TOKENS.md` — token 值和用法
+5. `docs/DOCUMENTATION.md` — 文档该写去哪的 SSOT 路由表（写文档前先查这里）
 
 ---
 

@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "project-graph.v0.2",
+  "generatedAt": "2026-06-05T17:07:45Z",
+  "projectPath": "/Users/heqiao/Desktop/Claude练习/项目9-fx-ui组件库",
+  "staleDays": 90,
+  "summary": {
+    "nodeCount": 4,
+    "edgeCount": 4,
+    "staleCount": 0
+  },
+  "nodes": [
+    {"id":"AGENTS.md","kind":"markdown","layer":"root-doc","template":false,"ssot":true,"executable":false,"archLayer":"governance","docType":"spec","lastVerified":"2026-06-06","stale":false,"teaches":"AI 在 fx-ui 项目里的行为红线：不手写组件、只注入 token、保护 token 真相源","useWhen":"AI 首次进入 fx-ui、要写组件代码、或要改样式/token 时"},
+    {"id":"HANDOFF.md","kind":"markdown","layer":"root-doc","template":false,"ssot":true,"executable":false,"archLayer":"knowledge","docType":"status","lastVerified":"2026-06-06","stale":false,"teaches":"fx-ui 上一轮做了什么、下一步具体干什么、有什么坑","useWhen":"新的 AI 会话接手 fx-ui 时"},
+    {"id":"PROJECT.md","kind":"markdown","layer":"root-doc","template":false,"ssot":true,"executable":false,"archLayer":"knowledge","docType":"status","lastVerified":"2026-06-06","stale":false,"teaches":"fx-ui 的项目定位、技术栈、当前进度和下一步","useWhen":"AI 需要判断 fx-ui 现在该做什么、处于什么阶段时"},
+    {"id":"docs/TOKENS.md","kind":"markdown","layer":"docs","template":false,"ssot":false,"executable":false,"archLayer":"knowledge","docType":"spec","lastVerified":"2026-06-06","stale":false,"teaches":"公司设计 token 的值和用法：品牌色、功能色、中性灰、圆角、字体","useWhen":"AI 要用某个颜色/圆角/字号、或判断视觉是否符合公司规范时"}
+  ],
+  "edges": [
+    {"source":"AGENTS.md","target":"PROJECT.md","type":"references"},
+    {"source":"AGENTS.md","target":"SETUP.md","type":"references"},
+    {"source":"AGENTS.md","target":"docs/TOKENS.md","type":"references"},
+    {"source":"HANDOFF.md","target":"AGENTS.md","type":"references"}
+  ]
+}

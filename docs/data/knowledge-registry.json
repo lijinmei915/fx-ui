@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "knowledge-registry.v0.1",
+  "generatedAt": "2026-06-05T17:07:45Z",
+  "entries": [
+    {"id":"AGENTS.md","teaches":"AI 在 fx-ui 项目里的行为红线：不手写组件、只注入 token、保护 token 真相源","useWhen":"AI 首次进入 fx-ui、要写组件代码、或要改样式/token 时","layer":"governance","type":"spec","stale":false},
+    {"id":"HANDOFF.md","teaches":"fx-ui 上一轮做了什么、下一步具体干什么、有什么坑","useWhen":"新的 AI 会话接手 fx-ui 时","layer":"knowledge","type":"status","stale":false},
+    {"id":"PROJECT.md","teaches":"fx-ui 的项目定位、技术栈、当前进度和下一步","useWhen":"AI 需要判断 fx-ui 现在该做什么、处于什么阶段时","layer":"knowledge","type":"status","stale":false},
+    {"id":"docs/TOKENS.md","teaches":"公司设计 token 的值和用法：品牌色、功能色、中性灰、圆角、字体","useWhen":"AI 要用某个颜色/圆角/字号、或判断视觉是否符合公司规范时","layer":"knowledge","type":"spec","stale":false}
+  ]
+}

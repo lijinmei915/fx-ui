@@ -7,7 +7,12 @@
       "mcp__Claude_Preview__preview_start",
       "Bash(git add *)",
       "Bash(git push *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(chmod +x scripts/check-docs-reminder.sh)",
+      "Bash(touch src/__tmp_test_reminder.ts)",
+      "Bash(bash scripts/check-all.sh)",
+      "Bash(git reset *)",
+      "Bash(rm src/__tmp_test_reminder.ts)"
     ]
   }
 }

@@ -12,7 +12,8 @@
       "Bash(touch src/__tmp_test_reminder.ts)",
       "Bash(bash scripts/check-all.sh)",
       "Bash(git reset *)",
-      "Bash(rm src/__tmp_test_reminder.ts)"
+      "Bash(rm src/__tmp_test_reminder.ts)",
+      "Bash(bash scripts/check-docs-routing.sh)"
     ]
   }
 }

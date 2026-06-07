@@ -43,6 +43,12 @@ use_when: "需要回溯某次跨层改动的原因和影响范围时"
 - **影响**：从"靠记性 → 事后才发现漏登记"变成"建文档时强制登记 + 提交前机械兜底"，二者互补（流程减少疏漏，脚本兜住漏网）
 - **相关文件**：`docs/DOCUMENTATION.md`、`scripts/check-docs-routing.sh`、`scripts/check-all.sh`
 
+## 2026-06-07 — 路由表覆盖范围补到根目录，修掉 CLAUDE.md 这处真空
+
+- **改动**：① `docs/DOCUMENTATION.md` 的 SSOT 表补一行"Claude Code 专属行为规则 → CLAUDE.md"——它之前能被发现纯靠 Claude Code 工具自动读取这个文件名，但路由表里查不到"这类信息该写哪"；② `scripts/check-docs-routing.sh` 扫描范围从只查 `docs/*.md` 扩大到根目录治理文档（豁免 `DOCUMENTATION.md` 自身和已转历史记录的 `SETUP.md`）
+- **影响**：路由设计不再只覆盖 `docs/` 这一个角落，根目录的治理文件也纳入同一张图，避免"靠工具约定能找到 = 不需要登记"的认知漏洞
+- **相关文件**：`docs/DOCUMENTATION.md`、`scripts/check-docs-routing.sh`、`CLAUDE.md`
+
 ## 相关文件
 
 | 文件 | 关系 |

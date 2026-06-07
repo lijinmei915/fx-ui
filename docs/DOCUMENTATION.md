@@ -28,6 +28,7 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 | AI 怎么行动 | `AGENTS.md` |
 | 项目当前状态、当前优先级 | `PROJECT.md` |
 | 交接 / 接手 | `HANDOFF.md` |
+| Claude Code 专属行为规则 | `CLAUDE.md`（通用规则仍以 `AGENTS.md` 为准，本文件只放 Claude Code 特有行为） |
 | 三层架构、模块职责 | `docs/ARCHITECTURE.md` |
 | 设计规则总览（指向 token/布局） | `docs/DESIGN_STANDARDS.md` |
 | token 具体取值 | `docs/TOKENS.md` |

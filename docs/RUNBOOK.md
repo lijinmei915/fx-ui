@@ -20,10 +20,24 @@ use_when: "本地启动/构建出问题时，先来这里查有没有现成的�
 ```bash
 npm run dev          # 启动本地开发服务器（Vite）
 npm run build        # tsc -b && vite build
-npm run check        # node scripts/check-shadcn-contract.mjs && npm run build
+npm run check        # 契约 + token 漂移 + 构建
+npm run check:all    # 契约 + token 漂移 + 密钥扫描（不含构建，更快）
 npm run check:shadcn # 单独跑 shadcn contract 检查
+npm run check:tokens # 单独跑 token 漂移检查
 npm run preview      # 预览构建产物
 ```
+
+## 提交前自动检查（pre-commit 钩子）
+
+`.git/hooks/` 不进版本库，每个 clone 下来的人**首次**要手动装一次：
+
+```bash
+bash scripts/install-git-hooks.sh
+```
+
+装好之后，每次 `git commit` 前会自动跑一遍 `npm run check:all`（组件契约 / token 漂移 / 密钥扫描），不通过就中止提交。钩子源文件在 `scripts/pre-commit`，改检查逻辑去改 `scripts/check-all.sh`，不要直接改 `.git/hooks/pre-commit`（不会同步给别人）。
+
+紧急情况可以 `git commit --no-verify` 跳过，但不建议常态化使用。
 
 ## 发布流程
 

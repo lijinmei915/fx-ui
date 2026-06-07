@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# git pre-commit 钩子：提交前自动跑一遍统一检查（组件契约 / token 漂移 / 密钥扫描）。
+# 本文件存在仓库里供安装；真正生效的是 .git/hooks/pre-commit（不进版本库），
+# 用 scripts/install-git-hooks.sh 装一次即可。
+
+root="$(git rev-parse --show-toplevel)"
+cd "$root"
+
+echo "🔍 提交前检查（npm run check:all）..."
+if ! npm run check:all; then
+  echo ""
+  echo "❌ 检查未通过，提交已中止。修好上面的问题再提交。"
+  echo "   （紧急情况可用 git commit --no-verify 跳过，但不建议）"
+  exit 1
+fi

@@ -12,9 +12,8 @@ cd "$root"
 routing_doc="docs/DOCUMENTATION.md"
 # 明确不需要进路由表的文件：
 # - DOCUMENTATION.md 自身
-# - SETUP.md 已转为"历史记录"，在自身文件里写明了去处，不归路由表管
 # - CLAUDE.md / AGENTS.md 等工具入口文件不在此列豁免——它们也代表一类"信息该写哪"的问题，要能在表里查到
-exempt="DOCUMENTATION.md SETUP.md"
+exempt="DOCUMENTATION.md"
 
 missing=0
 

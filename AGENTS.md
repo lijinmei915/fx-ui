@@ -56,10 +56,9 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 ## 必读文件
 
 1. `PROJECT.md` — 项目定位和当前进度
-2. `SETUP.md` — 怎么起工程、拉现成组件
-3. `docs/ARCHITECTURE.md` — 三层体系：基础组件、公司组合组件、页面 Blocks / 布局规范
-4. `theme/fx-theme.css` — 公司 token（改这里要谨慎）
-5. `docs/TOKENS.md` — token 值和用法
+2. `docs/ARCHITECTURE.md` — 三层体系：基础组件、公司组合组件、页面 Blocks / 布局规范
+3. `theme/fx-theme.css` — 公司 token（改这里要谨慎）
+4. `docs/TOKENS.md` — token 值和用法
 
 ---
 

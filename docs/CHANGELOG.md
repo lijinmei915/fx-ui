@@ -49,6 +49,12 @@ use_when: "需要回溯某次跨层改动的原因和影响范围时"
 - **影响**：路由设计不再只覆盖 `docs/` 这一个角落，根目录的治理文件也纳入同一张图，避免"靠工具约定能找到 = 不需要登记"的认知漏洞
 - **相关文件**：`docs/DOCUMENTATION.md`、`scripts/check-docs-routing.sh`、`CLAUDE.md`
 
+## 2026-06-07 — 删除 SETUP.md（不再维护就别留着占位）
+
+- **改动**：用户看到 `PRODUCT.md` / `PROJECT.md` / `SETUP.md` 三个名字容易看混，借机判断 `SETUP.md` 既已转成"历史记录、不再维护"，干脆直接删除，而不是留着一份不会再更新的文件。同步清理 `AGENTS.md` 必读列表里对它的引用、`scripts/check-docs-routing.sh` 里对它的豁免项（文件都没了，豁免规则就是死引用）
+- **影响**：减少一份"内容会过期但没人会去看"的文件；`PRODUCT.md`/`PROJECT.md` 的角色区分仍然保留在 SSOT 表里，靠职责说明区分而不是靠多一份文件做缓冲
+- **相关文件**：`AGENTS.md`、`scripts/check-docs-routing.sh`
+
 ## 相关文件
 
 | 文件 | 关系 |

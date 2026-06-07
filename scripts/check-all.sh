@@ -30,6 +30,7 @@ run_check "密钥扫描"              bash scripts/check-secrets.sh .
 echo ""
 echo "── 文档同步提醒（弱提示，不计入失败）──────────"
 bash scripts/check-docs-reminder.sh
+bash scripts/check-handoff-freshness.sh
 
 echo ""
 if [ "$fail" -ne 0 ]; then

@@ -61,6 +61,12 @@ use_when: "需要回溯某次跨层改动的原因和影响范围时"
 - **影响**：补上路由设计的最后一环——"规则本身完善"和"AI 知道去哪查规则"是两件事，前者有了不代表后者也有
 - **相关文件**：`AGENTS.md`、`docs/DOCUMENTATION.md`
 
+## 2026-06-07 — 新增 HANDOFF 新鲜度提醒（弱提示，不自动生成内容）
+
+- **改动**：新增 `scripts/check-handoff-freshness.sh`——统计自上次改动 `HANDOFF.md` 以来，又有多少次涉及 `src/`/`docs/` 的提交，超过阈值（5 次）就提醒"该写交接了"；接入 `check-all.sh` 的弱提示区
+- **影响**：交接记录的"内容"仍然只能靠人/AI 当场总结（语义判断，机器编不出有价值的内容），但"该不该动笔"这个时机判断现在有机器兜底提醒了——不阻断提交，纯提示
+- **相关文件**：`scripts/check-handoff-freshness.sh`、`scripts/check-all.sh`、`HANDOFF.md`
+
 ## 相关文件
 
 | 文件 | 关系 |

@@ -24,6 +24,7 @@ run_check() {
 
 run_check "shadcn 组件契约检查"   node scripts/check-shadcn-contract.mjs
 run_check "token 漂移检查"        bash scripts/check-tokens-sync.sh
+run_check "文档路由登记检查"      bash scripts/check-docs-routing.sh
 run_check "密钥扫描"              bash scripts/check-secrets.sh .
 
 echo ""

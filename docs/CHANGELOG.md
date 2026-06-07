@@ -37,6 +37,12 @@ use_when: "需要回溯某次跨层改动的原因和影响范围时"
 - **影响**：消除"两处记进度、必然漂移"的隐患，`PROJECT.md` confirmed 为进度唯一真相源；`KNOWLEDGE_SCHEMA.md` 现在能从 `DOCUMENTATION.md` 顺藤摸到
 - **相关文件**：`docs/DOCUMENTATION.md`、`SETUP.md`、`PROJECT.md`
 
+## 2026-06-07 — 新建文档自动登记路由表：流程规则 + 兜底脚本
+
+- **改动**：① `docs/DOCUMENTATION.md` 加了一条强制步骤——新建 `docs/*.md` 时必须同时在 SSOT 路由表加一行（"该归到哪类问题"是语义判断，机器做不了，只能靠人/AI 当场做）；② 新增 `scripts/check-docs-routing.sh` 作为兜底，机械检查 `docs/*.md` 文件名是否都出现在路由表里，没有就报警并阻断提交，接入 `check-all.sh`
+- **影响**：从"靠记性 → 事后才发现漏登记"变成"建文档时强制登记 + 提交前机械兜底"，二者互补（流程减少疏漏，脚本兜住漏网）
+- **相关文件**：`docs/DOCUMENTATION.md`、`scripts/check-docs-routing.sh`、`scripts/check-all.sh`
+
 ## 相关文件
 
 | 文件 | 关系 |

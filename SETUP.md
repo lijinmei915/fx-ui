@@ -1,6 +1,11 @@
-# fx-ui 搭建说明
+# fx-ui 搭建说明（历史记录）
 
 > 核心原则：**不自己写组件，只注入公司 token，组件全用现成 shadcn/ui。**
+>
+> ⚠️ 本文件是工程**初次搭建时**的一次性步骤记录，工程早已搭完，不再是日常操作入口：
+> - 日常启动/构建命令查 `docs/ENVIRONMENT.md` / `docs/RUNBOOK.md`
+> - 当前进度查 `PROJECT.md`（唯一真相源，本文件不再维护进度清单）
+> 留着只为回答"当初是怎么从零搭起来的"。
 
 ## 这个项目是什么
 
@@ -63,11 +68,10 @@ npx shadcn@latest add button card input dialog table form
 
 再由 AI / 工程师改成本业务版本。
 
-## 当前进度
+## 相关文件
 
-- [x] 公司 token 已扒取并映射到 shadcn 语义槽（`theme/fx-theme.css`）
-- [x] token 色值核对页（`preview.html`，仅核对颜色，非真组件）
-- [x] 起正式 Vite + shadcn 工程（步骤 1-4 全部完成）
-- [x] 拉现成 Button 组件验证换肤（公司橙 ✅）
-- [ ] 拉更多组件（Card / Input / Dialog / Table / Form 等）
-- [ ] 接入 Project OS 知识层（AGENTS.md / 组件 use_when 注册表）
+| 文件 | 关系 |
+|------|------|
+| `PROJECT.md` | 当前进度唯一真相源（本文件不重复记录） |
+| `docs/ENVIRONMENT.md` | 日常启动/构建命令 |
+| `docs/RUNBOOK.md` | 故障处理和常用操作 |

@@ -118,5 +118,6 @@ use_when: "什么场景下应该先查这份文档"
 | 文件 | 关系 |
 |------|------|
 | `docs/NAMING.md` | 文件命名和放置位置 |
+| `docs/KNOWLEDGE_SCHEMA.md` | frontmatter 元数据字段和取值规范（本文件定文档边界，它定 frontmatter 格式） |
 | `AGENTS.md` | AI 的文档职责定义 |
 | `PRODUCT.md` | 产品方向（文档内容需对齐产品定位） |

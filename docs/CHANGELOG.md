@@ -31,6 +31,12 @@ use_when: "需要回溯某次跨层改动的原因和影响范围时"
 - **影响**：`fx-theme.css` 仍是 fx-ui 范围内唯一真相源（不引入新的 `.ts` 副本，避免再叠一层转译），`docs/TOKENS.md` 改为"改完 CSS 后跑脚本校验"而不是纯靠人工记得同步；脚本只查不改，发现差异仍需手动同步表格内容
 - **相关文件**：`scripts/check-tokens-sync.sh`、`docs/TOKENS.md`、`theme/fx-theme.css`
 
+## 2026-06-07 — 文档体检：修孤岛、消重复
+
+- **改动**：① `docs/DOCUMENTATION.md` 的"相关文件"表补上 `docs/KNOWLEDGE_SCHEMA.md`（之前全项目没有文档引用它，是个孤岛）；② `SETUP.md` 删掉过期的"当前进度"打勾清单（和 `PROJECT.md` 重复记录同一件事，且已经过期），改为指向 `PROJECT.md` 的历史记录说明
+- **影响**：消除"两处记进度、必然漂移"的隐患，`PROJECT.md` confirmed 为进度唯一真相源；`KNOWLEDGE_SCHEMA.md` 现在能从 `DOCUMENTATION.md` 顺藤摸到
+- **相关文件**：`docs/DOCUMENTATION.md`、`SETUP.md`、`PROJECT.md`
+
 ## 相关文件
 
 | 文件 | 关系 |

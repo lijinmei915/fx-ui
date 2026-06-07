@@ -33,6 +33,11 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 | 架构/技术决策及原因 | `docs/DECISIONS.md` |
 | 结构性变更 | `docs/CHANGELOG.md` |
 | 错误复盘 | `docs/LESSONS.md` |
+| 实际目录结构、模块边界 | `docs/CODE_STRUCTURE.md` |
+| 本地怎么跑起来、依赖、环境变量 | `docs/ENVIRONMENT.md` |
+| 常用命令、故障排查步骤 | `docs/RUNBOOK.md` |
+| 测试/质量校验规范 | `docs/TESTING.md` |
+| 文档 frontmatter 元数据规范 | `docs/KNOWLEDGE_SCHEMA.md` |
 
 ---
 

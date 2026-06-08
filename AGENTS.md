@@ -50,7 +50,7 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 4. 运行 `npm run check`。检查不通过，不得向用户宣告完成。
 5. 最终回复必须说明：使用了哪些 shadcn 能力、是否新增 API、检查是否通过。
 
-`scripts/check-shadcn-contract.mjs` 会自动检查已接入的组件文档契约。新增组件文档时，应同时把该组件加入此检查脚本。
+`scripts/check-shadcn-contract.mjs` 目前只对 **Button** 做机器化契约核对（变体多、容易改坏，值得写专门脚本）。其余组件的 variant/size/状态等结构和 Button 差异很大（例如 Avatar 没有 variant/size、Sidebar 是另一套结构），硬塞进同一个脚本只会变成勉强凑数的伪检查；这些组件改动后，靠上面第 1-3 步的人工核对 + `npm run check` 基础构建检查即可，不强制加进契约脚本。
 
 ---
 

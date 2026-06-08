@@ -33,6 +33,7 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 | 设计规则总览（指向 token/布局） | `docs/DESIGN_STANDARDS.md` |
 | token 具体取值 | `docs/TOKENS.md` |
 | 布局规范 | `docs/LAYOUTS.md` |
+| 对外报告/简报渲染层（`src/reports/`）说明和数据契约 | `docs/REPORTS.md` |
 | 技术栈版本和约束 | `docs/TECH_STACK.md` |
 | 文档/文件命名规范 | `docs/NAMING.md` |
 | 架构/技术决策及原因 | `docs/DECISIONS.md` |

@@ -19,6 +19,12 @@ use_when: "需要回溯某次跨层改动的原因和影响范围时"
 
 ---
 
+## 2026-06-08 — 补全全部 28 个 shadcn 基础组件的中文文档页
+
+- **改动**：在 `src/App.tsx` 里为本地拉取的全部 28 个 shadcn 基础组件建好中文文档页（新增 Avatar、Breadcrumb、Button Group、Calendar、Collapsible、Dialog、Alert Dialog、Dropdown Menu、Popover、Select、Separator、Sheet、Sidebar、Skeleton、Spinner、Tabs、Toggle、Toggle Group、Tooltip 等，加上此前已完成的 Typography/Input/Checkbox/Switch/Textarea/Table/Card/Badge），统一走"组件总览/场景示例/使用方式/API/语义 DOM/正误示例"六段结构；为避免十几页重复模板代码，抽出 `StandardDocPage` 公共组件承载页面骨架；导航菜单同步重新分组（新增"导航"分组：面包屑/标签页/下拉菜单/侧边栏）
+- **影响**：组件文档覆盖率从约一半提升到 100%，后续新拉 shadcn 组件可直接复用 `StandardDocPage` + 数据数组的模式快速补页；导航分组调整后用户能更快按场景找到组件
+- **相关文件**：`src/App.tsx`（`StandardDocPage`、各组件的 `xxxAnchors`/`xxxScenarioExamples`/`xxxPropRows` 等数据数组与 `XxxPage` 组件、导航分组数据、路由判断链）
+
 ## 2026-06-07 — 组件总览改为从场景数据派生
 
 - **改动**：`src/App.tsx` 中 `ButtonOverview`（组件总览矩阵）原本是手写的独立数据，改为直接从 `buttonScenarioExamples` 按 `group` 过滤派生，并复用 `ButtonScenarioPreview` 渲染

@@ -50,6 +50,7 @@ React + TypeScript + Tailwind CSS v4 + shadcn/ui
 - 已完成：沉淀第一版布局规范：`docs/LAYOUTS.md`
 - 已完成：补全 Button 场景示例（类型/尺寸/状态/图标/组合），组件总览矩阵改为从场景数据派生避免漏同步
 - 已完成：拉取 ButtonGroup 组件并补充按钮组合场景
+- 已完成：补全本地拉取的全部 28 个 shadcn 基础组件的中文文档页（六段式结构 + `StandardDocPage` 公共骨架），组件文档覆盖率到 100%
 
 ## 当前优先级
 

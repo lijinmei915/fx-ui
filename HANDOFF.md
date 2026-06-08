@@ -1,13 +1,13 @@
-> **接手时间**：2026-06-07
+> **接手时间**：2026-06-08
 > **项目根目录**：fx-ui
-> **当前状态**：组件功能开发暂停一轮，专门做了一次文档治理体系大整顿——补全 docs/ 核心文档、建立 SSOT 路由表、接入自动检查脚本和 git 钩子
+> **当前状态**：本地拉到的全部 28 个 shadcn 基础组件已补齐中文文档页，组件文档覆盖率到 100%
 > **下一步**：回到产品功能线——把列表页 demo 拆成内部 Block 候选，继续补编辑页 / 详情页样板
 > **风险**：`theme/fx-theme.css` 是 token 真相源，改动影响全局；基础组件必须从 shadcn 拉，不能手写；新建文档必须同步登记 `docs/DOCUMENTATION.md` 的路由表，否则会被 pre-commit 钩子拦截
 
 ---
 layer: knowledge
 type: status
-last_verified: 2026-06-07
+last_verified: 2026-06-08
 teaches: "fx-ui 上一轮做了什么、当前能不能继续、风险是什么、下一步具体干什么"
 use_when: "新的 AI 会话接手 fx-ui 时"
 depends_on: [PROJECT.md]
@@ -19,19 +19,16 @@ depends_on: [PROJECT.md]
 
 ## 当前状态
 
-- 当前做到：完成一轮系统性的文档治理整顿——对照"Project OS"治理模板逐份审查，按 fx-ui 实际现状新建/调整了一整套 docs/ 文档，搭起 SSOT 路由表和自动化检查链
+- 当前做到：把 `src/components/ui/` 下本地拉取的全部 28 个 shadcn 基础组件都建好了中文文档页（`src/App.tsx`），统一走"组件总览/场景示例/使用方式/API/语义 DOM/正误示例"六段结构，导航菜单同步重新分组
 - 当前阻塞：无
-- 是否可继续：可以；本轮是治理基建，下一步该回到产品功能线（列表页 → Block 拆分）
+- 是否可继续：可以；组件文档线告一段落，下一步该回到产品功能线（列表页 → Block 拆分）
 
 ## 本次已完成
 
-- **新建 docs/ 核心文档**（共 13 份，均按 fx-ui 实际现状填写，非套用模板占位）：`CHANGELOG`、`DECISIONS`、`LESSONS`、`NAMING`、`DESIGN_STANDARDS`、`TECH_STACK`、`DOCUMENTATION`、`CODE_STRUCTURE`、`RUNBOOK`、`TESTING`、`ENVIRONMENT`、`KNOWLEDGE_SCHEMA`，以及根目录 `PRODUCT.md`
-- **修正 `docs/ARCHITECTURE.md`**：补"模块职责"表，修正 frontmatter `type: architecture` → `type: spec`（不在合法枚举里）
-- **token SSOT 治理**：新建 `scripts/check-tokens-sync.sh` 校验 `theme/fx-theme.css` 与 `docs/TOKENS.md` 色值是否漂移——运行时即发现并修复了 `--accent`/`--sidebar-accent` 真实漏抄
-- **建立文档 SSOT 路由表**：在 `docs/DOCUMENTATION.md` 补全"问题 → 该写去哪"映射表，覆盖全部 19 份文档（含根目录治理文档），并在 `AGENTS.md` 里补上指向它的入口（之前 AI 进项目都不知道有这张表）
-- **新建检查链**：`scripts/check-all.sh` 统一入口，整合"组件契约 / token 漂移 / 文档路由登记 / 密钥扫描 / 文档同步弱提醒"五项，接入 `npm run check:all` 和 git pre-commit 钩子（`scripts/pre-commit` + `scripts/install-git-hooks.sh`）
-- **从 kit 安全提取**：`.ai/rules`（符号链接同步真相文档）、`templates/`、若干自动化脚本；`check-secrets.sh` 按 fx-ui 实际情况重写；删除 5 个和 fx-ui 现状不符的打分类脚本
-- **文档体检清理**：删除 `SETUP.md`（内容和 `PROJECT.md` 重复且已过期）、修复 `docs/KNOWLEDGE_SCHEMA.md` 孤岛（漏被引用）、清理两代孤儿文件 `knowledge-registry.json`、删除 `11/` 参考模板目录
+- **补全文档页**：新增 Avatar、Breadcrumb、Button Group、Calendar、Collapsible、Dropdown Menu、Popover、Separator、Sheet、Sidebar、Skeleton、Spinner、Tabs、Toggle、Toggle Group 等 14 个组件文档页，加上此前已完成的（Typography/Input/Select/Checkbox/Switch/Textarea/Table/Card/Badge/Tooltip/Dialog/Alert Dialog），现在 28 个 shadcn 组件全部有中文文档
+- **抽出公共骨架 `StandardDocPage`**：避免十几页重复同一套六段结构模板代码，新组件页只需准备数据数组（`xxxAnchors`/`xxxScenarioExamples`/`xxxPropRows`/`xxxSemanticDomRows`/`xxxDoDontRows`）和场景预览渲染函数即可接入
+- **导航菜单重新分组**：新增"导航"分组（面包屑/标签页/下拉菜单/侧边栏），把分隔线、头像、日历等也归类到对应分组，避免菜单项堆在"通用"里
+- **补提交遗漏文件**：`src/components/ui/checkbox.tsx`、`switch.tsx`（此前拉取后忘记提交）
 
 ## 风险与待确认
 
@@ -41,6 +38,7 @@ depends_on: [PROJECT.md]
 - 必须 `@import "tailwindcss"`，否则 `shadcn/tailwind.css` 里所有 utility class 都不生效
 - **新规矩**：新建 `docs/*.md` 必须同步在 `docs/DOCUMENTATION.md` 的 SSOT 路由表里登记一行，否则 `check-docs-routing.sh` 会在提交前拦截
 - token 改动后若 `npm run check:tokens` 报漂移，要去同步 `docs/TOKENS.md` 的对应表格——脚本只查不自动改
+- 新增组件文档页时优先复用 `StandardDocPage`，不要另起一套结构，否则又会变成"各页各写一套、容易漂移"
 
 ## 下一步
 

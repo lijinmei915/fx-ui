@@ -51,6 +51,7 @@ React + TypeScript + Tailwind CSS v4 + shadcn/ui
 - 已完成：补全 Button 场景示例（类型/尺寸/状态/图标/组合），组件总览矩阵改为从场景数据派生避免漏同步
 - 已完成：拉取 ButtonGroup 组件并补充按钮组合场景
 - 已完成：补全本地拉取的全部 28 个 shadcn 基础组件的中文文档页（六段式结构 + `StandardDocPage` 公共骨架），组件文档覆盖率到 100%
+- 已完成：新增 `src/reports/` 报告渲染层（区别于 `src/blocks/` 页面 Block），落地客户简报渲染页 `customer-briefing`——数据契约对齐外部销售 skill 的 R01-R09 输出，用 fx-ui 真正的组件和公司 token 渲染全部分区，详见 `docs/REPORTS.md`
 
 ## 当前优先级
 

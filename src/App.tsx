@@ -33,8 +33,20 @@ import {
 import {
   LineChart,
   Line,
+  AreaChart,
+  Area,
   BarChart,
   Bar,
+  ComposedChart,
+  ScatterChart,
+  Scatter,
+  ZAxis,
+  RadarChart,
+  Radar,
+  PolarGrid,
+  PolarAngleAxis,
+  RadialBarChart,
+  RadialBar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -7433,6 +7445,67 @@ const pieChartConfig: ChartConfig = {
   其他: { label: "其他", color: "var(--chart-4)" },
 }
 
+// 面积图
+const areaChartConfig: ChartConfig = {
+  成交额: { label: "成交额（万）", color: "var(--chart-6)" },
+  目标:   { label: "目标（万）",   color: "var(--chart-8)" },
+}
+
+// 组合图（柱+折线）
+const chartComposedData = [
+  { month: "1月", 成交额: 420, 赢单率: 32 },
+  { month: "2月", 成交额: 380, 赢单率: 28 },
+  { month: "3月", 成交额: 610, 赢单率: 41 },
+  { month: "4月", 成交额: 730, 赢单率: 45 },
+  { month: "5月", 成交额: 690, 赢单率: 38 },
+  { month: "6月", 成交额: 870, 赢单率: 52 },
+]
+const composedChartConfig: ChartConfig = {
+  成交额: { label: "成交额（万）", color: "var(--chart-3)" },
+  赢单率: { label: "赢单率（%）",  color: "var(--chart-9)" },
+}
+
+// 散点图
+const chartScatterData = [
+  { 金额: 120, 概率: 80 },
+  { 金额: 350, 概率: 60 },
+  { 金额: 80,  概率: 90 },
+  { 金额: 520, 概率: 40 },
+  { 金额: 200, 概率: 70 },
+  { 金额: 95,  概率: 85 },
+  { 金额: 680, 概率: 35 },
+  { 金额: 310, 概率: 55 },
+]
+const scatterChartConfig: ChartConfig = {
+  商机: { label: "商机", color: "var(--chart-9)" },
+}
+
+// 雷达图
+const chartRadarData = [
+  { dimension: "新客开拓", A: 85, B: 65 },
+  { dimension: "客户维系", A: 72, B: 88 },
+  { dimension: "成交转化", A: 90, B: 75 },
+  { dimension: "客单价",   A: 68, B: 82 },
+  { dimension: "跟进速度", A: 78, B: 60 },
+  { dimension: "赢单率",   A: 82, B: 70 },
+]
+const radarChartConfig: ChartConfig = {
+  A: { label: "张三", color: "var(--chart-3)" },
+  B: { label: "李四", color: "var(--chart-9)" },
+}
+
+// 径向柱图
+const chartRadialData = [
+  { name: "张三", value: 112, fill: "var(--chart-1)" },
+  { name: "李四", value: 89,  fill: "var(--chart-8)" },
+  { name: "王五", value: 134, fill: "var(--chart-3)" },
+  { name: "赵六", value: 76,  fill: "var(--chart-4)" },
+  { name: "陈七", value: 98,  fill: "var(--chart-6)" },
+]
+const radialChartConfig: ChartConfig = {
+  value: { label: "配额完成率（%）" },
+}
+
 function ChartPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   return (
     <div className={docsSpacing.pageStack}>
@@ -7527,6 +7600,173 @@ function ChartPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
                   ))}
                 </Pie>
               </PieChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </section>
+
+      <Separator className="my-2" />
+
+      {/* 面积图 */}
+      <section className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Area Chart" : "面积图"}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{lang === "en" ? "Trend with volume emphasis via fill." : "趋势+量感，填充区域强调累积量级。"}</p>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>{lang === "en" ? "Monthly Revenue vs Target" : "月度成交额 vs 目标"}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={areaChartConfig} className="h-[260px] w-full">
+              <AreaChart data={chartLineData} margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="fillRevenue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%"  stopColor="var(--chart-6)" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="var(--chart-6)" stopOpacity={0.02} />
+                  </linearGradient>
+                  <linearGradient id="fillTarget" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%"  stopColor="var(--chart-8)" stopOpacity={0.2} />
+                    <stop offset="95%" stopColor="var(--chart-8)" stopOpacity={0.02} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                <XAxis dataKey="month" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                <YAxis tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <ChartLegend content={<ChartLegendContent />} />
+                <Area type="monotone" dataKey="成交额" stroke="var(--chart-6)" fill="url(#fillRevenue)" strokeWidth={2} dot={{ r: 3 }} />
+                <Area type="monotone" dataKey="目标"   stroke="var(--chart-8)" fill="url(#fillTarget)"   strokeWidth={2} strokeDasharray="4 2" dot={false} />
+              </AreaChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </section>
+
+      <Separator className="my-2" />
+
+      {/* 组合图 */}
+      <section className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Composed Chart" : "组合图（柱 + 折线）"}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{lang === "en" ? "Quantity and rate on the same canvas." : "量和率共屏，双 Y 轴分别承载。"}</p>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>{lang === "en" ? "Revenue & Win Rate" : "成交额与赢单率"}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={composedChartConfig} className="h-[260px] w-full">
+              <ComposedChart data={chartComposedData} margin={{ top: 4, right: 24, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                <XAxis dataKey="month" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                <YAxis yAxisId="left"  tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} tickFormatter={(v) => `${v}%`} />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <ChartLegend content={<ChartLegendContent />} />
+                <Bar    yAxisId="left"  dataKey="成交额" fill="var(--chart-3)" radius={[4, 4, 0, 0]} />
+                <Line  yAxisId="right" dataKey="赢单率" stroke="var(--chart-9)" strokeWidth={2} dot={{ r: 3 }} />
+              </ComposedChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </section>
+
+      <Separator className="my-2" />
+
+      {/* 散点图 */}
+      <section className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Scatter Chart" : "散点图"}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{lang === "en" ? "Distribution and correlation between two metrics." : "展示两个指标的分布和相关性。"}</p>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>{lang === "en" ? "Deal Size vs Win Probability" : "商机金额 vs 赢单概率"}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={scatterChartConfig} className="h-[260px] w-full">
+              <ScatterChart margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                <XAxis dataKey="金额" name="金额（万）" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} label={{ value: "金额（万）", position: "insideBottom", offset: -2, fontSize: 11 }} />
+                <YAxis dataKey="概率" name="赢单概率（%）" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
+                <ZAxis range={[48, 48]} />
+                <ChartTooltip cursor={{ strokeDasharray: "3 3" }} content={<ChartTooltipContent nameKey="name" />} />
+                <Scatter data={chartScatterData} fill="var(--chart-9)" fillOpacity={0.75} />
+              </ScatterChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </section>
+
+      <Separator className="my-2" />
+
+      {/* 雷达图 */}
+      <section className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Radar Chart" : "雷达图"}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{lang === "en" ? "Multi-dimensional comparison across categories." : "多维度能力对比，适合人员 / 产品综合评估。"}</p>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>{lang === "en" ? "Sales Rep Performance" : "销售能力雷达"}</CardTitle>
+          </CardHeader>
+          <CardContent className="flex items-center justify-center">
+            <ChartContainer config={radarChartConfig} className="h-[300px] w-full max-w-md">
+              <RadarChart data={chartRadarData} cx="50%" cy="50%" outerRadius="75%">
+                <PolarGrid stroke="var(--border)" />
+                <PolarAngleAxis dataKey="dimension" tick={{ fontSize: 12 }} />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <ChartLegend content={<ChartLegendContent />} />
+                <Radar dataKey="A" stroke="var(--chart-3)" fill="var(--chart-3)" fillOpacity={0.25} strokeWidth={2} />
+                <Radar dataKey="B" stroke="var(--chart-9)" fill="var(--chart-9)" fillOpacity={0.15} strokeWidth={2} />
+              </RadarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </section>
+
+      <Separator className="my-2" />
+
+      {/* 径向柱图 */}
+      <section className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Radial Bar Chart" : "径向柱图"}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{lang === "en" ? "Circular progress bars for ranking or quota attainment." : "环形进度条，适合配额达成率 / 排行榜。"}</p>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>{lang === "en" ? "Quota Attainment by Rep" : "各销售配额完成率（%）"}</CardTitle>
+          </CardHeader>
+          <CardContent className="flex items-center justify-center">
+            <ChartContainer config={radialChartConfig} className="h-[300px] w-full max-w-sm">
+              <RadialBarChart
+                data={chartRadialData}
+                cx="50%" cy="50%"
+                innerRadius="20%" outerRadius="90%"
+                startAngle={90} endAngle={-270}
+              >
+                <PolarAngleAxis type="number" domain={[0, 150]} tick={false} />
+                <RadialBar dataKey="value" background={{ fill: "var(--muted)" }} cornerRadius={4} label={{ position: "insideStart", fill: "var(--foreground)", fontSize: 11, formatter: (v: unknown) => `${v}%` }} />
+                <ChartTooltip content={<ChartTooltipContent nameKey="name" />} />
+                <ChartLegend
+                  iconSize={10}
+                  layout="vertical"
+                  verticalAlign="middle"
+                  align="right"
+                  content={({ payload }) => (
+                    <div className="flex flex-col gap-1.5 text-xs">
+                      {(payload ?? []).map((p, i) => (
+                        <div key={i} className="flex items-center gap-1.5">
+                          <span className="inline-block size-2 rounded-sm" style={{ backgroundColor: (p.payload as { fill: string }).fill }} />
+                          <span className="text-foreground">{(p.payload as { name: string }).name}</span>
+                          <span className="text-muted-foreground">{(p.payload as { value: number }).value}%</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                />
+              </RadialBarChart>
             </ChartContainer>
           </CardContent>
         </Card>

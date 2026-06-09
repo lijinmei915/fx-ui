@@ -1,6 +1,6 @@
 > **接手时间**：2026-06-09
 > **项目根目录**：fx-ui
-> **当前状态**：Figma 色彩规范完整色板已同步到 token 层和文档，Badge 新增 success variant 修正状态语义
+> **当前状态**：BI 图表色板落齐、8 种图表类型补完、fx-ui-report skill 完成
 > **下一步**：回到产品功能线——把列表页 demo 拆成内部 Block 候选，继续补编辑页 / 详情页样板
 > **风险**：`theme/fx-theme.css` 是 token 真相源，改动影响全局；基础组件必须从 shadcn 拉，不能手写；新建文档必须同步登记 `docs/DOCUMENTATION.md` 的路由表，否则会被 pre-commit 钩子拦截
 
@@ -19,15 +19,15 @@ depends_on: [PROJECT.md]
 
 ## 当前状态
 
-- 当前做到：Figma 色彩规范完整色板已补入 `theme/fx-theme.css`（11 色系 × 11 阶 + 中性色 19 阶 + 特殊色 4 个），设计 Tokens 页新增色板可视化展示，Badge 补 `success` variant 修正状态语义错用
+- 当前做到：BI 图表色板从 Figma「色彩的使用」规范落齐（各色系视觉均衡阶），ChartPage 补完 8 种图表类型，fx-ui-report skill 创建完成
 - 当前阻塞：无
-- 是否可继续：可以；token / 组件语义修正已告一段落，下一步该回到产品功能线
+- 是否可继续：可以；下一步回到产品功能线
 
 ## 本次已完成
 
-- **Figma 色板同步**：从 Figma「全局规范」节点读取完整色彩规范，补入 `theme/fx-theme.css`：11 色系（Orange / Magenta / Red / Yellow / Orange Warning / Yellow Green / Green / Teal / Blue / Dark Blue / Purple）× 00–10 阶、中性色 `--fx-neutrals-01~19`、特殊色 `--fx-special-01~04`；`docs/TOKENS.md` 同步追加色板速查表，通过 pre-commit token 漂移检查
-- **设计 Tokens 页色板展示**：`src/App.tsx` 颜色 section 新增三块可视化区域：11 色系横向色阶（06 加高亮圈）、中性色 19 格、特殊色卡片，悬停可见变量名和色值
-- **Badge success variant**：`badge.tsx` 新增 `success` variant（`bg-success/10 text-success`，风格与 `destructive` 对齐）；文档示例、表格渲染、variant 说明表均从 `default` 改为 `success`；`default` 回归品牌橙/强调语义
+- **BI 图表色板**：`--chart-1~10` 从 Figma「BI常用颜色」规范取各色系视觉均衡阶（非统一06），修正了上一轮的错误映射；同步新增图标色、品牌交互四态、列表高亮色 token，`docs/TOKENS.md` 对应章节补齐
+- **8 种图表类型**：ChartPage 在原有折线/柱/饼基础上补充面积图、组合图（柱+折线双Y轴）、散点图、雷达图、径向柱图，全部基于 shadcn chart + Recharts
+- **fx-ui-report skill**：`skills/fx-ui-report/SKILL.md` + `example.html`，参照 open-design skill 格式，接受任意格式入参（HTML/JSON/Markdown/纯文字），输出严格对齐 fx-ui token 的报告 HTML；内含完整 token 值、8 个组件渲染规则、文字层级规则
 
 ## 风险与待确认
 
@@ -41,14 +41,10 @@ depends_on: [PROJECT.md]
 
 ## 下一步
 
-1. **fx-ui 报告美化 skill**：在 `skills/fx-ui-report/` 创建两个文件
-   - `SKILL.md`：照 open-design data-report 格式，正文写 fx-ui token + 组件规则 + 禁止事项
-   - `example.html`：用商机预测报告（`~/Desktop/商机预测报告-风格demo/opportunity_forecast_fx-ui.html`）作为完整示例
-   - 前置条件：先把报告 HTML 样式调整满意，再用最终版做 example
-2. 回到产品功能线：把当前列表页 demo 拆成内部 Block 候选 `src/blocks/list-page/`
-3. 继续做编辑页 / 详情页 / 设置页样板
-4. 补 `docs/BLOCKS.md`，记录内部 Blocks 的使用方式（记得同步登记进路由表）
-5. 跑 `bash scripts/build-project-graph.sh` 生成知识图谱（目前生成了但还没有消费方）
+1. 回到产品功能线：把当前列表页 demo 拆成内部 Block 候选 `src/blocks/list-page/`
+2. 继续做编辑页 / 详情页 / 设置页样板
+3. 补 `docs/BLOCKS.md`，记录内部 Blocks 的使用方式（记得同步登记进路由表）
+4. 跑 `bash scripts/build-project-graph.sh` 生成知识图谱（目前生成了但还没有消费方）
 
 ## 相关文件
 

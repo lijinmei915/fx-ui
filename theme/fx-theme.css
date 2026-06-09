@@ -191,6 +191,20 @@
   --fx-special-03: #EFF1F3; /* 页面底色 */
   --fx-special-04: #F7F8FA; /* 卡片底色 */
 
+  /* ===== 图标色 Icon colors ===== */
+  --fx-icon-dark:      #181C25; /* 单色图标·深 = Neutrals 19 */
+  --fx-icon-light:     #FFFFFF; /* 单色图标·浅 = Neutrals 01 */
+  --fx-icon-gray:      #737C8C; /* 单色图标·灰 = Special 02 */
+
+  /* ===== 品牌色交互四态 Primary interaction states ===== */
+  --fx-primary-hover:    #FF9B29; /* Orange 05 — hover */
+  --fx-primary-click:    #D96500; /* Orange 07 — click / active */
+  --fx-primary-disabled: #FF9B29; /* Orange 05 — disabled（与 hover 同色，组件层加 opacity） */
+
+  /* ===== 列表行高亮色 List row highlight ===== */
+  --fx-list-orange: #FFF7E6; /* Orange 01 — 行选中橙 */
+  --fx-list-blue:   #E6F4FF; /* Dark Blue 01 — 行选中蓝 */
+
   /* ===== shadcn 标准语义槽 ←映射← 公司 token ===== */
 
   --radius: 0.625rem;
@@ -234,12 +248,17 @@
   /* 字体 */
   --font-sans: 'PingFang SC', 'Microsoft YaHei', sans-serif;
 
-  /* chart */
-  --chart-1: #FF8000;
-  --chart-2: #0C6CFF;
-  --chart-3: #30C776;
-  --chart-4: #FF7C19;
-  --chart-5: #FF522A;
+  /* chart — BI 常用色（10 色系各取 Normal/06 阶） */
+  --chart-1:  #FF4A66; /* Magenta 06 */
+  --chart-2:  #FF522A; /* Red 06 */
+  --chart-3:  #FF8000; /* Orange 06 / 品牌色 */
+  --chart-4:  #FFB602; /* Yellow 06 */
+  --chart-5:  #87CC3B; /* Yellow Green 06 */
+  --chart-6:  #30C776; /* Green 06 */
+  --chart-7:  #16B4AB; /* Teal 06 */
+  --chart-8:  #189DFF; /* Blue 06 */
+  --chart-9:  #0C6CFF; /* Dark Blue 06 */
+  --chart-10: #7341DE; /* Purple 06 */
 
   /* sidebar */
   --sidebar: #FFFFFF;
@@ -292,11 +311,16 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
+  --color-chart-10: var(--chart-10);
+  --color-chart-9:  var(--chart-9);
+  --color-chart-8:  var(--chart-8);
+  --color-chart-7:  var(--chart-7);
+  --color-chart-6:  var(--chart-6);
+  --color-chart-5:  var(--chart-5);
+  --color-chart-4:  var(--chart-4);
+  --color-chart-3:  var(--chart-3);
+  --color-chart-2:  var(--chart-2);
+  --color-chart-1:  var(--chart-1);
 }
 
 @layer base {

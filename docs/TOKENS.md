@@ -203,6 +203,50 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `--fx-special-03` | `#EFF1F3` | 页面底色 |
 | `--fx-special-04` | `#F7F8FA` | 卡片底色 |
 
+## 图表色板（BI 常用色 · 10 色）
+
+> 来源：Figma「色彩的使用」BI常用颜色规范。取每个色系的 Normal/06 阶。
+
+| Token | 值 | 色系 |
+|-------|-----|------|
+| `--chart-1`  | `#FF4A66` | Magenta 06 |
+| `--chart-2`  | `#FF522A` | Red 06 |
+| `--chart-3`  | `#FF8000` | Orange 06 / 品牌色 |
+| `--chart-4`  | `#FFB602` | Yellow 06 |
+| `--chart-5`  | `#87CC3B` | Yellow Green 06 |
+| `--chart-6`  | `#30C776` | Green 06 |
+| `--chart-7`  | `#16B4AB` | Teal 06 |
+| `--chart-8`  | `#189DFF` | Blue 06 |
+| `--chart-9`  | `#0C6CFF` | Dark Blue 06 |
+| `--chart-10` | `#7341DE` | Purple 06 |
+
+## 图标色（Icon colors）
+
+| Token | 值 | 场景 |
+|-------|-----|------|
+| `--fx-icon-dark`  | `#181C25` | 单色图标·深色（深色背景反白） |
+| `--fx-icon-light` | `#FFFFFF` | 单色图标·浅色（深色背景反白） |
+| `--fx-icon-gray`  | `#737C8C` | 单色图标·灰色（次级 icon） |
+
+线性图标（Linear icon）使用各色系 Normal/06 颜色，与 BI chart 色一致。
+填充/反色图标（Filled/Reverse icon）使用各色系 05 阶（比 Normal 浅一档）。
+
+## 品牌色交互四态
+
+| 状态 | Token | 值 | 说明 |
+|------|-------|-----|------|
+| Normal   | `--primary` / `--fx-orange-06`    | `#FF8000` | 默认态 |
+| Hover    | `--fx-primary-hover`              | `#FF9B29` | Orange 05，悬浮变浅 |
+| Click    | `--fx-primary-click`              | `#D96500` | Orange 07，点击加深 |
+| Disabled | `--fx-primary-disabled`           | `#FF9B29` | Orange 05，组件层叠加 opacity |
+
+## 列表行高亮色
+
+| Token | 值 | 场景 |
+|-------|-----|------|
+| `--fx-list-orange` | `#FFF7E6` | 列表行选中 / 高亮·橙（Orange 01） |
+| `--fx-list-blue`   | `#E6F4FF` | 列表行选中 / 高亮·蓝（Dark Blue 01） |
+
 ## 文件分工
 
 | 文件 | 角色 |

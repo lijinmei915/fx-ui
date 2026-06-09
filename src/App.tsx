@@ -22,6 +22,26 @@ import {
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+  type ChartConfig,
+} from "@/components/ui/chart"
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts"
 import { Button } from "@/components/ui/button"
 import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from "@/components/ui/button-group"
 import {
@@ -251,6 +271,7 @@ const docsNav = [
     items: [
       { label: "表格", labelEn: "Table", href: "#table" },
       { label: "卡片", labelEn: "Card", href: "#card" },
+      { label: "图表", labelEn: "Chart", href: "#chart" },
       { label: "徽标", labelEn: "Badge", href: "#badge" },
       { label: "提示", labelEn: "Tooltip", href: "#tooltip" },
       { label: "折叠面板", labelEn: "Collapsible", href: "#collapsible" },
@@ -2257,6 +2278,7 @@ function App() {
   const isSidebarPage = page === "sidebar"
   const isSpinnerPage = page === "spinner"
   const isTabsPage = page === "tabs"
+  const isChartPage = page === "chart"
   const isTogglePage = page === "toggle"
   const isToggleGroupPage = page === "toggle-group"
   const anchors = isTokensPage
@@ -2548,6 +2570,8 @@ function App() {
                 <TogglePage actions={pageActions} lang={lang} />
               ) : isToggleGroupPage ? (
                 <ToggleGroupPage actions={pageActions} lang={lang} />
+              ) : isChartPage ? (
+                <ChartPage actions={pageActions} lang={lang} />
               ) : (
                 <PlaceholderPage
                   actions={pageActions}
@@ -7357,6 +7381,202 @@ function RightRail({
         </nav>
       </div>
     </aside>
+  )
+}
+
+// ─── Chart Page ───────────────────────────────────────────────────────────────
+
+const chartLineData = [
+  { month: "1月", 成交额: 420, 目标: 500 },
+  { month: "2月", 成交额: 380, 目标: 500 },
+  { month: "3月", 成交额: 610, 目标: 550 },
+  { month: "4月", 成交额: 730, 目标: 600 },
+  { month: "5月", 成交额: 690, 目标: 650 },
+  { month: "6月", 成交额: 870, 目标: 700 },
+]
+
+const chartBarData = [
+  { stage: "线索", count: 240 },
+  { stage: "意向", count: 180 },
+  { stage: "报价", count: 120 },
+  { stage: "谈判", count: 72 },
+  { stage: "成交", count: 38 },
+]
+
+const chartPieData = [
+  { name: "直销", value: 48 },
+  { name: "渠道", value: 28 },
+  { name: "合作", value: 14 },
+  { name: "其他", value: 10 },
+]
+
+const lineChartConfig: ChartConfig = {
+  成交额: { label: "成交额（万）", color: "var(--chart-1)" },
+  目标:   { label: "目标（万）",   color: "var(--chart-2)" },
+}
+
+const barChartConfig: ChartConfig = {
+  count: { label: "商机数", color: "var(--chart-1)" },
+}
+
+const pieColors = [
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+]
+
+const pieChartConfig: ChartConfig = {
+  直销: { label: "直销", color: "var(--chart-1)" },
+  渠道: { label: "渠道", color: "var(--chart-2)" },
+  合作: { label: "合作", color: "var(--chart-3)" },
+  其他: { label: "其他", color: "var(--chart-4)" },
+}
+
+function ChartPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  return (
+    <div className={docsSpacing.pageStack}>
+      <section id="chart" className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <h1 className="text-4xl font-semibold leading-tight">Chart 图表</h1>
+          </div>
+          {actions}
+        </div>
+        <p className="text-base leading-8 text-muted-foreground">
+          {lang === "en"
+            ? "Built on Recharts via shadcn chart. Colors inherit from --chart-1~10 tokens."
+            : "基于 shadcn chart（Recharts 封装）。颜色继承 --chart-1~10 token，跟随主题自动切换。"}
+        </p>
+      </section>
+
+      <Separator className="my-2" />
+
+      {/* 折线图 */}
+      <section className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Line Chart" : "折线图"}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{lang === "en" ? "Trend comparison over time." : "适合趋势对比，时间轴在 X 轴。"}</p>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>{lang === "en" ? "Monthly Revenue vs Target" : "月度成交额 vs 目标"}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={lineChartConfig} className="h-[260px] w-full">
+              <LineChart data={chartLineData} margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                <XAxis dataKey="month" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                <YAxis tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <ChartLegend content={<ChartLegendContent />} />
+                <Line type="monotone" dataKey="成交额" stroke="var(--chart-1)" strokeWidth={2} dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="目标" stroke="var(--chart-2)" strokeWidth={2} strokeDasharray="4 2" dot={false} />
+              </LineChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </section>
+
+      <Separator className="my-2" />
+
+      {/* 柱状图 */}
+      <section className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Bar Chart" : "柱状图"}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{lang === "en" ? "Category comparison or funnel stages." : "适合分类对比，也常用于漏斗各阶段数量。"}</p>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>{lang === "en" ? "Pipeline Funnel" : "商机漏斗各阶段"}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={barChartConfig} className="h-[260px] w-full">
+              <BarChart data={chartBarData} margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                <XAxis dataKey="stage" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                <YAxis tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Bar dataKey="count" fill="var(--chart-1)" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </section>
+
+      <Separator className="my-2" />
+
+      {/* 饼图 */}
+      <section className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Pie Chart" : "饼图"}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{lang === "en" ? "Part-to-whole proportion." : "适合展示占比关系，类别不超过 5 个。"}</p>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>{lang === "en" ? "Revenue by Channel" : "成交额来源分布"}</CardTitle>
+          </CardHeader>
+          <CardContent className="flex items-center justify-center">
+            <ChartContainer config={pieChartConfig} className="h-[260px] w-full max-w-sm">
+              <PieChart>
+                <ChartTooltip content={<ChartTooltipContent nameKey="name" />} />
+                <ChartLegend content={<ChartLegendContent nameKey="name" />} />
+                <Pie data={chartPieData} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={60} outerRadius={100}>
+                  {chartPieData.map((_, i) => (
+                    <Cell key={i} fill={pieColors[i % pieColors.length]} />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </section>
+
+      <Separator className="my-2" />
+
+      {/* 图表色板 */}
+      <section className="flex flex-col gap-4">
+        <h2 className="text-2xl font-semibold">{lang === "en" ? "Chart Tokens" : "图表色板"}</h2>
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">{lang === "en" ? "Token" : "Token"}</TableHead>
+                <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
+                <TableHead className="pr-4">{lang === "en" ? "Usage" : "用途"}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {[
+                { token: "--chart-1",  value: "#FF4A66", usage: "Magenta 06" },
+                { token: "--chart-2",  value: "#FF522A", usage: "Red 06" },
+                { token: "--chart-3",  value: "#FF8000", usage: "Orange 06 / 品牌色" },
+                { token: "--chart-4",  value: "#FFB602", usage: "Yellow 06" },
+                { token: "--chart-5",  value: "#87CC3B", usage: "Yellow Green 06" },
+                { token: "--chart-6",  value: "#30C776", usage: "Green 06" },
+                { token: "--chart-7",  value: "#16B4AB", usage: "Teal 06" },
+                { token: "--chart-8",  value: "#189DFF", usage: "Blue 06" },
+                { token: "--chart-9",  value: "#0C6CFF", usage: "Dark Blue 06" },
+                { token: "--chart-10", value: "#7341DE", usage: "Purple 06" },
+              ].map((r) => (
+                <TableRow key={r.token}>
+                  <TableCell className="pl-4 font-medium">
+                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{r.token}</code>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <span className="inline-block size-4 rounded-full border border-border" style={{ backgroundColor: r.value }} />
+                      <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{r.value}</code>
+                    </div>
+                  </TableCell>
+                  <TableCell className="pr-4 text-muted-foreground">{r.usage}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </section>
+    </div>
   )
 }
 

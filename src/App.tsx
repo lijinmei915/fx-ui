@@ -1883,6 +1883,43 @@ const semanticTokens = [
   { name: "destructive", value: "#FF522A", usage: "删除、危险、不可逆操作", usageEn: "Delete, dangerous, irreversible actions", className: "bg-destructive" },
 ]
 
+const colorScales = [
+  { name: "Orange",         nameZh: "品牌橙",  tag: "Brand",     tagZh: "品牌色",  var: "--fx-orange",
+    colors: ["#FFFBF0","#FFF7E6","#FFDDA3","#FFCA7A","#FFB452","#FF9B29","#FF8000","#D96500","#B34100","#8C2F00","#662500"] },
+  { name: "Magenta",        nameZh: "玫红",    tag: "",          tagZh: "",        var: "--fx-magenta",
+    colors: ["#FFF1F0","#FFF0F0","#FFEDED","#FFC4C7","#FF9CA4","#FF7383","#FF4A66","#D93452","#B32241","#8C1432","#660D26"] },
+  { name: "Red",            nameZh: "红",      tag: "Error",     tagZh: "错误",    var: "--fx-red",
+    colors: ["#FFF6F0","#FFF5F0","#FFDCCC","#FFBDA3","#FF9C7A","#FF7752","#FF522A","#D93518","#B31E0B","#8C0D01","#660500"] },
+  { name: "Yellow",         nameZh: "黄",      tag: "",          tagZh: "",        var: "--fx-yellow",
+    colors: ["#FFFEF0","#FFFCE6","#FFF2A6","#FFE77D","#FFDA54","#FFCA2B","#FFB602","#D99400","#B37400","#8C5600","#663C00"] },
+  { name: "Orange Warning", nameZh: "暖橙",    tag: "Warning",   tagZh: "警告",    var: "--fx-orange-warning",
+    colors: ["#FFFAF0","#FFF5E6","#FFE2BD","#FFCD94","#FFB56B","#FF9A42","#FF7C19","#D95D0B","#B34100","#8C2F00","#661F00"] },
+  { name: "Yellow Green",   nameZh: "黄绿",    tag: "",          tagZh: "",        var: "--fx-yellow-green",
+    colors: ["#FBFFF0","#FAFFF0","#F9FFED","#DDF2BB","#C0E68C","#A3D962","#87CC3B","#65A628","#478018","#2C590C","#183307"] },
+  { name: "Green",          nameZh: "绿",      tag: "Success",   tagZh: "成功",    var: "--fx-green",
+    colors: ["#F0FFF3","#F0FFF4","#DCFAE6","#ABEDC3","#7EE0A5","#55D48C","#30C776","#1FA160","#117A49","#085433","#042E1D"] },
+  { name: "Teal",           nameZh: "青",      tag: "",          tagZh: "",        var: "--fx-teal",
+    colors: ["#F0FFFB","#E1F5F1","#B0E8DE","#84DBCE","#5BCFC1","#36C2B6","#16B4AB","#0A8F8D","#026769","#003F42","#001A1C"] },
+  { name: "Blue",           nameZh: "蓝",      tag: "",          tagZh: "",        var: "--fx-blue",
+    colors: ["#F0FCFF","#E6F9FF","#BAEBFF","#91DCFF","#69CAFF","#40B6FF","#189DFF","#097BD9","#005CB3","#00448C","#002E66"] },
+  { name: "Dark Blue",      nameZh: "深蓝",    tag: "Link/Info", tagZh: "链接/信息", var: "--fx-dark-blue",
+    colors: ["#F0F9FF","#E6F4FF","#B0DAFF","#87C3FF","#5EA9FF","#368DFF","#0C6CFF","#004FD9","#003BB3","#002A8C","#001B66"] },
+  { name: "Purple",         nameZh: "紫",      tag: "",          tagZh: "",        var: "--fx-purple",
+    colors: ["#F8F0FF","#F7F0FF","#F5EDFF","#DDC4FF","#BC97F7","#976AEB","#7341DE","#542CB8","#391C91","#230F6B","#140945"] },
+]
+
+const neutralsScale = [
+  "#FFFFFF","#FAFAFA","#F2F3F5","#EAEBEE","#DEE1E8","#CED1D9","#C1C5CE","#ADB1BA","#A3A7B0","#999DA6",
+  "#91959E","#81858F","#737881","#606570","#545861","#444852","#343841","#272B34","#181C25",
+]
+
+const specialColors = [
+  { name: "Special 01", var: "--fx-special-01", hex: "#F2F4FB", usage: "标签背景",  usageEn: "Label background" },
+  { name: "Special 02", var: "--fx-special-02", hex: "#737C8C", usage: "icon/dark", usageEn: "Dark icon color" },
+  { name: "Special 03", var: "--fx-special-03", hex: "#EFF1F3", usage: "页面底色",  usageEn: "Page background alt" },
+  { name: "Special 04", var: "--fx-special-04", hex: "#F7F8FA", usage: "卡片底色",  usageEn: "Card background alt" },
+]
+
 const typographyTokens = [
   { name: "font-sans", value: "Geist / system sans-serif", usage: "页面正文、表单、组件默认字体", usageEn: "Body text, forms, and default component typography" },
   { name: "text-sm", value: "0.875rem", usage: "表格、菜单、说明文字", usageEn: "Tables, menus, and supporting text" },
@@ -2985,6 +3022,8 @@ function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
 
       <section id="tokens-colors" className="flex flex-col gap-5">
         <h2 className="text-2xl font-semibold">{lang === "en" ? "Colors" : "颜色"}</h2>
+
+        {/* 语义 token 表 */}
         <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
           <Table className="min-w-[720px]">
             <TableHeader>
@@ -3015,6 +3054,72 @@ function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
               ))}
             </TableBody>
           </Table>
+        </div>
+
+        {/* 基础色板 */}
+        <div className="flex flex-col gap-2 pt-2">
+          <h3 className="text-lg font-semibold">{lang === "en" ? "Base Color Palette" : "基础色板"}</h3>
+          <p className="text-sm text-muted-foreground">
+            {lang === "en"
+              ? "11 color scales × 11 steps (00–10). Step 06 is the Normal value. Variable: --fx-{scale}-{step}"
+              : "11 个色系 × 11 阶（00–10），06 为 Normal 基准值。变量名：--fx-{色系}-{阶}"}
+          </p>
+        </div>
+        <div className="flex flex-col gap-2 rounded-lg border border-border bg-card p-4">
+          <div className="mb-1 flex items-center gap-1 pl-[120px]">
+            {["00","01","02","03","04","05","06","07","08","09","10"].map((s) => (
+              <div key={s} className={`w-8 text-center text-[10px] ${s === "06" ? "font-bold text-foreground" : "text-muted-foreground"}`}>{s}</div>
+            ))}
+          </div>
+          {colorScales.map((scale) => (
+            <div key={scale.name} className="flex items-center gap-3">
+              <div className="w-[108px] shrink-0">
+                <div className="text-sm font-medium leading-tight">{lang === "en" ? scale.name : scale.nameZh}</div>
+                {scale.tagZh && (
+                  <div className="text-[10px] text-muted-foreground">{lang === "en" ? scale.tag : scale.tagZh}</div>
+                )}
+              </div>
+              <div className="flex gap-1">
+                {scale.colors.map((hex, i) => (
+                  <div
+                    key={i}
+                    title={`${scale.var}-${String(i).padStart(2, "0")}: ${hex}`}
+                    className={`h-8 w-8 cursor-default rounded border ${i === 6 ? "ring-2 ring-foreground/20 ring-offset-1" : "border-black/5"}`}
+                    style={{ backgroundColor: hex }}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* 中性色 */}
+        <h3 className="text-lg font-semibold pt-2">{lang === "en" ? "Neutrals (01–19)" : "中性色（01–19）"}</h3>
+        <div className="flex flex-wrap gap-1 rounded-lg border border-border bg-card p-4">
+          {neutralsScale.map((hex, i) => (
+            <div key={i} className="flex flex-col items-center gap-0.5">
+              <div
+                title={`--fx-neutrals-${String(i + 1).padStart(2, "0")}: ${hex}`}
+                className="h-8 w-8 cursor-default rounded border border-black/5"
+                style={{ backgroundColor: hex }}
+              />
+              <span className="text-[10px] text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* 特殊色 */}
+        <h3 className="text-lg font-semibold pt-2">{lang === "en" ? "Special" : "特殊色"}</h3>
+        <div className="flex flex-wrap gap-3">
+          {specialColors.map((c) => (
+            <div key={c.name} className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2">
+              <div className="h-6 w-6 rounded border border-black/10" style={{ backgroundColor: c.hex }} />
+              <div>
+                <div className="text-xs font-medium">{c.name}</div>
+                <div className="text-[10px] text-muted-foreground">{lang === "en" ? c.usageEn : c.usage} · {c.hex}</div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 

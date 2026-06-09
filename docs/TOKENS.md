@@ -131,6 +131,78 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `z-40` | 固定 Header、文档顶部导航 |
 | `z-50` | Dialog、Dropdown、Popover、Sheet、Tooltip 等浮层 |
 
+## 基础色板（Figma 色彩规范 · 11 色系 × 00–10 阶）
+
+> 来源：Figma「全局规范」色彩规范节点。变量名格式：`--fx-{色系}-{阶}`，06 为 Normal 基准值。
+
+### Orange（品牌橙）
+`#FFFBF0` `#FFF7E6` `#FFDDA3` `#FFCA7A` `#FFB452` `#FF9B29` `#FF8000` `#D96500` `#B34100` `#8C2F00` `#662500`
+
+### Magenta（玫红）
+`#FFF1F0` `#FFF0F0` `#FFEDED` `#FFC4C7` `#FF9CA4` `#FF7383` `#FF4A66` `#D93452` `#B32241` `#8C1432` `#660D26`
+
+### Red（红 · 错误）
+`#FFF6F0` `#FFF5F0` `#FFDCCC` `#FFBDA3` `#FF9C7A` `#FF7752` `#FF522A` `#D93518` `#B31E0B` `#8C0D01` `#660500`
+
+### Yellow（黄）
+`#FFFEF0` `#FFFCE6` `#FFF2A6` `#FFE77D` `#FFDA54` `#FFCA2B` `#FFB602` `#D99400` `#B37400` `#8C5600` `#663C00`
+
+### Orange Warning（暖橙 · 警告）
+`#FFFAF0` `#FFF5E6` `#FFE2BD` `#FFCD94` `#FFB56B` `#FF9A42` `#FF7C19` `#D95D0B` `#B34100` `#8C2F00` `#661F00`
+
+### Yellow Green（黄绿）
+`#FBFFF0` `#FAFFF0` `#F9FFED` `#DDF2BB` `#C0E68C` `#A3D962` `#87CC3B` `#65A628` `#478018` `#2C590C` `#183307`
+
+### Green（绿 · 成功）
+`#F0FFF3` `#F0FFF4` `#DCFAE6` `#ABEDC3` `#7EE0A5` `#55D48C` `#30C776` `#1FA160` `#117A49` `#085433` `#042E1D`
+
+### Teal（青）
+`#F0FFFB` `#E1F5F1` `#B0E8DE` `#84DBCE` `#5BCFC1` `#36C2B6` `#16B4AB` `#0A8F8D` `#026769` `#003F42` `#001A1C`
+
+### Blue（蓝）
+`#F0FCFF` `#E6F9FF` `#BAEBFF` `#91DCFF` `#69CAFF` `#40B6FF` `#189DFF` `#097BD9` `#005CB3` `#00448C` `#002E66`
+
+### Dark Blue（深蓝 · 链接/信息）
+`#F0F9FF` `#E6F4FF` `#B0DAFF` `#87C3FF` `#5EA9FF` `#368DFF` `#0C6CFF` `#004FD9` `#003BB3` `#002A8C` `#001B66`
+
+### Purple（紫）
+`#F8F0FF` `#F7F0FF` `#F5EDFF` `#DDC4FF` `#BC97F7` `#976AEB` `#7341DE` `#542CB8` `#391C91` `#230F6B` `#140945`
+
+## 中性色（Neutrals 01–19）
+
+变量名：`--fx-neutrals-{01~19}`
+
+| 编号 | 值 | 常用场景 |
+|------|-----|----------|
+| 01 | `#FFFFFF` | 背景 |
+| 02 | `#FAFAFA` | 背景 |
+| 03 | `#F2F3F5` | 背景 / input disabled / header |
+| 04 | `#EAEBEE` | — |
+| 05 | `#DEE1E8` | 分割线 / icon gray |
+| 06 | `#CED1D9` | — |
+| 07 | `#C1C5CE` | text H4 / input border / icon light |
+| 08 | `#ADB1BA` | — |
+| 09 | `#A3A7B0` | input border hover |
+| 10 | `#999DA6` | — |
+| 11 | `#91959E` | text H3 |
+| 12 | `#81858F` | — |
+| 13 | `#737881` | — |
+| 14 | `#606570` | — |
+| 15 | `#545861` | text H2 |
+| 16 | `#444852` | — |
+| 17 | `#343841` | — |
+| 18 | `#272B34` | — |
+| 19 | `#181C25` | text H1 |
+
+## 特殊色（Special）
+
+| 变量 | 值 | 场景 |
+|------|-----|------|
+| `--fx-special-01` | `#F2F4FB` | 标签背景 |
+| `--fx-special-02` | `#737C8C` | icon/dark |
+| `--fx-special-03` | `#EFF1F3` | 页面底色 |
+| `--fx-special-04` | `#F7F8FA` | 卡片底色 |
+
 ## 文件分工
 
 | 文件 | 角色 |

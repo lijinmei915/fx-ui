@@ -1,13 +1,13 @@
-> **接手时间**：2026-06-08
+> **接手时间**：2026-06-09
 > **项目根目录**：fx-ui
-> **当前状态**：本地拉到的全部 28 个 shadcn 基础组件已补齐中文文档页，组件文档覆盖率到 100%
+> **当前状态**：Figma 色彩规范完整色板已同步到 token 层和文档，Badge 新增 success variant 修正状态语义
 > **下一步**：回到产品功能线——把列表页 demo 拆成内部 Block 候选，继续补编辑页 / 详情页样板
 > **风险**：`theme/fx-theme.css` 是 token 真相源，改动影响全局；基础组件必须从 shadcn 拉，不能手写；新建文档必须同步登记 `docs/DOCUMENTATION.md` 的路由表，否则会被 pre-commit 钩子拦截
 
 ---
 layer: knowledge
 type: status
-last_verified: 2026-06-08
+last_verified: 2026-06-09
 teaches: "fx-ui 上一轮做了什么、当前能不能继续、风险是什么、下一步具体干什么"
 use_when: "新的 AI 会话接手 fx-ui 时"
 depends_on: [PROJECT.md]
@@ -19,16 +19,15 @@ depends_on: [PROJECT.md]
 
 ## 当前状态
 
-- 当前做到：把 `src/components/ui/` 下本地拉取的全部 28 个 shadcn 基础组件都建好了中文文档页（`src/App.tsx`），统一走"组件总览/场景示例/使用方式/API/语义 DOM/正误示例"六段结构，导航菜单同步重新分组
+- 当前做到：Figma 色彩规范完整色板已补入 `theme/fx-theme.css`（11 色系 × 11 阶 + 中性色 19 阶 + 特殊色 4 个），设计 Tokens 页新增色板可视化展示，Badge 补 `success` variant 修正状态语义错用
 - 当前阻塞：无
-- 是否可继续：可以；组件文档线告一段落，下一步该回到产品功能线（列表页 → Block 拆分）
+- 是否可继续：可以；token / 组件语义修正已告一段落，下一步该回到产品功能线
 
 ## 本次已完成
 
-- **补全文档页**：新增 Avatar、Breadcrumb、Button Group、Calendar、Collapsible、Dropdown Menu、Popover、Separator、Sheet、Sidebar、Skeleton、Spinner、Tabs、Toggle、Toggle Group 等 14 个组件文档页，加上此前已完成的（Typography/Input/Select/Checkbox/Switch/Textarea/Table/Card/Badge/Tooltip/Dialog/Alert Dialog），现在 28 个 shadcn 组件全部有中文文档
-- **抽出公共骨架 `StandardDocPage`**：避免十几页重复同一套六段结构模板代码，新组件页只需准备数据数组（`xxxAnchors`/`xxxScenarioExamples`/`xxxPropRows`/`xxxSemanticDomRows`/`xxxDoDontRows`）和场景预览渲染函数即可接入
-- **导航菜单重新分组**：新增"导航"分组（面包屑/标签页/下拉菜单/侧边栏），把分隔线、头像、日历等也归类到对应分组，避免菜单项堆在"通用"里
-- **补提交遗漏文件**：`src/components/ui/checkbox.tsx`、`switch.tsx`（此前拉取后忘记提交）
+- **Figma 色板同步**：从 Figma「全局规范」节点读取完整色彩规范，补入 `theme/fx-theme.css`：11 色系（Orange / Magenta / Red / Yellow / Orange Warning / Yellow Green / Green / Teal / Blue / Dark Blue / Purple）× 00–10 阶、中性色 `--fx-neutrals-01~19`、特殊色 `--fx-special-01~04`；`docs/TOKENS.md` 同步追加色板速查表，通过 pre-commit token 漂移检查
+- **设计 Tokens 页色板展示**：`src/App.tsx` 颜色 section 新增三块可视化区域：11 色系横向色阶（06 加高亮圈）、中性色 19 格、特殊色卡片，悬停可见变量名和色值
+- **Badge success variant**：`badge.tsx` 新增 `success` variant（`bg-success/10 text-success`，风格与 `destructive` 对齐）；文档示例、表格渲染、variant 说明表均从 `default` 改为 `success`；`default` 回归品牌橙/强调语义
 
 ## 风险与待确认
 

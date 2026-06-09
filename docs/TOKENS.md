@@ -207,18 +207,18 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 > 来源：Figma「色彩的使用」BI常用颜色规范。取每个色系的 Normal/06 阶。
 
-| Token | 值 | 色系 |
-|-------|-----|------|
-| `--chart-1`  | `#FF4A66` | Magenta 06 |
-| `--chart-2`  | `#FF522A` | Red 06 |
-| `--chart-3`  | `#FF8000` | Orange 06 / 品牌色 |
-| `--chart-4`  | `#FFB602` | Yellow 06 |
-| `--chart-5`  | `#87CC3B` | Yellow Green 06 |
-| `--chart-6`  | `#30C776` | Green 06 |
-| `--chart-7`  | `#16B4AB` | Teal 06 |
-| `--chart-8`  | `#189DFF` | Blue 06 |
-| `--chart-9`  | `#0C6CFF` | Dark Blue 06 |
-| `--chart-10` | `#7341DE` | Purple 06 |
+| Token | 值 | 色系·阶 |
+|-------|-----|---------|
+| `--chart-1`  | `#FF7383` | Magenta 05 |
+| `--chart-2`  | `#FF7752` | Red 05 |
+| `--chart-3`  | `#FF9B29` | Orange 05 |
+| `--chart-4`  | `#FFDA54` | Yellow 04 |
+| `--chart-5`  | `#DDF2BB` | Yellow Green 03 |
+| `--chart-6`  | `#55D48C` | Green 05 |
+| `--chart-7`  | `#5BCFC1` | Teal 04 |
+| `--chart-8`  | `#40B6FF` | Blue 05 |
+| `--chart-9`  | `#368DFF` | Dark Blue 05 |
+| `--chart-10` | `#976AEB` | Purple 05 |
 
 ## 图标色（Icon colors）
 

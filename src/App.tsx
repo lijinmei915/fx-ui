@@ -7548,16 +7548,16 @@ function ChartPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
             </TableHeader>
             <TableBody>
               {[
-                { token: "--chart-1",  value: "#FF4A66", usage: "Magenta 06" },
-                { token: "--chart-2",  value: "#FF522A", usage: "Red 06" },
-                { token: "--chart-3",  value: "#FF8000", usage: "Orange 06 / 品牌色" },
-                { token: "--chart-4",  value: "#FFB602", usage: "Yellow 06" },
-                { token: "--chart-5",  value: "#87CC3B", usage: "Yellow Green 06" },
-                { token: "--chart-6",  value: "#30C776", usage: "Green 06" },
-                { token: "--chart-7",  value: "#16B4AB", usage: "Teal 06" },
-                { token: "--chart-8",  value: "#189DFF", usage: "Blue 06" },
-                { token: "--chart-9",  value: "#0C6CFF", usage: "Dark Blue 06" },
-                { token: "--chart-10", value: "#7341DE", usage: "Purple 06" },
+                { token: "--chart-1",  value: "#FF7383", usage: "Magenta 05" },
+                { token: "--chart-2",  value: "#FF7752", usage: "Red 05" },
+                { token: "--chart-3",  value: "#FF9B29", usage: "Orange 05" },
+                { token: "--chart-4",  value: "#FFDA54", usage: "Yellow 04" },
+                { token: "--chart-5",  value: "#DDF2BB", usage: "Yellow Green 03" },
+                { token: "--chart-6",  value: "#55D48C", usage: "Green 05" },
+                { token: "--chart-7",  value: "#5BCFC1", usage: "Teal 04" },
+                { token: "--chart-8",  value: "#40B6FF", usage: "Blue 05" },
+                { token: "--chart-9",  value: "#368DFF", usage: "Dark Blue 05" },
+                { token: "--chart-10", value: "#976AEB", usage: "Purple 05" },
               ].map((r) => (
                 <TableRow key={r.token}>
                   <TableCell className="pl-4 font-medium">

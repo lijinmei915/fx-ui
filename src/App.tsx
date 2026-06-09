@@ -1053,8 +1053,8 @@ const badgeScenarioExamples = [
     id: "status",
     title: "状态标记",
     intent: "在表格、列表里标记数据的当前状态。",
-    rule: "成功态用 default，中性态用 secondary 或 outline，错误态用 destructive。",
-    code: `<Badge>已支付</Badge>\n<Badge variant="secondary">处理中</Badge>\n<Badge variant="destructive">已失败</Badge>`,
+    rule: "成功态用 success，中性态用 secondary 或 outline，错误态用 destructive。",
+    code: `<Badge variant="success">已支付</Badge>\n<Badge variant="secondary">处理中</Badge>\n<Badge variant="destructive">已失败</Badge>`,
   },
   {
     id: "count",
@@ -1073,7 +1073,8 @@ const badgeScenarioExamples = [
 ]
 
 const badgeVariantRows = [
-  { variant: "default", usage: "强调态，强调中的主要状态（如已完成、已支付）" },
+  { variant: "default", usage: "品牌强调，主要操作标记（如当前版本、推荐）" },
+  { variant: "success", usage: "成功/完成态（如已支付、已完成、校验通过）" },
   { variant: "secondary", usage: "中性态，次要或过程态信息（如处理中、草稿）" },
   { variant: "destructive", usage: "错误/警示态（如已失败、已过期）" },
   { variant: "outline", usage: "弱化态，适合密集列表中的轻量标签" },
@@ -4821,7 +4822,7 @@ function TablePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
                   <TableCell className="font-medium">{row.id}</TableCell>
                   <TableCell>{row.customer}</TableCell>
                   <TableCell>
-                    <Badge variant={row.status === "已支付" ? "default" : "outline"}>{row.status}</Badge>
+                    <Badge variant={row.status === "已支付" ? "success" : "outline"}>{row.status}</Badge>
                   </TableCell>
                   <TableCell className="text-right">{row.amount}</TableCell>
                 </TableRow>
@@ -4854,7 +4855,7 @@ function TablePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
                   <TableCell className="font-medium">{row.id}</TableCell>
                   <TableCell>{row.customer}</TableCell>
                   <TableCell>
-                    <Badge variant={row.status === "已支付" ? "default" : "outline"}>{row.status}</Badge>
+                    <Badge variant={row.status === "已支付" ? "success" : "outline"}>{row.status}</Badge>
                   </TableCell>
                   <TableCell className="text-right">{row.amount}</TableCell>
                 </TableRow>
@@ -5175,7 +5176,7 @@ function BadgePreview({ id }: { id: string }) {
   if (id === "status") {
     return (
       <div className="flex flex-wrap gap-2">
-        <Badge>已支付</Badge>
+        <Badge variant="success">已支付</Badge>
         <Badge variant="secondary">处理中</Badge>
         <Badge variant="destructive">已失败</Badge>
       </div>
@@ -5196,7 +5197,7 @@ function BadgePreview({ id }: { id: string }) {
 
 function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   const badgeImportCode = `import { Badge } from "@/components/ui/badge"`
-  const badgeUsageCode = `<Badge>已支付</Badge>\n<Badge variant="secondary">处理中</Badge>\n<Badge variant="destructive">已失败</Badge>`
+  const badgeUsageCode = `<Badge variant="success">已支付</Badge>\n<Badge variant="secondary">处理中</Badge>\n<Badge variant="destructive">已失败</Badge>`
 
   return (
     <div className={docsSpacing.pageStack}>

@@ -41,10 +41,14 @@ depends_on: [PROJECT.md]
 
 ## 下一步
 
-1. 回到产品功能线：把当前列表页 demo 拆成内部 Block 候选 `src/blocks/list-page/`
-2. 继续做编辑页 / 详情页 / 设置页样板
-3. 补 `docs/BLOCKS.md`，记录内部 Blocks 的使用方式（记得同步登记进路由表）
-4. 跑 `bash scripts/build-project-graph.sh` 生成知识图谱（目前生成了但还没有消费方）
+1. **fx-ui 报告美化 skill**：在 `skills/fx-ui-report/` 创建两个文件
+   - `SKILL.md`：照 open-design data-report 格式，正文写 fx-ui token + 组件规则 + 禁止事项
+   - `example.html`：用商机预测报告（`~/Desktop/商机预测报告-风格demo/opportunity_forecast_fx-ui.html`）作为完整示例
+   - 前置条件：先把报告 HTML 样式调整满意，再用最终版做 example
+2. 回到产品功能线：把当前列表页 demo 拆成内部 Block 候选 `src/blocks/list-page/`
+3. 继续做编辑页 / 详情页 / 设置页样板
+4. 补 `docs/BLOCKS.md`，记录内部 Blocks 的使用方式（记得同步登记进路由表）
+5. 跑 `bash scripts/build-project-graph.sh` 生成知识图谱（目前生成了但还没有消费方）
 
 ## 相关文件
 

@@ -260,6 +260,12 @@
   --chart-9:  #368DFF; /* Dark Blue 05 */
   --chart-10: #976AEB; /* Purple 05 */
 
+  /* ===== 投影 Shadow（Figma「图层样式」规范） ===== */
+  --fx-shadow-l1:    0px 2px 6px 0px rgba(0,0,0,0.15);  /* 浮层菜单 / Dropdown */
+  --fx-shadow-l2:    0px 4px 12px 0px rgba(0,0,0,0.15); /* 页面滑出 / Sheet */
+  --fx-shadow-l3:    0px 6px 24px 0px rgba(0,0,0,0.15); /* 临时性插入 / Dialog / Modal */
+  --fx-shadow-l1-up: 0px -2px 6px 0px rgba(0,0,0,0.15); /* 向上弹出的浮层 */
+
   /* sidebar */
   --sidebar: #FFFFFF;
   --sidebar-foreground: #181C25;
@@ -321,6 +327,10 @@
   --color-chart-3:  var(--chart-3);
   --color-chart-2:  var(--chart-2);
   --color-chart-1:  var(--chart-1);
+  --shadow-l1:    var(--fx-shadow-l1);
+  --shadow-l2:    var(--fx-shadow-l2);
+  --shadow-l3:    var(--fx-shadow-l3);
+  --shadow-l1-up: var(--fx-shadow-l1-up);
 }
 
 @layer base {

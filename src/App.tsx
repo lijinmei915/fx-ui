@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
   BellIcon,
   BoldIcon,
   ChevronDownIcon,
@@ -76,10 +78,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { AgentSurface, type AgentSurfaceEvent, type AgentSurfaceSchema } from "@/components/fx/agent-surface"
+import componentsManifestRaw from "../docs/data/components.manifest.json?raw"
+import designTokensManifestRaw from "../docs/data/design-tokens.json?raw"
+import docSiteManifestRaw from "../docs/data/doc-site.manifest.json?raw"
+import governanceStatusRaw from "../docs/data/governance-status.json?raw"
+import projectGraphRaw from "../docs/data/project-graph.json?raw"
+import systemRelationsRaw from "../docs/data/system-relations.json?raw"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -219,10 +235,211 @@ const docsSpacing = {
   sectionHeader: "flex flex-col gap-3",
   sectionStackCompact: "flex flex-col gap-4",
   contentGap: "flex flex-col gap-3",
+  leadText: "max-w-5xl text-lg leading-8 text-muted-foreground",
+  componentLead: "max-w-5xl break-words text-lg leading-8",
+}
+
+type ComponentsManifest = {
+  updatedAt: string
+  uiComponents: { docStatus?: string }[]
+  fxComponents: { docStatus?: string }[]
+}
+
+type DesignTokensManifest = {
+  updatedAt: string
+  primitive: unknown[]
+  semantic: unknown[]
+  componentUsage: unknown[]
+}
+
+type DocSiteManifest = {
+  updatedAt: string
+  regions: unknown[]
+  supportingData: unknown[]
+}
+
+type ProjectGraph = {
+  generatedAt: string
+  summary: {
+    nodeCount: number
+    edgeCount: number
+    staleCount: number
+    systemRelationCount?: number
+    systemRelationGroupCount?: number
+  }
+  systemRelations?: {
+    source: string
+    updatedAt: string
+    summary: {
+      siteRelationCount: number
+      projectRelationCount: number
+      relationCount: number
+      groupCount: number
+    }
+    groups: {
+      scope: "site" | "project"
+      group: string
+      count: number
+    }[]
+  }
+  systemRelationEdges?: {
+    id: string
+    scope: "site" | "project"
+    group: string
+    source: string
+    action: string
+    target: string
+    result: string
+    emphasis?: boolean
+  }[]
+}
+
+type FileRelation = {
+  group: string
+  source: string
+  action: string
+  target: string
+  result: string
+  emphasis?: boolean
+}
+
+type SystemRelationsManifest = {
+  updatedAt: string
+  site: FileRelation[]
+  project: FileRelation[]
+}
+
+type GovernanceStatusManifest = {
+  updatedAt: string
+  statusCards: {
+    title: string
+    valueKey: string
+    desc: string
+  }[]
+  maintenanceModel: {
+    title: string
+    desc: string
+    layers: {
+      name: string
+      source: string
+      role: string
+      update: string
+    }[]
+    rules: string[]
+  }
+  freshness: {
+    name: string
+    source: string
+    updatedAtKey: string
+    maintenance: string
+  }[]
+  assets: {
+    rule: string
+    textSpec: string
+    machineData: string
+    check: string
+    status: string
+  }[]
+  loop: {
+    title: string
+    titleEn: string
+    file: string
+    desc: string
+    descEn: string
+  }[]
+  references: {
+    title: string
+    desc: string
+    href: string
+  }[]
+  actionFlows: {
+    id: string
+    title: string
+    titleEn: string
+    desc: string
+    descEn: string
+    href: string
+    linkLabel: string
+    linkLabelEn: string
+    checkCommand: string
+    done: string
+    doneEn: string
+    steps: {
+      file: string
+      action: string
+      actionEn: string
+      note: string
+      noteEn: string
+    }[]
+  }[]
+  taskRoutes: {
+    id: string
+    label: string
+    labelEn: string
+    match: string[]
+    flowId: string
+    firstDecision: string
+    firstDecisionEn: string
+    outputCheck: string
+  }[]
+  next: {
+    id: string
+    title: string
+    desc: string
+    priority: string
+    status: string
+    ownerRole: string
+    targetFiles: string[]
+    checkCommand: string
+    definitionOfDone: string
+  }[]
+}
+
+const componentsManifest = JSON.parse(componentsManifestRaw) as ComponentsManifest
+const designTokensManifest = JSON.parse(designTokensManifestRaw) as DesignTokensManifest
+const docSiteManifest = JSON.parse(docSiteManifestRaw) as DocSiteManifest
+const governanceStatus = JSON.parse(governanceStatusRaw) as GovernanceStatusManifest
+const projectGraph = JSON.parse(projectGraphRaw) as ProjectGraph
+const systemRelations = JSON.parse(systemRelationsRaw) as SystemRelationsManifest
+
+const allManifestComponents = [
+  ...componentsManifest.uiComponents,
+  ...componentsManifest.fxComponents,
+]
+const completeManifestComponents = allManifestComponents.filter((component) => component.docStatus === "complete")
+const governanceSnapshot = {
+  componentContracts: `${completeManifestComponents.length}/${allManifestComponents.length}`,
+  docSiteRegions: `${docSiteManifest.regions.length} 区`,
+  tokenFacts: `${
+    designTokensManifest.primitive.length +
+    designTokensManifest.semantic.length +
+    designTokensManifest.componentUsage.length
+  } 条`,
+  projectGraph: `${projectGraph.summary.nodeCount} 点 / ${projectGraph.summary.edgeCount} 边`,
+  defaultGate: "npm run check",
+  staleNodes: `${projectGraph.summary.staleCount}`,
+}
+const projectGraphCockpit = {
+  nodeCount: projectGraph.summary.nodeCount,
+  edgeCount: projectGraph.summary.edgeCount,
+  staleCount: projectGraph.summary.staleCount,
+  relationCount: projectGraph.systemRelations?.summary.relationCount ?? projectGraph.summary.systemRelationCount ?? 0,
+  relationGroupCount: projectGraph.systemRelations?.summary.groupCount ?? projectGraph.summary.systemRelationGroupCount ?? 0,
+  siteRelationCount: projectGraph.systemRelations?.summary.siteRelationCount ?? 0,
+  projectRelationCount: projectGraph.systemRelations?.summary.projectRelationCount ?? 0,
+  groups: projectGraph.systemRelations?.groups ?? [],
+}
+const governanceFreshness = {
+  componentsManifest: componentsManifest.updatedAt,
+  designTokens: designTokensManifest.updatedAt,
+  docSite: docSiteManifest.updatedAt,
+  governanceStatus: governanceStatus.updatedAt,
+  projectGraph: projectGraph.generatedAt,
+  systemRelations: systemRelations.updatedAt,
 }
 
 const topNav = [
-  { label: "组件", labelEn: "Components", href: "#button", page: "button" },
+  { label: "组件", labelEn: "Components", href: "#components", page: "components" },
   { label: "设计令牌", labelEn: "Tokens", href: "#tokens", page: "tokens" },
 ]
 
@@ -231,10 +448,9 @@ const docsNav = [
     title: "开始使用",
     titleEn: "Getting Started",
     items: [
-      { label: "项目定位", labelEn: "Positioning", href: "#intro" },
-      { label: "安装接入", labelEn: "Installation", href: "#install" },
-      { label: "主题注入", labelEn: "Theming", href: "#theme" },
-      { label: "AI 使用规则", labelEn: "AI Rules", href: "#ai-rules" },
+      { label: "概览", labelEn: "Overview", href: "#intro" },
+      { label: "安装", labelEn: "Installation", href: "#install" },
+      { label: "主题", labelEn: "Theme", href: "#theme" },
     ],
   },
   {
@@ -323,6 +539,13 @@ const docsNav = [
     ],
   },
   {
+    title: "Agent UI",
+    titleEn: "Agent UI",
+    items: [
+      { label: "AgentSurface", labelEn: "AgentSurface", href: "#agent-surface" },
+    ],
+  },
+  {
     title: "页面 Blocks",
     titleEn: "Page Blocks",
     items: [
@@ -333,7 +556,131 @@ const docsNav = [
       { label: "仪表盘", labelEn: "Dashboard", href: "#dashboard" },
     ],
   },
+  {
+    title: "维护",
+    titleEn: "Maintain",
+    items: [
+      { label: "现状", labelEn: "Status", href: "#governance-map" },
+      { label: "AI 规则", labelEn: "AI Rules", href: "#ai-rules" },
+      { label: "文档规范", labelEn: "Documentation", href: "#documentation" },
+      { label: "检查命令", labelEn: "Checks", href: "#checks" },
+    ],
+  },
 ]
+
+type GettingStartedPage = "intro" | "install" | "theme" | "governance-map" | "ai-rules" | "documentation" | "checks"
+
+const gettingStartedAnchors: Record<GettingStartedPage, { label: string; labelEn: string; href: string }[]> = {
+  intro: [
+    { label: "定位", labelEn: "Positioning", href: "#intro-positioning" },
+    { label: "三层体系", labelEn: "Three Layers", href: "#intro-layers" },
+    { label: "适合谁用", labelEn: "Audience", href: "#intro-audience" },
+  ],
+  install: [
+    { label: "接入前提", labelEn: "Prerequisites", href: "#install-prerequisites" },
+    { label: "安装组件", labelEn: "Components", href: "#install-components" },
+    { label: "接入主题", labelEn: "Theme", href: "#install-theme" },
+    { label: "目录约定", labelEn: "Structure", href: "#install-structure" },
+    { label: "启动检查", labelEn: "Verify", href: "#install-verify" },
+  ],
+  theme: [
+    { label: "token 真相源", labelEn: "Token Source", href: "#theme-source" },
+    { label: "shadcn 语义槽", labelEn: "Semantic Slots", href: "#theme-slots" },
+    { label: "修改流程", labelEn: "Change Flow", href: "#theme-flow" },
+  ],
+  "governance-map": [
+    { label: "当前状态", labelEn: "Status", href: "#governance-map-status" },
+    { label: "工程运行图", labelEn: "System Map", href: "#governance-map-system" },
+    { label: "数据新鲜度", labelEn: "Freshness", href: "#governance-map-freshness" },
+    { label: "规则资产", labelEn: "Assets", href: "#governance-map-assets" },
+    { label: "治理闭环", labelEn: "Loop", href: "#governance-map-loop" },
+    { label: "参考案例", labelEn: "References", href: "#governance-map-references" },
+  ],
+  "ai-rules": [
+    { label: "行为红线", labelEn: "Guardrails", href: "#ai-guardrails" },
+    { label: "改样式流程", labelEn: "Style Flow", href: "#ai-style-flow" },
+    { label: "交付检查", labelEn: "Checks", href: "#ai-checks" },
+  ],
+  documentation: [
+    { label: "SSOT 路由", labelEn: "SSOT", href: "#documentation-ssot" },
+    { label: "防漂三件套", labelEn: "Anti-Drift", href: "#documentation-anti-drift" },
+    { label: "写入规则", labelEn: "Write Rules", href: "#documentation-write-rules" },
+  ],
+  checks: [
+    { label: "常用命令", labelEn: "Commands", href: "#checks-commands" },
+    { label: "检查分层", labelEn: "Layers", href: "#checks-layers" },
+    { label: "收尾清单", labelEn: "Checklist", href: "#checks-checklist" },
+  ],
+}
+
+const componentsIndexAnchors = [
+  { label: "基础组件", labelEn: "UI Components", href: "#components-ui" },
+  { label: "业务组合", labelEn: "Compositions", href: "#components-fx" },
+  { label: "Agent UI", labelEn: "Agent UI", href: "#components-agent-ui" },
+]
+
+const governanceQuickLinks = [
+  { label: "现状", labelEn: "Status", href: "#governance-map", page: "governance-map" },
+  { label: "AI 规则", labelEn: "AI Rules", href: "#ai-rules", page: "ai-rules" },
+  { label: "文档规范", labelEn: "Documentation", href: "#documentation", page: "documentation" },
+  { label: "检查命令", labelEn: "Checks", href: "#checks", page: "checks" },
+]
+
+const componentIndexSections = docsNav.filter((section) =>
+  ["通用", "数据录入", "数据展示", "导航", "反馈", "业务组合组件", "Agent UI"].includes(section.title),
+)
+
+const footerNavItems = [
+  ...docsNav
+    .filter((section) => section.title === "开始使用")
+    .flatMap((section) =>
+      section.items.map((item) => ({
+        ...item,
+        group: section.title,
+        groupEn: section.titleEn,
+      })),
+    ),
+  {
+    label: "组件",
+    labelEn: "Components",
+    href: "#components",
+    group: "组件",
+    groupEn: "Components",
+  },
+  ...componentIndexSections.flatMap((section) =>
+    section.items.map((item) => ({
+        ...item,
+        group: section.title,
+        groupEn: section.titleEn,
+      })),
+    ),
+  ...docsNav
+    .filter((section) => ["设计 Tokens", "页面 Blocks"].includes(section.title))
+    .flatMap((section) =>
+      section.items.map((item) => ({
+        ...item,
+        group: section.title,
+        groupEn: section.titleEn,
+      })),
+    ),
+  ...governanceQuickLinks.map((item) => ({
+    ...item,
+    group: "维护",
+    groupEn: "Maintain",
+  })),
+]
+
+const installCommandsCode = `npx shadcn@latest add button input select checkbox switch table dialog alert-dialog sheet badge card tabs`
+
+const initShadcnCode = `npx shadcn@latest init`
+
+const themeSetupCode = `// src/main.tsx
+import "../theme/fx-theme.css"`
+
+const themeDistributionCode = `// 对外分发主题时，使用 shadcn registry:theme
+registry/fx-theme.json`
+
+const themeImportCode = `import "../theme/fx-theme.css"`
 
 const propRows = [
   { prop: "variant", type: "'default' | 'outline' | 'secondary' | 'ghost' | 'destructive' | 'link'", defaultValue: "'default'", desc: "来自 shadcn Button 的样式变体", descEn: "Style variant from shadcn Button" },
@@ -657,6 +1004,19 @@ const tokenAnchors = [
   { label: "层级", labelEn: "Layer", href: "#tokens-layer" },
 ]
 
+const tokenColorsAnchors = [
+  { label: "语义颜色", labelEn: "Semantic Colors", href: "#tokens-colors-semantic" },
+  { label: "基础色板", labelEn: "Base Palette", href: "#tokens-colors-palette" },
+  { label: "中性色", labelEn: "Neutrals", href: "#tokens-colors-neutrals" },
+  { label: "特殊色", labelEn: "Special", href: "#tokens-colors-special" },
+]
+const tokenTypographyAnchors = [{ label: "排版", labelEn: "Typography", href: "#tokens-typography" }]
+const tokenRadiusAnchors = [{ label: "圆角", labelEn: "Radius", href: "#tokens-radius" }]
+const tokenSpacingAnchors = [{ label: "间距", labelEn: "Spacing", href: "#tokens-spacing" }]
+const tokenShadowAnchors = [{ label: "阴影", labelEn: "Shadow", href: "#tokens-shadow" }]
+const tokenMotionAnchors = [{ label: "动效", labelEn: "Motion", href: "#tokens-motion" }]
+const tokenLayerAnchors = [{ label: "层级", labelEn: "Layer", href: "#tokens-layer" }]
+
 const iconAnchors = [
   { label: "图标库", labelEn: "Icon Library", href: "#icon-library" },
   { label: "安装状态", labelEn: "Installation", href: "#icon-install" },
@@ -670,6 +1030,17 @@ const typographyAnchors = [
   { label: "字号阶梯", href: "#typography-scale" },
   { label: "使用方式", href: "#typography-usage" },
   { label: "使用规则", href: "#typography-rules" },
+]
+
+const agentSurfaceAnchors = [
+  { label: "组件总览", labelEn: "Overview", href: "#agent-surface-overview" },
+  { label: "高频场景", labelEn: "Scenarios", href: "#agent-surface-scenarios" },
+  { label: "视觉规范", labelEn: "Visual", href: "#agent-surface-visual" },
+  { label: "Mock 预览", labelEn: "Mock preview", href: "#agent-surface-playground" },
+  { label: "实时示例", labelEn: "Live example", href: "#agent-surface-demo" },
+  { label: "JSON 协议", labelEn: "JSON protocol", href: "#agent-surface-schema" },
+  { label: "协议取舍", labelEn: "Protocol strategy", href: "#agent-surface-strategy" },
+  { label: "安全边界", labelEn: "Safety", href: "#agent-surface-safety" },
 ]
 
 const typographyUsageExamples = [
@@ -717,29 +1088,29 @@ const inputScenarioExamples = [
     id: "default",
     title: "默认输入框",
     intent: "最基础的单行文本录入，搭配 placeholder 提示输入内容。",
-    rule: "宽度跟随父容器，不手写固定宽度。",
+    rule: "单独展示控件能力时可以直接用 Input；进入真实表单后放进 Field。",
     code: `<Input placeholder="请输入姓名" />`,
   },
   {
-    id: "with-label",
-    title: "搭配 Label",
-    intent: "表单字段的标准写法，标签和输入框通过 id / htmlFor 关联。",
-    rule: "Label 和 Input 必须用 id / htmlFor 显式关联，不能只靠视觉相邻。",
-    code: `<div className="grid gap-2">\n  <Label htmlFor="name">姓名</Label>\n  <Input id="name" placeholder="请输入姓名" />\n</div>`,
+    id: "field",
+    title: "标准字段",
+    intent: "真实表单里的标准写法，承载 label、输入控件和辅助说明。",
+    rule: "使用 FieldGroup + Field + FieldLabel，不用 div/grid 临时拼字段结构。",
+    code: `<FieldGroup>\n  <Field>\n    <FieldLabel htmlFor="name">姓名</FieldLabel>\n    <Input id="name" placeholder="请输入姓名" />\n    <FieldDescription>请填写真实姓名。</FieldDescription>\n  </Field>\n</FieldGroup>`,
   },
   {
     id: "disabled",
     title: "禁用状态",
     intent: "字段当前不可编辑（如只读详情、依赖未满足）。",
-    rule: "用原生 disabled 属性，不要用样式假装禁用。",
-    code: `<Input disabled placeholder="不可编辑" />`,
+    rule: "Field 标记 data-disabled，Input 使用 disabled，不要用样式假装禁用。",
+    code: `<Field data-disabled>\n  <FieldLabel htmlFor="readonly-name">姓名</FieldLabel>\n  <Input id="readonly-name" disabled placeholder="不可编辑" />\n</Field>`,
   },
   {
     id: "invalid",
     title: "校验失败",
     intent: "提交校验未通过时，提示用户当前字段有误。",
-    rule: "用 aria-invalid 触发态，不手写红色边框 className。",
-    code: `<Input aria-invalid placeholder="请输入邮箱" />`,
+    rule: "Field 标记 data-invalid，Input 使用 aria-invalid，并通过 FieldError 输出错误文案。",
+    code: `<Field data-invalid>\n  <FieldLabel htmlFor="email">邮箱</FieldLabel>\n  <Input id="email" aria-invalid placeholder="请输入邮箱" />\n  <FieldError>请输入有效邮箱。</FieldError>\n</Field>`,
   },
 ]
 
@@ -754,14 +1125,17 @@ const inputPropRows = [
 
 const inputSemanticDomRows = [
   { part: "data-slot=\"input\"", desc: "标记输入框根节点，供样式选择器和测试定位使用" },
+  { part: "data-slot=\"field\"", desc: "Field 字段容器，承载 label、control、description 和 error 的语义分组" },
+  { part: "data-slot=\"field-label\"", desc: "字段标签，通常通过 htmlFor 与 Input 的 id 关联" },
+  { part: "data-slot=\"field-error\"", desc: "字段错误文案，使用 role=\"alert\" 向辅助技术宣布错误" },
   { part: "aria-invalid", desc: "校验失败态的语义标记，同时驱动错误态样式" },
   { part: "disabled", desc: "原生禁用属性，驱动禁用态样式并阻止交互" },
 ]
 
 const inputDoDontRows = [
-  { do: "搭配 Label 并用 id / htmlFor 关联，保证可访问性。", dont: "只让 Label 在视觉上挨着 Input，不做关联。" },
-  { do: "校验失败时设置 aria-invalid。", dont: "手写红色边框 className 来表示错误态。" },
-  { do: "用 disabled 属性表达不可编辑。", dont: "用样式伪装禁用（如降低透明度但仍可输入）。" },
+  { do: "真实表单字段使用 FieldGroup + Field + FieldLabel + Input。", dont: "用 div/grid 临时拼一个字段结构。" },
+  { do: "校验失败时 Field 设置 data-invalid，Input 设置 aria-invalid，并展示 FieldError。", dont: "手写红色边框 className 来表示错误态。" },
+  { do: "用 data-disabled + disabled 表达不可编辑。", dont: "用样式伪装禁用（如降低透明度但仍可输入）。" },
   { do: "通过 className 追加间距、宽度等布局类。", dont: "覆盖输入框自身的边框、圆角、内边距等基础视觉。" },
 ]
 
@@ -1103,6 +1477,13 @@ const badgeScenarioExamples = [
     rule: "图标放进 Badge 时用 data-icon 标记位置，不手写尺寸覆盖。",
     code: `<Badge variant="secondary">\n  <CheckCircleIcon data-icon="inline-start" />\n  已校验\n</Badge>`,
   },
+  {
+    id: "link",
+    title: "链接徽标",
+    intent: "版本号、分类标签等需要跳转到详情或筛选结果。",
+    rule: "使用 render={<a href=\"...\" />}，不要嵌套 <a>，也不要用 onClick 把 Badge 伪装成 Button。",
+    code: `<Badge variant="link" render={<a href="/releases/v1.2.0" />}>\n  v1.2.0\n</Badge>`,
+  },
 ]
 
 const badgeVariantRows = [
@@ -1116,13 +1497,14 @@ const badgeVariantRows = [
 ]
 
 const badgePropRows = [
-  { prop: "variant", type: "\"default\" | \"secondary\" | \"destructive\" | \"outline\" | \"ghost\" | \"link\"", defaultValue: "default", desc: "视觉强调级别，对应不同语义场景" },
-  { prop: "render", type: "ReactElement", defaultValue: "—", desc: "自定义根节点渲染（如渲染成 <a> 实现可点击徽标）" },
+  { prop: "variant", type: "\"default\" | \"secondary\" | \"destructive\" | \"success\" | \"outline\" | \"ghost\" | \"link\"", defaultValue: "default", desc: "视觉强调级别，对应不同语义场景" },
+  { prop: "render", type: "ReactElement | (props, state) => ReactElement", defaultValue: "—", desc: "自定义根节点渲染（如渲染成 <a> 实现链接徽标）" },
   { prop: "className", type: "string", defaultValue: "—", desc: "在保留基础样式的前提下追加 Tailwind 类名" },
 ]
 
 const badgeSemanticDomRows = [
-  { part: "data-slot=\"badge\"", desc: "徽标根节点，承载圆角、内边距、背景与文字色" },
+  { part: "slot: \"badge\"", desc: "源码传给 Base UI useRender 的状态，运行时用于标记徽标根节点" },
+  { part: "data-slot=\"badge\"", desc: "运行时语义定位，承载圆角、内边距、背景与文字色" },
   { part: "data-icon=\"inline-start\" / \"inline-end\"", desc: "标记图标在文字前/后的位置，驱动间距样式" },
 ]
 
@@ -1130,6 +1512,7 @@ const badgeDoDontRows = [
   { do: "用 variant 表达语义级别（成功/中性/错误）。", dont: "用自定义颜色 className 表达状态语义。" },
   { do: "内容保持简短（状态词、数字、图标+短词）。", dont: "把长句子或多行说明塞进 Badge。" },
   { do: "图标用 data-icon 标记位置。", dont: "手写图标尺寸和间距覆盖默认布局。" },
+  { do: "需要跳转时用 render 渲染成链接徽标。", dont: "在 Badge 里嵌套 a，或用 onClick 把 Badge 伪装成 Button。" },
 ]
 
 const tooltipAnchors = [
@@ -1980,11 +2363,12 @@ const spacingTokens = [
 ]
 
 const shadowTokens = [
-  { name: "shadow-none", usage: "扁平控件、表格、默认页面区域", usageEn: "Flat controls, tables, and default page regions" },
-  { name: "shadow-sm", usage: "轻量卡片、可点击列表项", usageEn: "Light cards and clickable list items" },
-  { name: "shadow-md", usage: "浮层、下拉菜单、轻量弹出容器", usageEn: "Overlays, dropdowns, and lightweight popover containers" },
-  { name: "shadow-lg", usage: "重点浮层、需要从页面背景中脱离的容器", usageEn: "Prominent overlays and containers that need stronger separation" },
+  { name: "shadow-l1",    value: "0 2px 6px rgba(0,0,0,.15)",  usage: "浮层菜单、Dropdown — 最近层",        usageEn: "Dropdown menus and nearest-layer overlays" },
+  { name: "shadow-l2",    value: "0 4px 12px rgba(0,0,0,.15)", usage: "Sheet、侧边滑出面板 — 中层",          usageEn: "Sheet panels and mid-layer surfaces" },
+  { name: "shadow-l3",    value: "0 6px 24px rgba(0,0,0,.15)", usage: "Dialog、Modal — 最高层遮罩",          usageEn: "Dialogs and top-layer modal surfaces" },
+  { name: "shadow-l1-up", value: "0 -2px 6px rgba(0,0,0,.15)", usage: "向上弹出的浮层（如底部工具栏菜单）", usageEn: "Upward overlays such as bottom toolbar menus" },
 ]
+// shadow-sm / shadow-md / shadow-lg 是 Tailwind 内置默认档，未映射公司 token，禁止在业务代码中语义使用
 
 const motionTokens = [
   { name: "duration-100", usage: "Dialog、Dropdown、Popover、Tooltip 的进入退出", usageEn: "Enter and exit transitions for Dialog, Dropdown, Popover, and Tooltip" },
@@ -2029,21 +2413,51 @@ function isDocPage(page: string): page is DocPage {
 }
 
 function getPageFromHash(hash: string) {
-  if (hash.startsWith("#tokens")) return "tokens"
+  if (hash === "#components" || hash.startsWith("#components-")) return "components"
+  if (hash === "#tokens") return "tokens"
+  if (hash === "#tokens-colors") return "tokens-colors"
+  if (hash === "#tokens-typography") return "tokens-typography"
+  if (hash === "#tokens-radius") return "tokens-radius"
+  if (hash === "#tokens-spacing") return "tokens-spacing"
+  if (hash === "#tokens-shadow") return "tokens-shadow"
+  if (hash === "#tokens-motion") return "tokens-motion"
+  if (hash === "#tokens-layer") return "tokens-layer"
   if (hash === "#icon" || hash.startsWith("#icon-")) return "icon"
+  if (hash === "#intro" || hash.startsWith("#intro-")) return "intro"
+  if (hash === "#install" || hash.startsWith("#install-")) return "install"
+  if (hash === "#theme" || hash.startsWith("#theme-")) return "theme"
+  if (hash === "#governance-map" || hash.startsWith("#governance-map-")) return "governance-map"
+  if (hash === "#ai-rules" || hash.startsWith("#ai-")) return "ai-rules"
+  if (hash === "#documentation" || hash.startsWith("#documentation-")) return "documentation"
+  if (hash === "#checks" || hash.startsWith("#checks-")) return "checks"
   if (buttonAnchors.some((item) => item.href === hash)) return "button"
-  if (hash === "#button" || hash === "" || hash === "#") return "button"
+  if (hash === "#button") return "button"
+  if (hash === "" || hash === "#") return "components"
   return hash.replace("#", "") || "button"
 }
 
 function getNavItemFromHash(hash: string) {
-  const normalizedHash = hash || "#button"
+  const normalizedHash = hash || "#components"
   const navItems = [
     ...topNav,
     ...docsNav.flatMap((section) => section.items),
   ]
 
   return navItems.find((item) => item.href === normalizedHash)
+}
+
+function getFooterNavIndex(page: string) {
+  const currentIndex = footerNavItems.findIndex((item) => getPageFromHash(item.href) === page)
+  return currentIndex >= 0 ? currentIndex : footerNavItems.findIndex((item) => item.href === "#components")
+}
+
+function getFooterNavPair(page: string) {
+  const currentIndex = getFooterNavIndex(page)
+
+  return {
+    previous: currentIndex > 0 ? footerNavItems[currentIndex - 1] : null,
+    next: currentIndex >= 0 && currentIndex < footerNavItems.length - 1 ? footerNavItems[currentIndex + 1] : null,
+  }
 }
 
 function copyText(text: string) {
@@ -2226,7 +2640,7 @@ function ButtonOverview({ lang }: { lang: Lang }) {
 
 function App() {
   const [page, setPage] = useState(() => getPageFromHash(window.location.hash))
-  const [activeHash, setActiveHash] = useState(() => window.location.hash || "#button")
+  const [activeHash, setActiveHash] = useState(() => window.location.hash || "#components")
   const [activeAnchor, setActiveAnchor] = useState("#overview")
   const [viewMode, setViewMode] = useState<ViewMode>("page")
   const [lang, setLang] = useState<Lang>(() => {
@@ -2235,9 +2649,27 @@ function App() {
   })
   const mainRef = useRef<HTMLElement>(null)
 
+  const scrollTargetIntoMain = (target: HTMLElement, behavior: ScrollBehavior = "smooth") => {
+    const main = mainRef.current
+    if (!main) return
+
+    const scrollOnce = (nextBehavior: ScrollBehavior) => {
+      const mainTop = main.getBoundingClientRect().top
+      const targetTop = target.getBoundingClientRect().top
+
+      main.scrollTo({
+        top: main.scrollTop + targetTop - mainTop - 28,
+        behavior: nextBehavior,
+      })
+    }
+
+    scrollOnce(behavior)
+    window.setTimeout(() => scrollOnce("auto"), 180)
+  }
+
   useEffect(() => {
     const onHashChange = () => {
-      const nextHash = window.location.hash || "#button"
+      const nextHash = window.location.hash || "#components"
 
       setActiveHash(nextHash)
       setPage(getPageFromHash(nextHash))
@@ -2263,8 +2695,22 @@ function App() {
   }, [])
 
   const isTokensPage = page === "tokens"
+  const isTokensColorsPage = page === "tokens-colors"
+  const isTokensTypographyPage = page === "tokens-typography"
+  const isTokensRadiusPage = page === "tokens-radius"
+  const isTokensSpacingPage = page === "tokens-spacing"
+  const isTokensShadowPage = page === "tokens-shadow"
+  const isTokensMotionPage = page === "tokens-motion"
+  const isTokensLayerPage = page === "tokens-layer"
   const isIconPage = page === "icon"
+  const isComponentsIndexPage = page === "components"
   const isButtonPage = page === "button"
+  const isGovernancePage = page === "governance-map" || page === "ai-rules" || page === "documentation" || page === "checks"
+  const isGettingStartedPage =
+    page === "intro" ||
+    page === "install" ||
+    page === "theme" ||
+    isGovernancePage
   const isTypographyPage = page === "typography"
   const isInputPage = page === "input"
   const isSelectPage = page === "select"
@@ -2293,13 +2739,37 @@ function App() {
   const isChartPage = page === "chart"
   const isTogglePage = page === "toggle"
   const isToggleGroupPage = page === "toggle-group"
+  const isAgentSurfacePage = page === "agent-surface"
+  const isComponentArea =
+    isComponentsIndexPage ||
+    componentIndexSections.some((section) =>
+      section.items.some((item) => getPageFromHash(item.href) === page),
+    )
   const anchors = isTokensPage
     ? tokenAnchors
-    : isIconPage
+    : isTokensColorsPage
+      ? tokenColorsAnchors
+      : isTokensTypographyPage
+        ? tokenTypographyAnchors
+        : isTokensRadiusPage
+          ? tokenRadiusAnchors
+          : isTokensSpacingPage
+            ? tokenSpacingAnchors
+            : isTokensShadowPage
+              ? tokenShadowAnchors
+              : isTokensMotionPage
+                ? tokenMotionAnchors
+                : isTokensLayerPage
+                  ? tokenLayerAnchors
+                  : isIconPage
       ? iconAnchors
-      : isButtonPage
-        ? buttonAnchors
-        : isTypographyPage
+      : isComponentsIndexPage
+        ? componentsIndexAnchors
+      : isGettingStartedPage
+        ? gettingStartedAnchors[page as GettingStartedPage]
+        : isButtonPage
+          ? buttonAnchors
+          : isTypographyPage
           ? typographyAnchors
           : isInputPage
             ? inputAnchors
@@ -2353,10 +2823,14 @@ function App() {
                                                             ? toggleAnchors
                                                             : isToggleGroupPage
                                                               ? toggleGroupAnchors
-                                                              : []
+                                                              : isAgentSurfacePage
+                                                                ? agentSurfaceAnchors
+                                                                : []
   const docKey: DocPage | null = isDocPage(page) ? page : null
   const currentDoc = docKey ? docsByPage[docKey] : null
   const placeholderItem = getNavItemFromHash(activeHash)
+  const footerNav = getFooterNavPair(page)
+  const navActions = <PageStepActions previous={footerNav.previous} next={footerNav.next} lang={lang} />
 
   useEffect(() => {
     const main = mainRef.current
@@ -2364,7 +2838,7 @@ function App() {
 
     const syncActiveAnchor = () => {
       const mainTop = main.getBoundingClientRect().top
-      let nextActive = anchors[0]?.href ?? "#button"
+      let nextActive = anchors[0]?.href ?? "#components"
 
       for (const item of anchors) {
         const target = document.getElementById(item.href.slice(1))
@@ -2373,6 +2847,15 @@ function App() {
         const offset = target.getBoundingClientRect().top - mainTop
         if (offset <= 160) {
           nextActive = item.href
+        }
+      }
+
+      const isScrollable = main.scrollHeight > main.clientHeight + 2
+      const isAtBottom = main.scrollTop + main.clientHeight >= main.scrollHeight - 2
+      if (isScrollable && isAtBottom) {
+        const lastExistingAnchor = [...anchors].reverse().find((item) => document.getElementById(item.href.slice(1)))
+        if (lastExistingAnchor) {
+          nextActive = lastExistingAnchor.href
         }
       }
 
@@ -2391,20 +2874,20 @@ function App() {
 
     const id = activeHash.slice(1)
     const isPageAnchor = anchors.some((item) => item.href === activeHash)
-    if (!id || !isPageAnchor) return
+    if (!id) return
 
     requestAnimationFrame(() => {
       const target = document.getElementById(id)
-      if (!target) return
+      if (!target) {
+        if (!isPageAnchor) {
+          main.scrollTo({ top: 0, behavior: "smooth" })
+          setActiveAnchor(anchors[0]?.href ?? "#components")
+        }
+        return
+      }
 
-      const mainTop = main.getBoundingClientRect().top
-      const targetTop = target.getBoundingClientRect().top
-
-      main.scrollTo({
-        top: main.scrollTop + targetTop - mainTop - 28,
-        behavior: "smooth",
-      })
-      setActiveAnchor(activeHash)
+      scrollTargetIntoMain(target)
+      setActiveAnchor(isPageAnchor ? activeHash : anchors[0]?.href ?? activeHash)
     })
   }, [activeHash, anchors, viewMode])
 
@@ -2413,27 +2896,24 @@ function App() {
     const target = document.getElementById(href.slice(1))
     if (!main || !target) return
 
-    const mainTop = main.getBoundingClientRect().top
-    const targetTop = target.getBoundingClientRect().top
-
     window.history.pushState(null, "", href)
     setActiveHash(href)
     setActiveAnchor(href)
-    main.scrollTo({
-      top: main.scrollTop + targetTop - mainTop - 28,
-      behavior: "smooth",
-    })
+    scrollTargetIntoMain(target)
   }
 
   const pageActions = currentDoc ? (
     <PageActions
       doc={currentDoc}
       lang={lang}
+      navActions={navActions}
       viewMode={viewMode}
       onViewModeChange={setViewMode}
     />
   ) : (
-    <CopyPageAction lang={lang} />
+    <PageActionsShell navActions={navActions}>
+      <CopyPageAction lang={lang} />
+    </PageActionsShell>
   )
 
   return (
@@ -2446,15 +2926,22 @@ function App() {
           </div>
 
           <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
-            {topNav.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className={page === item.page ? "text-foreground" : "text-muted-foreground hover:text-foreground"}
-              >
-                {getLabel(item, lang)}
-              </a>
-            ))}
+            {topNav.map((item) => {
+              const isActive =
+                page === item.page ||
+                (item.page === "components" && isComponentArea) ||
+                (item.page === "governance-map" && isGovernancePage)
+
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className={isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"}
+                >
+                  {getLabel(item, lang)}
+                </a>
+              )
+            })}
           </nav>
 
           <Button
@@ -2490,7 +2977,7 @@ function App() {
                     {section.items.map((item) => {
                       const isActive =
                         item.href === activeHash ||
-                        (activeHash === "#" && item.href === "#button")
+                        (activeHash === "#" && item.href === "#components")
 
                       return (
                         <a
@@ -2524,8 +3011,26 @@ function App() {
                 <MarkdownPage doc={currentDoc} actions={pageActions} lang={lang} />
               ) : isTokensPage ? (
                 <TokensPage actions={pageActions} lang={lang} />
+              ) : isTokensColorsPage ? (
+                <TokensColorsPage actions={pageActions} lang={lang} />
+              ) : isTokensTypographyPage ? (
+                <TokensTypographyPage actions={pageActions} lang={lang} />
+              ) : isTokensRadiusPage ? (
+                <TokensRadiusPage actions={pageActions} lang={lang} />
+              ) : isTokensSpacingPage ? (
+                <TokensSpacingPage actions={pageActions} lang={lang} />
+              ) : isTokensShadowPage ? (
+                <TokensShadowPage actions={pageActions} lang={lang} />
+              ) : isTokensMotionPage ? (
+                <TokensMotionPage actions={pageActions} lang={lang} />
+              ) : isTokensLayerPage ? (
+                <TokensLayerPage actions={pageActions} lang={lang} />
               ) : isIconPage ? (
                 <IconPage actions={pageActions} lang={lang} />
+              ) : isComponentsIndexPage ? (
+                <ComponentsIndexPage actions={pageActions} lang={lang} />
+              ) : isGettingStartedPage ? (
+                <GettingStartedPage actions={pageActions} page={page as GettingStartedPage} lang={lang} />
               ) : isButtonPage ? (
                 <ButtonPage actions={pageActions} lang={lang} />
               ) : isTypographyPage ? (
@@ -2582,6 +3087,8 @@ function App() {
                 <TogglePage actions={pageActions} lang={lang} />
               ) : isToggleGroupPage ? (
                 <ToggleGroupPage actions={pageActions} lang={lang} />
+              ) : isAgentSurfacePage ? (
+                <AgentSurfacePage actions={pageActions} lang={lang} />
               ) : isChartPage ? (
                 <ChartPage actions={pageActions} lang={lang} />
               ) : (
@@ -2610,11 +3117,13 @@ function App() {
 function PageActions({
   doc,
   lang,
+  navActions,
   viewMode,
   onViewModeChange,
 }: {
   doc: (typeof docsByPage)[DocPage]
   lang: Lang
+  navActions: React.ReactNode
   viewMode: ViewMode
   onViewModeChange: (mode: ViewMode) => void
 }) {
@@ -2627,7 +3136,7 @@ function PageActions({
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <PageActionsShell navActions={navActions}>
       <Button variant="secondary" size="sm" onClick={copyCurrentPage}>
         <CopyIcon data-icon="inline-start" />
         {uiText[lang].copyPage}
@@ -2660,6 +3169,53 @@ function PageActions({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+    </PageActionsShell>
+  )
+}
+
+function PageActionsShell({
+  children,
+  navActions,
+}: {
+  children: React.ReactNode
+  navActions: React.ReactNode
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      {children}
+      <div className="mx-1 h-5 w-px bg-border" />
+      {navActions}
+    </div>
+  )
+}
+
+function PageStepActions({
+  lang,
+  next,
+  previous,
+}: {
+  lang: Lang
+  next: (typeof footerNavItems)[number] | null
+  previous: (typeof footerNavItems)[number] | null
+}) {
+  return (
+    <div className="flex items-center gap-2" aria-label={lang === "en" ? "Page navigation" : "页面导航"}>
+      <Button
+        variant="secondary"
+        size="icon-sm"
+        disabled={!previous}
+        render={previous ? <a href={previous.href} aria-label={lang === "en" ? `Previous: ${getLabel(previous, lang)}` : `上一篇：${getLabel(previous, lang)}`} /> : undefined}
+      >
+        <ArrowLeftIcon />
+      </Button>
+      <Button
+        variant="secondary"
+        size="icon-sm"
+        disabled={!next}
+        render={next ? <a href={next.href} aria-label={lang === "en" ? `Next: ${getLabel(next, lang)}` : `下一篇：${getLabel(next, lang)}`} /> : undefined}
+      >
+        <ArrowRightIcon />
+      </Button>
     </div>
   )
 }
@@ -2697,7 +3253,7 @@ function MarkdownPage({
         {actions}
       </div>
 
-      <p className="max-w-3xl text-lg leading-8 text-muted-foreground">
+      <p className={docsSpacing.leadText}>
         {uiText[lang].markdownLead}
       </p>
 
@@ -2733,7 +3289,7 @@ function PlaceholderPage({
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
           <p className="mb-3 text-sm text-muted-foreground">
-            {lang === "en" ? "Placeholder" : "空页面占位"} / {hash || "#button"}
+            {lang === "en" ? "Placeholder" : "空页面占位"} / {hash || "#components"}
           </p>
           <h1 className="text-4xl font-semibold leading-tight">{title}</h1>
         </div>
@@ -2759,6 +3315,1241 @@ function PlaceholderPage({
   )
 }
 
+function GovernanceQuickLinks({
+  currentPage,
+  lang,
+}: {
+  currentPage: GettingStartedPage
+  lang: Lang
+}) {
+  return (
+    <div className="flex flex-wrap gap-2 pt-2">
+      {governanceQuickLinks.map((item) => {
+        const isActive = currentPage === item.page
+
+        return (
+          <a
+            key={item.href}
+            href={item.href}
+            className={
+              isActive
+                ? "rounded-full bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground"
+                : "rounded-full border border-border bg-card px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground"
+            }
+          >
+            {getLabel(item, lang)}
+          </a>
+        )
+      })}
+    </div>
+  )
+}
+
+function LayerCard({ title, desc, emphasis = false }: { title: string; desc: string; emphasis?: boolean }) {
+  return (
+    <div className={`rounded-xl border px-4 py-3 ${emphasis ? "border-primary bg-primary/10" : "border-border bg-card"}`}>
+      <div className="text-sm font-semibold text-foreground">{title}</div>
+      <div className="mt-1 text-xs leading-5 text-muted-foreground">{desc}</div>
+    </div>
+  )
+}
+
+function LayerRow({
+  label,
+  note,
+  children,
+}: {
+  label: string
+  note?: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className="grid gap-3 rounded-2xl border border-border bg-background/70 p-4 md:grid-cols-[120px_minmax(0,1fr)]">
+      <div>
+        <div className="text-sm font-medium text-muted-foreground">{label}</div>
+        {note ? <div className="mt-2 text-xs leading-5 text-muted-foreground">{note}</div> : null}
+      </div>
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">{children}</div>
+    </div>
+  )
+}
+
+function FileRelationRow({ relation }: { relation: FileRelation }) {
+  return (
+    <div className="grid gap-3 rounded-xl border border-border bg-background p-3 xl:grid-cols-[minmax(0,1fr)_132px_minmax(0,1fr)_minmax(0,1.2fr)]">
+      <div>
+        <div className="text-xs font-medium text-muted-foreground">来源文件</div>
+        <code className="mt-1 block break-words rounded-lg bg-muted px-2 py-1.5 text-xs text-foreground">{relation.source}</code>
+      </div>
+      <div className="flex items-center xl:justify-center">
+        <Badge variant={relation.emphasis ? "default" : "secondary"}>{relation.action}</Badge>
+      </div>
+      <div>
+        <div className="text-xs font-medium text-muted-foreground">作用对象</div>
+        <code className="mt-1 block break-words rounded-lg bg-muted px-2 py-1.5 text-xs text-foreground">{relation.target}</code>
+      </div>
+      <div>
+        <div className="text-xs font-medium text-muted-foreground">运行结果</div>
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">{relation.result}</p>
+      </div>
+    </div>
+  )
+}
+
+function StepBadge({ index }: { index: number }) {
+  return <Badge variant="outline">{String(index + 1).padStart(2, "0")}</Badge>
+}
+
+function CountBadge({ children }: { children: React.ReactNode }) {
+  return <Badge variant="outline">{children}</Badge>
+}
+
+function StatusBadge({ status }: { status: string }) {
+  return <Badge variant="outline">{status}</Badge>
+}
+
+function FileRelationMap({ relations }: { relations: FileRelation[] }) {
+  const groups = relations.reduce<Record<string, FileRelation[]>>((acc, relation) => {
+    acc[relation.group] = [...(acc[relation.group] ?? []), relation]
+    return acc
+  }, {})
+
+  return (
+    <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4">
+      <div className="rounded-2xl border border-border bg-background/70 p-4">
+        <div className="text-sm font-medium text-foreground">怎么看这张图</div>
+        <p className="mt-2 text-sm leading-7 text-muted-foreground">
+          这里不表达时间顺序，而是表达文件之间的作用关系：谁被 import、谁被读取、谁负责检查、谁产出页面或分发包。
+        </p>
+      </div>
+      {Object.entries(groups).map(([group, items]) => (
+        <div key={group} className="flex flex-col gap-3">
+          <h3 className="text-base font-semibold text-foreground">{group}</h3>
+          <div className="flex flex-col gap-3">
+            {items.map((relation) => (
+              <FileRelationRow key={`${relation.source}-${relation.action}-${relation.target}`} relation={relation} />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function GraphCockpit({ lang }: { lang: Lang }) {
+  const actionCards = governanceStatus.actionFlows.map((flow) => ({
+    ...flow,
+    title: lang === "en" ? flow.titleEn : flow.title,
+    desc: lang === "en" ? flow.descEn : flow.desc,
+    linkLabel: lang === "en" ? flow.linkLabelEn : flow.linkLabel,
+    done: lang === "en" ? flow.doneEn : flow.done,
+    check: flow.checkCommand,
+    steps: flow.steps.map((step) => ({
+      ...step,
+      action: lang === "en" ? step.actionEn : step.action,
+      note: lang === "en" ? step.noteEn : step.note,
+    })),
+  }))
+  const taskRoutes = governanceStatus.taskRoutes.map((route) => {
+    const flow = governanceStatus.actionFlows.find((item) => item.id === route.flowId)
+
+    return {
+      ...route,
+      label: lang === "en" ? route.labelEn : route.label,
+      firstDecision: lang === "en" ? route.firstDecisionEn : route.firstDecision,
+      flowTitle: flow ? (lang === "en" ? flow.titleEn : flow.title) : route.flowId,
+    }
+  })
+
+  const metricCards = [
+    {
+      label: lang === "en" ? "Files / facts" : "文件节点",
+      value: projectGraphCockpit.nodeCount,
+      desc: lang === "en" ? "This tells you the governed surface is not only src files." : "说明治理范围不只是 src，还包括 docs、scripts、rules、skills、data。",
+    },
+    {
+      label: lang === "en" ? "Reference edges" : "自动引用边",
+      value: projectGraphCockpit.edgeCount,
+      desc: lang === "en" ? "Use this when you need raw file-level references." : "要追真实文件引用时看它，不用靠猜。",
+    },
+    {
+      label: lang === "en" ? "System relations" : "工程关系",
+      value: projectGraphCockpit.relationCount,
+      desc: lang === "en" ? "Use this first when deciding what a change may affect." : "判断改动影响范围时先看它。",
+    },
+    {
+      label: lang === "en" ? "Stale nodes" : "过期节点",
+      value: projectGraphCockpit.staleCount,
+      desc: lang === "en" ? "Zero means the current rule docs have no stale markers." : "为 0 说明当前规则文档没有过期标记。",
+    },
+  ]
+
+  return (
+    <Card className="overflow-hidden">
+      <CardHeader>
+        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+          <div>
+            <CardTitle>{lang === "en" ? "Project Cockpit" : "工程驾驶舱"}</CardTitle>
+            <CardDescription>
+              {lang === "en"
+                ? "A compact view of the generated graph plus curated engineering relations."
+                : "把自动扫描的项目图谱和人工整理的工程关系放在一起看。"}
+            </CardDescription>
+          </div>
+          <Badge variant="outline">project-graph.v0.3</Badge>
+        </div>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-5">
+        <div className="rounded-2xl border border-primary/25 bg-primary/5 p-4">
+          <div className="text-sm font-semibold text-foreground">
+            {lang === "en" ? "What this is useful for" : "这个面板真正用来干嘛"}
+          </div>
+          <p className="mt-2 text-sm leading-7 text-muted-foreground">
+            {lang === "en"
+              ? "The numbers are only evidence. The useful part is choosing the right source file, relation view, and check command before changing code."
+              : "数字只是证据，不是结论。真正有用的是：你要改东西时，它告诉你先看哪份事实表、哪张关系图、最后跑哪个检查。"}
+          </p>
+          <Tabs defaultValue="style" className="mt-4 flex flex-col gap-5">
+            <TabsList className="grid !h-auto w-full grid-cols-1 items-stretch justify-stretch gap-3 bg-transparent p-0 md:grid-cols-2 xl:grid-cols-4">
+              {actionCards.map((action) => (
+                <TabsTrigger
+                  key={action.id}
+                  value={action.id}
+                  className="h-full min-h-24 w-full items-start justify-start whitespace-normal rounded-xl border border-border bg-background px-3 py-3 text-left data-active:border-primary data-active:bg-background"
+                >
+                  <span className="flex min-w-0 flex-col items-start gap-1">
+                    <span className="text-sm font-semibold">{action.title}</span>
+                    <span className="line-clamp-3 whitespace-normal break-words text-xs font-normal leading-5 text-muted-foreground">{action.desc}</span>
+                  </span>
+                </TabsTrigger>
+              ))}
+            </TabsList>
+
+            {actionCards.map((action) => (
+              <TabsContent key={action.id} value={action.id} className="mt-0">
+                <div className="rounded-2xl border border-border bg-background p-4">
+                  <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                    <div>
+                      <div className="text-sm font-semibold text-foreground">{action.title}</div>
+                      <p className="mt-1 text-sm leading-7 text-muted-foreground">{action.desc}</p>
+                    </div>
+                    <a href={action.href} className="text-sm font-medium text-primary hover:underline">
+                      {action.linkLabel}
+                    </a>
+                  </div>
+
+                  <div className="mt-4 grid gap-3 md:grid-cols-4">
+                    {action.steps.map((step, index) => (
+                      <div key={`${action.id}-${step.file}`} className="relative rounded-xl border border-border bg-card p-3">
+                        <StepBadge index={index} />
+                        <div className="mt-3 text-sm font-semibold text-foreground">{step.action}</div>
+                        <code className="mt-2 block break-words rounded bg-muted px-2 py-1.5 text-xs text-foreground">{step.file}</code>
+                        <p className="mt-2 text-xs leading-5 text-muted-foreground">{step.note}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-4 grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]">
+                    <div className="rounded-xl bg-muted p-3">
+                      <div className="text-xs font-medium text-muted-foreground">{lang === "en" ? "Check" : "检查命令"}</div>
+                      <code className="mt-2 block w-fit rounded bg-background px-2 py-1 text-xs text-foreground">{action.check}</code>
+                    </div>
+                    <div className="rounded-xl bg-muted p-3">
+                      <div className="text-xs font-medium text-muted-foreground">{lang === "en" ? "Done means" : "完成标准"}</div>
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground">{action.done}</p>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+            ))}
+          </Tabs>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-background p-4">
+          <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+            <div>
+              <div className="text-sm font-semibold text-foreground">{lang === "en" ? "Task Routing" : "任务路由"}</div>
+              <p className="mt-1 text-sm leading-7 text-muted-foreground">
+                {lang === "en"
+                  ? "When a user or DevInspector request arrives, AI should route it here first, then follow the matching action flow."
+                  : "用户或 DevInspector 任务进来时，AI 先在这里判断走哪条工作流，再按对应行动链路执行。"}
+              </p>
+            </div>
+            <Badge variant="outline">{taskRoutes.length}</Badge>
+          </div>
+
+          <div className="mt-4 grid gap-3 md:grid-cols-2">
+            {taskRoutes.map((route) => (
+              <div key={route.id} className="rounded-xl border border-border bg-card p-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="text-sm font-semibold text-foreground">{route.label}</div>
+                  <Badge variant="outline">{route.flowTitle}</Badge>
+                </div>
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">{route.firstDecision}</p>
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {route.match.slice(0, 6).map((keyword) => (
+                    <code key={keyword} className="rounded bg-muted px-1.5 py-0.5 text-xs text-foreground">{keyword}</code>
+                  ))}
+                </div>
+                <code className="mt-3 block w-fit rounded bg-muted px-1.5 py-0.5 text-xs text-foreground">{route.outputCheck}</code>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <Collapsible>
+          <div className="rounded-2xl border border-border bg-background p-4">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div>
+                <div className="text-sm font-semibold text-foreground">{lang === "en" ? "Evidence Details" : "证据详情"}</div>
+                <p className="mt-1 text-sm leading-7 text-muted-foreground">
+                  {lang === "en"
+                    ? "Open this when you need the graph numbers, relation split, and group evidence behind the cockpit."
+                    : "需要看驾驶舱背后的图谱数字、关系分布和分组证据时再展开。"}
+                </p>
+              </div>
+              <CollapsibleTrigger render={<Button variant="outline" size="sm" />}>
+                {lang === "en" ? "Show evidence" : "展开证据"}
+              </CollapsibleTrigger>
+            </div>
+
+            <CollapsibleContent className="mt-4 flex flex-col gap-4">
+              <div className="grid gap-3 md:grid-cols-4">
+                {metricCards.map((metric) => (
+                  <div key={metric.label} className="rounded-xl border border-border bg-card p-4">
+                    <div className="text-xs font-medium text-muted-foreground">{metric.label}</div>
+                    <div className="mt-2 text-2xl font-semibold text-foreground">{metric.value}</div>
+                    <p className="mt-2 text-xs leading-5 text-muted-foreground">{metric.desc}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+                <div className="rounded-xl border border-border bg-card p-4">
+                  <div className="text-sm font-semibold text-foreground">{lang === "en" ? "Relation Split" : "关系分布"}</div>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                    <div className="rounded-lg bg-muted p-3">
+                      <div className="text-xs text-muted-foreground">{lang === "en" ? "Site relations" : "网站关系"}</div>
+                      <div className="mt-1 text-xl font-semibold">{projectGraphCockpit.siteRelationCount}</div>
+                      <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                        {lang === "en" ? "How this docs site runs and reads data." : "解释这个文档站怎么运行、读数据、渲染页面。"}
+                      </p>
+                    </div>
+                    <div className="rounded-lg bg-muted p-3">
+                      <div className="text-xs text-muted-foreground">{lang === "en" ? "Project relations" : "项目关系"}</div>
+                      <div className="mt-1 text-xl font-semibold">{projectGraphCockpit.projectRelationCount}</div>
+                      <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                        {lang === "en" ? "How fx-ui files support real project delivery." : "解释 fx-ui 工程文件如何支撑真实项目交付。"}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="mt-4 text-sm leading-7 text-muted-foreground">
+                    {lang === "en"
+                      ? "Use generated edges to find raw references; use system relations to understand responsibility and impact."
+                      : "自动边用来找真实引用；工程关系用来看职责和影响。两者合起来，才不会只剩一堆文件名。"}
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-border bg-card p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="text-sm font-semibold text-foreground">{lang === "en" ? "Relation Groups" : "关系分组"}</div>
+                    <CountBadge>{projectGraphCockpit.relationGroupCount}</CountBadge>
+                  </div>
+                  <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                    {projectGraphCockpit.groups.map((group) => (
+                      <div key={`${group.scope}-${group.group}`} className="flex items-center justify-between gap-3 rounded-lg border border-border px-3 py-2">
+                        <div>
+                          <div className="text-sm font-medium text-foreground">{group.group}</div>
+                          <div className="text-xs text-muted-foreground">{group.scope === "site" ? "网站" : "项目"}</div>
+                        </div>
+                        <CountBadge>{group.count}</CountBadge>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </CollapsibleContent>
+          </div>
+        </Collapsible>
+      </CardContent>
+    </Card>
+  )
+}
+
+function FxUiSystemDiagram({ scope }: { scope: "site" | "project" }) {
+  if (scope === "project") {
+    return (
+      <Tabs defaultValue="category" className="flex flex-col gap-4">
+        <TabsList className="w-fit">
+          <TabsTrigger value="category">分类视图</TabsTrigger>
+          <TabsTrigger value="relations">文件关系</TabsTrigger>
+        </TabsList>
+        <TabsContent value="category" className="mt-0">
+          <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4">
+            <LayerRow label="最终产物" note="项目能力最终不是 dist，而是能支撑真实业务页面。">
+              <LayerCard title="真实业务项目页面" desc="后台列表、详情、编辑、设置、报表等完整页面" emphasis />
+            </LayerRow>
+            <LayerRow label="页面模式" note="把常见业务结构沉淀为可复用模式。">
+              <LayerCard title="页面 Blocks / layouts" desc="常见页面骨架和组合模式" />
+              <LayerCard title="src/components/fx" desc="公司组合组件，承接高频业务结构" />
+              <LayerCard title="docs/LAYOUTS.md" desc="业务后台页面布局规范" />
+            </LayerRow>
+            <LayerRow label="基础能力" note="组件、token、规则数据共同支撑页面模式。">
+              <LayerCard title="src/components/ui" desc="shadcn open-code 基础组件" />
+              <LayerCard title="theme/fx-theme.css" desc="公司视觉 token 真相源" />
+              <LayerCard title="docs + docs/data" desc="给人和 AI 共同消费的规范与事实" />
+            </LayerRow>
+            <LayerRow label="工程工具" note="这些不是页面本身，但决定项目怎么被检查、分发和复用。">
+              <LayerCard title="scripts/check-*" desc="契约、token、文档站、组件 manifest 检查" />
+              <LayerCard title=".ai/rules + .agents/skills" desc="AI 工作规则和项目 skill" />
+              <LayerCard title="registry/fx-theme.json" desc="主题分发包" />
+              <LayerCard title="package.json" desc="依赖、脚本和检查命令" />
+            </LayerRow>
+            <LayerRow label="底座" note="本地开发和构建运行的基础。">
+              <LayerCard title="shadcn/ui" desc="基础组件来源" />
+              <LayerCard title="Vite / React / Tailwind" desc="开发、渲染和样式技术栈" />
+              <LayerCard title="dist/" desc="构建产物，不手改" />
+            </LayerRow>
+          </div>
+        </TabsContent>
+        <TabsContent value="relations" className="mt-0">
+          <FileRelationMap relations={systemRelations.project} />
+        </TabsContent>
+      </Tabs>
+    )
+  }
+
+  return (
+    <Tabs defaultValue="category" className="flex flex-col gap-4">
+      <TabsList className="w-fit">
+        <TabsTrigger value="category">分类视图</TabsTrigger>
+        <TabsTrigger value="relations">文件关系</TabsTrigger>
+      </TabsList>
+      <TabsContent value="category" className="mt-0">
+        <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4">
+          <LayerRow label="最终产物">
+            <LayerCard title="fx-ui 文档站页面" desc="开发者查看组件、token、规范和现状的完整网站" emphasis />
+          </LayerRow>
+          <LayerRow label="运行层">
+            <LayerCard title="src/main.tsx" desc="React 应用入口" />
+            <LayerCard title="src/App.tsx" desc="页面路由、导航、示例和现状页渲染" />
+            <LayerCard title="npm run check" desc="交付前质量门禁" />
+          </LayerRow>
+          <LayerRow label="内容层">
+            <LayerCard title="组件体系" desc="src/components/ui + src/components/fx" />
+            <LayerCard title="文档与机器事实" desc="docs/**/*.md + docs/data/*.json" />
+            <LayerCard title="src/reports" desc="报告/简报渲染层" />
+          </LayerRow>
+          <LayerRow label="底座">
+            <LayerCard title="theme/fx-theme.css" desc="公司 token 和 shadcn 语义槽" />
+            <LayerCard title="package.json" desc="依赖、脚本和构建命令" />
+            <LayerCard title="Vite + React + Tailwind" desc="本网站的运行与构建技术栈" />
+          </LayerRow>
+        </div>
+      </TabsContent>
+      <TabsContent value="relations" className="mt-0">
+        <FileRelationMap relations={systemRelations.site} />
+      </TabsContent>
+    </Tabs>
+  )
+}
+
+function GettingStartedPage({
+  actions,
+  page,
+  lang,
+}: {
+  actions: React.ReactNode
+  page: GettingStartedPage
+  lang: Lang
+}) {
+  if (page === "governance-map") {
+    return (
+      <div className={docsSpacing.pageStack}>
+        <section id="governance-map" className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div>
+              <p className="mb-3 text-sm text-muted-foreground">Maintain / Status</p>
+              <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Status" : "现状看板"}</h1>
+            </div>
+            {actions}
+          </div>
+          <p className={docsSpacing.leadText}>
+            {lang === "en"
+              ? "A developer-facing snapshot of fx-ui governance: what is already protected, what is still being structured, and which checks are the current gate."
+              : "给开发者看的仓库现状快照：哪些规则已经被检查保护，哪些还在结构化，当前交付门禁是什么。"}
+          </p>
+          <GovernanceQuickLinks currentPage={page} lang={lang} />
+        </section>
+
+        <section id="governance-map-status" className={docsSpacing.sectionStack}>
+          <div className={docsSpacing.sectionHeader}>
+            <h2 className="text-2xl font-semibold">{lang === "en" ? "Current Status" : "当前状态"}</h2>
+            <p className="text-base leading-8 text-muted-foreground">
+              {lang === "en"
+                ? "Start here when you only want to know whether the project is protected enough to keep changing."
+                : "如果你只是想知道“现在能不能继续改、风险在哪”，先看这里。"}
+            </p>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {governanceStatus.statusCards.map((card) => (
+              <Card key={card.title}>
+                <CardHeader>
+                  <CardDescription>{card.title}</CardDescription>
+                  <CardTitle className="text-2xl">{governanceSnapshot[card.valueKey as keyof typeof governanceSnapshot]}</CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm leading-7 text-muted-foreground">{card.desc}</CardContent>
+              </Card>
+            ))}
+          </div>
+          <GraphCockpit lang={lang} />
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">{governanceStatus.maintenanceModel.title}</CardTitle>
+              <CardDescription>{governanceStatus.maintenanceModel.desc}</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                {governanceStatus.maintenanceModel.layers.map((layer) => (
+                  <div key={layer.source} className="rounded-xl border border-border bg-card p-3">
+                    <div className="text-sm font-semibold text-foreground">{layer.name}</div>
+                    <code className="mt-2 block w-fit rounded bg-muted px-1.5 py-0.5 text-xs text-foreground">{layer.source}</code>
+                    <p className="mt-2 text-xs leading-5 text-muted-foreground">{layer.role}</p>
+                    <p className="mt-2 text-xs leading-5 text-muted-foreground">{layer.update}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-xl bg-muted p-4">
+                <div className="text-sm font-semibold text-foreground">{lang === "en" ? "Change Rules" : "改动规则"}</div>
+                <ul className="mt-3 grid gap-2 text-sm leading-7 text-muted-foreground">
+                  {governanceStatus.maintenanceModel.rules.map((rule) => (
+                    <li key={rule} className="flex gap-2">
+                      <span className="mt-3 size-1.5 shrink-0 rounded-full bg-primary" />
+                      <span>{rule}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+        <section id="governance-map-system" className={docsSpacing.sectionStack}>
+          <div className={docsSpacing.sectionHeader}>
+            <h2 className="text-2xl font-semibold">{lang === "en" ? "System Map" : "工程运行图"}</h2>
+            <p className="text-base leading-8 text-muted-foreground">
+              {lang === "en"
+                ? "Use the category view to see responsibility layers, and the file relation view to see which files import, read, check, constrain, or produce each other."
+                : "分类视图看模块职责；文件关系看真实文件之间如何 import、读取、检查、约束和产出。这里关注工程文件怎么互相作用，不是时间顺序。"}
+            </p>
+          </div>
+          <Tabs defaultValue="site" className="flex flex-col gap-4">
+            <TabsList className="w-fit">
+              <TabsTrigger value="site">网站</TabsTrigger>
+              <TabsTrigger value="project">项目</TabsTrigger>
+            </TabsList>
+            <TabsContent value="site" className="mt-0">
+              <FxUiSystemDiagram scope="site" />
+            </TabsContent>
+            <TabsContent value="project" className="mt-0">
+              <FxUiSystemDiagram scope="project" />
+            </TabsContent>
+          </Tabs>
+        </section>
+
+        <section id="governance-map-freshness" className={docsSpacing.sectionStack}>
+          <div className={docsSpacing.sectionHeader}>
+            <h2 className="text-2xl font-semibold">{lang === "en" ? "Freshness" : "数据新鲜度"}</h2>
+            <p className="text-base leading-8 text-muted-foreground">
+              {lang === "en"
+                ? "The board updates when these source files update."
+                : "这个看板的“实时”来自这些源文件，源文件变了，看板刷新后就变。"}
+            </p>
+          </div>
+          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+            <Table className="min-w-[860px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="pl-4">数据</TableHead>
+                  <TableHead>来源</TableHead>
+                  <TableHead>更新时间</TableHead>
+                  <TableHead className="pr-4">怎么维护</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {governanceStatus.freshness.map((row) => (
+                  <TableRow key={row.source}>
+                    <TableCell className="pl-4 font-medium">{row.name}</TableCell>
+                    <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.source}</code></TableCell>
+                    <TableCell className="text-muted-foreground">{governanceFreshness[row.updatedAtKey as keyof typeof governanceFreshness]}</TableCell>
+                    <TableCell className="pr-4 text-muted-foreground">{row.maintenance}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </section>
+
+        <section id="governance-map-assets" className={docsSpacing.sectionStack}>
+          <div className={docsSpacing.sectionHeader}>
+            <h2 className="text-2xl font-semibold">{lang === "en" ? "Governance Assets" : "规则资产"}</h2>
+            <p className="text-base leading-8 text-muted-foreground">
+              {lang === "en"
+                ? "This table shows which rules already have the full anti-drift loop and which ones still need structure."
+                : "这张表看一眼就知道：哪些规则已经形成防漂闭环，哪些还只是半结构化。"}
+            </p>
+          </div>
+          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+            <Table className="min-w-[900px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="pl-4">{lang === "en" ? "Rule" : "规则"}</TableHead>
+                  <TableHead>{lang === "en" ? "Text Spec" : "文字规范"}</TableHead>
+                  <TableHead>{lang === "en" ? "Machine Data" : "机器事实"}</TableHead>
+                  <TableHead>{lang === "en" ? "Check" : "检查"}</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "Status" : "状态"}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {governanceStatus.assets.map((asset) => (
+                  <TableRow key={asset.rule}>
+                    <TableCell className="pl-4 font-medium">{asset.rule}</TableCell>
+                    <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{asset.textSpec}</code></TableCell>
+                    <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{asset.machineData}</code></TableCell>
+                    <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{asset.check}</code></TableCell>
+                    <TableCell className="pr-4">
+                      <StatusBadge status={asset.status} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </section>
+
+        <section id="governance-map-loop" className={docsSpacing.sectionStack}>
+          <div className={docsSpacing.sectionHeader}>
+            <h2 className="text-2xl font-semibold">{lang === "en" ? "Governance Loop" : "治理闭环"}</h2>
+            <p className="text-base leading-8 text-muted-foreground">
+              {lang === "en"
+                ? "This is the rule model behind the status board."
+                : "这是现状看板背后的规则模型，平时不用先看它。"}
+            </p>
+          </div>
+          <Card>
+            <CardContent className="grid gap-4 p-5 md:grid-cols-4">
+              {governanceStatus.loop.map((item, index) => (
+                <div key={item.file} className="relative rounded-xl border border-border bg-background p-4">
+                  <StepBadge index={index} />
+                  <h3 className="mt-4 text-base font-semibold">{lang === "en" ? item.titleEn : item.title}</h3>
+                  <code className="mt-2 block rounded bg-muted px-2 py-1 text-xs">{item.file}</code>
+                  <p className="mt-3 text-sm leading-7 text-muted-foreground">{lang === "en" ? item.descEn : item.desc}</p>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </section>
+
+        <section id="governance-map-references" className={docsSpacing.sectionStack}>
+          <div className={docsSpacing.sectionHeader}>
+            <h2 className="text-2xl font-semibold">{lang === "en" ? "References" : "参考案例"}</h2>
+            <p className="text-base leading-8 text-muted-foreground">
+              {lang === "en"
+                ? "These are not copied directly. They point to mainstream patterns that match our direction."
+                : "这些不是照搬，而是说明我们的方向和主流做法接近：关系图、检查项、Policy as Code。"}
+            </p>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {governanceStatus.references.map((reference) => (
+              <Card key={reference.title}>
+                <CardHeader>
+                  <CardTitle className="text-base">{reference.title}</CardTitle>
+                  <CardDescription>{reference.desc}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <a className="text-sm font-medium text-primary hover:underline" href={reference.href} target="_blank" rel="noreferrer">
+                    {lang === "en" ? "Open reference" : "查看参考"}
+                  </a>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+      </div>
+    )
+  }
+
+  if (page === "install") {
+    return (
+      <div className={docsSpacing.pageStack}>
+        <section id="install" className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div>
+              <p className="mb-3 text-sm text-muted-foreground">Getting Started / Installation</p>
+              <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Installation" : "安装"}</h1>
+            </div>
+            {actions}
+          </div>
+          <p className={docsSpacing.leadText}>
+            {lang === "en"
+              ? "Start from a shadcn project, add the fx-ui component set, then import the company theme tokens."
+              : "从 shadcn 项目起步，安装 fx-ui 所需基础组件，再接入公司主题 token。"}
+          </p>
+        </section>
+
+        <section id="install-prerequisites" className={docsSpacing.sectionStack}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Prerequisites" : "接入前提"}</h2>
+          <Card>
+            <CardContent className="flex flex-col gap-3 p-5 text-sm leading-7 text-muted-foreground">
+              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>Vite + React + TypeScript。</span></div>
+              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>Tailwind CSS v4，并通过全局 CSS 承载 shadcn 语义变量。</span></div>
+              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>项目已初始化 shadcn；未初始化时先运行：</span></div>
+            </CardContent>
+          </Card>
+          <CopyCodeBlock code={initShadcnCode} label="shadcn" lang={lang} />
+        </section>
+
+        <section id="install-components" className={docsSpacing.sectionStack}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Install Components" : "安装组件"}</h2>
+          <p className="text-base leading-8 text-muted-foreground">
+            {lang === "en"
+              ? "fx-ui uses shadcn open-code components. Add components through the CLI instead of hand-writing base controls."
+              : "fx-ui 使用 shadcn open-code 组件。基础控件通过 CLI 拉取，不手写 Button/Input/Dialog 这类组件。"}
+          </p>
+          <CopyCodeBlock code={installCommandsCode} label="shadcn" lang={lang} />
+        </section>
+
+        <section id="install-theme" className={docsSpacing.sectionStack}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Install Theme" : "接入主题"}</h2>
+          <p className="text-base leading-8 text-muted-foreground">
+            {lang === "en"
+              ? "Use theme/fx-theme.css as the runtime token source. For distribution, publish registry/fx-theme.json as a shadcn registry theme."
+              : "运行时使用 theme/fx-theme.css 作为 token 真相源；对外分发时使用 registry/fx-theme.json 作为 shadcn registry:theme。"}
+          </p>
+          <div className="grid gap-4 md:grid-cols-2">
+            <CopyCodeBlock code={themeSetupCode} label="runtime theme" lang={lang} />
+            <CopyCodeBlock code={themeDistributionCode} label="registry theme" lang={lang} />
+          </div>
+        </section>
+
+        <section id="install-structure" className={docsSpacing.sectionStack}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Structure" : "目录约定"}</h2>
+          <Card>
+            <CardContent className="flex flex-col gap-3 p-5 text-sm leading-7 text-muted-foreground">
+              <p><code>src/components/ui/</code>：shadcn 基础组件，CLI 拉取，open-code 可读可改。</p>
+              <p><code>src/components/fx/</code>：公司组合组件，由 shadcn 组件组合而成。</p>
+              <p><code>theme/fx-theme.css</code>：公司 token 真相源，改它等于全局换肤。</p>
+              <p><code>docs/components/</code>：组件文档资产，给工程师和 AI 共同消费。</p>
+            </CardContent>
+          </Card>
+        </section>
+
+        <section id="install-verify" className={docsSpacing.sectionStack}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Verify" : "启动检查"}</h2>
+          <Card>
+            <CardContent className="flex flex-col gap-3 p-5 text-sm leading-7 text-muted-foreground">
+              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{lang === "en" ? "shadcn components are present in src/components/ui." : "shadcn 组件已经进入 src/components/ui。"}</span></div>
+              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{lang === "en" ? "theme/fx-theme.css is imported once at the app entry." : "theme/fx-theme.css 在应用入口只导入一次。"}</span></div>
+              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{lang === "en" ? "Run npm run check before saying the integration is complete." : "宣告接入完成前运行 npm run check。"}</span></div>
+            </CardContent>
+          </Card>
+        </section>
+      </div>
+    )
+  }
+
+  if (page === "theme") {
+    return (
+      <div className={docsSpacing.pageStack}>
+        <section id="theme" className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div>
+              <p className="mb-3 text-sm text-muted-foreground">Getting Started / Theme Setup</p>
+              <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Theme" : "主题"}</h1>
+            </div>
+            {actions}
+          </div>
+          <p className={docsSpacing.leadText}>
+            {lang === "en"
+              ? "fx-ui does not restyle every component by hand. Company visuals are injected through shadcn semantic tokens."
+              : "fx-ui 不逐个重写组件样式。公司视觉通过 shadcn 语义 token 注入。"}
+          </p>
+        </section>
+
+        <section id="theme-source" className={docsSpacing.sectionStack}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Token Source" : "token 真相源"}</h2>
+          <Card>
+            <CardContent className="grid gap-4 p-5 md:grid-cols-2">
+              <div>
+                <Badge variant="secondary">SSOT</Badge>
+                <h3 className="mt-3 font-medium">theme/fx-theme.css</h3>
+                <p className="mt-2 text-sm leading-7 text-muted-foreground">
+                  {lang === "en" ? "Changing this file changes the whole system." : "改这里等于全局换肤，必须先说明影响范围。"}
+                </p>
+              </div>
+              <CopyCodeBlock code={themeImportCode} label="src/main.tsx" lang={lang} />
+            </CardContent>
+          </Card>
+        </section>
+
+        <section id="theme-slots" className={docsSpacing.sectionStack}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Semantic Slots" : "shadcn 语义槽"}</h2>
+          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+            <Table className="min-w-[720px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="pl-4">Layer</TableHead>
+                  <TableHead>{lang === "en" ? "Example" : "例子"}</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "Purpose" : "用途"}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {[
+                  ["Primitive", "--fx-primary: #FF8000", "公司原始视觉值，只在 token 真相源维护。"],
+                  ["Semantic", "--primary / --background / --ring", "shadcn/ui 和 Tailwind 真正消费的语义槽。"],
+                  ["Component Usage", "Button default -> bg-primary", "组件如何消费 token 的规则。"],
+                ].map(([layer, example, desc]) => (
+                  <TableRow key={layer}>
+                    <TableCell className="pl-4 font-medium">{layer}</TableCell>
+                    <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{example}</code></TableCell>
+                    <TableCell className="pr-4 text-muted-foreground">{desc}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </section>
+
+        <section id="theme-flow" className={docsSpacing.sectionStack}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Change Flow" : "修改流程"}</h2>
+          <Card>
+            <CardContent className="flex flex-col gap-3 p-5 text-sm leading-7 text-muted-foreground">
+              <p>1. {lang === "en" ? "Decide whether this is global theme or local component usage." : "先判断这是全局主题问题，还是局部组件用法问题。"}</p>
+              <p>2. {lang === "en" ? "Global tokens go to theme/fx-theme.css; component docs go to docs/components." : "全局 token 改 theme/fx-theme.css；组件规则改 docs/components。"}</p>
+              <p>3. {lang === "en" ? "Run npm run check to catch token and documentation drift." : "运行 npm run check，拦住 token 和文档漂移。"}</p>
+            </CardContent>
+          </Card>
+        </section>
+      </div>
+    )
+  }
+
+  if (page === "ai-rules") {
+    return (
+      <div className={docsSpacing.pageStack}>
+        <section id="ai-rules" className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div>
+              <p className="mb-3 text-sm text-muted-foreground">Getting Started / AI Integration</p>
+              <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "AI Rules" : "AI 规则"}</h1>
+            </div>
+            {actions}
+          </div>
+          <p className={docsSpacing.leadText}>
+            {lang === "en"
+              ? "These rules keep AI-generated pages aligned with shadcn open-code, company tokens, and executable checks."
+              : "这些规则用来保证 AI 生成页面时对齐 shadcn open-code、公司 token 和可执行检查。"}
+          </p>
+          <GovernanceQuickLinks currentPage={page} lang={lang} />
+        </section>
+
+        <section id="ai-guardrails" className={docsSpacing.sectionStack}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Guardrails" : "行为红线"}</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            {[
+              ["不手写基础组件", "需要新组件时用 npx shadcn@latest add <component> 拉 open-code。"],
+              ["不乱改 token 真相源", "theme/fx-theme.css 是全局换肤入口，修改前说明影响范围。"],
+              ["不发明组件 API", "variant、size、state 必须来自 src/components/ui 源码。"],
+              ["不手改 dist", "所有样式任务都定位源码，dist 只作为构建产物。"],
+            ].map(([title, desc]) => (
+              <Card key={title}>
+                <CardHeader><CardTitle className="text-base">{title}</CardTitle></CardHeader>
+                <CardContent className="text-sm leading-7 text-muted-foreground">{desc}</CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        <section id="ai-style-flow" className={docsSpacing.sectionStack}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Style Flow" : "改样式流程"}</h2>
+          <Card>
+            <CardContent className="flex flex-col gap-3 p-5 text-sm leading-7 text-muted-foreground">
+              <p>1. 从页面选择器或浏览器检查工具定位源码，不手改 dist。</p>
+              <p>2. 判断应该固化到组件样式、token、组合组件，还是局部页面覆盖。</p>
+              <p>3. 修改组件文档或示例时，先读取对应 `src/components/ui/&lt;component&gt;.tsx`。</p>
+              <p>4. 完成后运行 `npm run check`，检查不通过不宣告完成。</p>
+            </CardContent>
+          </Card>
+        </section>
+
+        <section id="ai-checks" className={docsSpacing.sectionStack}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Checks" : "交付检查"}</h2>
+          <CopyCodeBlock code="npm run check" label="check" lang={lang} />
+          <p className="text-base leading-8 text-muted-foreground">
+            {lang === "en"
+              ? "This runs shadcn contract checks, token drift checks, doc-site contract checks, component manifest checks, and the production build."
+              : "这会同时跑 shadcn 契约、token 漂移、文档站契约、组件 manifest 和生产构建。"}
+          </p>
+        </section>
+      </div>
+    )
+  }
+
+  if (page === "documentation") {
+    return (
+      <div className={docsSpacing.pageStack}>
+        <section id="documentation" className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div>
+              <p className="mb-3 text-sm text-muted-foreground">Governance / Documentation</p>
+              <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Documentation" : "文档规范"}</h1>
+            </div>
+            {actions}
+          </div>
+          <p className={docsSpacing.leadText}>
+            {lang === "en"
+              ? "This page explains where information belongs, how to avoid orphan documents, and when text rules need machine checks."
+              : "这页解决一件事：一条信息该写去哪，怎么避免孤岛文档，以及哪些文字规则必须升级成机器检查。"}
+          </p>
+          <GovernanceQuickLinks currentPage={page} lang={lang} />
+        </section>
+
+        <section id="documentation-ssot" className={docsSpacing.sectionStack}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "SSOT Routes" : "SSOT 路由"}</h2>
+          <p className="text-base leading-8 text-muted-foreground">
+            {lang === "en"
+              ? "One kind of information has one truth source. Other files should link to it instead of duplicating it."
+              : "同一类信息只维护一个真相源，其他地方引用它，不复制一份新的。"}
+          </p>
+          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+            <Table className="min-w-[760px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="pl-4">{lang === "en" ? "Question" : "问题"}</TableHead>
+                  <TableHead>{lang === "en" ? "Truth Source" : "真相源"}</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "Use It For" : "使用场景"}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {[
+                  ["AI 怎么行动", "AGENTS.md", "AI 红线、组件改动核对、token 保护规则。"],
+                  ["项目现在到哪", "PROJECT.md / HANDOFF.md", "当前优先级、交接状态、下一步。"],
+                  ["组件事实", "docs/components/*.md + docs/data/components.manifest.json", "组件 API、示例、AI 可消费结构化事实。"],
+                  ["token 取值", "docs/TOKENS.md + docs/data/design-tokens.json", "颜色、排版、圆角、间距等设计令牌。"],
+                  ["文档站骨架", "docs/DOC_SITE_DESIGN.md + docs/data/doc-site.manifest.json", "顶部导航、左侧导航、内容区、右侧目录。"],
+                ].map(([question, source, usage]) => (
+                  <TableRow key={question}>
+                    <TableCell className="pl-4 font-medium">{question}</TableCell>
+                    <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{source}</code></TableCell>
+                    <TableCell className="pr-4 text-muted-foreground">{usage}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </section>
+
+        <section id="documentation-anti-drift" className={docsSpacing.sectionStack}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Anti-Drift Loop" : "防漂三件套"}</h2>
+          <Card>
+            <CardContent className="grid gap-4 p-5 md:grid-cols-3">
+              {[
+                ["文字规范", "docs/*.md", "解释为什么这么做、边界是什么。"],
+                ["机器事实表", "docs/data/*.json", "记录必须存在的结构事实，给脚本读取。"],
+                ["可执行检查", "scripts/check-*.mjs", "把规则接入 npm run check，防止页面和文档漂。"],
+              ].map(([title, file, desc]) => (
+                <div key={title} className="rounded-lg border border-border bg-background p-4">
+                  <Badge variant="secondary">{title}</Badge>
+                  <p className="mt-3 font-medium"><code>{file}</code></p>
+                  <p className="mt-2 text-sm leading-7 text-muted-foreground">{desc}</p>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+          <CopyCodeBlock
+            code={`文字规范 text spec
+  -> 机器事实表 machine manifest
+  -> 可执行检查 executable check`}
+            label="governance loop"
+            lang={lang}
+          />
+        </section>
+
+        <section id="documentation-write-rules" className={docsSpacing.sectionStack}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Write Rules" : "写入规则"}</h2>
+          <Card>
+            <CardContent className="flex flex-col gap-3 p-5 text-sm leading-7 text-muted-foreground">
+              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>新建 <code>docs/*.md</code> 时，必须同时在 <code>docs/DOCUMENTATION.md</code> 的 SSOT 表登记。</span></div>
+              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>改组件文档或示例前，先读对应 <code>src/components/ui/&lt;component&gt;.tsx</code>，不要发明源码没有的 API。</span></div>
+              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>结构事实会被代码消费时，补 <code>docs/data/*.json</code>；会随源码漂移时，再补检查脚本。</span></div>
+              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>不要每次改动都同时更新 PROJECT / HANDOFF / CHANGELOG / DECISIONS，只更新真正被影响的真相源。</span></div>
+            </CardContent>
+          </Card>
+        </section>
+      </div>
+    )
+  }
+
+  if (page === "checks") {
+    return (
+      <div className={docsSpacing.pageStack}>
+        <section id="checks" className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div>
+              <p className="mb-3 text-sm text-muted-foreground">Governance / Checks</p>
+              <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Checks" : "检查命令"}</h1>
+            </div>
+            {actions}
+          </div>
+          <p className={docsSpacing.leadText}>
+            {lang === "en"
+              ? "Use these commands to verify component contracts, token sync, documentation structure, and production build health."
+              : "这里列出一次改动完成前该跑什么检查：组件契约、token 同步、文档站骨架、组件 manifest 和生产构建。"}
+          </p>
+          <GovernanceQuickLinks currentPage={page} lang={lang} />
+        </section>
+
+        <section id="checks-commands" className={docsSpacing.sectionStack}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Commands" : "常用命令"}</h2>
+          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+            <Table className="min-w-[760px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="pl-4">{lang === "en" ? "Command" : "命令"}</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "When To Use" : "什么时候用"}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {[
+                  ["npm run check", "默认交付门禁：组件契约、token、文档站、组件 manifest、构建一起跑。"],
+                  ["npm run check:components", "改了组件文档、组件示例或 docs/data/components.manifest.json 时单独跑。"],
+                  ["npm run check:doc-site", "改了顶部导航、左侧导航、右侧目录、文档站页面骨架时单独跑。"],
+                  ["npm run check:tokens", "改了 theme/fx-theme.css、docs/TOKENS.md 或 design-tokens.json 时单独跑。"],
+                  ["npm run check:all", "交接前的宽检查：额外跑文档路由登记、密钥扫描和交接提醒。"],
+                ].map(([command, usage]) => (
+                  <TableRow key={command}>
+                    <TableCell className="pl-4"><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{command}</code></TableCell>
+                    <TableCell className="pr-4 text-muted-foreground">{usage}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </section>
+
+        <section id="checks-layers" className={docsSpacing.sectionStack}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Check Layers" : "检查分层"}</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            {[
+              ["shadcn 组件契约", "scripts/check-shadcn-contract.mjs", "守住 Button 这类高风险组件的真实 variant、size 和状态。"],
+              ["token 漂移", "scripts/check-tokens-sync.sh", "确认 token 文档、JSON 和主题文件没有互相飘。"],
+              ["文档站骨架", "scripts/check-doc-site-contract.mjs", "确认导航、页面骨架、右侧目录这些结构还存在。"],
+              ["组件 manifest", "scripts/check-components-manifest.mjs", "确认组件文档和机器事实表对得上。"],
+              ["生产构建", "npm run build", "TypeScript 和 Vite 构建必须通过。"],
+              ["交接宽检查", "scripts/check-all.sh", "补跑文档路由登记、密钥扫描和弱提醒。"],
+            ].map(([title, script, desc]) => (
+              <Card key={title}>
+                <CardHeader>
+                  <CardTitle className="text-base">{title}</CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm leading-7 text-muted-foreground">
+                  <p><code>{script}</code></p>
+                  <p className="mt-2">{desc}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        <section id="checks-checklist" className={docsSpacing.sectionStack}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Finish Checklist" : "收尾清单"}</h2>
+          <Card>
+            <CardContent className="flex flex-col gap-3 p-5 text-sm leading-7 text-muted-foreground">
+              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>组件文档变了：读源码，核对 variant / size / 状态，再跑 <code>npm run check:components</code>。</span></div>
+              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>token 或主题变了：同步 token 文档和 JSON，再跑 <code>npm run check:tokens</code>。</span></div>
+              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>文档站导航或页面骨架变了：同步 doc-site manifest，再跑 <code>npm run check:doc-site</code>。</span></div>
+              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>新增文档：先登记 <code>docs/DOCUMENTATION.md</code>，交接前跑 <code>npm run check:all</code>。</span></div>
+              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>宣告完成前默认跑 <code>npm run check</code>，检查不通过就继续修。</span></div>
+            </CardContent>
+          </Card>
+        </section>
+      </div>
+    )
+  }
+
+  return (
+    <div className={docsSpacing.pageStack}>
+      <section id="intro" className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="mb-3 text-sm text-muted-foreground">Getting Started / Overview</p>
+            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Overview" : "概览"}</h1>
+          </div>
+          {actions}
+        </div>
+        <p className={docsSpacing.leadText}>
+          {lang === "en"
+            ? "fx-ui is not a hand-written component library. It is a shadcn open-code system with company tokens, documentation contracts, and AI-readable rules."
+            : "fx-ui 不是手写组件库，而是一套基于 shadcn open-code、公司 token、文档契约和 AI 可读规则的前端生产体系。"}
+        </p>
+      </section>
+
+      <section id="intro-positioning" className={docsSpacing.sectionStack}>
+        <h2 className="text-2xl font-semibold">{lang === "en" ? "Positioning" : "定位"}</h2>
+        <div className="grid gap-4 md:grid-cols-3">
+          {[
+            ["基础组件", "全部来自 shadcn/ui open-code，不做黑盒封装。"],
+            ["公司视觉", "通过 theme/fx-theme.css 注入 token，不逐个组件重写。"],
+            ["AI 治理", "规则进入 Markdown、JSON manifest 和检查脚本，防止漂移。"],
+          ].map(([title, desc]) => (
+            <Card key={title}>
+              <CardHeader><CardTitle className="text-base">{title}</CardTitle></CardHeader>
+              <CardContent className="text-sm leading-7 text-muted-foreground">{desc}</CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      <section id="intro-layers" className={docsSpacing.sectionStack}>
+        <h2 className="text-2xl font-semibold">{lang === "en" ? "Three Layers" : "三层体系"}</h2>
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <Table className="min-w-[760px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">Layer</TableHead>
+                <TableHead>{lang === "en" ? "Directory" : "目录"}</TableHead>
+                <TableHead className="pr-4">{lang === "en" ? "Responsibility" : "职责"}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {[
+                ["基础组件", "src/components/ui", "shadcn/ui open-code 基础控件。"],
+                ["公司组合组件", "src/components/fx", "沉淀 PageHeader、SearchToolbar、ConfirmDangerDialog 等业务组合。"],
+                ["页面 Blocks / 布局规范", "src/blocks + docs/LAYOUTS.md", "从真实页面抽取页面模式和布局规则。"],
+              ].map(([layer, dir, desc]) => (
+                <TableRow key={layer}>
+                  <TableCell className="pl-4 font-medium">{layer}</TableCell>
+                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{dir}</code></TableCell>
+                  <TableCell className="pr-4 text-muted-foreground">{desc}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </section>
+
+      <section id="intro-audience" className={docsSpacing.sectionStack}>
+        <h2 className="text-2xl font-semibold">{lang === "en" ? "Audience" : "适合谁用"}</h2>
+        <Card>
+          <CardContent className="grid gap-3 p-5 text-sm leading-7 text-muted-foreground md:grid-cols-3">
+            <p><span className="font-medium text-foreground">工程师：</span>查组件 API、复制真实用法、确认 token 规则。</p>
+            <p><span className="font-medium text-foreground">设计/产品：</span>查看组件语义、状态、场景和设计令牌。</p>
+            <p><span className="font-medium text-foreground">AI：</span>读取 Markdown + manifest + 检查脚本，生成不漂的页面。</p>
+          </CardContent>
+        </Card>
+      </section>
+    </div>
+  )
+}
+
+function ComponentsIndexPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  const uiSections = componentIndexSections.filter((section) => !["业务组合组件", "Agent UI"].includes(section.title))
+  const fxSections = componentIndexSections.filter((section) => section.title === "业务组合组件")
+  const agentSections = componentIndexSections.filter((section) => section.title === "Agent UI")
+
+  return (
+    <div className={docsSpacing.pageStack}>
+      <section id="components" className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="mb-3 text-sm text-muted-foreground">Components / Index</p>
+            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Components" : "组件"}</h1>
+          </div>
+          {actions}
+        </div>
+        <p className={docsSpacing.leadText}>
+          {lang === "en"
+            ? "Find every component currently available in fx-ui. Base controls come from shadcn open-code; company compositions are listed separately."
+            : "这里可以找到 fx-ui 当前可用的组件。基础控件来自 shadcn open-code，公司组合组件单独列出。"}
+        </p>
+      </section>
+
+      <section id="components-ui" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "UI Components" : "基础组件"}</h2>
+          <p className="text-base leading-8 text-muted-foreground">
+            {lang === "en"
+              ? "Installed shadcn/ui components and local documentation pages."
+              : "已安装并在本站沉淀文档的 shadcn/ui 基础组件。"}
+          </p>
+        </div>
+        <div className="grid gap-x-12 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+          {uiSections.flatMap((section) =>
+            section.items.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="rounded-lg py-1 text-base font-medium text-foreground transition-colors hover:text-primary"
+              >
+                {getLabel(item, lang)}
+              </a>
+            )),
+          )}
+        </div>
+      </section>
+
+      <section id="components-fx" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Compositions" : "业务组合"}</h2>
+          <p className="text-base leading-8 text-muted-foreground">
+            {lang === "en"
+              ? "Company-level patterns composed from shadcn primitives."
+              : "由 shadcn 基础组件组合出来的公司级模式。"}
+          </p>
+        </div>
+        <div className="grid gap-x-12 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+          {fxSections.flatMap((section) =>
+            section.items.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="rounded-lg py-1 text-base font-medium text-foreground transition-colors hover:text-primary"
+              >
+                {getLabel(item, lang)}
+              </a>
+            )),
+          )}
+        </div>
+      </section>
+
+      <section id="components-agent-ui" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">Agent UI</h2>
+          <p className="text-base leading-8 text-muted-foreground">
+            {lang === "en"
+              ? "Controlled generative UI surfaces for Agent responses. Agents send JSON intent; fx-ui renders trusted React components."
+              : "承载 Agent 回复里的受控生成式 UI。Agent 发 JSON 意图，fx-ui 渲染可信 React 组件。"}
+          </p>
+        </div>
+        <div className="grid gap-x-12 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+          {agentSections.flatMap((section) =>
+            section.items.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="rounded-lg py-1 text-base font-medium text-foreground transition-colors hover:text-primary"
+              >
+                {getLabel(item, lang)}
+              </a>
+            )),
+          )}
+        </div>
+      </section>
+    </div>
+  )
+}
+
 function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   const [scenarioFilter, setScenarioFilter] = useState<ButtonScenarioFilter>("all")
   const filteredScenarioExamples = buttonScenarioExamples.filter((example) => {
@@ -2775,7 +4566,7 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           {actions}
         </div>
 
-        <p className="max-w-3xl break-words text-lg leading-8">
+        <p className={docsSpacing.componentLead}>
           {lang === "en" ? "A button starts an immediate action." : "按钮用于开始一个即时操作。"}
         </p>
       </section>
@@ -3019,7 +4810,7 @@ function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           {actions}
         </div>
 
-        <p className="max-w-3xl text-lg leading-8 text-muted-foreground">
+        <p className={docsSpacing.leadText}>
           {lang === "en"
             ? "Tokens are the visual source of truth for fx-ui. Base components come from shadcn/ui and pages start from Blocks, but visual consistency must be expressed through semantic tokens."
             : "Tokens 是 fx-ui 的公司视觉真相。基础组件来自 shadcn/ui，页面从 Blocks 起步，但视觉统一必须通过这些语义 token 实现。"}
@@ -3057,10 +4848,46 @@ function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
 
       <Separator className="my-10" />
 
-      <section id="tokens-colors" className="flex flex-col gap-5">
-        <h2 className="text-2xl font-semibold">{lang === "en" ? "Colors" : "颜色"}</h2>
+      <section className="flex flex-col gap-5">
+        <h2 className="text-2xl font-semibold">{lang === "en" ? "Browse by Category" : "按分类浏览"}</h2>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {[
+            { label: "颜色", labelEn: "Colors", desc: "语义色、色板、中性色", href: "#tokens-colors" },
+            { label: "排版", labelEn: "Typography", desc: "字号、字重、字族", href: "#tokens-typography" },
+            { label: "圆角", labelEn: "Radius", desc: "控件、卡片、浮层圆角", href: "#tokens-radius" },
+            { label: "间距", labelEn: "Spacing", desc: "页面节奏与组件密度", href: "#tokens-spacing" },
+            { label: "阴影", labelEn: "Shadow", desc: "L1/L2/L3 四档投影", href: "#tokens-shadow" },
+            { label: "动效", labelEn: "Motion", desc: "时长、缓动、进出场", href: "#tokens-motion" },
+            { label: "层级", labelEn: "Layer", desc: "z-index 约定", href: "#tokens-layer" },
+          ].map((item) => (
+            <a key={item.href} href={item.href} className="flex flex-col gap-1 rounded-lg border border-border bg-card p-4 hover:border-primary/50 transition-colors">
+              <div className="font-medium">{lang === "en" ? item.labelEn : item.label}</div>
+              <div className="text-sm text-muted-foreground">{item.desc}</div>
+            </a>
+          ))}
+        </div>
+      </section>
+    </>
+  )
+}
 
-        {/* 语义 token 表 */}
+function TokensColorsPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  return (
+    <>
+      <section id="tokens-colors" className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "Design Tokens / Colors" : "设计 Tokens / 颜色"}</p>
+            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Colors" : "颜色"}</h1>
+          </div>
+          {actions}
+        </div>
+      </section>
+
+      <Separator className="my-10" />
+
+      <section id="tokens-colors-semantic" className="flex flex-col gap-5">
+        <h2 className="text-2xl font-semibold">{lang === "en" ? "Semantic Colors" : "语义颜色"}</h2>
         <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
           <Table className="min-w-[720px]">
             <TableHeader>
@@ -3092,10 +4919,13 @@ function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
             </TableBody>
           </Table>
         </div>
+      </section>
 
-        {/* 基础色板 */}
-        <div className="flex flex-col gap-2 pt-2">
-          <h3 className="text-lg font-semibold">{lang === "en" ? "Base Color Palette" : "基础色板"}</h3>
+      <Separator className="my-10" />
+
+      <section id="tokens-colors-palette" className="flex flex-col gap-5">
+        <div className="flex flex-col gap-2">
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Base Color Palette" : "基础色板"}</h2>
           <p className="text-sm text-muted-foreground">
             {lang === "en"
               ? "11 color scales × 11 steps (00–10). Step 06 is the Normal value. Variable: --fx-{scale}-{step}"
@@ -3129,9 +4959,12 @@ function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
             </div>
           ))}
         </div>
+      </section>
 
-        {/* 中性色 */}
-        <h3 className="text-lg font-semibold pt-2">{lang === "en" ? "Neutrals (01–19)" : "中性色（01–19）"}</h3>
+      <Separator className="my-10" />
+
+      <section id="tokens-colors-neutrals" className="flex flex-col gap-5">
+        <h2 className="text-2xl font-semibold">{lang === "en" ? "Neutrals (01–19)" : "中性色（01–19）"}</h2>
         <div className="flex flex-wrap gap-1 rounded-lg border border-border bg-card p-4">
           {neutralsScale.map((hex, i) => (
             <div key={i} className="flex flex-col items-center gap-0.5">
@@ -3144,9 +4977,12 @@ function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
             </div>
           ))}
         </div>
+      </section>
 
-        {/* 特殊色 */}
-        <h3 className="text-lg font-semibold pt-2">{lang === "en" ? "Special" : "特殊色"}</h3>
+      <Separator className="my-10" />
+
+      <section id="tokens-colors-special" className="flex flex-col gap-5">
+        <h2 className="text-2xl font-semibold">{lang === "en" ? "Special" : "特殊色"}</h2>
         <div className="flex flex-wrap gap-3">
           {specialColors.map((c) => (
             <div key={c.name} className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2">
@@ -3159,18 +4995,26 @@ function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           ))}
         </div>
       </section>
+    </>
+  )
+}
 
-      <Separator className="my-10" />
-
-      <section id="tokens-typography" className="flex flex-col gap-5">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-2xl font-semibold">{lang === "en" ? "Typography" : "排版"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
-            {lang === "en"
-              ? "Typography tokens define the basic reading scale for pages, components, and documentation."
-              : "排版 token 定义页面、组件和文档的基础阅读层级。"}
-          </p>
+function TokensTypographyPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  return (
+    <>
+      <section id="tokens-typography" className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "Design Tokens / Typography" : "设计 Tokens / 排版"}</p>
+            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Typography" : "排版"}</h1>
+          </div>
+          {actions}
         </div>
+        <p className="text-base leading-8 text-muted-foreground">
+          {lang === "en"
+            ? "Typography tokens define the basic reading scale for pages, components, and documentation."
+            : "排版 token 定义页面、组件和文档的基础阅读层级。"}
+        </p>
         <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
           <Table className="min-w-[680px]">
             <TableHeader>
@@ -3196,18 +5040,26 @@ function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           </Table>
         </div>
       </section>
+    </>
+  )
+}
 
-      <Separator className="my-10" />
-
-      <section id="tokens-radius" className="flex flex-col gap-5">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-2xl font-semibold">{lang === "en" ? "Radius" : "圆角"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
-            {lang === "en"
-              ? "Radius tokens keep shadcn controls, cards, and overlays visually consistent."
-              : "圆角 token 用来统一 shadcn 控件、卡片和浮层容器的视觉性格。"}
-          </p>
+function TokensRadiusPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  return (
+    <>
+      <section id="tokens-radius" className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "Design Tokens / Radius" : "设计 Tokens / 圆角"}</p>
+            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Radius" : "圆角"}</h1>
+          </div>
+          {actions}
         </div>
+        <p className="text-base leading-8 text-muted-foreground">
+          {lang === "en"
+            ? "Radius tokens keep shadcn controls, cards, and overlays visually consistent."
+            : "圆角 token 用来统一 shadcn 控件、卡片和浮层容器的视觉性格。"}
+        </p>
         <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
           <Table className="min-w-[680px]">
             <TableHeader>
@@ -3233,18 +5085,26 @@ function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           </Table>
         </div>
       </section>
+    </>
+  )
+}
 
-      <Separator className="my-10" />
-
-      <section id="tokens-spacing" className="flex flex-col gap-5">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-2xl font-semibold">{lang === "en" ? "Spacing" : "间距"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
-            {lang === "en"
-              ? "Spacing tokens keep page rhythm, component density, and documentation layout consistent. Prefer Tailwind spacing utilities instead of one-off pixel values."
-              : "间距 token 用来统一页面节奏、组件密度和文档排版。优先使用 Tailwind 间距工具类，不临时手写像素值。"}
-          </p>
+function TokensSpacingPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  return (
+    <>
+      <section id="tokens-spacing" className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "Design Tokens / Spacing" : "设计 Tokens / 间距"}</p>
+            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Spacing" : "间距"}</h1>
+          </div>
+          {actions}
         </div>
+        <p className="text-base leading-8 text-muted-foreground">
+          {lang === "en"
+            ? "Spacing tokens keep page rhythm, component density, and documentation layout consistent. Prefer Tailwind spacing utilities instead of one-off pixel values."
+            : "间距 token 用来统一页面节奏、组件密度和文档排版。优先使用 Tailwind 间距工具类，不临时手写像素值。"}
+        </p>
         <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
           <Table className="min-w-[640px]">
             <TableHeader>
@@ -3270,23 +5130,32 @@ function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           </Table>
         </div>
       </section>
+    </>
+  )
+}
 
-      <Separator className="my-10" />
-
-      <section id="tokens-shadow" className="flex flex-col gap-5">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-2xl font-semibold">{lang === "en" ? "Shadow" : "阴影"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
-            {lang === "en"
-              ? "Shadow tokens describe elevation. Use them sparingly for overlays and interactive surfaces, not as decoration."
-              : "阴影 token 用来表达层级抬升。只在浮层、下拉、可交互表面中谨慎使用，不作为纯装饰。"}
-          </p>
+function TokensShadowPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  return (
+    <>
+      <section id="tokens-shadow" className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "Design Tokens / Shadow" : "设计 Tokens / 阴影"}</p>
+            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Shadow" : "阴影"}</h1>
+          </div>
+          {actions}
         </div>
+        <p className="text-base leading-8 text-muted-foreground">
+          {lang === "en"
+            ? "Shadow tokens map to Figma's Layer Style spec. Four semantic levels cover all overlay use cases. Do not use Tailwind's built-in shadow-sm / shadow-md / shadow-lg — they are not mapped to company tokens."
+            : "阴影 token 来自 Figma「图层样式」规范，四档覆盖所有浮层场景。禁止使用 Tailwind 内置的 shadow-sm / shadow-md / shadow-lg，它们未映射公司 token。"}
+        </p>
         <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[640px]">
+          <Table className="min-w-[720px]">
             <TableHeader>
               <TableRow>
                 <TableHead className="pl-4">Token</TableHead>
+                <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
                 <TableHead>{lang === "en" ? "Preview" : "预览"}</TableHead>
                 <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
               </TableRow>
@@ -3298,7 +5167,10 @@ function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
                     <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
                   </TableCell>
                   <TableCell>
-                    <div className={`h-10 w-24 rounded-lg border border-border bg-card ${row.name}`} />
+                    <code className="text-xs text-muted-foreground">{row.value}</code>
+                  </TableCell>
+                  <TableCell>
+                    <div className={`h-10 w-24 rounded-lg bg-card ${row.name}`} />
                   </TableCell>
                   <TableCell className="pr-4 text-muted-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
                 </TableRow>
@@ -3307,18 +5179,26 @@ function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           </Table>
         </div>
       </section>
+    </>
+  )
+}
 
-      <Separator className="my-10" />
-
-      <section id="tokens-motion" className="flex flex-col gap-5">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-2xl font-semibold">{lang === "en" ? "Motion" : "动效"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
-            {lang === "en"
-              ? "Motion follows the shadcn components already in the project: tw-animate-css utilities, short durations, and data-state driven enter/exit transitions."
-              : "动效沿用项目里 shadcn 组件已经在使用的模式：tw-animate-css 工具类、短时长、以及由 data-state 驱动的进入退出。"}
-          </p>
+function TokensMotionPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  return (
+    <>
+      <section id="tokens-motion" className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "Design Tokens / Motion" : "设计 Tokens / 动效"}</p>
+            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Motion" : "动效"}</h1>
+          </div>
+          {actions}
         </div>
+        <p className="text-base leading-8 text-muted-foreground">
+          {lang === "en"
+            ? "Motion follows the shadcn components already in the project: tw-animate-css utilities, short durations, and data-state driven enter/exit transitions."
+            : "动效沿用项目里 shadcn 组件已经在使用的模式：tw-animate-css 工具类、短时长、以及由 data-state 驱动的进入退出。"}
+        </p>
         <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
           <Table className="min-w-[720px]">
             <TableHeader>
@@ -3340,18 +5220,26 @@ function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           </Table>
         </div>
       </section>
+    </>
+  )
+}
 
-      <Separator className="my-10" />
-
-      <section id="tokens-layer" className="flex flex-col gap-5">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-2xl font-semibold">{lang === "en" ? "Layer" : "层级"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
-            {lang === "en"
-              ? "Layer rules document the z-index scale already used by shadcn overlays. Avoid inventing new z-index values unless a real collision appears."
-              : "层级规则记录 shadcn 浮层已经在用的 z-index 习惯。除非真的出现遮挡冲突，不要临时发明新的 z-index。"}
-          </p>
+function TokensLayerPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  return (
+    <>
+      <section id="tokens-layer" className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "Design Tokens / Layer" : "设计 Tokens / 层级"}</p>
+            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Layer" : "层级"}</h1>
+          </div>
+          {actions}
         </div>
+        <p className="text-base leading-8 text-muted-foreground">
+          {lang === "en"
+            ? "Layer rules document the z-index scale already used by shadcn overlays. Avoid inventing new z-index values unless a real collision appears."
+            : "层级规则记录 shadcn 浮层已经在用的 z-index 习惯。除非真的出现遮挡冲突，不要临时发明新的 z-index。"}
+        </p>
         <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
           <Table className="min-w-[720px]">
             <TableHeader>
@@ -3421,7 +5309,7 @@ function IconPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
           {actions}
         </div>
 
-        <p className="max-w-3xl text-lg leading-8 text-muted-foreground">
+        <p className={docsSpacing.leadText}>
           {lang === "en" ? (
             <>
               fx-ui currently uses <code className="rounded bg-muted px-1.5 py-0.5">lucide-react</code> as the unified icon library.
@@ -3616,7 +5504,7 @@ function TypographyPage({ actions, lang }: { actions: React.ReactNode; lang: Lan
           {actions}
         </div>
 
-        <p className="max-w-3xl text-lg leading-8 text-muted-foreground">
+        <p className={docsSpacing.leadText}>
           fx-ui 的字号、字重、行高全部走 Tailwind 的语义类，不单独定义一套排版组件。
           统一字体是 <code className="rounded bg-muted px-1.5 py-0.5">font-sans</code>（Geist / system sans-serif），
           页面只需要按场景选择合适的字号和颜色组合。
@@ -3707,8 +5595,8 @@ function TypographyPage({ actions, lang }: { actions: React.ReactNode; lang: Lan
 }
 
 function InputPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
-  const inputImportCode = `import { Input } from "@/components/ui/input"\nimport { Label } from "@/components/ui/label"`
-  const inputUsageCode = `<div className="grid gap-2">\n  <Label htmlFor="name">姓名</Label>\n  <Input id="name" placeholder="请输入姓名" />\n</div>`
+  const inputImportCode = `import { Input } from "@/components/ui/input"\nimport { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field"`
+  const inputUsageCode = `<FieldGroup>\n  <Field>\n    <FieldLabel htmlFor="name">姓名</FieldLabel>\n    <Input id="name" placeholder="请输入姓名" />\n    <FieldDescription>请填写真实姓名。</FieldDescription>\n  </Field>\n</FieldGroup>`
 
   return (
     <div className={docsSpacing.pageStack}>
@@ -3719,7 +5607,7 @@ function InputPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
           </div>
           {actions}
         </div>
-        <p className="max-w-3xl break-words text-lg leading-8">
+        <p className={docsSpacing.componentLead}>
           单行文本录入控件，用于表单字段、搜索框、内联编辑等场景。
         </p>
       </section>
@@ -3734,8 +5622,13 @@ function InputPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
         </div>
         <Card>
           <CardContent className="flex flex-col gap-3 p-5">
-            <Label htmlFor="input-overview-demo">姓名</Label>
-            <Input id="input-overview-demo" placeholder="请输入姓名" className="max-w-sm" />
+            <FieldGroup className="max-w-sm">
+              <Field>
+                <FieldLabel htmlFor="input-overview-demo">姓名</FieldLabel>
+                <Input id="input-overview-demo" placeholder="请输入姓名" />
+                <FieldDescription>标准字段由 Field 承载结构，Input 只负责输入控件。</FieldDescription>
+              </Field>
+            </FieldGroup>
           </CardContent>
         </Card>
       </section>
@@ -3767,15 +5660,23 @@ function InputPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
                   <TableCell className="align-top">
                     {example.id === "default" ? (
                       <Input placeholder="请输入姓名" className="max-w-[200px]" />
-                    ) : example.id === "with-label" ? (
-                      <div className="grid w-[200px] gap-2">
-                        <Label htmlFor={`input-demo-${example.id}`}>姓名</Label>
+                    ) : example.id === "field" ? (
+                      <Field className="w-[220px]">
+                        <FieldLabel htmlFor={`input-demo-${example.id}`}>姓名</FieldLabel>
                         <Input id={`input-demo-${example.id}`} placeholder="请输入姓名" />
-                      </div>
+                        <FieldDescription>请填写真实姓名。</FieldDescription>
+                      </Field>
                     ) : example.id === "disabled" ? (
-                      <Input disabled placeholder="不可编辑" className="max-w-[200px]" />
+                      <Field data-disabled className="w-[220px]">
+                        <FieldLabel htmlFor={`input-demo-${example.id}`}>姓名</FieldLabel>
+                        <Input id={`input-demo-${example.id}`} disabled placeholder="不可编辑" />
+                      </Field>
                     ) : (
-                      <Input aria-invalid placeholder="请输入邮箱" className="max-w-[200px]" />
+                      <Field data-invalid className="w-[220px]">
+                        <FieldLabel htmlFor={`input-demo-${example.id}`}>邮箱</FieldLabel>
+                        <Input id={`input-demo-${example.id}`} aria-invalid placeholder="请输入邮箱" />
+                        <FieldError>请输入有效邮箱。</FieldError>
+                      </Field>
                     )}
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
@@ -3974,7 +5875,7 @@ function SelectPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           </div>
           {actions}
         </div>
-        <p className="max-w-3xl break-words text-lg leading-8">
+        <p className={docsSpacing.componentLead}>
           从一组互斥选项中选择一个值，用于表单字段、筛选条件等场景。
         </p>
       </section>
@@ -4213,7 +6114,7 @@ function CheckboxPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
           </div>
           {actions}
         </div>
-        <p className="max-w-3xl break-words text-lg leading-8">
+        <p className={docsSpacing.componentLead}>
           表达单个布尔选项的勾选，常用于条款确认、设置项、列表批量选择。
         </p>
       </section>
@@ -4439,7 +6340,7 @@ function SwitchPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           </div>
           {actions}
         </div>
-        <p className="max-w-3xl break-words text-lg leading-8">
+        <p className={docsSpacing.componentLead}>
           表达立即生效的二元设置项，切换后无需额外提交，常用于偏好设置、功能开关。
         </p>
       </section>
@@ -4644,7 +6545,7 @@ function TextareaPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
           </div>
           {actions}
         </div>
-        <p className="max-w-3xl break-words text-lg leading-8">
+        <p className={docsSpacing.componentLead}>
           录入较长文本，如备注、描述、反馈内容，高度随内容自适应。
         </p>
       </section>
@@ -4828,7 +6729,7 @@ function TablePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
           </div>
           {actions}
         </div>
-        <p className="max-w-3xl break-words text-lg leading-8">
+        <p className={docsSpacing.componentLead}>
           展示结构化的多行数据，常用于订单列表、用户管理、数据看板等场景。
         </p>
       </section>
@@ -5027,7 +6928,7 @@ function CardPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
           </div>
           {actions}
         </div>
-        <p className="max-w-3xl break-words text-lg leading-8">
+        <p className={docsSpacing.componentLead}>
           通用内容容器，用 Header / Content / Footer 等子组件搭出统一的卡片骨架。
         </p>
       </section>
@@ -5223,6 +7124,14 @@ function BadgePreview({ id }: { id: string }) {
     return <Badge variant="outline">+12</Badge>
   }
 
+  if (id === "link") {
+    return (
+      <Badge variant="link" render={<a href="#badge" />}>
+        v1.2.0
+      </Badge>
+    )
+  }
+
   return (
     <Badge variant="secondary">
       <CheckCircleIcon data-icon="inline-start" />
@@ -5244,7 +7153,7 @@ function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
           </div>
           {actions}
         </div>
-        <p className="max-w-3xl break-words text-lg leading-8">
+        <p className={docsSpacing.componentLead}>
           展示简短的状态、计数或分类标记，常用于表格、列表、卡片角标。
         </p>
       </section>
@@ -5253,7 +7162,7 @@ function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-semibold">组件总览</h2>
           <p className="text-base leading-8 text-muted-foreground">
-            Badge 提供 6 种 variant 表达不同语义级别，统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot="badge"</code> 标记，
+            Badge 提供 7 种 variant 表达不同语义级别，统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot="badge"</code> 标记，
             视觉由公司 token 注入。
           </p>
         </div>
@@ -5467,7 +7376,7 @@ function TooltipPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }
           </div>
           {actions}
         </div>
-        <p className="max-w-3xl break-words text-lg leading-8">
+        <p className={docsSpacing.componentLead}>
           鼠标悬浮或聚焦时弹出的简短说明，用于补充说明、可访问性兜底，不承载关键信息。
         </p>
       </section>
@@ -5706,7 +7615,7 @@ function DialogPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           </div>
           {actions}
         </div>
-        <p className="max-w-3xl break-words text-lg leading-8">
+        <p className={docsSpacing.componentLead}>
           以模态浮层承载需要用户聚焦完成的单一任务，如表单录入、操作确认。
         </p>
       </section>
@@ -5941,7 +7850,7 @@ function AlertDialogPage({ actions, lang }: { actions: React.ReactNode; lang: La
           </div>
           {actions}
         </div>
-        <p className="max-w-3xl break-words text-lg leading-8">
+        <p className={docsSpacing.componentLead}>
           强制用户对不可逆或有重大影响的操作做出明确选择，不可通过点击遮罩或 Esc 关闭。
         </p>
       </section>
@@ -6176,7 +8085,7 @@ function SheetPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
           </div>
           {actions}
         </div>
-        <p className="max-w-3xl break-words text-lg leading-8">
+        <p className={docsSpacing.componentLead}>
           从屏幕边缘滑出的浮层面板，用于在不离开当前上下文的情况下查看详情或执行操作。
         </p>
       </section>
@@ -6396,7 +8305,7 @@ function SkeletonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
           </div>
           {actions}
         </div>
-        <p className="max-w-3xl break-words text-lg leading-8">
+        <p className={docsSpacing.componentLead}>
           内容加载完成前展示的占位块，用呼吸动画提示"正在加载"，并提前还原真实内容的大致结构。
         </p>
       </section>
@@ -6608,7 +8517,7 @@ function StandardDocPage({
           </div>
           {actions}
         </div>
-        <p className="max-w-3xl break-words text-lg leading-8">{lead}</p>
+        <p className={docsSpacing.componentLead}>{lead}</p>
       </section>
 
       <section id={`${slug}-overview`} className={docsSpacing.sectionStack}>
@@ -7346,6 +9255,477 @@ function ToggleGroupPage({ actions, lang }: { actions: React.ReactNode; lang: La
   )
 }
 
+function AgentSurfacePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  const sampleSurface: AgentSurfaceSchema = {
+    id: "customer-followup",
+    title: lang === "en" ? "Customer follow-up suggestion" : "客户跟进建议",
+    description:
+      lang === "en"
+        ? "This surface is generated from controlled JSON, then rendered by local fx-ui React components."
+        : "这块界面来自受控 JSON，再由本地 fx-ui React 组件渲染。",
+    blocks: [
+      {
+        type: "text",
+        text:
+          lang === "en"
+            ? "Agent found one customer object and one related file. The following cards are not static HTML."
+            : "Agent 识别到一个客户对象和一个相关文件。下面这些卡片不是静态 HTML。",
+      },
+      {
+        type: "object-card",
+        title: lang === "en" ? "Customer object" : "客户对象",
+        description: lang === "en" ? "Generated from Agent context." : "由 Agent 上下文生成。",
+        fields: [
+          { label: lang === "en" ? "Customer" : "客户", value: lang === "en" ? "Stellar Tech" : "星河科技" },
+          { label: lang === "en" ? "Status" : "状态", value: lang === "en" ? "Needs follow-up" : "待跟进" },
+          { label: lang === "en" ? "Risk" : "风险", value: lang === "en" ? "Contract delay" : "合同延期" },
+          { label: lang === "en" ? "Owner" : "负责人", value: lang === "en" ? "Sales team" : "销售团队" },
+        ],
+        actions: [
+          { label: lang === "en" ? "Generate plan" : "生成跟进计划", event: "generate_followup", payload: { customerId: "cus_001" } },
+          { label: lang === "en" ? "Mark reviewed" : "标记已读", event: "mark_reviewed", variant: "outline" },
+        ],
+      },
+      {
+        type: "file-card",
+        title: lang === "en" ? "Related file" : "相关文件",
+        filename: "采购合同.pdf",
+        meta: "PDF",
+        summary:
+          lang === "en"
+            ? "The Agent can ask the host system to summarize this file, but the button only emits an event."
+            : "Agent 可以请求宿主系统总结这个文件，但按钮本身只发事件。",
+        actions: [
+          { label: lang === "en" ? "Summarize file" : "总结文件", event: "summarize_file", payload: { fileId: "file_001" }, variant: "outline" },
+        ],
+      },
+      {
+        type: "insight-card",
+        title: lang === "en" ? "Prioritize follow-up" : "建议优先跟进",
+        summary:
+          lang === "en"
+            ? "The contract is already delayed, and the last two conversations did not confirm a next step."
+            : "合同已经延期，且最近两次沟通都没有确认下一步。",
+        tone: "warning",
+        evidence:
+          lang === "en"
+            ? ["Contract status: delayed", "Recent conversations: no confirmed next date"]
+            : ["合同状态：延期", "最近沟通：未确认新时间"],
+        actions: [
+          { label: lang === "en" ? "Draft follow-up" : "生成跟进话术", event: "draft_followup", payload: { customerId: "cus_001" }, variant: "outline" },
+        ],
+      },
+      {
+        type: "action-row",
+        actions: [
+          { label: lang === "en" ? "Continue analysis" : "继续分析", event: "continue_analysis" },
+          { label: lang === "en" ? "Cancel" : "取消", event: "cancel", variant: "ghost" },
+        ],
+      },
+    ],
+  }
+  const unsupportedSurface: AgentSurfaceSchema = {
+    id: "unsupported-demo",
+    blocks: [
+      {
+        id: "unknown-1",
+        type: "custom-html-widget",
+      },
+    ],
+  }
+  const [events, setEvents] = useState<AgentSurfaceEvent[]>([])
+  const sampleJson = JSON.stringify(sampleSurface, null, 2)
+  const [mockJson, setMockJson] = useState(sampleJson)
+  let mockSurface: AgentSurfaceSchema | null = null
+  let mockError = ""
+
+  try {
+    const parsed = JSON.parse(mockJson) as Partial<AgentSurfaceSchema>
+
+    if (typeof parsed.id !== "string") {
+      mockError = lang === "en" ? "surface.id must be a string." : "surface.id 必须是字符串。"
+    } else if (!Array.isArray(parsed.blocks)) {
+      mockError = lang === "en" ? "surface.blocks must be an array." : "surface.blocks 必须是数组。"
+    } else {
+      mockSurface = parsed as AgentSurfaceSchema
+    }
+  } catch (error) {
+    mockError = error instanceof Error ? error.message : lang === "en" ? "Invalid JSON." : "JSON 格式不正确。"
+  }
+
+  const handleAction = (event: AgentSurfaceEvent) => {
+    setEvents((current) => [event, ...current].slice(0, 4))
+  }
+
+  return (
+    <div className={docsSpacing.pageStack}>
+      <section id="agent-surface" className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="mb-3 text-sm text-muted-foreground">Compositions / AgentSurface</p>
+            <h1 className="text-4xl font-semibold leading-tight">AgentSurface</h1>
+          </div>
+          {actions}
+        </div>
+        <p className={docsSpacing.leadText}>
+          {lang === "en"
+            ? "A controlled generative UI surface: Agent returns JSON intent, fx-ui renders trusted React components, and user actions become events."
+            : "受控生成式 UI 渲染面：Agent 返回 JSON 意图，fx-ui 渲染可信 React 组件，用户操作变成事件。"}
+        </p>
+      </section>
+
+      <section id="agent-surface-overview" className={docsSpacing.sectionStack}>
+        <h2 className="text-2xl font-semibold">{lang === "en" ? "Overview" : "组件总览"}</h2>
+        <div className="grid gap-4 md:grid-cols-3">
+          {[
+            [lang === "en" ? "Agent sends JSON" : "Agent 发 JSON", lang === "en" ? "Not React, HTML, CSS, or JS." : "不是 React、HTML、CSS 或 JS。"],
+            [lang === "en" ? "Frontend renders React" : "前端渲染 React", lang === "en" ? "Only local fx-ui components are used." : "只使用本地 fx-ui 组件。"],
+            [lang === "en" ? "Actions are events" : "Action 只是事件", lang === "en" ? "Buttons call onAction with event payloads." : "按钮只把事件交给 onAction。"],
+          ].map(([title, desc]) => (
+            <Card key={title}>
+              <CardHeader>
+                <CardTitle className="text-base">{title}</CardTitle>
+                <CardDescription>{desc}</CardDescription>
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      <section id="agent-surface-scenarios" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "High-frequency Scenarios" : "高频场景"}</h2>
+          <p className="text-base leading-8 text-muted-foreground">
+            {lang === "en"
+              ? "Start from what company Agents actually return, then decide which blocks deserve to become stable components."
+              : "先从公司 Agent 真实回复里最高频的内容出发，再决定哪些 block 值得沉淀成稳定组件。"}
+          </p>
+        </div>
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+          <Card>
+            <CardHeader>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="outline">phase-1</Badge>
+                <CardTitle className="text-base">{lang === "en" ? "Implemented blocks" : "已落地能力"}</CardTitle>
+              </div>
+              <CardDescription>
+                {lang === "en"
+                  ? "These are already supported by AgentSurface and can be tested in the mock preview."
+                  : "这些已经进入 AgentSurface 白名单，可以在 Mock 预览里直接测试。"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-3 md:grid-cols-2">
+              {[
+                [
+                  lang === "en" ? "Object information" : "对象信息",
+                  "object-card",
+                  lang === "en" ? "User sees a compact business object summary." : "用户看到一个业务对象摘要。",
+                  lang === "en" ? "Use when the Agent found a customer, order, project, or approval." : "Agent 找到客户、订单、项目、审批单时使用。",
+                ],
+                [
+                  lang === "en" ? "File information" : "文件信息",
+                  "file-card",
+                  lang === "en" ? "User sees the file name, type, summary, and safe actions." : "用户看到文件名、类型、摘要和安全操作。",
+                  lang === "en" ? "Use when the Agent references contracts, reports, attachments, or docs." : "Agent 引用合同、报告、附件或知识库文档时使用。",
+                ],
+                [
+                  lang === "en" ? "Insight / recommendation" : "建议/结论",
+                  "insight-card",
+                  lang === "en" ? "User sees the conclusion first, then evidence and next action." : "用户先看结论，再看依据和下一步。",
+                  lang === "en" ? "Use when the Agent has a judgment, risk hint, or recommendation." : "Agent 给出判断、风险提示或推荐动作时使用。",
+                ],
+                [
+                  lang === "en" ? "Action area" : "操作区",
+                  "action-row",
+                  lang === "en" ? "User chooses the next step; the UI only emits events." : "用户选择下一步；UI 只发事件。",
+                  lang === "en" ? "Use for continue, generate, open details, or cancel." : "用于继续分析、生成、查看详情或取消。",
+                ],
+              ].map(([title, block, userSees, rule]) => (
+                <div key={block} className="flex flex-col gap-3 rounded-xl border border-border bg-background p-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <CardTitle className="text-base">{title}</CardTitle>
+                    <Badge variant="secondary">{block}</Badge>
+                  </div>
+                  <p className="text-sm leading-6 text-foreground">{userSees}</p>
+                  <p className="text-sm leading-6 text-muted-foreground">{rule}</p>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="secondary">phase-2</Badge>
+                <CardTitle className="text-base">{lang === "en" ? "To validate" : "待验证场景"}</CardTitle>
+              </div>
+              <CardDescription>
+                {lang === "en"
+                  ? "These should not become components until real Agent responses repeat the same shape."
+                  : "这些先不要急着做组件，等真实 Agent 回复稳定复用后再沉淀。"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3">
+              {[
+                [lang === "en" ? "Tasks / todos" : "任务/待办", "task-card", lang === "en" ? "Follow-up, approval, missing data, confirmation." : "待跟进、待审批、待补充资料、待确认。"],
+                [lang === "en" ? "Result list" : "多对象列表", "result-list", lang === "en" ? "Multiple customers, files, records, or candidates." : "多个客户、文件、记录或候选项。"],
+                [lang === "en" ? "Risk / warning" : "风险/警告", "risk-card", lang === "en" ? "Missing permission, incomplete data, irreversible action." : "权限不足、数据缺失、高风险操作、不可逆动作。"],
+                [lang === "en" ? "Progress state" : "进度状态", "agent-status", lang === "en" ? "Analyzing, completed, partially failed, waiting." : "正在分析、已完成、部分失败、等待用户选择。"],
+              ].map(([title, block, desc]) => (
+                <div key={block} className="flex items-start justify-between gap-4 rounded-xl border border-border bg-muted/30 p-4">
+                  <div className="flex flex-col gap-1">
+                    <div className="font-medium text-foreground">{title}</div>
+                    <p className="text-sm leading-6 text-muted-foreground">{desc}</p>
+                  </div>
+                  <Badge variant="outline">{block}</Badge>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      <section id="agent-surface-visual" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Visual Direction" : "视觉规范"}</h2>
+          <p className="text-base leading-8 text-muted-foreground">
+            {lang === "en"
+              ? "Agent UI can borrow the lightness of consumer AI cards, but it remains a subsystem of fx-ui."
+              : "Agent UI 可以借鉴 C 端 AI 卡片的轻盈感，但它仍然是 fx-ui 的视觉子系统。"}
+          </p>
+        </div>
+        <Card className="border-primary/30 bg-primary/5">
+          <CardHeader>
+            <CardTitle className="text-base">
+              {lang === "en" ? "Visual principle" : "视觉原则"}
+            </CardTitle>
+            <CardDescription>
+              {lang === "en"
+                ? "Consumer-grade feeling, fx-ui-grade foundation: tokens, shadcn base components, and local trusted React."
+                : "视觉气质参考 C 端，底层能力仍用 fx-ui：token、shadcn 基础组件和本地可信 React。"}
+            </CardDescription>
+          </CardHeader>
+        </Card>
+        <div className="grid gap-4 md:grid-cols-2">
+          {[
+            [
+              lang === "en" ? "Borrow" : "可以借鉴",
+              lang === "en"
+                ? "Light cards, clear hierarchy, concise copy, calmer actions, fewer fields, and more breathing room."
+                : "轻量卡片、清楚层级、短文案、克制操作、更少字段和更有呼吸感的留白。",
+            ],
+            [
+              lang === "en" ? "Avoid" : "不要照搬",
+              lang === "en"
+                ? "Brand skins, decorative gradients, marketing motion, nested cards, or a separate Agent-only component library."
+                : "品牌皮肤、装饰渐变、营销动效、卡片套卡片，或给 Agent 另起一套组件库。",
+            ],
+          ].map(([title, desc]) => (
+            <Card key={title}>
+              <CardHeader>
+                <CardTitle className="text-base">{title}</CardTitle>
+                <CardDescription>{desc}</CardDescription>
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
+        <div className="grid gap-4 md:grid-cols-4">
+          {[
+            [lang === "en" ? "One subject" : "一张卡一件事", lang === "en" ? "Object, file, insight, or action group." : "对象、文件、结论或操作组。"],
+            [lang === "en" ? "Conclusion first" : "先结论", lang === "en" ? "Then evidence, then action." : "再依据，最后行动。"],
+            [lang === "en" ? "One primary" : "一个主操作", lang === "en" ? "At most two secondary actions." : "次操作最多两个。"],
+            [lang === "en" ? "No nested cards" : "不套卡片", lang === "en" ? "Keep one visual level in the chat flow." : "保持对话流里的单一层级。"],
+          ].map(([title, desc]) => (
+            <Card key={title}>
+              <CardHeader>
+                <CardTitle className="text-base">{title}</CardTitle>
+                <CardDescription>{desc}</CardDescription>
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      <section id="agent-surface-playground" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Mock Preview" : "Mock 预览"}</h2>
+          <p className="text-base leading-8 text-muted-foreground">
+            {lang === "en"
+              ? "Paste or edit the Agent JSON on the left. The right side renders the real AgentSurface component."
+              : "在左侧粘贴或编辑 Agent JSON，右侧会用真实 AgentSurface 组件实时渲染。"}
+          </p>
+        </div>
+        <div className="grid gap-4 xl:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <CardTitle className="text-base">{lang === "en" ? "Mock JSON input" : "Mock JSON 输入"}</CardTitle>
+                  <CardDescription>
+                    {lang === "en"
+                      ? "Use the AgentSurfaceSchema shape: id, optional title/description, and blocks."
+                      : "使用 AgentSurfaceSchema 结构：id、可选 title/description，以及 blocks。"}
+                  </CardDescription>
+                </div>
+                <Button type="button" variant="outline" size="sm" onClick={() => setMockJson(sampleJson)}>
+                  {lang === "en" ? "Reset" : "重置示例"}
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Field data-invalid={mockError ? true : undefined}>
+                <FieldLabel htmlFor="agent-surface-mock-json">
+                  {lang === "en" ? "Agent JSON" : "Agent JSON"}
+                </FieldLabel>
+                <Textarea
+                  id="agent-surface-mock-json"
+                  aria-invalid={mockError ? true : undefined}
+                  value={mockJson}
+                  onChange={(event) => setMockJson(event.target.value)}
+                  className="min-h-[420px] resize-y font-mono text-xs leading-5"
+                  spellCheck={false}
+                />
+                {mockError ? (
+                  <FieldError>{mockError}</FieldError>
+                ) : (
+                  <FieldDescription>
+                    {lang === "en"
+                      ? "Unknown block types will render as the safe unsupported state."
+                      : "未知 block type 会渲染成安全兜底态，不会执行未知代码。"}
+                  </FieldDescription>
+                )}
+              </Field>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">{lang === "en" ? "Real component output" : "真实组件输出"}</CardTitle>
+              <CardDescription>
+                {lang === "en"
+                  ? "This is not an image or static HTML. It is the same React component used by AgentSurface."
+                  : "这里不是图片，也不是静态 HTML，而是 AgentSurface 真实 React 组件渲染结果。"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {mockSurface ? (
+                <AgentSurface surface={mockSurface} onAction={handleAction} />
+              ) : (
+                <Card data-slot="agent-surface-playground-error" className="bg-muted/40">
+                  <CardContent className="text-sm text-muted-foreground">
+                    {lang === "en" ? "Fix the JSON input to preview the component." : "修正左侧 JSON 后，这里会显示组件预览。"}
+                  </CardContent>
+                </Card>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      <section id="agent-surface-demo" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Live Example" : "实时示例"}</h2>
+          <p className="text-base leading-8 text-muted-foreground">
+            {lang === "en"
+              ? "Click a button below. The UI does not execute Agent code; it only emits an event."
+              : "点击下面的按钮。UI 不会执行 Agent 代码，只会发出事件。"}
+          </p>
+        </div>
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+          <AgentSurface surface={sampleSurface} onAction={handleAction} />
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">{lang === "en" ? "Event log" : "事件日志"}</CardTitle>
+              <CardDescription>
+                {lang === "en" ? "What the host app receives from AgentSurface." : "宿主应用从 AgentSurface 收到的内容。"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-2">
+              {events.length > 0 ? (
+                events.map((event, index) => (
+                  <code key={`${event.event}-${index}`} className="block rounded bg-muted px-2 py-1.5 text-xs text-foreground">
+                    {JSON.stringify(event)}
+                  </code>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground">{lang === "en" ? "No event yet." : "还没有事件。"}</p>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      <section id="agent-surface-schema" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "JSON Protocol" : "JSON 协议"}</h2>
+          <p className="text-base leading-8 text-muted-foreground">
+            {lang === "en"
+              ? "The first version supports text, object-card, file-card, and action-row."
+              : "第一版支持 text、object-card、file-card 和 action-row。"}
+          </p>
+        </div>
+        <CopyCodeBlock code={sampleJson} label="AgentSurface JSON" lang={lang} />
+      </section>
+
+      <section id="agent-surface-strategy" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Protocol Strategy" : "协议取舍"}</h2>
+          <p className="text-base leading-8 text-muted-foreground">
+            {lang === "en"
+              ? "fx-ui references mature generative UI ideas, but the first phase stays lightweight so real Agent cards can ship first."
+              : "fx-ui 会参考成熟生成式 UI 思路，但第一阶段先保持轻协议，让真实 Agent 卡片先跑起来。"}
+          </p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          {[
+            [
+              lang === "en" ? "Borrow" : "借鉴",
+              lang === "en"
+                ? "A2UI catalog/surface/action ideas, AG-UI event thinking, Vercel-style local React rendering, and MCP-style structured tool results."
+                : "借鉴 A2UI 的 catalog/surface/action、AG-UI 的事件思路、Vercel 的本地 React 渲染、MCP 的结构化工具结果。",
+            ],
+            [
+              lang === "en" ? "Defer" : "暂缓",
+              lang === "en"
+                ? "Do not start with a full cross-client protocol, remote component registry, complex event bus, or long-term compatibility layer."
+                : "暂时不做完整跨端协议、远程组件注册、复杂事件总线和长期兼容层。",
+            ],
+          ].map(([title, desc]) => (
+            <Card key={title}>
+              <CardHeader>
+                <CardTitle className="text-base">{title}</CardTitle>
+                <CardDescription>{desc}</CardDescription>
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
+        <Card className="border-primary/30 bg-primary/5">
+          <CardHeader>
+            <CardTitle className="text-base">
+              {lang === "en" ? "First phase rule" : "第一阶段规则"}
+            </CardTitle>
+            <CardDescription>
+              {lang === "en"
+                ? "Light protocol first, then evaluate heavier protocols when scenarios and clients become stable."
+                : "先做轻协议，后看是否接重协议；等场景稳定、多端复用或必须互通时，再评估 A2UI / AG-UI。"}
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </section>
+
+      <section id="agent-surface-safety" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Safety" : "安全边界"}</h2>
+          <p className="text-base leading-8 text-muted-foreground">
+            {lang === "en"
+              ? "Unknown blocks are shown as unsupported. The renderer does not eval, import, or inject HTML."
+              : "未知 block 会显示为不支持。渲染器不会 eval、动态 import 或注入 HTML。"}
+          </p>
+        </div>
+        <AgentSurface surface={unsupportedSurface} />
+      </section>
+    </div>
+  )
+}
+
 function RightRail({
   activeAnchor,
   anchors,
@@ -7382,9 +9762,6 @@ function RightRail({
                       : "relative flex items-center text-muted-foreground transition-colors hover:text-foreground"
                   }
                 >
-                  {isActive ? (
-                    <span className="absolute -left-[29px] size-1.5 rounded-full bg-primary" />
-                  ) : null}
                   {getLabel(item, lang)}
                 </a>
               )

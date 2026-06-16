@@ -55,12 +55,12 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | 危险 destructive | red | 09 / 08 / 10 / 05 | 01 / 02 / 03 |
 | 成功 success | green | 09 / 08 / 10 / 05 | 01 / 02 / 03 |
 | 警告 warning | amber | 09 / 08 / 10 / 05 | 01 / 02 / 03 |
-| 信息 info | **中性灰 neutrals** | 实心 16/17/18/10 | 浅色 03/04/05（深灰字 16） |
+| 信息 info | blue | 09 / 08 / 10 / 05 | 01 / 02 / 03 |
 
-- 实心：`bg-{success/warning/destructive}`、`-hover`、`-active`、`-disabled`，文字反白
+- 实心：`bg-{success/warning/info/destructive}`、`-hover`、`-active`、`-disabled`，文字反白
 - 浅色：`bg-{...}-light`、`-light-hover`、`-light-active`，文字取该色 09 阶
-- 不再写死十六进制——`--success/--warning` 已归到 `green/amber-09`（原 `#30C776/#FF7C19` 弃用，warning 由撞品牌橙改为琥珀）
-- **info = 中性 Tag（灰）**：信息语义一般不抢色，用中性灰（浅灰底深灰字），从中性轴取阶，和品牌/链接色区分
+- 不再写死十六进制——`--success/--warning/--info` 已归到 `green/amber/blue-09`（原 `#30C776/#FF7C19/#0C6CFF` 弃用，warning 由撞品牌橙改为琥珀）
+- **中性 / 默认标签用 `secondary`（灰）**，不归入状态色：草稿、未开始、归档这类不带情绪的标签，用 secondary（neutrals 03/04/05），不要拿 info 假扮中性
 
 ## 链接色（Link）
 
@@ -69,10 +69,10 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | 态 | 来源 | 用法 |
 |----|------|------|
 | 默认 | `--fx-blue-09` | `text-link` |
-| hover | `--fx-blue-10` | `hover:text-link-hover` |
-| active | `--fx-blue-11` | `active:text-link-active` |
+| hover | `--fx-blue-08` | `hover:text-link-hover` |
+| active | `--fx-blue-10` | `active:text-link-active` |
 
-`Button` / `Badge` 的 `link` 变体、行内超链接都用这套，不再用品牌橙。
+`Button` / `Badge` 的 `link` 变体、行内超链接都用这套，不再用品牌橙。链接、品牌强调文字都走下方「统一交互阶梯」（09/08/10），不单独加深。
 
 ## 文字 / 图标层级
 
@@ -261,7 +261,11 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 任何一个需要交互的颜色（主色、功能色等），都按下面这套固定阶梯派生态，**深浅各一组**，统一从该色的 12 阶色板取阶，不手挑十六进制：
 
-### 实心组（按钮、实心标签等）
+> ⚠️ **当前阶梯仅适用浅色模式**。深色模式以后另定（hover/active 的明暗方向会反），不要把这套直接套用到 dark。
+
+### 实心 / 彩色文字组（以 09 为默认）
+
+适用：主色实心、状态色实心、**链接文字、品牌强调文字**——全部一套，不单独加深。
 
 | 态 | 取阶 | 规律 |
 |------|------|------|

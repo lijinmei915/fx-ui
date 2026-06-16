@@ -301,9 +301,9 @@
   --fx-success-light:        var(--fx-green-01);
   --fx-success-light-hover:  var(--fx-green-02);
   --fx-success-light-active: var(--fx-green-03);
-  --fx-info-light:           var(--fx-neutrals-03);
-  --fx-info-light-hover:     var(--fx-neutrals-04);
-  --fx-info-light-active:    var(--fx-neutrals-05);
+  --fx-info-light:           var(--fx-blue-01);
+  --fx-info-light-hover:     var(--fx-blue-02);
+  --fx-info-light-active:    var(--fx-blue-03);
   --fx-warning-light:        var(--fx-amber-01);
   --fx-warning-light-hover:  var(--fx-amber-02);
   --fx-warning-light-active: var(--fx-amber-03);
@@ -361,10 +361,10 @@
   --destructive-light-hover: var(--fx-danger-light-hover);
   --destructive-light-active: var(--fx-danger-light-active);
 
-  /* 链接色（蓝）：默认 09 / hover 10 / active 11，文字态 */
+  /* 链接色（蓝）：统一交互阶梯 默认 09 / hover 08 / active 10（浅色模式） */
   --link: var(--fx-blue-09);
-  --link-hover: var(--fx-blue-10);
-  --link-active: var(--fx-blue-11);
+  --link-hover: var(--fx-blue-08);
+  --link-active: var(--fx-blue-10);
 
   --border: #DEE1E8;
   --input: #C1C5CE;
@@ -381,11 +381,11 @@
   --warning-active: var(--fx-amber-10);
   --warning-disabled: var(--fx-amber-05);
   --warning-foreground: #FFFFFF;
-  /* info = 中性 Tag（灰）：实心走中性轴深阶，浅色走浅阶 */
-  --info: var(--fx-neutrals-16);
-  --info-hover: var(--fx-neutrals-17);
-  --info-active: var(--fx-neutrals-18);
-  --info-disabled: var(--fx-neutrals-10);
+
+  --info: var(--fx-blue-09);
+  --info-hover: var(--fx-blue-08);
+  --info-active: var(--fx-blue-10);
+  --info-disabled: var(--fx-blue-05);
   --info-foreground: var(--fx-neutrals-01);
 
   /* 字体 */

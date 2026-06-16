@@ -1351,19 +1351,19 @@
     },
     {
       "name": "--fx-info-light",
-      "value": "var(--fx-neutrals-03)",
+      "value": "var(--fx-blue-01)",
       "category": "palette",
       "usage": ""
     },
     {
       "name": "--fx-info-light-hover",
-      "value": "var(--fx-neutrals-04)",
+      "value": "var(--fx-blue-02)",
       "category": "palette",
       "usage": ""
     },
     {
       "name": "--fx-info-light-active",
-      "value": "var(--fx-neutrals-05)",
+      "value": "var(--fx-blue-03)",
       "category": "palette",
       "usage": ""
     },
@@ -1623,13 +1623,13 @@
     },
     {
       "name": "--link-hover",
-      "value": "var(--fx-blue-10)",
+      "value": "var(--fx-blue-08)",
       "category": "shadcn-semantic",
       "usage": ""
     },
     {
       "name": "--link-active",
-      "value": "var(--fx-blue-11)",
+      "value": "var(--fx-blue-10)",
       "category": "shadcn-semantic",
       "usage": ""
     },
@@ -1713,25 +1713,25 @@
     },
     {
       "name": "--info",
-      "value": "var(--fx-neutrals-16)",
+      "value": "var(--fx-blue-09)",
       "category": "status",
       "usage": "信息状态"
     },
     {
       "name": "--info-hover",
-      "value": "var(--fx-neutrals-17)",
+      "value": "var(--fx-blue-08)",
       "category": "shadcn-semantic",
       "usage": ""
     },
     {
       "name": "--info-active",
-      "value": "var(--fx-neutrals-18)",
+      "value": "var(--fx-blue-10)",
       "category": "shadcn-semantic",
       "usage": ""
     },
     {
       "name": "--info-disabled",
-      "value": "var(--fx-neutrals-10)",
+      "value": "var(--fx-blue-05)",
       "category": "shadcn-semantic",
       "usage": ""
     },
@@ -2119,5 +2119,69 @@
   "checks": [
     "npm run check:tokens",
     "npm run check"
-  ]
+  ],
+  "interactionLadder": {
+    "mode": "light",
+    "note": "仅浅色模式。以 09 为默认的可交互色统一取阶；深色模式以后另定。文字规范见 docs/TOKENS.md 交互色状态阶梯，决策见 DEC-005。",
+    "solid": {
+      "default": "09",
+      "hover": "08",
+      "active": "10",
+      "disabled": "05"
+    },
+    "soft": {
+      "default": "01",
+      "hover": "02",
+      "active": "03"
+    },
+    "colors": [
+      {
+        "name": "primary",
+        "scale": "brand",
+        "default": "--primary",
+        "hover": "--fx-primary-hover",
+        "active": "--fx-primary-active",
+        "disabled": "--fx-primary-disabled"
+      },
+      {
+        "name": "success",
+        "scale": "green",
+        "default": "--success",
+        "hover": "--success-hover",
+        "active": "--success-active",
+        "disabled": "--success-disabled"
+      },
+      {
+        "name": "warning",
+        "scale": "amber",
+        "default": "--warning",
+        "hover": "--warning-hover",
+        "active": "--warning-active",
+        "disabled": "--warning-disabled"
+      },
+      {
+        "name": "destructive",
+        "scale": "red",
+        "default": "--destructive",
+        "hover": "--destructive-hover",
+        "active": "--destructive-active",
+        "disabled": "--destructive-disabled"
+      },
+      {
+        "name": "info",
+        "scale": "blue",
+        "default": "--info",
+        "hover": "--info-hover",
+        "active": "--info-active",
+        "disabled": "--info-disabled"
+      },
+      {
+        "name": "link",
+        "scale": "blue",
+        "default": "--link",
+        "hover": "--link-hover",
+        "active": "--link-active"
+      }
+    ]
+  }
 }

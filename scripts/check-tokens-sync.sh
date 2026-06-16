@@ -144,6 +144,30 @@ if (!Array.isArray(componentUsage) || componentUsage.length === 0) {
   }
 }
 
+// 交互色状态阶梯校验：hover/active/disabled 必须按 interactionLadder 取阶
+const ladder = manifest.interactionLadder
+if (ladder) {
+  const steps = ladder.solid
+  for (const c of ladder.colors ?? []) {
+    const checks = [
+      ["default", c.default, steps.default],
+      ["hover", c.hover, steps.hover],
+      ["active", c.active, steps.active],
+      ["disabled", c.disabled, steps.disabled],
+    ]
+    for (const [state, tokenName, step] of checks) {
+      if (!tokenName) continue
+      const expected = `var(--fx-${c.scale}-${step})`
+      const actual = cssVars.get(tokenName)
+      if (actual === undefined) {
+        errors.push(`interactionLadder: ${c.name}.${state} 的 token ${tokenName} 在 CSS 中不存在。`)
+      } else if (normalize(actual) !== expected) {
+        errors.push(`interactionLadder: ${c.name}.${state} 应为 ${expected}（${step}阶），实际 ${tokenName}=${actual}`)
+      }
+    }
+  }
+}
+
 if (errors.length > 0) {
   console.error("")
   console.error(`Result: docs/data/design-tokens.json 发现 ${errors.length} 处漂移：`)

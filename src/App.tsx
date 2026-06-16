@@ -2321,7 +2321,7 @@ const semanticTokenGroups = [
   },
   {
     role: "text",
-    label: "文字色", labelEn: "Text",
+    label: "文字色 · 中性层级", labelEn: "Text · Neutral hierarchy",
     desc: "文字与图标共用同一套四级层级（主/次/占位/禁用），全部取自中性轴；外加反色文字",
     descEn: "Text and icons share one four-level hierarchy (primary / secondary / placeholder / disabled), all from the neutral axis, plus reversed text.",
     tokens: [
@@ -2330,7 +2330,20 @@ const semanticTokenGroups = [
       { name: "muted-foreground",    value: "", sourceToken: "--fx-neutrals-11",  tailwind: "text-muted-foreground",     usage: "③ 弱信息/caption — 描述、辅助说明、次要图标",  usageEn: "③ Low-emphasis / caption — descriptions, helper text, muted icons" },
       { name: "foreground-disabled", value: "", sourceToken: "--fx-neutrals-07",  tailwind: "text-foreground-disabled",  usage: "④ 占位 + 禁用 — 表单 placeholder、禁用文字与图标（≈25%）", usageEn: "④ Placeholder + disabled — form placeholder, disabled text/icons (≈25%)" },
       { name: "primary-foreground",  value: "", sourceToken: "--fx-neutrals-01",  tailwind: "text-primary-foreground",   usage: "反色文字 — 主色按钮、品牌背景上的文字图标",  usageEn: "Reversed text — on primary / brand-color backgrounds" },
-      { name: "link",                value: "", sourceToken: "--fx-blue-09",       tailwind: "text-link",                 usage: "链接 — 超链接、link 变体（hover blue-10 / active blue-11）", usageEn: "Link — hyperlinks, link variants (hover blue-10 / active blue-11)" },
+    ],
+  },
+  {
+    role: "text-colored",
+    label: "文字色 · 彩色（品牌 / 链接）", labelEn: "Text · Colored (brand / link)",
+    desc: "彩色交互文字：品牌色（橙）用于强调，链接色（蓝）用于超链接。统一交互阶梯 09 / hover 08 / active 10（浅色模式）。",
+    descEn: "Colored interactive text: brand (orange) for emphasis, link (blue) for hyperlinks. Unified ladder 09 / hover 08 / active 10 (light mode).",
+    tokens: [
+      { name: "text-brand",        value: "", sourceToken: "--fx-brand-09", tailwind: "text-primary",                    usage: "品牌色文字 — 默认（强调、品牌色链接）", usageEn: "Brand text — default (emphasis, brand link)" },
+      { name: "text-brand-hover",  value: "", sourceToken: "--fx-brand-08", tailwind: "hover:text-[var(--fx-brand-08)]", usage: "品牌色文字 — 悬浮", usageEn: "Brand text — hover" },
+      { name: "text-brand-active", value: "", sourceToken: "--fx-brand-10", tailwind: "active:text-[var(--fx-brand-10)]", usage: "品牌色文字 — 激活 / 按下", usageEn: "Brand text — active / pressed" },
+      { name: "link",              value: "", sourceToken: "--fx-blue-09",  tailwind: "text-link",                       usage: "链接 — 默认（超链接、Button/Badge link 变体）", usageEn: "Link — default (hyperlinks, link variants)" },
+      { name: "link-hover",        value: "", sourceToken: "--fx-blue-08",  tailwind: "hover:text-link-hover",           usage: "链接 — 悬浮", usageEn: "Link — hover" },
+      { name: "link-active",       value: "", sourceToken: "--fx-blue-10",  tailwind: "active:text-link-active",         usage: "链接 — 激活 / 按下", usageEn: "Link — active / pressed" },
     ],
   },
   {
@@ -2380,17 +2393,17 @@ const semanticTokenGroups = [
   },
   {
     role: "status-info",
-    label: "状态色 · 信息（中性）", labelEn: "Status · Info (neutral)",
-    desc: "信息语义用中性灰 Tag（浅灰底深灰字），与品牌/链接色区分；走中性轴。",
-    descEn: "Info uses a neutral gray tag (light gray bg, dark gray text), distinct from brand/link colors; from the neutral axis.",
+    label: "状态色 · 信息", labelEn: "Status · Info",
+    desc: "信息语义（蓝）。Solid 取 09，浅色组取 01/02/03。（中性/默认标签请用 secondary，不用 info）",
+    descEn: "Info semantics (blue). Solid = 09, light = 01/02/03. (For neutral/default tags use secondary, not info.)",
     tokens: [
-      { name: "info",              value: "", sourceToken: "--fx-neutrals-16", tailwind: "bg-info",              usage: "实心默认 — 中性信息块", usageEn: "Solid default — neutral info block" },
-      { name: "info-hover",        value: "", sourceToken: "--fx-neutrals-17", tailwind: "bg-info-hover",        usage: "实心悬浮", usageEn: "Solid hover" },
-      { name: "info-active",       value: "", sourceToken: "--fx-neutrals-18", tailwind: "bg-info-active",       usage: "实心激活 / 按下", usageEn: "Solid active / pressed" },
-      { name: "info-disabled",     value: "", sourceToken: "--fx-neutrals-10", tailwind: "bg-info-disabled",     usage: "实心禁用", usageEn: "Solid disabled" },
-      { name: "info-light",        value: "", sourceToken: "--fx-neutrals-03", tailwind: "bg-info-light",        usage: "浅色默认 — 信息 Tag / Alert 背景（浅灰底深灰字）", usageEn: "Light default — info tag / alert bg" },
-      { name: "info-light-hover",  value: "", sourceToken: "--fx-neutrals-04", tailwind: "bg-info-light-hover",  usage: "浅色悬浮", usageEn: "Light hover" },
-      { name: "info-light-active", value: "", sourceToken: "--fx-neutrals-05", tailwind: "bg-info-light-active", usage: "浅色激活 / 按下", usageEn: "Light active / pressed" },
+      { name: "info",              value: "", sourceToken: "--fx-blue-09", tailwind: "bg-info",              usage: "实心默认 — 信息状态", usageEn: "Solid default — info state" },
+      { name: "info-hover",        value: "", sourceToken: "--fx-blue-08", tailwind: "bg-info-hover",        usage: "实心悬浮", usageEn: "Solid hover" },
+      { name: "info-active",       value: "", sourceToken: "--fx-blue-10", tailwind: "bg-info-active",       usage: "实心激活 / 按下", usageEn: "Solid active / pressed" },
+      { name: "info-disabled",     value: "", sourceToken: "--fx-blue-05", tailwind: "bg-info-disabled",     usage: "实心禁用", usageEn: "Solid disabled" },
+      { name: "info-light",        value: "", sourceToken: "--fx-blue-01", tailwind: "bg-info-light",        usage: "浅色默认 — 信息 Tag / Alert 背景", usageEn: "Light default — info tag / alert bg" },
+      { name: "info-light-hover",  value: "", sourceToken: "--fx-blue-02", tailwind: "bg-info-light-hover",  usage: "浅色悬浮", usageEn: "Light hover" },
+      { name: "info-light-active", value: "", sourceToken: "--fx-blue-03", tailwind: "bg-info-light-active", usage: "浅色激活 / 按下", usageEn: "Light active / pressed" },
     ],
   },
   {
@@ -5323,21 +5336,12 @@ function getTokenExample(name: string): React.ReactNode {
     </span>
   )
 
-  // info = 中性 Tag（灰）：实心走中性轴深阶白字，浅色走浅阶深灰字
-  if (/^info(-light)?(-hover|-active|-disabled)?$/.test(name)) {
-    if (!name.includes("-light")) {
-      const step = name.endsWith("-hover") ? "17" : name.endsWith("-active") ? "18" : name.endsWith("-disabled") ? "10" : "16"
-      return btn({ backgroundColor: `var(--fx-neutrals-${step})`, color: "var(--fx-neutrals-01)" }, "信息")
-    }
-    const step = name.endsWith("-active") ? "05" : name.endsWith("-hover") ? "04" : "03"
-    return btn({ backgroundColor: `var(--fx-neutrals-${step})`, color: "var(--fx-neutrals-16)", border: "1px solid var(--fx-neutrals-05)" }, "信息")
-  }
-
   // 状态色统一示例：solid（实心白字）+ 浅色 默认/hover/active（浅底彩字）
   const statusMap: Record<string, { scale: string; label: string }> = {
     destructive: { scale: "red", label: "删除" },
     success: { scale: "green", label: "成功" },
     warning: { scale: "amber", label: "警告" },
+    info: { scale: "blue", label: "信息" },
   }
   const statusBase = name.replace(/-(light(-hover|-active)?|hover|active|disabled)$/, "")
   if (statusMap[statusBase]) {
@@ -5373,7 +5377,12 @@ function getTokenExample(name: string): React.ReactNode {
         按钮文字 <StarIcon className="size-3.5" />
       </span>
     )
+    case "text-brand":        return <span className="text-xs font-medium" style={{ color: "var(--fx-brand-09)" }}>品牌强调 Aa</span>
+    case "text-brand-hover":  return <span className="text-xs font-medium" style={{ color: "var(--fx-brand-08)" }}>品牌强调 Aa</span>
+    case "text-brand-active": return <span className="text-xs font-medium" style={{ color: "var(--fx-brand-10)" }}>品牌强调 Aa</span>
     case "link":              return <a className="text-xs underline underline-offset-4" style={{ color: "var(--fx-blue-09)" }}>查看详情</a>
+    case "link-hover":        return <a className="text-xs underline underline-offset-4" style={{ color: "var(--fx-blue-08)" }}>查看详情</a>
+    case "link-active":       return <a className="text-xs underline underline-offset-4" style={{ color: "var(--fx-blue-10)" }}>查看详情</a>
     case "icon":              return <StarIcon className="size-4" style={{ color: "var(--fx-neutrals-20)" }} />
     case "icon-muted":        return <StarIcon className="size-4" style={{ color: "var(--fx-neutrals-11)" }} />
     case "background":        return <span className="inline-flex h-5 w-12 rounded border border-border" style={{ backgroundColor: "var(--fx-neutrals-02)" }} />

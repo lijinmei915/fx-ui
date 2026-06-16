@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-06-07
+last_verified: 2026-06-16
 depends_on: [docs/DOCUMENTATION.md]
 teaches: "fx-ui 文档 frontmatter 元数据的字段定义和合法取值，避免字段值越写越乱"
 use_when: "给新文档加 frontmatter、或检查已有文档的元数据是否规范时"
@@ -33,7 +33,7 @@ use_when: "给新文档加 frontmatter、或检查已有文档的元数据是否
 ---
 layer: knowledge        # 架构归属层（必填）
 type: spec              # 文档类型（必填）
-last_verified: 2026-06-07   # 最后人工核实日期 ISO（必填）
+last_verified: 2026-06-16
 depends_on: [AGENTS.md, docs/DOCUMENTATION.md]  # 声明式依赖（可选，无则省略）
 teaches: "项目的技术栈选型与运行环境约定"  # 语义摘要：这个文件教会 AI 什么（可选）
 use_when: "AI 需要了解项目用了什么框架、怎么启动时"  # 语义触发：什么场景下该查这个文件（可选）
@@ -63,9 +63,13 @@ use_when: "AI 需要了解项目用了什么框架、怎么启动时"  # 语义�
 
 > ⚠️ 自查发现：`docs/ARCHITECTURE.md` 之前写的是 `type: architecture`，不在合法枚举里——已改正为 `type: spec`（架构说明本质是"定义规则和边界"，归 spec 类）。
 
-### last_verified — 最后人工核实日期
+### last_verified — 最后内容变更日期（自动维护）
 
-ISO 日期（`YYYY-MM-DD`）。每次人工确认该文档内容仍准确时更新。这是给 AI/人快速判断"这份信息是不是过时了"的标记，没有自动化工具检测前，靠人手动维护。
+ISO 日期（`YYYY-MM-DD`），语义是**该文档最后一次内容变更的日期**。
+
+**自动更新**：`scripts/bump-doc-dates.sh` 在 pre-commit 里，把本次提交中有内容变更的文档（`docs/*.md` + `AGENTS.md` / `PROJECT.md` / `PRODUCT.md`）的 `last_verified` 自动 bump 到当天并重新入暂存。**不需要手动填**——改了内容、提交时日期就跟着到当天。
+
+`scripts/check-doc-freshness.sh` 是兜底：万一绕过 hook（`--no-verify`）或手改导致日期落后，会在 `check-all` 里弱提醒。
 
 ### depends_on — 声明式依赖
 

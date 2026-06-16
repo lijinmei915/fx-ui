@@ -8,6 +8,9 @@ set -euo pipefail
 root="$(git rev-parse --show-toplevel)"
 cd "$root"
 
+# 内容有变更的文档自动 bump last_verified 到当天，并重新入暂存
+bash scripts/bump-doc-dates.sh
+
 echo "🔍 提交前检查（npm run check:all）..."
 if ! npm run check:all; then
   echo ""

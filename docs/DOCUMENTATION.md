@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-06-07
+last_verified: 2026-06-16
 teaches: "fx-ui 的文档分工边界、SSOT 规则——一条信息该写进哪个文件"
 use_when: "不确定一条新信息该记录到哪份文档时，先查这里的 SSOT 表和判断示例"
 ---
@@ -142,7 +142,7 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 ---
 layer: knowledge | governance
 type: spec | status | log | architecture
-last_verified: YYYY-MM-DD
+last_verified: 2026-06-16
 teaches: "这份文档回答什么问题"
 use_when: "什么场景下应该先查这份文档"
 ---

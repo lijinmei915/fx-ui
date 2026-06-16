@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-06
+last_verified: 2026-06-16
 teaches: "公司设计 token 的基础架构、真实值和全局视觉使用规则"
 use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadcn 组件样式或判断视觉是否符合公司规范时"
 ---

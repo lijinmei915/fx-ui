@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-06-07
+last_verified: 2026-06-16
 teaches: "fx-ui 重要的技术/协作决策记录：选了什么、放弃了什么、为什么"
 use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论"
 ---

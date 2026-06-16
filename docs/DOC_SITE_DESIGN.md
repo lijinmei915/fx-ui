@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-12
+last_verified: 2026-06-16
 teaches: "fx-ui 文档站自身的页面结构、样式边界和改样式流程"
 use_when: "要改 fx-ui 文档网站的顶部导航、侧边栏、内容区、目录、示例区、代码块或文档页展示样式时"
 depends_on: [theme/fx-theme.css, docs/TOKENS.md, docs/LAYOUTS.md, src/App.tsx]

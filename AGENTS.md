@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-06-06
+last_verified: 2026-06-16
 teaches: "AI 在 fx-ui 项目里的行为红线：不手写组件、只注入 token、保护 token 真相源"
 use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token 时"
 ---

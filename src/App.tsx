@@ -5118,16 +5118,9 @@ function ColorPaletteWithTabs({ lang }: { lang: Lang }) {
         </div>
       )}
 
-      {/* 标题行 + 深浅 tab */}
+      {/* 标题行 + 深浅 tab（说明独占整行，见下方）*/}
       <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-semibold">{lang === "en" ? "Chromatic Palette" : "彩色色板"}</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {lang === "en"
-              ? "13 chromatic families × 12 steps, derived from a seed in oklch. 01–08 toward white: L += (1−L)×[.93 .84 .72 .58 .43 .28 .14 .12], C ×= [.04 .10 .18 .30 .45 .62 .80 .94]. 09 = seed. 10–12 toward black: L ×= [.87 .72 .35], C ×= [.95 .82 .65]. Steps 01–07 dark text, 08–12 white. Click a swatch to copy its variable."
-              : "13 个有色色系 × 12 阶（中性灰见下方中性色色板），由种子色在 oklch 空间推导。01–08 向白：L += (1−L)×[.93 .84 .72 .58 .43 .28 .14 .12]、C ×= [.04 .10 .18 .30 .45 .62 .80 .94]；09 = 种子色；10–12 向黑：L ×= [.87 .72 .35]、C ×= [.95 .82 .65]。01–07 深色字，08–12 白色字。点击色块复制变量名。"}
-          </p>
-        </div>
+        <h2 className="text-2xl font-semibold">{lang === "en" ? "Chromatic Palette" : "彩色色板"}</h2>
         <div className="flex shrink-0 items-center rounded-md border border-border bg-muted/50 p-0.5 text-xs">
           <button
             onClick={() => setDarkBg(false)}
@@ -5149,6 +5142,11 @@ function ColorPaletteWithTabs({ lang }: { lang: Lang }) {
           </button>
         </div>
       </div>
+      <p className="mt-1 text-sm text-muted-foreground">
+        {lang === "en"
+          ? "13 chromatic families × 12 steps, derived from a seed in oklch. 01–08 toward white: L += (1−L)×[.93 .84 .72 .58 .43 .28 .14 .12], C ×= [.04 .10 .18 .30 .45 .62 .80 .94]. 09 = seed. 10–12 toward black: L ×= [.87 .72 .35], C ×= [.95 .82 .65]. Steps 01–07 dark text, 08–12 white. Click a swatch to copy its variable."
+          : "13 个有色色系 × 12 阶（中性灰见下方中性色色板），由种子色在 oklch 空间推导。01–08 向白：L += (1−L)×[.93 .84 .72 .58 .43 .28 .14 .12]、C ×= [.04 .10 .18 .30 .45 .62 .80 .94]；09 = 种子色；10–12 向黑：L ×= [.87 .72 .35]、C ×= [.95 .82 .65]。01–07 深色字，08–12 白色字。点击色块复制变量名。"}
+      </p>
 
       {/* 色板 */}
       <div className={["overflow-hidden rounded-xl border border-border transition-colors", darkBg ? "bg-zinc-900" : "bg-card"].join(" ")}>

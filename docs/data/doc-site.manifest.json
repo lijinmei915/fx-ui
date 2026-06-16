@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/doc-site-manifest",
-  "updatedAt": "2026-06-13",
+  "updatedAt": "2026-06-16",
   "truthSource": "src/App.tsx",
   "humanDoc": "docs/DOC_SITE_DESIGN.md",
   "note": "文档站骨架机器事实表。文字规范说明为什么，manifest 记录必须存在的结构事实，check-doc-site-contract.mjs 负责防漂。",
@@ -19,7 +19,13 @@
         "uiText[lang].search",
         "setLang(lang === \"zh\" ? \"en\" : \"zh\")"
       ],
-      "requiredCapabilities": ["brand", "version", "primary-nav", "language-toggle", "search-entry"]
+      "requiredCapabilities": [
+        "brand",
+        "version",
+        "primary-nav",
+        "language-toggle",
+        "search-entry"
+      ]
     },
     {
       "id": "left-nav",
@@ -39,7 +45,11 @@
         "docsNav.map",
         "isActive ? <span className=\"ml-2 size-1.5 rounded-full bg-primary\" /> : null"
       ],
-      "requiredCapabilities": ["group-title", "page-link", "active-indicator"]
+      "requiredCapabilities": [
+        "group-title",
+        "page-link",
+        "active-indicator"
+      ]
     },
     {
       "id": "main-content",
@@ -55,7 +65,12 @@
         "TokensPage",
         "ButtonPage"
       ],
-      "requiredCapabilities": ["component-doc", "token-page", "markdown-view", "report-preview"]
+      "requiredCapabilities": [
+        "component-doc",
+        "token-page",
+        "markdown-view",
+        "report-preview"
+      ]
     },
     {
       "id": "right-toc",
@@ -66,7 +81,10 @@
         "uiText[lang].toc",
         "anchors.map"
       ],
-      "requiredCapabilities": ["current-page-anchors", "active-anchor"]
+      "requiredCapabilities": [
+        "current-page-anchors",
+        "active-anchor"
+      ]
     }
   ],
   "layoutContracts": [
@@ -159,6 +177,15 @@
         "projectGraphCockpit.relationCount",
         "projectGraphCockpit.groups.map",
         "<GraphCockpit lang={lang} />"
+      ]
+    },
+    {
+      "id": "section-description-fullwidth",
+      "label": "章节说明独占整行",
+      "source": "src/App.tsx",
+      "intent": "标题行右侧有控件（如浅色/深色切换）时，说明文字独占整行放在标题行下方，不塞进左侧子容器被控件挤窄、换行后右侧留白。",
+      "requiredSourceIncludes": [
+        "标题行 + 深浅 tab（说明独占整行，见下方）"
       ]
     }
   ],

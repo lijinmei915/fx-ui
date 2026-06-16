@@ -6,10 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "check": "node scripts/check-shadcn-contract.mjs && bash scripts/check-tokens-sync.sh && npm run build",
+    "check": "node scripts/check-shadcn-contract.mjs && bash scripts/check-tokens-sync.sh && node scripts/check-doc-site-contract.mjs && node scripts/check-components-manifest.mjs && node scripts/check-agent-ui-contract.mjs && npm run build",
     "check:shadcn": "node scripts/check-shadcn-contract.mjs",
     "check:tokens": "bash scripts/check-tokens-sync.sh",
+    "check:doc-site": "node scripts/check-doc-site-contract.mjs",
+    "check:components": "node scripts/check-components-manifest.mjs",
+    "check:agent-ui": "node scripts/check-agent-ui-contract.mjs",
     "check:all": "bash scripts/check-all.sh",
+    "build:tokens": "node scripts/build-design-tokens.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

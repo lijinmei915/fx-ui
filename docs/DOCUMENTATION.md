@@ -21,6 +21,30 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 > 这一步和"建文档"是同一个动作，不是事后补充——漏了会让新文档变成孤岛（查不到它，等于不存在）。
 > `scripts/check-docs-routing.sh` 会在提交前兜底检查有没有漏登记，但那是兜底网，不是替代这一步。
 
+### 防漂治理三件套
+
+长期规则不能只停留在自然语言里。新增或修改治理规则时，先判断它属于哪种类型：
+
+| 类型 | 只写 Markdown 是否足够 | 还应该补什么 |
+|------|------------------------|--------------|
+| 解释性原则 | 通常足够 | 必要时补相关文件链接 |
+| 会被代码实现的结构事实 | 不够 | 补 `docs/data/*.json` 机器事实表 |
+| 会随源码变化的 API / token / 页面骨架 | 不够 | 补检查脚本，并接入 `npm run check` 或 `check-all.sh` |
+
+标准闭环：
+
+```txt
+文字规范 text spec -> 机器事实表 machine manifest -> 可执行检查 executable check
+```
+
+例子：
+
+| 规则 | 文字规范 | 机器事实表 | 检查 |
+|------|----------|------------|------|
+| 文档站骨架 | `docs/DOC_SITE_DESIGN.md` | `docs/data/doc-site.manifest.json` | `scripts/check-doc-site-contract.mjs` |
+| 组件事实 | `docs/components/*.md` | `docs/data/components.manifest.json` | `scripts/check-components-manifest.mjs` |
+| token | `docs/TOKENS.md` | `docs/data/design-tokens.json` | `scripts/check-tokens-sync.sh` |
+
 | 问题 | SSOT |
 |------|------|
 | 怎么开始用 | `README.md` |
@@ -31,12 +55,16 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 | Claude Code 专属行为规则 | `CLAUDE.md`（通用规则仍以 `AGENTS.md` 为准，本文件只放 Claude Code 特有行为） |
 | 三层架构、模块职责 | `docs/ARCHITECTURE.md` |
 | 设计规则总览（指向 token/布局） | `docs/DESIGN_STANDARDS.md` |
+| 文档站自身的页面结构、样式边界和改样式流程 | `docs/DOC_SITE_DESIGN.md` |
 | token 具体取值 | `docs/TOKENS.md` |
 | 布局规范 | `docs/LAYOUTS.md` |
+| Agent UI 生成式界面协议 | `docs/AGENT_UI.md` |
+| Agent UI 视觉规范 | `docs/AGENT_UI_VISUAL.md` |
 | 对外报告/简报渲染层（`src/reports/`）说明和数据契约 | `docs/REPORTS.md` |
+| 设计语言导出包（`skills/`）说明和维护规则 | `docs/SKILLS.md` |
 | 技术栈版本和约束 | `docs/TECH_STACK.md` |
 | 文档/文件命名规范 | `docs/NAMING.md` |
-| 架构/技术决策及原因 | `docs/DECISIONS.md` |
+| 架构/技术/产品决策及原因 | `docs/DECISIONS.md`（⚠️ 不写进 AI memory，memory 只存跨项目 AI 行为偏好） |
 | 结构性变更 | `docs/CHANGELOG.md` |
 | 错误复盘 | `docs/LESSONS.md` |
 | 实际目录结构、模块边界 | `docs/CODE_STRUCTURE.md` |
@@ -66,6 +94,9 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 ### docs/DESIGN_STANDARDS.md
 回答"UI 规则总览、token 怎么用、设计边界"。具体值不在这里列，指向 TOKENS/LAYOUTS。
 
+### docs/DOC_SITE_DESIGN.md
+回答"fx-ui 文档站本身怎么布局、哪些样式能改、改样式时该动哪一层"。不写 token 具体值、组件 API 或业务后台页面布局规则。
+
 ### docs/TECH_STACK.md
 回答"用了什么技术、什么版本、AI 能不能假设它已落地"。不写产品路线。
 
@@ -80,6 +111,12 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 
 ### docs/ARCHITECTURE.md
 回答"模块职责、三层边界、目录结构"。不写运行规则、当前进度。
+
+### docs/AGENT_UI.md
+回答"公司 Agent 怎么生成受控 UI、AgentSurface 支持哪些 JSON block、action 怎么回传、哪些字段禁止"。不写具体业务接口、权限规则或某个 Agent 的提示词。
+
+### docs/AGENT_UI_VISUAL.md
+回答"Agent UI 卡片应该长什么气质、怎么参考 C 端、和 fx-ui token / shadcn 基础组件是什么关系"。不写 Agent 通信协议、业务接口或提示词。
 
 ---
 

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/design-tokens",
-  "updatedAt": "2026-06-13",
+  "updatedAt": "2026-06-16",
   "truthSource": "theme/fx-theme.css",
   "humanDoc": "docs/TOKENS.md",
   "note": "主项目采用 shadcn 友好的三层结构：primitive -> semantic -> componentUsage。报告 skill 的 Seed -> Map -> Alias -> Component 四层结构可作为独立 HTML 输出参考，但不替代本项目的 shadcn semantic slots。",
@@ -24,946 +24,1444 @@
   ],
   "primitive": [
     {
-      "name": "--fx-primary",
+      "name": "--fx-brand",
       "value": "#FF8000",
-      "category": "brand-core",
-      "usage": "公司原始视觉值"
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-success",
-      "value": "#30C776",
-      "category": "brand-core",
-      "usage": "公司原始视觉值"
+      "name": "--fx-brand-vivid",
+      "value": "oklch(from var(--fx-brand) clamp(0.58, l, 0.72) max(c, 0.12) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-info",
-      "value": "#0C6CFF",
-      "category": "brand-core",
-      "usage": "公司原始视觉值"
+      "name": "--fx-seed-orange",
+      "value": "#FF8000",
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-warning",
-      "value": "#FF7C19",
-      "category": "brand-core",
-      "usage": "公司原始视觉值"
+      "name": "--fx-seed-orange-warning",
+      "value": "#F97316",
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-danger",
-      "value": "#FF522A",
-      "category": "brand-core",
-      "usage": "公司原始视觉值"
+      "name": "--fx-seed-amber",
+      "value": "#F59E0B",
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-orange-00",
-      "value": "#FFFBF0",
-      "category": "palette.orange",
-      "usage": "浅色背景、弱提示或状态底色"
+      "name": "--fx-seed-yellow",
+      "value": "#EAB308",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-seed-lime",
+      "value": "#84CC16",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-seed-yellow-green",
+      "value": "oklch(0.70 0.19 137)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-seed-green",
+      "value": "#22C55E",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-seed-teal",
+      "value": "#14B8A6",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-seed-cyan",
+      "value": "#06B6D4",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-seed-blue",
+      "value": "#3B82F6",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-seed-purple",
+      "value": "#8B5CF6",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-seed-pink",
+      "value": "#EC4899",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-seed-red",
+      "value": "#EF4444",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-seed-gray",
+      "value": "oklch(from var(--fx-brand-vivid) 0.65 0.010 h)",
+      "category": "palette",
+      "usage": ""
     },
     {
       "name": "--fx-orange-01",
-      "value": "#FFF7E6",
+      "value": "oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
       "category": "palette.orange",
       "usage": "浅色背景、弱提示或状态底色"
     },
     {
       "name": "--fx-orange-02",
-      "value": "#FFDDA3",
+      "value": "oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
       "category": "palette.orange",
       "usage": "浅色背景、弱提示或状态底色"
     },
     {
       "name": "--fx-orange-03",
-      "value": "#FFCA7A",
+      "value": "oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
       "category": "palette.orange",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-orange-04",
-      "value": "#FFB452",
+      "value": "oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
       "category": "palette.orange",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-orange-05",
-      "value": "#FF9B29",
+      "value": "oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
       "category": "palette.orange",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-orange-06",
-      "value": "#FF8000",
+      "value": "oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
       "category": "palette.orange",
       "usage": "Normal / 品牌色"
     },
     {
       "name": "--fx-orange-07",
-      "value": "#D96500",
+      "value": "oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
       "category": "palette.orange",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-orange-08",
-      "value": "#B34100",
+      "value": "oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
       "category": "palette.orange",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-orange-09",
-      "value": "#8C2F00",
+      "value": "var(--fx-seed-orange)",
       "category": "palette.orange",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-orange-10",
-      "value": "#662500",
+      "value": "oklch(from var(--fx-seed-orange) calc(l * 0.87) calc(c * 0.95) h)",
       "category": "palette.orange",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
-      "name": "--fx-magenta-00",
-      "value": "#FFF1F0",
-      "category": "palette.magenta",
-      "usage": "浅色背景、弱提示或状态底色"
+      "name": "--fx-orange-11",
+      "value": "oklch(from var(--fx-seed-orange) calc(l * 0.72) calc(c * 0.82) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-magenta-01",
-      "value": "#FFF0F0",
-      "category": "palette.magenta",
-      "usage": "浅色背景、弱提示或状态底色"
+      "name": "--fx-orange-12",
+      "value": "oklch(from var(--fx-seed-orange) calc(l * 0.35) calc(c * 0.65) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-magenta-02",
-      "value": "#FFEDED",
-      "category": "palette.magenta",
-      "usage": "浅色背景、弱提示或状态底色"
+      "name": "--fx-brand-01",
+      "value": "oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-magenta-03",
-      "value": "#FFC4C7",
-      "category": "palette.magenta",
-      "usage": "中浅阶视觉辅助、图表或交互态"
+      "name": "--fx-brand-02",
+      "value": "oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-magenta-04",
-      "value": "#FF9CA4",
-      "category": "palette.magenta",
-      "usage": "中浅阶视觉辅助、图表或交互态"
+      "name": "--fx-brand-03",
+      "value": "oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-magenta-05",
-      "value": "#FF7383",
-      "category": "palette.magenta",
-      "usage": "中浅阶视觉辅助、图表或交互态"
+      "name": "--fx-brand-04",
+      "value": "oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-magenta-06",
-      "value": "#FF4A66",
-      "category": "palette.magenta",
-      "usage": "Normal"
+      "name": "--fx-brand-05",
+      "value": "oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-magenta-07",
-      "value": "#D93452",
-      "category": "palette.magenta",
-      "usage": "深色阶，用于强调、点击或深色文本"
+      "name": "--fx-brand-06",
+      "value": "oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-magenta-08",
-      "value": "#B32241",
-      "category": "palette.magenta",
-      "usage": "深色阶，用于强调、点击或深色文本"
+      "name": "--fx-brand-07",
+      "value": "oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-magenta-09",
-      "value": "#8C1432",
-      "category": "palette.magenta",
-      "usage": "深色阶，用于强调、点击或深色文本"
+      "name": "--fx-brand-08",
+      "value": "oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-magenta-10",
-      "value": "#660D26",
-      "category": "palette.magenta",
-      "usage": "深色阶，用于强调、点击或深色文本"
+      "name": "--fx-brand-09",
+      "value": "var(--fx-brand-vivid)",
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-red-00",
-      "value": "#FFF6F0",
-      "category": "palette.red",
-      "usage": "浅色背景、弱提示或状态底色"
+      "name": "--fx-brand-10",
+      "value": "oklch(from var(--fx-brand-vivid) calc(l * 0.87) calc(c * 0.95) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-red-01",
-      "value": "#FFF5F0",
-      "category": "palette.red",
-      "usage": "浅色背景、弱提示或状态底色"
+      "name": "--fx-brand-11",
+      "value": "oklch(from var(--fx-brand-vivid) calc(l * 0.72) calc(c * 0.82) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-red-02",
-      "value": "#FFDCCC",
-      "category": "palette.red",
-      "usage": "浅色背景、弱提示或状态底色"
-    },
-    {
-      "name": "--fx-red-03",
-      "value": "#FFBDA3",
-      "category": "palette.red",
-      "usage": "中浅阶视觉辅助、图表或交互态"
-    },
-    {
-      "name": "--fx-red-04",
-      "value": "#FF9C7A",
-      "category": "palette.red",
-      "usage": "中浅阶视觉辅助、图表或交互态"
-    },
-    {
-      "name": "--fx-red-05",
-      "value": "#FF7752",
-      "category": "palette.red",
-      "usage": "中浅阶视觉辅助、图表或交互态"
-    },
-    {
-      "name": "--fx-red-06",
-      "value": "#FF522A",
-      "category": "palette.red",
-      "usage": "Normal / 危险"
-    },
-    {
-      "name": "--fx-red-07",
-      "value": "#D93518",
-      "category": "palette.red",
-      "usage": "深色阶，用于强调、点击或深色文本"
-    },
-    {
-      "name": "--fx-red-08",
-      "value": "#B31E0B",
-      "category": "palette.red",
-      "usage": "深色阶，用于强调、点击或深色文本"
-    },
-    {
-      "name": "--fx-red-09",
-      "value": "#8C0D01",
-      "category": "palette.red",
-      "usage": "深色阶，用于强调、点击或深色文本"
-    },
-    {
-      "name": "--fx-red-10",
-      "value": "#660500",
-      "category": "palette.red",
-      "usage": "深色阶，用于强调、点击或深色文本"
-    },
-    {
-      "name": "--fx-yellow-00",
-      "value": "#FFFEF0",
-      "category": "palette.yellow",
-      "usage": "浅色背景、弱提示或状态底色"
-    },
-    {
-      "name": "--fx-yellow-01",
-      "value": "#FFFCE6",
-      "category": "palette.yellow",
-      "usage": "浅色背景、弱提示或状态底色"
-    },
-    {
-      "name": "--fx-yellow-02",
-      "value": "#FFF2A6",
-      "category": "palette.yellow",
-      "usage": "浅色背景、弱提示或状态底色"
-    },
-    {
-      "name": "--fx-yellow-03",
-      "value": "#FFE77D",
-      "category": "palette.yellow",
-      "usage": "中浅阶视觉辅助、图表或交互态"
-    },
-    {
-      "name": "--fx-yellow-04",
-      "value": "#FFDA54",
-      "category": "palette.yellow",
-      "usage": "中浅阶视觉辅助、图表或交互态"
-    },
-    {
-      "name": "--fx-yellow-05",
-      "value": "#FFCA2B",
-      "category": "palette.yellow",
-      "usage": "中浅阶视觉辅助、图表或交互态"
-    },
-    {
-      "name": "--fx-yellow-06",
-      "value": "#FFB602",
-      "category": "palette.yellow",
-      "usage": "Normal"
-    },
-    {
-      "name": "--fx-yellow-07",
-      "value": "#D99400",
-      "category": "palette.yellow",
-      "usage": "深色阶，用于强调、点击或深色文本"
-    },
-    {
-      "name": "--fx-yellow-08",
-      "value": "#B37400",
-      "category": "palette.yellow",
-      "usage": "深色阶，用于强调、点击或深色文本"
-    },
-    {
-      "name": "--fx-yellow-09",
-      "value": "#8C5600",
-      "category": "palette.yellow",
-      "usage": "深色阶，用于强调、点击或深色文本"
-    },
-    {
-      "name": "--fx-yellow-10",
-      "value": "#663C00",
-      "category": "palette.yellow",
-      "usage": "深色阶，用于强调、点击或深色文本"
-    },
-    {
-      "name": "--fx-orange-warning-00",
-      "value": "#FFFAF0",
-      "category": "palette.orange-warning",
-      "usage": "浅色背景、弱提示或状态底色"
+      "name": "--fx-brand-12",
+      "value": "oklch(from var(--fx-brand-vivid) calc(l * 0.35) calc(c * 0.65) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
       "name": "--fx-orange-warning-01",
-      "value": "#FFF5E6",
+      "value": "oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
       "category": "palette.orange-warning",
       "usage": "浅色背景、弱提示或状态底色"
     },
     {
       "name": "--fx-orange-warning-02",
-      "value": "#FFE2BD",
+      "value": "oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
       "category": "palette.orange-warning",
       "usage": "浅色背景、弱提示或状态底色"
     },
     {
       "name": "--fx-orange-warning-03",
-      "value": "#FFCD94",
+      "value": "oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
       "category": "palette.orange-warning",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-orange-warning-04",
-      "value": "#FFB56B",
+      "value": "oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
       "category": "palette.orange-warning",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-orange-warning-05",
-      "value": "#FF9A42",
+      "value": "oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
       "category": "palette.orange-warning",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-orange-warning-06",
-      "value": "#FF7C19",
+      "value": "oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
       "category": "palette.orange-warning",
       "usage": "Normal / 警告"
     },
     {
       "name": "--fx-orange-warning-07",
-      "value": "#D95D0B",
+      "value": "oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
       "category": "palette.orange-warning",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-orange-warning-08",
-      "value": "#B34100",
+      "value": "oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
       "category": "palette.orange-warning",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-orange-warning-09",
-      "value": "#8C2F00",
+      "value": "var(--fx-seed-orange-warning)",
       "category": "palette.orange-warning",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-orange-warning-10",
-      "value": "#661F00",
+      "value": "oklch(from var(--fx-seed-orange-warning) calc(l * 0.87) calc(c * 0.95) h)",
       "category": "palette.orange-warning",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
-      "name": "--fx-yellow-green-00",
-      "value": "#FBFFF0",
-      "category": "palette.yellow-green",
+      "name": "--fx-orange-warning-11",
+      "value": "oklch(from var(--fx-seed-orange-warning) calc(l * 0.72) calc(c * 0.82) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-orange-warning-12",
+      "value": "oklch(from var(--fx-seed-orange-warning) calc(l * 0.35) calc(c * 0.65) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-amber-01",
+      "value": "oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-amber-02",
+      "value": "oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-amber-03",
+      "value": "oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-amber-04",
+      "value": "oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-amber-05",
+      "value": "oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-amber-06",
+      "value": "oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-amber-07",
+      "value": "oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-amber-08",
+      "value": "oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-amber-09",
+      "value": "var(--fx-seed-amber)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-amber-10",
+      "value": "oklch(from var(--fx-seed-amber) calc(l * 0.87) calc(c * 0.95) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-amber-11",
+      "value": "oklch(from var(--fx-seed-amber) calc(l * 0.72) calc(c * 0.82) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-amber-12",
+      "value": "oklch(from var(--fx-seed-amber) calc(l * 0.35) calc(c * 0.65) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-yellow-01",
+      "value": "oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "category": "palette.yellow",
       "usage": "浅色背景、弱提示或状态底色"
     },
     {
+      "name": "--fx-yellow-02",
+      "value": "oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
+      "category": "palette.yellow",
+      "usage": "浅色背景、弱提示或状态底色"
+    },
+    {
+      "name": "--fx-yellow-03",
+      "value": "oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
+      "category": "palette.yellow",
+      "usage": "中浅阶视觉辅助、图表或交互态"
+    },
+    {
+      "name": "--fx-yellow-04",
+      "value": "oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
+      "category": "palette.yellow",
+      "usage": "中浅阶视觉辅助、图表或交互态"
+    },
+    {
+      "name": "--fx-yellow-05",
+      "value": "oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
+      "category": "palette.yellow",
+      "usage": "中浅阶视觉辅助、图表或交互态"
+    },
+    {
+      "name": "--fx-yellow-06",
+      "value": "oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
+      "category": "palette.yellow",
+      "usage": "Normal"
+    },
+    {
+      "name": "--fx-yellow-07",
+      "value": "oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
+      "category": "palette.yellow",
+      "usage": "深色阶，用于强调、点击或深色文本"
+    },
+    {
+      "name": "--fx-yellow-08",
+      "value": "oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
+      "category": "palette.yellow",
+      "usage": "深色阶，用于强调、点击或深色文本"
+    },
+    {
+      "name": "--fx-yellow-09",
+      "value": "var(--fx-seed-yellow)",
+      "category": "palette.yellow",
+      "usage": "深色阶，用于强调、点击或深色文本"
+    },
+    {
+      "name": "--fx-yellow-10",
+      "value": "oklch(from var(--fx-seed-yellow) calc(l * 0.87) calc(c * 0.95) h)",
+      "category": "palette.yellow",
+      "usage": "深色阶，用于强调、点击或深色文本"
+    },
+    {
+      "name": "--fx-yellow-11",
+      "value": "oklch(from var(--fx-seed-yellow) calc(l * 0.72) calc(c * 0.82) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-yellow-12",
+      "value": "oklch(from var(--fx-seed-yellow) calc(l * 0.35) calc(c * 0.65) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-lime-01",
+      "value": "oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-lime-02",
+      "value": "oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-lime-03",
+      "value": "oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-lime-04",
+      "value": "oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-lime-05",
+      "value": "oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-lime-06",
+      "value": "oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-lime-07",
+      "value": "oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-lime-08",
+      "value": "oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-lime-09",
+      "value": "var(--fx-seed-lime)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-lime-10",
+      "value": "oklch(from var(--fx-seed-lime) calc(l * 0.87) calc(c * 0.95) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-lime-11",
+      "value": "oklch(from var(--fx-seed-lime) calc(l * 0.72) calc(c * 0.82) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-lime-12",
+      "value": "oklch(from var(--fx-seed-lime) calc(l * 0.35) calc(c * 0.65) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
       "name": "--fx-yellow-green-01",
-      "value": "#FAFFF0",
+      "value": "oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
       "category": "palette.yellow-green",
       "usage": "浅色背景、弱提示或状态底色"
     },
     {
       "name": "--fx-yellow-green-02",
-      "value": "#F9FFED",
+      "value": "oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
       "category": "palette.yellow-green",
       "usage": "浅色背景、弱提示或状态底色"
     },
     {
       "name": "--fx-yellow-green-03",
-      "value": "#DDF2BB",
+      "value": "oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
       "category": "palette.yellow-green",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-yellow-green-04",
-      "value": "#C0E68C",
+      "value": "oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
       "category": "palette.yellow-green",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-yellow-green-05",
-      "value": "#A3D962",
+      "value": "oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
       "category": "palette.yellow-green",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-yellow-green-06",
-      "value": "#87CC3B",
+      "value": "oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
       "category": "palette.yellow-green",
       "usage": "Normal"
     },
     {
       "name": "--fx-yellow-green-07",
-      "value": "#65A628",
+      "value": "oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
       "category": "palette.yellow-green",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-yellow-green-08",
-      "value": "#478018",
+      "value": "oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
       "category": "palette.yellow-green",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-yellow-green-09",
-      "value": "#2C590C",
+      "value": "var(--fx-seed-yellow-green)",
       "category": "palette.yellow-green",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-yellow-green-10",
-      "value": "#183307",
+      "value": "oklch(from var(--fx-seed-yellow-green) calc(l * 0.87) calc(c * 0.95) h)",
       "category": "palette.yellow-green",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
-      "name": "--fx-green-00",
-      "value": "#F0FFF3",
-      "category": "palette.green",
-      "usage": "浅色背景、弱提示或状态底色"
+      "name": "--fx-yellow-green-11",
+      "value": "oklch(from var(--fx-seed-yellow-green) calc(l * 0.72) calc(c * 0.82) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-yellow-green-12",
+      "value": "oklch(from var(--fx-seed-yellow-green) calc(l * 0.35) calc(c * 0.65) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
       "name": "--fx-green-01",
-      "value": "#F0FFF4",
+      "value": "oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
       "category": "palette.green",
       "usage": "浅色背景、弱提示或状态底色"
     },
     {
       "name": "--fx-green-02",
-      "value": "#DCFAE6",
+      "value": "oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
       "category": "palette.green",
       "usage": "浅色背景、弱提示或状态底色"
     },
     {
       "name": "--fx-green-03",
-      "value": "#ABEDC3",
+      "value": "oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
       "category": "palette.green",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-green-04",
-      "value": "#7EE0A5",
+      "value": "oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
       "category": "palette.green",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-green-05",
-      "value": "#55D48C",
+      "value": "oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
       "category": "palette.green",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-green-06",
-      "value": "#30C776",
+      "value": "oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
       "category": "palette.green",
       "usage": "Normal / 成功"
     },
     {
       "name": "--fx-green-07",
-      "value": "#1FA160",
+      "value": "oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
       "category": "palette.green",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-green-08",
-      "value": "#117A49",
+      "value": "oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
       "category": "palette.green",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-green-09",
-      "value": "#085433",
+      "value": "var(--fx-seed-green)",
       "category": "palette.green",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-green-10",
-      "value": "#042E1D",
+      "value": "oklch(from var(--fx-seed-green) calc(l * 0.87) calc(c * 0.95) h)",
       "category": "palette.green",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
-      "name": "--fx-teal-00",
-      "value": "#F0FFFB",
-      "category": "palette.teal",
-      "usage": "浅色背景、弱提示或状态底色"
+      "name": "--fx-green-11",
+      "value": "oklch(from var(--fx-seed-green) calc(l * 0.72) calc(c * 0.82) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-green-12",
+      "value": "oklch(from var(--fx-seed-green) calc(l * 0.35) calc(c * 0.65) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
       "name": "--fx-teal-01",
-      "value": "#E1F5F1",
+      "value": "oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
       "category": "palette.teal",
       "usage": "浅色背景、弱提示或状态底色"
     },
     {
       "name": "--fx-teal-02",
-      "value": "#B0E8DE",
+      "value": "oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
       "category": "palette.teal",
       "usage": "浅色背景、弱提示或状态底色"
     },
     {
       "name": "--fx-teal-03",
-      "value": "#84DBCE",
+      "value": "oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
       "category": "palette.teal",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-teal-04",
-      "value": "#5BCFC1",
+      "value": "oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
       "category": "palette.teal",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-teal-05",
-      "value": "#36C2B6",
+      "value": "oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
       "category": "palette.teal",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-teal-06",
-      "value": "#16B4AB",
+      "value": "oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
       "category": "palette.teal",
       "usage": "Normal"
     },
     {
       "name": "--fx-teal-07",
-      "value": "#0A8F8D",
+      "value": "oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
       "category": "palette.teal",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-teal-08",
-      "value": "#026769",
+      "value": "oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
       "category": "palette.teal",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-teal-09",
-      "value": "#003F42",
+      "value": "var(--fx-seed-teal)",
       "category": "palette.teal",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-teal-10",
-      "value": "#001A1C",
+      "value": "oklch(from var(--fx-seed-teal) calc(l * 0.87) calc(c * 0.95) h)",
       "category": "palette.teal",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
-      "name": "--fx-blue-00",
-      "value": "#F0FCFF",
-      "category": "palette.blue",
-      "usage": "浅色背景、弱提示或状态底色"
+      "name": "--fx-teal-11",
+      "value": "oklch(from var(--fx-seed-teal) calc(l * 0.72) calc(c * 0.82) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-teal-12",
+      "value": "oklch(from var(--fx-seed-teal) calc(l * 0.35) calc(c * 0.65) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-cyan-01",
+      "value": "oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-cyan-02",
+      "value": "oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-cyan-03",
+      "value": "oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-cyan-04",
+      "value": "oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-cyan-05",
+      "value": "oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-cyan-06",
+      "value": "oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-cyan-07",
+      "value": "oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-cyan-08",
+      "value": "oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-cyan-09",
+      "value": "var(--fx-seed-cyan)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-cyan-10",
+      "value": "oklch(from var(--fx-seed-cyan) calc(l * 0.87) calc(c * 0.95) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-cyan-11",
+      "value": "oklch(from var(--fx-seed-cyan) calc(l * 0.72) calc(c * 0.82) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-cyan-12",
+      "value": "oklch(from var(--fx-seed-cyan) calc(l * 0.35) calc(c * 0.65) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
       "name": "--fx-blue-01",
-      "value": "#E6F9FF",
+      "value": "oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
       "category": "palette.blue",
       "usage": "浅色背景、弱提示或状态底色"
     },
     {
       "name": "--fx-blue-02",
-      "value": "#BAEBFF",
+      "value": "oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
       "category": "palette.blue",
       "usage": "浅色背景、弱提示或状态底色"
     },
     {
       "name": "--fx-blue-03",
-      "value": "#91DCFF",
+      "value": "oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
       "category": "palette.blue",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-blue-04",
-      "value": "#69CAFF",
+      "value": "oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
       "category": "palette.blue",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-blue-05",
-      "value": "#40B6FF",
+      "value": "oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
       "category": "palette.blue",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-blue-06",
-      "value": "#189DFF",
+      "value": "oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
       "category": "palette.blue",
       "usage": "Normal"
     },
     {
       "name": "--fx-blue-07",
-      "value": "#097BD9",
+      "value": "oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
       "category": "palette.blue",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-blue-08",
-      "value": "#005CB3",
+      "value": "oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
       "category": "palette.blue",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-blue-09",
-      "value": "#00448C",
+      "value": "var(--fx-seed-blue)",
       "category": "palette.blue",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-blue-10",
-      "value": "#002E66",
+      "value": "oklch(from var(--fx-seed-blue) calc(l * 0.87) calc(c * 0.95) h)",
       "category": "palette.blue",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
-      "name": "--fx-dark-blue-00",
-      "value": "#F0F9FF",
-      "category": "palette.dark-blue",
-      "usage": "浅色背景、弱提示或状态底色"
+      "name": "--fx-blue-11",
+      "value": "oklch(from var(--fx-seed-blue) calc(l * 0.72) calc(c * 0.82) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
-      "name": "--fx-dark-blue-01",
-      "value": "#E6F4FF",
-      "category": "palette.dark-blue",
-      "usage": "浅色背景、弱提示或状态底色"
-    },
-    {
-      "name": "--fx-dark-blue-02",
-      "value": "#B0DAFF",
-      "category": "palette.dark-blue",
-      "usage": "浅色背景、弱提示或状态底色"
-    },
-    {
-      "name": "--fx-dark-blue-03",
-      "value": "#87C3FF",
-      "category": "palette.dark-blue",
-      "usage": "中浅阶视觉辅助、图表或交互态"
-    },
-    {
-      "name": "--fx-dark-blue-04",
-      "value": "#5EA9FF",
-      "category": "palette.dark-blue",
-      "usage": "中浅阶视觉辅助、图表或交互态"
-    },
-    {
-      "name": "--fx-dark-blue-05",
-      "value": "#368DFF",
-      "category": "palette.dark-blue",
-      "usage": "中浅阶视觉辅助、图表或交互态"
-    },
-    {
-      "name": "--fx-dark-blue-06",
-      "value": "#0C6CFF",
-      "category": "palette.dark-blue",
-      "usage": "Normal / 链接"
-    },
-    {
-      "name": "--fx-dark-blue-07",
-      "value": "#004FD9",
-      "category": "palette.dark-blue",
-      "usage": "深色阶，用于强调、点击或深色文本"
-    },
-    {
-      "name": "--fx-dark-blue-08",
-      "value": "#003BB3",
-      "category": "palette.dark-blue",
-      "usage": "深色阶，用于强调、点击或深色文本"
-    },
-    {
-      "name": "--fx-dark-blue-09",
-      "value": "#002A8C",
-      "category": "palette.dark-blue",
-      "usage": "深色阶，用于强调、点击或深色文本"
-    },
-    {
-      "name": "--fx-dark-blue-10",
-      "value": "#001B66",
-      "category": "palette.dark-blue",
-      "usage": "深色阶，用于强调、点击或深色文本"
-    },
-    {
-      "name": "--fx-purple-00",
-      "value": "#F8F0FF",
-      "category": "palette.purple",
-      "usage": "浅色背景、弱提示或状态底色"
+      "name": "--fx-blue-12",
+      "value": "oklch(from var(--fx-seed-blue) calc(l * 0.35) calc(c * 0.65) h)",
+      "category": "palette",
+      "usage": ""
     },
     {
       "name": "--fx-purple-01",
-      "value": "#F7F0FF",
+      "value": "oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
       "category": "palette.purple",
       "usage": "浅色背景、弱提示或状态底色"
     },
     {
       "name": "--fx-purple-02",
-      "value": "#F5EDFF",
+      "value": "oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
       "category": "palette.purple",
       "usage": "浅色背景、弱提示或状态底色"
     },
     {
       "name": "--fx-purple-03",
-      "value": "#DDC4FF",
+      "value": "oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
       "category": "palette.purple",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-purple-04",
-      "value": "#BC97F7",
+      "value": "oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
       "category": "palette.purple",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-purple-05",
-      "value": "#976AEB",
+      "value": "oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
       "category": "palette.purple",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-purple-06",
-      "value": "#7341DE",
+      "value": "oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
       "category": "palette.purple",
       "usage": "Normal"
     },
     {
       "name": "--fx-purple-07",
-      "value": "#542CB8",
+      "value": "oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
       "category": "palette.purple",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-purple-08",
-      "value": "#391C91",
+      "value": "oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
       "category": "palette.purple",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-purple-09",
-      "value": "#230F6B",
+      "value": "var(--fx-seed-purple)",
       "category": "palette.purple",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-purple-10",
-      "value": "#140945",
+      "value": "oklch(from var(--fx-seed-purple) calc(l * 0.87) calc(c * 0.95) h)",
       "category": "palette.purple",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
+      "name": "--fx-purple-11",
+      "value": "oklch(from var(--fx-seed-purple) calc(l * 0.72) calc(c * 0.82) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-purple-12",
+      "value": "oklch(from var(--fx-seed-purple) calc(l * 0.35) calc(c * 0.65) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-pink-01",
+      "value": "oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-pink-02",
+      "value": "oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-pink-03",
+      "value": "oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-pink-04",
+      "value": "oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-pink-05",
+      "value": "oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-pink-06",
+      "value": "oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-pink-07",
+      "value": "oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-pink-08",
+      "value": "oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-pink-09",
+      "value": "var(--fx-seed-pink)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-pink-10",
+      "value": "oklch(from var(--fx-seed-pink) calc(l * 0.87) calc(c * 0.95) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-pink-11",
+      "value": "oklch(from var(--fx-seed-pink) calc(l * 0.72) calc(c * 0.82) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-pink-12",
+      "value": "oklch(from var(--fx-seed-pink) calc(l * 0.35) calc(c * 0.65) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-red-01",
+      "value": "oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "category": "palette.red",
+      "usage": "浅色背景、弱提示或状态底色"
+    },
+    {
+      "name": "--fx-red-02",
+      "value": "oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
+      "category": "palette.red",
+      "usage": "浅色背景、弱提示或状态底色"
+    },
+    {
+      "name": "--fx-red-03",
+      "value": "oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
+      "category": "palette.red",
+      "usage": "中浅阶视觉辅助、图表或交互态"
+    },
+    {
+      "name": "--fx-red-04",
+      "value": "oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
+      "category": "palette.red",
+      "usage": "中浅阶视觉辅助、图表或交互态"
+    },
+    {
+      "name": "--fx-red-05",
+      "value": "oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
+      "category": "palette.red",
+      "usage": "中浅阶视觉辅助、图表或交互态"
+    },
+    {
+      "name": "--fx-red-06",
+      "value": "oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
+      "category": "palette.red",
+      "usage": "Normal / 危险"
+    },
+    {
+      "name": "--fx-red-07",
+      "value": "oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
+      "category": "palette.red",
+      "usage": "深色阶，用于强调、点击或深色文本"
+    },
+    {
+      "name": "--fx-red-08",
+      "value": "oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
+      "category": "palette.red",
+      "usage": "深色阶，用于强调、点击或深色文本"
+    },
+    {
+      "name": "--fx-red-09",
+      "value": "var(--fx-seed-red)",
+      "category": "palette.red",
+      "usage": "深色阶，用于强调、点击或深色文本"
+    },
+    {
+      "name": "--fx-red-10",
+      "value": "oklch(from var(--fx-seed-red) calc(l * 0.87) calc(c * 0.95) h)",
+      "category": "palette.red",
+      "usage": "深色阶，用于强调、点击或深色文本"
+    },
+    {
+      "name": "--fx-red-11",
+      "value": "oklch(from var(--fx-seed-red) calc(l * 0.72) calc(c * 0.82) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-red-12",
+      "value": "oklch(from var(--fx-seed-red) calc(l * 0.35) calc(c * 0.65) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-gray-01",
+      "value": "oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-gray-02",
+      "value": "oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-gray-03",
+      "value": "oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-gray-04",
+      "value": "oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-gray-05",
+      "value": "oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-gray-06",
+      "value": "oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-gray-07",
+      "value": "oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-gray-08",
+      "value": "oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-gray-09",
+      "value": "var(--fx-seed-gray)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-gray-10",
+      "value": "oklch(from var(--fx-seed-gray) calc(l * 0.87) calc(c * 0.95) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-gray-11",
+      "value": "oklch(from var(--fx-seed-gray) calc(l * 0.72) calc(c * 0.82) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-gray-12",
+      "value": "oklch(from var(--fx-seed-gray) calc(l * 0.35) calc(c * 0.65) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-neutral-dark",
+      "value": "oklch(from var(--fx-brand-vivid) 0.12 0.018 h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
       "name": "--fx-neutrals-01",
-      "value": "#FFFFFF",
+      "value": "white",
       "category": "neutral",
       "usage": "background"
     },
     {
       "name": "--fx-neutrals-02",
-      "value": "#FAFAFA",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 2%)",
       "category": "neutral",
       "usage": "background"
     },
     {
       "name": "--fx-neutrals-03",
-      "value": "#F2F3F5",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 5%)",
       "category": "neutral",
       "usage": "background / input disabled / header"
     },
     {
       "name": "--fx-neutrals-04",
-      "value": "#EAEBEE",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 10%)",
       "category": "neutral",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-neutrals-05",
-      "value": "#DEE1E8",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 16%)",
       "category": "neutral",
       "usage": "divider / icon gray"
     },
     {
       "name": "--fx-neutrals-06",
-      "value": "#CED1D9",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 24%)",
       "category": "neutral",
       "usage": "Normal 基准色"
     },
     {
       "name": "--fx-neutrals-07",
-      "value": "#C1C5CE",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 32%)",
       "category": "neutral",
       "usage": "text H4 / input border / icon light"
     },
     {
       "name": "--fx-neutrals-08",
-      "value": "#ADB1BA",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 42%)",
       "category": "neutral",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-neutrals-09",
-      "value": "#A3A7B0",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 48%)",
       "category": "neutral",
       "usage": "input border hover"
     },
     {
       "name": "--fx-neutrals-10",
-      "value": "#999DA6",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 54%)",
       "category": "neutral",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-neutrals-11",
-      "value": "#91959E",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 60%)",
       "category": "neutral",
       "usage": "text H3"
     },
     {
       "name": "--fx-neutrals-12",
-      "value": "#81858F",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 66%)",
       "category": "neutral",
       "usage": "中性色阶，用于背景、边框、图标或文字层级"
     },
     {
       "name": "--fx-neutrals-13",
-      "value": "#737881",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 72%)",
       "category": "neutral",
       "usage": "中性色阶，用于背景、边框、图标或文字层级"
     },
     {
       "name": "--fx-neutrals-14",
-      "value": "#606570",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 78%)",
       "category": "neutral",
       "usage": "中性色阶，用于背景、边框、图标或文字层级"
     },
     {
       "name": "--fx-neutrals-15",
-      "value": "#545861",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 83%)",
       "category": "neutral",
       "usage": "text H2"
     },
     {
       "name": "--fx-neutrals-16",
-      "value": "#444852",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 88%)",
       "category": "neutral",
       "usage": "中性色阶，用于背景、边框、图标或文字层级"
     },
     {
       "name": "--fx-neutrals-17",
-      "value": "#343841",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 92%)",
       "category": "neutral",
       "usage": "中性色阶，用于背景、边框、图标或文字层级"
     },
     {
       "name": "--fx-neutrals-18",
-      "value": "#272B34",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 96%)",
       "category": "neutral",
       "usage": "中性色阶，用于背景、边框、图标或文字层级"
     },
     {
       "name": "--fx-neutrals-19",
-      "value": "#181C25",
+      "value": "var(--fx-neutral-dark)",
       "category": "neutral",
       "usage": "text H1"
     },
     {
-      "name": "--fx-special-01",
-      "value": "#F2F4FB",
-      "category": "special",
-      "usage": "标签背景"
-    },
-    {
-      "name": "--fx-special-02",
-      "value": "#737C8C",
-      "category": "special",
-      "usage": "icon/dark"
-    },
-    {
-      "name": "--fx-special-03",
-      "value": "#EFF1F3",
-      "category": "special",
-      "usage": "页面底色"
-    },
-    {
-      "name": "--fx-special-04",
-      "value": "#F7F8FA",
-      "category": "special",
-      "usage": "卡片底色"
-    },
-    {
       "name": "--fx-icon-dark",
-      "value": "#181C25",
+      "value": "var(--fx-neutrals-19)",
       "category": "icon",
       "usage": "单色图标·深 = Neutrals 19"
     },
     {
       "name": "--fx-icon-light",
-      "value": "#FFFFFF",
+      "value": "var(--fx-neutrals-01)",
       "category": "icon",
       "usage": "单色图标·浅 = Neutrals 01"
     },
     {
       "name": "--fx-icon-gray",
-      "value": "#737C8C",
+      "value": "var(--fx-neutrals-11)",
       "category": "icon",
       "usage": "单色图标·灰 = Special 02"
     },
     {
+      "name": "--fx-primary",
+      "value": "var(--fx-brand-09)",
+      "category": "brand-core",
+      "usage": "公司原始视觉值"
+    },
+    {
+      "name": "--fx-success",
+      "value": "var(--fx-green-09)",
+      "category": "brand-core",
+      "usage": "公司原始视觉值"
+    },
+    {
+      "name": "--fx-info",
+      "value": "var(--fx-blue-09)",
+      "category": "brand-core",
+      "usage": "公司原始视觉值"
+    },
+    {
+      "name": "--fx-warning",
+      "value": "var(--fx-amber-09)",
+      "category": "brand-core",
+      "usage": "公司原始视觉值"
+    },
+    {
+      "name": "--fx-danger",
+      "value": "var(--fx-red-09)",
+      "category": "brand-core",
+      "usage": "公司原始视觉值"
+    },
+    {
       "name": "--fx-primary-hover",
-      "value": "#FF9B29",
+      "value": "var(--fx-brand-10)",
       "category": "interaction.primary",
       "usage": "Orange 05 - hover"
     },
     {
-      "name": "--fx-primary-click",
-      "value": "#D96500",
-      "category": "interaction.primary",
-      "usage": "Orange 07 - click / active"
+      "name": "--fx-primary-active",
+      "value": "var(--fx-brand-11)",
+      "category": "palette",
+      "usage": ""
     },
     {
       "name": "--fx-primary-disabled",
-      "value": "#FF9B29",
+      "value": "var(--fx-brand-05)",
       "category": "interaction.primary",
       "usage": "Orange 05 - disabled（与 hover 同色，组件层加 opacity）"
     },
     {
+      "name": "--fx-primary-light",
+      "value": "var(--fx-brand-01)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-primary-light-hover",
+      "value": "var(--fx-brand-02)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-primary-light-active",
+      "value": "var(--fx-brand-03)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-success-light",
+      "value": "var(--fx-green-01)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-info-light",
+      "value": "var(--fx-blue-01)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-warning-light",
+      "value": "var(--fx-amber-01)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-danger-light",
+      "value": "var(--fx-red-01)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
       "name": "--fx-list-orange",
-      "value": "#FFF7E6",
+      "value": "var(--fx-orange-01)",
       "category": "list-highlight",
       "usage": "Orange 01 - 行选中橙"
     },
     {
       "name": "--fx-list-blue",
-      "value": "#E6F4FF",
+      "value": "var(--fx-blue-01)",
       "category": "list-highlight",
       "usage": "Dark Blue 01 - 行选中蓝"
+    },
+    {
+      "name": "--fx-shadow-l1",
+      "value": "0px 2px 6px 0px rgba(0,0,0,0.15)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-shadow-l2",
+      "value": "0px 4px 12px 0px rgba(0,0,0,0.15)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-shadow-l3",
+      "value": "0px 6px 24px 0px rgba(0,0,0,0.15)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-shadow-l1-up",
+      "value": "0px -2px 6px 0px rgba(0,0,0,0.15)",
+      "category": "palette",
+      "usage": ""
     }
   ],
   "semantic": [
@@ -975,177 +1473,152 @@
     },
     {
       "name": "--background",
-      "value": "#F7F8FA",
+      "value": "var(--fx-neutrals-02)",
       "category": "surface-text",
-      "tailwind": "bg-background",
       "usage": "页面底色"
     },
     {
       "name": "--foreground",
       "value": "#181C25",
       "category": "surface-text",
-      "tailwind": "text-foreground",
       "usage": "主文字"
     },
     {
       "name": "--card",
       "value": "#FFFFFF",
       "category": "surface-text",
-      "tailwind": "bg-card",
       "usage": "卡片和内容容器背景"
     },
     {
       "name": "--card-foreground",
       "value": "#181C25",
       "category": "surface-text",
-      "tailwind": "text-card-foreground",
       "usage": "卡片文字"
     },
     {
       "name": "--popover",
       "value": "#FFFFFF",
       "category": "surface-text",
-      "tailwind": "bg-popover",
       "usage": "浮层背景"
     },
     {
       "name": "--popover-foreground",
       "value": "#181C25",
       "category": "surface-text",
-      "tailwind": "text-popover-foreground",
       "usage": "浮层文字"
     },
     {
       "name": "--primary",
       "value": "#FF8000",
       "category": "action-state",
-      "tailwind": "bg-primary text-primary-foreground",
       "usage": "主操作、激活态、品牌强调"
     },
     {
       "name": "--primary-foreground",
       "value": "#FFFFFF",
       "category": "action-state",
-      "tailwind": "text-primary-foreground",
       "usage": "主色背景上的文字和图标"
     },
     {
       "name": "--secondary",
       "value": "#F2F3F5",
       "category": "action-state",
-      "tailwind": "bg-secondary text-secondary-foreground",
       "usage": "次级按钮和弱操作背景"
     },
     {
       "name": "--secondary-foreground",
       "value": "#181C25",
       "category": "action-state",
-      "tailwind": "text-secondary-foreground",
       "usage": "次级背景上的文字"
     },
     {
       "name": "--muted",
       "value": "#F2F3F5",
       "category": "surface-text",
-      "tailwind": "bg-muted",
       "usage": "次级背景、弱按钮、代码块"
     },
     {
       "name": "--muted-foreground",
       "value": "#91959E",
       "category": "surface-text",
-      "tailwind": "text-muted-foreground",
       "usage": "辅助说明、弱信息"
     },
     {
       "name": "--accent",
-      "value": "#F2F4FB",
+      "value": "var(--fx-orange-01)",
       "category": "surface-text",
-      "tailwind": "bg-accent text-accent-foreground",
       "usage": "悬浮态、轻量高亮背景"
     },
     {
       "name": "--accent-foreground",
       "value": "#181C25",
       "category": "surface-text",
-      "tailwind": "text-accent-foreground",
       "usage": "高亮背景上的文字"
     },
     {
       "name": "--destructive",
       "value": "#FF522A",
       "category": "action-state",
-      "tailwind": "bg-destructive text-destructive-foreground",
       "usage": "删除、危险、不可逆操作"
     },
     {
       "name": "--destructive-foreground",
       "value": "#FFFFFF",
       "category": "action-state",
-      "tailwind": "text-destructive-foreground",
       "usage": "危险背景上的文字"
     },
     {
       "name": "--border",
       "value": "#DEE1E8",
       "category": "border-focus",
-      "tailwind": "border-border",
       "usage": "边框、分割线"
     },
     {
       "name": "--input",
       "value": "#C1C5CE",
       "category": "border-focus",
-      "tailwind": "border-input",
       "usage": "表单边框"
     },
     {
       "name": "--ring",
-      "value": "#FF8000",
+      "value": "oklch(from var(--fx-brand-09) l c h / 0.4)",
       "category": "border-focus",
-      "tailwind": "ring-ring outline-ring",
       "usage": "键盘焦点和可访问性焦点环"
     },
     {
       "name": "--success",
       "value": "#30C776",
       "category": "status",
-      "tailwind": "bg-success text-success",
       "usage": "成功状态"
     },
     {
       "name": "--success-foreground",
       "value": "#FFFFFF",
       "category": "status",
-      "tailwind": "text-success-foreground",
       "usage": "成功背景上的文字"
     },
     {
       "name": "--warning",
       "value": "#FF7C19",
       "category": "status",
-      "tailwind": "bg-warning text-warning",
       "usage": "警告状态"
     },
     {
       "name": "--warning-foreground",
       "value": "#FFFFFF",
       "category": "status",
-      "tailwind": "text-warning-foreground",
       "usage": "警告背景上的文字"
     },
     {
       "name": "--info",
       "value": "#0C6CFF",
       "category": "status",
-      "tailwind": "bg-info text-info",
       "usage": "信息状态"
     },
     {
       "name": "--info-foreground",
       "value": "#FFFFFF",
       "category": "status",
-      "tailwind": "text-info-foreground",
       "usage": "信息背景上的文字"
     },
     {
@@ -1158,126 +1631,108 @@
       "name": "--chart-1",
       "value": "#FF7383",
       "category": "chart",
-      "tailwind": "chart-1",
       "usage": "图表序列色"
     },
     {
       "name": "--chart-2",
       "value": "#FF7752",
       "category": "chart",
-      "tailwind": "chart-2",
       "usage": "图表序列色"
     },
     {
       "name": "--chart-3",
       "value": "#FF9B29",
       "category": "chart",
-      "tailwind": "chart-3",
       "usage": "图表序列色"
     },
     {
       "name": "--chart-4",
       "value": "#FFDA54",
       "category": "chart",
-      "tailwind": "chart-4",
       "usage": "图表序列色"
     },
     {
       "name": "--chart-5",
       "value": "#DDF2BB",
       "category": "chart",
-      "tailwind": "chart-5",
       "usage": "图表序列色"
     },
     {
       "name": "--chart-6",
       "value": "#55D48C",
       "category": "chart",
-      "tailwind": "chart-6",
       "usage": "图表序列色"
     },
     {
       "name": "--chart-7",
       "value": "#5BCFC1",
       "category": "chart",
-      "tailwind": "chart-7",
       "usage": "图表序列色"
     },
     {
       "name": "--chart-8",
       "value": "#40B6FF",
       "category": "chart",
-      "tailwind": "chart-8",
       "usage": "图表序列色"
     },
     {
       "name": "--chart-9",
       "value": "#368DFF",
       "category": "chart",
-      "tailwind": "chart-9",
       "usage": "图表序列色"
     },
     {
       "name": "--chart-10",
       "value": "#976AEB",
       "category": "chart",
-      "tailwind": "chart-10",
       "usage": "图表序列色"
     },
     {
       "name": "--sidebar",
       "value": "#FFFFFF",
       "category": "sidebar",
-      "tailwind": "bg-sidebar",
       "usage": "侧边栏背景"
     },
     {
       "name": "--sidebar-foreground",
       "value": "#181C25",
       "category": "sidebar",
-      "tailwind": "text-sidebar-foreground",
       "usage": "侧边栏文字"
     },
     {
       "name": "--sidebar-primary",
       "value": "#FF8000",
       "category": "sidebar",
-      "tailwind": "bg-sidebar-primary",
       "usage": "侧边栏主操作"
     },
     {
       "name": "--sidebar-primary-foreground",
       "value": "#FFFFFF",
       "category": "sidebar",
-      "tailwind": "text-sidebar-primary-foreground",
       "usage": "侧边栏主操作文字"
     },
     {
       "name": "--sidebar-accent",
       "value": "#F2F4FB",
       "category": "sidebar",
-      "tailwind": "bg-sidebar-accent",
       "usage": "侧边栏选中/悬浮背景"
     },
     {
       "name": "--sidebar-accent-foreground",
       "value": "#181C25",
       "category": "sidebar",
-      "tailwind": "text-sidebar-accent-foreground",
       "usage": "侧边栏选中/悬浮文字"
     },
     {
       "name": "--sidebar-border",
       "value": "#DEE1E8",
       "category": "sidebar",
-      "tailwind": "border-sidebar-border",
       "usage": "侧边栏边框"
     },
     {
       "name": "--sidebar-ring",
       "value": "#FF8000",
       "category": "sidebar",
-      "tailwind": "ring-sidebar-ring",
       "usage": "侧边栏焦点环"
     }
   ],

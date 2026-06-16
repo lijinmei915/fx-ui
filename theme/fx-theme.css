@@ -12,204 +12,320 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* ===== 公司原始 token（底层真相）===== */
-  --fx-primary: #FF8000;
-  --fx-success: #30C776;
-  --fx-info:    #0C6CFF;
-  --fx-warning: #FF7C19;
-  --fx-danger:  #FF522A;
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   * SEED — 唯一种子色，改这一行，全部 16 个色系 + 中性色自动更新
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  --fx-brand: #FF8000;
 
-  /* ===== 完整色板（Figma 色彩规范 · 11 色系 × 0-10 阶）===== */
+  /* 归一化：亮度钳制到 0.58–0.72（可用区间），饱和度兜底 0.12
+   * 太深的颜色（如深蓝 #1A237E）→ L 拉亮到 0.58
+   * 太浅的颜色（如米色 #FFE4B5）→ L 压暗到 0.72
+   * 近中性灰 → C max(c, 0.12) 强制有色调 */
+  --fx-brand-vivid: oklch(from var(--fx-brand) clamp(0.58, l, 0.72) max(c, 0.12) h);
 
-  /* Orange — 品牌色系 */
-  --fx-orange-00: #FFFBF0;
-  --fx-orange-01: #FFF7E6;
-  --fx-orange-02: #FFDDA3;
-  --fx-orange-03: #FFCA7A;
-  --fx-orange-04: #FFB452;
-  --fx-orange-05: #FF9B29;
-  --fx-orange-06: #FF8000; /* Normal / 品牌色 */
-  --fx-orange-07: #D96500;
-  --fx-orange-08: #B34100;
-  --fx-orange-09: #8C2F00;
-  --fx-orange-10: #662500;
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   * PALETTE SEEDS — 参考 Tailwind v3 500 阶，12 个色系固定参考值
+   * 只有 --fx-brand / Orange 随换肤变化，其余为固定色
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  --fx-seed-orange:          #FF8000;  /* 固定橙，色板展示用，不随 brand 变 */
+  --fx-seed-orange-warning: #F97316;  /* tw orange-500  → Warning */
+  --fx-seed-amber:          #F59E0B;  /* tw amber-500   → 琥珀 */
+  --fx-seed-yellow:         #EAB308;  /* tw yellow-500  → 黄 */
+  --fx-seed-lime:           #84CC16;  /* tw lime-500    → 嫩绿 */
+  --fx-seed-yellow-green:   oklch(0.70 0.19 137); /* 黄绿，介于嫩绿与绿之间 */
+  --fx-seed-green:          #22C55E;  /* tw green-500   → 成功 */
+  --fx-seed-teal:           #14B8A6;  /* tw teal-500    → 青 */
+  --fx-seed-cyan:           #06B6D4;  /* tw cyan-500    → 青蓝 */
+  --fx-seed-blue:           #3B82F6;  /* tw blue-500    → 蓝 / 链接 / 信息 */
+  --fx-seed-purple:         #8B5CF6;  /* tw violet-500  → 紫 */
+  --fx-seed-pink:           #EC4899;  /* tw pink-500    → 粉 */
+  --fx-seed-red:            #EF4444;  /* tw red-500     → 错误 */
+  --fx-seed-gray:           oklch(from var(--fx-brand-vivid) 0.65 0.010 h); /* 主题色偏色灰，极低彩度避免色相偏色 */
 
-  /* Magenta */
-  --fx-magenta-00: #FFF1F0;
-  --fx-magenta-01: #FFF0F0;
-  --fx-magenta-02: #FFEDED;
-  --fx-magenta-03: #FFC4C7;
-  --fx-magenta-04: #FF9CA4;
-  --fx-magenta-05: #FF7383;
-  --fx-magenta-06: #FF4A66; /* Normal */
-  --fx-magenta-07: #D93452;
-  --fx-magenta-08: #B32241;
-  --fx-magenta-09: #8C1432;
-  --fx-magenta-10: #660D26;
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   * GENERATED PALETTE — 14 色系 × 12 阶（01–12），对齐 Radix 分区
+   * 01-02 背景 | 03-05 交互 | 06-08 边框 | 09-10 实心 | 11-12 文字
+   * 09 = 种子色（最鲜艳），11-12 = 深色文字专用
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-  /* Red — 错误/危险 */
-  --fx-red-00: #FFF6F0;
-  --fx-red-01: #FFF5F0;
-  --fx-red-02: #FFDCCC;
-  --fx-red-03: #FFBDA3;
-  --fx-red-04: #FF9C7A;
-  --fx-red-05: #FF7752;
-  --fx-red-06: #FF522A; /* Normal / 危险 */
-  --fx-red-07: #D93518;
-  --fx-red-08: #B31E0B;
-  --fx-red-09: #8C0D01;
-  --fx-red-10: #660500;
+  /* Orange（固定橙，色板展示；品牌语义 token 仍用 --fx-brand-vivid） */
+  --fx-orange-01: oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.93) calc(c * 0.04) h);
+  --fx-orange-02: oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
+  --fx-orange-03: oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
+  --fx-orange-04: oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
+  --fx-orange-05: oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
+  --fx-orange-06: oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
+  --fx-orange-07: oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
+  --fx-orange-08: oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
+  --fx-orange-09: var(--fx-seed-orange);
+  --fx-orange-10: oklch(from var(--fx-seed-orange) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-orange-11: oklch(from var(--fx-seed-orange) calc(l * 0.72) calc(c * 0.82) h);
+  --fx-orange-12: oklch(from var(--fx-seed-orange) calc(l * 0.35) calc(c * 0.65) h);
+
+  /* Brand（随换肤变化，品牌语义 token 的真相源；09 = --fx-brand-vivid） */
+  --fx-brand-01: oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.93) calc(c * 0.04) h);
+  --fx-brand-02: oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
+  --fx-brand-03: oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
+  --fx-brand-04: oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
+  --fx-brand-05: oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
+  --fx-brand-06: oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
+  --fx-brand-07: oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
+  --fx-brand-08: oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
+  --fx-brand-09: var(--fx-brand-vivid);
+  --fx-brand-10: oklch(from var(--fx-brand-vivid) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-brand-11: oklch(from var(--fx-brand-vivid) calc(l * 0.72) calc(c * 0.82) h);
+  --fx-brand-12: oklch(from var(--fx-brand-vivid) calc(l * 0.35) calc(c * 0.65) h);
+
+  /* Orange Warning */
+  --fx-orange-warning-01: oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.93) calc(c * 0.04) h);
+  --fx-orange-warning-02: oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
+  --fx-orange-warning-03: oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
+  --fx-orange-warning-04: oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
+  --fx-orange-warning-05: oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
+  --fx-orange-warning-06: oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
+  --fx-orange-warning-07: oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
+  --fx-orange-warning-08: oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
+  --fx-orange-warning-09: var(--fx-seed-orange-warning);
+  --fx-orange-warning-10: oklch(from var(--fx-seed-orange-warning) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-orange-warning-11: oklch(from var(--fx-seed-orange-warning) calc(l * 0.72) calc(c * 0.82) h);
+  --fx-orange-warning-12: oklch(from var(--fx-seed-orange-warning) calc(l * 0.35) calc(c * 0.65) h);
+
+  /* Amber */
+  --fx-amber-01: oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.93) calc(c * 0.04) h);
+  --fx-amber-02: oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
+  --fx-amber-03: oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
+  --fx-amber-04: oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
+  --fx-amber-05: oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
+  --fx-amber-06: oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
+  --fx-amber-07: oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
+  --fx-amber-08: oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
+  --fx-amber-09: var(--fx-seed-amber);
+  --fx-amber-10: oklch(from var(--fx-seed-amber) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-amber-11: oklch(from var(--fx-seed-amber) calc(l * 0.72) calc(c * 0.82) h);
+  --fx-amber-12: oklch(from var(--fx-seed-amber) calc(l * 0.35) calc(c * 0.65) h);
 
   /* Yellow */
-  --fx-yellow-00: #FFFEF0;
-  --fx-yellow-01: #FFFCE6;
-  --fx-yellow-02: #FFF2A6;
-  --fx-yellow-03: #FFE77D;
-  --fx-yellow-04: #FFDA54;
-  --fx-yellow-05: #FFCA2B;
-  --fx-yellow-06: #FFB602; /* Normal */
-  --fx-yellow-07: #D99400;
-  --fx-yellow-08: #B37400;
-  --fx-yellow-09: #8C5600;
-  --fx-yellow-10: #663C00;
+  --fx-yellow-01: oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.93) calc(c * 0.04) h);
+  --fx-yellow-02: oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
+  --fx-yellow-03: oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
+  --fx-yellow-04: oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
+  --fx-yellow-05: oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
+  --fx-yellow-06: oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
+  --fx-yellow-07: oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
+  --fx-yellow-08: oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
+  --fx-yellow-09: var(--fx-seed-yellow);
+  --fx-yellow-10: oklch(from var(--fx-seed-yellow) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-yellow-11: oklch(from var(--fx-seed-yellow) calc(l * 0.72) calc(c * 0.82) h);
+  --fx-yellow-12: oklch(from var(--fx-seed-yellow) calc(l * 0.35) calc(c * 0.65) h);
 
-  /* Orange Warning — 警告 */
-  --fx-orange-warning-00: #FFFAF0;
-  --fx-orange-warning-01: #FFF5E6;
-  --fx-orange-warning-02: #FFE2BD;
-  --fx-orange-warning-03: #FFCD94;
-  --fx-orange-warning-04: #FFB56B;
-  --fx-orange-warning-05: #FF9A42;
-  --fx-orange-warning-06: #FF7C19; /* Normal / 警告 */
-  --fx-orange-warning-07: #D95D0B;
-  --fx-orange-warning-08: #B34100;
-  --fx-orange-warning-09: #8C2F00;
-  --fx-orange-warning-10: #661F00;
+  /* Lime */
+  --fx-lime-01: oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.93) calc(c * 0.04) h);
+  --fx-lime-02: oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
+  --fx-lime-03: oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
+  --fx-lime-04: oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
+  --fx-lime-05: oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
+  --fx-lime-06: oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
+  --fx-lime-07: oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
+  --fx-lime-08: oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
+  --fx-lime-09: var(--fx-seed-lime);
+  --fx-lime-10: oklch(from var(--fx-seed-lime) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-lime-11: oklch(from var(--fx-seed-lime) calc(l * 0.72) calc(c * 0.82) h);
+  --fx-lime-12: oklch(from var(--fx-seed-lime) calc(l * 0.35) calc(c * 0.65) h);
 
   /* Yellow Green */
-  --fx-yellow-green-00: #FBFFF0;
-  --fx-yellow-green-01: #FAFFF0;
-  --fx-yellow-green-02: #F9FFED;
-  --fx-yellow-green-03: #DDF2BB;
-  --fx-yellow-green-04: #C0E68C;
-  --fx-yellow-green-05: #A3D962;
-  --fx-yellow-green-06: #87CC3B; /* Normal */
-  --fx-yellow-green-07: #65A628;
-  --fx-yellow-green-08: #478018;
-  --fx-yellow-green-09: #2C590C;
-  --fx-yellow-green-10: #183307;
+  --fx-yellow-green-01: oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.93) calc(c * 0.04) h);
+  --fx-yellow-green-02: oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
+  --fx-yellow-green-03: oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
+  --fx-yellow-green-04: oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
+  --fx-yellow-green-05: oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
+  --fx-yellow-green-06: oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
+  --fx-yellow-green-07: oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
+  --fx-yellow-green-08: oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
+  --fx-yellow-green-09: var(--fx-seed-yellow-green);
+  --fx-yellow-green-10: oklch(from var(--fx-seed-yellow-green) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-yellow-green-11: oklch(from var(--fx-seed-yellow-green) calc(l * 0.72) calc(c * 0.82) h);
+  --fx-yellow-green-12: oklch(from var(--fx-seed-yellow-green) calc(l * 0.35) calc(c * 0.65) h);
 
-  /* Green — 成功 */
-  --fx-green-00: #F0FFF3;
-  --fx-green-01: #F0FFF4;
-  --fx-green-02: #DCFAE6;
-  --fx-green-03: #ABEDC3;
-  --fx-green-04: #7EE0A5;
-  --fx-green-05: #55D48C;
-  --fx-green-06: #30C776; /* Normal / 成功 */
-  --fx-green-07: #1FA160;
-  --fx-green-08: #117A49;
-  --fx-green-09: #085433;
-  --fx-green-10: #042E1D;
+  /* Green */
+  --fx-green-01: oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.93) calc(c * 0.04) h);
+  --fx-green-02: oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
+  --fx-green-03: oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
+  --fx-green-04: oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
+  --fx-green-05: oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
+  --fx-green-06: oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
+  --fx-green-07: oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
+  --fx-green-08: oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
+  --fx-green-09: var(--fx-seed-green);
+  --fx-green-10: oklch(from var(--fx-seed-green) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-green-11: oklch(from var(--fx-seed-green) calc(l * 0.72) calc(c * 0.82) h);
+  --fx-green-12: oklch(from var(--fx-seed-green) calc(l * 0.35) calc(c * 0.65) h);
 
   /* Teal */
-  --fx-teal-00: #F0FFFB;
-  --fx-teal-01: #E1F5F1;
-  --fx-teal-02: #B0E8DE;
-  --fx-teal-03: #84DBCE;
-  --fx-teal-04: #5BCFC1;
-  --fx-teal-05: #36C2B6;
-  --fx-teal-06: #16B4AB; /* Normal */
-  --fx-teal-07: #0A8F8D;
-  --fx-teal-08: #026769;
-  --fx-teal-09: #003F42;
-  --fx-teal-10: #001A1C;
+  --fx-teal-01: oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.93) calc(c * 0.04) h);
+  --fx-teal-02: oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
+  --fx-teal-03: oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
+  --fx-teal-04: oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
+  --fx-teal-05: oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
+  --fx-teal-06: oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
+  --fx-teal-07: oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
+  --fx-teal-08: oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
+  --fx-teal-09: var(--fx-seed-teal);
+  --fx-teal-10: oklch(from var(--fx-seed-teal) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-teal-11: oklch(from var(--fx-seed-teal) calc(l * 0.72) calc(c * 0.82) h);
+  --fx-teal-12: oklch(from var(--fx-seed-teal) calc(l * 0.35) calc(c * 0.65) h);
+
+  /* Cyan */
+  --fx-cyan-01: oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.93) calc(c * 0.04) h);
+  --fx-cyan-02: oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
+  --fx-cyan-03: oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
+  --fx-cyan-04: oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
+  --fx-cyan-05: oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
+  --fx-cyan-06: oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
+  --fx-cyan-07: oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
+  --fx-cyan-08: oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
+  --fx-cyan-09: var(--fx-seed-cyan);
+  --fx-cyan-10: oklch(from var(--fx-seed-cyan) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-cyan-11: oklch(from var(--fx-seed-cyan) calc(l * 0.72) calc(c * 0.82) h);
+  --fx-cyan-12: oklch(from var(--fx-seed-cyan) calc(l * 0.35) calc(c * 0.65) h);
 
   /* Blue */
-  --fx-blue-00: #F0FCFF;
-  --fx-blue-01: #E6F9FF;
-  --fx-blue-02: #BAEBFF;
-  --fx-blue-03: #91DCFF;
-  --fx-blue-04: #69CAFF;
-  --fx-blue-05: #40B6FF;
-  --fx-blue-06: #189DFF; /* Normal */
-  --fx-blue-07: #097BD9;
-  --fx-blue-08: #005CB3;
-  --fx-blue-09: #00448C;
-  --fx-blue-10: #002E66;
-
-  /* Dark Blue — 链接/信息 */
-  --fx-dark-blue-00: #F0F9FF;
-  --fx-dark-blue-01: #E6F4FF;
-  --fx-dark-blue-02: #B0DAFF;
-  --fx-dark-blue-03: #87C3FF;
-  --fx-dark-blue-04: #5EA9FF;
-  --fx-dark-blue-05: #368DFF;
-  --fx-dark-blue-06: #0C6CFF; /* Normal / 链接 */
-  --fx-dark-blue-07: #004FD9;
-  --fx-dark-blue-08: #003BB3;
-  --fx-dark-blue-09: #002A8C;
-  --fx-dark-blue-10: #001B66;
+  --fx-blue-01: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.93) calc(c * 0.04) h);
+  --fx-blue-02: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
+  --fx-blue-03: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
+  --fx-blue-04: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
+  --fx-blue-05: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
+  --fx-blue-06: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
+  --fx-blue-07: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
+  --fx-blue-08: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
+  --fx-blue-09: var(--fx-seed-blue);
+  --fx-blue-10: oklch(from var(--fx-seed-blue) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-blue-11: oklch(from var(--fx-seed-blue) calc(l * 0.72) calc(c * 0.82) h);
+  --fx-blue-12: oklch(from var(--fx-seed-blue) calc(l * 0.35) calc(c * 0.65) h);
 
   /* Purple */
-  --fx-purple-00: #F8F0FF;
-  --fx-purple-01: #F7F0FF;
-  --fx-purple-02: #F5EDFF;
-  --fx-purple-03: #DDC4FF;
-  --fx-purple-04: #BC97F7;
-  --fx-purple-05: #976AEB;
-  --fx-purple-06: #7341DE; /* Normal */
-  --fx-purple-07: #542CB8;
-  --fx-purple-08: #391C91;
-  --fx-purple-09: #230F6B;
-  --fx-purple-10: #140945;
+  --fx-purple-01: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.93) calc(c * 0.04) h);
+  --fx-purple-02: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
+  --fx-purple-03: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
+  --fx-purple-04: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
+  --fx-purple-05: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
+  --fx-purple-06: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
+  --fx-purple-07: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
+  --fx-purple-08: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
+  --fx-purple-09: var(--fx-seed-purple);
+  --fx-purple-10: oklch(from var(--fx-seed-purple) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-purple-11: oklch(from var(--fx-seed-purple) calc(l * 0.72) calc(c * 0.82) h);
+  --fx-purple-12: oklch(from var(--fx-seed-purple) calc(l * 0.35) calc(c * 0.65) h);
 
-  /* ===== 中性色 Neutrals 01–19 ===== */
-  --fx-neutrals-01: #FFFFFF; /* background */
-  --fx-neutrals-02: #FAFAFA; /* background */
-  --fx-neutrals-03: #F2F3F5; /* background / input disabled / header */
-  --fx-neutrals-04: #EAEBEE;
-  --fx-neutrals-05: #DEE1E8; /* divider / icon gray */
-  --fx-neutrals-06: #CED1D9;
-  --fx-neutrals-07: #C1C5CE; /* text H4 / input border / icon light */
-  --fx-neutrals-08: #ADB1BA;
-  --fx-neutrals-09: #A3A7B0; /* input border hover */
-  --fx-neutrals-10: #999DA6;
-  --fx-neutrals-11: #91959E; /* text H3 */
-  --fx-neutrals-12: #81858F;
-  --fx-neutrals-13: #737881;
-  --fx-neutrals-14: #606570;
-  --fx-neutrals-15: #545861; /* text H2 */
-  --fx-neutrals-16: #444852;
-  --fx-neutrals-17: #343841;
-  --fx-neutrals-18: #272B34;
-  --fx-neutrals-19: #181C25; /* text H1 */
+  /* Pink */
+  --fx-pink-01: oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.93) calc(c * 0.04) h);
+  --fx-pink-02: oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
+  --fx-pink-03: oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
+  --fx-pink-04: oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
+  --fx-pink-05: oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
+  --fx-pink-06: oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
+  --fx-pink-07: oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
+  --fx-pink-08: oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
+  --fx-pink-09: var(--fx-seed-pink);
+  --fx-pink-10: oklch(from var(--fx-seed-pink) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-pink-11: oklch(from var(--fx-seed-pink) calc(l * 0.72) calc(c * 0.82) h);
+  --fx-pink-12: oklch(from var(--fx-seed-pink) calc(l * 0.35) calc(c * 0.65) h);
 
-  /* ===== 特殊色 Special ===== */
-  --fx-special-01: #F2F4FB; /* 标签背景 */
-  --fx-special-02: #737C8C; /* icon/dark */
-  --fx-special-03: #EFF1F3; /* 页面底色 */
-  --fx-special-04: #F7F8FA; /* 卡片底色 */
+  /* Red */
+  --fx-red-01: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.93) calc(c * 0.04) h);
+  --fx-red-02: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
+  --fx-red-03: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
+  --fx-red-04: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
+  --fx-red-05: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
+  --fx-red-06: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
+  --fx-red-07: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
+  --fx-red-08: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
+  --fx-red-09: var(--fx-seed-red);
+  --fx-red-10: oklch(from var(--fx-seed-red) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-red-11: oklch(from var(--fx-seed-red) calc(l * 0.72) calc(c * 0.82) h);
+  --fx-red-12: oklch(from var(--fx-seed-red) calc(l * 0.35) calc(c * 0.65) h);
 
-  /* ===== 图标色 Icon colors ===== */
-  --fx-icon-dark:      #181C25; /* 单色图标·深 = Neutrals 19 */
-  --fx-icon-light:     #FFFFFF; /* 单色图标·浅 = Neutrals 01 */
-  --fx-icon-gray:      #737C8C; /* 单色图标·灰 = Special 02 */
+  /* Gray (brand-tinted) */
+  --fx-gray-01: oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.93) calc(c * 0.04) h);
+  --fx-gray-02: oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
+  --fx-gray-03: oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
+  --fx-gray-04: oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
+  --fx-gray-05: oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
+  --fx-gray-06: oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
+  --fx-gray-07: oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
+  --fx-gray-08: oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
+  --fx-gray-09: var(--fx-seed-gray);
+  --fx-gray-10: oklch(from var(--fx-seed-gray) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-gray-11: oklch(from var(--fx-seed-gray) calc(l * 0.72) calc(c * 0.82) h);
+  --fx-gray-12: oklch(from var(--fx-seed-gray) calc(l * 0.35) calc(c * 0.65) h);
 
-  /* ===== 品牌色交互四态 Primary interaction states ===== */
-  --fx-primary-hover:    #FF9B29; /* Orange 05 — hover */
-  --fx-primary-click:    #D96500; /* Orange 07 — click / active */
-  --fx-primary-disabled: #FF9B29; /* Orange 05 — disabled（与 hover 同色，组件层加 opacity） */
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   * NEUTRALS — 19 阶灰阶，带品牌色相轻染（chroma ≈ 0.01–0.02）
+   * --fx-neutral-dark 是近黑基色，含品牌色相微量；01 最浅 → 19 最深
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  --fx-neutral-dark: oklch(from var(--fx-brand-vivid) 0.12 0.018 h);
+
+  --fx-neutrals-01: white;
+  --fx-neutrals-02: color-mix(in oklch, white, var(--fx-neutral-dark)  2%);
+  --fx-neutrals-03: color-mix(in oklch, white, var(--fx-neutral-dark)  5%);
+  --fx-neutrals-04: color-mix(in oklch, white, var(--fx-neutral-dark) 10%);
+  --fx-neutrals-05: color-mix(in oklch, white, var(--fx-neutral-dark) 16%);
+  --fx-neutrals-06: color-mix(in oklch, white, var(--fx-neutral-dark) 24%);
+  --fx-neutrals-07: color-mix(in oklch, white, var(--fx-neutral-dark) 32%);
+  --fx-neutrals-08: color-mix(in oklch, white, var(--fx-neutral-dark) 42%);
+  --fx-neutrals-09: color-mix(in oklch, white, var(--fx-neutral-dark) 48%);
+  --fx-neutrals-10: color-mix(in oklch, white, var(--fx-neutral-dark) 54%);
+  --fx-neutrals-11: color-mix(in oklch, white, var(--fx-neutral-dark) 60%);
+  --fx-neutrals-12: color-mix(in oklch, white, var(--fx-neutral-dark) 66%);
+  --fx-neutrals-13: color-mix(in oklch, white, var(--fx-neutral-dark) 72%);
+  --fx-neutrals-14: color-mix(in oklch, white, var(--fx-neutral-dark) 78%);
+  --fx-neutrals-15: color-mix(in oklch, white, var(--fx-neutral-dark) 83%);
+  --fx-neutrals-16: color-mix(in oklch, white, var(--fx-neutral-dark) 88%);
+  --fx-neutrals-17: color-mix(in oklch, white, var(--fx-neutral-dark) 92%);
+  --fx-neutrals-18: color-mix(in oklch, white, var(--fx-neutral-dark) 96%);
+  --fx-neutrals-19: var(--fx-neutral-dark);
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   * ICONS
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  --fx-icon-dark:  var(--fx-neutrals-19);
+  --fx-icon-light: var(--fx-neutrals-01);
+  --fx-icon-gray:  var(--fx-neutrals-11);
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   * PRIMITIVE ALIASES
+   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  --fx-primary:          var(--fx-brand-09);
+  --fx-success:          var(--fx-green-09);
+  --fx-info:             var(--fx-blue-09);
+  --fx-warning:          var(--fx-amber-09);
+  --fx-danger:           var(--fx-red-09);
+
+  /* 实心交互态（Radix 推荐：hover/click 同用 10 阶，click 靠动效区分）
+     —— 从 --fx-brand-vivid 按阶梯公式推导，随换肤变化 */
+  --fx-primary-hover:    var(--fx-brand-10);
+  --fx-primary-active:   var(--fx-brand-11);
+  --fx-primary-disabled: var(--fx-brand-05);
+
+  /* 浅色变体（Tag / Badge / Alert / Ghost 按钮背景） */
+  --fx-primary-light:        var(--fx-brand-01);
+  --fx-primary-light-hover:  var(--fx-brand-02);
+  --fx-primary-light-active: var(--fx-brand-03);
+
+  /* 功能色浅色变体 */
+  --fx-success-light: var(--fx-green-01);
+  --fx-info-light:    var(--fx-blue-01);
+  --fx-warning-light: var(--fx-amber-01);
+  --fx-danger-light:  var(--fx-red-01);
 
   /* ===== 列表行高亮色 List row highlight ===== */
-  --fx-list-orange: #FFF7E6; /* Orange 01 — 行选中橙 */
-  --fx-list-blue:   #E6F4FF; /* Dark Blue 01 — 行选中蓝 */
+  --fx-list-orange: var(--fx-orange-01);
+  --fx-list-blue:   var(--fx-blue-01);
 
   /* ===== shadcn 标准语义槽 ←映射← 公司 token ===== */
 
   --radius: 0.625rem;
 
-  --background: #F7F8FA;
+  --background: var(--fx-neutrals-02);
   --foreground: #181C25;
 
   --card: #FFFFFF;
@@ -227,7 +343,7 @@
   --muted: #F2F3F5;
   --muted-foreground: #91959E;
 
-  --accent: #F2F4FB;
+  --accent: var(--fx-orange-01);
   --accent-foreground: #181C25;
 
   --destructive: #FF522A;
@@ -235,7 +351,7 @@
 
   --border: #DEE1E8;
   --input: #C1C5CE;
-  --ring: #FF8000;
+  --ring: oklch(from var(--fx-brand-09) l c h / 0.4);
 
   /* ===== 扩展功能色 ===== */
   --success: #30C776;
@@ -257,7 +373,7 @@
   --chart-6:  #55D48C; /* Green 05 */
   --chart-7:  #5BCFC1; /* Teal 04 */
   --chart-8:  #40B6FF; /* Blue 05 */
-  --chart-9:  #368DFF; /* Dark Blue 05 */
+  --chart-9:  #368DFF; /* Blue 05 deep */
   --chart-10: #976AEB; /* Purple 05 */
 
   /* ===== 投影 Shadow（Figma「图层样式」规范） ===== */
@@ -300,6 +416,19 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-info: var(--info);
+  --color-icon:       var(--fx-icon-dark);
+  --color-icon-muted: var(--fx-icon-gray);
+
+  --color-primary-hover:        var(--fx-primary-hover);
+  --color-primary-active:       var(--fx-primary-active);
+  --color-primary-disabled:     var(--fx-primary-disabled);
+  --color-primary-light:        var(--fx-primary-light);
+  --color-primary-light-hover:  var(--fx-primary-light-hover);
+  --color-primary-light-active: var(--fx-primary-light-active);
+  --color-success-light:         var(--fx-success-light);
+  --color-warning-light:         var(--fx-warning-light);
+  --color-info-light:            var(--fx-info-light);
+  --color-danger-light:          var(--fx-danger-light);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);

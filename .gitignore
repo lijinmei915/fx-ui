@@ -1,5 +1,6 @@
 node_modules
 dist
+.project-os/graph/
 .DS_Store
 
 # TS 增量编译缓存

@@ -461,10 +461,10 @@ const docsNav = [
       { label: "颜色", labelEn: "Colors", href: "#tokens-colors" },
       { label: "排版", labelEn: "Typography", href: "#tokens-typography" },
       { label: "圆角", labelEn: "Radius", href: "#tokens-radius" },
-      { label: "间距", labelEn: "Spacing", href: "#tokens-spacing" },
       { label: "阴影", labelEn: "Shadow", href: "#tokens-shadow" },
-      { label: "动效", labelEn: "Motion", href: "#tokens-motion" },
+      { label: "间距", labelEn: "Spacing", href: "#tokens-spacing" },
       { label: "层级", labelEn: "Layer", href: "#tokens-layer" },
+      { label: "动效", labelEn: "Motion", href: "#tokens-motion" },
     ],
   },
   {
@@ -998,17 +998,16 @@ const tokenAnchors = [
   { label: "颜色", labelEn: "Colors", href: "#tokens-colors" },
   { label: "排版", labelEn: "Typography", href: "#tokens-typography" },
   { label: "圆角", labelEn: "Radius", href: "#tokens-radius" },
-  { label: "间距", labelEn: "Spacing", href: "#tokens-spacing" },
   { label: "阴影", labelEn: "Shadow", href: "#tokens-shadow" },
-  { label: "动效", labelEn: "Motion", href: "#tokens-motion" },
+  { label: "间距", labelEn: "Spacing", href: "#tokens-spacing" },
   { label: "层级", labelEn: "Layer", href: "#tokens-layer" },
+  { label: "动效", labelEn: "Motion", href: "#tokens-motion" },
 ]
 
 const tokenColorsAnchors = [
+  { label: "主题色", labelEn: "Brand Color", href: "#tokens-colors-seeds" },
+  { label: "推导色板", labelEn: "Generated Palette", href: "#tokens-colors-palette" },
   { label: "语义颜色", labelEn: "Semantic Colors", href: "#tokens-colors-semantic" },
-  { label: "基础色板", labelEn: "Base Palette", href: "#tokens-colors-palette" },
-  { label: "中性色", labelEn: "Neutrals", href: "#tokens-colors-neutrals" },
-  { label: "特殊色", labelEn: "Special", href: "#tokens-colors-special" },
 ]
 const tokenTypographyAnchors = [{ label: "排版", labelEn: "Typography", href: "#tokens-typography" }]
 const tokenRadiusAnchors = [{ label: "圆角", labelEn: "Radius", href: "#tokens-radius" }]
@@ -2289,53 +2288,93 @@ const tokenLayers = [
   { title: "Semantic", desc: "shadcn/ui 和页面真正消费的语义槽。", descEn: "Semantic slots consumed by shadcn/ui and product pages.", example: "bg-primary text-primary-foreground" },
 ]
 
-const semanticTokens = [
-  { name: "primary", value: "#FF8000", usage: "主操作、激活态、品牌强调", usageEn: "Primary actions, active states, brand emphasis", className: "bg-primary" },
-  { name: "background", value: "#F7F8FA", usage: "页面底色", usageEn: "Page background", className: "bg-background" },
-  { name: "foreground", value: "#181C25", usage: "主文字", usageEn: "Primary text", className: "bg-foreground" },
-  { name: "card", value: "#FFFFFF", usage: "卡片、浮层、内容容器", usageEn: "Cards, overlays, content containers", className: "bg-card" },
-  { name: "muted", value: "#F2F3F5", usage: "次级背景、弱按钮、代码块", usageEn: "Subtle backgrounds, weak buttons, code blocks", className: "bg-muted" },
-  { name: "muted-foreground", value: "#91959E", usage: "辅助说明、弱信息", usageEn: "Supporting text and low-emphasis information", className: "bg-muted-foreground" },
-  { name: "border", value: "#DEE1E8", usage: "边框、分割线", usageEn: "Borders and dividers", className: "bg-border" },
-  { name: "destructive", value: "#FF522A", usage: "删除、危险、不可逆操作", usageEn: "Delete, dangerous, irreversible actions", className: "bg-destructive" },
+const semanticTokenGroups = [
+  {
+    role: "brand",
+    label: "品牌色", labelEn: "Brand",
+    desc: "来自 Orange 色系，品牌橙驱动所有主操作和激活态",
+    descEn: "Derived from the Orange scale. Brand orange drives all primary actions and active states.",
+    tokens: [
+      { name: "primary",                value: "#FF8000", sourceToken: "--fx-brand-09", tailwind: "bg-primary",             usage: "主色默认态 — 主按钮、品牌强调",       usageEn: "Primary default — main buttons, brand emphasis" },
+      { name: "primary-hover",        value: "", sourceToken: "--fx-brand-10", tailwind: "bg-primary-hover",        usage: "主色悬浮态",                              usageEn: "Primary hover state" },
+      { name: "primary-active",       value: "", sourceToken: "--fx-brand-11", tailwind: "bg-primary-active",       usage: "主色激活 / 按下态（click）",               usageEn: "Primary active / pressed (click) state" },
+      { name: "primary-disabled",     value: "", sourceToken: "--fx-brand-05", tailwind: "bg-primary-disabled",     usage: "主色禁用态",                              usageEn: "Primary disabled state" },
+      { name: "primary-light",        value: "", sourceToken: "--fx-brand-01", tailwind: "bg-primary-light",        usage: "浅色主色背景（Tag / Badge / Alert）",      usageEn: "Light primary bg (Tag / Badge / Alert)" },
+      { name: "primary-light-hover",  value: "", sourceToken: "--fx-brand-02", tailwind: "bg-primary-light-hover",  usage: "浅色主色悬浮态",                          usageEn: "Light primary hover state" },
+      { name: "primary-light-active", value: "", sourceToken: "--fx-brand-03", tailwind: "bg-primary-light-active", usage: "浅色主色激活 / 按下态",                    usageEn: "Light primary active / pressed state" },
+      { name: "ring",                 value: "", sourceToken: "--fx-brand-09", tailwind: "ring-ring",               usage: "键盘焦点环（品牌色 40% 透明）",            usageEn: "Keyboard focus ring (brand color at 40% opacity)" },
+    ],
+  },
+  {
+    role: "surface",
+    label: "背景色", labelEn: "Background",
+    desc: "页面与组件背景。background/card 定义页面层级，更高层（弹窗 → Popover）靠 shadow-l1/l2/l3 区分；muted/accent/secondary 用于组件内部状态",
+    descEn: "Page and component backgrounds. background/card define elevation; higher layers use shadow-l1/l2/l3. muted/accent/secondary cover component-level states.",
+    tokens: [
+      { name: "background", value: "",         sourceToken: "--fx-neutrals-02",  tailwind: "bg-background", usage: "页面底色 — 应用外壳、Layout 背景",       usageEn: "App shell / page canvas" },
+      { name: "card",       value: "#FFFFFF", sourceToken: "--fx-neutrals-01",  tailwind: "bg-card",       usage: "容器层 — 卡片、面板（含 popover）",       usageEn: "Container layer — card / panel / popover" },
+      { name: "muted",    value: "#F2F3F5", sourceToken: "--fx-neutrals-03", tailwind: "bg-muted",     usage: "次级背景 — 代码块、表格斑马纹、输入框底色",                       usageEn: "Subtle background — code blocks, table stripes, input fill" },
+      { name: "accent",   value: "",         sourceToken: "--fx-orange-01",   tailwind: "bg-accent",    usage: "交互高亮背景 — 列表/菜单项悬浮态",                              usageEn: "Hover highlight background — list / menu item hover" },
+      { name: "secondary", value: "#F2F3F5", sourceToken: "--fx-neutrals-03", tailwind: "bg-secondary", usage: "弱操作背景 — secondary 按钮、ghost 按钮按下态",                 usageEn: "Low-emphasis action background — secondary and ghost buttons" },
+    ],
+  },
+  {
+    role: "text",
+    label: "文字色", labelEn: "Text",
+    desc: "正文、辅助说明、以及反色背景上的文字，来自 Neutrals 深阶",
+    descEn: "Body text, supporting text, and text on colored backgrounds. Derived from deep Neutrals steps.",
+    tokens: [
+      { name: "foreground",          value: "#181C25", sourceToken: "--fx-neutrals-19",  tailwind: "text-foreground",         usage: "主文字 — 标题、正文、表单标签",             usageEn: "Primary text — headings, body, form labels" },
+      { name: "muted-foreground",    value: "#91959E", sourceToken: "--fx-neutrals-11",  tailwind: "text-muted-foreground",   usage: "辅助说明 — placeholder、描述、弱信息",      usageEn: "Supporting text — placeholder, description, low-emphasis" },
+      { name: "primary-foreground",  value: "#FFFFFF", sourceToken: "--fx-neutrals-01",  tailwind: "text-primary-foreground", usage: "反色文字 — 主色按钮、品牌背景上的文字图标",  usageEn: "Reversed text — on primary / brand-color backgrounds" },
+      { name: "icon",                value: "#181C25", sourceToken: "--fx-icon-dark",     tailwind: "text-icon",               usage: "图标默认色 — 与正文同色",                   usageEn: "Default icon color — matches foreground" },
+      { name: "icon-muted",          value: "#6B7280", sourceToken: "--fx-icon-gray",     tailwind: "text-icon-muted",         usage: "弱图标 — 工具栏次要图标、禁用态",            usageEn: "Muted icon — secondary toolbar icons, disabled state" },
+    ],
+  },
+  {
+    role: "status",
+    label: "状态色", labelEn: "Status",
+    desc: "功能性语义色，均取对应色系的 09 阶（Solid 基准值）",
+    descEn: "Functional semantic colors. Each maps to step 09 of its scale (the Solid baseline).",
+    tokens: [
+      { name: "destructive",       value: "#FF522A", sourceToken: "--fx-red-09",   tailwind: "bg-destructive", usage: "删除、危险、不可逆操作",    usageEn: "Delete, dangerous, and irreversible actions" },
+      { name: "destructive-light", value: "",        sourceToken: "--fx-red-01",   tailwind: "bg-danger-light",   usage: "危险色浅色背景",           usageEn: "Light danger background" },
+      { name: "success",           value: "#30C776", sourceToken: "--fx-green-09", tailwind: "bg-success",     usage: "成功状态",                 usageEn: "Success states" },
+      { name: "success-light",     value: "",        sourceToken: "--fx-green-01", tailwind: "bg-success-light",  usage: "成功色浅色背景",           usageEn: "Light success background" },
+      { name: "warning",           value: "#F59E0B", sourceToken: "--fx-amber-09", tailwind: "bg-warning",     usage: "警告状态",                 usageEn: "Warning states" },
+      { name: "warning-light",     value: "",        sourceToken: "--fx-amber-01", tailwind: "bg-warning-light",  usage: "警告色浅色背景",           usageEn: "Light warning background" },
+      { name: "info",              value: "#3B82F6", sourceToken: "--fx-blue-09",  tailwind: "bg-info",        usage: "信息状态",                 usageEn: "Informational states" },
+      { name: "info-light",        value: "",        sourceToken: "--fx-blue-01",  tailwind: "bg-info-light",     usage: "信息色浅色背景",           usageEn: "Light info background" },
+    ],
+  },
+  {
+    role: "border",
+    label: "边框色", labelEn: "Border",
+    desc: "来自 Neutrals 中浅阶，表达边界和表单边框",
+    descEn: "Derived from mid-light Neutrals steps for structural edges and form controls.",
+    tokens: [
+      { name: "border", value: "#DEE1E8", sourceToken: "--fx-neutrals-05", tailwind: "border-border", usage: "边框、分割线", usageEn: "Borders and dividers" },
+      { name: "input",  value: "#C1C5CE", sourceToken: "--fx-neutrals-07", tailwind: "border-input",  usage: "表单输入边框", usageEn: "Form input borders" },
+    ],
+  },
 ]
 
-const colorScales = [
-  { name: "Orange",         nameZh: "品牌橙",  tag: "Brand",     tagZh: "品牌色",  var: "--fx-orange",
-    colors: ["#FFFBF0","#FFF7E6","#FFDDA3","#FFCA7A","#FFB452","#FF9B29","#FF8000","#D96500","#B34100","#8C2F00","#662500"] },
-  { name: "Magenta",        nameZh: "玫红",    tag: "",          tagZh: "",        var: "--fx-magenta",
-    colors: ["#FFF1F0","#FFF0F0","#FFEDED","#FFC4C7","#FF9CA4","#FF7383","#FF4A66","#D93452","#B32241","#8C1432","#660D26"] },
-  { name: "Red",            nameZh: "红",      tag: "Error",     tagZh: "错误",    var: "--fx-red",
-    colors: ["#FFF6F0","#FFF5F0","#FFDCCC","#FFBDA3","#FF9C7A","#FF7752","#FF522A","#D93518","#B31E0B","#8C0D01","#660500"] },
-  { name: "Yellow",         nameZh: "黄",      tag: "",          tagZh: "",        var: "--fx-yellow",
-    colors: ["#FFFEF0","#FFFCE6","#FFF2A6","#FFE77D","#FFDA54","#FFCA2B","#FFB602","#D99400","#B37400","#8C5600","#663C00"] },
-  { name: "Orange Warning", nameZh: "暖橙",    tag: "Warning",   tagZh: "警告",    var: "--fx-orange-warning",
-    colors: ["#FFFAF0","#FFF5E6","#FFE2BD","#FFCD94","#FFB56B","#FF9A42","#FF7C19","#D95D0B","#B34100","#8C2F00","#661F00"] },
-  { name: "Yellow Green",   nameZh: "黄绿",    tag: "",          tagZh: "",        var: "--fx-yellow-green",
-    colors: ["#FBFFF0","#FAFFF0","#F9FFED","#DDF2BB","#C0E68C","#A3D962","#87CC3B","#65A628","#478018","#2C590C","#183307"] },
-  { name: "Green",          nameZh: "绿",      tag: "Success",   tagZh: "成功",    var: "--fx-green",
-    colors: ["#F0FFF3","#F0FFF4","#DCFAE6","#ABEDC3","#7EE0A5","#55D48C","#30C776","#1FA160","#117A49","#085433","#042E1D"] },
-  { name: "Teal",           nameZh: "青",      tag: "",          tagZh: "",        var: "--fx-teal",
-    colors: ["#F0FFFB","#E1F5F1","#B0E8DE","#84DBCE","#5BCFC1","#36C2B6","#16B4AB","#0A8F8D","#026769","#003F42","#001A1C"] },
-  { name: "Blue",           nameZh: "蓝",      tag: "",          tagZh: "",        var: "--fx-blue",
-    colors: ["#F0FCFF","#E6F9FF","#BAEBFF","#91DCFF","#69CAFF","#40B6FF","#189DFF","#097BD9","#005CB3","#00448C","#002E66"] },
-  { name: "Dark Blue",      nameZh: "深蓝",    tag: "Link/Info", tagZh: "链接/信息", var: "--fx-dark-blue",
-    colors: ["#F0F9FF","#E6F4FF","#B0DAFF","#87C3FF","#5EA9FF","#368DFF","#0C6CFF","#004FD9","#003BB3","#002A8C","#001B66"] },
-  { name: "Purple",         nameZh: "紫",      tag: "",          tagZh: "",        var: "--fx-purple",
-    colors: ["#F8F0FF","#F7F0FF","#F5EDFF","#DDC4FF","#BC97F7","#976AEB","#7341DE","#542CB8","#391C91","#230F6B","#140945"] },
+const seedColors = [
+  { name: "Orange",         nameZh: "橙",     tag: "",        tagZh: "",         cssVar: "--fx-seed-orange",         hueOffset: "#FF8000",    prefix: "--fx-orange" },
+  { name: "Amber",          nameZh: "琥珀",   tag: "Warning", tagZh: "警告",     cssVar: "--fx-seed-amber",          hueOffset: "#F59E0B", prefix: "--fx-amber" },
+  { name: "Yellow",         nameZh: "黄",     tag: "",        tagZh: "",         cssVar: "--fx-seed-yellow",         hueOffset: "#EAB308", prefix: "--fx-yellow" },
+  { name: "Lime",           nameZh: "嫩绿",   tag: "",        tagZh: "",         cssVar: "--fx-seed-lime",           hueOffset: "#84CC16", prefix: "--fx-lime" },
+  { name: "Chartreuse",     nameZh: "黄绿",   tag: "",        tagZh: "",         cssVar: "--fx-seed-yellow-green",   hueOffset: "custom",  prefix: "--fx-yellow-green" },
+  { name: "Green",          nameZh: "绿",     tag: "Success", tagZh: "成功",     cssVar: "--fx-seed-green",          hueOffset: "#22C55E", prefix: "--fx-green" },
+  { name: "Teal",           nameZh: "青",     tag: "",        tagZh: "",         cssVar: "--fx-seed-teal",           hueOffset: "#14B8A6", prefix: "--fx-teal" },
+  { name: "Cyan",           nameZh: "青蓝",   tag: "",        tagZh: "",         cssVar: "--fx-seed-cyan",           hueOffset: "#06B6D4", prefix: "--fx-cyan" },
+  { name: "Blue",           nameZh: "蓝",     tag: "Link/Info", tagZh: "链接/信息", cssVar: "--fx-seed-blue",        hueOffset: "#3B82F6", prefix: "--fx-blue" },
+  { name: "Purple",         nameZh: "紫",     tag: "",        tagZh: "",         cssVar: "--fx-seed-purple",         hueOffset: "#8B5CF6", prefix: "--fx-purple" },
+  { name: "Pink",           nameZh: "粉",     tag: "",        tagZh: "",         cssVar: "--fx-seed-pink",           hueOffset: "#EC4899", prefix: "--fx-pink" },
+  { name: "Red",            nameZh: "红",     tag: "Error",   tagZh: "错误",     cssVar: "--fx-seed-red",            hueOffset: "#EF4444", prefix: "--fx-red" },
+  { name: "Gray",           nameZh: "灰",     tag: "",        tagZh: "",         cssVar: "--fx-seed-gray",           hueOffset: "brand",   prefix: "--fx-gray" },
 ]
 
-const neutralsScale = [
-  "#FFFFFF","#FAFAFA","#F2F3F5","#EAEBEE","#DEE1E8","#CED1D9","#C1C5CE","#ADB1BA","#A3A7B0","#999DA6",
-  "#91959E","#81858F","#737881","#606570","#545861","#444852","#343841","#272B34","#181C25",
-]
-
-const specialColors = [
-  { name: "Special 01", var: "--fx-special-01", hex: "#F2F4FB", usage: "标签背景",  usageEn: "Label background" },
-  { name: "Special 02", var: "--fx-special-02", hex: "#737C8C", usage: "icon/dark", usageEn: "Dark icon color" },
-  { name: "Special 03", var: "--fx-special-03", hex: "#EFF1F3", usage: "页面底色",  usageEn: "Page background alt" },
-  { name: "Special 04", var: "--fx-special-04", hex: "#F7F8FA", usage: "卡片底色",  usageEn: "Card background alt" },
-]
 
 const typographyTokens = [
   { name: "font-sans", value: "Geist / system sans-serif", usage: "页面正文、表单、组件默认字体", usageEn: "Body text, forms, and default component typography" },
@@ -4852,13 +4891,13 @@ function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
         <h2 className="text-2xl font-semibold">{lang === "en" ? "Browse by Category" : "按分类浏览"}</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {[
-            { label: "颜色", labelEn: "Colors", desc: "语义色、色板、中性色", href: "#tokens-colors" },
+            { label: "颜色", labelEn: "Colors", desc: "品牌色、色板、语义色", href: "#tokens-colors" },
             { label: "排版", labelEn: "Typography", desc: "字号、字重、字族", href: "#tokens-typography" },
             { label: "圆角", labelEn: "Radius", desc: "控件、卡片、浮层圆角", href: "#tokens-radius" },
-            { label: "间距", labelEn: "Spacing", desc: "页面节奏与组件密度", href: "#tokens-spacing" },
             { label: "阴影", labelEn: "Shadow", desc: "L1/L2/L3 四档投影", href: "#tokens-shadow" },
-            { label: "动效", labelEn: "Motion", desc: "时长、缓动、进出场", href: "#tokens-motion" },
+            { label: "间距", labelEn: "Spacing", desc: "页面节奏与组件密度", href: "#tokens-spacing" },
             { label: "层级", labelEn: "Layer", desc: "z-index 约定", href: "#tokens-layer" },
+            { label: "动效", labelEn: "Motion", desc: "时长、缓动、进出场", href: "#tokens-motion" },
           ].map((item) => (
             <a key={item.href} href={item.href} className="flex flex-col gap-1 rounded-lg border border-border bg-card p-4 hover:border-primary/50 transition-colors">
               <div className="font-medium">{lang === "en" ? item.labelEn : item.label}</div>
@@ -4869,6 +4908,365 @@ function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       </section>
     </>
   )
+}
+
+const PALETTE_STEPS = ["01","02","03","04","05","06","07","08","09","10","11","12"] as const
+
+const PREVIEW_FORMULAS = [
+  (s: string) => `oklch(from ${s} calc(l + (1 - l) * 0.93) calc(c * 0.04) h)`,
+  (s: string) => `oklch(from ${s} calc(l + (1 - l) * 0.84) calc(c * 0.10) h)`,
+  (s: string) => `oklch(from ${s} calc(l + (1 - l) * 0.72) calc(c * 0.18) h)`,
+  (s: string) => `oklch(from ${s} calc(l + (1 - l) * 0.58) calc(c * 0.30) h)`,
+  (s: string) => `oklch(from ${s} calc(l + (1 - l) * 0.43) calc(c * 0.45) h)`,
+  (s: string) => `oklch(from ${s} calc(l + (1 - l) * 0.28) calc(c * 0.62) h)`,
+  (s: string) => `oklch(from ${s} calc(l + (1 - l) * 0.14) calc(c * 0.80) h)`,
+  (s: string) => `oklch(from ${s} calc(l + (1 - l) * 0.12) calc(c * 0.94) h)`,
+  (s: string) => s,
+  (s: string) => `oklch(from ${s} calc(l * 0.87) calc(c * 0.95) h)`,
+  (s: string) => `oklch(from ${s} calc(l * 0.72) calc(c * 0.82) h)`,
+  (s: string) => `oklch(from ${s} calc(l * 0.35) calc(c * 0.65) h)`,
+]
+
+function SeedPreview({ lang: _lang }: { lang: Lang }) {
+  const [input, setInput] = useState("var(--fx-brand)")
+  const [copied, setCopied] = useState<string | null>(null)
+  const styleRef = useRef<HTMLStyleElement | null>(null)
+  const swatchRefs = useRef<(HTMLDivElement | null)[]>([])
+  const [hexMap, setHexMap] = useState<Record<string, string>>({})
+
+  useEffect(() => {
+    if (!styleRef.current) {
+      styleRef.current = document.createElement("style")
+      document.head.appendChild(styleRef.current)
+    }
+    const seed = input.trim() || "var(--fx-brand)"
+    styleRef.current.textContent = PALETTE_STEPS.map((step, i) =>
+      `.fx-preview-${step}{background-color:${PREVIEW_FORMULAS[i](seed)}}`
+    ).join("\n")
+    return () => { if (styleRef.current) styleRef.current.textContent = "" }
+  }, [input])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const map: Record<string, string> = {}
+      swatchRefs.current.forEach((el, i) => {
+        if (!el) return
+        const info = computeSwatchInfo(el, i + 1)
+        if (info.hex) map[PALETTE_STEPS[i]] = info.hex
+      })
+      setHexMap(map)
+    }, 50)
+    return () => clearTimeout(timer)
+  }, [input])
+
+  const handleCopy = (val: string) => {
+    navigator.clipboard.writeText(val).then(() => {
+      setCopied(val)
+      setTimeout(() => setCopied(null), 1200)
+    })
+  }
+
+  return (
+    <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4">
+      <div className="flex items-center gap-3">
+        <div className="h-10 w-10 shrink-0 rounded-md border border-black/10 shadow-sm"
+          style={{ backgroundColor: input.trim() || "var(--fx-brand)" }} />
+        <input
+          className="h-9 flex-1 rounded-md border border-border bg-background px-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-ring"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="#FF8000"
+          spellCheck={false}
+        />
+      </div>
+      <div className="flex overflow-hidden rounded-md gap-[2px]">
+        {PALETTE_STEPS.map((step, i) => {
+          const textDark = i + 1 <= 7
+          const base = textDark ? "text-black" : "text-white"
+          const muted = textDark ? "text-black/50" : "text-white/55"
+          const hex = hexMap[step]
+          const varName = `--fx-brand-${step}`
+          return (
+            <div
+              key={step}
+              ref={el => { swatchRefs.current[i] = el }}
+              className={`fx-preview-${step} group relative flex-1 cursor-pointer`}
+              style={{ minHeight: 72 }}
+              onClick={() => handleCopy(hex || varName)}
+              title={copied === (hex || varName) ? "已复制" : hex || ""}
+            >
+              <div className={`pointer-events-none absolute inset-0 flex flex-col justify-between p-1.5 ${base}`}>
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-[9px] font-bold leading-tight whitespace-nowrap overflow-hidden">Brand {step}</span>
+                  {step === "09" && (
+                    <span className="self-start rounded bg-black/25 px-1 py-px text-[7px] font-semibold text-white leading-tight whitespace-nowrap">Brand</span>
+                  )}
+                </div>
+                {hexMap[step] && (
+                  <span className={`self-end text-[8px] font-semibold leading-tight tabular-nums ${muted}`}>
+                    {(() => {
+                      const info = computeSwatchInfo(swatchRefs.current[i]!, i + 1)
+                      return info.ratio
+                    })()}
+                  </span>
+                )}
+              </div>
+              {hex && (
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-start gap-px bg-black/60 px-1.5 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+                  <span className="text-[8px] font-semibold text-white leading-tight tabular-nums">{hex.toUpperCase()}</span>
+                  <span className={`text-[7px] text-white/70 leading-tight truncate w-full ${muted}`}>{varName}</span>
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+      {copied && <p className="text-[11px] text-muted-foreground text-center">已复制 {copied}</p>}
+    </div>
+  )
+}
+
+function computeSwatchInfo(bgEl: HTMLElement, stepNum: number): { ratio: string; hex: string } {
+  const colorStr = getComputedStyle(bgEl).backgroundColor
+  if (!colorStr || colorStr === "rgba(0, 0, 0, 0)") return { ratio: "", hex: "" }
+  const canvas = document.createElement("canvas")
+  canvas.width = canvas.height = 1
+  const ctx = canvas.getContext("2d")
+  if (!ctx) return { ratio: "", hex: "" }
+  ctx.fillStyle = colorStr
+  ctx.fillRect(0, 0, 1, 1)
+  const [rv, gv, bv] = ctx.getImageData(0, 0, 1, 1).data
+  const lin = (v: number) => { const s = v / 255; return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4) }
+  const L = 0.2126 * lin(rv) + 0.7152 * lin(gv) + 0.0722 * lin(bv)
+  const textDark = stepNum <= 7
+  const ratio = textDark ? (L + 0.05) / 0.05 : 1.05 / (L + 0.05)
+  const h = (v: number) => v.toString(16).padStart(2, "0")
+  return { ratio: `${ratio.toFixed(1)}:1`, hex: `#${h(rv)}${h(gv)}${h(bv)}` }
+}
+
+function ColorSwatch({ varName, step, label, semanticTag, onCopy, className }: { varName: string; step: string; label: string; semanticTag?: string; onCopy: (v: string) => void; className?: string }) {
+  const bgRef = useRef<HTMLDivElement>(null)
+  const [info, setInfo] = useState<{ ratio: string; hex: string }>({ ratio: "", hex: "" })
+  const stepNum = parseInt(step)
+  useEffect(() => {
+    if (!bgRef.current) return
+    requestAnimationFrame(() => {
+      if (bgRef.current) setInfo(computeSwatchInfo(bgRef.current, stepNum))
+    })
+  }, [varName, stepNum])
+
+  const textDark = parseInt(step) <= 7
+  const base = textDark ? "text-black" : "text-white"
+  const muted = textDark ? "text-black/50" : "text-white/55"
+
+  return (
+    <div
+      className={["group relative flex-1 cursor-pointer", className ?? ""].join(" ")}
+      onClick={() => navigator.clipboard.writeText(varName).then(() => onCopy(varName))}
+    >
+      <div
+        ref={bgRef}
+        className="h-16 w-full transition-[filter] group-hover:brightness-105"
+        style={{ backgroundColor: `var(${varName})` }}
+      />
+      {/* 常显：色系名 + 语义标签 + 对比度 */}
+      <div className="pointer-events-none absolute inset-0 flex flex-col justify-between p-1.5">
+        <div className="flex flex-col gap-0.5">
+          <span className={`text-[8px] font-bold leading-tight ${base} whitespace-nowrap overflow-hidden`}>{label} {step}</span>
+          {semanticTag && (
+            <span className="self-start rounded bg-black/25 px-1 py-px text-[7px] font-semibold text-white leading-tight whitespace-nowrap">
+              {semanticTag}
+            </span>
+          )}
+        </div>
+        {info.ratio && (
+          <span className={`self-end text-[7px] font-semibold leading-tight tabular-nums ${muted}`}>{info.ratio}</span>
+        )}
+      </div>
+      {/* Hover：HEX + CSS 变量名 */}
+      {info.hex && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-start gap-px bg-black/60 px-1.5 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+          <span className="text-[8px] font-semibold text-white leading-tight tabular-nums">{info.hex.toUpperCase()}</span>
+          <span className="text-[7px] text-white/70 leading-tight truncate w-full">{varName}</span>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ColorPaletteWithTabs({ lang }: { lang: Lang }) {
+  const customPrefix = null
+  const [darkBg, setDarkBg] = useState(false)
+  const [toast, setToast] = useState<string | null>(null)
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const handleCopy = (varName: string) => {
+    if (toastTimer.current) clearTimeout(toastTimer.current)
+    setToast(varName)
+    toastTimer.current = setTimeout(() => setToast(null), 2000)
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      {/* Toast */}
+      {toast && (
+        <div className="fixed left-1/2 top-4 z-50 -translate-x-1/2 flex items-center gap-2.5 rounded-lg border border-border bg-popover px-4 py-2.5 shadow-lg">
+          <span className="text-green-500">✓</span>
+          <span className="text-sm text-foreground">
+            已复制 <code className="ml-1 rounded bg-muted px-1.5 py-0.5 text-xs font-mono">{toast}</code>
+          </span>
+        </div>
+      )}
+
+      {/* 标题行 + 深浅 tab */}
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Generated Palette" : "推导色板"}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {lang === "en"
+              ? "14 families × 12 steps. Derived from a seed in oklch — 01–08 lighten, 09 is the seed, 10–12 darken. Steps 01–07 use dark text, 08–12 use white. Click any swatch to copy its CSS variable."
+              : "14 个色系 × 12 阶，由种子色在 oklch 空间推导；01–08 渐亮，09 为种子色，10–12 渐深；01–07 深色字，08–12 白色字。点击色块复制 CSS 变量名。"}
+          </p>
+        </div>
+        <div className="flex shrink-0 items-center rounded-md border border-border bg-muted/50 p-0.5 text-xs">
+          <button
+            onClick={() => setDarkBg(false)}
+            className={[
+              "rounded px-3 py-1 transition-colors",
+              !darkBg ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground",
+            ].join(" ")}
+          >
+            {lang === "en" ? "Light" : "浅色"}
+          </button>
+          <button
+            onClick={() => setDarkBg(true)}
+            className={[
+              "rounded px-3 py-1 transition-colors",
+              darkBg ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground",
+            ].join(" ")}
+          >
+            {lang === "en" ? "Dark" : "深色"}
+          </button>
+        </div>
+      </div>
+
+      {/* 色板 */}
+      <div className={["overflow-hidden rounded-xl border border-border transition-colors", darkBg ? "bg-zinc-900" : "bg-card"].join(" ")}>
+        {/* 用途分组行 */}
+        <div className={["flex items-center text-[9px]", darkBg ? "text-white/50" : "text-foreground/55"].join(" ")}>
+          <div className={["w-24 shrink-0 self-stretch border-r", darkBg ? "border-white/10" : "border-border"].join(" ")} />
+          {([
+            { label: lang === "en" ? "Backgrounds" : "背景",   cols: 2 },
+            { label: lang === "en" ? "Interactive" : "交互",   cols: 3 },
+            { label: lang === "en" ? "Borders"      : "边框",  cols: 3 },
+            { label: lang === "en" ? "Solid"        : "实心",  cols: 2 },
+            { label: lang === "en" ? "Text"         : "文字",  cols: 2 },
+          ] as const).map((g, i, arr) => (
+            <div
+              key={g.label}
+              className={[
+                "flex items-center justify-center py-1",
+                i < arr.length - 1 ? (darkBg ? "border-r border-white/10" : "border-r border-border") : "",
+              ].join(" ")}
+              style={{ flex: g.cols }}
+            >
+              {g.label}
+            </div>
+          ))}
+        </div>
+        {/* 阶编号行 */}
+        <div className={["flex items-center border-b text-[10px]", darkBg ? "border-white/10" : "border-border"].join(" ")}>
+          <div className={["w-24 shrink-0 self-stretch border-r", darkBg ? "border-white/10" : "border-border"].join(" ")} />
+          {PALETTE_STEPS.map((s) => (
+            <div key={s} className={[
+              "flex-1 flex items-center justify-center py-1.5",
+              darkBg ? "text-white/35" : "text-muted-foreground",
+              ["03","06","09","11"].includes(s) ? (darkBg ? "border-l border-white/20" : "border-l border-border") : "",
+            ].join(" ")}>
+              {s}
+            </div>
+          ))}
+        </div>
+
+        {/* 色板行 */}
+        <div className="flex flex-col gap-[2px]">
+        {seedColors.map((seed) => (
+          <div
+            key={seed.name}
+            className="flex items-stretch"
+          >
+            <div className={["w-24 shrink-0 flex flex-col justify-center px-3 py-2 border-r", darkBg ? "border-white/10" : "border-border", seed.prefix === customPrefix ? (darkBg ? "bg-white/5" : "bg-primary/5") : ""].join(" ")}>
+              <span className={`text-xs font-semibold leading-tight ${darkBg ? "text-white" : "text-foreground"}`}>
+                {lang === "en" ? seed.name : seed.nameZh}
+              </span>
+              {seed.prefix === customPrefix ? (
+                <span className="mt-0.5 text-[9px] font-medium text-primary">
+                  {lang === "en" ? "custom" : "自定义"}
+                </span>
+              ) : seed.tagZh ? (
+                <span className={`mt-0.5 text-[9px] ${darkBg ? "text-white/45" : "text-muted-foreground"}`}>
+                  {lang === "en" ? seed.tag : seed.tagZh}
+                </span>
+              ) : null}
+            </div>
+            <div className="flex flex-1 gap-[2px]">
+              {PALETTE_STEPS.map((step) => (
+                <ColorSwatch
+                  key={step}
+                  varName={`${seed.prefix}-${step}`}
+                  step={step}
+                  label={seed.name}
+                  semanticTag={step === "09" && seed.tag ? seed.tag : undefined}
+                  onCopy={handleCopy}
+                  className=""
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function getTokenExample(name: string): React.ReactNode {
+  const btn = (style: React.CSSProperties, label: string, textStyle?: React.CSSProperties) => (
+    <span className="inline-flex items-center rounded px-2.5 py-0.5 text-xs font-medium" style={{ ...style }}>
+      <span style={textStyle}>{label}</span>
+    </span>
+  )
+  switch (name) {
+    case "primary":             return btn({ backgroundColor: "var(--fx-brand-09)", color: "#fff" }, "主按钮")
+    case "primary-hover":       return btn({ backgroundColor: "var(--fx-primary-hover)", color: "#fff" }, "悬浮")
+    case "primary-active":      return btn({ backgroundColor: "var(--fx-primary-active)", color: "#fff" }, "按下")
+    case "primary-disabled":    return btn({ backgroundColor: "var(--fx-primary-disabled)", color: "#fff" }, "禁用")
+    case "primary-light":       return btn({ backgroundColor: "var(--fx-primary-light)", color: "var(--fx-brand-09)", border: "1px solid var(--fx-primary-light-hover)" }, "标签")
+    case "primary-light-hover": return btn({ backgroundColor: "var(--fx-primary-light-hover)", color: "var(--fx-brand-09)", border: "1px solid var(--fx-primary-light-hover)" }, "悬浮")
+    case "primary-light-active": return btn({ backgroundColor: "var(--fx-primary-light-active)", color: "var(--fx-brand-09)", border: "1px solid var(--fx-primary-light-active)" }, "按下")
+    case "ring":              return <span className="inline-flex items-center rounded border-2 px-2 py-0.5 text-xs" style={{ borderColor: "oklch(from var(--fx-brand-09) l c h / 0.4)" }}>焦点</span>
+    case "foreground":        return <span className="text-xs font-medium" style={{ color: "var(--fx-neutrals-19)" }}>正文文字 Aa</span>
+    case "muted-foreground":  return <span className="text-xs" style={{ color: "var(--fx-neutrals-11)" }}>辅助说明 Aa</span>
+    case "primary-foreground": return btn({ backgroundColor: "var(--fx-orange-09)" }, "按钮文字", { color: "#fff" })
+    case "icon":              return <span className="inline-flex size-5 items-center justify-center rounded" style={{ color: "var(--fx-neutrals-19)" }}>◎</span>
+    case "icon-muted":        return <span className="inline-flex size-5 items-center justify-center rounded" style={{ color: "var(--fx-neutrals-11)" }}>◎</span>
+    case "background":        return <span className="inline-flex h-5 w-12 rounded border border-border" style={{ backgroundColor: "var(--fx-neutrals-02)" }} />
+    case "card":              return <span className="inline-flex h-5 w-12 rounded border border-border shadow-sm" style={{ backgroundColor: "var(--fx-neutrals-01)" }} />
+    case "muted":             return <span className="inline-flex h-5 w-12 rounded" style={{ backgroundColor: "var(--fx-neutrals-03)" }} />
+    case "accent":            return <span className="inline-flex h-5 w-12 rounded" style={{ backgroundColor: "var(--fx-orange-01)" }} />
+    case "secondary":         return btn({ backgroundColor: "var(--fx-neutrals-03)", color: "var(--fx-neutrals-19)" }, "次级按钮")
+    case "destructive":       return btn({ backgroundColor: "var(--fx-red-09)", color: "#fff" }, "删除")
+    case "destructive-light": return btn({ backgroundColor: "var(--fx-red-01)", color: "var(--fx-red-09)", border: "1px solid var(--fx-red-03)" }, "危险")
+    case "success":           return btn({ backgroundColor: "var(--fx-green-09)", color: "#fff" }, "成功")
+    case "success-light":     return btn({ backgroundColor: "var(--fx-green-01)", color: "var(--fx-green-09)", border: "1px solid var(--fx-green-03)" }, "成功")
+    case "warning":           return btn({ backgroundColor: "var(--fx-amber-09)", color: "#fff" }, "警告")
+    case "warning-light":     return btn({ backgroundColor: "var(--fx-amber-01)", color: "var(--fx-amber-09)", border: "1px solid var(--fx-amber-03)" }, "警告")
+    case "info":              return btn({ backgroundColor: "var(--fx-blue-09)", color: "#fff" }, "信息")
+    case "info-light":        return btn({ backgroundColor: "var(--fx-blue-01)", color: "var(--fx-blue-09)", border: "1px solid var(--fx-blue-03)" }, "信息")
+    case "border":            return <span className="inline-flex h-5 w-12 items-center justify-center"><span className="w-full border-t" style={{ borderColor: "var(--fx-neutrals-05)" }} /></span>
+    case "input":             return <span className="inline-flex h-5 w-16 rounded border px-1.5 text-[10px] items-center text-muted-foreground" style={{ borderColor: "var(--fx-neutrals-07)" }}>输入框</span>
+    default:                  return <span className="text-muted-foreground/30">—</span>
+  }
 }
 
 function TokensColorsPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
@@ -4886,114 +5284,77 @@ function TokensColorsPage({ actions, lang }: { actions: React.ReactNode; lang: L
 
       <Separator className="my-10" />
 
-      <section id="tokens-colors-semantic" className="flex flex-col gap-5">
-        <h2 className="text-2xl font-semibold">{lang === "en" ? "Semantic Colors" : "语义颜色"}</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[720px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-4">Token</TableHead>
-                <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
-                <TableHead>Tailwind</TableHead>
-                <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {semanticTokens.map((row) => (
-                <TableRow key={row.name}>
-                  <TableCell className="pl-4 font-medium">
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <span className={`size-4 rounded-full border border-border ${row.className}`} />
-                      <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.value}</code>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.className}</code>
-                  </TableCell>
-                  <TableCell className="pr-4 text-muted-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-
-      <Separator className="my-10" />
-
-      <section id="tokens-colors-palette" className="flex flex-col gap-5">
+      <section id="tokens-colors-seeds" className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
-          <h2 className="text-2xl font-semibold">{lang === "en" ? "Base Color Palette" : "基础色板"}</h2>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Brand Color" : "主题色"}</h2>
           <p className="text-sm text-muted-foreground">
             {lang === "en"
-              ? "11 color scales × 11 steps (00–10). Step 06 is the Normal value. Variable: --fx-{scale}-{step}"
-              : "11 个色系 × 11 阶（00–10），06 为 Normal 基准值。变量名：--fx-{色系}-{阶}"}
+              ? "Input any color to preview its 12-step palette. Default is --fx-brand. The derivation uses CSS oklch relative color syntax."
+              : "输入任意色值，实时预览 12 阶推导色板。默认为 --fx-brand，推导算法使用 CSS oklch 相对颜色语法。"}
           </p>
         </div>
-        <div className="flex flex-col gap-2 rounded-lg border border-border bg-card p-4">
-          <div className="mb-1 flex items-center gap-1 pl-[120px]">
-            {["00","01","02","03","04","05","06","07","08","09","10"].map((s) => (
-              <div key={s} className={`w-8 text-center text-[10px] ${s === "06" ? "font-bold text-foreground" : "text-muted-foreground"}`}>{s}</div>
-            ))}
+        <SeedPreview lang={lang} />
+      </section>
+
+      <Separator className="my-10" />
+
+      <section id="tokens-colors-palette">
+        <ColorPaletteWithTabs lang={lang} />
+      </section>
+
+
+      <Separator className="my-10" />
+
+      <section id="tokens-colors-semantic" className="flex flex-col gap-8">
+        <div className="flex flex-col gap-2">
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Semantic Colors" : "语义颜色"}</h2>
+          <p className="text-base text-muted-foreground">
+            {lang === "en"
+              ? "Each semantic token is derived from a primitive (--fx-*) variable. The source shows which palette step it maps to."
+              : "每个语义 token 都从对应的 primitive（--fx-*）推导而来。「来源」列显示它映射的色系阶值。"}
+          </p>
+        </div>
+        {semanticTokenGroups.map((group) => (
+          <div key={group.role} className="flex flex-col gap-3">
+            <div className="flex flex-col gap-0.5">
+              <h3 className="text-base font-semibold">{lang === "en" ? group.labelEn : group.label}</h3>
+              <p className="text-sm text-muted-foreground">{lang === "en" ? group.descEn : group.desc}</p>
+            </div>
+            <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+              <Table className="min-w-[860px]">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="pl-4">Token</TableHead>
+                    <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
+                    <TableHead>Tailwind</TableHead>
+                    <TableHead>{lang === "en" ? "Usage" : "场景"}</TableHead>
+                    <TableHead className="pr-4">{lang === "en" ? "Example" : "示例"}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {group.tokens.map((row) => (
+                    <TableRow key={row.name}>
+                      <TableCell className="pl-4 font-medium">
+                        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <span className="size-4 rounded-full border border-border" style={{ backgroundColor: `var(${row.sourceToken})` }} />
+                          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{`var(${row.sourceToken})`}</code>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        {row.tailwind ? <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.tailwind}</code> : <span className="text-muted-foreground/30">—</span>}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+                      <TableCell className="pr-4">{getTokenExample(row.name)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
-          {colorScales.map((scale) => (
-            <div key={scale.name} className="flex items-center gap-3">
-              <div className="w-[108px] shrink-0">
-                <div className="text-sm font-medium leading-tight">{lang === "en" ? scale.name : scale.nameZh}</div>
-                {scale.tagZh && (
-                  <div className="text-[10px] text-muted-foreground">{lang === "en" ? scale.tag : scale.tagZh}</div>
-                )}
-              </div>
-              <div className="flex gap-1">
-                {scale.colors.map((hex, i) => (
-                  <div
-                    key={i}
-                    title={`${scale.var}-${String(i).padStart(2, "0")}: ${hex}`}
-                    className={`h-8 w-8 cursor-default rounded border ${i === 6 ? "ring-2 ring-foreground/20 ring-offset-1" : "border-black/5"}`}
-                    style={{ backgroundColor: hex }}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <Separator className="my-10" />
-
-      <section id="tokens-colors-neutrals" className="flex flex-col gap-5">
-        <h2 className="text-2xl font-semibold">{lang === "en" ? "Neutrals (01–19)" : "中性色（01–19）"}</h2>
-        <div className="flex flex-wrap gap-1 rounded-lg border border-border bg-card p-4">
-          {neutralsScale.map((hex, i) => (
-            <div key={i} className="flex flex-col items-center gap-0.5">
-              <div
-                title={`--fx-neutrals-${String(i + 1).padStart(2, "0")}: ${hex}`}
-                className="h-8 w-8 cursor-default rounded border border-black/5"
-                style={{ backgroundColor: hex }}
-              />
-              <span className="text-[10px] text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <Separator className="my-10" />
-
-      <section id="tokens-colors-special" className="flex flex-col gap-5">
-        <h2 className="text-2xl font-semibold">{lang === "en" ? "Special" : "特殊色"}</h2>
-        <div className="flex flex-wrap gap-3">
-          {specialColors.map((c) => (
-            <div key={c.name} className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2">
-              <div className="h-6 w-6 rounded border border-black/10" style={{ backgroundColor: c.hex }} />
-              <div>
-                <div className="text-xs font-medium">{c.name}</div>
-                <div className="text-[10px] text-muted-foreground">{lang === "en" ? c.usageEn : c.usage} · {c.hex}</div>
-              </div>
-            </div>
-          ))}
-        </div>
+        ))}
       </section>
     </>
   )
@@ -10165,7 +10526,7 @@ function ChartPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
             </TableHeader>
             <TableBody>
               {[
-                { token: "--chart-1",  value: "#FF7383", usage: "Magenta 05" },
+                { token: "--chart-1",  value: "#FF7383", usage: "Pink 05" },
                 { token: "--chart-2",  value: "#FF7752", usage: "Red 05" },
                 { token: "--chart-3",  value: "#FF9B29", usage: "Orange 05" },
                 { token: "--chart-4",  value: "#FFDA54", usage: "Yellow 04" },
@@ -10173,7 +10534,7 @@ function ChartPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
                 { token: "--chart-6",  value: "#55D48C", usage: "Green 05" },
                 { token: "--chart-7",  value: "#5BCFC1", usage: "Teal 04" },
                 { token: "--chart-8",  value: "#40B6FF", usage: "Blue 05" },
-                { token: "--chart-9",  value: "#368DFF", usage: "Dark Blue 05" },
+                { token: "--chart-9",  value: "#368DFF", usage: "Blue 05 deep" },
                 { token: "--chart-10", value: "#976AEB", usage: "Purple 05" },
               ].map((r) => (
                 <TableRow key={r.token}>

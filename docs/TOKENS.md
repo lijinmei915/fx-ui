@@ -131,77 +131,73 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `z-40` | 固定 Header、文档顶部导航 |
 | `z-50` | Dialog、Dropdown、Popover、Sheet、Tooltip 等浮层 |
 
-## 基础色板（Figma 色彩规范 · 11 色系 × 00–10 阶）
+## 基础色板（14 色系 × 12 阶）
 
-> 来源：Figma「全局规范」色彩规范节点。变量名格式：`--fx-{色系}-{阶}`，06 为 Normal 基准值。
+> 真相源：`theme/fx-theme.css`，用 CSS 相对颜色语法从种子色（seed）在 oklch 空间推导。
+> 变量名格式：`--fx-{色系}-{阶}`，例如 `--fx-orange-09`。
 
-### Orange（品牌橙）
-`#FFFBF0` `#FFF7E6` `#FFDDA3` `#FFCA7A` `#FFB452` `#FF9B29` `#FF8000` `#D96500` `#B34100` `#8C2F00` `#662500`
+### 推导公式
 
-### Magenta（玫红）
-`#FFF1F0` `#FFF0F0` `#FFEDED` `#FFC4C7` `#FF9CA4` `#FF7383` `#FF4A66` `#D93452` `#B32241` `#8C1432` `#660D26`
+| 阶 | 公式 | 用途 |
+|----|------|------|
+| 01 | `l + (1-l)*0.93, c*0.04` | 极浅背景 |
+| 02 | `l + (1-l)*0.84, c*0.10` | 次浅背景 |
+| 03 | `l + (1-l)*0.72, c*0.18` | 交互浅背景（默认） |
+| 04 | `l + (1-l)*0.58, c*0.30` | 交互浅背景（hover） |
+| 05 | `l + (1-l)*0.43, c*0.45` | 交互浅背景（active） |
+| 06 | `l + (1-l)*0.28, c*0.62` | 浅边框 |
+| 07 | `l + (1-l)*0.14, c*0.80` | 边框（默认） |
+| 08 | `l + (1-l)*0.12, c*0.94` | 边框（hover），与 09 有明显视觉差距 |
+| 09 | seed 本身 | 最鲜艳，实心填充基准（按钮/Badge 默认） |
+| 10 | `l*0.87, c*0.95` | 暗 13%，hover / 按下态（同色靠动效区分） |
+| 11 | `l*0.72, c*0.82` | 暗 28%，**低对比彩色文字**（仍明显有色，如品牌色链接、Tag 文字） |
+| 12 | `l*0.35, c*0.65` | 暗 65%，**高对比深色文字**（接近深棕/黑，WCAG AA 可达） |
 
-### Red（红 · 错误）
-`#FFF6F0` `#FFF5F0` `#FFDCCC` `#FFBDA3` `#FF9C7A` `#FF7752` `#FF522A` `#D93518` `#B31E0B` `#8C0D01` `#660500`
+> **11-12 跨度大是有意为之**（对齐 Radix 设计逻辑）：11 是"还能看出是品牌色"的文字，12 是"必须够深才能达标"的正文。两档功能不同，跨度天然大。
 
-### Yellow（黄）
-`#FFFEF0` `#FFFCE6` `#FFF2A6` `#FFE77D` `#FFDA54` `#FFCA2B` `#FFB602` `#D99400` `#B37400` `#8C5600` `#663C00`
+### Radix 分区对照
 
-### Orange Warning（暖橙 · 警告）
-`#FFFAF0` `#FFF5E6` `#FFE2BD` `#FFCD94` `#FFB56B` `#FF9A42` `#FF7C19` `#D95D0B` `#B34100` `#8C2F00` `#661F00`
+| 阶范围 | 分区 | 典型用途 |
+|--------|------|----------|
+| 01–02 | 背景 | 极浅彩色块、高亮背景 |
+| 03–05 | 交互背景 | 浅色按钮/组件 hover/active 背景 |
+| 06–08 | 边框 | 分割线、输入框描边、边框 hover |
+| 09–10 | 实心填充 | 主按钮、Badge、Tag 实心背景 |
+| 11 | 低对比文字 | 彩色链接、Tag 文字、品牌色标注 |
+| 12 | 高对比文字 | 深色正文、需要高对比的彩色文字 |
 
-### Yellow Green（黄绿）
-`#FBFFF0` `#FAFFF0` `#F9FFED` `#DDF2BB` `#C0E68C` `#A3D962` `#87CC3B` `#65A628` `#478018` `#2C590C` `#183307`
+### 14 色系种子色
 
-### Green（绿 · 成功）
-`#F0FFF3` `#F0FFF4` `#DCFAE6` `#ABEDC3` `#7EE0A5` `#55D48C` `#30C776` `#1FA160` `#117A49` `#085433` `#042E1D`
-
-### Teal（青）
-`#F0FFFB` `#E1F5F1` `#B0E8DE` `#84DBCE` `#5BCFC1` `#36C2B6` `#16B4AB` `#0A8F8D` `#026769` `#003F42` `#001A1C`
-
-### Blue（蓝）
-`#F0FCFF` `#E6F9FF` `#BAEBFF` `#91DCFF` `#69CAFF` `#40B6FF` `#189DFF` `#097BD9` `#005CB3` `#00448C` `#002E66`
-
-### Dark Blue（深蓝 · 链接/信息）
-`#F0F9FF` `#E6F4FF` `#B0DAFF` `#87C3FF` `#5EA9FF` `#368DFF` `#0C6CFF` `#004FD9` `#003BB3` `#002A8C` `#001B66`
-
-### Purple（紫）
-`#F8F0FF` `#F7F0FF` `#F5EDFF` `#DDC4FF` `#BC97F7` `#976AEB` `#7341DE` `#542CB8` `#391C91` `#230F6B` `#140945`
+| 色系变量 | 参考值 | 语义 |
+|----------|--------|------|
+| `--fx-brand-vivid` | `#FF8000` | 品牌橙（随 `--fx-brand` 换肤） |
+| `--fx-seed-orange-warning` | `#F97316` | 暖橙 Warning |
+| `--fx-seed-amber` | `#F59E0B` | 琥珀 |
+| `--fx-seed-yellow` | `#EAB308` | 黄 |
+| `--fx-seed-lime` | `#84CC16` | 嫩绿 |
+| `--fx-seed-yellow-green` | `oklch(0.70 0.19 137)` | 黄绿 |
+| `--fx-seed-green` | `#22C55E` | 绿 · 成功 |
+| `--fx-seed-teal` | `#14B8A6` | 青 |
+| `--fx-seed-cyan` | `#06B6D4` | 青蓝 |
+| `--fx-seed-blue` | `#3B82F6` | 蓝 · 链接/信息 |
+| `--fx-seed-purple` | `#8B5CF6` | 紫 |
+| `--fx-seed-pink` | `#EC4899` | 粉 |
+| `--fx-seed-red` | `#EF4444` | 红 · 错误 |
+| `--fx-seed-gray` | `oklch(from brand 0.65 0.010 h)` | 主题色偏色灰；C=0.010 为确认值，继承 brand 色相但彩度极低，视觉上看不出色相偏向；不调高到 0.020+（会出现橙调），不降到 0.005 以下（步骤差异消失） |
 
 ## 中性色（Neutrals 01–19）
 
-变量名：`--fx-neutrals-{01~19}`
+变量名：`--fx-neutrals-{01~19}`，用 `color-mix(in oklch, white, neutral-dark N%)` 推导。
 
-| 编号 | 值 | 常用场景 |
-|------|-----|----------|
-| 01 | `#FFFFFF` | 背景 |
-| 02 | `#FAFAFA` | 背景 |
-| 03 | `#F2F3F5` | 背景 / input disabled / header |
-| 04 | `#EAEBEE` | — |
-| 05 | `#DEE1E8` | 分割线 / icon gray |
-| 06 | `#CED1D9` | — |
-| 07 | `#C1C5CE` | text H4 / input border / icon light |
-| 08 | `#ADB1BA` | — |
-| 09 | `#A3A7B0` | input border hover |
-| 10 | `#999DA6` | — |
-| 11 | `#91959E` | text H3 |
-| 12 | `#81858F` | — |
-| 13 | `#737881` | — |
-| 14 | `#606570` | — |
-| 15 | `#545861` | text H2 |
-| 16 | `#444852` | — |
-| 17 | `#343841` | — |
-| 18 | `#272B34` | — |
-| 19 | `#181C25` | text H1 |
-
-## 特殊色（Special）
-
-| 变量 | 值 | 场景 |
-|------|-----|------|
-| `--fx-special-01` | `#F2F4FB` | 标签背景 |
-| `--fx-special-02` | `#737C8C` | icon/dark |
-| `--fx-special-03` | `#EFF1F3` | 页面底色 |
-| `--fx-special-04` | `#F7F8FA` | 卡片底色 |
+| 编号 | 混合比 | 常用场景 |
+|------|--------|----------|
+| 01 | white | 卡片、容器背景 |
+| 02 | 2% | 页面底色（`--background`） |
+| 03 | 5% | 次级背景、muted、input disabled |
+| 05 | 16% | 分割线（`--border`） |
+| 07 | 28% | 表单边框（`--input`） |
+| 11 | 54% | 辅助文字（`--muted-foreground`）、icon-muted |
+| 19 | neutral-dark | 主文字（`--foreground`）、icon |
 
 ## 图表色板（BI 常用色 · 10 色）
 
@@ -231,14 +227,34 @@ shadcn/ui 和业务页面真正使用的语义槽。
 线性图标（Linear icon）使用各色系 Normal/06 颜色，与 BI chart 色一致。
 填充/反色图标（Filled/Reverse icon）使用各色系 05 阶（比 Normal 浅一档）。
 
-## 品牌色交互四态
+## 交互色状态阶梯（通用规则）
 
-| 状态 | Token | 值 | 说明 |
-|------|-------|-----|------|
-| Normal   | `--primary` / `--fx-orange-06`    | `#FF8000` | 默认态 |
-| Hover    | `--fx-primary-hover`              | `#FF9B29` | Orange 05，悬浮变浅 |
-| Click    | `--fx-primary-click`              | `#D96500` | Orange 07，点击加深 |
-| Disabled | `--fx-primary-disabled`           | `#FF9B29` | Orange 05，组件层叠加 opacity |
+任何一个需要交互的颜色（主色、功能色等），都按下面这套固定阶梯派生态，**深浅各一组**，统一从该色的 12 阶色板取阶，不手挑十六进制：
+
+### 实心组（按钮、实心标签等）
+
+| 态 | 取阶 | 规律 |
+|------|------|------|
+| 默认 Default | 09 | 种子色本身 |
+| 悬浮 Hover | 10 | 比默认深一阶 |
+| 激活 Active / 按下 Click | 11 | 比悬浮再深一阶 |
+| 禁用 Disabled | 05 | 大幅变浅（组件层不再叠 opacity） |
+
+### 浅色组（Tag / Badge / Alert / Ghost 按钮背景）
+
+| 态 | 取阶 | 规律 |
+|------|------|------|
+| 默认 Default | 01 | 最浅背景 |
+| 悬浮 Hover | 02 | 深一阶 |
+| 激活 Active / 按下 Click | 03 | 再深一阶 |
+| 文字 / 描边 | 09 | 浅色背景上的文字用种子色 |
+
+### 焦点环 Focus ring
+
+键盘焦点环单独一条：种子色（09）叠 40% 透明，`oklch(from var(--fx-brand-09) l c h / 0.4)`。
+
+> 落地示例（主色）：`--fx-primary` = `--fx-brand-09`，`--fx-primary-hover` = `--fx-brand-10`，`--fx-primary-active` = `--fx-brand-11`，`--fx-primary-disabled` = `--fx-brand-05`；浅色组 `--fx-primary-light` = `--fx-brand-01/02/03`。
+> 新增任何可交互色（如自定义功能色按钮）时，按这张表派生，不要临时挑色值。
 
 ## 列表行高亮色
 

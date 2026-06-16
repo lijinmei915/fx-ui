@@ -22,6 +22,7 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 2. **不要封装黑盒。** shadcn 组件以 open-code 进 `src/components/ui/`，源码可见可改。
 3. **不要从零写页面。** 页面用 shadcn Blocks / v0 / 内部 blocks 现成区块起步。
 4. **不要乱改 token 真相源。** `theme/fx-theme.css` 是公司视觉的 SSOT，改它 = 全局换肤，必须先向用户说明再动。
+5. **不要自动同步 shadcn 上游。** shadcn 官网 / registry 更新不等于本项目必须更新；只有遇到 bug、安全、可访问性或明确业务需要时，才按单个组件评估升级，且不得盲目覆盖本地源码。
 
 ---
 
@@ -30,8 +31,10 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 - 公司视觉**只靠注入 token 实现**（`theme/fx-theme.css` 里的语义变量）
 - 需要新组件 → 查 shadcn 有没有现成的 → `npx shadcn add` 拉
 - 需要改某个组件样式 → 改它的 Tailwind class 或 token，不重写
+- 需要升级已有 shadcn 组件 → 先说明升级原因，只处理相关组件，对比本地源码和上游差异，保留 fx-ui token、文档契约和 `data-slot` 语义，再跑 `npm run check`
 - 不确定用什么颜色/圆角 → 查 `docs/TOKENS.md`，用公司 token，别写死十六进制
 - 不确定一条信息该写进哪份文档（CHANGELOG / DECISIONS / LESSONS / 新建文档…）→ 先查 `docs/DOCUMENTATION.md` 的 SSOT 路由表；新建 `docs/*.md` 时必须同时在该表里登记一行，否则会变成孤岛文档
+- 用户说"记住这个规则"→ **先判断类型**：设计/架构/产品决策 → `docs/DECISIONS.md`；AI 行为偏好/跨项目约定 → memory；不要两个都写
 
 ---
 

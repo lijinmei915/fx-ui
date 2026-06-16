@@ -20,11 +20,14 @@ use_when: "完成一次主要改动后，收尾前过一遍这份 checklist"
 ### 1. 构建检查
 
 ```bash
-npm run check        # node scripts/check-shadcn-contract.mjs && npm run build
+npm run check        # 契约 + token 漂移 + 文档站骨架 + 构建
 npm run check:shadcn # 单独跑 shadcn contract 检查
+npm run check:tokens # 单独跑 token 漂移检查
+npm run check:doc-site # 单独跑文档站骨架契约检查
+npm run check:components # 单独跑组件 manifest 检查
 ```
 
-`check` 同时校验了 shadcn 组件契约和 TS/构建是否通过——这是 fx-ui 目前最接近"自动化测试"的命令。
+`check` 同时校验 shadcn 组件契约、token 漂移、文档站骨架契约、组件 manifest 和 TS/构建是否通过——这是 fx-ui 目前最接近"自动化测试"的命令。
 
 ### 2. 文档健康检查
 
@@ -55,6 +58,16 @@ npm run check:shadcn # 单独跑 shadcn contract 检查
 - 是否只改了一处数据源
 - 总览矩阵是否自动跟着更新，而不是要手动同步两处
 
+### 6. 治理防漂检查
+
+长期规范应尽量形成“文字规范 + 机器事实表 + 可执行检查”：
+
+- 文档站骨架：`docs/DOC_SITE_DESIGN.md` + `docs/data/doc-site.manifest.json` + `scripts/check-doc-site-contract.mjs`
+- 组件事实：`docs/components/*.md` + `docs/data/components.manifest.json` + `scripts/check-components-manifest.mjs`
+- token：`docs/TOKENS.md` + `docs/data/design-tokens.json` + `scripts/check-tokens-sync.sh`
+
+如果新增了某条会被代码实现的规范，却没有机器事实表或检查脚本，要在收尾时明确说明它目前仍是软约束。
+
 ---
 
 ## 收尾最小检查
@@ -63,6 +76,7 @@ npm run check:shadcn # 单独跑 shadcn contract 检查
 - 改动是否符合 `PROJECT.md` 里的当前优先级
 - UI 改动是否符合 `docs/DESIGN_STANDARDS.md`
 - 是否跑了 `npm run check`
+- 新增长期规范时，是否判断过需不需要机器事实表和检查脚本
 - `HANDOFF.md` 的"下一步"是否需要更新
 - 踩坑或杜撰被纠正后，是否更新了 `docs/LESSONS.md`
 

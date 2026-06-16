@@ -1,0 +1,492 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/governance-status",
+  "updatedAt": "2026-06-14",
+  "truthSource": "docs/data/governance-status.json",
+  "humanDoc": "docs/DOC_SITE_DESIGN.md",
+  "note": "现状看板的治理内容事实表。页面只负责展示当前状态、规则资产、治理闭环和参考案例；已完成沉淀记录可以留在这里做历史，不默认渲染。",
+  "statusCards": [
+    {
+      "title": "组件契约",
+      "valueKey": "componentContracts",
+      "desc": "来自 components.manifest.json，表示组件文档契约完成度。"
+    },
+    {
+      "title": "文档站骨架",
+      "valueKey": "docSiteRegions",
+      "desc": "来自 doc-site.manifest.json，表示顶部、左侧、内容区、右侧目录等结构事实。"
+    },
+    {
+      "title": "token 事实",
+      "valueKey": "tokenFacts",
+      "desc": "来自 design-tokens.json，覆盖 theme/fx-theme.css 的完整 primitive、semantic 和核心组件消费规则。"
+    },
+    {
+      "title": "项目图谱",
+      "valueKey": "projectGraph",
+      "desc": "来自 project-graph.json，表示文档、脚本、规则之间的关系快照。"
+    },
+    {
+      "title": "默认门禁",
+      "valueKey": "defaultGate",
+      "desc": "组件契约、token 漂移、文档站契约、组件 manifest、构建一起跑。"
+    },
+    {
+      "title": "过期节点",
+      "valueKey": "staleNodes",
+      "desc": "来自 project-graph.json 的 stale 统计；图谱需要定期重新生成。"
+    }
+  ],
+  "maintenanceModel": {
+    "title": "网页和文档怎么同步",
+    "desc": "这个网站不是后台实时监控，也不是任意 Markdown 自动生成页面。它是 React 页面读取仓库里的机器事实表后形成的开发者看板。",
+    "layers": [
+      {
+        "name": "人读文档",
+        "source": "docs/*.md",
+        "role": "解释规则为什么存在、边界是什么、改动流程怎么走。",
+        "update": "被 raw import 的 Markdown 在 Vite dev 下会热更新；没有接入页面的 Markdown 只作为文档源，不会自动变成页面模块。"
+      },
+      {
+        "name": "机器事实",
+        "source": "docs/data/*.json",
+        "role": "给网页、AI 和检查脚本读取的结构化事实。",
+        "update": "开发服务开着时通常会热更新；生产构建需要重新 build。"
+      },
+      {
+        "name": "网页展示",
+        "source": "src/App.tsx",
+        "role": "负责导航、布局、卡片、表格和交互，不直接替代文档源。",
+        "update": "改 React 源码会热更新；但文案和事实尽量从 JSON 来，避免写死。"
+      },
+      {
+        "name": "检查门禁",
+        "source": "scripts/check-*",
+        "role": "确认 Markdown、JSON、源码和 token 没有漂移。",
+        "update": "检查结果不会自动写回网页，需要运行 npm run check 或对应子命令确认。"
+      }
+    ],
+    "rules": [
+      "改视觉 token：先改 theme/fx-theme.css，再同步 docs/data/design-tokens.json 和 docs/TOKENS.md，最后跑 npm run check:tokens。",
+      "改组件能力：先看 src/components/ui 源码，再同步 docs/components 和 docs/data/components.manifest.json，最后跑 npm run check:components。",
+      "改文档站结构：同步 src/App.tsx、docs/data/doc-site.manifest.json 和 docs/DOC_SITE_DESIGN.md，最后跑 npm run check:doc-site。",
+      "改工程关系图：同步 docs/data/system-relations.json，再跑 bash scripts/build-project-graph.sh 和 npm run check:doc-site。"
+    ]
+  },
+  "freshness": [
+    {
+      "name": "组件事实",
+      "source": "docs/data/components.manifest.json",
+      "updatedAtKey": "componentsManifest",
+      "maintenance": "改组件源码、组件文档或组件契约后同步。"
+    },
+    {
+      "name": "token 事实",
+      "source": "docs/data/design-tokens.json",
+      "updatedAtKey": "designTokens",
+      "maintenance": "改 token、token 文档或组件 token 消费规则后同步。"
+    },
+    {
+      "name": "文档站骨架",
+      "source": "docs/data/doc-site.manifest.json",
+      "updatedAtKey": "docSite",
+      "maintenance": "改顶部导航、左侧导航、右侧目录或页面骨架后同步。"
+    },
+    {
+      "name": "工程文件关系",
+      "source": "docs/data/system-relations.json",
+      "updatedAtKey": "systemRelations",
+      "maintenance": "改工程运行图的文件关系后同步。"
+    },
+    {
+      "name": "现状治理内容",
+      "source": "docs/data/governance-status.json",
+      "updatedAtKey": "governanceStatus",
+      "maintenance": "改当前状态卡、规则资产、参考案例或历史沉淀记录后同步。"
+    },
+    {
+      "name": "项目图谱",
+      "source": "docs/data/project-graph.json",
+      "updatedAtKey": "projectGraph",
+      "maintenance": "跑 bash scripts/build-project-graph.sh 重新生成。"
+    }
+  ],
+  "assets": [
+    {
+      "rule": "AI 行为红线",
+      "textSpec": "AGENTS.md",
+      "machineData": "无单独 JSON",
+      "check": "npm run check",
+      "status": "已落地"
+    },
+    {
+      "rule": "文档路由",
+      "textSpec": "docs/DOCUMENTATION.md",
+      "machineData": "路由表",
+      "check": "check-docs-routing.sh",
+      "status": "已落地"
+    },
+    {
+      "rule": "token 体系",
+      "textSpec": "docs/TOKENS.md",
+      "machineData": "docs/data/design-tokens.json",
+      "check": "check-tokens-sync.sh",
+      "status": "已落地"
+    },
+    {
+      "rule": "文档站骨架",
+      "textSpec": "docs/DOC_SITE_DESIGN.md",
+      "machineData": "docs/data/doc-site.manifest.json",
+      "check": "check-doc-site-contract.mjs",
+      "status": "已落地"
+    },
+    {
+      "rule": "工程文件关系",
+      "textSpec": "docs/DOC_SITE_DESIGN.md",
+      "machineData": "docs/data/system-relations.json",
+      "check": "check-doc-site-contract.mjs",
+      "status": "已落地"
+    },
+    {
+      "rule": "组件事实",
+      "textSpec": "docs/components/*.md",
+      "machineData": "docs/data/components.manifest.json",
+      "check": "check-components-manifest.mjs",
+      "status": "已落地"
+    },
+    {
+      "rule": "shadcn 上游升级",
+      "textSpec": "AGENTS.md / docs/ARCHITECTURE.md",
+      "machineData": "src/components/ui",
+      "check": "npm run check",
+      "status": "按需手动"
+    },
+    {
+      "rule": "项目知识图谱",
+      "textSpec": "docs/data/project-graph.json",
+      "machineData": ".project-os/graph/project-graph.json",
+      "check": "build-project-graph.sh",
+      "status": "可增强"
+    }
+  ],
+  "loop": [
+    {
+      "title": "文字规范",
+      "titleEn": "Text spec",
+      "file": "docs/*.md",
+      "desc": "说明为什么这么定、边界在哪里。",
+      "descEn": "Explains why a rule exists and where its boundaries are."
+    },
+    {
+      "title": "机器事实表",
+      "titleEn": "Machine manifest",
+      "file": "docs/data/*.json",
+      "desc": "记录必须存在的结构事实，给 AI 和脚本读取。",
+      "descEn": "Stores structural facts for AI and scripts."
+    },
+    {
+      "title": "可执行检查",
+      "titleEn": "Executable check",
+      "file": "scripts/check-*",
+      "desc": "把规则接入检查命令，防止文档、页面和源码漂移。",
+      "descEn": "Connects rules to checks so docs, pages, and source do not drift."
+    },
+    {
+      "title": "站内页面",
+      "titleEn": "Site page",
+      "file": "src/App.tsx",
+      "desc": "把规则可视化给工程师、设计和 AI 共同消费。",
+      "descEn": "Makes the rules visible for engineers, designers, and AI."
+    }
+  ],
+  "references": [
+    {
+      "title": "Backstage Catalog Graph",
+      "desc": "把实体和关系可视化，适合参考我们的文件关系图。",
+      "href": "https://backstage.io/docs/features/software-catalog/creating-the-catalog-graph/"
+    },
+    {
+      "title": "OpenSSF Scorecard",
+      "desc": "把仓库健康度拆成检查项和改进建议，适合参考我们的风险面板。",
+      "href": "https://github.com/ossf/scorecard"
+    },
+    {
+      "title": "OPA / Conftest",
+      "desc": "Policy as Code 思路，适合参考结构化规则如何被机器执行。",
+      "href": "https://openpolicyagent.org/docs"
+    }
+  ],
+  "actionFlows": [
+    {
+      "id": "style",
+      "title": "我要改样式",
+      "titleEn": "I want to change styles",
+      "desc": "先看 token 事实，再看组件消费规则，最后才判断是不是局部覆盖。",
+      "descEn": "Start from token facts, then check component usage before touching page overrides.",
+      "href": "#tokens",
+      "linkLabel": "查看 token 页",
+      "linkLabelEn": "Open token page",
+      "checkCommand": "npm run check:tokens",
+      "done": "token 值、文档、JSON 事实和组件消费规则保持一致。",
+      "doneEn": "Token values, docs, JSON facts, and component usage stay aligned.",
+      "steps": [
+        {
+          "file": "theme/fx-theme.css",
+          "action": "真相源",
+          "actionEn": "Truth source",
+          "note": "公司视觉 token 和 shadcn 语义槽从这里开始。",
+          "noteEn": "Company visual tokens and shadcn semantic slots start here."
+        },
+        {
+          "file": "docs/data/design-tokens.json",
+          "action": "机器事实",
+          "actionEn": "Machine facts",
+          "note": "页面和检查脚本读取这份结构化 token 表。",
+          "noteEn": "Pages and checks read this structured token table."
+        },
+        {
+          "file": "docs/TOKENS.md",
+          "action": "人工说明",
+          "actionEn": "Human spec",
+          "note": "给工程师和 AI 解释 token 值、用途和改法。",
+          "noteEn": "Explains token values, usage, and change flow for engineers and AI."
+        },
+        {
+          "file": "scripts/check-tokens-sync.sh",
+          "action": "检查",
+          "actionEn": "Check",
+          "note": "核对 CSS、Markdown、JSON 和组件 tokenRefs 是否漂移。",
+          "noteEn": "Checks whether CSS, Markdown, JSON, and component tokenRefs drift."
+        }
+      ]
+    },
+    {
+      "id": "component",
+      "title": "我要改组件",
+      "titleEn": "I want to change a component",
+      "desc": "先看组件契约：源码、文档、状态、variant、tokenRefs 是否对齐；shadcn 上游更新不自动同步，只在 bug、安全、可访问性或业务需要时按单组件升级。",
+      "descEn": "Use the component contract to know source, docs, states, variants, and token refs.",
+      "href": "#components",
+      "linkLabel": "查看组件索引",
+      "linkLabelEn": "Open component index",
+      "checkCommand": "npm run check:components",
+      "done": "源码、组件文档、manifest 契约和 tokenRefs 对齐。",
+      "doneEn": "Source, component docs, manifest contract, and token refs agree.",
+      "steps": [
+        {
+          "file": "src/components/ui/<component>.tsx",
+          "action": "真实 API",
+          "actionEn": "Real API",
+          "note": "variant、size、状态和 data-slot 以源码为准。",
+          "noteEn": "Variants, sizes, states, and data-slot come from source."
+        },
+        {
+          "file": "docs/components/<component>.md",
+          "action": "人工文档",
+          "actionEn": "Human docs",
+          "note": "解释用法、禁区、组合方式和示例。",
+          "noteEn": "Explains usage, boundaries, composition, and examples."
+        },
+        {
+          "file": "docs/data/components.manifest.json",
+          "action": "组件契约",
+          "actionEn": "Component contract",
+          "note": "记录源码、文档、状态、语义 DOM 和 tokenRefs。",
+          "noteEn": "Records source, docs, states, semantic DOM, and tokenRefs."
+        },
+        {
+          "file": "scripts/check-components-manifest.mjs",
+          "action": "检查",
+          "actionEn": "Check",
+          "note": "核对源码、文档、manifest 和 design-tokens。",
+          "noteEn": "Checks source, docs, manifest, and design tokens."
+        }
+      ]
+    },
+    {
+      "id": "site",
+      "title": "我要改这个网站",
+      "titleEn": "I want to change this site",
+      "desc": "看文档站契约，守住导航、阅读宽度、顶部操作区和右侧目录。",
+      "descEn": "Use doc-site contracts to keep navigation, reading width, actions, and TOC stable.",
+      "href": "#governance-map-system",
+      "linkLabel": "查看工程运行图",
+      "linkLabelEn": "Open system map",
+      "checkCommand": "npm run check:doc-site",
+      "done": "导航、阅读宽度、顶部操作区、右侧目录和现状页都被契约保护。",
+      "doneEn": "Navigation, reading width, actions, TOC, and status board remain protected.",
+      "steps": [
+        {
+          "file": "src/App.tsx",
+          "action": "页面实现",
+          "actionEn": "Page implementation",
+          "note": "路由、导航、页面内容和驾驶舱都在这里渲染。",
+          "noteEn": "Routes, navigation, page content, and cockpit render here."
+        },
+        {
+          "file": "docs/data/doc-site.manifest.json",
+          "action": "布局契约",
+          "actionEn": "Layout contract",
+          "note": "记录文档站四大区和容易漂的 layoutContracts。",
+          "noteEn": "Records four doc-site regions and drift-prone layout contracts."
+        },
+        {
+          "file": "docs/DOC_SITE_DESIGN.md",
+          "action": "设计规范",
+          "actionEn": "Design spec",
+          "note": "解释为什么这样布局、哪些地方不能漂。",
+          "noteEn": "Explains layout decisions and drift boundaries."
+        },
+        {
+          "file": "scripts/check-doc-site-contract.mjs",
+          "action": "检查",
+          "actionEn": "Check",
+          "note": "核对源码、manifest、系统关系和治理状态。",
+          "noteEn": "Checks source, manifest, system relations, and governance status."
+        }
+      ]
+    },
+    {
+      "id": "impact",
+      "title": "我要看影响范围",
+      "titleEn": "I want to understand impact",
+      "desc": "工程关系看职责和影响，自动引用边看真实文件引用。",
+      "descEn": "Use system relations for responsibility and generated edges for raw references.",
+      "href": "#governance-map-system",
+      "linkLabel": "查看工程运行图",
+      "linkLabelEn": "Open system map",
+      "checkCommand": "bash scripts/build-project-graph.sh",
+      "done": "自动图谱和人工工程关系一起刷新。",
+      "doneEn": "Generated graph and curated system relations are refreshed together.",
+      "steps": [
+        {
+          "file": "docs/data/system-relations.json",
+          "action": "工程解释",
+          "actionEn": "Engineering explanation",
+          "note": "人工维护网站/项目文件之间的作用关系。",
+          "noteEn": "Curates how site and project files affect each other."
+        },
+        {
+          "file": "scripts/build-project-graph.sh",
+          "action": "生成",
+          "actionEn": "Generate",
+          "note": "扫描文件引用，并合入 system-relations。",
+          "noteEn": "Scans file references and merges system-relations."
+        },
+        {
+          "file": "docs/data/project-graph.json",
+          "action": "图谱快照",
+          "actionEn": "Graph snapshot",
+          "note": "页面读取节点、边、过期状态和工程关系摘要。",
+          "noteEn": "Pages read nodes, edges, stale status, and relation summary."
+        },
+        {
+          "file": "#governance-map-system",
+          "action": "钻取",
+          "actionEn": "Drill down",
+          "note": "回到工程运行图查看分类视图和文件关系。",
+          "noteEn": "Go back to the system map for category and file-relation views."
+        }
+      ]
+    }
+  ],
+  "taskRoutes": [
+    {
+      "id": "devinspector-style",
+      "label": "DevInspector 样式任务",
+      "labelEn": "DevInspector style task",
+      "match": ["DevInspector", "选择器", "样式", "gap", "padding", "margin", "颜色", "圆角"],
+      "flowId": "style",
+      "firstDecision": "先定位源码，判断应固化为 token、组件样式还是局部覆盖；不要手改 dist。",
+      "firstDecisionEn": "Locate source first, then decide token, component style, or local override; never edit dist.",
+      "outputCheck": "npm run check"
+    },
+    {
+      "id": "component-contract-change",
+      "label": "组件能力或文档改动",
+      "labelEn": "Component capability or docs change",
+      "match": ["组件", "variant", "size", "状态", "data-slot", "组件文档", "示例"],
+      "flowId": "component",
+      "firstDecision": "先读 src/components/ui 源码，以真实 API 为准，不发明 prop。",
+      "firstDecisionEn": "Read src/components/ui source first and treat real API as truth; do not invent props.",
+      "outputCheck": "npm run check:components"
+    },
+    {
+      "id": "doc-site-layout-change",
+      "label": "文档站布局或导航改动",
+      "labelEn": "Doc-site layout or navigation change",
+      "match": ["文档站", "导航", "右侧目录", "顶部操作", "阅读宽度", "驾驶舱", "现状看板"],
+      "flowId": "site",
+      "firstDecision": "先看 doc-site manifest 的 regions 和 layoutContracts，再改 App 展示。",
+      "firstDecisionEn": "Check doc-site manifest regions and layoutContracts before changing App rendering.",
+      "outputCheck": "npm run check:doc-site"
+    },
+    {
+      "id": "impact-analysis",
+      "label": "影响范围判断",
+      "labelEn": "Impact analysis",
+      "match": ["影响范围", "关系", "谁影响谁", "文件链路", "项目图谱", "工程运行图"],
+      "flowId": "impact",
+      "firstDecision": "先看 system-relations 的工程关系，再用 project-graph 找真实文件引用。",
+      "firstDecisionEn": "Read system-relations first, then use project-graph for raw file references.",
+      "outputCheck": "bash scripts/build-project-graph.sh"
+    }
+  ],
+  "next": [
+    {
+      "id": "complete-token-facts",
+      "title": "补 token 机器事实",
+      "desc": "已把完整 palette、neutral、special、icon、chart、品牌状态从 CSS 同步到 JSON。",
+      "priority": "P0",
+      "status": "done",
+      "ownerRole": "token-governance",
+      "targetFiles": ["theme/fx-theme.css", "docs/TOKENS.md", "docs/data/design-tokens.json"],
+      "checkCommand": "npm run check:tokens",
+      "definitionOfDone": "design-tokens.json 覆盖 theme/fx-theme.css 的 primitive、semantic 和核心组件 token 消费规则，并由 check:tokens 自动核对。"
+    },
+    {
+      "id": "complete-component-usage-rules",
+      "title": "补组件消费规则",
+      "desc": "已覆盖 30 个 ui 组件和 4 个 fx 组合组件，并把 tokenRefs 接入 design-tokens 校验。",
+      "priority": "P1",
+      "status": "done",
+      "ownerRole": "component-governance",
+      "targetFiles": ["docs/data/components.manifest.json", "docs/components", "src/components/ui"],
+      "checkCommand": "npm run check:components",
+      "definitionOfDone": "核心组件的 variants、sizes、states、composedStates 和 token 消费规则都能从源码、Markdown、components.manifest.json 与 design-tokens.json 对齐。"
+    },
+    {
+      "id": "extend-doc-site-contract",
+      "title": "补文档站检查",
+      "desc": "已把 lead 宽度、右侧目录、顶部操作区、组件索引页接入 doc-site manifest 和检查脚本。",
+      "priority": "P1",
+      "status": "done",
+      "ownerRole": "doc-site-governance",
+      "targetFiles": ["src/App.tsx", "docs/data/doc-site.manifest.json", "scripts/check-doc-site-contract.mjs"],
+      "checkCommand": "npm run check:doc-site",
+      "definitionOfDone": "文档站关键布局规则进入 doc-site.manifest.json，并由 check-doc-site-contract.mjs 自动验证。"
+    },
+    {
+      "id": "enhance-project-graph",
+      "title": "增强项目图谱",
+      "desc": "已把 docs/data/project-graph.json 升级到 v0.3，并合入 system-relations 的 19 条工程关系。",
+      "priority": "P2",
+      "status": "done",
+      "ownerRole": "knowledge-graph-governance",
+      "targetFiles": ["scripts/build-project-graph.sh", "docs/data/project-graph.json", "docs/data/system-relations.json"],
+      "checkCommand": "bash scripts/build-project-graph.sh",
+      "definitionOfDone": "项目图谱能表达 docs/data 与工程关系图的交叉引用，并重新生成 docs/data/project-graph.json。"
+    },
+    {
+      "id": "agent-action-context",
+      "title": "补 Agent action/context 机制",
+      "desc": "当前先用轻协议完成 Agent UI 安全渲染；后续补页面上下文、动作注册表和受控产品动作。",
+      "priority": "P2",
+      "status": "queued",
+      "ownerRole": "agent-ui-governance",
+      "targetFiles": ["docs/AGENT_UI.md", "docs/data/agent-ui.manifest.json", "src/App.tsx"],
+      "checkCommand": "npm run check:agent-ui",
+      "definitionOfDone": "Agent 能读取受控页面上下文并触发注册 action，但仍保持白名单渲染和宿主确认边界。"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/agent-ui-visual-manifest",
+  "updatedAt": "2026-06-13",
+  "truthSource": "docs/AGENT_UI_VISUAL.md",
+  "implementedBy": "src/components/fx/agent-surface.tsx",
+  "page": "src/App.tsx",
+  "note": "Agent UI 视觉规范机器事实表。Agent UI 可以参考 C 端轻卡片体验，但仍使用 fx-ui token、shadcn 基础组件和 fx 组合组件。",
+  "positioning": {
+    "principle": "视觉气质参考 C 端，底层能力仍用 fx-ui。",
+    "isSubsystemOf": "fx-ui",
+    "mustUse": ["fx-ui token", "shadcn Card/Button/Badge", "src/components/fx"],
+    "mustNotCreate": ["独立颜色体系", "独立按钮体系", "独立圆角体系", "独立组件库"]
+  },
+  "references": [
+    {
+      "name": "C 端 AI 产品",
+      "borrow": "对话流里的轻量结果块、简洁操作、低噪音信息层级",
+      "avoid": "具体品牌皮肤、渐变、动效和营销感"
+    },
+    {
+      "name": "Microsoft Adaptive Cards",
+      "borrow": "卡片结构、字段、行动按钮和宿主内渲染边界",
+      "avoid": "完整平台 schema 和宿主样式"
+    },
+    {
+      "name": "Material Cards",
+      "borrow": "一个卡片承载一个对象或主题，内容边界清楚",
+      "avoid": "把后台整页、复杂表格或大表单塞进卡片"
+    },
+    {
+      "name": "Apple HIG / C 端卡片",
+      "borrow": "留白、层级、直接、少即是多",
+      "avoid": "为了高级感牺牲可读性和操作确定性"
+    },
+    {
+      "name": "shadcn/ui",
+      "borrow": "Card、Button、Badge 等可组合基础件",
+      "avoid": "在 Agent UI 里重写基础组件"
+    }
+  ],
+  "principles": [
+    "像对话里的结果块，不像后台页面。",
+    "一个卡片只表达一件事。",
+    "先结论，再依据，再行动。",
+    "主操作最多一个。",
+    "证据列表最多 3 条。",
+    "状态要克制。",
+    "不做卡片套卡片。",
+    "不放完整表单。"
+  ],
+  "densityRules": {
+    "summary": "1 到 2 句",
+    "fields": "4 到 6 个以内",
+    "evidence": "3 条以内",
+    "actions": "主操作 1 个，次操作最多 2 个",
+    "multiCards": "垂直排列，保持同一层级，不做复杂网格"
+  },
+  "blockVisualRules": [
+    {
+      "block": "object-card",
+      "focus": "字段清楚，像一张对象摘要",
+      "rule": "字段过多时进入详情"
+    },
+    {
+      "block": "file-card",
+      "focus": "文件名、类型、摘要优先",
+      "rule": "不显示长路径和复杂权限"
+    },
+    {
+      "block": "insight-card",
+      "focus": "结论、依据、下一步",
+      "rule": "不把长篇分析塞进 summary"
+    },
+    {
+      "block": "action-row",
+      "focus": "让用户快速选择下一步",
+      "rule": "不让按钮看起来像在执行未知代码"
+    }
+  ],
+  "checks": ["npm run check:agent-ui", "npm run check"]
+}

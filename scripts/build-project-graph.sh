@@ -306,7 +306,7 @@ tmp_json="$tmp_dir/project-graph.json"
 
 {
   printf '{\n'
-  printf '  "schemaVersion": "project-graph.v0.2",\n'
+  printf '  "schemaVersion": "project-graph.v0.3",\n'
   printf '  "generatedAt": "%s",\n' "$(json_escape "$generated_at")"
   printf '  "projectPath": "%s",\n' "$(json_escape "$project_path")"
   printf '  "staleDays": %s,\n' "$stale_days"
@@ -346,6 +346,56 @@ tmp_json="$tmp_dir/project-graph.json"
   printf '\n  ]\n'
   printf '}\n'
 } > "$tmp_json"
+
+if [ -f "docs/data/system-relations.json" ]; then
+  GRAPH_PATH="$tmp_json" RELATIONS_PATH="docs/data/system-relations.json" node --input-type=module <<'NODE'
+import fs from "node:fs"
+
+const graphPath = process.env.GRAPH_PATH
+const relationsPath = process.env.RELATIONS_PATH
+const graph = JSON.parse(fs.readFileSync(graphPath, "utf8"))
+const relations = JSON.parse(fs.readFileSync(relationsPath, "utf8"))
+
+const scopes = ["site", "project"]
+const relationRows = scopes.flatMap((scope) =>
+  (relations[scope] ?? []).map((relation, index) => ({
+    id: `${scope}:${index + 1}`,
+    scope,
+    group: relation.group,
+    source: relation.source,
+    action: relation.action,
+    target: relation.target,
+    result: relation.result,
+    emphasis: Boolean(relation.emphasis),
+  })),
+)
+
+graph.systemRelations = {
+  source: relationsPath,
+  updatedAt: relations.updatedAt,
+  summary: {
+    siteRelationCount: relations.site?.length ?? 0,
+    projectRelationCount: relations.project?.length ?? 0,
+    relationCount: relationRows.length,
+    groupCount: new Set(relationRows.map((relation) => `${relation.scope}:${relation.group}`)).size,
+  },
+  groups: scopes.flatMap((scope) =>
+    [...new Set((relations[scope] ?? []).map((relation) => relation.group))].map((group) => ({
+      scope,
+      group,
+      count: (relations[scope] ?? []).filter((relation) => relation.group === group).length,
+    })),
+  ),
+}
+
+graph.systemRelationEdges = relationRows
+
+graph.summary.systemRelationCount = relationRows.length
+graph.summary.systemRelationGroupCount = graph.systemRelations.summary.groupCount
+
+fs.writeFileSync(graphPath, `${JSON.stringify(graph, null, 2)}\n`)
+NODE
+fi
 
 if [ "$stdout" -eq 1 ]; then
   cat "$tmp_json"

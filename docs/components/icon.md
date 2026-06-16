@@ -8,7 +8,7 @@ source: package.json
 config: components.json
 library: lucide-react
 iconLibrary: lucide
-status: draft
+status: complete
 ---
 
 # Icon 图标
@@ -118,4 +118,3 @@ export function SettingsButton() {
 - 图标放在 Button 内时必须使用 `data-icon`。
 - 纯图标按钮必须提供 `aria-label`。
 - 不要为了单个页面临时手写 SVG 图标。
-

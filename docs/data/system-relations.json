@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/system-relations",
+  "updatedAt": "2026-06-13",
+  "truthSource": "docs/data/system-relations.json",
+  "humanDoc": "docs/DOC_SITE_DESIGN.md",
+  "note": "工程运行图的机器事实表。页面只负责展示，文件之间的来源、作用方式、作用对象和结果在这里维护。",
+  "site": [
+    {
+      "group": "文档站运行",
+      "source": "package.json",
+      "action": "运行",
+      "target": "vite.config.ts / Vite",
+      "result": "npm run dev、npm run build 从这里进入；Vite 负责本地服务、模块加载和构建。",
+      "emphasis": true
+    },
+    {
+      "group": "文档站运行",
+      "source": "src/main.tsx",
+      "action": "导入",
+      "target": "theme/fx-theme.css + src/App.tsx",
+      "result": "先注入全局 token，再挂载 React 文档站；页面视觉和路由入口都从这里进入。",
+      "emphasis": true
+    },
+    {
+      "group": "文档站运行",
+      "source": "src/App.tsx",
+      "action": "导入",
+      "target": "src/components/ui/* + src/components/fx/*",
+      "result": "文档站页面、导航、表格、示例、现状看板都用这些 open-code 组件组合出来。"
+    },
+    {
+      "group": "文档站数据",
+      "source": "src/App.tsx",
+      "action": "读取",
+      "target": "docs/data/*.json?raw",
+      "result": "把组件契约、token 事实、文档站骨架和项目图谱读进页面，生成现状看板。",
+      "emphasis": true
+    },
+    {
+      "group": "文档站数据",
+      "source": "docs/components/*.md",
+      "action": "对齐",
+      "target": "src/App.tsx 里的组件页面数据",
+      "result": "Markdown 是文字规范，App 是站内展示；两边要一起维护，避免页面和文档说法分叉。"
+    },
+    {
+      "group": "文档站数据",
+      "source": "src/reports/*",
+      "action": "渲染",
+      "target": "src/App.tsx",
+      "result": "报告/简报页面作为文档站内容入口被 App 渲染，不单独跑另一套站点。"
+    }
+  ],
+  "project": [
+    {
+      "group": "组件与主题",
+      "source": "components.json",
+      "action": "配置",
+      "target": "shadcn CLI -> src/components/ui/*",
+      "result": "决定 shadcn 组件写入哪里、CSS 真相源在哪里；新增基础组件时看这个配置。",
+      "emphasis": true
+    },
+    {
+      "group": "组件与主题",
+      "source": "theme/fx-theme.css",
+      "action": "注入",
+      "target": "src/components/ui/* + src/App.tsx",
+      "result": "公司视觉 token 通过 shadcn/Tailwind 语义类被组件和文档站消费；改这里会全局换肤。",
+      "emphasis": true
+    },
+    {
+      "group": "组件与主题",
+      "source": "src/components/ui/*",
+      "action": "组合",
+      "target": "src/components/fx/* + src/App.tsx",
+      "result": "基础组件不封黑盒；公司组合组件和文档站示例都直接复用这些源码组件。"
+    },
+    {
+      "group": "规范与页面",
+      "source": "docs/**/*.md",
+      "action": "解释",
+      "target": "docs/data/*.json + src/App.tsx",
+      "result": "Markdown 解释规则原因；JSON 和页面把规则结构化，给 AI、检查脚本和开发者共同消费。"
+    },
+    {
+      "group": "规范与页面",
+      "source": "docs/data/components.manifest.json",
+      "action": "描述",
+      "target": "src/components/ui/* + docs/components/*.md",
+      "result": "记录组件源码、文档状态、variant、size、状态等机器事实，用来防止组件文档漂移。"
+    },
+    {
+      "group": "规范与页面",
+      "source": "docs/data/doc-site.manifest.json",
+      "action": "约束",
+      "target": "src/App.tsx",
+      "result": "约束顶部导航、左侧导航、内容区、右侧目录和维护页骨架，避免文档站结构随手漂。"
+    },
+    {
+      "group": "检查与产物",
+      "source": "package.json",
+      "action": "串联",
+      "target": "scripts/check-* + npm run build",
+      "result": "npm run check 把组件契约、token、文档站、组件 manifest 和构建统一收口。",
+      "emphasis": true
+    },
+    {
+      "group": "检查与产物",
+      "source": "scripts/check-doc-site-contract.mjs",
+      "action": "读取",
+      "target": "src/App.tsx + docs/data/doc-site.manifest.json",
+      "result": "验证文档站页面骨架和机器事实是否一致。"
+    },
+    {
+      "group": "检查与产物",
+      "source": "scripts/check-tokens-sync.sh",
+      "action": "比对",
+      "target": "theme/fx-theme.css + docs/TOKENS.md",
+      "result": "检查 token 文档里的色值是否还存在于 CSS 真相源中。"
+    },
+    {
+      "group": "检查与产物",
+      "source": "scripts/build-project-graph.sh",
+      "action": "写入",
+      "target": ".project-os/graph/project-graph.json + docs/data/project-graph.json",
+      "result": "生成项目知识图谱，再把可展示版本同步给文档站现状看板。"
+    },
+    {
+      "group": "AI 与分发",
+      "source": "AGENTS.md / CLAUDE.md",
+      "action": "指导",
+      "target": ".ai/rules + .agents/skills",
+      "result": "把 AI 行为红线、项目规则和 shadcn 使用方式传给不同 AI 工具。"
+    },
+    {
+      "group": "AI 与分发",
+      "source": "registry/fx-theme.json",
+      "action": "分发",
+      "target": "外部 Vite/React 项目",
+      "result": "作为 shadcn registry theme 分发公司主题，外部项目可复用同一套 token。"
+    },
+    {
+      "group": "AI 与分发",
+      "source": "skills/fx-ui-report/*",
+      "action": "打包",
+      "target": "报告/简报生成工作流",
+      "result": "把报告视觉 token、组件 manifest、预览和使用说明打成独立 skill 资产。"
+    }
+  ]
+}

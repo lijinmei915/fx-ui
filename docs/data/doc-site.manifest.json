@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/doc-site-manifest",
+  "updatedAt": "2026-06-13",
+  "truthSource": "src/App.tsx",
+  "humanDoc": "docs/DOC_SITE_DESIGN.md",
+  "note": "文档站骨架机器事实表。文字规范说明为什么，manifest 记录必须存在的结构事实，check-doc-site-contract.mjs 负责防漂。",
+  "regions": [
+    {
+      "id": "top-nav",
+      "label": "顶部导航",
+      "source": "src/App.tsx",
+      "requiredSourceIncludes": [
+        "const topNav = [",
+        "fx-ui",
+        "v1.2.0",
+        "#components",
+        "governanceQuickLinks",
+        "uiText[lang].search",
+        "setLang(lang === \"zh\" ? \"en\" : \"zh\")"
+      ],
+      "requiredCapabilities": ["brand", "version", "primary-nav", "language-toggle", "search-entry"]
+    },
+    {
+      "id": "left-nav",
+      "label": "左侧导航",
+      "source": "src/App.tsx",
+      "requiredSourceIncludes": [
+        "const docsNav = [",
+        "概览",
+        "安装",
+        "主题",
+        "维护",
+        "现状",
+        "function GettingStartedPage",
+        "installCommandsCode",
+        "documentation-ssot",
+        "checks-commands",
+        "docsNav.map",
+        "isActive ? <span className=\"ml-2 size-1.5 rounded-full bg-primary\" /> : null"
+      ],
+      "requiredCapabilities": ["group-title", "page-link", "active-indicator"]
+    },
+    {
+      "id": "main-content",
+      "label": "中间内容区",
+      "source": "src/App.tsx",
+      "requiredSourceIncludes": [
+        "<main ref={mainRef}",
+        "viewMode === \"markdown\"",
+        "leadText",
+        "PageStepActions",
+        "ComponentsIndexPage",
+        "governance-map",
+        "TokensPage",
+        "ButtonPage"
+      ],
+      "requiredCapabilities": ["component-doc", "token-page", "markdown-view", "report-preview"]
+    },
+    {
+      "id": "right-toc",
+      "label": "右侧目录",
+      "source": "src/App.tsx",
+      "requiredSourceIncludes": [
+        "function RightRail",
+        "uiText[lang].toc",
+        "anchors.map"
+      ],
+      "requiredCapabilities": ["current-page-anchors", "active-anchor"]
+    }
+  ],
+  "layoutContracts": [
+    {
+      "id": "reading-width",
+      "label": "阅读宽度",
+      "source": "src/App.tsx",
+      "intent": "长说明不提前折行，主内容区保持可读宽度，文章内部不横向溢出。",
+      "requiredSourceIncludes": [
+        "leadText: \"max-w-5xl text-lg leading-8 text-muted-foreground\"",
+        "componentLead: \"max-w-5xl break-words text-lg leading-8\"",
+        "xl:grid-cols-[minmax(0,1080px)_220px]",
+        "className=\"w-full min-w-0 break-words\"",
+        "style={{ maxWidth: \"calc(100vw - 3rem)\" }}"
+      ]
+    },
+    {
+      "id": "page-actions",
+      "label": "顶部操作区",
+      "source": "src/App.tsx",
+      "intent": "页面操作保持在标题右侧，复制、更多和上一篇/下一篇放在同一组，不把操作按钮散到内容流里。",
+      "requiredSourceIncludes": [
+        "function PageActionsShell",
+        "className=\"flex flex-wrap items-center gap-2\"",
+        "function CopyPageAction",
+        "function PageStepActions",
+        "size=\"icon-sm\"",
+        "className=\"mx-1 h-5 w-px bg-border\""
+      ]
+    },
+    {
+      "id": "right-rail-toc",
+      "label": "右侧目录",
+      "source": "src/App.tsx",
+      "intent": "右侧目录只展示当前页面锚点；active 只用文字权重和颜色表达，不再放突兀圆点。",
+      "requiredSourceIncludes": [
+        "function RightRail",
+        "if (anchors.length === 0) return null",
+        "className=\"hidden xl:block\"",
+        "className=\"border-l border-border pl-6\"",
+        "className={\n                    isActive\n                      ? \"relative flex items-center font-medium text-foreground\""
+      ]
+    },
+    {
+      "id": "components-index",
+      "label": "组件索引页",
+      "source": "src/App.tsx",
+      "intent": "点击顶部组件入口时先进入组件单，组件单分基础组件、业务组合和 Agent UI，来源于同一份导航结构。",
+      "requiredSourceIncludes": [
+        "const componentsIndexAnchors = [",
+        "href: \"#components-ui\"",
+        "href: \"#components-fx\"",
+        "href: \"#components-agent-ui\"",
+        "function ComponentsIndexPage",
+        "const componentIndexSections = docsNav.filter",
+        "[\"通用\", \"数据录入\", \"数据展示\", \"导航\", \"反馈\", \"业务组合组件\", \"Agent UI\"].includes(section.title)"
+      ]
+    },
+    {
+      "id": "governance-cockpit",
+      "label": "工程驾驶舱",
+      "source": "src/App.tsx",
+      "intent": "现状页优先回答开发者下一步该看哪里、跑什么检查；数字只作为证据，不能只有计数器。",
+      "requiredSourceIncludes": [
+        "function GraphCockpit",
+        "function StepBadge",
+        "function CountBadge",
+        "function StatusBadge",
+        "const actionCards = governanceStatus.actionFlows.map",
+        "const taskRoutes = governanceStatus.taskRoutes.map",
+        "governanceStatus.maintenanceModel.layers.map",
+        "governanceStatus.maintenanceModel.rules.map",
+        "linkLabel: lang === \"en\" ? flow.linkLabelEn : flow.linkLabel",
+        "任务路由",
+        "证据详情",
+        "<Collapsible>",
+        "<CollapsibleContent className=\"mt-4 flex flex-col gap-4\">",
+        "route.flowTitle",
+        "检查命令",
+        "完成标准",
+        "Tabs defaultValue=\"style\"",
+        "grid !h-auto w-full grid-cols-1",
+        "min-h-24 w-full items-start",
+        "whitespace-normal break-words",
+        "<StepBadge index={index} />",
+        "<CountBadge>{projectGraphCockpit.relationGroupCount}</CountBadge>",
+        "<StatusBadge status={asset.status} />",
+        "这个面板真正用来干嘛",
+        "project-graph.v0.3",
+        "projectGraphCockpit.relationCount",
+        "projectGraphCockpit.groups.map",
+        "<GraphCockpit lang={lang} />"
+      ]
+    }
+  ],
+  "supportingData": [
+    {
+      "id": "governance-index",
+      "path": "docs/data/governance-index.json",
+      "required": true
+    },
+    {
+      "id": "design-tokens",
+      "path": "docs/data/design-tokens.json",
+      "required": true
+    },
+    {
+      "id": "components-manifest",
+      "path": "docs/data/components.manifest.json",
+      "required": true
+    },
+    {
+      "id": "agent-ui-manifest",
+      "path": "docs/data/agent-ui.manifest.json",
+      "required": true
+    },
+    {
+      "id": "agent-ui-visual-manifest",
+      "path": "docs/data/agent-ui-visual.manifest.json",
+      "required": true
+    },
+    {
+      "id": "system-relations",
+      "path": "docs/data/system-relations.json",
+      "required": true
+    },
+    {
+      "id": "governance-status",
+      "path": "docs/data/governance-status.json",
+      "required": true
+    }
+  ],
+  "governance": {
+    "method": "text-spec + machine-manifest + executable-check",
+    "textSpec": "docs/DOC_SITE_DESIGN.md",
+    "machineManifest": "docs/data/doc-site.manifest.json",
+    "checkScript": "scripts/check-doc-site-contract.mjs"
+  }
+}

@@ -52,10 +52,20 @@ React + TypeScript + Tailwind CSS v4 + shadcn/ui
 - 已完成：拉取 ButtonGroup 组件并补充按钮组合场景
 - 已完成：补全本地拉取的全部 28 个 shadcn 基础组件的中文文档页（六段式结构 + `StandardDocPage` 公共骨架），组件文档覆盖率到 100%
 - 已完成：新增 `src/reports/` 报告渲染层（区别于 `src/blocks/` 页面 Block），落地客户简报渲染页 `customer-briefing`——数据契约对齐外部销售 skill 的 R01-R09 输出，用 fx-ui 真正的组件和公司 token 渲染全部分区，详见 `docs/REPORTS.md`
+- 已完成：新增 `skills/fx-ui-report/` 报告美化 skill（接受任意格式入参，输出严格对齐 fx-ui token 的独立 HTML 报告页），16 个文件完整结构（manifest/USAGE/DESIGN/tokens.css/components.html/design-tokens.json/tailwind-v4.css/preview/source 等），详见 `docs/SKILLS.md`
 
 ## 当前优先级
 
-继续基于列表页 demo 抽内部 Blocks，补详情页 / 编辑页 / 设置页样板
+1. 继续把文档站设计规范从"文字说明"沉淀为"机器事实表 + 可执行检查"，重点补 token、文档站骨架和组件消费规则的防漂约束。
+2. 逐个精修组件文档和组件索引页，优先保证页面结构、导航、右侧目录、示例数据和源码 API 对齐。
+3. 继续基于列表页 demo 抽内部 Blocks，补详情页 / 编辑页 / 设置页样板。
+
+### 设计规范治理待办
+
+- 补全 `docs/data/design-tokens.json`：把 `theme/fx-theme.css` 里的完整色板、neutral、special、icon、chart、品牌交互状态逐步结构化，不只保留核心 5 个 primitive。
+- 扩展 `componentUsage`：Button 已作为样例，后续按组件逐个补 Badge / Input / Card / Table / Dialog 等组件如何消费 token。
+- 区分 token 和页面规范：颜色、语义槽、圆角等归 `docs/TOKENS.md`；文档站版心、顶部操作区、右侧目录、lead 文本宽度归 `docs/DOC_SITE_DESIGN.md` 和 `docs/data/doc-site.manifest.json`。
+- 需要新增约束时优先走三件套：文字规范 -> `docs/data/*.json` 机器事实表 -> `scripts/*` 检查脚本。
 
 ## 已知边界
 

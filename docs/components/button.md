@@ -9,14 +9,18 @@ theme: theme/fx-theme.css
 tokens:
   - primary
   - primary-foreground
+  - background
+  - foreground
   - secondary
   - secondary-foreground
   - muted
   - muted-foreground
   - destructive
+  - border
+  - input
   - ring
   - radius
-status: draft
+status: complete
 ---
 
 # Button 按钮
@@ -26,6 +30,8 @@ Button 用于触发即时操作，适合提交、保存、创建、删除等用�
 源码来自 shadcn/ui，进入项目后保持 open-code。公司视觉通过 `theme/fx-theme.css` 的语义 token 注入，不通过重新封装或硬编码样式实现。
 
 AI 生成页面时应优先使用 Button 的 `variant`、`size` 和 `disabled` 状态表达语义，避免手写颜色、圆角和 loading prop。
+
+Button 文档也是后续组件精修的模板：先写“什么时候用”，再写“源码真实 API”，最后写“AI 不要怎么误用”。
 
 ## 来源 {#source}
 
@@ -63,14 +69,23 @@ import { Button } from "@/components/ui/button"
 
 - 类型：Default、Secondary、Outline、Ghost、Destructive、Link
 - 尺寸：XS、SM、Default、Large，以及 Icon XS、Icon SM、Icon、Icon LG
-- 交互状态：Normal、Loading、Disabled；Loading 由 `disabled` 与 Spinner 组合
-- 图标：左图标、右图标、图标按钮
+- 原生交互状态：hover、active、focus-visible、aria-expanded、disabled、aria-invalid
+- 业务组合状态：Loading = `disabled + Spinner`
+- 图标：左图标、右图标、图标按钮、无底色图标按钮
+- 组合：ButtonGroup 用于多个按钮作为一组出现
 - 尺寸、交互状态与图标统一使用 Default variant，便于只比较对应能力差异；Hover、Press、Keyboard Focus 等交互反馈可直接在任意类型按钮上体验
 - `aria-invalid` 属于校验状态，保留在 API 中，不混入常规交互状态总览
 
 ## 场景示例 {#examples}
 
 场景示例用于解释什么时候使用哪一种 Button。网页以决策表展示，并支持按 `全部 / 类型 / 尺寸 / 状态 / 图标` 点选查看。每行都绑定场景、使用意图、推荐写法、约束和预览，让人、AI 和程序读同一份语义；类型、尺寸、原生状态和业务组合态保持明确区分。
+
+AI 选择 Button 时按这个顺序判断：
+
+1. 先判断动作语义：主操作、次操作、危险操作、弱操作、跳转操作。
+2. 再判断空间密度：默认尺寸优先，高密度区域才用 `xs` 或 `sm`，空状态/营销位才考虑 `lg`。
+3. 再判断是否需要图标：图标只辅助识别，不替代文字；纯图标按钮必须补 `aria-label`。
+4. 最后判断状态：原生状态用 HTML/ARIA 表达，业务组合态用现有组件组合，不发明新 prop。
 
 ### 主操作
 
@@ -114,6 +129,28 @@ import { Button } from "@/components/ui/button"
 
 ```tsx
 <Button variant="link">打开文档</Button>
+```
+
+### 描边操作
+
+- 使用意图：与主操作并列、但比 secondary 更轻的辅助操作，常用于工具栏。
+- 规则：保留边框但不强调底色，避免与 secondary 在同一组里混用造成层级混乱。
+- 分组：`类型`
+- 关键属性：`variant: "outline"`，`size: "default"`。
+
+```tsx
+<Button variant="outline">导出</Button>
+```
+
+### Ghost 操作
+
+- 使用意图：工具栏、卡片内的弱化操作，不需要边框和底色来吸引注意。
+- 规则：shadcn 源码里的真实 variant 就叫 `ghost`；悬浮态才出现底色，不用于页面主行动点。
+- 分组：`类型`
+- 关键属性：`variant: "ghost"`，`size: "default"`。
+
+```tsx
+<Button variant="ghost">查看详情</Button>
 ```
 
 ### 超小尺寸
@@ -201,6 +238,19 @@ import { Button } from "@/components/ui/button"
 </Button>
 ```
 
+### 无底色图标按钮
+
+- 使用意图：工具栏、卡片角落等需要弱化视觉权重的图标操作。
+- 规则：使用 `variant="ghost"`，悬浮态再出现底色；同样必须有 `aria-label`。
+- 分组：`图标`
+- 关键属性：`variant: "ghost"`，`size: "icon"`，`aria-label`，`data-icon`。
+
+```tsx
+<Button variant="ghost" size="icon" aria-label="打开组件包">
+  <PackageIcon data-icon="inline-start" />
+</Button>
+```
+
 ### 禁用状态
 
 - 使用意图：权限不足、表单未完成或提交中，暂时不可触发。
@@ -215,7 +265,7 @@ import { Button } from "@/components/ui/button"
 ### 加载状态
 
 - 使用意图：提交中、保存中等需要阻止重复点击的场景。
-- 规则：Button 没有 `loading` prop，使用 `disabled` 和 Spinner 组合。
+- 规则：Button 没有 `loading` prop，Loading = `disabled + Spinner`。
 - 分组：`状态`
 - 关键属性：`disabled`，`Spinner`，`data-icon: "inline-start"`。
 
@@ -224,6 +274,21 @@ import { Button } from "@/components/ui/button"
   <Spinner data-icon="inline-start" />
   提交中
 </Button>
+```
+
+### 按钮组合
+
+- 使用意图：工具栏、分段操作等需要把多个按钮视觉上连成一体的场景。
+- 规则：用 ButtonGroup 包裹，不要靠手写负 margin 拼接按钮边框。
+- 分组：`组合`
+- 关键属性：`ButtonGroup`，`variant: "outline"`，`size: "default"`。
+
+```tsx
+<ButtonGroup>
+  <Button variant="outline">复制</Button>
+  <Button variant="outline">剪切</Button>
+  <Button variant="outline">粘贴</Button>
+</ButtonGroup>
 ```
 
 ## API {#api}
@@ -236,12 +301,17 @@ Button 支持 `@base-ui/react/button` 的原生 button props，并额外支持�
 | `size` | 按钮尺寸 | `'default' \| 'xs' \| 'sm' \| 'lg' \| 'icon' \| 'icon-xs' \| 'icon-sm' \| 'icon-lg'` | `'default'` |
 | `disabled` | 是否禁用 | `boolean` | `false` |
 | `aria-invalid` | 是否展示错误态 | `boolean` | `false` |
+| `render` | 把按钮样式渲染到自定义元素上，例如 `<a>`；这是 Base UI 版本的 asChild 能力 | `ReactElement \| (props, state) => ReactElement` | - |
 | `className` | 追加 class，主要用于布局，不用于硬覆盖颜色和字体 | `string` | - |
 
 ## Semantic DOM {#semantic-dom}
 
 | 部位 | 说明 |
 | --- | --- |
+| `data-component="Button"` | DevInspector 和 AI 识别 Button 的组件身份证。 |
+| `data-slot="button"` | shadcn open-code 根节点标记，供样式选择器和测试定位使用。 |
+| `data-variant` | 当前 Button 的样式变体，值来自源码里的 `variant`。 |
+| `data-size` | 当前 Button 的尺寸变体，值来自源码里的 `size`。 |
 | `root` | 按钮根节点，承载 variant、size、disabled、aria-invalid 和焦点态样式。 |
 | `icon` | 图标区域。图标使用 `data-icon="inline-start"` 或 `data-icon="inline-end"` 标记位置，不手写尺寸覆盖。 |
 | `content` | 按钮文本内容。保持短动作短语，不放长说明。 |
@@ -250,13 +320,18 @@ Button 支持 `@base-ui/react/button` 的原生 button props，并额外支持�
 
 | Token | 用途 |
 | --- | --- |
-| `primary` | 默认主按钮背景、激活态和品牌强调 |
-| `primary-foreground` | 主色背景上的文字和图标 |
-| `secondary` / `secondary-foreground` | 次按钮背景和文字 |
-| `muted` / `muted-foreground` | ghost、outline hover 和弱信息 |
-| `destructive` | 危险按钮、错误态和不可逆操作 |
-| `ring` | 键盘焦点环和可访问性焦点态 |
-| `radius` | 按钮圆角派生尺度 |
+| `--primary` | 默认主按钮背景、激活态和品牌强调 |
+| `--primary-foreground` | 主色背景上的文字和图标 |
+| `--background` | outline 按钮背景 |
+| `--foreground` | hover 与低强调按钮文字 |
+| `--secondary` | 次按钮背景 |
+| `--secondary-foreground` | 次按钮文字 |
+| `--muted` | ghost、outline hover 背景 |
+| `--border` | outline 按钮边框 |
+| `--input` | dark 模式下 outline 边框/背景兼容 |
+| `--destructive` | 危险按钮、错误态和不可逆操作 |
+| `--ring` | 键盘焦点环和可访问性焦点态 |
+| `--radius` | 按钮圆角派生尺度 |
 
 完整 token 规则见 `docs/TOKENS.md`。
 
@@ -264,10 +339,11 @@ Button 支持 `@base-ui/react/button` 的原生 button props，并额外支持�
 
 - 需要主操作时使用 `<Button>保存</Button>`，不要手写 `bg-[#FF8000]`。
 - 需要危险操作时使用 `variant="destructive"`。
+- 需要跳转但仍要 Button 外观时，优先使用 `render={<a href="..." />}`，不要在 Button 里套 `<a>`。
 - 图标按钮必须有 `aria-label`。
 - 图标放在按钮内时，图标使用 `data-icon`，不要直接写 `size-4`。
 - `className` 只用于布局、宽度或间距，不用于覆盖组件颜色。
-- 当前 Button 没有内置 `loading` prop；加载态用 `disabled` 与 Spinner 组合实现。
+- 当前 Button 没有内置 `loading` prop；Loading = `disabled + Spinner`。
 
 ## 正误示例 {#do-dont}
 
@@ -330,4 +406,20 @@ Button 支持 `@base-ui/react/button` 的原生 button props，并额外支持�
 
 ```tsx
 <PackageIcon data-icon="inline-start" />
+```
+
+### 链接外观用 render，不嵌套 a
+
+不推荐：
+
+```tsx
+<Button>
+  <a href="/docs">打开文档</a>
+</Button>
+```
+
+推荐：
+
+```tsx
+<Button render={<a href="/docs" />}>打开文档</Button>
 ```

@@ -19,6 +19,7 @@ fx-ui 的目标不是重新手写一套 UI 组件库，而是建立一套公司�
 - 页面可以快速生成
 - 生成后的页面可以继续改造
 - 高频页面模式可以沉淀成公司的布局规范和内部 Blocks
+- Agent 回复可以通过受控 JSON 生成产品内 React UI
 
 ## 三层体系
 
@@ -32,8 +33,24 @@ fx-ui 的目标不是重新手写一套 UI 组件库，而是建立一套公司�
 - 不手写 Button / Input / Dialog / Table 等基础控件
 - 不做黑盒封装
 - 公司视觉通过 `theme/fx-theme.css` 注入 token
+- shadcn 上游更新默认不自动同步；只有 bug、安全、可访问性或业务需要时，才按单个组件升级
 
 这一层解决：基础控件统一、源码可读、AI 可消费。
+
+#### shadcn 上游升级策略
+
+shadcn 组件进入 `src/components/ui/` 后，就视为 fx-ui 的本地源码资产，不再跟官网自动同步。
+
+升级已有组件时必须按下面流程：
+
+1. 说明为什么要升级：bug、安全、可访问性或明确业务需要。
+2. 只处理相关组件，不做全量覆盖。
+3. 对比上游实现和本地 `src/components/ui/<component>.tsx`。
+4. 保留 fx-ui 已接好的 token、Tailwind class、`data-slot` 语义和文档契约。
+5. 同步 `docs/components/<component>.md` 与 `docs/data/components.manifest.json`。
+6. 运行 `npm run check`。
+
+不为了“官网出了新版”而升级；稳定优先。
 
 ### 2. 公司组合组件层：fx components
 
@@ -71,6 +88,19 @@ fx-ui 的目标不是重新手写一套 UI 组件库，而是建立一套公司�
 
 这一层解决：页面快速起步、页面模式复用、公司布局规范沉淀。
 
+### 4. Agent UI 层：受控生成式界面
+
+目录建议：`src/components/fx/agent-surface.tsx`、`docs/AGENT_UI.md`、`docs/data/agent-ui.manifest.json`
+
+这一层用于公司 Agent 在对话里生成卡片、对象信息、文件信息和操作按钮。
+
+- Agent 只生成 JSON 意图，不生成 React、HTML、CSS 或 JS
+- 前端只渲染 manifest 登记的 block 白名单
+- action 只作为事件回传宿主应用，不作为代码执行
+- 未知 block type 走安全兜底，不动态 import、不 eval、不 innerHTML
+
+这一层解决：Agent 回复可以生成产品内真实 React UI，同时保持安全、可控和可检查。
+
 ## 模块职责
 
 | 目录 / 文件 | 职责 | 备注 |
@@ -79,6 +109,9 @@ fx-ui 的目标不是重新手写一套 UI 组件库，而是建立一套公司�
 | `src/components/fx/` | 公司组合组件 | 必须由 shadcn 组件组合而成，不做黑盒 |
 | `src/blocks/` | 公司页面模板 | 从真实页面里抽出来，不预先设计 |
 | `src/layouts/` | 页面壳、侧边栏、主内容布局 | |
+| `src/components/fx/agent-surface.tsx` | Agent UI 渲染面 | 受控 JSON -> 本地 React 组件 |
+| `docs/AGENT_UI.md` | Agent UI 生成式界面协议 | 定义 block、action 和安全红线 |
+| `docs/data/agent-ui.manifest.json` | Agent UI 机器事实表 | 给 AI 和检查脚本读取 |
 | `theme/fx-theme.css` | 公司 token 真相源 | 改它 = 全局换肤 |
 | `registry/fx-theme.json` | shadcn 官方 `registry:theme` 分发格式 | 对外分发主题用 |
 | `docs/components/` | 组件文档资产 | 给人和 AI 共同消费 |
@@ -118,8 +151,10 @@ docs/
 ## 关键原则
 
 - 基础组件不手写，优先从 shadcn 拉
+- shadcn 上游更新默认不自动同步，按需单组件评估升级
 - 页面不从零写，优先从 shadcn Blocks / v0 / 内部 Blocks 起步
 - 公司组合组件可以写，但必须是 shadcn 组件的可读组合
+- Agent UI 可以生成界面，但只能生成受控 JSON 意图，不执行 LLM 生成代码
 - token 真相源仍然是 `theme/fx-theme.css`
 - 对外分发主题时使用 shadcn 官方 `registry:theme` 格式：`registry/fx-theme.json`
 - 布局规范来自真实页面沉淀，不凭空制定

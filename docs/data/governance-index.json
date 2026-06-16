@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/governance-index",
+  "updatedAt": "2026-06-13",
+  "truthSource": "docs/data/governance-index.json",
+  "humanDoc": "docs/DOC_SITE_DESIGN.md",
+  "note": "治理数据总入口。AI 或工程师先读这里，再进入具体 manifest；这里登记每份机器事实表负责什么、谁消费、谁检查。",
+  "datasets": [
+    {
+      "id": "components-manifest",
+      "path": "docs/data/components.manifest.json",
+      "format": "fx-ui/components-manifest",
+      "purpose": "登记基础组件和公司组合组件的源码、文档状态、API 契约和 AI 可读规则。",
+      "ownerRole": "component-governance",
+      "consumedBy": ["src/App.tsx", "scripts/check-components-manifest.mjs", "scripts/check-doc-site-contract.mjs"],
+      "checkCommand": "npm run check:components"
+    },
+    {
+      "id": "agent-ui-manifest",
+      "path": "docs/data/agent-ui.manifest.json",
+      "format": "fx-ui/agent-ui-manifest",
+      "purpose": "登记 AgentSurface 支持的 block、action、禁用字段和安全兜底规则。",
+      "ownerRole": "agent-ui-governance",
+      "consumedBy": ["src/App.tsx", "src/components/fx/agent-surface.tsx", "scripts/check-agent-ui-contract.mjs"],
+      "checkCommand": "npm run check:agent-ui"
+    },
+    {
+      "id": "agent-ui-visual-manifest",
+      "path": "docs/data/agent-ui-visual.manifest.json",
+      "format": "fx-ui/agent-ui-visual-manifest",
+      "purpose": "登记 Agent UI 独立视觉规范：C 端参考方向、视觉原则、密度规则和 block 视觉边界。",
+      "ownerRole": "agent-ui-governance",
+      "consumedBy": ["src/App.tsx", "scripts/check-agent-ui-contract.mjs"],
+      "checkCommand": "npm run check:agent-ui"
+    },
+    {
+      "id": "design-tokens",
+      "path": "docs/data/design-tokens.json",
+      "format": "fx-ui/design-tokens",
+      "purpose": "登记 token 分层、语义槽和组件消费规则。",
+      "ownerRole": "token-governance",
+      "consumedBy": ["src/App.tsx", "scripts/check-doc-site-contract.mjs"],
+      "checkCommand": "npm run check:tokens"
+    },
+    {
+      "id": "doc-site-manifest",
+      "path": "docs/data/doc-site.manifest.json",
+      "format": "fx-ui/doc-site-manifest",
+      "purpose": "登记文档站顶部导航、左侧导航、内容区、右侧目录和必需数据源。",
+      "ownerRole": "doc-site-governance",
+      "consumedBy": ["scripts/check-doc-site-contract.mjs"],
+      "checkCommand": "npm run check:doc-site"
+    },
+    {
+      "id": "system-relations",
+      "path": "docs/data/system-relations.json",
+      "format": "fx-ui/system-relations",
+      "purpose": "登记工程运行图里的文件关系：来源文件、作用方式、作用对象和运行结果。",
+      "ownerRole": "architecture-governance",
+      "consumedBy": ["src/App.tsx", "scripts/check-doc-site-contract.mjs"],
+      "checkCommand": "npm run check:doc-site"
+    },
+    {
+      "id": "governance-status",
+      "path": "docs/data/governance-status.json",
+      "format": "fx-ui/governance-status",
+      "purpose": "登记现状看板的当前状态卡、数据新鲜度、规则资产、治理闭环、行动链路、任务路由、参考案例和下一步队列。",
+      "ownerRole": "status-governance",
+      "consumedBy": ["src/App.tsx", "scripts/check-doc-site-contract.mjs"],
+      "checkCommand": "npm run check:doc-site"
+    },
+    {
+      "id": "project-graph",
+      "path": "docs/data/project-graph.json",
+      "format": "project-graph.v0.3",
+      "purpose": "登记项目知识图谱快照，并合入 system-relations 的工程关系摘要，供现状看板显示节点、边、stale 和关系统计。",
+      "ownerRole": "knowledge-graph-governance",
+      "consumedBy": ["src/App.tsx"],
+      "checkCommand": "bash scripts/build-project-graph.sh"
+    }
+  ]
+}

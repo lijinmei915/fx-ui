@@ -1,0 +1,1194 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/components-manifest",
+  "updatedAt": "2026-06-12",
+  "truthSource": "src/components/ui",
+  "note": "机器可读组件事实表。所有 ui 基础组件和 fx 组合组件均已登记为 complete；具体契约以源码、Markdown 和本 manifest 共同校验。",
+  "componentLayers": [
+    {
+      "id": "ui",
+      "label": "基础组件层",
+      "path": "src/components/ui",
+      "rule": "只放 shadcn/ui 拉取的 open-code 基础组件，不手写、不封装黑盒。"
+    },
+    {
+      "id": "fx",
+      "label": "公司组合组件层",
+      "path": "src/components/fx",
+      "rule": "由 shadcn 基础组件组合出公司高频业务模式。"
+    },
+    {
+      "id": "agent-ui",
+      "label": "Agent UI 层",
+      "path": "src/components/fx",
+      "rule": "把 Agent 返回的受控 JSON 意图渲染为本地可信 React 组件；不执行 LLM 生成代码。"
+    }
+  ],
+  "uiComponents": [
+    {
+      "name": "AlertDialog",
+      "source": "src/components/ui/alert-dialog.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/alert-dialog.md",
+      "category": "feedback",
+      "nativeStates": [
+        "hover",
+        "data-open",
+        "data-closed"
+      ],
+      "semanticDom": [
+        "data-slot=\"alert-dialog\"",
+        "data-slot=\"alert-dialog-trigger\"",
+        "data-slot=\"alert-dialog-portal\"",
+        "data-slot=\"alert-dialog-overlay\"",
+        "data-slot=\"alert-dialog-content\"",
+        "data-slot=\"alert-dialog-header\"",
+        "data-slot=\"alert-dialog-footer\"",
+        "data-slot=\"alert-dialog-media\"",
+        "data-slot=\"alert-dialog-title\"",
+        "data-slot=\"alert-dialog-description\"",
+        "data-slot=\"alert-dialog-action\"",
+        "data-slot=\"alert-dialog-cancel\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--popover",
+        "--popover-foreground",
+        "--muted",
+        "--muted-foreground",
+        "--border",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 AlertDialog 前必须以 src/components/ui/alert-dialog.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Avatar",
+      "source": "src/components/ui/avatar.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/avatar.md",
+      "category": "display",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "data-slot=\"avatar\"",
+        "data-slot=\"avatar-image\"",
+        "data-slot=\"avatar-fallback\"",
+        "data-slot=\"avatar-badge\"",
+        "data-slot=\"avatar-group\"",
+        "data-slot=\"avatar-group-count\""
+      ],
+      "tokenRefs": [
+        "--primary",
+        "--primary-foreground",
+        "--background",
+        "--foreground",
+        "--muted",
+        "--muted-foreground",
+        "--border",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 Avatar 前必须以 src/components/ui/avatar.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Badge",
+      "source": "src/components/ui/badge.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/badge.md",
+      "category": "display",
+      "nativeStates": [
+        "hover",
+        "focus-visible",
+        "aria-invalid"
+      ],
+      "semanticDom": [
+        "slot: \"badge\""
+      ],
+      "tokenRefs": [
+        "--primary",
+        "--primary-foreground",
+        "--secondary",
+        "--secondary-foreground",
+        "--foreground",
+        "--muted",
+        "--muted-foreground",
+        "--destructive",
+        "--border",
+        "--ring",
+        "--success"
+      ],
+      "usageRules": [
+        "使用 Badge 前必须以 src/components/ui/badge.tsx 为真实 API。",
+        "用 variant 表达状态语义，不要手写颜色、圆角、边框和状态样式。",
+        "Badge 只承载短状态、短数字或分类词；长说明放正文、Tooltip 或表格说明。",
+        "需要跳转时用 render 渲染成链接徽标，不要在 Badge 里嵌套 a。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ],
+      "variants": [
+        "default",
+        "secondary",
+        "destructive",
+        "success",
+        "outline",
+        "ghost",
+        "link"
+      ]
+    },
+    {
+      "name": "Breadcrumb",
+      "source": "src/components/ui/breadcrumb.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/breadcrumb.md",
+      "category": "navigation",
+      "nativeStates": [
+        "hover",
+        "disabled"
+      ],
+      "semanticDom": [
+        "data-slot=\"breadcrumb\"",
+        "data-slot=\"breadcrumb-list\"",
+        "data-slot=\"breadcrumb-item\"",
+        "data-slot=\"breadcrumb-page\"",
+        "data-slot=\"breadcrumb-separator\"",
+        "data-slot=\"breadcrumb-ellipsis\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--muted",
+        "--muted-foreground"
+      ],
+      "usageRules": [
+        "使用 Breadcrumb 前必须以 src/components/ui/breadcrumb.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "ButtonGroup",
+      "source": "src/components/ui/button-group.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/button-group.md",
+      "category": "action",
+      "nativeStates": [
+        "focus-visible"
+      ],
+      "semanticDom": [
+        "data-slot=\"button-group\"",
+        "data-slot=\"button-group-separator\""
+      ],
+      "tokenRefs": [
+        "--muted",
+        "--border",
+        "--input"
+      ],
+      "usageRules": [
+        "使用 ButtonGroup 前必须以 src/components/ui/button-group.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Button",
+      "source": "src/components/ui/button.tsx",
+      "doc": "docs/components/button.md",
+      "docStatus": "complete",
+      "devInspector": "src/dev-inspector.config.tsx",
+      "category": "action",
+      "variants": [
+        "default",
+        "outline",
+        "secondary",
+        "ghost",
+        "destructive",
+        "link"
+      ],
+      "sizes": [
+        "default",
+        "xs",
+        "sm",
+        "lg",
+        "icon",
+        "icon-xs",
+        "icon-sm",
+        "icon-lg"
+      ],
+      "nativeStates": [
+        "hover",
+        "active",
+        "focus-visible",
+        "disabled",
+        "aria-invalid",
+        "aria-expanded"
+      ],
+      "composedStates": [
+        {
+          "name": "loading",
+          "composition": "disabled + Spinner",
+          "note": "Button 没有 loading prop。"
+        }
+      ],
+      "semanticDom": [
+        "data-slot=\"button\""
+      ],
+      "tokenRefs": [
+        "--primary",
+        "--primary-foreground",
+        "--secondary",
+        "--secondary-foreground",
+        "--background",
+        "--foreground",
+        "--muted",
+        "--destructive",
+        "--border",
+        "--input",
+        "--ring",
+        "--radius"
+      ],
+      "usageRules": [
+        "使用 Button 前必须以 src/components/ui/button.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "跳转但需要 Button 外观时使用 render，不要在 Button 内嵌套 a。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Calendar",
+      "source": "src/components/ui/calendar.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/calendar.md",
+      "category": "form",
+      "nativeStates": [
+        "hover",
+        "disabled"
+      ],
+      "semanticDom": [
+        "data-slot=\"calendar\""
+      ],
+      "tokenRefs": [
+        "--primary",
+        "--primary-foreground",
+        "--background",
+        "--foreground",
+        "--card",
+        "--popover",
+        "--muted",
+        "--muted-foreground",
+        "--border",
+        "--ring",
+        "--radius"
+      ],
+      "usageRules": [
+        "使用 Calendar 前必须以 src/components/ui/calendar.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Card",
+      "source": "src/components/ui/card.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/card.md",
+      "category": "container",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "data-slot=\"card\"",
+        "data-slot=\"card-header\"",
+        "data-slot=\"card-title\"",
+        "data-slot=\"card-description\"",
+        "data-slot=\"card-action\"",
+        "data-slot=\"card-content\"",
+        "data-slot=\"card-footer\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--card",
+        "--card-foreground",
+        "--muted",
+        "--muted-foreground",
+        "--border",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 Card 前必须以 src/components/ui/card.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Chart",
+      "source": "src/components/ui/chart.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/chart.md",
+      "category": "display",
+      "nativeStates": [
+        "active"
+      ],
+      "semanticDom": [
+        "data-slot=\"chart\""
+      ],
+      "tokenRefs": [
+        "--background",
+        "--foreground",
+        "--muted",
+        "--muted-foreground",
+        "--border",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 Chart 前必须以 src/components/ui/chart.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Checkbox",
+      "source": "src/components/ui/checkbox.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/checkbox.md",
+      "category": "form",
+      "nativeStates": [
+        "focus-visible",
+        "disabled",
+        "aria-invalid",
+        "data-checked"
+      ],
+      "semanticDom": [
+        "data-slot=\"checkbox\"",
+        "data-slot=\"checkbox-indicator\""
+      ],
+      "tokenRefs": [
+        "--primary",
+        "--primary-foreground",
+        "--foreground",
+        "--destructive",
+        "--border",
+        "--input",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 Checkbox 前必须以 src/components/ui/checkbox.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Collapsible",
+      "source": "src/components/ui/collapsible.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/collapsible.md",
+      "category": "container",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "data-slot=\"collapsible\"",
+        "data-slot=\"collapsible-trigger\"",
+        "data-slot=\"collapsible-content\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--background"
+      ],
+      "usageRules": [
+        "使用 Collapsible 前必须以 src/components/ui/collapsible.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Dialog",
+      "source": "src/components/ui/dialog.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/dialog.md",
+      "category": "feedback",
+      "nativeStates": [
+        "hover",
+        "data-open",
+        "data-closed"
+      ],
+      "semanticDom": [
+        "data-slot=\"dialog\"",
+        "data-slot=\"dialog-trigger\"",
+        "data-slot=\"dialog-portal\"",
+        "data-slot=\"dialog-close\"",
+        "data-slot=\"dialog-overlay\"",
+        "data-slot=\"dialog-content\"",
+        "data-slot=\"dialog-header\"",
+        "data-slot=\"dialog-footer\"",
+        "data-slot=\"dialog-title\"",
+        "data-slot=\"dialog-description\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--popover",
+        "--popover-foreground",
+        "--muted",
+        "--muted-foreground",
+        "--border",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 Dialog 前必须以 src/components/ui/dialog.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "DropdownMenu",
+      "source": "src/components/ui/dropdown-menu.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/dropdown-menu.md",
+      "category": "overlay",
+      "nativeStates": [
+        "disabled",
+        "data-open",
+        "data-closed"
+      ],
+      "semanticDom": [
+        "data-slot=\"dropdown-menu\"",
+        "data-slot=\"dropdown-menu-portal\"",
+        "data-slot=\"dropdown-menu-trigger\"",
+        "data-slot=\"dropdown-menu-content\"",
+        "data-slot=\"dropdown-menu-group\"",
+        "data-slot=\"dropdown-menu-label\"",
+        "data-slot=\"dropdown-menu-item\"",
+        "data-slot=\"dropdown-menu-sub\"",
+        "data-slot=\"dropdown-menu-sub-trigger\"",
+        "data-slot=\"dropdown-menu-sub-content\"",
+        "data-slot=\"dropdown-menu-checkbox-item\"",
+        "data-slot=\"dropdown-menu-checkbox-item-indicator\"",
+        "data-slot=\"dropdown-menu-radio-group\"",
+        "data-slot=\"dropdown-menu-radio-item\"",
+        "data-slot=\"dropdown-menu-radio-item-indicator\"",
+        "data-slot=\"dropdown-menu-separator\"",
+        "data-slot=\"dropdown-menu-shortcut\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--popover",
+        "--popover-foreground",
+        "--muted",
+        "--muted-foreground",
+        "--accent",
+        "--accent-foreground",
+        "--destructive",
+        "--border",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 DropdownMenu 前必须以 src/components/ui/dropdown-menu.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Field",
+      "source": "src/components/ui/field.tsx",
+      "doc": "docs/components/field.md",
+      "docStatus": "complete",
+      "category": "form",
+      "nativeStates": [
+        "data-invalid",
+        "data-disabled"
+      ],
+      "variants": [
+        "vertical",
+        "horizontal",
+        "responsive"
+      ],
+      "semanticDom": [
+        "data-slot=\"field-group\"",
+        "data-slot=\"field\"",
+        "data-slot=\"field-label\"",
+        "data-slot=\"field-description\"",
+        "data-slot=\"field-error\"",
+        "data-slot=\"field-set\"",
+        "data-slot=\"field-legend\"",
+        "data-slot=\"field-separator\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--muted-foreground",
+        "--destructive",
+        "--primary",
+        "--background",
+        "--border"
+      ],
+      "usageRules": [
+        "使用 Field 前必须以 src/components/ui/field.tsx 为真实 API。",
+        "真实表单字段使用 FieldGroup + Field + FieldLabel + 控件，不用 div/grid 临时拼。",
+        "错误态必须同时有 Field 的 data-invalid 和控件的 aria-invalid。",
+        "禁用态必须同时有 Field 的 data-disabled 和控件的 disabled。"
+      ]
+    },
+    {
+      "name": "Input",
+      "source": "src/components/ui/input.tsx",
+      "doc": "docs/components/input.md",
+      "docStatus": "complete",
+      "category": "form",
+      "nativeStates": [
+        "focus-visible",
+        "disabled",
+        "aria-invalid"
+      ],
+      "semanticDom": [
+        "data-slot=\"input\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--muted",
+        "--muted-foreground",
+        "--destructive",
+        "--border",
+        "--input",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 Input 前必须以 src/components/ui/input.tsx 为真实 API。",
+        "真实表单字段使用 FieldGroup + Field + FieldLabel + Input，不用 div/grid 临时拼。",
+        "错误态使用 Field 的 data-invalid + Input 的 aria-invalid + FieldError。",
+        "禁用态使用 Field 的 data-disabled + Input 的 disabled。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Label",
+      "source": "src/components/ui/label.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/label.md",
+      "category": "form",
+      "nativeStates": [
+        "disabled"
+      ],
+      "semanticDom": [
+        "data-slot=\"label\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--background"
+      ],
+      "usageRules": [
+        "使用 Label 前必须以 src/components/ui/label.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Popover",
+      "source": "src/components/ui/popover.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/popover.md",
+      "category": "overlay",
+      "nativeStates": [
+        "data-open",
+        "data-closed"
+      ],
+      "semanticDom": [
+        "data-slot=\"popover\"",
+        "data-slot=\"popover-trigger\"",
+        "data-slot=\"popover-content\"",
+        "data-slot=\"popover-header\"",
+        "data-slot=\"popover-title\"",
+        "data-slot=\"popover-description\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--popover",
+        "--popover-foreground",
+        "--muted",
+        "--muted-foreground",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 Popover 前必须以 src/components/ui/popover.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Select",
+      "source": "src/components/ui/select.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/select.md",
+      "category": "form",
+      "nativeStates": [
+        "hover",
+        "focus-visible",
+        "disabled",
+        "aria-invalid",
+        "data-open",
+        "data-closed"
+      ],
+      "semanticDom": [
+        "data-slot=\"select-group\"",
+        "data-slot=\"select-value\"",
+        "data-slot=\"select-trigger\"",
+        "data-slot=\"select-content\"",
+        "data-slot=\"select-label\"",
+        "data-slot=\"select-item\"",
+        "data-slot=\"select-separator\"",
+        "data-slot=\"select-scroll-up-button\"",
+        "data-slot=\"select-scroll-down-button\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--popover",
+        "--popover-foreground",
+        "--muted",
+        "--muted-foreground",
+        "--accent",
+        "--accent-foreground",
+        "--destructive",
+        "--border",
+        "--input",
+        "--ring",
+        "--radius"
+      ],
+      "usageRules": [
+        "使用 Select 前必须以 src/components/ui/select.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Separator",
+      "source": "src/components/ui/separator.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/separator.md",
+      "category": "layout",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "data-slot=\"separator\""
+      ],
+      "tokenRefs": [
+        "--border"
+      ],
+      "usageRules": [
+        "使用 Separator 前必须以 src/components/ui/separator.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Sheet",
+      "source": "src/components/ui/sheet.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/sheet.md",
+      "category": "overlay",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "data-slot=\"sheet\"",
+        "data-slot=\"sheet-trigger\"",
+        "data-slot=\"sheet-close\"",
+        "data-slot=\"sheet-portal\"",
+        "data-slot=\"sheet-overlay\"",
+        "data-slot=\"sheet-content\"",
+        "data-slot=\"sheet-header\"",
+        "data-slot=\"sheet-footer\"",
+        "data-slot=\"sheet-title\"",
+        "data-slot=\"sheet-description\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--popover",
+        "--popover-foreground",
+        "--muted",
+        "--muted-foreground",
+        "--border"
+      ],
+      "usageRules": [
+        "使用 Sheet 前必须以 src/components/ui/sheet.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Sidebar",
+      "source": "src/components/ui/sidebar.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/sidebar.md",
+      "category": "navigation",
+      "nativeStates": [
+        "hover",
+        "active",
+        "focus-visible",
+        "disabled",
+        "aria-expanded",
+        "data-active",
+        "data-state",
+        "data-open"
+      ],
+      "semanticDom": [
+        "data-slot=\"sidebar-wrapper\"",
+        "data-slot=\"sidebar\"",
+        "data-slot=\"sidebar-gap\"",
+        "data-slot=\"sidebar-container\"",
+        "data-slot=\"sidebar-inner\"",
+        "data-slot=\"sidebar-trigger\"",
+        "data-slot=\"sidebar-rail\"",
+        "data-slot=\"sidebar-inset\"",
+        "data-slot=\"sidebar-input\"",
+        "data-slot=\"sidebar-header\"",
+        "data-slot=\"sidebar-footer\"",
+        "data-slot=\"sidebar-separator\"",
+        "data-slot=\"sidebar-content\"",
+        "data-slot=\"sidebar-group\"",
+        "data-slot=\"sidebar-group-content\"",
+        "data-slot=\"sidebar-menu\"",
+        "data-slot=\"sidebar-menu-item\"",
+        "data-slot=\"sidebar-menu-badge\"",
+        "data-slot=\"sidebar-menu-skeleton\"",
+        "data-slot=\"sidebar-menu-sub\"",
+        "data-slot=\"sidebar-menu-sub-item\""
+      ],
+      "tokenRefs": [
+        "--background",
+        "--foreground",
+        "--accent",
+        "--accent-foreground",
+        "--border",
+        "--input",
+        "--ring",
+        "--sidebar",
+        "--sidebar-foreground",
+        "--sidebar-accent",
+        "--sidebar-border"
+      ],
+      "usageRules": [
+        "使用 Sidebar 前必须以 src/components/ui/sidebar.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ],
+      "variants": [
+        "default",
+        "outline"
+      ],
+      "sizes": [
+        "default",
+        "sm",
+        "lg"
+      ]
+    },
+    {
+      "name": "Skeleton",
+      "source": "src/components/ui/skeleton.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/skeleton.md",
+      "category": "feedback",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "data-slot=\"skeleton\""
+      ],
+      "tokenRefs": [
+        "--muted"
+      ],
+      "usageRules": [
+        "使用 Skeleton 前必须以 src/components/ui/skeleton.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Spinner",
+      "source": "src/components/ui/spinner.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/spinner.md",
+      "category": "feedback",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "root"
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--background"
+      ],
+      "usageRules": [
+        "使用 Spinner 前必须以 src/components/ui/spinner.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Switch",
+      "source": "src/components/ui/switch.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/switch.md",
+      "category": "form",
+      "nativeStates": [
+        "focus-visible",
+        "disabled",
+        "aria-invalid",
+        "data-checked",
+        "data-unchecked"
+      ],
+      "semanticDom": [
+        "data-slot=\"switch\"",
+        "data-slot=\"switch-thumb\""
+      ],
+      "tokenRefs": [
+        "--primary",
+        "--primary-foreground",
+        "--background",
+        "--foreground",
+        "--destructive",
+        "--border",
+        "--input",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 Switch 前必须以 src/components/ui/switch.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Table",
+      "source": "src/components/ui/table.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/table.md",
+      "category": "display",
+      "nativeStates": [
+        "hover",
+        "aria-expanded"
+      ],
+      "semanticDom": [
+        "data-slot=\"table-container\"",
+        "data-slot=\"table\"",
+        "data-slot=\"table-header\"",
+        "data-slot=\"table-body\"",
+        "data-slot=\"table-footer\"",
+        "data-slot=\"table-row\"",
+        "data-slot=\"table-head\"",
+        "data-slot=\"table-cell\"",
+        "data-slot=\"table-caption\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--muted",
+        "--muted-foreground",
+        "--border"
+      ],
+      "usageRules": [
+        "使用 Table 前必须以 src/components/ui/table.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Tabs",
+      "source": "src/components/ui/tabs.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/tabs.md",
+      "category": "navigation",
+      "nativeStates": [
+        "hover",
+        "active",
+        "focus-visible",
+        "disabled",
+        "data-active"
+      ],
+      "semanticDom": [
+        "data-slot=\"tabs\"",
+        "data-slot=\"tabs-list\"",
+        "data-slot=\"tabs-trigger\"",
+        "data-slot=\"tabs-content\""
+      ],
+      "tokenRefs": [
+        "--background",
+        "--foreground",
+        "--muted",
+        "--muted-foreground",
+        "--border",
+        "--input",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 Tabs 前必须以 src/components/ui/tabs.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ],
+      "variants": [
+        "default",
+        "line"
+      ]
+    },
+    {
+      "name": "Textarea",
+      "source": "src/components/ui/textarea.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/textarea.md",
+      "category": "form",
+      "nativeStates": [
+        "focus-visible",
+        "disabled",
+        "aria-invalid"
+      ],
+      "semanticDom": [
+        "data-slot=\"textarea\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--muted",
+        "--muted-foreground",
+        "--destructive",
+        "--border",
+        "--input",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 Textarea 前必须以 src/components/ui/textarea.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "ToggleGroup",
+      "source": "src/components/ui/toggle-group.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/toggle-group.md",
+      "category": "action",
+      "nativeStates": [
+        "focus-visible"
+      ],
+      "semanticDom": [
+        "data-slot=\"toggle-group\"",
+        "data-slot=\"toggle-group-item\""
+      ],
+      "tokenRefs": [
+        "--border",
+        "--radius"
+      ],
+      "usageRules": [
+        "使用 ToggleGroup 前必须以 src/components/ui/toggle-group.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Toggle",
+      "source": "src/components/ui/toggle.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/toggle.md",
+      "category": "action",
+      "nativeStates": [
+        "hover",
+        "focus-visible",
+        "disabled",
+        "aria-invalid"
+      ],
+      "semanticDom": [
+        "data-slot=\"toggle\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--muted",
+        "--destructive",
+        "--border",
+        "--input",
+        "--ring",
+        "--radius"
+      ],
+      "usageRules": [
+        "使用 Toggle 前必须以 src/components/ui/toggle.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ],
+      "variants": [
+        "default",
+        "outline"
+      ],
+      "sizes": [
+        "default",
+        "sm",
+        "lg"
+      ]
+    },
+    {
+      "name": "Tooltip",
+      "source": "src/components/ui/tooltip.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/tooltip.md",
+      "category": "overlay",
+      "nativeStates": [
+        "data-open",
+        "data-closed"
+      ],
+      "semanticDom": [
+        "data-slot=\"tooltip-provider\"",
+        "data-slot=\"tooltip\"",
+        "data-slot=\"tooltip-trigger\"",
+        "data-slot=\"tooltip-content\""
+      ],
+      "tokenRefs": [
+        "--background",
+        "--foreground"
+      ],
+      "usageRules": [
+        "使用 Tooltip 前必须以 src/components/ui/tooltip.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    }
+  ],
+  "fxComponents": [
+    {
+      "name": "AgentSurface",
+      "source": "src/components/fx/agent-surface.tsx",
+      "docStatus": "complete",
+      "role": "Agent JSON 安全渲染面",
+      "doc": "docs/components/fx-agent-surface.md",
+      "category": "agent-ui",
+      "nativeStates": [
+        "root",
+        "unsupported type"
+      ],
+      "semanticDom": [
+        "data-slot=\"agent-surface\"",
+        "data-slot=\"agent-surface-header\"",
+        "data-slot=\"agent-surface-blocks\"",
+        "data-slot=\"agent-surface-text\"",
+        "data-slot=\"agent-surface-object-card\"",
+        "data-slot=\"agent-surface-file-card\"",
+        "data-slot=\"agent-surface-insight-card\"",
+        "data-slot=\"agent-surface-action-row\"",
+        "data-slot=\"agent-surface-actions\"",
+        "data-slot=\"agent-surface-unsupported\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--muted",
+        "--muted-foreground",
+        "--card",
+        "--border",
+        "--primary",
+        "--primary-foreground",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 AgentSurface 前必须以 src/components/fx/agent-surface.tsx 为真实 API。",
+        "AgentSurface 只接收受控 JSON 意图，不执行 LLM 生成的 React、HTML、CSS 或 JS。",
+        "action 只是事件，不是代码；前端只把 surfaceId、event 和 payload 交给 onAction。",
+        "未知 type 必须走安全兜底，不得动态 import、eval 或 innerHTML。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。"
+      ]
+    },
+    {
+      "name": "ConfirmDangerDialog",
+      "source": "src/components/fx/confirm-danger-dialog.tsx",
+      "docStatus": "complete",
+      "role": "危险操作二次确认",
+      "doc": "docs/components/fx-confirm-danger-dialog.md",
+      "category": "fx",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "root"
+      ],
+      "tokenRefs": [
+        "--destructive",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 ConfirmDangerDialog 前必须以 src/components/fx/confirm-danger-dialog.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "PageHeader",
+      "source": "src/components/fx/page-header.tsx",
+      "docStatus": "complete",
+      "role": "页面标题、描述、主操作",
+      "doc": "docs/components/fx-page-header.md",
+      "category": "fx",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "root"
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--muted",
+        "--muted-foreground",
+        "--border",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 PageHeader 前必须以 src/components/fx/page-header.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "PageShell",
+      "source": "src/components/fx/page-shell.tsx",
+      "docStatus": "complete",
+      "role": "后台页面外壳",
+      "doc": "docs/components/fx-page-shell.md",
+      "category": "fx",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "root"
+      ],
+      "tokenRefs": [
+        "--background",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 PageShell 前必须以 src/components/fx/page-shell.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "SearchToolbar",
+      "source": "src/components/fx/search-toolbar.tsx",
+      "docStatus": "complete",
+      "role": "筛选区和查询/重置操作",
+      "doc": "docs/components/fx-search-toolbar.md",
+      "category": "fx",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "root"
+      ],
+      "tokenRefs": [
+        "--card"
+      ],
+      "usageRules": [
+        "使用 SearchToolbar 前必须以 src/components/fx/search-toolbar.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    }
+  ],
+  "checks": [
+    "npm run check:components",
+    "npm run check"
+  ]
+}

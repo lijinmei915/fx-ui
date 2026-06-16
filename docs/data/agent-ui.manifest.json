@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/agent-ui-manifest",
+  "updatedAt": "2026-06-13",
+  "truthSource": "src/components/fx/agent-surface.tsx",
+  "humanDoc": "docs/AGENT_UI.md",
+  "componentDoc": "docs/components/fx-agent-surface.md",
+  "note": "Agent UI 第一阶段协议事实表。Agent 只能生成这里登记的 block 和 action 字段；前端只用本地可信 React 组件渲染，不执行 LLM 生成代码。",
+  "strategy": {
+    "principle": "先做轻协议，后看是否接重协议。",
+    "lightProtocol": "Agent 只输出受控 JSON，前端只渲染本地白名单组件，action 只作为事件。",
+    "heavyProtocolRisk": "不要在第一阶段就被完整跨端标准、复杂事件流、远程组件注册、多宿主适配和长期兼容层拖住。",
+    "upgradeWhen": ["公司 Agent 场景稳定", "多个客户端需要复用", "必须和外部生态互通"]
+  },
+  "references": [
+    {
+      "name": "A2UI",
+      "url": "https://a2ui.org/",
+      "borrow": "catalog、surface、action、受控组件白名单",
+      "defer": "完整跨端协议和远程组件生态"
+    },
+    {
+      "name": "AG-UI",
+      "url": "https://docs.ag-ui.com/",
+      "borrow": "Agent 和前端之间的事件、状态、流式通信思路",
+      "defer": "完整运行时事件总线"
+    },
+    {
+      "name": "Vercel AI SDK Generative UI",
+      "url": "https://ai-sdk.dev/docs/ai-sdk-ui/generative-user-interfaces",
+      "borrow": "工具结果映射到本地 React 组件",
+      "defer": "让 LLM 任意决定 React 代码结构"
+    },
+    {
+      "name": "OpenAI Apps / MCP UI",
+      "url": "https://developers.openai.com/apps-sdk/build/chatgpt-ui",
+      "borrow": "工具结果可以带结构化 UI，由宿主渲染",
+      "defer": "绑定到某个宿主平台"
+    }
+  ],
+  "scenarioMap": [
+    {
+      "scenario": "对象信息",
+      "description": "客户、员工、订单、合同、项目、审批单等业务对象。",
+      "block": "object-card",
+      "phase": "phase-1"
+    },
+    {
+      "scenario": "文件信息",
+      "description": "合同、报告、附件、知识库文档、表格等文件。",
+      "block": "file-card",
+      "phase": "phase-1"
+    },
+    {
+      "scenario": "建议/结论",
+      "description": "Agent 的判断、摘要、风险提示和推荐动作。",
+      "block": "insight-card",
+      "phase": "phase-1"
+    },
+    {
+      "scenario": "操作区",
+      "description": "继续分析、生成报告、发起审批、查看详情等用户选择。",
+      "block": "action-row",
+      "phase": "phase-1"
+    },
+    {
+      "scenario": "任务/待办",
+      "description": "待跟进、待审批、待补充资料、待确认。",
+      "block": "task-card",
+      "phase": "phase-2"
+    },
+    {
+      "scenario": "多对象列表",
+      "description": "找到多个客户、文件、记录或候选项。",
+      "block": "result-list",
+      "phase": "phase-2"
+    },
+    {
+      "scenario": "风险/警告",
+      "description": "权限不足、数据缺失、高风险操作、不可逆动作。",
+      "block": "risk-card",
+      "phase": "phase-2"
+    },
+    {
+      "scenario": "进度状态",
+      "description": "正在分析、已完成、部分失败、等待用户选择。",
+      "block": "agent-status",
+      "phase": "phase-2"
+    }
+  ],
+  "surface": {
+    "type": "AgentSurfaceSchema",
+    "requiredFields": ["id", "blocks"],
+    "optionalFields": ["title", "description"],
+    "rootSlot": "data-slot=\"agent-surface\""
+  },
+  "playground": {
+    "pageAnchor": "#agent-surface-playground",
+    "source": "src/App.tsx",
+    "purpose": "粘贴或编辑 mock Agent JSON，并实时渲染真实 AgentSurface 组件。",
+    "rules": [
+      "只接受受控 JSON。",
+      "JSON 格式错误时显示错误，不渲染假 UI。",
+      "未知 block 仍然走 AgentSurface 安全兜底。"
+    ]
+  },
+  "blocks": [
+    {
+      "type": "text",
+      "sourceType": "AgentTextBlock",
+      "slot": "data-slot=\"agent-surface-text\"",
+      "purpose": "展示 Agent 生成的说明文字。",
+      "requiredFields": ["type", "text"],
+      "optionalFields": ["id", "tone"],
+      "allowedValues": {
+        "tone": ["default", "muted"]
+      }
+    },
+    {
+      "type": "object-card",
+      "sourceType": "AgentObjectCardBlock",
+      "slot": "data-slot=\"agent-surface-object-card\"",
+      "purpose": "展示对象信息，例如客户、任务、审批对象。",
+      "requiredFields": ["type", "title", "fields"],
+      "optionalFields": ["id", "description", "actions"],
+      "childContracts": {
+        "fields": {
+          "requiredFields": ["label", "value"]
+        }
+      }
+    },
+    {
+      "type": "file-card",
+      "sourceType": "AgentFileCardBlock",
+      "slot": "data-slot=\"agent-surface-file-card\"",
+      "purpose": "展示文件信息，例如合同、附件、报告。",
+      "requiredFields": ["type", "title", "filename"],
+      "optionalFields": ["id", "summary", "meta", "actions"]
+    },
+    {
+      "type": "insight-card",
+      "sourceType": "AgentInsightCardBlock",
+      "slot": "data-slot=\"agent-surface-insight-card\"",
+      "purpose": "展示 Agent 生成的结论、建议、风险提示或推荐动作。",
+      "requiredFields": ["type", "title", "summary"],
+      "optionalFields": ["id", "tone", "evidence", "actions"],
+      "allowedValues": {
+        "tone": ["info", "success", "warning", "danger"]
+      }
+    },
+    {
+      "type": "action-row",
+      "sourceType": "AgentActionRowBlock",
+      "slot": "data-slot=\"agent-surface-action-row\"",
+      "purpose": "展示一组操作按钮，把用户选择回传给宿主应用。",
+      "requiredFields": ["type", "actions"],
+      "optionalFields": ["id"]
+    }
+  ],
+  "action": {
+    "type": "AgentAction",
+    "requiredFields": ["label", "event"],
+    "optionalFields": ["payload", "variant"],
+    "allowedValues": {
+      "variant": ["default", "outline", "secondary", "ghost", "destructive"]
+    },
+    "dispatch": "onAction({ surfaceId, event, payload })",
+    "rule": "action 只是事件，不是代码；不得接收 onClick、script、href:javascript 或可执行字符串。"
+  },
+  "safety": {
+    "unsupportedSlot": "data-slot=\"agent-surface-unsupported\"",
+    "forbiddenFields": ["html", "script", "style", "css", "jsx", "onClick", "dangerouslySetInnerHTML"],
+    "forbiddenRuntime": ["eval", "new Function", "dangerouslySetInnerHTML", "innerHTML", "根据 Agent payload 动态 import 组件"],
+    "unknownTypeBehavior": "显示不支持提示，不执行、不渲染未知代码。"
+  },
+  "checks": [
+    "npm run check:agent-ui",
+    "npm run check"
+  ]
+}

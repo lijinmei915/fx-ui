@@ -311,11 +311,22 @@
   --fx-primary-light-hover:  var(--fx-brand-02);
   --fx-primary-light-active: var(--fx-brand-03);
 
-  /* 功能色浅色变体 */
-  --fx-success-light: var(--fx-green-01);
-  --fx-info-light:    var(--fx-blue-01);
-  --fx-warning-light: var(--fx-amber-01);
-  --fx-danger-light:  var(--fx-red-01);
+  /* 功能色浅色三态（Tag / Badge / Alert / 软按钮 —— 全走各自 12 阶色板 01/02/03） */
+  --fx-success-light:        var(--fx-green-01);
+  --fx-success-light-hover:  var(--fx-green-02);
+  --fx-success-light-active: var(--fx-green-03);
+  --fx-info-light:           var(--fx-blue-01);
+  --fx-info-light-hover:     var(--fx-blue-02);
+  --fx-info-light-active:    var(--fx-blue-03);
+  --fx-warning-light:        var(--fx-amber-01);
+  --fx-warning-light-hover:  var(--fx-amber-02);
+  --fx-warning-light-active: var(--fx-amber-03);
+  --fx-danger-light:         var(--fx-red-01);
+  --fx-danger-light-hover:   var(--fx-red-02);
+  --fx-danger-light-active:  var(--fx-red-03);
+
+  /* 中性面交互态（secondary / muted / ghost / outline —— 走灰色 12 阶色板） */
+  /* 默认 02、hover 03、active 04，对齐 Radix 灰交互区 */
 
   /* ===== 列表行高亮色 List row highlight ===== */
   --fx-list-orange: var(--fx-orange-01);
@@ -334,20 +345,27 @@
   --popover: #FFFFFF;
   --popover-foreground: #181C25;
 
-  --primary: #FF8000;                /* ★ 品牌橙 → 主按钮/强调 */
+  --primary: var(--fx-brand-09);     /* ★ 品牌色 → 主按钮/强调（唯一真相：色板 09 阶） */
   --primary-foreground: #FFFFFF;
 
-  --secondary: #F2F3F5;
+  --secondary: var(--fx-gray-02);
+  --secondary-hover: var(--fx-gray-03);
+  --secondary-active: var(--fx-gray-04);
   --secondary-foreground: #181C25;
 
-  --muted: #F2F3F5;
+  --muted: var(--fx-gray-02);
+  --muted-hover: var(--fx-gray-03);
+  --muted-active: var(--fx-gray-04);
   --muted-foreground: #91959E;
 
   --accent: var(--fx-orange-01);
   --accent-foreground: #181C25;
 
-  --destructive: #FF522A;
+  --destructive: var(--fx-red-09);
   --destructive-foreground: #FFFFFF;
+  --destructive-light: var(--fx-danger-light);
+  --destructive-light-hover: var(--fx-danger-light-hover);
+  --destructive-light-active: var(--fx-danger-light-active);
 
   --border: #DEE1E8;
   --input: #C1C5CE;
@@ -425,10 +443,23 @@
   --color-primary-light:        var(--fx-primary-light);
   --color-primary-light-hover:  var(--fx-primary-light-hover);
   --color-primary-light-active: var(--fx-primary-light-active);
+  --color-secondary-hover:       var(--secondary-hover);
+  --color-secondary-active:      var(--secondary-active);
+  --color-muted-hover:           var(--muted-hover);
+  --color-muted-active:          var(--muted-active);
   --color-success-light:         var(--fx-success-light);
+  --color-success-light-hover:   var(--fx-success-light-hover);
+  --color-success-light-active:  var(--fx-success-light-active);
   --color-warning-light:         var(--fx-warning-light);
+  --color-warning-light-hover:   var(--fx-warning-light-hover);
+  --color-warning-light-active:  var(--fx-warning-light-active);
   --color-info-light:            var(--fx-info-light);
+  --color-info-light-hover:      var(--fx-info-light-hover);
+  --color-info-light-active:     var(--fx-info-light-active);
   --color-danger-light:          var(--fx-danger-light);
+  --color-destructive-light:        var(--destructive-light);
+  --color-destructive-light-hover:  var(--destructive-light-hover);
+  --color-destructive-light-active: var(--destructive-light-active);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);

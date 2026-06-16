@@ -1410,8 +1410,32 @@
       "usage": ""
     },
     {
+      "name": "--fx-success-light-hover",
+      "value": "var(--fx-green-02)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-success-light-active",
+      "value": "var(--fx-green-03)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
       "name": "--fx-info-light",
       "value": "var(--fx-blue-01)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-info-light-hover",
+      "value": "var(--fx-blue-02)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-info-light-active",
+      "value": "var(--fx-blue-03)",
       "category": "palette",
       "usage": ""
     },
@@ -1422,8 +1446,32 @@
       "usage": ""
     },
     {
+      "name": "--fx-warning-light-hover",
+      "value": "var(--fx-amber-02)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-warning-light-active",
+      "value": "var(--fx-amber-03)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
       "name": "--fx-danger-light",
       "value": "var(--fx-red-01)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-danger-light-hover",
+      "value": "var(--fx-red-02)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-danger-light-active",
+      "value": "var(--fx-red-03)",
       "category": "palette",
       "usage": ""
     },
@@ -1509,7 +1557,7 @@
     },
     {
       "name": "--primary",
-      "value": "#FF8000",
+      "value": "var(--fx-brand-09)",
       "category": "action-state",
       "usage": "主操作、激活态、品牌强调"
     },
@@ -1521,9 +1569,21 @@
     },
     {
       "name": "--secondary",
-      "value": "#F2F3F5",
+      "value": "var(--fx-gray-02)",
       "category": "action-state",
       "usage": "次级按钮和弱操作背景"
+    },
+    {
+      "name": "--secondary-hover",
+      "value": "var(--fx-gray-03)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--secondary-active",
+      "value": "var(--fx-gray-04)",
+      "category": "shadcn-semantic",
+      "usage": ""
     },
     {
       "name": "--secondary-foreground",
@@ -1533,9 +1593,21 @@
     },
     {
       "name": "--muted",
-      "value": "#F2F3F5",
+      "value": "var(--fx-gray-02)",
       "category": "surface-text",
       "usage": "次级背景、弱按钮、代码块"
+    },
+    {
+      "name": "--muted-hover",
+      "value": "var(--fx-gray-03)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--muted-active",
+      "value": "var(--fx-gray-04)",
+      "category": "shadcn-semantic",
+      "usage": ""
     },
     {
       "name": "--muted-foreground",
@@ -1557,7 +1629,7 @@
     },
     {
       "name": "--destructive",
-      "value": "#FF522A",
+      "value": "var(--fx-red-09)",
       "category": "action-state",
       "usage": "删除、危险、不可逆操作"
     },
@@ -1566,6 +1638,24 @@
       "value": "#FFFFFF",
       "category": "action-state",
       "usage": "危险背景上的文字"
+    },
+    {
+      "name": "--destructive-light",
+      "value": "var(--fx-danger-light)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--destructive-light-hover",
+      "value": "var(--fx-danger-light-hover)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--destructive-light-active",
+      "value": "var(--fx-danger-light-active)",
+      "category": "shadcn-semantic",
+      "usage": ""
     },
     {
       "name": "--border",

@@ -253,8 +253,25 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 键盘焦点环单独一条：种子色（09）叠 40% 透明，`oklch(from var(--fx-brand-09) l c h / 0.4)`。
 
-> 落地示例（主色）：`--fx-primary` = `--fx-brand-09`，`--fx-primary-hover` = `--fx-brand-10`，`--fx-primary-active` = `--fx-brand-11`，`--fx-primary-disabled` = `--fx-brand-05`；浅色组 `--fx-primary-light` = `--fx-brand-01/02/03`。
-> 新增任何可交互色（如自定义功能色按钮）时，按这张表派生，不要临时挑色值。
+### 唯一真相：所有交互态都从 12 阶色板取阶
+
+**禁止**用 `color-mix(...)` 现算、`/透明度`（如 `bg-primary/80`、`bg-destructive/10`）这类手法表达交互态——它们绕过色板、各处不一致。一律走对应色系的 12 阶色板。
+
+各类颜色的色板归属：
+
+| 颜色 | 色板来源 | 实心/浅色 |
+|------|----------|-----------|
+| 主色 primary | `--fx-brand-*`（随换肤变） | 实心组 09/10/11/05 + 浅色组 01/02/03 |
+| 功能色 success/info/warning/destructive | 各自 `--fx-green/blue/amber/red-*` | 浅色组 01/02/03，文字用 09 |
+| 中性面 secondary/muted | `--fx-gray-*`（灰色板，对齐 Radix 交互区 03/04/05） | 默认 03 / hover 04 / active 05 |
+
+落地 token：
+- 主色：`--fx-primary*` = `--fx-brand-09/10/11/05`、`--fx-primary-light*` = `--fx-brand-01/02/03`
+- 功能色：`--fx-{success/info/warning/danger}-light(/-hover/-active)` = 对应色板 01/02/03
+- 中性面：`--secondary(/-hover/-active)` = `--fx-gray-03/04/05`；`--muted(/-hover/-active)` = `--fx-gray-02/03/04`
+- 焦点环：`--ring` = 种子色 09 叠 40% 透明
+
+> 新增任何可交互色时，按这张表派生，不要临时挑色值、不要用 color-mix 或透明度。
 
 ## 列表行高亮色
 

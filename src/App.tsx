@@ -2296,8 +2296,8 @@ const semanticTokenGroups = [
     descEn: "Derived from the Orange scale. Brand orange drives all primary actions and active states.",
     tokens: [
       { name: "primary",                value: "#FF8000", sourceToken: "--fx-brand-09", tailwind: "bg-primary",             usage: "主色默认态 — 主按钮、品牌强调",       usageEn: "Primary default — main buttons, brand emphasis" },
-      { name: "primary-hover",        value: "", sourceToken: "--fx-brand-10", tailwind: "bg-primary-hover",        usage: "主色悬浮态",                              usageEn: "Primary hover state" },
-      { name: "primary-active",       value: "", sourceToken: "--fx-brand-11", tailwind: "bg-primary-active",       usage: "主色激活 / 按下态（click）",               usageEn: "Primary active / pressed (click) state" },
+      { name: "primary-hover",        value: "", sourceToken: "--fx-brand-08", tailwind: "bg-primary-hover",        usage: "主色悬浮态",                              usageEn: "Primary hover state" },
+      { name: "primary-active",       value: "", sourceToken: "--fx-brand-10", tailwind: "bg-primary-active",       usage: "主色激活 / 按下态（click）",               usageEn: "Primary active / pressed (click) state" },
       { name: "primary-disabled",     value: "", sourceToken: "--fx-brand-05", tailwind: "bg-primary-disabled",     usage: "主色禁用态",                              usageEn: "Primary disabled state" },
       { name: "primary-light",        value: "", sourceToken: "--fx-brand-01", tailwind: "bg-primary-light",        usage: "浅色主色背景（Tag / Badge / Alert）",      usageEn: "Light primary bg (Tag / Badge / Alert)" },
       { name: "primary-light-hover",  value: "", sourceToken: "--fx-brand-02", tailwind: "bg-primary-light-hover",  usage: "浅色主色悬浮态",                          usageEn: "Light primary hover state" },

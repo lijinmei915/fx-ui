@@ -236,8 +236,8 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | 态 | 取阶 | 规律 |
 |------|------|------|
 | 默认 Default | 09 | 种子色本身 |
-| 悬浮 Hover | 10 | 比默认深一阶 |
-| 激活 Active / 按下 Click | 11 | 比悬浮再深一阶 |
+| 悬浮 Hover | 08 | 比默认浅一阶（柔和悬浮） |
+| 激活 Active / 按下 Click | 10 | 比默认深一阶（按下加深） |
 | 禁用 Disabled | 05 | 大幅变浅（组件层不再叠 opacity） |
 
 ### 浅色组（Tag / Badge / Alert / Ghost 按钮背景）
@@ -261,12 +261,12 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 | 颜色 | 色板来源 | 实心/浅色 |
 |------|----------|-----------|
-| 主色 primary | `--fx-brand-*`（随换肤变） | 实心组 09/10/11/05 + 浅色组 01/02/03 |
+| 主色 primary | `--fx-brand-*`（随换肤变） | 实心组 默认09/hover08/active10/禁用05 + 浅色组 01/02/03 |
 | 功能色 success/info/warning/destructive | 各自 `--fx-green/blue/amber/red-*` | 浅色组 01/02/03，文字用 09 |
 | 中性面 secondary/muted | `--fx-gray-*`（灰色板，对齐 Radix 交互区 03/04/05） | 默认 03 / hover 04 / active 05 |
 
 落地 token：
-- 主色：`--fx-primary*` = `--fx-brand-09/10/11/05`、`--fx-primary-light*` = `--fx-brand-01/02/03`
+- 主色：`--fx-primary` = `--fx-brand-09`、`-hover` = `08`、`-active` = `10`、`-disabled` = `05`；`--fx-primary-light*` = `--fx-brand-01/02/03`
 - 功能色：`--fx-{success/info/warning/danger}-light(/-hover/-active)` = 对应色板 01/02/03
 - 中性面：`--secondary(/-hover/-active)` = `--fx-gray-03/04/05`；`--muted(/-hover/-active)` = `--fx-gray-02/03/04`
 - 焦点环：`--ring` = 种子色 09 叠 40% 透明

@@ -1369,13 +1369,13 @@
     },
     {
       "name": "--fx-primary-hover",
-      "value": "var(--fx-brand-10)",
+      "value": "var(--fx-brand-08)",
       "category": "interaction.primary",
       "usage": "Orange 05 - hover"
     },
     {
       "name": "--fx-primary-active",
-      "value": "var(--fx-brand-11)",
+      "value": "var(--fx-brand-10)",
       "category": "palette",
       "usage": ""
     },

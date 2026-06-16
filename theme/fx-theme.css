@@ -300,10 +300,9 @@
   --fx-warning:          var(--fx-amber-09);
   --fx-danger:           var(--fx-red-09);
 
-  /* 实心交互态（Radix 推荐：hover/click 同用 10 阶，click 靠动效区分）
-     —— 从 --fx-brand-vivid 按阶梯公式推导，随换肤变化 */
-  --fx-primary-hover:    var(--fx-brand-10);
-  --fx-primary-active:   var(--fx-brand-11);
+  /* 实心交互态：hover 浅一阶（08）、active 深一阶（10），随换肤变化 */
+  --fx-primary-hover:    var(--fx-brand-08);
+  --fx-primary-active:   var(--fx-brand-10);
   --fx-primary-disabled: var(--fx-brand-05);
 
   /* 浅色变体（Tag / Badge / Alert / Ghost 按钮背景） */

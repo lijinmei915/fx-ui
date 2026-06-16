@@ -75,7 +75,7 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 
 - **日期**：2026-06-16
 - **状态**：已决定
-- **决定**：任何可交互色的 hover/active/disabled 等状态，一律从对应色系的 12 阶色板取阶；功能色（success/info/warning/destructive）补齐 light 三态（01/02/03）；中性面（secondary/muted）走灰色板（03/04/05）
+- **决定**：任何可交互色的 hover/active/disabled 等状态，一律从对应色系的 12 阶色板取阶。主色实心组取 默认09 / hover08（浅一阶）/ active10（深一阶）/ 禁用05；功能色（success/info/warning/destructive）补齐 light 三态（01/02/03）；中性面填充（secondary）走灰色板 02/03/04；无填充控件（ghost / outline）再降一档，hover02 / active03
 - **放弃**：组件里用 `color-mix(...)` 现算、`/透明度`（`bg-primary/80`、`bg-destructive/10`）表达交互态——三套手法并存、各处不一致
 - **原因**：色板是唯一真相源，绕过它就会漂移；统一取阶后换肤、对比度、深浅层次都可预测，组件只引用 token 不再写死算式
 - **影响**：新增 `--fx-{success/info/warning/danger}-light-hover/-active`、`--secondary/muted-hover/-active`、`--destructive-light*` 等 token；button/badge 已改为引用 token；其余用到 `bg-muted`、`/透明度` 交互态的组件后续逐步收敛

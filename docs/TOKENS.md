@@ -131,7 +131,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `z-40` | 固定 Header、文档顶部导航 |
 | `z-50` | Dialog、Dropdown、Popover、Sheet、Tooltip 等浮层 |
 
-## 基础色板（14 色系 × 12 阶）
+## 基础色板（13 有色色系 × 12 阶 + 中性灰 20 阶）
 
 > 真相源：`theme/fx-theme.css`，用 CSS 相对颜色语法从种子色（seed）在 oklch 空间推导。
 > 变量名格式：`--fx-{色系}-{阶}`，例如 `--fx-orange-09`。
@@ -166,7 +166,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | 11 | 低对比文字 | 彩色链接、Tag 文字、品牌色标注 |
 | 12 | 高对比文字 | 深色正文、需要高对比的彩色文字 |
 
-### 14 色系种子色
+### 13 有色色系种子色
 
 | 色系变量 | 参考值 | 语义 |
 |----------|--------|------|
@@ -183,21 +183,22 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `--fx-seed-purple` | `#8B5CF6` | 紫 |
 | `--fx-seed-pink` | `#EC4899` | 粉 |
 | `--fx-seed-red` | `#EF4444` | 红 · 错误 |
-| `--fx-seed-gray` | `oklch(from brand 0.65 0.010 h)` | 主题色偏色灰；C=0.010 为确认值，继承 brand 色相但彩度极低，视觉上看不出色相偏向；不调高到 0.020+（会出现橙调），不降到 0.005 以下（步骤差异消失） |
 
-## 中性色（Neutrals 01–19）
+> 灰色不在有色色系里——全站唯一中性灰是下方 Neutrals 20 阶（结构灰）。不再有独立的"品牌偏色灰"色系。
 
-变量名：`--fx-neutrals-{01~19}`，用 `color-mix(in oklch, white, neutral-dark N%)` 推导。
+## 中性色（Neutrals 01–20）
+
+**全站唯一中性灰轴**：变量名 `--fx-neutrals-{01~20}`，用 `color-mix(in oklch, white, neutral-dark N%)` 推导（`neutral-dark` 带品牌色相微量染色）。页面底/卡片/文字/边框，以及中性交互面（secondary / muted / ghost·outline 悬浮底）全部取自这里。
 
 | 编号 | 混合比 | 常用场景 |
 |------|--------|----------|
-| 01 | white | 卡片、容器背景 |
+| 01 | white | 卡片、容器背景（`--card`）、反白文字、浅色图标 |
 | 02 | 2% | 页面底色（`--background`） |
-| 03 | 5% | 次级背景、muted、input disabled |
-| 05 | 16% | 分割线（`--border`） |
-| 07 | 28% | 表单边框（`--input`） |
-| 11 | 54% | 辅助文字（`--muted-foreground`）、icon-muted |
-| 19 | neutral-dark | 主文字（`--foreground`）、icon |
+| 03 | 5% | 次级背景 muted / secondary 默认底、ghost·outline 悬浮底 |
+| 04 | 9% | secondary·muted hover |
+| 05 | 14% | secondary·muted active、分割线（`--border`） |
+| 13 | 61% | 辅助文字（`--muted-foreground`）、icon-muted |
+| 20 | neutral-dark | 主文字（`--foreground`）、icon |
 
 ## 图表色板（BI 常用色 · 10 色）
 

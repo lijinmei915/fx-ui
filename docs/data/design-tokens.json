@@ -114,12 +114,6 @@
       "usage": ""
     },
     {
-      "name": "--fx-seed-gray",
-      "value": "oklch(from var(--fx-brand-vivid) 0.65 0.010 h)",
-      "category": "palette",
-      "usage": ""
-    },
-    {
       "name": "--fx-orange-01",
       "value": "oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
       "category": "palette.orange",
@@ -1128,80 +1122,8 @@
       "usage": ""
     },
     {
-      "name": "--fx-gray-01",
-      "value": "oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
-      "category": "palette",
-      "usage": ""
-    },
-    {
-      "name": "--fx-gray-02",
-      "value": "oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
-      "category": "palette",
-      "usage": ""
-    },
-    {
-      "name": "--fx-gray-03",
-      "value": "oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
-      "category": "palette",
-      "usage": ""
-    },
-    {
-      "name": "--fx-gray-04",
-      "value": "oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
-      "category": "palette",
-      "usage": ""
-    },
-    {
-      "name": "--fx-gray-05",
-      "value": "oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
-      "category": "palette",
-      "usage": ""
-    },
-    {
-      "name": "--fx-gray-06",
-      "value": "oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
-      "category": "palette",
-      "usage": ""
-    },
-    {
-      "name": "--fx-gray-07",
-      "value": "oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
-      "category": "palette",
-      "usage": ""
-    },
-    {
-      "name": "--fx-gray-08",
-      "value": "oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
-      "category": "palette",
-      "usage": ""
-    },
-    {
-      "name": "--fx-gray-09",
-      "value": "var(--fx-seed-gray)",
-      "category": "palette",
-      "usage": ""
-    },
-    {
-      "name": "--fx-gray-10",
-      "value": "oklch(from var(--fx-seed-gray) calc(l * 0.87) calc(c * 0.95) h)",
-      "category": "palette",
-      "usage": ""
-    },
-    {
-      "name": "--fx-gray-11",
-      "value": "oklch(from var(--fx-seed-gray) calc(l * 0.72) calc(c * 0.82) h)",
-      "category": "palette",
-      "usage": ""
-    },
-    {
-      "name": "--fx-gray-12",
-      "value": "oklch(from var(--fx-seed-gray) calc(l * 0.35) calc(c * 0.65) h)",
-      "category": "palette",
-      "usage": ""
-    },
-    {
       "name": "--fx-neutral-dark",
-      "value": "oklch(from var(--fx-brand-vivid) 0.12 0.018 h)",
+      "value": "oklch(from var(--fx-brand-vivid) 0.12 0.008 h)",
       "category": "palette",
       "usage": ""
     },
@@ -1225,103 +1147,109 @@
     },
     {
       "name": "--fx-neutrals-04",
-      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 10%)",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 9%)",
       "category": "neutral",
       "usage": "中浅阶视觉辅助、图表或交互态"
     },
     {
       "name": "--fx-neutrals-05",
-      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 16%)",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 14%)",
       "category": "neutral",
       "usage": "divider / icon gray"
     },
     {
       "name": "--fx-neutrals-06",
-      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 24%)",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 19%)",
       "category": "neutral",
       "usage": "Normal 基准色"
     },
     {
       "name": "--fx-neutrals-07",
-      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 32%)",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 25%)",
       "category": "neutral",
       "usage": "text H4 / input border / icon light"
     },
     {
       "name": "--fx-neutrals-08",
-      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 42%)",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 31%)",
       "category": "neutral",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-neutrals-09",
-      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 48%)",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 37%)",
       "category": "neutral",
       "usage": "input border hover"
     },
     {
       "name": "--fx-neutrals-10",
-      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 54%)",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 43%)",
       "category": "neutral",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
     {
       "name": "--fx-neutrals-11",
-      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 60%)",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 49%)",
       "category": "neutral",
       "usage": "text H3"
     },
     {
       "name": "--fx-neutrals-12",
-      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 66%)",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 55%)",
       "category": "neutral",
       "usage": "中性色阶，用于背景、边框、图标或文字层级"
     },
     {
       "name": "--fx-neutrals-13",
-      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 72%)",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 61%)",
       "category": "neutral",
       "usage": "中性色阶，用于背景、边框、图标或文字层级"
     },
     {
       "name": "--fx-neutrals-14",
-      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 78%)",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 67%)",
       "category": "neutral",
       "usage": "中性色阶，用于背景、边框、图标或文字层级"
     },
     {
       "name": "--fx-neutrals-15",
-      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 83%)",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 73%)",
       "category": "neutral",
       "usage": "text H2"
     },
     {
       "name": "--fx-neutrals-16",
-      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 88%)",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 79%)",
       "category": "neutral",
       "usage": "中性色阶，用于背景、边框、图标或文字层级"
     },
     {
       "name": "--fx-neutrals-17",
-      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 92%)",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 85%)",
       "category": "neutral",
       "usage": "中性色阶，用于背景、边框、图标或文字层级"
     },
     {
       "name": "--fx-neutrals-18",
-      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 96%)",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 90%)",
       "category": "neutral",
       "usage": "中性色阶，用于背景、边框、图标或文字层级"
     },
     {
       "name": "--fx-neutrals-19",
-      "value": "var(--fx-neutral-dark)",
+      "value": "color-mix(in oklch, white, var(--fx-neutral-dark) 95%)",
       "category": "neutral",
       "usage": "text H1"
     },
     {
+      "name": "--fx-neutrals-20",
+      "value": "var(--fx-neutral-dark)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
       "name": "--fx-icon-dark",
-      "value": "var(--fx-neutrals-19)",
+      "value": "var(--fx-neutrals-20)",
       "category": "icon",
       "usage": "单色图标·深 = Neutrals 19"
     },
@@ -1333,7 +1261,7 @@
     },
     {
       "name": "--fx-icon-gray",
-      "value": "var(--fx-neutrals-11)",
+      "value": "var(--fx-neutrals-13)",
       "category": "icon",
       "usage": "单色图标·灰 = Special 02"
     },
@@ -1569,19 +1497,19 @@
     },
     {
       "name": "--secondary",
-      "value": "var(--fx-gray-02)",
+      "value": "var(--fx-neutrals-03)",
       "category": "action-state",
       "usage": "次级按钮和弱操作背景"
     },
     {
       "name": "--secondary-hover",
-      "value": "var(--fx-gray-03)",
+      "value": "var(--fx-neutrals-04)",
       "category": "shadcn-semantic",
       "usage": ""
     },
     {
       "name": "--secondary-active",
-      "value": "var(--fx-gray-04)",
+      "value": "var(--fx-neutrals-05)",
       "category": "shadcn-semantic",
       "usage": ""
     },
@@ -1593,19 +1521,19 @@
     },
     {
       "name": "--muted",
-      "value": "var(--fx-gray-02)",
+      "value": "var(--fx-neutrals-03)",
       "category": "surface-text",
       "usage": "次级背景、弱按钮、代码块"
     },
     {
       "name": "--muted-hover",
-      "value": "var(--fx-gray-03)",
+      "value": "var(--fx-neutrals-04)",
       "category": "shadcn-semantic",
       "usage": ""
     },
     {
       "name": "--muted-active",
-      "value": "var(--fx-gray-04)",
+      "value": "var(--fx-neutrals-05)",
       "category": "shadcn-semantic",
       "usage": ""
     },

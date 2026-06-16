@@ -2313,9 +2313,9 @@ const semanticTokenGroups = [
     tokens: [
       { name: "background", value: "",         sourceToken: "--fx-neutrals-02",  tailwind: "bg-background", usage: "页面底色 — 应用外壳、Layout 背景",       usageEn: "App shell / page canvas" },
       { name: "card",       value: "#FFFFFF", sourceToken: "--fx-neutrals-01",  tailwind: "bg-card",       usage: "容器层 — 卡片、面板（含 popover）",       usageEn: "Container layer — card / panel / popover" },
-      { name: "muted",    value: "#F2F3F5", sourceToken: "--fx-neutrals-03", tailwind: "bg-muted",     usage: "次级背景 — 代码块、表格斑马纹、输入框底色",                       usageEn: "Subtle background — code blocks, table stripes, input fill" },
-      { name: "accent",   value: "",         sourceToken: "--fx-orange-01",   tailwind: "bg-accent",    usage: "交互高亮背景 — 列表/菜单项悬浮态",                              usageEn: "Hover highlight background — list / menu item hover" },
-      { name: "secondary", value: "#F2F3F5", sourceToken: "--fx-neutrals-03", tailwind: "bg-secondary", usage: "弱操作背景 — secondary 按钮、ghost 按钮按下态",                 usageEn: "Low-emphasis action background — secondary and ghost buttons" },
+      { name: "muted",    value: "", sourceToken: "--fx-neutrals-03", tailwind: "bg-muted",     usage: "次级背景 — 代码块、表格斑马纹、输入框底色；ghost/outline 悬浮底",   usageEn: "Subtle background — code blocks, table stripes, input fill; ghost/outline hover" },
+      { name: "accent",   value: "", sourceToken: "--fx-orange-01",   tailwind: "bg-accent",    usage: "交互高亮背景 — 列表/菜单项悬浮态",                              usageEn: "Hover highlight background — list / menu item hover" },
+      { name: "secondary", value: "", sourceToken: "--fx-neutrals-03", tailwind: "bg-secondary", usage: "弱操作背景 — secondary 按钮默认底",                              usageEn: "Low-emphasis action background — secondary button base" },
     ],
   },
   {
@@ -2324,8 +2324,8 @@ const semanticTokenGroups = [
     desc: "正文、辅助说明、以及反色背景上的文字，来自 Neutrals 深阶",
     descEn: "Body text, supporting text, and text on colored backgrounds. Derived from deep Neutrals steps.",
     tokens: [
-      { name: "foreground",          value: "#181C25", sourceToken: "--fx-neutrals-19",  tailwind: "text-foreground",         usage: "主文字 — 标题、正文、表单标签",             usageEn: "Primary text — headings, body, form labels" },
-      { name: "muted-foreground",    value: "#91959E", sourceToken: "--fx-neutrals-11",  tailwind: "text-muted-foreground",   usage: "辅助说明 — placeholder、描述、弱信息",      usageEn: "Supporting text — placeholder, description, low-emphasis" },
+      { name: "foreground",          value: "#181C25", sourceToken: "--fx-neutrals-20",  tailwind: "text-foreground",         usage: "主文字 — 标题、正文、表单标签",             usageEn: "Primary text — headings, body, form labels" },
+      { name: "muted-foreground",    value: "#91959E", sourceToken: "--fx-neutrals-13",  tailwind: "text-muted-foreground",   usage: "辅助说明 — placeholder、描述、弱信息",      usageEn: "Supporting text — placeholder, description, low-emphasis" },
       { name: "primary-foreground",  value: "#FFFFFF", sourceToken: "--fx-neutrals-01",  tailwind: "text-primary-foreground", usage: "反色文字 — 主色按钮、品牌背景上的文字图标",  usageEn: "Reversed text — on primary / brand-color backgrounds" },
       { name: "icon",                value: "#181C25", sourceToken: "--fx-icon-dark",     tailwind: "text-icon",               usage: "图标默认色 — 与正文同色",                   usageEn: "Default icon color — matches foreground" },
       { name: "icon-muted",          value: "#6B7280", sourceToken: "--fx-icon-gray",     tailwind: "text-icon-muted",         usage: "弱图标 — 工具栏次要图标、禁用态",            usageEn: "Muted icon — secondary toolbar icons, disabled state" },
@@ -2372,7 +2372,6 @@ const seedColors = [
   { name: "Purple",         nameZh: "紫",     tag: "",        tagZh: "",         cssVar: "--fx-seed-purple",         hueOffset: "#8B5CF6", prefix: "--fx-purple" },
   { name: "Pink",           nameZh: "粉",     tag: "",        tagZh: "",         cssVar: "--fx-seed-pink",           hueOffset: "#EC4899", prefix: "--fx-pink" },
   { name: "Red",            nameZh: "红",     tag: "Error",   tagZh: "错误",     cssVar: "--fx-seed-red",            hueOffset: "#EF4444", prefix: "--fx-red" },
-  { name: "Gray",           nameZh: "灰",     tag: "",        tagZh: "",         cssVar: "--fx-seed-gray",           hueOffset: "brand",   prefix: "--fx-gray" },
 ]
 
 
@@ -4911,6 +4910,7 @@ function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
 }
 
 const PALETTE_STEPS = ["01","02","03","04","05","06","07","08","09","10","11","12"] as const
+const NEUTRAL_STEPS = ["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20"] as const
 
 const PREVIEW_FORMULAS = [
   (s: string) => `oklch(from ${s} calc(l + (1 - l) * 0.93) calc(c * 0.04) h)`,
@@ -5044,7 +5044,7 @@ function computeSwatchInfo(bgEl: HTMLElement, stepNum: number): { ratio: string;
   return { ratio: `${ratio.toFixed(1)}:1`, hex: `#${h(rv)}${h(gv)}${h(bv)}` }
 }
 
-function ColorSwatch({ varName, step, label, semanticTag, onCopy, className }: { varName: string; step: string; label: string; semanticTag?: string; onCopy: (v: string) => void; className?: string }) {
+function ColorSwatch({ varName, step, label, semanticTag, onCopy, className, darkTextMax = 7 }: { varName: string; step: string; label: string; semanticTag?: string; onCopy: (v: string) => void; className?: string; darkTextMax?: number }) {
   const bgRef = useRef<HTMLDivElement>(null)
   const [info, setInfo] = useState<{ ratio: string; hex: string }>({ ratio: "", hex: "" })
   const stepNum = parseInt(step)
@@ -5055,7 +5055,7 @@ function ColorSwatch({ varName, step, label, semanticTag, onCopy, className }: {
     })
   }, [varName, stepNum])
 
-  const textDark = parseInt(step) <= 7
+  const textDark = parseInt(step) <= darkTextMax
   const base = textDark ? "text-black" : "text-white"
   const muted = textDark ? "text-black/50" : "text-white/55"
 
@@ -5121,11 +5121,11 @@ function ColorPaletteWithTabs({ lang }: { lang: Lang }) {
       {/* 标题行 + 深浅 tab */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-semibold">{lang === "en" ? "Generated Palette" : "推导色板"}</h2>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Chromatic Palette" : "彩色色板"}</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             {lang === "en"
-              ? "14 families × 12 steps. Derived from a seed in oklch — 01–08 lighten, 09 is the seed, 10–12 darken. Steps 01–07 use dark text, 08–12 use white. Click any swatch to copy its CSS variable."
-              : "14 个色系 × 12 阶，由种子色在 oklch 空间推导；01–08 渐亮，09 为种子色，10–12 渐深；01–07 深色字，08–12 白色字。点击色块复制 CSS 变量名。"}
+              ? "13 chromatic families × 12 steps, derived from a seed in oklch. 01–08 toward white: L += (1−L)×[.93 .84 .72 .58 .43 .28 .14 .12], C ×= [.04 .10 .18 .30 .45 .62 .80 .94]. 09 = seed. 10–12 toward black: L ×= [.87 .72 .35], C ×= [.95 .82 .65]. Steps 01–07 dark text, 08–12 white. Click a swatch to copy its variable."
+              : "13 个有色色系 × 12 阶（中性灰见下方中性色色板），由种子色在 oklch 空间推导。01–08 向白：L += (1−L)×[.93 .84 .72 .58 .43 .28 .14 .12]、C ×= [.04 .10 .18 .30 .45 .62 .80 .94]；09 = 种子色；10–12 向黑：L ×= [.87 .72 .35]、C ×= [.95 .82 .65]。01–07 深色字，08–12 白色字。点击色块复制变量名。"}
           </p>
         </div>
         <div className="flex shrink-0 items-center rounded-md border border-border bg-muted/50 p-0.5 text-xs">
@@ -5226,6 +5226,51 @@ function ColorPaletteWithTabs({ lang }: { lang: Lang }) {
         ))}
         </div>
       </div>
+
+      {/* 中性色色板 */}
+      <div className="mt-10">
+        <h2 className="text-2xl font-semibold">{lang === "en" ? "Neutral Palette" : "中性色色板"}</h2>
+        <p className="mt-1 mb-4 text-sm text-muted-foreground">
+          {lang === "en"
+            ? "The single neutral gray axis — 20 steps via color-mix(white, neutral-dark N%), N = [0 2 5 9 14 19 25 31 37 43 49 55 61 67 73 79 85 90 95 100]. neutral-dark = oklch(L 0.12, C 0.008, brand hue) — faintly tinted, near-neutral. Source for page/card/text/border and neutral interactive surfaces (secondary / muted / ghost). Click to copy."
+            : "全站唯一中性灰轴 — 20 阶，由 color-mix(white, neutral-dark N%) 推导，N = [0 2 5 9 14 19 25 31 37 43 49 55 61 67 73 79 85 90 95 100]。neutral-dark = oklch(L 0.12, C 0.008, 品牌色相)，极淡染色、肉眼近中性。页面底/卡片/文字/边框，以及中性交互面（secondary / muted / ghost）都取自这里。点击色块复制变量名。"}
+        </p>
+        <div className={["overflow-hidden rounded-xl border border-border transition-colors", darkBg ? "bg-zinc-900" : "bg-card"].join(" ")}>
+          {/* 阶编号行 */}
+          <div className={["flex items-center border-b text-[10px]", darkBg ? "border-white/10" : "border-border"].join(" ")}>
+            <div className={["w-24 shrink-0 self-stretch border-r", darkBg ? "border-white/10" : "border-border"].join(" ")} />
+            {NEUTRAL_STEPS.map((s) => (
+              <div key={s} className={["flex-1 flex items-center justify-center py-1.5", darkBg ? "text-white/35" : "text-muted-foreground"].join(" ")}>
+                {s}
+              </div>
+            ))}
+          </div>
+          {/* 色板行 */}
+          <div className="flex items-stretch">
+            <div className={["w-24 shrink-0 flex flex-col justify-center px-3 py-2 border-r", darkBg ? "border-white/10" : "border-border"].join(" ")}>
+              <span className={`text-xs font-semibold leading-tight ${darkBg ? "text-white" : "text-foreground"}`}>
+                {lang === "en" ? "Neutral" : "中性灰"}
+              </span>
+              <span className={`mt-0.5 text-[9px] ${darkBg ? "text-white/45" : "text-muted-foreground"}`}>
+                {lang === "en" ? "structure" : "结构灰"}
+              </span>
+            </div>
+            <div className="flex flex-1 gap-[2px]">
+              {NEUTRAL_STEPS.map((step) => (
+                <ColorSwatch
+                  key={step}
+                  varName={`--fx-neutrals-${step}`}
+                  step={step}
+                  label="N"
+                  onCopy={handleCopy}
+                  darkTextMax={11}
+                  className=""
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
@@ -5245,16 +5290,16 @@ function getTokenExample(name: string): React.ReactNode {
     case "primary-light-hover": return btn({ backgroundColor: "var(--fx-primary-light-hover)", color: "var(--fx-brand-09)", border: "1px solid var(--fx-primary-light-hover)" }, "悬浮")
     case "primary-light-active": return btn({ backgroundColor: "var(--fx-primary-light-active)", color: "var(--fx-brand-09)", border: "1px solid var(--fx-primary-light-active)" }, "按下")
     case "ring":              return <span className="inline-flex items-center rounded border-2 px-2 py-0.5 text-xs" style={{ borderColor: "oklch(from var(--fx-brand-09) l c h / 0.4)" }}>焦点</span>
-    case "foreground":        return <span className="text-xs font-medium" style={{ color: "var(--fx-neutrals-19)" }}>正文文字 Aa</span>
-    case "muted-foreground":  return <span className="text-xs" style={{ color: "var(--fx-neutrals-11)" }}>辅助说明 Aa</span>
+    case "foreground":        return <span className="text-xs font-medium" style={{ color: "var(--fx-neutrals-20)" }}>正文文字 Aa</span>
+    case "muted-foreground":  return <span className="text-xs" style={{ color: "var(--fx-neutrals-13)" }}>辅助说明 Aa</span>
     case "primary-foreground": return btn({ backgroundColor: "var(--fx-orange-09)" }, "按钮文字", { color: "#fff" })
-    case "icon":              return <span className="inline-flex size-5 items-center justify-center rounded" style={{ color: "var(--fx-neutrals-19)" }}>◎</span>
-    case "icon-muted":        return <span className="inline-flex size-5 items-center justify-center rounded" style={{ color: "var(--fx-neutrals-11)" }}>◎</span>
+    case "icon":              return <span className="inline-flex size-5 items-center justify-center rounded" style={{ color: "var(--fx-neutrals-20)" }}>◎</span>
+    case "icon-muted":        return <span className="inline-flex size-5 items-center justify-center rounded" style={{ color: "var(--fx-neutrals-13)" }}>◎</span>
     case "background":        return <span className="inline-flex h-5 w-12 rounded border border-border" style={{ backgroundColor: "var(--fx-neutrals-02)" }} />
     case "card":              return <span className="inline-flex h-5 w-12 rounded border border-border shadow-sm" style={{ backgroundColor: "var(--fx-neutrals-01)" }} />
     case "muted":             return <span className="inline-flex h-5 w-12 rounded" style={{ backgroundColor: "var(--fx-neutrals-03)" }} />
     case "accent":            return <span className="inline-flex h-5 w-12 rounded" style={{ backgroundColor: "var(--fx-orange-01)" }} />
-    case "secondary":         return btn({ backgroundColor: "var(--fx-neutrals-03)", color: "var(--fx-neutrals-19)" }, "次级按钮")
+    case "secondary":         return btn({ backgroundColor: "var(--fx-neutrals-03)", color: "var(--fx-neutrals-20)" }, "次级按钮")
     case "destructive":       return btn({ backgroundColor: "var(--fx-red-09)", color: "#fff" }, "删除")
     case "destructive-light": return btn({ backgroundColor: "var(--fx-red-01)", color: "var(--fx-red-09)", border: "1px solid var(--fx-red-03)" }, "危险")
     case "success":           return btn({ backgroundColor: "var(--fx-green-09)", color: "#fff" }, "成功")

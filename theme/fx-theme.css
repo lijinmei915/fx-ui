@@ -40,7 +40,6 @@
   --fx-seed-purple:         #8B5CF6;  /* tw violet-500  → 紫 */
   --fx-seed-pink:           #EC4899;  /* tw pink-500    → 粉 */
   --fx-seed-red:            #EF4444;  /* tw red-500     → 错误 */
-  --fx-seed-gray:           oklch(from var(--fx-brand-vivid) 0.65 0.010 h); /* 主题色偏色灰，极低彩度避免色相偏色 */
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    * GENERATED PALETTE — 14 色系 × 12 阶（01–12），对齐 Radix 分区
@@ -244,52 +243,40 @@
   --fx-red-11: oklch(from var(--fx-seed-red) calc(l * 0.72) calc(c * 0.82) h);
   --fx-red-12: oklch(from var(--fx-seed-red) calc(l * 0.35) calc(c * 0.65) h);
 
-  /* Gray (brand-tinted) */
-  --fx-gray-01: oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.93) calc(c * 0.04) h);
-  --fx-gray-02: oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
-  --fx-gray-03: oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
-  --fx-gray-04: oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
-  --fx-gray-05: oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
-  --fx-gray-06: oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
-  --fx-gray-07: oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
-  --fx-gray-08: oklch(from var(--fx-seed-gray) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  --fx-gray-09: var(--fx-seed-gray);
-  --fx-gray-10: oklch(from var(--fx-seed-gray) calc(l * 0.87) calc(c * 0.95) h);
-  --fx-gray-11: oklch(from var(--fx-seed-gray) calc(l * 0.72) calc(c * 0.82) h);
-  --fx-gray-12: oklch(from var(--fx-seed-gray) calc(l * 0.35) calc(c * 0.65) h);
-
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   * NEUTRALS — 19 阶灰阶，带品牌色相轻染（chroma ≈ 0.01–0.02）
-   * --fx-neutral-dark 是近黑基色，含品牌色相微量；01 最浅 → 19 最深
+   * NEUTRALS — 20 阶灰阶，带品牌色相极轻染（neutral-dark chroma 0.008，肉眼近中性）
+   * --fx-neutral-dark 是近黑基色，含品牌色相微量；01 最浅(白) → 20 最深
+   * 全站唯一中性灰轴：页面底/卡片/文字/边框/中性交互面（secondary·muted·ghost）都取自这里
    * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  --fx-neutral-dark: oklch(from var(--fx-brand-vivid) 0.12 0.018 h);
+  --fx-neutral-dark: oklch(from var(--fx-brand-vivid) 0.12 0.008 h);
 
   --fx-neutrals-01: white;
   --fx-neutrals-02: color-mix(in oklch, white, var(--fx-neutral-dark)  2%);
   --fx-neutrals-03: color-mix(in oklch, white, var(--fx-neutral-dark)  5%);
-  --fx-neutrals-04: color-mix(in oklch, white, var(--fx-neutral-dark) 10%);
-  --fx-neutrals-05: color-mix(in oklch, white, var(--fx-neutral-dark) 16%);
-  --fx-neutrals-06: color-mix(in oklch, white, var(--fx-neutral-dark) 24%);
-  --fx-neutrals-07: color-mix(in oklch, white, var(--fx-neutral-dark) 32%);
-  --fx-neutrals-08: color-mix(in oklch, white, var(--fx-neutral-dark) 42%);
-  --fx-neutrals-09: color-mix(in oklch, white, var(--fx-neutral-dark) 48%);
-  --fx-neutrals-10: color-mix(in oklch, white, var(--fx-neutral-dark) 54%);
-  --fx-neutrals-11: color-mix(in oklch, white, var(--fx-neutral-dark) 60%);
-  --fx-neutrals-12: color-mix(in oklch, white, var(--fx-neutral-dark) 66%);
-  --fx-neutrals-13: color-mix(in oklch, white, var(--fx-neutral-dark) 72%);
-  --fx-neutrals-14: color-mix(in oklch, white, var(--fx-neutral-dark) 78%);
-  --fx-neutrals-15: color-mix(in oklch, white, var(--fx-neutral-dark) 83%);
-  --fx-neutrals-16: color-mix(in oklch, white, var(--fx-neutral-dark) 88%);
-  --fx-neutrals-17: color-mix(in oklch, white, var(--fx-neutral-dark) 92%);
-  --fx-neutrals-18: color-mix(in oklch, white, var(--fx-neutral-dark) 96%);
-  --fx-neutrals-19: var(--fx-neutral-dark);
+  --fx-neutrals-04: color-mix(in oklch, white, var(--fx-neutral-dark)  9%);
+  --fx-neutrals-05: color-mix(in oklch, white, var(--fx-neutral-dark) 14%);
+  --fx-neutrals-06: color-mix(in oklch, white, var(--fx-neutral-dark) 19%);
+  --fx-neutrals-07: color-mix(in oklch, white, var(--fx-neutral-dark) 25%);
+  --fx-neutrals-08: color-mix(in oklch, white, var(--fx-neutral-dark) 31%);
+  --fx-neutrals-09: color-mix(in oklch, white, var(--fx-neutral-dark) 37%);
+  --fx-neutrals-10: color-mix(in oklch, white, var(--fx-neutral-dark) 43%);
+  --fx-neutrals-11: color-mix(in oklch, white, var(--fx-neutral-dark) 49%);
+  --fx-neutrals-12: color-mix(in oklch, white, var(--fx-neutral-dark) 55%);
+  --fx-neutrals-13: color-mix(in oklch, white, var(--fx-neutral-dark) 61%);
+  --fx-neutrals-14: color-mix(in oklch, white, var(--fx-neutral-dark) 67%);
+  --fx-neutrals-15: color-mix(in oklch, white, var(--fx-neutral-dark) 73%);
+  --fx-neutrals-16: color-mix(in oklch, white, var(--fx-neutral-dark) 79%);
+  --fx-neutrals-17: color-mix(in oklch, white, var(--fx-neutral-dark) 85%);
+  --fx-neutrals-18: color-mix(in oklch, white, var(--fx-neutral-dark) 90%);
+  --fx-neutrals-19: color-mix(in oklch, white, var(--fx-neutral-dark) 95%);
+  --fx-neutrals-20: var(--fx-neutral-dark);
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    * ICONS
    * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  --fx-icon-dark:  var(--fx-neutrals-19);
+  --fx-icon-dark:  var(--fx-neutrals-20);
   --fx-icon-light: var(--fx-neutrals-01);
-  --fx-icon-gray:  var(--fx-neutrals-11);
+  --fx-icon-gray:  var(--fx-neutrals-13);
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    * PRIMITIVE ALIASES
@@ -347,14 +334,14 @@
   --primary: var(--fx-brand-09);     /* ★ 品牌色 → 主按钮/强调（唯一真相：色板 09 阶） */
   --primary-foreground: #FFFFFF;
 
-  --secondary: var(--fx-gray-02);
-  --secondary-hover: var(--fx-gray-03);
-  --secondary-active: var(--fx-gray-04);
+  --secondary: var(--fx-neutrals-03);
+  --secondary-hover: var(--fx-neutrals-04);
+  --secondary-active: var(--fx-neutrals-05);
   --secondary-foreground: #181C25;
 
-  --muted: var(--fx-gray-02);
-  --muted-hover: var(--fx-gray-03);
-  --muted-active: var(--fx-gray-04);
+  --muted: var(--fx-neutrals-03);
+  --muted-hover: var(--fx-neutrals-04);
+  --muted-active: var(--fx-neutrals-05);
   --muted-foreground: #91959E;
 
   --accent: var(--fx-orange-01);

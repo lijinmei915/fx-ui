@@ -46,22 +46,49 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `ring` | `#FF8000` | `ring-ring` | 键盘焦点和可访问性焦点环 |
 | `destructive` | `#FF522A` | `bg-destructive text-destructive-foreground` | 删除、危险、不可逆操作 |
 
-## 功能色
+## 功能色（状态色）
 
-| 语义 | 值 | CSS 变量 | Tailwind 用法 |
-|------|-----|----------|---------------|
-| 成功 | `#30C776` | `--success` | `text-success` / `bg-success` |
-| 信息 | `#0C6CFF` | `--info` | `text-info` / `bg-info` |
-| 警告 | `#FF7C19` | `--warning` | `text-warning` / `bg-warning` |
-| 危险 | `#FF522A` | `--destructive` | `text-destructive` / `bg-destructive` |
+四个功能色全走对应色板，且按交互阶梯补齐**实心组 + 浅色组**两套态（和 primary 一致）：
 
-## 文字层级
+| 语义 | 色系 | 实心 默认/hover/active/disabled | 浅色 默认/hover/active |
+|------|------|--------------------------------|------------------------|
+| 危险 destructive | red | 09 / 08 / 10 / 05 | 01 / 02 / 03 |
+| 成功 success | green | 09 / 08 / 10 / 05 | 01 / 02 / 03 |
+| 警告 warning | amber | 09 / 08 / 10 / 05 | 01 / 02 / 03 |
+| 信息 info | **中性灰 neutrals** | 实心 16/17/18/10 | 浅色 03/04/05（深灰字 16） |
 
-| 用途 | 值 | 变量/用法 |
-|------|-----|-----------|
-| 主文字 | `#181C25` | `text-foreground` |
-| 辅助文字 | `#91959E` | `text-muted-foreground` |
-| 反白文字 | `#FFFFFF` | `text-primary-foreground` / `text-destructive-foreground` |
+- 实心：`bg-{success/warning/destructive}`、`-hover`、`-active`、`-disabled`，文字反白
+- 浅色：`bg-{...}-light`、`-light-hover`、`-light-active`，文字取该色 09 阶
+- 不再写死十六进制——`--success/--warning` 已归到 `green/amber-09`（原 `#30C776/#FF7C19` 弃用，warning 由撞品牌橙改为琥珀）
+- **info = 中性 Tag（灰）**：信息语义一般不抢色，用中性灰（浅灰底深灰字），从中性轴取阶，和品牌/链接色区分
+
+## 链接色（Link）
+
+链接统一用**蓝色**（与品牌橙、中性信息区分）：
+
+| 态 | 来源 | 用法 |
+|----|------|------|
+| 默认 | `--fx-blue-09` | `text-link` |
+| hover | `--fx-blue-10` | `hover:text-link-hover` |
+| active | `--fx-blue-11` | `active:text-link-active` |
+
+`Button` / `Badge` 的 `link` 变体、行内超链接都用这套，不再用品牌橙。
+
+## 文字 / 图标层级
+
+**文字与图标共用同一套四级层级**，全部取自中性轴（对齐主流 Ant/Apple 的 4 级做法）：
+
+| 级 | 用途 | 来源 | 变量/用法 |
+|----|------|------|-----------|
+| ① 主 | 标题、正文、表单标签、默认图标 | `--fx-neutrals-20` | `text-foreground` |
+| ② 次 | 次要正文、说明 | `--fx-neutrals-15` | `text-foreground-secondary` |
+| ③ 弱信息/caption | 描述、辅助说明、次要图标 | `--fx-neutrals-11` | `text-muted-foreground` |
+| ④ 占位 + 禁用 | 表单 placeholder、禁用文字与图标（≈25%，对齐 Ant/Apple） | `--fx-neutrals-07` | `text-foreground-disabled` |
+| 反白 | 主色/品牌背景上的文字图标 | `--fx-neutrals-01` | `text-primary-foreground` |
+
+> **placeholder 与禁用同档**（④）：主流表单 placeholder 都很浅（Ant 25% / Material ~38%），不要用 ③ 的弱信息色（太深）。表单 placeholder 一律 `placeholder:text-foreground-disabled`。
+
+> 图标不再单列一套色，直接复用这四级（默认图标 = ①，次要/禁用图标取 ③/④）。`text-icon` / `text-icon-muted` 作为 ①/③ 的别名保留，供 shadcn 组件兼容。
 
 ## 背景 / 边框
 
@@ -197,7 +224,9 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | 03 | 5% | 次级背景 muted / secondary 默认底、ghost·outline 悬浮底 |
 | 04 | 9% | secondary·muted hover |
 | 05 | 14% | secondary·muted active、分割线（`--border`） |
-| 13 | 61% | 辅助文字（`--muted-foreground`）、icon-muted |
+| 07 | 25% | 占位+禁用文字/图标（`--foreground-disabled`） |
+| 11 | 49% | 弱信息/caption（`--muted-foreground`）、icon-muted |
+| 15 | 73% | 次要文字（`--foreground-secondary`） |
 | 20 | neutral-dark | 主文字（`--foreground`）、icon |
 
 ## 图表色板（BI 常用色 · 10 色）

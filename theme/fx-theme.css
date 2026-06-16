@@ -276,7 +276,7 @@
    * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   --fx-icon-dark:  var(--fx-neutrals-20);
   --fx-icon-light: var(--fx-neutrals-01);
-  --fx-icon-gray:  var(--fx-neutrals-13);
+  --fx-icon-gray:  var(--fx-neutrals-11);
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    * PRIMITIVE ALIASES
@@ -301,9 +301,9 @@
   --fx-success-light:        var(--fx-green-01);
   --fx-success-light-hover:  var(--fx-green-02);
   --fx-success-light-active: var(--fx-green-03);
-  --fx-info-light:           var(--fx-blue-01);
-  --fx-info-light-hover:     var(--fx-blue-02);
-  --fx-info-light-active:    var(--fx-blue-03);
+  --fx-info-light:           var(--fx-neutrals-03);
+  --fx-info-light-hover:     var(--fx-neutrals-04);
+  --fx-info-light-active:    var(--fx-neutrals-05);
   --fx-warning-light:        var(--fx-amber-01);
   --fx-warning-light-hover:  var(--fx-amber-02);
   --fx-warning-light-active: var(--fx-amber-03);
@@ -323,13 +323,18 @@
   --radius: 0.625rem;
 
   --background: var(--fx-neutrals-02);
-  --foreground: #181C25;
+  /* 文字/图标四级层级（文字与图标共用同一套，全部取自中性轴）
+     约 100/73/49/25 的均匀梯度（对齐 Ant 88/65/45/25）：
+     ① 主 20 / ② 次 15 / ③ 弱信息·caption 11 / ④ 占位+禁用 07 */
+  --foreground: var(--fx-neutrals-20);
+  --foreground-secondary: var(--fx-neutrals-15);
+  --foreground-disabled: var(--fx-neutrals-07);
 
   --card: #FFFFFF;
-  --card-foreground: #181C25;
+  --card-foreground: var(--fx-neutrals-20);
 
   --popover: #FFFFFF;
-  --popover-foreground: #181C25;
+  --popover-foreground: var(--fx-neutrals-20);
 
   --primary: var(--fx-brand-09);     /* ★ 品牌色 → 主按钮/强调（唯一真相：色板 09 阶） */
   --primary-foreground: #FFFFFF;
@@ -337,33 +342,51 @@
   --secondary: var(--fx-neutrals-03);
   --secondary-hover: var(--fx-neutrals-04);
   --secondary-active: var(--fx-neutrals-05);
-  --secondary-foreground: #181C25;
+  --secondary-foreground: var(--fx-neutrals-20);
 
   --muted: var(--fx-neutrals-03);
   --muted-hover: var(--fx-neutrals-04);
   --muted-active: var(--fx-neutrals-05);
-  --muted-foreground: #91959E;
+  --muted-foreground: var(--fx-neutrals-11);
 
   --accent: var(--fx-orange-01);
-  --accent-foreground: #181C25;
+  --accent-foreground: var(--fx-neutrals-20);
 
   --destructive: var(--fx-red-09);
+  --destructive-hover: var(--fx-red-08);
+  --destructive-active: var(--fx-red-10);
+  --destructive-disabled: var(--fx-red-05);
   --destructive-foreground: #FFFFFF;
   --destructive-light: var(--fx-danger-light);
   --destructive-light-hover: var(--fx-danger-light-hover);
   --destructive-light-active: var(--fx-danger-light-active);
 
+  /* 链接色（蓝）：默认 09 / hover 10 / active 11，文字态 */
+  --link: var(--fx-blue-09);
+  --link-hover: var(--fx-blue-10);
+  --link-active: var(--fx-blue-11);
+
   --border: #DEE1E8;
   --input: #C1C5CE;
   --ring: oklch(from var(--fx-brand-09) l c h / 0.4);
 
-  /* ===== 扩展功能色 ===== */
-  --success: #30C776;
+  /* ===== 扩展功能色（实心组：默认09 / hover08 / active10 / disabled05，全走色板）===== */
+  --success: var(--fx-green-09);
+  --success-hover: var(--fx-green-08);
+  --success-active: var(--fx-green-10);
+  --success-disabled: var(--fx-green-05);
   --success-foreground: #FFFFFF;
-  --warning: #FF7C19;
+  --warning: var(--fx-amber-09);
+  --warning-hover: var(--fx-amber-08);
+  --warning-active: var(--fx-amber-10);
+  --warning-disabled: var(--fx-amber-05);
   --warning-foreground: #FFFFFF;
-  --info: #0C6CFF;
-  --info-foreground: #FFFFFF;
+  /* info = 中性 Tag（灰）：实心走中性轴深阶，浅色走浅阶 */
+  --info: var(--fx-neutrals-16);
+  --info-hover: var(--fx-neutrals-17);
+  --info-active: var(--fx-neutrals-18);
+  --info-disabled: var(--fx-neutrals-10);
+  --info-foreground: var(--fx-neutrals-01);
 
   /* 字体 */
   --font-sans: 'PingFang SC', 'Microsoft YaHei', sans-serif;
@@ -388,11 +411,11 @@
 
   /* sidebar */
   --sidebar: #FFFFFF;
-  --sidebar-foreground: #181C25;
+  --sidebar-foreground: var(--fx-neutrals-20);
   --sidebar-primary: #FF8000;
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: #F2F4FB;
-  --sidebar-accent-foreground: #181C25;
+  --sidebar-accent-foreground: var(--fx-neutrals-20);
   --sidebar-border: #DEE1E8;
   --sidebar-ring: #FF8000;
 }
@@ -400,6 +423,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-foreground-secondary: var(--foreground-secondary);
+  --color-foreground-disabled: var(--foreground-disabled);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -418,8 +443,23 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-success: var(--success);
+  --color-success-hover: var(--success-hover);
+  --color-success-active: var(--success-active);
+  --color-success-disabled: var(--success-disabled);
   --color-warning: var(--warning);
+  --color-warning-hover: var(--warning-hover);
+  --color-warning-active: var(--warning-active);
+  --color-warning-disabled: var(--warning-disabled);
   --color-info: var(--info);
+  --color-info-hover: var(--info-hover);
+  --color-info-active: var(--info-active);
+  --color-info-disabled: var(--info-disabled);
+  --color-link: var(--link);
+  --color-link-hover: var(--link-hover);
+  --color-link-active: var(--link-active);
+  --color-destructive-hover: var(--destructive-hover);
+  --color-destructive-active: var(--destructive-active);
+  --color-destructive-disabled: var(--destructive-disabled);
   --color-icon:       var(--fx-icon-dark);
   --color-icon-muted: var(--fx-icon-gray);
 

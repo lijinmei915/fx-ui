@@ -18,6 +18,7 @@ import {
   SearchIcon,
   SettingsIcon,
   SparklesIcon,
+  StarIcon,
   TerminalIcon,
   UnderlineIcon,
   UserIcon,
@@ -1006,7 +1007,7 @@ const tokenAnchors = [
 
 const tokenColorsAnchors = [
   { label: "主题色", labelEn: "Brand Color", href: "#tokens-colors-seeds" },
-  { label: "推导色板", labelEn: "Generated Palette", href: "#tokens-colors-palette" },
+  { label: "彩色色板", labelEn: "Chromatic Palette", href: "#tokens-colors-palette" },
   { label: "语义颜色", labelEn: "Semantic Colors", href: "#tokens-colors-semantic" },
 ]
 const tokenTypographyAnchors = [{ label: "排版", labelEn: "Typography", href: "#tokens-typography" }]
@@ -2321,30 +2322,75 @@ const semanticTokenGroups = [
   {
     role: "text",
     label: "文字色", labelEn: "Text",
-    desc: "正文、辅助说明、以及反色背景上的文字，来自 Neutrals 深阶",
-    descEn: "Body text, supporting text, and text on colored backgrounds. Derived from deep Neutrals steps.",
+    desc: "文字与图标共用同一套四级层级（主/次/占位/禁用），全部取自中性轴；外加反色文字",
+    descEn: "Text and icons share one four-level hierarchy (primary / secondary / placeholder / disabled), all from the neutral axis, plus reversed text.",
     tokens: [
-      { name: "foreground",          value: "#181C25", sourceToken: "--fx-neutrals-20",  tailwind: "text-foreground",         usage: "主文字 — 标题、正文、表单标签",             usageEn: "Primary text — headings, body, form labels" },
-      { name: "muted-foreground",    value: "#91959E", sourceToken: "--fx-neutrals-13",  tailwind: "text-muted-foreground",   usage: "辅助说明 — placeholder、描述、弱信息",      usageEn: "Supporting text — placeholder, description, low-emphasis" },
-      { name: "primary-foreground",  value: "#FFFFFF", sourceToken: "--fx-neutrals-01",  tailwind: "text-primary-foreground", usage: "反色文字 — 主色按钮、品牌背景上的文字图标",  usageEn: "Reversed text — on primary / brand-color backgrounds" },
-      { name: "icon",                value: "#181C25", sourceToken: "--fx-icon-dark",     tailwind: "text-icon",               usage: "图标默认色 — 与正文同色",                   usageEn: "Default icon color — matches foreground" },
-      { name: "icon-muted",          value: "#6B7280", sourceToken: "--fx-icon-gray",     tailwind: "text-icon-muted",         usage: "弱图标 — 工具栏次要图标、禁用态",            usageEn: "Muted icon — secondary toolbar icons, disabled state" },
+      { name: "foreground",          value: "", sourceToken: "--fx-neutrals-20",  tailwind: "text-foreground",           usage: "① 主文字/图标 — 标题、正文、表单标签、默认图标", usageEn: "① Primary text/icon — headings, body, labels, default icons" },
+      { name: "foreground-secondary", value: "", sourceToken: "--fx-neutrals-15", tailwind: "text-foreground-secondary", usage: "② 次要文字/图标 — 次要正文、说明",            usageEn: "② Secondary text/icon — secondary copy, descriptions" },
+      { name: "muted-foreground",    value: "", sourceToken: "--fx-neutrals-11",  tailwind: "text-muted-foreground",     usage: "③ 弱信息/caption — 描述、辅助说明、次要图标",  usageEn: "③ Low-emphasis / caption — descriptions, helper text, muted icons" },
+      { name: "foreground-disabled", value: "", sourceToken: "--fx-neutrals-07",  tailwind: "text-foreground-disabled",  usage: "④ 占位 + 禁用 — 表单 placeholder、禁用文字与图标（≈25%）", usageEn: "④ Placeholder + disabled — form placeholder, disabled text/icons (≈25%)" },
+      { name: "primary-foreground",  value: "", sourceToken: "--fx-neutrals-01",  tailwind: "text-primary-foreground",   usage: "反色文字 — 主色按钮、品牌背景上的文字图标",  usageEn: "Reversed text — on primary / brand-color backgrounds" },
+      { name: "link",                value: "", sourceToken: "--fx-blue-09",       tailwind: "text-link",                 usage: "链接 — 超链接、link 变体（hover blue-10 / active blue-11）", usageEn: "Link — hyperlinks, link variants (hover blue-10 / active blue-11)" },
     ],
   },
   {
-    role: "status",
-    label: "状态色", labelEn: "Status",
-    desc: "功能性语义色，均取对应色系的 09 阶（Solid 基准值）",
-    descEn: "Functional semantic colors. Each maps to step 09 of its scale (the Solid baseline).",
+    role: "status-danger",
+    label: "状态色 · 危险", labelEn: "Status · Danger",
+    desc: "危险/删除语义（红）。Solid 取 09，浅色组取 01/02/03。",
+    descEn: "Danger / delete semantics (red). Solid = 09, light group = 01/02/03.",
     tokens: [
-      { name: "destructive",       value: "#FF522A", sourceToken: "--fx-red-09",   tailwind: "bg-destructive", usage: "删除、危险、不可逆操作",    usageEn: "Delete, dangerous, and irreversible actions" },
-      { name: "destructive-light", value: "",        sourceToken: "--fx-red-01",   tailwind: "bg-danger-light",   usage: "危险色浅色背景",           usageEn: "Light danger background" },
-      { name: "success",           value: "#30C776", sourceToken: "--fx-green-09", tailwind: "bg-success",     usage: "成功状态",                 usageEn: "Success states" },
-      { name: "success-light",     value: "",        sourceToken: "--fx-green-01", tailwind: "bg-success-light",  usage: "成功色浅色背景",           usageEn: "Light success background" },
-      { name: "warning",           value: "#F59E0B", sourceToken: "--fx-amber-09", tailwind: "bg-warning",     usage: "警告状态",                 usageEn: "Warning states" },
-      { name: "warning-light",     value: "",        sourceToken: "--fx-amber-01", tailwind: "bg-warning-light",  usage: "警告色浅色背景",           usageEn: "Light warning background" },
-      { name: "info",              value: "#3B82F6", sourceToken: "--fx-blue-09",  tailwind: "bg-info",        usage: "信息状态",                 usageEn: "Informational states" },
-      { name: "info-light",        value: "",        sourceToken: "--fx-blue-01",  tailwind: "bg-info-light",     usage: "信息色浅色背景",           usageEn: "Light info background" },
+      { name: "destructive",              value: "", sourceToken: "--fx-red-09", tailwind: "bg-destructive",              usage: "实心默认 — 删除、危险、不可逆操作", usageEn: "Solid default — delete, dangerous, irreversible" },
+      { name: "destructive-hover",        value: "", sourceToken: "--fx-red-08", tailwind: "bg-destructive-hover",        usage: "实心悬浮", usageEn: "Solid hover" },
+      { name: "destructive-active",       value: "", sourceToken: "--fx-red-10", tailwind: "bg-destructive-active",       usage: "实心激活 / 按下", usageEn: "Solid active / pressed" },
+      { name: "destructive-disabled",     value: "", sourceToken: "--fx-red-05", tailwind: "bg-destructive-disabled",     usage: "实心禁用", usageEn: "Solid disabled" },
+      { name: "destructive-light",        value: "", sourceToken: "--fx-red-01", tailwind: "bg-destructive-light",        usage: "浅色默认 — 危险 Tag / Alert 背景", usageEn: "Light default — danger tag / alert bg" },
+      { name: "destructive-light-hover",  value: "", sourceToken: "--fx-red-02", tailwind: "bg-destructive-light-hover",  usage: "浅色悬浮", usageEn: "Light hover" },
+      { name: "destructive-light-active", value: "", sourceToken: "--fx-red-03", tailwind: "bg-destructive-light-active", usage: "浅色激活 / 按下", usageEn: "Light active / pressed" },
+    ],
+  },
+  {
+    role: "status-success",
+    label: "状态色 · 成功", labelEn: "Status · Success",
+    desc: "成功语义（绿）。Solid 取 09，浅色组取 01/02/03。",
+    descEn: "Success semantics (green). Solid = 09, light group = 01/02/03.",
+    tokens: [
+      { name: "success",              value: "", sourceToken: "--fx-green-09", tailwind: "bg-success",              usage: "实心默认 — 成功状态", usageEn: "Solid default — success state" },
+      { name: "success-hover",        value: "", sourceToken: "--fx-green-08", tailwind: "bg-success-hover",        usage: "实心悬浮", usageEn: "Solid hover" },
+      { name: "success-active",       value: "", sourceToken: "--fx-green-10", tailwind: "bg-success-active",       usage: "实心激活 / 按下", usageEn: "Solid active / pressed" },
+      { name: "success-disabled",     value: "", sourceToken: "--fx-green-05", tailwind: "bg-success-disabled",     usage: "实心禁用", usageEn: "Solid disabled" },
+      { name: "success-light",        value: "", sourceToken: "--fx-green-01", tailwind: "bg-success-light",        usage: "浅色默认 — 成功 Tag / Alert 背景", usageEn: "Light default — success tag / alert bg" },
+      { name: "success-light-hover",  value: "", sourceToken: "--fx-green-02", tailwind: "bg-success-light-hover",  usage: "浅色悬浮", usageEn: "Light hover" },
+      { name: "success-light-active", value: "", sourceToken: "--fx-green-03", tailwind: "bg-success-light-active", usage: "浅色激活 / 按下", usageEn: "Light active / pressed" },
+    ],
+  },
+  {
+    role: "status-warning",
+    label: "状态色 · 警告", labelEn: "Status · Warning",
+    desc: "警告语义（琥珀）。Solid 取 09，浅色组取 01/02/03。",
+    descEn: "Warning semantics (amber). Solid = 09, light group = 01/02/03.",
+    tokens: [
+      { name: "warning",              value: "", sourceToken: "--fx-amber-09", tailwind: "bg-warning",              usage: "实心默认 — 警告状态", usageEn: "Solid default — warning state" },
+      { name: "warning-hover",        value: "", sourceToken: "--fx-amber-08", tailwind: "bg-warning-hover",        usage: "实心悬浮", usageEn: "Solid hover" },
+      { name: "warning-active",       value: "", sourceToken: "--fx-amber-10", tailwind: "bg-warning-active",       usage: "实心激活 / 按下", usageEn: "Solid active / pressed" },
+      { name: "warning-disabled",     value: "", sourceToken: "--fx-amber-05", tailwind: "bg-warning-disabled",     usage: "实心禁用", usageEn: "Solid disabled" },
+      { name: "warning-light",        value: "", sourceToken: "--fx-amber-01", tailwind: "bg-warning-light",        usage: "浅色默认 — 警告 Tag / Alert 背景", usageEn: "Light default — warning tag / alert bg" },
+      { name: "warning-light-hover",  value: "", sourceToken: "--fx-amber-02", tailwind: "bg-warning-light-hover",  usage: "浅色悬浮", usageEn: "Light hover" },
+      { name: "warning-light-active", value: "", sourceToken: "--fx-amber-03", tailwind: "bg-warning-light-active", usage: "浅色激活 / 按下", usageEn: "Light active / pressed" },
+    ],
+  },
+  {
+    role: "status-info",
+    label: "状态色 · 信息（中性）", labelEn: "Status · Info (neutral)",
+    desc: "信息语义用中性灰 Tag（浅灰底深灰字），与品牌/链接色区分；走中性轴。",
+    descEn: "Info uses a neutral gray tag (light gray bg, dark gray text), distinct from brand/link colors; from the neutral axis.",
+    tokens: [
+      { name: "info",              value: "", sourceToken: "--fx-neutrals-16", tailwind: "bg-info",              usage: "实心默认 — 中性信息块", usageEn: "Solid default — neutral info block" },
+      { name: "info-hover",        value: "", sourceToken: "--fx-neutrals-17", tailwind: "bg-info-hover",        usage: "实心悬浮", usageEn: "Solid hover" },
+      { name: "info-active",       value: "", sourceToken: "--fx-neutrals-18", tailwind: "bg-info-active",       usage: "实心激活 / 按下", usageEn: "Solid active / pressed" },
+      { name: "info-disabled",     value: "", sourceToken: "--fx-neutrals-10", tailwind: "bg-info-disabled",     usage: "实心禁用", usageEn: "Solid disabled" },
+      { name: "info-light",        value: "", sourceToken: "--fx-neutrals-03", tailwind: "bg-info-light",        usage: "浅色默认 — 信息 Tag / Alert 背景（浅灰底深灰字）", usageEn: "Light default — info tag / alert bg" },
+      { name: "info-light-hover",  value: "", sourceToken: "--fx-neutrals-04", tailwind: "bg-info-light-hover",  usage: "浅色悬浮", usageEn: "Light hover" },
+      { name: "info-light-active", value: "", sourceToken: "--fx-neutrals-05", tailwind: "bg-info-light-active", usage: "浅色激活 / 按下", usageEn: "Light active / pressed" },
     ],
   },
   {
@@ -5249,9 +5295,6 @@ function ColorPaletteWithTabs({ lang }: { lang: Lang }) {
               <span className={`text-xs font-semibold leading-tight ${darkBg ? "text-white" : "text-foreground"}`}>
                 {lang === "en" ? "Neutral" : "中性灰"}
               </span>
-              <span className={`mt-0.5 text-[9px] ${darkBg ? "text-white/45" : "text-muted-foreground"}`}>
-                {lang === "en" ? "structure" : "结构灰"}
-              </span>
             </div>
             <div className="flex flex-1 gap-[2px]">
               {NEUTRAL_STEPS.map((step) => (
@@ -5279,6 +5322,39 @@ function getTokenExample(name: string): React.ReactNode {
       <span style={textStyle}>{label}</span>
     </span>
   )
+
+  // info = 中性 Tag（灰）：实心走中性轴深阶白字，浅色走浅阶深灰字
+  if (/^info(-light)?(-hover|-active|-disabled)?$/.test(name)) {
+    if (!name.includes("-light")) {
+      const step = name.endsWith("-hover") ? "17" : name.endsWith("-active") ? "18" : name.endsWith("-disabled") ? "10" : "16"
+      return btn({ backgroundColor: `var(--fx-neutrals-${step})`, color: "var(--fx-neutrals-01)" }, "信息")
+    }
+    const step = name.endsWith("-active") ? "05" : name.endsWith("-hover") ? "04" : "03"
+    return btn({ backgroundColor: `var(--fx-neutrals-${step})`, color: "var(--fx-neutrals-16)", border: "1px solid var(--fx-neutrals-05)" }, "信息")
+  }
+
+  // 状态色统一示例：solid（实心白字）+ 浅色 默认/hover/active（浅底彩字）
+  const statusMap: Record<string, { scale: string; label: string }> = {
+    destructive: { scale: "red", label: "删除" },
+    success: { scale: "green", label: "成功" },
+    warning: { scale: "amber", label: "警告" },
+  }
+  const statusBase = name.replace(/-(light(-hover|-active)?|hover|active|disabled)$/, "")
+  if (statusMap[statusBase]) {
+    const { scale, label } = statusMap[statusBase]
+    if (!name.includes("-light")) {
+      // 实心组：默认09 / hover08 / active10 / disabled05，白字
+      const step = name.endsWith("-hover") ? "08" : name.endsWith("-active") ? "10" : name.endsWith("-disabled") ? "05" : "09"
+      return btn({ backgroundColor: `var(--fx-${scale}-${step})`, color: "var(--fx-neutrals-01)" }, label)
+    }
+    // 浅色组：默认01 / hover02 / active03，浅底彩字
+    const step = name.endsWith("-active") ? "03" : name.endsWith("-hover") ? "02" : "01"
+    return btn(
+      { backgroundColor: `var(--fx-${scale}-${step})`, color: `var(--fx-${scale}-09)`, border: `1px solid var(--fx-${scale}-03)` },
+      label,
+    )
+  }
+
   switch (name) {
     case "primary":             return btn({ backgroundColor: "var(--fx-brand-09)", color: "#fff" }, "主按钮")
     case "primary-hover":       return btn({ backgroundColor: "var(--fx-primary-hover)", color: "#fff" }, "悬浮")
@@ -5288,24 +5364,23 @@ function getTokenExample(name: string): React.ReactNode {
     case "primary-light-hover": return btn({ backgroundColor: "var(--fx-primary-light-hover)", color: "var(--fx-brand-09)", border: "1px solid var(--fx-primary-light-hover)" }, "悬浮")
     case "primary-light-active": return btn({ backgroundColor: "var(--fx-primary-light-active)", color: "var(--fx-brand-09)", border: "1px solid var(--fx-primary-light-active)" }, "按下")
     case "ring":              return <span className="inline-flex items-center rounded border-2 px-2 py-0.5 text-xs" style={{ borderColor: "oklch(from var(--fx-brand-09) l c h / 0.4)" }}>焦点</span>
-    case "foreground":        return <span className="text-xs font-medium" style={{ color: "var(--fx-neutrals-20)" }}>正文文字 Aa</span>
-    case "muted-foreground":  return <span className="text-xs" style={{ color: "var(--fx-neutrals-13)" }}>辅助说明 Aa</span>
-    case "primary-foreground": return btn({ backgroundColor: "var(--fx-orange-09)" }, "按钮文字", { color: "#fff" })
-    case "icon":              return <span className="inline-flex size-5 items-center justify-center rounded" style={{ color: "var(--fx-neutrals-20)" }}>◎</span>
-    case "icon-muted":        return <span className="inline-flex size-5 items-center justify-center rounded" style={{ color: "var(--fx-neutrals-13)" }}>◎</span>
+    case "foreground":          return <span className="inline-flex items-center gap-1.5 text-xs font-medium" style={{ color: "var(--fx-neutrals-20)" }}>主文字 Aa <StarIcon className="size-3.5" /></span>
+    case "foreground-secondary": return <span className="inline-flex items-center gap-1.5 text-xs" style={{ color: "var(--fx-neutrals-15)" }}>次要文字 Aa <StarIcon className="size-3.5" /></span>
+    case "muted-foreground":    return <span className="inline-flex items-center gap-1.5 text-xs" style={{ color: "var(--fx-neutrals-11)" }}>弱信息 Aa <StarIcon className="size-3.5" /></span>
+    case "foreground-disabled": return <span className="inline-flex items-center gap-1.5 text-xs" style={{ color: "var(--fx-neutrals-07)" }}>占位/禁用 Aa <StarIcon className="size-3.5" /></span>
+    case "primary-foreground": return (
+      <span className="inline-flex items-center gap-1.5 rounded px-2.5 py-0.5 text-xs font-medium" style={{ backgroundColor: "var(--fx-brand-09)", color: "var(--fx-neutrals-01)" }}>
+        按钮文字 <StarIcon className="size-3.5" />
+      </span>
+    )
+    case "link":              return <a className="text-xs underline underline-offset-4" style={{ color: "var(--fx-blue-09)" }}>查看详情</a>
+    case "icon":              return <StarIcon className="size-4" style={{ color: "var(--fx-neutrals-20)" }} />
+    case "icon-muted":        return <StarIcon className="size-4" style={{ color: "var(--fx-neutrals-11)" }} />
     case "background":        return <span className="inline-flex h-5 w-12 rounded border border-border" style={{ backgroundColor: "var(--fx-neutrals-02)" }} />
     case "card":              return <span className="inline-flex h-5 w-12 rounded border border-border shadow-sm" style={{ backgroundColor: "var(--fx-neutrals-01)" }} />
     case "muted":             return <span className="inline-flex h-5 w-12 rounded" style={{ backgroundColor: "var(--fx-neutrals-03)" }} />
     case "accent":            return <span className="inline-flex h-5 w-12 rounded" style={{ backgroundColor: "var(--fx-orange-01)" }} />
     case "secondary":         return btn({ backgroundColor: "var(--fx-neutrals-03)", color: "var(--fx-neutrals-20)" }, "次级按钮")
-    case "destructive":       return btn({ backgroundColor: "var(--fx-red-09)", color: "#fff" }, "删除")
-    case "destructive-light": return btn({ backgroundColor: "var(--fx-red-01)", color: "var(--fx-red-09)", border: "1px solid var(--fx-red-03)" }, "危险")
-    case "success":           return btn({ backgroundColor: "var(--fx-green-09)", color: "#fff" }, "成功")
-    case "success-light":     return btn({ backgroundColor: "var(--fx-green-01)", color: "var(--fx-green-09)", border: "1px solid var(--fx-green-03)" }, "成功")
-    case "warning":           return btn({ backgroundColor: "var(--fx-amber-09)", color: "#fff" }, "警告")
-    case "warning-light":     return btn({ backgroundColor: "var(--fx-amber-01)", color: "var(--fx-amber-09)", border: "1px solid var(--fx-amber-03)" }, "警告")
-    case "info":              return btn({ backgroundColor: "var(--fx-blue-09)", color: "#fff" }, "信息")
-    case "info-light":        return btn({ backgroundColor: "var(--fx-blue-01)", color: "var(--fx-blue-09)", border: "1px solid var(--fx-blue-03)" }, "信息")
     case "border":            return <span className="inline-flex h-5 w-12 items-center justify-center"><span className="w-full border-t" style={{ borderColor: "var(--fx-neutrals-05)" }} /></span>
     case "input":             return <span className="inline-flex h-5 w-16 rounded border px-1.5 text-[10px] items-center text-muted-foreground" style={{ borderColor: "var(--fx-neutrals-07)" }}>输入框</span>
     default:                  return <span className="text-muted-foreground/30">—</span>
@@ -5370,8 +5445,8 @@ function TokensColorsPage({ actions, lang }: { actions: React.ReactNode; lang: L
                     <TableHead className="pl-4">Token</TableHead>
                     <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
                     <TableHead>Tailwind</TableHead>
-                    <TableHead>{lang === "en" ? "Usage" : "场景"}</TableHead>
-                    <TableHead className="pr-4">{lang === "en" ? "Example" : "示例"}</TableHead>
+                    <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
+                    <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -5389,8 +5464,8 @@ function TokensColorsPage({ actions, lang }: { actions: React.ReactNode; lang: L
                       <TableCell>
                         {row.tailwind ? <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.tailwind}</code> : <span className="text-muted-foreground/30">—</span>}
                       </TableCell>
-                      <TableCell className="text-muted-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
-                      <TableCell className="pr-4">{getTokenExample(row.name)}</TableCell>
+                      <TableCell>{getTokenExample(row.name)}</TableCell>
+                      <TableCell className="pr-4 text-muted-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

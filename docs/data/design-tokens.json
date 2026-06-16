@@ -1261,7 +1261,7 @@
     },
     {
       "name": "--fx-icon-gray",
-      "value": "var(--fx-neutrals-13)",
+      "value": "var(--fx-neutrals-11)",
       "category": "icon",
       "usage": "单色图标·灰 = Special 02"
     },
@@ -1351,19 +1351,19 @@
     },
     {
       "name": "--fx-info-light",
-      "value": "var(--fx-blue-01)",
+      "value": "var(--fx-neutrals-03)",
       "category": "palette",
       "usage": ""
     },
     {
       "name": "--fx-info-light-hover",
-      "value": "var(--fx-blue-02)",
+      "value": "var(--fx-neutrals-04)",
       "category": "palette",
       "usage": ""
     },
     {
       "name": "--fx-info-light-active",
-      "value": "var(--fx-blue-03)",
+      "value": "var(--fx-neutrals-05)",
       "category": "palette",
       "usage": ""
     },
@@ -1455,9 +1455,21 @@
     },
     {
       "name": "--foreground",
-      "value": "#181C25",
+      "value": "var(--fx-neutrals-20)",
       "category": "surface-text",
       "usage": "主文字"
+    },
+    {
+      "name": "--foreground-secondary",
+      "value": "var(--fx-neutrals-15)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--foreground-disabled",
+      "value": "var(--fx-neutrals-07)",
+      "category": "shadcn-semantic",
+      "usage": ""
     },
     {
       "name": "--card",
@@ -1467,7 +1479,7 @@
     },
     {
       "name": "--card-foreground",
-      "value": "#181C25",
+      "value": "var(--fx-neutrals-20)",
       "category": "surface-text",
       "usage": "卡片文字"
     },
@@ -1479,7 +1491,7 @@
     },
     {
       "name": "--popover-foreground",
-      "value": "#181C25",
+      "value": "var(--fx-neutrals-20)",
       "category": "surface-text",
       "usage": "浮层文字"
     },
@@ -1515,7 +1527,7 @@
     },
     {
       "name": "--secondary-foreground",
-      "value": "#181C25",
+      "value": "var(--fx-neutrals-20)",
       "category": "action-state",
       "usage": "次级背景上的文字"
     },
@@ -1539,7 +1551,7 @@
     },
     {
       "name": "--muted-foreground",
-      "value": "#91959E",
+      "value": "var(--fx-neutrals-11)",
       "category": "surface-text",
       "usage": "辅助说明、弱信息"
     },
@@ -1551,7 +1563,7 @@
     },
     {
       "name": "--accent-foreground",
-      "value": "#181C25",
+      "value": "var(--fx-neutrals-20)",
       "category": "surface-text",
       "usage": "高亮背景上的文字"
     },
@@ -1560,6 +1572,24 @@
       "value": "var(--fx-red-09)",
       "category": "action-state",
       "usage": "删除、危险、不可逆操作"
+    },
+    {
+      "name": "--destructive-hover",
+      "value": "var(--fx-red-08)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--destructive-active",
+      "value": "var(--fx-red-10)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--destructive-disabled",
+      "value": "var(--fx-red-05)",
+      "category": "shadcn-semantic",
+      "usage": ""
     },
     {
       "name": "--destructive-foreground",
@@ -1586,6 +1616,24 @@
       "usage": ""
     },
     {
+      "name": "--link",
+      "value": "var(--fx-blue-09)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--link-hover",
+      "value": "var(--fx-blue-10)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--link-active",
+      "value": "var(--fx-blue-11)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
       "name": "--border",
       "value": "#DEE1E8",
       "category": "border-focus",
@@ -1605,9 +1653,27 @@
     },
     {
       "name": "--success",
-      "value": "#30C776",
+      "value": "var(--fx-green-09)",
       "category": "status",
       "usage": "成功状态"
+    },
+    {
+      "name": "--success-hover",
+      "value": "var(--fx-green-08)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--success-active",
+      "value": "var(--fx-green-10)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--success-disabled",
+      "value": "var(--fx-green-05)",
+      "category": "shadcn-semantic",
+      "usage": ""
     },
     {
       "name": "--success-foreground",
@@ -1617,9 +1683,27 @@
     },
     {
       "name": "--warning",
-      "value": "#FF7C19",
+      "value": "var(--fx-amber-09)",
       "category": "status",
       "usage": "警告状态"
+    },
+    {
+      "name": "--warning-hover",
+      "value": "var(--fx-amber-08)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--warning-active",
+      "value": "var(--fx-amber-10)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--warning-disabled",
+      "value": "var(--fx-amber-05)",
+      "category": "shadcn-semantic",
+      "usage": ""
     },
     {
       "name": "--warning-foreground",
@@ -1629,13 +1713,31 @@
     },
     {
       "name": "--info",
-      "value": "#0C6CFF",
+      "value": "var(--fx-neutrals-16)",
       "category": "status",
       "usage": "信息状态"
     },
     {
+      "name": "--info-hover",
+      "value": "var(--fx-neutrals-17)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--info-active",
+      "value": "var(--fx-neutrals-18)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--info-disabled",
+      "value": "var(--fx-neutrals-10)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
       "name": "--info-foreground",
-      "value": "#FFFFFF",
+      "value": "var(--fx-neutrals-01)",
       "category": "status",
       "usage": "信息背景上的文字"
     },
@@ -1713,7 +1815,7 @@
     },
     {
       "name": "--sidebar-foreground",
-      "value": "#181C25",
+      "value": "var(--fx-neutrals-20)",
       "category": "sidebar",
       "usage": "侧边栏文字"
     },
@@ -1737,7 +1839,7 @@
     },
     {
       "name": "--sidebar-accent-foreground",
-      "value": "#181C25",
+      "value": "var(--fx-neutrals-20)",
       "category": "sidebar",
       "usage": "侧边栏选中/悬浮文字"
     },

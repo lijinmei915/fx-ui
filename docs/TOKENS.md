@@ -102,7 +102,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | 强边框 / hover | `--fx-neutrals-08` | `border-border-strong` |
 | 输入框边框 | `--fx-neutrals-07` | `border-input` |
 
-## 圆角 / 字体
+## 圆角
 
 | 项 | 值 | 用法 |
 |----|-----|------|
@@ -110,7 +110,25 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `radius-sm` | `calc(var(--radius) * 0.6)` | 小控件、tag |
 | `radius-md` | `calc(var(--radius) * 0.8)` | 默认控件 |
 | `radius-lg` | `var(--radius)` | 卡片、弹窗、区域容器 |
-| 默认字体 | `PingFang SC`, `Microsoft YaHei`, `sans-serif` | `font-sans` |
+
+## 排版（字族 / 字号 / 字重）
+
+字族用 `--font-sans`（Geist + 系统 sans）；字号、字重直接用 Tailwind 默认刻度，不另造 token。
+
+**字号阶**（按场景挑，不新增字号）：
+
+| 类名 | 值 | 场景 |
+|------|-----|------|
+| `text-xs` | 12px | 徽标、表格次要信息、辅助标签 |
+| `text-sm` | 14px | 表格、菜单、表单、说明（UI 默认） |
+| `text-base` | 16px | 正文、主要说明 |
+| `text-lg` | 18px | 卡片标题、强调正文 |
+| `text-xl` | 20px | 小节标题 |
+| `text-2xl` | 24px | 章节标题 |
+| `text-3xl` | 30px | 次级页面标题 |
+| `text-4xl` | 36px | 页面主标题 |
+
+**字重**：`font-normal`(400) 正文 / `font-medium`(500) 标签·按钮·菜单 / `font-semibold`(600) 标题·强调。
 
 ## 间距
 
@@ -248,16 +266,26 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `--chart-9`  | `#368DFF` | Dark Blue 05 |
 | `--chart-10` | `#976AEB` | Purple 05 |
 
-## 图标色（Icon colors）
+## 图标（颜色 + 尺寸）
 
-| Token | 值 | 场景 |
-|-------|-----|------|
-| `--fx-icon-dark`  | `#181C25` | 单色图标·深色（深色背景反白） |
-| `--fx-icon-light` | `#FFFFFF` | 单色图标·浅色（深色背景反白） |
-| `--fx-icon-gray`  | `#737C8C` | 单色图标·灰色（次级 icon） |
+图标用 lucide-react（线性单色，`currentColor` 跟随），分三类用色，颜色全部来自色板/文字层级，不另造图标专用色：
 
-线性图标（Linear icon）使用各色系 Normal/06 颜色，与 BI chart 色一致。
-填充/反色图标（Filled/Reverse icon）使用各色系 05 阶（比 Normal 浅一档）。
+**1. 单色图标 — 跟随文字四级层级**
+
+| 用途 | 类 |
+|------|----|
+| 主图标 | `text-foreground`（neutrals-20） |
+| 次图标 | `text-muted-foreground`（neutrals-11） |
+| 禁用图标 | `text-foreground-disabled`（neutrals-07） |
+| 反白图标（深底/品牌底） | `text-primary-foreground`（neutrals-01） |
+
+**2. 彩色线性图标 — 语义/品牌色**：`text-primary` / `text-success` / `text-warning` / `text-destructive` / `text-info`，分类场景可用 chart 色系（09 阶）。
+
+**3. 面状/反白图标**：彩色圆底（`bg-{色}-09`）+ 白色图标（`text-primary-foreground`）。
+
+**图标尺寸阶**：`size-3`(12) 内联/徽标 · `size-3.5`(14) 小按钮 · `size-4`(16) 默认 · `size-5`(20) 强调/列表 · `size-6`(24) 页面级/空状态。描边 lucide 默认 strokeWidth 2，密集 UI 可用 1.5。
+
+> 兼容别名：`--fx-icon-dark`=neutrals-20、`--fx-icon-gray`=neutrals-11、`--fx-icon-light`=neutrals-01，供 shadcn 组件的 `text-icon` / `text-icon-muted` 使用。
 
 ## 交互色状态阶梯（通用规则）
 

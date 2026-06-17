@@ -17,7 +17,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { ChevronDownIcon, PlusIcon } from "lucide-react"
+import { ChevronDownIcon, PlusIcon } from "@/lib/icons"
 
 export function TeamSwitcher({
   teams,

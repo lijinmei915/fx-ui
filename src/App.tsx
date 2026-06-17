@@ -22,7 +22,7 @@ import {
   TerminalIcon,
   UnderlineIcon,
   UserIcon,
-} from "lucide-react"
+} from "@/lib/icons"
 
 import { Badge } from "@/components/ui/badge"
 import {
@@ -1021,6 +1021,7 @@ const iconAnchors = [
   { label: "图标库", labelEn: "Icon Library", href: "#icon-library" },
   { label: "安装状态", labelEn: "Installation", href: "#icon-install" },
   { label: "代码演示", labelEn: "Examples", href: "#icon-examples" },
+  { label: "图标色与尺寸", labelEn: "Color & Size", href: "#icon-color" },
   { label: "使用规则", labelEn: "Usage Rules", href: "#icon-rules" },
   { label: "AI 规则", labelEn: "AI Rules", href: "#icon-ai-rules" },
 ]
@@ -2437,11 +2438,21 @@ const seedColors = [
 
 
 const typographyTokens = [
-  { name: "font-sans", value: "Geist / system sans-serif", usage: "页面正文、表单、组件默认字体", usageEn: "Body text, forms, and default component typography" },
-  { name: "text-sm", value: "0.875rem", usage: "表格、菜单、说明文字", usageEn: "Tables, menus, and supporting text" },
-  { name: "text-base", value: "1rem", usage: "正文和主要说明", usageEn: "Body copy and primary descriptions" },
-  { name: "text-2xl", value: "1.5rem", usage: "章节标题", usageEn: "Section headings" },
-  { name: "text-4xl", value: "2.25rem", usage: "页面标题", usageEn: "Page titles" },
+  // 字族
+  { name: "font-sans", value: "Geist / system sans-serif", cls: "", usage: "页面正文、表单、组件默认字体", usageEn: "Body text, forms, and default component typography" },
+  // 字号阶（对齐 Tailwind 默认刻度）
+  { name: "text-xs", value: "0.75rem · 12px", cls: "text-xs", usage: "徽标、表格次要信息、辅助标签", usageEn: "Badges, secondary table info, helper labels" },
+  { name: "text-sm", value: "0.875rem · 14px", cls: "text-sm", usage: "表格、菜单、表单、说明（UI 默认字号）", usageEn: "Tables, menus, forms, captions (default UI size)" },
+  { name: "text-base", value: "1rem · 16px", cls: "text-base", usage: "正文、主要说明", usageEn: "Body copy and primary descriptions" },
+  { name: "text-lg", value: "1.125rem · 18px", cls: "text-lg", usage: "卡片标题、强调正文", usageEn: "Card titles, emphasized body" },
+  { name: "text-xl", value: "1.25rem · 20px", cls: "text-xl", usage: "小节标题", usageEn: "Sub-section headings" },
+  { name: "text-2xl", value: "1.5rem · 24px", cls: "text-2xl", usage: "章节标题", usageEn: "Section headings" },
+  { name: "text-3xl", value: "1.875rem · 30px", cls: "text-3xl", usage: "次级页面标题", usageEn: "Secondary page titles" },
+  { name: "text-4xl", value: "2.25rem · 36px", cls: "text-4xl", usage: "页面主标题", usageEn: "Page titles" },
+  // 字重
+  { name: "font-normal", value: "400", cls: "font-normal", usage: "正文默认字重", usageEn: "Default body weight" },
+  { name: "font-medium", value: "500", cls: "font-medium", usage: "表单标签、按钮、菜单项、轻强调", usageEn: "Form labels, buttons, menu items, light emphasis" },
+  { name: "font-semibold", value: "600", cls: "font-semibold", usage: "标题、卡片标题、强调", usageEn: "Headings, card titles, emphasis" },
 ]
 
 const radiusTokens = [
@@ -2484,7 +2495,7 @@ const layerTokens = [
   { name: "z-50", usage: "Dialog、Dropdown、Popover、Sheet、Tooltip 等浮层", usageEn: "Overlays such as Dialog, Dropdown, Popover, Sheet, and Tooltip" },
 ]
 
-const iconInstallCode = "npm install lucide-react"
+const iconInstallCode = "npm install @phosphor-icons/react"
 
 const docsByPage = {
   button: {
@@ -5513,6 +5524,7 @@ function TokensTypographyPage({ actions, lang }: { actions: React.ReactNode; lan
               <TableRow>
                 <TableHead className="pl-4">Token</TableHead>
                 <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
+                <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
                 <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
               </TableRow>
             </TableHeader>
@@ -5524,6 +5536,9 @@ function TokensTypographyPage({ actions, lang }: { actions: React.ReactNode; lan
                   </TableCell>
                   <TableCell>
                     <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.value}</code>
+                  </TableCell>
+                  <TableCell>
+                    <span className={`leading-none text-foreground ${row.cls}`}>示例文字 Aa</span>
                   </TableCell>
                   <TableCell className="pr-4 text-muted-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
                 </TableRow>
@@ -5769,8 +5784,8 @@ function IconPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
 
   const iconRules = [
     {
-      zh: "统一从 lucide-react 按需导入图标。",
-      en: "Import icons from lucide-react by name.",
+      zh: "统一从 @/lib/icons 导入图标（底层是 Phosphor，线性默认、面型用 weight=\"fill\"）。",
+      en: "Import icons from @/lib/icons (backed by Phosphor; regular by default, weight=\"fill\" for solid).",
     },
     {
       zh: "图标颜色使用 currentColor，跟随父级 text-* 语义色。",
@@ -5804,13 +5819,13 @@ function IconPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
         <p className={docsSpacing.leadText}>
           {lang === "en" ? (
             <>
-              fx-ui currently uses <code className="rounded bg-muted px-1.5 py-0.5">lucide-react</code> as the unified icon library.
-              This matches the shadcn iconLibrary setting used by component examples, button icons, and menu icons.
+              fx-ui uses <code className="rounded bg-muted px-1.5 py-0.5">Phosphor</code> (@phosphor-icons/react) as the unified icon library —
+              one icon, switch line/solid via <code className="rounded bg-muted px-1.5 py-0.5">weight</code>. Import via <code className="rounded bg-muted px-1.5 py-0.5">@/lib/icons</code>.
             </>
           ) : (
             <>
-              fx-ui 当前统一使用 <code className="rounded bg-muted px-1.5 py-0.5">lucide-react</code>。
-              这也是 shadcn 项目配置里的 iconLibrary：组件示例、按钮图标、菜单图标都按这个库来。
+              fx-ui 统一使用 <code className="rounded bg-muted px-1.5 py-0.5">Phosphor</code>（@phosphor-icons/react）——
+              一个图标靠 <code className="rounded bg-muted px-1.5 py-0.5">weight</code> 在线性/面型间切换。统一从 <code className="rounded bg-muted px-1.5 py-0.5">@/lib/icons</code> 导入（见 DEC-007）。
             </>
           )}
         </p>
@@ -5860,7 +5875,7 @@ function IconPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
                 {lang === "en" ? " includes:" : " 中已经安装："}
               </p>
               <code className="rounded-lg bg-muted px-3 py-2 text-xs text-foreground">
-                "lucide-react": "^1.17.0"
+                "@phosphor-icons/react": "^2.1.10"
               </code>
             </CardContent>
           </Card>
@@ -5909,7 +5924,7 @@ function IconPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
         <Card>
           <CardContent className="p-0">
             <pre className="max-w-full overflow-x-auto p-5 text-sm leading-7">
-              <code>{`import { SearchIcon } from "lucide-react"
+              <code>{`import { SearchIcon } from "@/lib/icons"
 
 export function SearchAction() {
   return <SearchIcon className="size-4 text-muted-foreground" />
@@ -5917,6 +5932,82 @@ export function SearchAction() {
             </pre>
           </CardContent>
         </Card>
+      </section>
+
+      <Separator className="my-10" />
+
+      <section id="icon-color" className="flex flex-col gap-5">
+        <div>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Icon color & size" : "图标色与尺寸"}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {lang === "en"
+              ? "Three icon color modes (mono / colored line / filled-reverse) + one size scale. All colors come from the palette & text hierarchy; Phosphor icons use currentColor."
+              : "图标分三类用色（单色 / 彩色线性 / 面状反白）+ 一套尺寸阶。颜色全部来自色板与文字层级，Phosphor 图标用 currentColor 跟随。"}
+          </p>
+        </div>
+
+        {/* 1. 单色图标 */}
+        <div className="rounded-lg border border-border bg-card p-5">
+          <p className="mb-3 text-sm font-medium">{lang === "en" ? "1. Monochrome — follow text hierarchy" : "1. 单色图标 — 跟随文字四级层级"}</p>
+          <div className="flex flex-wrap gap-6 text-sm">
+            <div className="flex flex-col items-center gap-1.5"><HomeIcon className="size-6 text-foreground" /><code className="text-xs text-muted-foreground">text-foreground</code><span className="text-xs text-muted-foreground">主图标</span></div>
+            <div className="flex flex-col items-center gap-1.5"><HomeIcon className="size-6 text-muted-foreground" /><code className="text-xs text-muted-foreground">text-muted-foreground</code><span className="text-xs text-muted-foreground">次图标</span></div>
+            <div className="flex flex-col items-center gap-1.5"><HomeIcon className="size-6 text-foreground-disabled" /><code className="text-xs text-muted-foreground">text-foreground-disabled</code><span className="text-xs text-muted-foreground">禁用</span></div>
+            <div className="flex flex-col items-center gap-1.5"><span className="flex size-9 items-center justify-center rounded-md bg-foreground"><HomeIcon className="size-6 text-primary-foreground" /></span><code className="text-xs text-muted-foreground">text-primary-foreground</code><span className="text-xs text-muted-foreground">反白（深底）</span></div>
+          </div>
+        </div>
+
+        {/* 2. 彩色线性图标 */}
+        <div className="rounded-lg border border-border bg-card p-5">
+          <p className="mb-3 text-sm font-medium">{lang === "en" ? "2. Colored line — semantic / brand colors" : "2. 彩色线性图标 — 语义/品牌色"}</p>
+          <div className="flex flex-wrap items-center gap-6">
+            <span className="flex flex-col items-center gap-1.5"><CheckCircleIcon className="size-6 text-primary" /><span className="text-xs text-muted-foreground">primary</span></span>
+            <span className="flex flex-col items-center gap-1.5"><CheckCircleIcon className="size-6 text-success" /><span className="text-xs text-muted-foreground">success</span></span>
+            <span className="flex flex-col items-center gap-1.5"><BellIcon className="size-6 text-warning" /><span className="text-xs text-muted-foreground">warning</span></span>
+            <span className="flex flex-col items-center gap-1.5"><PackageIcon className="size-6 text-destructive" /><span className="text-xs text-muted-foreground">destructive</span></span>
+            <span className="flex flex-col items-center gap-1.5"><DatabaseIcon className="size-6 text-info" /><span className="text-xs text-muted-foreground">info</span></span>
+          </div>
+        </div>
+
+        {/* 3. 面状/反白图标 */}
+        <div className="rounded-lg border border-border bg-card p-5">
+          <p className="mb-3 text-sm font-medium">{lang === "en" ? "3. Filled / reverse — colored circle + white icon" : "3. 面状/反白图标 — 彩色圆底 + 白色图标"}</p>
+          <div className="flex flex-wrap items-center gap-4">
+            {[
+              { bg: "var(--fx-brand-09)", Icon: HomeIcon },
+              { bg: "var(--fx-green-09)", Icon: CheckCircleIcon },
+              { bg: "var(--fx-amber-09)", Icon: BellIcon },
+              { bg: "var(--fx-red-09)", Icon: PackageIcon },
+              { bg: "var(--fx-blue-09)", Icon: DatabaseIcon },
+              { bg: "var(--fx-purple-09)", Icon: UserIcon },
+            ].map(({ bg, Icon }, i) => (
+              <span key={i} className="flex size-10 items-center justify-center rounded-full" style={{ backgroundColor: bg }}>
+                <Icon className="size-5" style={{ color: "var(--fx-neutrals-01)" }} />
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* 4. 图标尺寸 */}
+        <div className="rounded-lg border border-border bg-card p-5">
+          <p className="mb-3 text-sm font-medium">{lang === "en" ? "4. Size scale" : "4. 图标尺寸阶"}</p>
+          <div className="flex flex-wrap items-end gap-6">
+            {[
+              { cls: "size-3", px: "12", scene: "内联/徽标" },
+              { cls: "size-3.5", px: "14", scene: "小按钮 sm" },
+              { cls: "size-4", px: "16", scene: "默认" },
+              { cls: "size-5", px: "20", scene: "强调/列表" },
+              { cls: "size-6", px: "24", scene: "页面级/空状态" },
+            ].map(({ cls, px, scene }) => (
+              <span key={cls} className="flex flex-col items-center gap-1.5 text-foreground">
+                <SettingsIcon className={cls} />
+                <code className="text-xs text-muted-foreground">{cls} · {px}px</code>
+                <span className="text-xs text-muted-foreground">{scene}</span>
+              </span>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-muted-foreground">{lang === "en" ? "Weight: Phosphor thin/light/regular/bold/fill/duotone; default regular (line), fill for solid." : "粗细：Phosphor 用 weight（thin/light/regular/bold/fill/duotone），默认 regular 线性，fill 面型。"}</p>
+        </div>
       </section>
 
       <Separator className="my-10" />

@@ -1,4 +1,4 @@
-import { AlertCircleIcon, FileTextIcon, LightbulbIcon } from "lucide-react"
+import { AlertCircleIcon, FileTextIcon, LightbulbIcon } from "@/lib/icons"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"

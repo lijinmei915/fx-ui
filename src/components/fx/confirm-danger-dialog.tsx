@@ -1,5 +1,5 @@
 import type { ReactElement } from "react"
-import { AlertTriangleIcon } from "lucide-react"
+import { AlertTriangleIcon } from "@/lib/icons"
 
 import {
   AlertDialog,

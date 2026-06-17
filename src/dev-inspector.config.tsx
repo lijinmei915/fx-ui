@@ -1,5 +1,5 @@
 import type { DevInspectorConfigOverrides } from "@lijinmei-810/dev-inspector"
-import { SearchIcon } from "lucide-react"
+import { SearchIcon } from "@/lib/icons"
 
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"

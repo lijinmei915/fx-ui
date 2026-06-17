@@ -1,4 +1,4 @@
-import { CircleIcon, Code2Icon, CopyIcon } from "lucide-react"
+import { CircleIcon, Code2Icon, CopyIcon } from "@/lib/icons"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"

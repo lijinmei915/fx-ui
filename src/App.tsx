@@ -1019,10 +1019,20 @@ const tokenColorsAnchors = [
   { label: "彩色色板", labelEn: "Chromatic Palette", href: "#tokens-colors-palette" },
   { label: "语义颜色", labelEn: "Semantic Colors", href: "#tokens-colors-semantic" },
 ]
-const tokenTypographyAnchors = [{ label: "排版", labelEn: "Typography", href: "#tokens-typography" }]
-const tokenRadiusAnchors = [{ label: "圆角", labelEn: "Radius", href: "#tokens-radius" }]
+const tokenTypographyAnchors = [
+  { label: "字号", labelEn: "Size", href: "#tokens-typography-size" },
+  { label: "字重", labelEn: "Weight", href: "#tokens-typography-weight" },
+  { label: "字体", labelEn: "Family", href: "#tokens-typography-family" },
+]
+const tokenRadiusAnchors = [
+  { label: "圆角档位", labelEn: "Radius scale", href: "#tokens-radius-scale" },
+  { label: "计算方式", labelEn: "How computed", href: "#tokens-radius-compute" },
+]
 const tokenSpacingAnchors = [{ label: "间距", labelEn: "Spacing", href: "#tokens-spacing" }]
-const tokenShadowAnchors = [{ label: "阴影", labelEn: "Shadow", href: "#tokens-shadow" }]
+const tokenShadowAnchors = [
+  { label: "阴影档位", labelEn: "Elevation levels", href: "#tokens-shadow-scale" },
+  { label: "计算方式", labelEn: "How computed", href: "#tokens-shadow-compute" },
+]
 const tokenMotionAnchors = [{ label: "动效", labelEn: "Motion", href: "#tokens-motion" }]
 const tokenLayerAnchors = [{ label: "层级", labelEn: "Layer", href: "#tokens-layer" }]
 const layoutAnchors = [
@@ -5769,11 +5779,11 @@ function TokensTypographyPage({ actions, lang }: { actions: React.ReactNode; lan
         />
 
         {([
-          { title: lang === "en" ? "Size 字号" : "字号", desc: lang === "en" ? "Text size by hierarchy (H1–H6 / body / small). Value = font-size / line-height." : "决定不同层级文本的大小（H1–H6 / 正文 / 小字）。值 = 字号 / 行高。", rows: typeSizeTokens },
-          { title: lang === "en" ? "Weight 字重" : "字重", desc: lang === "en" ? "Text thickness." : "决定不同层级文本的粗细。", rows: typeWeightTokens },
-          { title: lang === "en" ? "Family 字体" : "字体", desc: lang === "en" ? "Global font family." : "全局字族。", rows: typeFamilyTokens },
+          { id: "tokens-typography-size", title: lang === "en" ? "Size 字号" : "字号", desc: lang === "en" ? "Text size by hierarchy (H1–H6 / body / small). Value = font-size / line-height." : "决定不同层级文本的大小（H1–H6 / 正文 / 小字）。值 = 字号 / 行高。", rows: typeSizeTokens },
+          { id: "tokens-typography-weight", title: lang === "en" ? "Weight 字重" : "字重", desc: lang === "en" ? "Text thickness." : "决定不同层级文本的粗细。", rows: typeWeightTokens },
+          { id: "tokens-typography-family", title: lang === "en" ? "Family 字体" : "字体", desc: lang === "en" ? "Global font family." : "全局字族。", rows: typeFamilyTokens },
         ] as const).map((group) => (
-          <div key={group.title} className="flex flex-col gap-3">
+          <div key={group.title} id={group.id} className="flex flex-col gap-3 scroll-mt-24">
             <div>
               <h2 className="text-2xl font-semibold">{group.title}</h2>
               <p className="mt-1 text-sm text-muted-foreground">{group.desc}</p>
@@ -5833,7 +5843,7 @@ function TokensRadiusPage({ actions, lang }: { actions: React.ReactNode; lang: L
           actions={actions}
         />
         {/* 圆角档位 */}
-        <div className="flex flex-col gap-3">
+        <div id="tokens-radius-scale" className="flex flex-col gap-3 scroll-mt-24">
           <div>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "Radius scale 圆角档位" : "圆角档位"}</h2>
             <p className="mt-1 text-fx-13 text-muted-foreground">
@@ -5873,7 +5883,7 @@ function TokensRadiusPage({ actions, lang }: { actions: React.ReactNode; lang: L
         </div>
 
         {/* 计算方式 */}
-        <div className="flex flex-col gap-3">
+        <div id="tokens-radius-compute" className="flex flex-col gap-3 scroll-mt-24">
           <div>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "How it's computed 计算方式" : "计算方式"}</h2>
             <p className="mt-1 text-fx-13 text-muted-foreground">
@@ -5952,7 +5962,7 @@ function TokensShadowPage({ actions, lang }: { actions: React.ReactNode; lang: L
           actions={actions}
         />
         {/* 阴影档位 */}
-        <div className="flex flex-col gap-3">
+        <div id="tokens-shadow-scale" className="flex flex-col gap-3 scroll-mt-24">
           <div>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "Elevation levels 阴影档位" : "阴影档位"}</h2>
             <p className="mt-1 text-fx-13 text-muted-foreground">
@@ -5994,7 +6004,7 @@ function TokensShadowPage({ actions, lang }: { actions: React.ReactNode; lang: L
         </div>
 
         {/* 计算方式 */}
-        <div className="flex flex-col gap-3">
+        <div id="tokens-shadow-compute" className="flex flex-col gap-3 scroll-mt-24">
           <div>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "How it's computed 计算方式" : "计算方式"}</h2>
             <p className="mt-1 text-fx-13 text-muted-foreground">
@@ -10668,7 +10678,7 @@ function RightRail({
       <div className="sticky top-8">
         <nav className="border-l border-border pl-6">
           <div className="mb-4 text-sm font-medium text-foreground">{uiText[lang].toc}</div>
-          <div className="flex flex-col gap-1 text-sm">
+          <div className="flex flex-col gap-2 text-sm">
             {anchors.map((item) => {
               const isActive = activeAnchor === item.href
 

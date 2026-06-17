@@ -829,6 +829,29 @@
       ]
     },
     {
+      "name": "Toast",
+      "source": "src/components/ui/sonner.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/toast.md",
+      "category": "feedback",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "root"
+      ],
+      "tokenRefs": [
+        "--popover",
+        "--popover-foreground",
+        "--border"
+      ],
+      "usageRules": [
+        "使用 Toast 前必须以 src/components/ui/sonner.tsx 为真实 API。",
+        "全局只挂一个 Toaster；业务代码直接调用 toast()，不重复挂载。",
+        "浮层阴影用公司档 shadow-l1，不要改用 Tailwind 内置阴影。"
+      ]
+    },
+    {
       "name": "Switch",
       "source": "src/components/ui/switch.tsx",
       "docStatus": "complete",

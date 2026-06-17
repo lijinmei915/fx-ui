@@ -14,7 +14,7 @@
     { "path": "docs/CODE_STRUCTURE.md", "responsibility": "实际目录结构与新文件放哪", "requiredSections": ["当前结构", "结构规则"] },
     { "path": "docs/DESIGN_STANDARDS.md", "responsibility": "UI 设计规则总览（指向 token/布局）", "requiredSections": ["基本规则", "参考文档"] },
     { "path": "docs/TOKENS.md", "responsibility": "设计 token 的值与全局使用规则", "requiredSections": ["基础架构", "基础色板", "交互色状态阶梯"] },
-    { "path": "docs/LAYOUTS.md", "responsibility": "后台页面布局规范", "requiredSections": ["标准列表页结构", "标题区规则", "表格区规则"] },
+    { "path": "docs/LAYOUTS.md", "responsibility": "Web 布局基础规范（栅格/断点/容器/间距）", "requiredSections": ["栅格系统", "页面布局容器（6 种样式）", "间距规则"] },
     { "path": "docs/ENVIRONMENT.md", "responsibility": "运行环境/依赖/环境变量/外部服务", "requiredSections": ["运行环境", "环境变量", "外部服务"] },
     { "path": "docs/RUNBOOK.md", "responsibility": "常用命令与故障处理", "requiredSections": ["本地自检", "常见故障"] },
     { "path": "docs/TECH_STACK.md", "responsibility": "技术栈与版本约束", "requiredSections": ["技术栈总览", "版本边界", "AI 使用约束"] },

@@ -469,6 +469,13 @@ const docsNav = [
     ],
   },
   {
+    title: "布局",
+    titleEn: "Layout",
+    items: [
+      { label: "页面布局", labelEn: "Layout", href: "#layout" },
+    ],
+  },
+  {
     title: "通用",
     titleEn: "General",
     items: [
@@ -1016,6 +1023,11 @@ const tokenSpacingAnchors = [{ label: "间距", labelEn: "Spacing", href: "#toke
 const tokenShadowAnchors = [{ label: "阴影", labelEn: "Shadow", href: "#tokens-shadow" }]
 const tokenMotionAnchors = [{ label: "动效", labelEn: "Motion", href: "#tokens-motion" }]
 const tokenLayerAnchors = [{ label: "层级", labelEn: "Layer", href: "#tokens-layer" }]
+const layoutAnchors = [
+  { label: "栅格系统", labelEn: "Grid", href: "#layout-grid" },
+  { label: "响应式断点", labelEn: "Breakpoints", href: "#layout-breakpoints" },
+  { label: "页面容器", labelEn: "Containers", href: "#layout-containers" },
+]
 
 const iconAnchors = [
   { label: "图标库", labelEn: "Icon Library", href: "#icon-library" },
@@ -2537,6 +2549,7 @@ function getPageFromHash(hash: string) {
   if (hash === "#tokens-shadow") return "tokens-shadow"
   if (hash === "#tokens-motion") return "tokens-motion"
   if (hash === "#tokens-layer") return "tokens-layer"
+  if (hash === "#layout") return "layout"
   if (hash === "#icon" || hash.startsWith("#icon-")) return "icon"
   if (hash === "#intro" || hash.startsWith("#intro-")) return "intro"
   if (hash === "#install" || hash.startsWith("#install-")) return "install"
@@ -2855,6 +2868,7 @@ function App() {
   const isTogglePage = page === "toggle"
   const isToggleGroupPage = page === "toggle-group"
   const isAgentSurfacePage = page === "agent-surface"
+  const isLayoutPage = page === "layout"
   const isComponentArea =
     isComponentsIndexPage ||
     componentIndexSections.some((section) =>
@@ -2876,6 +2890,8 @@ function App() {
                 ? tokenMotionAnchors
                 : isTokensLayerPage
                   ? tokenLayerAnchors
+                  : isLayoutPage
+      ? layoutAnchors
                   : isIconPage
       ? iconAnchors
       : isComponentsIndexPage
@@ -3126,6 +3142,8 @@ function App() {
                 <MarkdownPage doc={currentDoc} actions={pageActions} lang={lang} />
               ) : isTokensPage ? (
                 <TokensPage actions={pageActions} lang={lang} />
+              ) : isLayoutPage ? (
+                <LayoutPage actions={pageActions} lang={lang} />
               ) : isTokensColorsPage ? (
                 <TokensColorsPage actions={pageActions} lang={lang} />
               ) : isTokensTypographyPage ? (
@@ -4913,32 +4931,42 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
   )
 }
 
+// 页面头部：面包屑 + 大标题 + 说明，紧凑成一组（标题与说明 gap-2，不被 section 的大间距撑开）
+// 统一页面头部组（规范见 docs/DOC_SITE_DESIGN.md「页面头部组」）
+// 固定内容 = 面包屑 + 大标题 + 一句说明 + 右侧操作；其后统一接一条分隔线。
+// 内部间距：面包屑→标题 mb-2，标题↔说明成组 gap-2；分隔线 mt-2（与组内间距一致）mb-10。
+// 不放第二行说明、不在头部组里加其它横线。
+function PageLead({ crumb, title, lead, actions }: { crumb: string; title: string; lead: React.ReactNode; actions: React.ReactNode }) {
+  return (
+    <>
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="mb-2 text-fx-13 text-muted-foreground">{crumb}</p>
+            <h1 className="text-4xl font-semibold leading-tight">{title}</h1>
+          </div>
+          {actions}
+        </div>
+        <p className="text-base leading-8 text-muted-foreground">{lead}</p>
+      </div>
+      <Separator className="mt-2 mb-10" />
+    </>
+  )
+}
+
 function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   return (
     <>
       <section id="tokens" className="flex flex-col gap-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "Design Tokens / Overview" : "设计 Tokens / Overview"}</p>
-            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Design Tokens" : "Tokens 设计令牌"}</h1>
-          </div>
-          {actions}
-        </div>
-
-        <p className={docsSpacing.leadText}>
-          {lang === "en"
-            ? "Tokens are the visual source of truth for fx-ui. Base components come from shadcn/ui and pages start from Blocks, but visual consistency must be expressed through semantic tokens."
-            : "Tokens 是 fx-ui 的公司视觉真相。基础组件来自 shadcn/ui，页面从 Blocks 起步，但视觉统一必须通过这些语义 token 实现。"}
-        </p>
-
-        <p className="text-base leading-8">
-          {lang === "en"
-            ? "This page is designed for both engineers and AI: engineers read real values and usage, while AI reads generation constraints and component-level rules."
-            : "这个页面给前端工程师和 AI 同时消费：工程师看真实值和用法，AI 看生成约束和组件级规则。"}
-        </p>
+        <PageLead
+          crumb={lang === "en" ? "Design Tokens / Overview" : "设计 Tokens / Overview"}
+          title={lang === "en" ? "Design Tokens" : "Tokens 设计令牌"}
+          lead={lang === "en"
+            ? "Tokens are the visual source of truth for fx-ui — consumed by both engineers (real values and usage) and AI (generation constraints and component rules)."
+            : "Tokens 是 fx-ui 的公司视觉真相，给工程师（真实值和用法）和 AI（生成约束、组件级规则）同时消费。"}
+          actions={actions}
+        />
       </section>
-
-      <Separator className="my-10" />
 
       <section id="tokens-architecture" className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
@@ -5420,16 +5448,13 @@ function TokensColorsPage({ actions, lang }: { actions: React.ReactNode; lang: L
   return (
     <>
       <section id="tokens-colors" className="flex flex-col gap-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "Design Tokens / Colors" : "设计 Tokens / 颜色"}</p>
-            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Colors" : "颜色"}</h1>
-          </div>
-          {actions}
-        </div>
+        <PageLead
+          crumb={lang === "en" ? "Design Tokens / Colors" : "设计 Tokens / 颜色"}
+          title={lang === "en" ? "Colors" : "颜色"}
+          lead={lang === "en" ? "Brand seed, 12-step palettes, the neutral gray axis, and semantic colors — the single source of truth for all color." : "品牌种子色、12 阶色板、中性灰轴与语义色——全站颜色的唯一真相源。"}
+          actions={actions}
+        />
       </section>
-
-      <Separator className="my-10" />
 
       <section id="tokens-colors-seeds" className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
@@ -5507,22 +5532,182 @@ function TokensColorsPage({ actions, lang }: { actions: React.ReactNode; lang: L
   )
 }
 
+function LayoutPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  // 线框区域块（区域名按语言显示）
+  const t = (zh: string, en: string) => (lang === "en" ? en : zh)
+  const hd = t("头部", "Header"), mn = t("主体", "Main"), ft = t("底部", "Footer"), nv = t("导航", "Menu"), lf = t("左", "Left"), rt = t("右", "Right")
+  const B = ({ label, className = "" }: { label: string; className?: string }) => (
+    <div className={`flex items-center justify-center rounded bg-muted text-[10px] text-muted-foreground ${className}`}>{label}</div>
+  )
+  const containers = [
+    { n: "一", en: "1", desc: "最常见基础页", descEn: "Most common",
+      wire: <div className="flex h-36 flex-col gap-1"><B label={hd} className="h-6" /><B label={mn} className="flex-1" /></div> },
+    { n: "二", en: "2", desc: "带固定底部", descEn: "With footer",
+      wire: <div className="flex h-36 flex-col gap-1"><B label={hd} className="h-6" /><B label={mn} className="flex-1" /><B label={ft} className="h-6" /></div> },
+    { n: "三", en: "3", desc: "二级左侧导航", descEn: "Left menu",
+      wire: <div className="flex h-36 flex-col gap-1"><B label={hd} className="h-6" /><div className="flex flex-1 gap-1"><B label={nv} className="w-1/4" /><B label={mn} className="flex-1" /></div><B label={ft} className="h-6" /></div> },
+    { n: "四", en: "4", desc: "二级顶部导航", descEn: "Top menu",
+      wire: <div className="flex h-36 flex-col gap-1"><B label={hd} className="h-6" /><B label={nv} className="h-5" /><B label={mn} className="flex-1" /><B label={ft} className="h-6" /></div> },
+    { n: "五", en: "5", desc: "三栏·画布操作区", descEn: "3-column canvas",
+      wire: <div className="flex h-36 flex-col gap-1"><B label={hd} className="h-6" /><div className="flex flex-1 gap-1"><B label={lf} className="w-1/5" /><B label={mn} className="flex-1" /><B label={rt} className="w-1/5" /></div></div> },
+    { n: "六", en: "6", desc: "左侧一级导航 · 新版趋势", descEn: "Left primary nav · trend",
+      wire: <div className="flex h-36 gap-1"><B label={nv} className="w-1/5" /><div className="flex flex-1 flex-col gap-1"><B label={hd} className="h-6" /><B label={mn} className="flex-1" /><B label={ft} className="h-6" /></div></div> },
+  ]
+  return (
+    <>
+      <section id="layout-grid" className="flex flex-col gap-6">
+        <PageLead
+          crumb={lang === "en" ? "Foundations / Layout" : "基础 / 布局"}
+          title={lang === "en" ? "Layout" : "布局"}
+          lead={lang === "en" ? "Enterprise web layout: 24-column grid, 16px column gap, and page container patterns." : "企业 Web 布局：24 列栅格、16px 列间距、页面容器样式。来源：企业 Figma Web 端基础组件库。"}
+          actions={actions}
+        />
+
+        <div>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Grid 栅格系统" : "栅格系统"}</h2>
+          <p className="mt-1 text-fx-13 text-muted-foreground">{lang === "en" ? "24 columns, column gap = 16px (gap-4). Span by /24 with col-span-[n]." : "24 列基准，列间距 = 16px（gap-4）。分栏用 col-span-[n]（按 24 计），可 1/24 自由组合。"}</p>
+        </div>
+        <div>
+          <p className="mb-2 text-fx-13 font-medium">{lang === "en" ? "24 columns (16px gap)" : "24 列栅格（列间距 16px）"}</p>
+          <div className="rounded-lg border border-border bg-card p-5">
+            <div className="grid grid-cols-[repeat(24,minmax(0,1fr))] gap-1">
+              {Array.from({ length: 24 }).map((_, i) => (
+                <div key={i} className="flex h-9 items-center justify-center rounded bg-muted text-[9px] text-muted-foreground">{i + 1}</div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* 等分栅格 */}
+        <div>
+          <p className="mb-2 text-fx-13 font-medium">{lang === "en" ? "Equal columns" : "等分栅格"}</p>
+          <div className="flex flex-col gap-2 rounded-lg border border-border bg-card p-5">
+            {[1, 2, 3, 4, 6].map((n) => (
+              <div key={n} className="grid gap-4" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
+                {Array.from({ length: n }).map((_, i) => (
+                  <div key={i} className="flex h-9 items-center justify-center rounded bg-muted text-fx-12 text-muted-foreground">{`1/${n}`}</div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 混合布局 */}
+        <div>
+          <p className="mb-2 text-fx-13 font-medium">{lang === "en" ? "Mixed (by /24)" : "混合布局（按 24 分）"}</p>
+          <div className="flex flex-col gap-2 rounded-lg border border-border bg-card p-5">
+            {[[6, 18], [8, 16], [6, 12, 6], [18, 6]].map((row, ri) => (
+              <div key={ri} className="grid grid-cols-[repeat(24,minmax(0,1fr))] gap-4">
+                {row.map((span, ci) => (
+                  <div key={ci} className="flex h-9 items-center justify-center rounded bg-muted text-fx-12 text-muted-foreground" style={{ gridColumn: `span ${span} / span ${span}` }}>{span}/24</div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 对齐方式 */}
+        <div>
+          <p className="mb-2 text-fx-13 font-medium">{lang === "en" ? "Alignment" : "对齐方式"}</p>
+          <div className="flex flex-col gap-2 rounded-lg border border-border bg-card p-5">
+            {([
+              { just: "justify-start", zh: "整体左对齐", en: "Left" },
+              { just: "justify-center", zh: "居中", en: "Center" },
+              { just: "justify-end", zh: "右对齐", en: "Right" },
+              { just: "justify-between", zh: "左右齐飞（两端）", en: "Justify" },
+            ] as const).map((a) => (
+              <div key={a.just} className="flex items-center gap-3 rounded bg-muted/40 p-2">
+                <span className="w-28 shrink-0 text-fx-12 text-muted-foreground">{lang === "en" ? a.en : a.zh}</span>
+                <div className={`flex flex-1 ${a.just} gap-2`}>
+                  {[0, 1, 2].map((i) => <div key={i} className="h-7 w-60 rounded bg-muted" />)}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 偏移 / 容器 / 嵌套 */}
+        <div className="rounded-lg border border-border bg-card p-5 text-fx-13 leading-7 text-muted-foreground">
+          <p><span className="font-medium text-foreground">{lang === "en" ? "Offset" : "偏移"}</span>：{lang === "en" ? "leave columns before content with " : "内容前留空用 "}<code className="rounded bg-muted px-1 text-fx-12">col-start-[n]</code></p>
+          <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Container" : "容器/版心"}</span>：{lang === "en" ? "max-width + page padding — " : "内容最大宽度 + 页面外边距 — "}<code className="rounded bg-muted px-1 text-fx-12">max-w-7xl</code> + <code className="rounded bg-muted px-1 text-fx-12">px-4 lg:px-8</code></p>
+          <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Nesting" : "嵌套"}</span>：{lang === "en" ? "a grid can nest another grid; child re-splits by /24." : "栅格内可再嵌栅格，子栅格按 1/24 重新划分。"}</p>
+        </div>
+      </section>
+
+      <Separator className="my-10" />
+
+      <section id="layout-breakpoints" className="flex flex-col gap-5">
+        <div>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Breakpoints 响应式断点" : "响应式断点"}</h2>
+          <p className="mt-1 text-fx-13 leading-7 text-muted-foreground">
+            {lang === "en"
+              ? "Tailwind is mobile-first: base styles apply at every width; a prefix like lg: means \"apply only when the viewport ≥ this width\". The five values below are the min-width thresholds where layout switches."
+              : "Tailwind 是移动优先：不带前缀的样式对所有宽度生效；加前缀（如 lg:）表示\"屏幕宽度 ≥ 该值时才生效\"。下面五个值就是布局切换的最小宽度门槛——窗口宽度跨过它，对应规则才接管。"}
+          </p>
+        </div>
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <Table className="min-w-[520px]">
+            <TableHeader><TableRow>
+              <TableHead className="pl-4">{lang === "en" ? "Prefix" : "前缀"}</TableHead>
+              <TableHead>{lang === "en" ? "Triggers at width ≥" : "宽度 ≥ 时生效"}</TableHead>
+              <TableHead className="pr-4">{lang === "en" ? "Typical" : "典型设备"}</TableHead>
+            </TableRow></TableHeader>
+            <TableBody>
+              {[["sm", "640px", "大手机/小平板"], ["md", "768px", "平板"], ["lg", "1024px", "笔记本（后台默认）"], ["xl", "1280px", "桌面"], ["2xl", "1536px", "大屏"]].map(([p, w, d]) => (
+                <TableRow key={p}>
+                  <TableCell className="pl-4"><code className="rounded bg-muted px-1.5 py-0.5 text-fx-12">{p}:</code></TableCell>
+                  <TableCell className="text-fx-13 text-muted-foreground">{w}</TableCell>
+                  <TableCell className="pr-4 text-fx-13 text-muted-foreground">{lang === "en" ? "" : d}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+        <div className="rounded-lg border border-border bg-card p-5">
+          <p className="mb-3 text-fx-13 text-muted-foreground">
+            {lang === "en"
+              ? <>Example: <code className="rounded bg-muted px-1 text-fx-12">grid-cols-1 lg:grid-cols-3</code> — 1 column below 1024px, 3 columns at ≥1024px. Resize to see it break.</>
+              : <>例子：<code className="rounded bg-muted px-1 text-fx-12">grid-cols-1 lg:grid-cols-3</code> —— 窗口 &lt; 1024px 时一列，≥ 1024px 自动变三列。拖动窗口可看到它"断"。</>}
+          </p>
+          <div className="grid grid-cols-1 gap-2 lg:grid-cols-3">
+            {[0, 1, 2].map((i) => <div key={i} className="flex h-12 items-center justify-center rounded bg-muted text-fx-12 text-muted-foreground">{i + 1}</div>)}
+          </div>
+        </div>
+      </section>
+
+      <Separator className="my-10" />
+
+      <section id="layout-containers" className="flex flex-col gap-5">
+        <div>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Page containers 页面容器" : "页面布局容器（6 种样式）"}</h2>
+          <p className="mt-1 text-fx-13 text-muted-foreground">{lang === "en" ? "From simple to complex. Style 6 (left primary nav) is the recommended trend." : "从简到繁；样式六（左侧一级导航）是新版趋势，新建后台优先。"}</p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {containers.map((c) => (
+            <div key={c.n} className="rounded-lg border border-border bg-card p-4">
+              <div className="mb-3 flex items-baseline gap-2">
+                <span className="text-fx-15 font-semibold">{lang === "en" ? `Style ${c.en}` : `样式${c.n}`}</span>
+                <span className="text-fx-12 text-muted-foreground">{lang === "en" ? c.descEn : c.desc}</span>
+              </div>
+              {c.wire}
+            </div>
+          ))}
+        </div>
+      </section>
+    </>
+  )
+}
+
 function TokensTypographyPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   return (
     <>
       <section id="tokens-typography" className="flex flex-col gap-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "Design Tokens / Typography" : "设计 Tokens / 排版"}</p>
-            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Typography" : "排版"}</h1>
-          </div>
-          {actions}
-        </div>
-        <p className="text-base leading-8 text-muted-foreground">
-          {lang === "en"
-            ? "Typography is split into three parts: size (with heading levels), weight, and family."
-            : "排版分三部分：字号（含标题层级）、字重、字体。"}
-        </p>
+        <PageLead
+          crumb={lang === "en" ? "Design Tokens / Typography" : "设计 Tokens / 排版"}
+          title={lang === "en" ? "Typography" : "排版"}
+          lead={lang === "en" ? "Typography is split into three parts: size (with heading levels), weight, and family." : "排版分三部分：字号（含标题层级）、字重、字体。"}
+          actions={actions}
+        />
 
         {([
           { title: lang === "en" ? "Size 字号" : "字号", desc: lang === "en" ? "Text size by hierarchy (H1–H6 / body / small)." : "决定不同层级文本的大小（H1–H6 / 正文 / 小字）。", rows: typeSizeTokens },
@@ -5582,18 +5767,12 @@ function TokensRadiusPage({ actions, lang }: { actions: React.ReactNode; lang: L
   return (
     <>
       <section id="tokens-radius" className="flex flex-col gap-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "Design Tokens / Radius" : "设计 Tokens / 圆角"}</p>
-            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Radius" : "圆角"}</h1>
-          </div>
-          {actions}
-        </div>
-        <p className="text-base leading-8 text-muted-foreground">
-          {lang === "en"
-            ? "Radius tokens keep shadcn controls, cards, and overlays visually consistent."
-            : "圆角 token 用来统一 shadcn 控件、卡片和浮层容器的视觉性格。"}
-        </p>
+        <PageLead
+          crumb={lang === "en" ? "Design Tokens / Radius" : "设计 Tokens / 圆角"}
+          title={lang === "en" ? "Radius" : "圆角"}
+          lead={lang === "en" ? "Radius tokens keep shadcn controls, cards, and overlays visually consistent." : "圆角 token 用来统一 shadcn 控件、卡片和浮层容器的视觉性格。"}
+          actions={actions}
+        />
         <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
           <Table className="min-w-[680px]">
             <TableHeader>
@@ -5627,18 +5806,12 @@ function TokensSpacingPage({ actions, lang }: { actions: React.ReactNode; lang: 
   return (
     <>
       <section id="tokens-spacing" className="flex flex-col gap-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "Design Tokens / Spacing" : "设计 Tokens / 间距"}</p>
-            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Spacing" : "间距"}</h1>
-          </div>
-          {actions}
-        </div>
-        <p className="text-base leading-8 text-muted-foreground">
-          {lang === "en"
-            ? "Spacing tokens keep page rhythm, component density, and documentation layout consistent. Prefer Tailwind spacing utilities instead of one-off pixel values."
-            : "间距 token 用来统一页面节奏、组件密度和文档排版。优先使用 Tailwind 间距工具类，不临时手写像素值。"}
-        </p>
+        <PageLead
+          crumb={lang === "en" ? "Design Tokens / Spacing" : "设计 Tokens / 间距"}
+          title={lang === "en" ? "Spacing" : "间距"}
+          lead={lang === "en" ? "Spacing tokens keep page rhythm, component density, and documentation layout consistent. Prefer Tailwind spacing utilities instead of one-off pixel values." : "间距 token 用来统一页面节奏、组件密度和文档排版。优先使用 Tailwind 间距工具类，不临时手写像素值。"}
+          actions={actions}
+        />
         <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
           <Table className="min-w-[640px]">
             <TableHeader>
@@ -5672,18 +5845,12 @@ function TokensShadowPage({ actions, lang }: { actions: React.ReactNode; lang: L
   return (
     <>
       <section id="tokens-shadow" className="flex flex-col gap-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "Design Tokens / Shadow" : "设计 Tokens / 阴影"}</p>
-            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Shadow" : "阴影"}</h1>
-          </div>
-          {actions}
-        </div>
-        <p className="text-base leading-8 text-muted-foreground">
-          {lang === "en"
-            ? "Shadow tokens map to Figma's Layer Style spec. Four semantic levels cover all overlay use cases. Do not use Tailwind's built-in shadow-sm / shadow-md / shadow-lg — they are not mapped to company tokens."
-            : "阴影 token 来自 Figma「图层样式」规范，四档覆盖所有浮层场景。禁止使用 Tailwind 内置的 shadow-sm / shadow-md / shadow-lg，它们未映射公司 token。"}
-        </p>
+        <PageLead
+          crumb={lang === "en" ? "Design Tokens / Shadow" : "设计 Tokens / 阴影"}
+          title={lang === "en" ? "Shadow" : "阴影"}
+          lead={lang === "en" ? "Shadow tokens map to Figma's Layer Style spec. Four semantic levels cover all overlay use cases. Do not use Tailwind's built-in shadow-sm / shadow-md / shadow-lg — they are not mapped to company tokens." : "阴影 token 来自 Figma「图层样式」规范，四档覆盖所有浮层场景。禁止使用 Tailwind 内置的 shadow-sm / shadow-md / shadow-lg，它们未映射公司 token。"}
+          actions={actions}
+        />
         <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
           <Table className="min-w-[720px]">
             <TableHeader>
@@ -5721,18 +5888,12 @@ function TokensMotionPage({ actions, lang }: { actions: React.ReactNode; lang: L
   return (
     <>
       <section id="tokens-motion" className="flex flex-col gap-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "Design Tokens / Motion" : "设计 Tokens / 动效"}</p>
-            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Motion" : "动效"}</h1>
-          </div>
-          {actions}
-        </div>
-        <p className="text-base leading-8 text-muted-foreground">
-          {lang === "en"
-            ? "Motion follows the shadcn components already in the project: tw-animate-css utilities, short durations, and data-state driven enter/exit transitions."
-            : "动效沿用项目里 shadcn 组件已经在使用的模式：tw-animate-css 工具类、短时长、以及由 data-state 驱动的进入退出。"}
-        </p>
+        <PageLead
+          crumb={lang === "en" ? "Design Tokens / Motion" : "设计 Tokens / 动效"}
+          title={lang === "en" ? "Motion" : "动效"}
+          lead={lang === "en" ? "Motion follows the shadcn components already in the project: tw-animate-css utilities, short durations, and data-state driven enter/exit transitions." : "动效沿用项目里 shadcn 组件已经在使用的模式：tw-animate-css 工具类、短时长、以及由 data-state 驱动的进入退出。"}
+          actions={actions}
+        />
         <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
           <Table className="min-w-[720px]">
             <TableHeader>
@@ -5762,18 +5923,12 @@ function TokensLayerPage({ actions, lang }: { actions: React.ReactNode; lang: La
   return (
     <>
       <section id="tokens-layer" className="flex flex-col gap-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "Design Tokens / Layer" : "设计 Tokens / 层级"}</p>
-            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Layer" : "层级"}</h1>
-          </div>
-          {actions}
-        </div>
-        <p className="text-base leading-8 text-muted-foreground">
-          {lang === "en"
-            ? "Layer rules document the z-index scale already used by shadcn overlays. Avoid inventing new z-index values unless a real collision appears."
-            : "层级规则记录 shadcn 浮层已经在用的 z-index 习惯。除非真的出现遮挡冲突，不要临时发明新的 z-index。"}
-        </p>
+        <PageLead
+          crumb={lang === "en" ? "Design Tokens / Layer" : "设计 Tokens / 层级"}
+          title={lang === "en" ? "Layer" : "层级"}
+          lead={lang === "en" ? "Layer rules document the z-index scale already used by shadcn overlays. Avoid inventing new z-index values unless a real collision appears." : "层级规则记录 shadcn 浮层已经在用的 z-index 习惯。除非真的出现遮挡冲突，不要临时发明新的 z-index。"}
+          actions={actions}
+        />
         <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
           <Table className="min-w-[720px]">
             <TableHeader>
@@ -5835,16 +5990,10 @@ function IconPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   return (
     <>
       <section id="icon-library" className="flex flex-col gap-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "General / Icon" : "通用 / Icon"}</p>
-            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Icon" : "Icon 图标"}</h1>
-          </div>
-          {actions}
-        </div>
-
-        <p className={docsSpacing.leadText}>
-          {lang === "en" ? (
+        <PageLead
+          crumb={lang === "en" ? "General / Icon" : "通用 / Icon"}
+          title={lang === "en" ? "Icon" : "Icon 图标"}
+          lead={lang === "en" ? (
             <>
               fx-ui uses <code className="rounded bg-muted px-1.5 py-0.5">Phosphor</code> (@phosphor-icons/react) as the unified icon library —
               one icon, switch line/solid via <code className="rounded bg-muted px-1.5 py-0.5">weight</code>. Import via <code className="rounded bg-muted px-1.5 py-0.5">@/lib/icons</code>.
@@ -5852,27 +6001,12 @@ function IconPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
           ) : (
             <>
               fx-ui 统一使用 <code className="rounded bg-muted px-1.5 py-0.5">Phosphor</code>（@phosphor-icons/react）——
-              一个图标靠 <code className="rounded bg-muted px-1.5 py-0.5">weight</code> 在线性/面型间切换。统一从 <code className="rounded bg-muted px-1.5 py-0.5">@/lib/icons</code> 导入（见 DEC-007）。
+              一个图标靠 <code className="rounded bg-muted px-1.5 py-0.5">weight</code> 在线性/面型间切换，统一从 <code className="rounded bg-muted px-1.5 py-0.5">@/lib/icons</code> 导入（见 DEC-007）。
             </>
           )}
-        </p>
-
-        <p className="text-base leading-8">
-          {lang === "en" ? (
-            <>
-              Icons are not company wrapper components and do not live in <code className="rounded bg-muted px-1.5 py-0.5">src/components/ui</code>.
-              They are consumed directly as part of the visual language.
-            </>
-          ) : (
-            <>
-              图标不是公司封装组件，不进入 <code className="rounded bg-muted px-1.5 py-0.5">src/components/ui</code>。
-              它作为基础视觉语言被组件和页面直接消费。
-            </>
-          )}
-        </p>
+          actions={actions}
+        />
       </section>
-
-      <Separator className="my-10" />
 
       <section id="icon-install" className="flex flex-col gap-4">
         <h2 className="text-2xl font-semibold">{lang === "en" ? "Installation" : "安装状态"}</h2>
@@ -9136,13 +9270,12 @@ function StandardDocPage({
   return (
     <div className={docsSpacing.pageStack}>
       <section id={slug} className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-4xl font-semibold leading-tight">{title}</h1>
-          </div>
-          {actions}
-        </div>
-        <p className={docsSpacing.componentLead}>{lead}</p>
+        <PageLead
+          crumb={lang === "en" ? `Components / ${title}` : `组件 / ${title}`}
+          title={title}
+          lead={lead}
+          actions={actions}
+        />
       </section>
 
       <section id={`${slug}-overview`} className={docsSpacing.sectionStack}>

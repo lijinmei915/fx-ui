@@ -169,7 +169,7 @@
     },
     {
       "name": "--fx-orange-10",
-      "value": "oklch(from var(--fx-seed-orange) calc(l * 0.87) calc(c * 0.95) h)",
+      "value": "oklch(from var(--fx-seed-orange) calc(l * 0.92) calc(c * 0.95) h)",
       "category": "palette.orange",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
@@ -241,7 +241,7 @@
     },
     {
       "name": "--fx-brand-10",
-      "value": "oklch(from var(--fx-brand-vivid) calc(l * 0.87) calc(c * 0.95) h)",
+      "value": "oklch(from var(--fx-brand-vivid) calc(l * 0.92) calc(c * 0.95) h)",
       "category": "palette",
       "usage": ""
     },
@@ -313,7 +313,7 @@
     },
     {
       "name": "--fx-orange-warning-10",
-      "value": "oklch(from var(--fx-seed-orange-warning) calc(l * 0.87) calc(c * 0.95) h)",
+      "value": "oklch(from var(--fx-seed-orange-warning) calc(l * 0.92) calc(c * 0.95) h)",
       "category": "palette.orange-warning",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
@@ -385,7 +385,7 @@
     },
     {
       "name": "--fx-amber-10",
-      "value": "oklch(from var(--fx-seed-amber) calc(l * 0.87) calc(c * 0.95) h)",
+      "value": "oklch(from var(--fx-seed-amber) calc(l * 0.92) calc(c * 0.95) h)",
       "category": "palette",
       "usage": ""
     },
@@ -457,7 +457,7 @@
     },
     {
       "name": "--fx-yellow-10",
-      "value": "oklch(from var(--fx-seed-yellow) calc(l * 0.87) calc(c * 0.95) h)",
+      "value": "oklch(from var(--fx-seed-yellow) calc(l * 0.92) calc(c * 0.95) h)",
       "category": "palette.yellow",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
@@ -529,7 +529,7 @@
     },
     {
       "name": "--fx-lime-10",
-      "value": "oklch(from var(--fx-seed-lime) calc(l * 0.87) calc(c * 0.95) h)",
+      "value": "oklch(from var(--fx-seed-lime) calc(l * 0.92) calc(c * 0.95) h)",
       "category": "palette",
       "usage": ""
     },
@@ -601,7 +601,7 @@
     },
     {
       "name": "--fx-yellow-green-10",
-      "value": "oklch(from var(--fx-seed-yellow-green) calc(l * 0.87) calc(c * 0.95) h)",
+      "value": "oklch(from var(--fx-seed-yellow-green) calc(l * 0.92) calc(c * 0.95) h)",
       "category": "palette.yellow-green",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
@@ -673,7 +673,7 @@
     },
     {
       "name": "--fx-green-10",
-      "value": "oklch(from var(--fx-seed-green) calc(l * 0.87) calc(c * 0.95) h)",
+      "value": "oklch(from var(--fx-seed-green) calc(l * 0.92) calc(c * 0.95) h)",
       "category": "palette.green",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
@@ -745,7 +745,7 @@
     },
     {
       "name": "--fx-teal-10",
-      "value": "oklch(from var(--fx-seed-teal) calc(l * 0.87) calc(c * 0.95) h)",
+      "value": "oklch(from var(--fx-seed-teal) calc(l * 0.92) calc(c * 0.95) h)",
       "category": "palette.teal",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
@@ -817,7 +817,7 @@
     },
     {
       "name": "--fx-cyan-10",
-      "value": "oklch(from var(--fx-seed-cyan) calc(l * 0.87) calc(c * 0.95) h)",
+      "value": "oklch(from var(--fx-seed-cyan) calc(l * 0.92) calc(c * 0.95) h)",
       "category": "palette",
       "usage": ""
     },
@@ -889,7 +889,7 @@
     },
     {
       "name": "--fx-blue-10",
-      "value": "oklch(from var(--fx-seed-blue) calc(l * 0.87) calc(c * 0.95) h)",
+      "value": "oklch(from var(--fx-seed-blue) calc(l * 0.92) calc(c * 0.95) h)",
       "category": "palette.blue",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
@@ -961,7 +961,7 @@
     },
     {
       "name": "--fx-purple-10",
-      "value": "oklch(from var(--fx-seed-purple) calc(l * 0.87) calc(c * 0.95) h)",
+      "value": "oklch(from var(--fx-seed-purple) calc(l * 0.92) calc(c * 0.95) h)",
       "category": "palette.purple",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
@@ -1033,7 +1033,7 @@
     },
     {
       "name": "--fx-pink-10",
-      "value": "oklch(from var(--fx-seed-pink) calc(l * 0.87) calc(c * 0.95) h)",
+      "value": "oklch(from var(--fx-seed-pink) calc(l * 0.92) calc(c * 0.95) h)",
       "category": "palette",
       "usage": ""
     },
@@ -1105,7 +1105,7 @@
     },
     {
       "name": "--fx-red-10",
-      "value": "oklch(from var(--fx-seed-red) calc(l * 0.87) calc(c * 0.95) h)",
+      "value": "oklch(from var(--fx-seed-red) calc(l * 0.92) calc(c * 0.95) h)",
       "category": "palette.red",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
@@ -1634,14 +1634,26 @@
       "usage": ""
     },
     {
+      "name": "--border-subtle",
+      "value": "var(--fx-neutrals-04)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
       "name": "--border",
-      "value": "#DEE1E8",
+      "value": "var(--fx-neutrals-05)",
       "category": "border-focus",
       "usage": "边框、分割线"
     },
     {
+      "name": "--border-strong",
+      "value": "var(--fx-neutrals-08)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
       "name": "--input",
-      "value": "#C1C5CE",
+      "value": "var(--fx-neutrals-07)",
       "category": "border-focus",
       "usage": "表单边框"
     },

@@ -2409,11 +2409,13 @@ const semanticTokenGroups = [
   {
     role: "border",
     label: "边框色", labelEn: "Border",
-    desc: "来自 Neutrals 中浅阶，表达边界和表单边框",
-    descEn: "Derived from mid-light Neutrals steps for structural edges and form controls.",
+    desc: "来自 Neutrals 中浅阶，三档：弱（分割线）/ 默认 / 强（hover/强调）+ 表单输入边框",
+    descEn: "From mid-light Neutrals — three levels: subtle (dividers) / default / strong (hover) + form input border.",
     tokens: [
-      { name: "border", value: "#DEE1E8", sourceToken: "--fx-neutrals-05", tailwind: "border-border", usage: "边框、分割线", usageEn: "Borders and dividers" },
-      { name: "input",  value: "#C1C5CE", sourceToken: "--fx-neutrals-07", tailwind: "border-input",  usage: "表单输入边框", usageEn: "Form input borders" },
+      { name: "border-subtle", value: "", sourceToken: "--fx-neutrals-04", tailwind: "border-border-subtle", usage: "弱边框 — 分割线、表格内线、列表分隔", usageEn: "Subtle — dividers, table inner lines, list separators" },
+      { name: "border",        value: "", sourceToken: "--fx-neutrals-05", tailwind: "border-border",        usage: "默认边框 — 卡片、输入框外框", usageEn: "Default — cards, control outlines" },
+      { name: "border-strong", value: "", sourceToken: "--fx-neutrals-08", tailwind: "border-border-strong", usage: "强边框 — hover 边框、选中态、需强调的边界", usageEn: "Strong — hover border, selected, emphasis" },
+      { name: "input",         value: "", sourceToken: "--fx-neutrals-07", tailwind: "border-input",         usage: "表单可交互边框（比默认略重）", usageEn: "Interactive form input border" },
     ],
   },
 ]
@@ -4981,7 +4983,7 @@ const PREVIEW_FORMULAS = [
   (s: string) => `oklch(from ${s} calc(l + (1 - l) * 0.14) calc(c * 0.80) h)`,
   (s: string) => `oklch(from ${s} calc(l + (1 - l) * 0.12) calc(c * 0.94) h)`,
   (s: string) => s,
-  (s: string) => `oklch(from ${s} calc(l * 0.87) calc(c * 0.95) h)`,
+  (s: string) => `oklch(from ${s} calc(l * 0.92) calc(c * 0.95) h)`,
   (s: string) => `oklch(from ${s} calc(l * 0.72) calc(c * 0.82) h)`,
   (s: string) => `oklch(from ${s} calc(l * 0.35) calc(c * 0.65) h)`,
 ]
@@ -5125,7 +5127,7 @@ function ColorSwatch({ varName, step, label, semanticTag, onCopy, className, dar
     >
       <div
         ref={bgRef}
-        className="h-16 w-full transition-[filter] group-hover:brightness-105"
+        className="h-16 w-full"
         style={{ backgroundColor: `var(${varName})` }}
       />
       {/* 常显：色系名 + 语义标签 + 对比度 */}
@@ -5390,7 +5392,9 @@ function getTokenExample(name: string): React.ReactNode {
     case "muted":             return <span className="inline-flex h-5 w-12 rounded" style={{ backgroundColor: "var(--fx-neutrals-03)" }} />
     case "accent":            return <span className="inline-flex h-5 w-12 rounded" style={{ backgroundColor: "var(--fx-orange-01)" }} />
     case "secondary":         return btn({ backgroundColor: "var(--fx-neutrals-03)", color: "var(--fx-neutrals-20)" }, "次级按钮")
+    case "border-subtle":     return <span className="inline-flex h-5 w-12 items-center justify-center"><span className="w-full border-t" style={{ borderColor: "var(--fx-neutrals-04)" }} /></span>
     case "border":            return <span className="inline-flex h-5 w-12 items-center justify-center"><span className="w-full border-t" style={{ borderColor: "var(--fx-neutrals-05)" }} /></span>
+    case "border-strong":     return <span className="inline-flex h-5 w-12 items-center justify-center"><span className="w-full border-t-2" style={{ borderColor: "var(--fx-neutrals-08)" }} /></span>
     case "input":             return <span className="inline-flex h-5 w-16 rounded border px-1.5 text-[10px] items-center text-muted-foreground" style={{ borderColor: "var(--fx-neutrals-07)" }}>输入框</span>
     default:                  return <span className="text-muted-foreground/30">—</span>
   }

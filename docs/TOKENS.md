@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-16
+last_verified: 2026-06-17
 teaches: "公司设计 token 的基础架构、真实值和全局视觉使用规则"
 use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadcn 组件样式或判断视觉是否符合公司规范时"
 ---
@@ -94,11 +94,13 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 | 用途 | 值 | 变量/用法 |
 |------|-----|-----------|
-| 全局背景 | `#F7F8FA` | `bg-background` |
-| 卡片背景 | `#FFFFFF` | `bg-card` |
-| 弱背景 | `#F2F3F5` | `bg-muted` |
-| 边框 / 分割线 | `#DEE1E8` | `border-border` |
-| 输入框边框 | `#C1C5CE` | `border-input` |
+| 全局背景 | `--fx-neutrals-02` | `bg-background` |
+| 卡片背景 | `--fx-neutrals-01` | `bg-card` |
+| 弱背景 | `--fx-neutrals-03` | `bg-muted` |
+| 弱边框 / 分割线 | `--fx-neutrals-04` | `border-border-subtle` |
+| 默认边框 | `--fx-neutrals-05` | `border-border` |
+| 强边框 / hover | `--fx-neutrals-08` | `border-border-strong` |
+| 输入框边框 | `--fx-neutrals-07` | `border-input` |
 
 ## 圆角 / 字体
 
@@ -176,7 +178,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | 07 | `l + (1-l)*0.14, c*0.80` | 边框（默认） |
 | 08 | `l + (1-l)*0.12, c*0.94` | 边框（hover），与 09 有明显视觉差距 |
 | 09 | seed 本身 | 最鲜艳，实心填充基准（按钮/Badge 默认） |
-| 10 | `l*0.87, c*0.95` | 暗 13%，hover / 按下态（同色靠动效区分） |
+| 10 | `l*0.92, c*0.95` | 暗 8%，hover / 按下态（与 09 缓和过渡，不跳） |
 | 11 | `l*0.72, c*0.82` | 暗 28%，**低对比彩色文字**（仍明显有色，如品牌色链接、Tag 文字） |
 | 12 | `l*0.35, c*0.65` | 暗 65%，**高对比深色文字**（接近深棕/黑，WCAG AA 可达） |
 

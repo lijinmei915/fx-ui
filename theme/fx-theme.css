@@ -57,7 +57,7 @@
   --fx-orange-07: oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
   --fx-orange-08: oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
   --fx-orange-09: var(--fx-seed-orange);
-  --fx-orange-10: oklch(from var(--fx-seed-orange) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-orange-10: oklch(from var(--fx-seed-orange) calc(l * 0.92) calc(c * 0.95) h);
   --fx-orange-11: oklch(from var(--fx-seed-orange) calc(l * 0.72) calc(c * 0.82) h);
   --fx-orange-12: oklch(from var(--fx-seed-orange) calc(l * 0.35) calc(c * 0.65) h);
 
@@ -71,7 +71,7 @@
   --fx-brand-07: oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
   --fx-brand-08: oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
   --fx-brand-09: var(--fx-brand-vivid);
-  --fx-brand-10: oklch(from var(--fx-brand-vivid) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-brand-10: oklch(from var(--fx-brand-vivid) calc(l * 0.92) calc(c * 0.95) h);
   --fx-brand-11: oklch(from var(--fx-brand-vivid) calc(l * 0.72) calc(c * 0.82) h);
   --fx-brand-12: oklch(from var(--fx-brand-vivid) calc(l * 0.35) calc(c * 0.65) h);
 
@@ -85,7 +85,7 @@
   --fx-orange-warning-07: oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
   --fx-orange-warning-08: oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
   --fx-orange-warning-09: var(--fx-seed-orange-warning);
-  --fx-orange-warning-10: oklch(from var(--fx-seed-orange-warning) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-orange-warning-10: oklch(from var(--fx-seed-orange-warning) calc(l * 0.92) calc(c * 0.95) h);
   --fx-orange-warning-11: oklch(from var(--fx-seed-orange-warning) calc(l * 0.72) calc(c * 0.82) h);
   --fx-orange-warning-12: oklch(from var(--fx-seed-orange-warning) calc(l * 0.35) calc(c * 0.65) h);
 
@@ -99,7 +99,7 @@
   --fx-amber-07: oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
   --fx-amber-08: oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
   --fx-amber-09: var(--fx-seed-amber);
-  --fx-amber-10: oklch(from var(--fx-seed-amber) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-amber-10: oklch(from var(--fx-seed-amber) calc(l * 0.92) calc(c * 0.95) h);
   --fx-amber-11: oklch(from var(--fx-seed-amber) calc(l * 0.72) calc(c * 0.82) h);
   --fx-amber-12: oklch(from var(--fx-seed-amber) calc(l * 0.35) calc(c * 0.65) h);
 
@@ -113,7 +113,7 @@
   --fx-yellow-07: oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
   --fx-yellow-08: oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
   --fx-yellow-09: var(--fx-seed-yellow);
-  --fx-yellow-10: oklch(from var(--fx-seed-yellow) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-yellow-10: oklch(from var(--fx-seed-yellow) calc(l * 0.92) calc(c * 0.95) h);
   --fx-yellow-11: oklch(from var(--fx-seed-yellow) calc(l * 0.72) calc(c * 0.82) h);
   --fx-yellow-12: oklch(from var(--fx-seed-yellow) calc(l * 0.35) calc(c * 0.65) h);
 
@@ -127,7 +127,7 @@
   --fx-lime-07: oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
   --fx-lime-08: oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
   --fx-lime-09: var(--fx-seed-lime);
-  --fx-lime-10: oklch(from var(--fx-seed-lime) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-lime-10: oklch(from var(--fx-seed-lime) calc(l * 0.92) calc(c * 0.95) h);
   --fx-lime-11: oklch(from var(--fx-seed-lime) calc(l * 0.72) calc(c * 0.82) h);
   --fx-lime-12: oklch(from var(--fx-seed-lime) calc(l * 0.35) calc(c * 0.65) h);
 
@@ -141,7 +141,7 @@
   --fx-yellow-green-07: oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
   --fx-yellow-green-08: oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
   --fx-yellow-green-09: var(--fx-seed-yellow-green);
-  --fx-yellow-green-10: oklch(from var(--fx-seed-yellow-green) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-yellow-green-10: oklch(from var(--fx-seed-yellow-green) calc(l * 0.92) calc(c * 0.95) h);
   --fx-yellow-green-11: oklch(from var(--fx-seed-yellow-green) calc(l * 0.72) calc(c * 0.82) h);
   --fx-yellow-green-12: oklch(from var(--fx-seed-yellow-green) calc(l * 0.35) calc(c * 0.65) h);
 
@@ -155,7 +155,7 @@
   --fx-green-07: oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
   --fx-green-08: oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
   --fx-green-09: var(--fx-seed-green);
-  --fx-green-10: oklch(from var(--fx-seed-green) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-green-10: oklch(from var(--fx-seed-green) calc(l * 0.92) calc(c * 0.95) h);
   --fx-green-11: oklch(from var(--fx-seed-green) calc(l * 0.72) calc(c * 0.82) h);
   --fx-green-12: oklch(from var(--fx-seed-green) calc(l * 0.35) calc(c * 0.65) h);
 
@@ -169,7 +169,7 @@
   --fx-teal-07: oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
   --fx-teal-08: oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
   --fx-teal-09: var(--fx-seed-teal);
-  --fx-teal-10: oklch(from var(--fx-seed-teal) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-teal-10: oklch(from var(--fx-seed-teal) calc(l * 0.92) calc(c * 0.95) h);
   --fx-teal-11: oklch(from var(--fx-seed-teal) calc(l * 0.72) calc(c * 0.82) h);
   --fx-teal-12: oklch(from var(--fx-seed-teal) calc(l * 0.35) calc(c * 0.65) h);
 
@@ -183,7 +183,7 @@
   --fx-cyan-07: oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
   --fx-cyan-08: oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
   --fx-cyan-09: var(--fx-seed-cyan);
-  --fx-cyan-10: oklch(from var(--fx-seed-cyan) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-cyan-10: oklch(from var(--fx-seed-cyan) calc(l * 0.92) calc(c * 0.95) h);
   --fx-cyan-11: oklch(from var(--fx-seed-cyan) calc(l * 0.72) calc(c * 0.82) h);
   --fx-cyan-12: oklch(from var(--fx-seed-cyan) calc(l * 0.35) calc(c * 0.65) h);
 
@@ -197,7 +197,7 @@
   --fx-blue-07: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
   --fx-blue-08: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
   --fx-blue-09: var(--fx-seed-blue);
-  --fx-blue-10: oklch(from var(--fx-seed-blue) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-blue-10: oklch(from var(--fx-seed-blue) calc(l * 0.92) calc(c * 0.95) h);
   --fx-blue-11: oklch(from var(--fx-seed-blue) calc(l * 0.72) calc(c * 0.82) h);
   --fx-blue-12: oklch(from var(--fx-seed-blue) calc(l * 0.35) calc(c * 0.65) h);
 
@@ -211,7 +211,7 @@
   --fx-purple-07: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
   --fx-purple-08: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
   --fx-purple-09: var(--fx-seed-purple);
-  --fx-purple-10: oklch(from var(--fx-seed-purple) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-purple-10: oklch(from var(--fx-seed-purple) calc(l * 0.92) calc(c * 0.95) h);
   --fx-purple-11: oklch(from var(--fx-seed-purple) calc(l * 0.72) calc(c * 0.82) h);
   --fx-purple-12: oklch(from var(--fx-seed-purple) calc(l * 0.35) calc(c * 0.65) h);
 
@@ -225,7 +225,7 @@
   --fx-pink-07: oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
   --fx-pink-08: oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
   --fx-pink-09: var(--fx-seed-pink);
-  --fx-pink-10: oklch(from var(--fx-seed-pink) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-pink-10: oklch(from var(--fx-seed-pink) calc(l * 0.92) calc(c * 0.95) h);
   --fx-pink-11: oklch(from var(--fx-seed-pink) calc(l * 0.72) calc(c * 0.82) h);
   --fx-pink-12: oklch(from var(--fx-seed-pink) calc(l * 0.35) calc(c * 0.65) h);
 
@@ -239,7 +239,7 @@
   --fx-red-07: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
   --fx-red-08: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
   --fx-red-09: var(--fx-seed-red);
-  --fx-red-10: oklch(from var(--fx-seed-red) calc(l * 0.87) calc(c * 0.95) h);
+  --fx-red-10: oklch(from var(--fx-seed-red) calc(l * 0.92) calc(c * 0.95) h);
   --fx-red-11: oklch(from var(--fx-seed-red) calc(l * 0.72) calc(c * 0.82) h);
   --fx-red-12: oklch(from var(--fx-seed-red) calc(l * 0.35) calc(c * 0.65) h);
 
@@ -366,8 +366,11 @@
   --link-hover: var(--fx-blue-08);
   --link-active: var(--fx-blue-10);
 
-  --border: #DEE1E8;
-  --input: #C1C5CE;
+  /* 边框三档（走中性轴）：弱 04 / 默认 05 / 强 08；input 07 为可交互元素边框 */
+  --border-subtle: var(--fx-neutrals-04);
+  --border: var(--fx-neutrals-05);
+  --border-strong: var(--fx-neutrals-08);
+  --input: var(--fx-neutrals-07);
   --ring: oklch(from var(--fx-brand-09) l c h / 0.4);
 
   /* ===== 扩展功能色（实心组：默认09 / hover08 / active10 / disabled05，全走色板）===== */
@@ -439,7 +442,9 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-border-subtle: var(--border-subtle);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-success: var(--success);

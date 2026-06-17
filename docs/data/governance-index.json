@@ -77,6 +77,15 @@
       "ownerRole": "knowledge-graph-governance",
       "consumedBy": ["src/App.tsx"],
       "checkCommand": "bash scripts/build-project-graph.sh"
+    },
+    {
+      "id": "doc-structure",
+      "path": "docs/data/doc-structure.manifest.json",
+      "format": "fx-ui/doc-structure",
+      "purpose": "登记每个治理文档的唯一职责（responsibility，路由不打架）和必备章节（防 AI 产出残缺）。",
+      "ownerRole": "docs-governance",
+      "consumedBy": ["scripts/check-doc-structure.mjs"],
+      "checkCommand": "node scripts/check-doc-structure.mjs"
     }
   ]
 }

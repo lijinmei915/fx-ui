@@ -1,9 +1,9 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-07
-teaches: "fx-ui 的三层生产体系：基础组件、公司组合组件、页面 Blocks/布局规范"
-use_when: "AI 要判断 fx-ui 未来如何统一公司组件、生成页面、沉淀布局规范时"
+last_verified: 2026-06-17
+teaches: "fx-ui 的三层生产体系：基础组件、公司组合组件、页面 Blocks（目录细节见 CODE_STRUCTURE，布局规范见 LAYOUTS）"
+use_when: "AI 要判断某个能力归哪一层、三层之间如何分工时"
 ---
 
 # fx-ui 架构方向
@@ -117,26 +117,9 @@ shadcn 组件进入 `src/components/ui/` 后，就视为 fx-ui 的本地源码�
 | `docs/components/` | 组件文档资产 | 给人和 AI 共同消费 |
 | `docs/LAYOUTS.md` | 布局规范 | 来自真实页面沉淀 |
 
-## 推荐目录边界
+## 目录边界
 
-```txt
-src/
-  components/
-    ui/              # shadcn 原子组件，CLI 拉取
-    fx/              # 公司组合组件，由 shadcn 组合而成
-  blocks/            # 公司页面模板
-  layouts/           # 页面壳、侧边栏布局、主内容布局
-theme/
-  fx-theme.css       # 公司 token 真相源
-registry/
-  fx-theme.json      # shadcn 官方 registry:theme 分发格式
-docs/
-  components/        # 组件文档资产，给人和 AI 共同消费
-  TOKENS.md          # token 查询表
-  ARCHITECTURE.md    # 三层体系与路线
-  LAYOUTS.md         # 未来沉淀公司布局规范
-  BLOCKS.md          # 未来记录内部 Blocks 使用方式
-```
+三层体系如何落到具体目录，见 `docs/CODE_STRUCTURE.md`（实际目录结构、新文件该放哪的真相源）。本文件只定义层的职责，不复述目录树。
 
 ## 落地路线
 

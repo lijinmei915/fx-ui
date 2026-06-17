@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/doc-structure",
+  "updatedAt": "2026-06-17",
+  "truthSource": "docs/data/doc-structure.manifest.json",
+  "humanDoc": "docs/DOCUMENTATION.md",
+  "note": "治理文档的章节契约 + 职责归属。每个文档声明唯一 responsibility（路由不打架）和必备章节（防 AI 产出残缺）。check-doc-structure.mjs 校验：①每个治理 doc 有且仅有一条 ②responsibility 不重复 ③requiredSections 必须作为 ## 标题出现。boilerplate（相关文件等）不强制。",
+  "docs": [
+    { "path": "AGENTS.md", "responsibility": "AI 行为红线与该做的事", "requiredSections": ["红线", "你该做的", "必读文件"] },
+    { "path": "PROJECT.md", "responsibility": "项目当前进度/优先级/边界", "requiredSections": ["当前进度", "当前优先级", "已知边界"] },
+    { "path": "PRODUCT.md", "responsibility": "产品定位/用户/解决的问题/调性", "requiredSections": ["产品定位", "使用者", "解决的问题", "边界"] },
+    { "path": "HANDOFF.md", "responsibility": "本轮做了什么/风险/下一步", "requiredSections": [] },
+    { "path": "docs/ARCHITECTURE.md", "responsibility": "三层生产体系与层职责", "requiredSections": ["三层体系", "模块职责", "关键原则"] },
+    { "path": "docs/CODE_STRUCTURE.md", "responsibility": "实际目录结构与新文件放哪", "requiredSections": ["当前结构", "结构规则"] },
+    { "path": "docs/DESIGN_STANDARDS.md", "responsibility": "UI 设计规则总览（指向 token/布局）", "requiredSections": ["基本规则", "参考文档"] },
+    { "path": "docs/TOKENS.md", "responsibility": "设计 token 的值与全局使用规则", "requiredSections": ["基础架构", "基础色板", "交互色状态阶梯"] },
+    { "path": "docs/LAYOUTS.md", "responsibility": "后台页面布局规范", "requiredSections": ["标准列表页结构", "标题区规则", "表格区规则"] },
+    { "path": "docs/ENVIRONMENT.md", "responsibility": "运行环境/依赖/环境变量/外部服务", "requiredSections": ["运行环境", "环境变量", "外部服务"] },
+    { "path": "docs/RUNBOOK.md", "responsibility": "常用命令与故障处理", "requiredSections": ["本地自检", "常见故障"] },
+    { "path": "docs/TECH_STACK.md", "responsibility": "技术栈与版本约束", "requiredSections": ["技术栈总览", "版本边界", "AI 使用约束"] },
+    { "path": "docs/DECISIONS.md", "responsibility": "技术/协作决策及原因", "requiredSections": ["如何记录一条决策", "决策列表"] },
+    { "path": "docs/CHANGELOG.md", "responsibility": "结构性变更记录", "requiredSections": [] },
+    { "path": "docs/LESSONS.md", "responsibility": "错误模式复盘与新增约束", "requiredSections": ["如何记录一条教训", "教训列表"] },
+    { "path": "docs/DOCUMENTATION.md", "responsibility": "文档分工 SSOT 与写哪里的路由", "requiredSections": ["SSOT 原则", "核心文件边界", "文档头部规范"] },
+    { "path": "docs/KNOWLEDGE_SCHEMA.md", "responsibility": "文档 frontmatter 字段与取值规范", "requiredSections": ["Frontmatter 字段", "新增文件接入规则"] },
+    { "path": "docs/NAMING.md", "responsibility": "文档命名与放置位置", "requiredSections": ["总原则", "docs/ 工程文档"] },
+    { "path": "docs/DOC_SITE_DESIGN.md", "responsibility": "文档站自身的页面结构与改样式流程", "requiredSections": ["样式来源", "页面骨架", "改样式流程"] },
+    { "path": "docs/REPORTS.md", "responsibility": "对外报告渲染层与数据契约", "requiredSections": ["这一层是什么", "数据契约约定"] },
+    { "path": "docs/TESTING.md", "responsibility": "验收分层与收尾检查", "requiredSections": ["验收分层", "收尾最小检查"] },
+    { "path": "docs/AGENT_UI.md", "responsibility": "Agent UI 生成式界面协议", "requiredSections": ["Surface 协议", "Block 白名单", "Action 规则", "安全红线"] },
+    { "path": "docs/AGENT_UI_VISUAL.md", "responsibility": "Agent UI 视觉规范", "requiredSections": ["视觉原则", "卡片类型视觉", "和 fx-ui 的关系"] }
+  ]
+}

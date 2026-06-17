@@ -1,9 +1,9 @@
 ---
 layer: knowledge
 type: guide
-last_verified: 2026-06-07
-teaches: "fx-ui 怎么跑起来、遇到常见报错怎么处理"
-use_when: "本地启动/构建出问题时，先来这里查有没有现成的症状/原因/处理"
+last_verified: 2026-06-17
+teaches: "fx-ui 的常用命令、提交前检查和常见故障处理（运行环境/依赖见 ENVIRONMENT）"
+use_when: "要查命令、跑检查、或本地启动/构建出问题时"
 ---
 
 # 运行手册
@@ -24,6 +24,7 @@ npm run check        # 契约 + token 漂移 + 构建
 npm run check:all    # 契约 + token 漂移 + 密钥扫描（不含构建，更快）
 npm run check:shadcn # 单独跑 shadcn contract 检查
 npm run check:tokens # 单独跑 token 漂移检查
+npm run build:tokens # 从 fx-theme.css 重建 design-tokens.json（改完 CSS 必跑）
 npm run preview      # 预览构建产物
 ```
 

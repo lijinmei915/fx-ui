@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-06-16
+last_verified: 2026-06-17
 teaches: "fx-ui 的文档分工边界、SSOT 规则——一条信息该写进哪个文件"
 use_when: "不确定一条新信息该记录到哪份文档时，先查这里的 SSOT 表和判断示例"
 ---
@@ -44,6 +44,7 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 | 文档站骨架 | `docs/DOC_SITE_DESIGN.md` | `docs/data/doc-site.manifest.json` | `scripts/check-doc-site-contract.mjs` |
 | 组件事实 | `docs/components/*.md` | `docs/data/components.manifest.json` | `scripts/check-components-manifest.mjs` |
 | token | `docs/TOKENS.md` | `docs/data/design-tokens.json` | `scripts/check-tokens-sync.sh` |
+| 文档章节/职责 | 本文（SSOT 表） | `docs/data/doc-structure.manifest.json` | `scripts/check-doc-structure.mjs` |
 
 | 问题 | SSOT |
 |------|------|
@@ -61,7 +62,6 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 | Agent UI 生成式界面协议 | `docs/AGENT_UI.md` |
 | Agent UI 视觉规范 | `docs/AGENT_UI_VISUAL.md` |
 | 对外报告/简报渲染层（`src/reports/`）说明和数据契约 | `docs/REPORTS.md` |
-| 设计语言导出包（`skills/`）说明和维护规则 | `docs/SKILLS.md` |
 | 技术栈版本和约束 | `docs/TECH_STACK.md` |
 | 文档/文件命名规范 | `docs/NAMING.md` |
 | 架构/技术/产品决策及原因 | `docs/DECISIONS.md`（⚠️ 不写进 AI memory，memory 只存跨项目 AI 行为偏好） |
@@ -142,7 +142,7 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 ---
 layer: knowledge | governance
 type: spec | status | log | architecture
-last_verified: 2026-06-16
+last_verified: 2026-06-17
 teaches: "这份文档回答什么问题"
 use_when: "什么场景下应该先查这份文档"
 ---

@@ -1,9 +1,9 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-08
-teaches: "fx-ui 本地怎么跑起来、需要什么依赖、有没有环境变量"
-use_when: "AI 需要帮用户启动项目、排查环境问题、或判断要不要配置密钥时"
+last_verified: 2026-06-17
+teaches: "fx-ui 的运行环境、依赖、环境变量和外部服务（启动命令见 RUNBOOK）"
+use_when: "AI 需要判断依赖/环境变量/外部服务，或要不要配置密钥时"
 ---
 
 # 环境说明
@@ -24,15 +24,14 @@ use_when: "AI 需要帮用户启动项目、排查环境问题、或判断要不
 
 具体版本要求见 `docs/TECH_STACK.md`。
 
-## 常用命令
+## 首次启动
 
 ```bash
 npm install
-npm run dev          # 启动本地开发服务器
-npm run build        # 构建
-npm run check        # shadcn contract 检查 + 构建
-npm run preview      # 预览构建产物
+npm run dev
 ```
+
+完整命令清单（build / check / check:all / build:tokens / preview 等）见 `docs/RUNBOOK.md` 的「本地自检」——本文件不复述命令。
 
 ## 环境变量
 
@@ -53,10 +52,6 @@ npm run preview      # 预览构建产物
 ## 外部服务
 
 当前不依赖数据库、云服务或第三方 API。fx-ui 是纯前端组件文档站，所有数据来自本地源码。
-
-## 常见问题
-
-环境相关的启动报错见 `docs/RUNBOOK.md`（例如 Tailwind utility class 不生效、`@theme inline` 取值问题）。
 
 ## 相关文件
 

@@ -1,11 +1,11 @@
 {
   "schemaVersion": "project-graph.v0.3",
-  "generatedAt": "2026-06-16T13:00:06Z",
+  "generatedAt": "2026-06-17T02:17:17Z",
   "projectPath": "/Users/heqiao/Desktop/Claude练习/项目9-fx-ui组件库",
   "staleDays": 90,
   "summary": {
-    "nodeCount": 117,
-    "edgeCount": 647,
+    "nodeCount": 119,
+    "edgeCount": 695,
     "staleCount": 0,
     "systemRelationCount": 19,
     "systemRelationGroupCount": 6
@@ -248,7 +248,7 @@
       "executable": false,
       "archLayer": "governance",
       "docType": "spec",
-      "lastVerified": "2026-06-07",
+      "lastVerified": "2026-06-16",
       "stale": false
     },
     {
@@ -548,7 +548,7 @@
       "executable": false,
       "archLayer": "governance",
       "docType": "spec",
-      "lastVerified": "2026-06-07",
+      "lastVerified": "2026-06-16",
       "stale": false
     },
     {
@@ -609,18 +609,6 @@
       "archLayer": "knowledge",
       "docType": "guide",
       "lastVerified": "2026-06-07",
-      "stale": false
-    },
-    {
-      "id": "docs/SKILLS.md",
-      "kind": "markdown",
-      "layer": "docs",
-      "template": false,
-      "ssot": false,
-      "executable": false,
-      "archLayer": "knowledge",
-      "docType": "spec",
-      "lastVerified": "2026-06-09",
       "stale": false
     },
     {
@@ -1164,6 +1152,18 @@
       "stale": false
     },
     {
+      "id": "docs/data/doc-structure.manifest.json",
+      "kind": "json",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
       "id": "docs/data/governance-index.json",
       "kind": "json",
       "layer": "docs",
@@ -1260,6 +1260,18 @@
       "stale": false
     },
     {
+      "id": "scripts/bump-doc-dates.sh",
+      "kind": "shell",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": true,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
       "id": "scripts/check-agent-ui-contract.mjs",
       "kind": "javascript",
       "layer": "scripts",
@@ -1309,6 +1321,18 @@
     },
     {
       "id": "scripts/check-doc-site-contract.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/check-doc-structure.mjs",
       "kind": "javascript",
       "layer": "scripts",
       "template": false,
@@ -1471,6 +1495,11 @@
       "source": ".ai/rules/architecture.md",
       "target": "docs/ARCHITECTURE.md",
       "type": "maps_to"
+    },
+    {
+      "source": ".ai/rules/architecture.md",
+      "target": "docs/CODE_STRUCTURE.md",
+      "type": "references"
     },
     {
       "source": ".ai/rules/architecture.md",
@@ -1739,11 +1768,6 @@
     },
     {
       "source": ".ai/rules/documentation.md",
-      "target": "docs/SKILLS.md",
-      "type": "references"
-    },
-    {
-      "source": ".ai/rules/documentation.md",
       "target": "docs/TECH_STACK.md",
       "type": "references"
     },
@@ -1774,12 +1798,22 @@
     },
     {
       "source": ".ai/rules/documentation.md",
+      "target": "docs/data/doc-structure.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/documentation.md",
       "target": "scripts/check-components-manifest.mjs",
       "type": "references"
     },
     {
       "source": ".ai/rules/documentation.md",
       "target": "scripts/check-doc-site-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/documentation.md",
+      "target": "scripts/check-doc-structure.mjs",
       "type": "references"
     },
     {
@@ -1824,6 +1858,11 @@
     },
     {
       "source": ".ai/rules/knowledge_schema.md",
+      "target": "PRODUCT.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/knowledge_schema.md",
       "target": "PROJECT.md",
       "type": "references"
     },
@@ -1855,6 +1894,16 @@
     {
       "source": ".ai/rules/knowledge_schema.md",
       "target": "scripts/build-project-graph.sh",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/knowledge_schema.md",
+      "target": "scripts/bump-doc-dates.sh",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/knowledge_schema.md",
+      "target": "scripts/check-doc-freshness.sh",
       "type": "references"
     },
     {
@@ -1934,17 +1983,27 @@
     },
     {
       "source": ".ai/rules/project-status.md",
+      "target": "HANDOFF.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/project-status.md",
+      "target": "PRODUCT.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/project-status.md",
       "target": "PROJECT.md",
       "type": "maps_to"
     },
     {
       "source": ".ai/rules/project-status.md",
-      "target": "docs/ARCHITECTURE.md",
+      "target": "docs/AGENT_UI.md",
       "type": "references"
     },
     {
       "source": ".ai/rules/project-status.md",
-      "target": "docs/DOC_SITE_DESIGN.md",
+      "target": "docs/ARCHITECTURE.md",
       "type": "references"
     },
     {
@@ -1959,22 +2018,7 @@
     },
     {
       "source": ".ai/rules/project-status.md",
-      "target": "docs/SKILLS.md",
-      "type": "references"
-    },
-    {
-      "source": ".ai/rules/project-status.md",
-      "target": "docs/TOKENS.md",
-      "type": "references"
-    },
-    {
-      "source": ".ai/rules/project-status.md",
-      "target": "docs/data/design-tokens.json",
-      "type": "references"
-    },
-    {
-      "source": ".ai/rules/project-status.md",
-      "target": "docs/data/doc-site.manifest.json",
+      "target": "docs/TECH_STACK.md",
       "type": "references"
     },
     {
@@ -2294,12 +2338,22 @@
     },
     {
       "source": "PROJECT.md",
-      "target": "docs/ARCHITECTURE.md",
+      "target": "HANDOFF.md",
       "type": "references"
     },
     {
       "source": "PROJECT.md",
-      "target": "docs/DOC_SITE_DESIGN.md",
+      "target": "PRODUCT.md",
+      "type": "references"
+    },
+    {
+      "source": "PROJECT.md",
+      "target": "docs/AGENT_UI.md",
+      "type": "references"
+    },
+    {
+      "source": "PROJECT.md",
+      "target": "docs/ARCHITECTURE.md",
       "type": "references"
     },
     {
@@ -2314,22 +2368,7 @@
     },
     {
       "source": "PROJECT.md",
-      "target": "docs/SKILLS.md",
-      "type": "references"
-    },
-    {
-      "source": "PROJECT.md",
-      "target": "docs/TOKENS.md",
-      "type": "references"
-    },
-    {
-      "source": "PROJECT.md",
-      "target": "docs/data/design-tokens.json",
-      "type": "references"
-    },
-    {
-      "source": "PROJECT.md",
-      "target": "docs/data/doc-site.manifest.json",
+      "target": "docs/TECH_STACK.md",
       "type": "references"
     },
     {
@@ -2360,6 +2399,11 @@
     {
       "source": "docs/ARCHITECTURE.md",
       "target": "docs/AGENT_UI.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/ARCHITECTURE.md",
+      "target": "docs/CODE_STRUCTURE.md",
       "type": "references"
     },
     {
@@ -2669,11 +2713,6 @@
     },
     {
       "source": "docs/DOCUMENTATION.md",
-      "target": "docs/SKILLS.md",
-      "type": "references"
-    },
-    {
-      "source": "docs/DOCUMENTATION.md",
       "target": "docs/TECH_STACK.md",
       "type": "references"
     },
@@ -2704,12 +2743,22 @@
     },
     {
       "source": "docs/DOCUMENTATION.md",
+      "target": "docs/data/doc-structure.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/DOCUMENTATION.md",
       "target": "scripts/check-components-manifest.mjs",
       "type": "references"
     },
     {
       "source": "docs/DOCUMENTATION.md",
       "target": "scripts/check-doc-site-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DOCUMENTATION.md",
+      "target": "scripts/check-doc-structure.mjs",
       "type": "references"
     },
     {
@@ -2829,6 +2878,11 @@
     },
     {
       "source": "docs/KNOWLEDGE_SCHEMA.md",
+      "target": "PRODUCT.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/KNOWLEDGE_SCHEMA.md",
       "target": "PROJECT.md",
       "type": "references"
     },
@@ -2855,6 +2909,16 @@
     {
       "source": "docs/KNOWLEDGE_SCHEMA.md",
       "target": "scripts/build-project-graph.sh",
+      "type": "references"
+    },
+    {
+      "source": "docs/KNOWLEDGE_SCHEMA.md",
+      "target": "scripts/bump-doc-dates.sh",
+      "type": "references"
+    },
+    {
+      "source": "docs/KNOWLEDGE_SCHEMA.md",
+      "target": "scripts/check-doc-freshness.sh",
       "type": "references"
     },
     {
@@ -2990,16 +3054,6 @@
     {
       "source": "docs/RUNBOOK.md",
       "target": "scripts/install-git-hooks.sh",
-      "type": "references"
-    },
-    {
-      "source": "docs/SKILLS.md",
-      "target": "docs/TOKENS.md",
-      "type": "references"
-    },
-    {
-      "source": "docs/SKILLS.md",
-      "target": "scripts/check-tokens-sync.sh",
       "type": "references"
     },
     {
@@ -3548,6 +3602,121 @@
       "type": "references"
     },
     {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "AGENTS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "HANDOFF.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "PRODUCT.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "PROJECT.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/AGENT_UI.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/AGENT_UI_VISUAL.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/ARCHITECTURE.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/CHANGELOG.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/CODE_STRUCTURE.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/DECISIONS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/DESIGN_STANDARDS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/DOCUMENTATION.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/DOC_SITE_DESIGN.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/ENVIRONMENT.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/KNOWLEDGE_SCHEMA.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/LAYOUTS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/LESSONS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/NAMING.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/REPORTS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/RUNBOOK.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/TECH_STACK.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/TESTING.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
       "source": "docs/data/governance-index.json",
       "target": "docs/DOC_SITE_DESIGN.md",
       "type": "references"
@@ -3575,6 +3744,11 @@
     {
       "source": "docs/data/governance-index.json",
       "target": "docs/data/doc-site.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
+      "target": "docs/data/doc-structure.manifest.json",
       "type": "references"
     },
     {
@@ -3610,6 +3784,11 @@
     {
       "source": "docs/data/governance-index.json",
       "target": "scripts/check-doc-site-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
+      "target": "scripts/check-doc-structure.mjs",
       "type": "references"
     },
     {
@@ -3889,6 +4068,16 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "docs/AGENT_UI.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/AGENT_UI_VISUAL.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "docs/ARCHITECTURE.md",
       "type": "references"
     },
@@ -3955,11 +4144,6 @@
     {
       "source": "docs/data/project-graph.json",
       "target": "docs/RUNBOOK.md",
-      "type": "references"
-    },
-    {
-      "source": "docs/data/project-graph.json",
-      "target": "docs/SKILLS.md",
       "type": "references"
     },
     {
@@ -4050,6 +4234,11 @@
     {
       "source": "docs/data/project-graph.json",
       "target": "docs/components/field.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/fx-agent-surface.md",
       "type": "references"
     },
     {
@@ -4159,6 +4348,16 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "docs/data/agent-ui-visual.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/data/agent-ui.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "docs/data/components.manifest.json",
       "type": "references"
     },
@@ -4209,7 +4408,17 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "scripts/build-design-tokens.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "scripts/build-project-graph.sh",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-agent-ui-contract.mjs",
       "type": "references"
     },
     {
@@ -4220,6 +4429,11 @@
     {
       "source": "docs/data/project-graph.json",
       "target": "scripts/check-components-manifest.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-doc-freshness.sh",
       "type": "references"
     },
     {
@@ -4235,6 +4449,11 @@
     {
       "source": "docs/data/project-graph.json",
       "target": "scripts/check-docs-routing.sh",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-frontmatter.sh",
       "type": "references"
     },
     {
@@ -4443,6 +4662,21 @@
       "type": "references"
     },
     {
+      "source": "scripts/bump-doc-dates.sh",
+      "target": "AGENTS.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/bump-doc-dates.sh",
+      "target": "PRODUCT.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/bump-doc-dates.sh",
+      "target": "PROJECT.md",
+      "type": "references"
+    },
+    {
       "source": "scripts/check-agent-ui-contract.mjs",
       "target": "docs/data/agent-ui-visual.manifest.json",
       "type": "references"
@@ -4475,6 +4709,11 @@
     {
       "source": "scripts/check-all.sh",
       "target": "scripts/check-doc-site-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/check-doc-structure.mjs",
       "type": "references"
     },
     {
@@ -4575,6 +4814,31 @@
     {
       "source": "scripts/check-doc-site-contract.mjs",
       "target": "package.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-doc-structure.mjs",
+      "target": "AGENTS.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-doc-structure.mjs",
+      "target": "HANDOFF.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-doc-structure.mjs",
+      "target": "PRODUCT.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-doc-structure.mjs",
+      "target": "PROJECT.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-doc-structure.mjs",
+      "target": "docs/data/doc-structure.manifest.json",
       "type": "references"
     },
     {

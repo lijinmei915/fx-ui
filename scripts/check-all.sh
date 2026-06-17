@@ -28,6 +28,7 @@ run_check "文档站骨架契约检查"    node scripts/check-doc-site-contract.
 run_check "组件 manifest 检查"    node scripts/check-components-manifest.mjs
 run_check "Agent UI 协议检查"     node scripts/check-agent-ui-contract.mjs
 run_check "文档路由登记检查"      bash scripts/check-docs-routing.sh
+run_check "文档章节/职责契约检查"  node scripts/check-doc-structure.mjs
 run_check "文档 frontmatter 检查"  bash scripts/check-frontmatter.sh .
 run_check "密钥扫描"              bash scripts/check-secrets.sh .
 

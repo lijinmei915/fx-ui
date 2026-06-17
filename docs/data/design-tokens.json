@@ -1755,7 +1755,7 @@
     },
     {
       "name": "--font-sans",
-      "value": "'PingFang SC', 'Microsoft YaHei', sans-serif",
+      "value": "\"Helvetica Neue\", Helvetica, \"Source Han Sans CN\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft Yahei\", \"微软雅黑\", Arial, sans-serif",
       "category": "font-source",
       "usage": "默认字体族"
     },

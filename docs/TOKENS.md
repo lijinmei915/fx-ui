@@ -111,24 +111,24 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `radius-md` | `calc(var(--radius) * 0.8)` | 默认控件 |
 | `radius-lg` | `var(--radius)` | 卡片、弹窗、区域容器 |
 
-## 排版（字族 / 字号 / 字重）
+## 排版（字号 / 字重 / 字体 · 企业 web 规范）
 
-字族用 `--font-sans`（Geist + 系统 sans）；字号、字重直接用 Tailwind 默认刻度，不另造 token。
+来源：企业 Figma **web 字体规范**（fx-ui 是 web 库，以 web 规范为准；移动端字号另有一套，见 DEC-004）。业务页面/组件用 `text-fx-*` 字号；文档站自身展示标题另走 Tailwind `text-*` 大号，不在此列。
 
-**字号阶**（按场景挑，不新增字号）：
+**字号 + 行高**（默认正文 = 13）：
 
-| 类名 | 值 | 场景 |
-|------|-----|------|
-| `text-xs` | 12px | 徽标、表格次要信息、辅助标签 |
-| `text-sm` | 14px | 表格、菜单、表单、说明（UI 默认） |
-| `text-base` | 16px | 正文、主要说明 |
-| `text-lg` | 18px | 卡片标题、强调正文 |
-| `text-xl` | 20px | 小节标题 |
-| `text-2xl` | 24px | 章节标题 |
-| `text-3xl` | 30px | 次级页面标题 |
-| `text-4xl` | 36px | 页面主标题 |
+| 工具类 | 字号/行高 | 字重 | 层级/场景 |
+|------|-----|------|------|
+| `text-fx-18` | 18 / 28 | bold | 详情页标题 |
+| `text-fx-15` | 15 / 22 | regular·bold | 模块/卡片/组件标题 |
+| `text-fx-13` | 13 / 18 | regular·bold | **默认正文** — 菜单、列表、表单、大面积文案 |
+| `text-fx-12` | 12 / 18 | regular | 提示信息、说明文字 |
 
-**字重**：`font-normal`(400) 正文 / `font-medium`(500) 标签·按钮·菜单 / `font-semibold`(600) 标题·强调。
+**字重**：`font-normal`(400) 常规·正文 / `font-medium`(500) 中等·标签·按钮·菜单 / `font-bold`(**700**) 加粗·标题·强调。
+
+**字族**：`--font-sans` = `"Helvetica Neue", Helvetica, "Source Han Sans CN", "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei", "微软雅黑", Arial, sans-serif`（西文 Helvetica 优先，中文思源黑体 CN，全系统字体、零下载）。
+
+> 完整企业字号阶（11/14/16/20/22/28 + 中英双套语义变量名 Large Title/Title1/Body1…）见 Figma 字体规范；fx-ui web 当前只落地上面四档，按需再补。
 
 ## 间距
 

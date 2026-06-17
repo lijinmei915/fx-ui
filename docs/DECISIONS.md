@@ -69,7 +69,8 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **放弃**：不在 `src/components/fx/` 下建 `*-mobile.tsx` 变体；不引入只服务移动端的独立视觉系统（下沉式 tabbar、底部抽屉等）
 - **原因**：双倍维护是反目标；统一设计语言才是 fx-ui 体系的核心价值，组件靠 Tailwind 响应式 + 内容驱动自适应不同宽度
 - **影响**：组合组件设计需兼顾 PC 详情页和移动列表页两种宽度场景
-- **相关文件**：`src/components/fx/`、`docs/DESIGN_STANDARDS.md`
+- **补充（2026-06-17）**：组件结构/token 体系仍是一套；但**字号是例外**——企业 Figma 的 web 与移动端字号刻度不同（web 12/13/15/18 默认 13；移动端 13~28）。fx-ui 当前做 web，字号以 **web 规范**为准；移动端字号刻度以后单独落地，不强行用一套字号通吃。
+- **相关文件**：`src/components/fx/`、`docs/DESIGN_STANDARDS.md`、`docs/TOKENS.md`（排版）
 
 ### DEC-005: 所有交互态颜色统一从 12 阶色板取阶，禁用 color-mix 和透明度
 

@@ -2437,23 +2437,28 @@ const seedColors = [
 ]
 
 
-const typographyTokens = [
-  // 字族
-  { name: "font-sans", value: "Geist / system sans-serif", cls: "", usage: "页面正文、表单、组件默认字体", usageEn: "Body text, forms, and default component typography" },
-  // 字号阶（对齐 Tailwind 默认刻度）
-  { name: "text-xs", value: "0.75rem · 12px", cls: "text-xs", usage: "徽标、表格次要信息、辅助标签", usageEn: "Badges, secondary table info, helper labels" },
-  { name: "text-sm", value: "0.875rem · 14px", cls: "text-sm", usage: "表格、菜单、表单、说明（UI 默认字号）", usageEn: "Tables, menus, forms, captions (default UI size)" },
-  { name: "text-base", value: "1rem · 16px", cls: "text-base", usage: "正文、主要说明", usageEn: "Body copy and primary descriptions" },
-  { name: "text-lg", value: "1.125rem · 18px", cls: "text-lg", usage: "卡片标题、强调正文", usageEn: "Card titles, emphasized body" },
-  { name: "text-xl", value: "1.25rem · 20px", cls: "text-xl", usage: "小节标题", usageEn: "Sub-section headings" },
-  { name: "text-2xl", value: "1.5rem · 24px", cls: "text-2xl", usage: "章节标题", usageEn: "Section headings" },
-  { name: "text-3xl", value: "1.875rem · 30px", cls: "text-3xl", usage: "次级页面标题", usageEn: "Secondary page titles" },
-  { name: "text-4xl", value: "2.25rem · 36px", cls: "text-4xl", usage: "页面主标题", usageEn: "Page titles" },
-  // 字重
-  { name: "font-normal", value: "400", cls: "font-normal", usage: "正文默认字重", usageEn: "Default body weight" },
-  { name: "font-medium", value: "500", cls: "font-medium", usage: "表单标签、按钮、菜单项、轻强调", usageEn: "Form labels, buttons, menu items, light emphasis" },
-  { name: "font-semibold", value: "600", cls: "font-semibold", usage: "标题、卡片标题、强调", usageEn: "Headings, card titles, emphasis" },
+// 企业 web 字号（Figma web 字体规范）：字号 + 行高，默认正文 13
+const typeSizeTokens = [
+  { name: "text-fx-18", value: "18px / 28", cls: "text-fx-18", usage: "详情页标题（配 bold）", usageEn: "Detail page title (with bold)" },
+  { name: "text-fx-15", value: "15px / 22", cls: "text-fx-15", usage: "模块/卡片/组件标题（regular 或 bold 区分）", usageEn: "Module / card / component title" },
+  { name: "text-fx-13", value: "13px / 18", cls: "text-fx-13", usage: "默认正文 — 菜单、列表、表单、大面积文案", usageEn: "Default body — menus, lists, forms" },
+  { name: "text-fx-12", value: "12px / 18", cls: "text-fx-12", usage: "提示信息、说明文字", usageEn: "Hints, helper text" },
 ]
+
+// 字重（企业规范：Regular 400 / Medium 500 / Bold 700）
+const typeWeightTokens = [
+  { name: "font-normal", value: "400", cls: "font-normal", usage: "Regular 常规 — 正文默认", usageEn: "Regular — default body" },
+  { name: "font-medium", value: "500", cls: "font-medium", usage: "Medium 中等 — 标签、按钮、菜单、轻强调", usageEn: "Medium — labels, buttons, menus" },
+  { name: "font-bold", value: "700", cls: "font-bold", usage: "Bold 加粗 — 标题、强调", usageEn: "Bold — headings, emphasis" },
+]
+
+// 字族（企业真实栈）
+const typeFamilyTokens = [
+  { name: "--font-sans", value: "Helvetica Neue → Source Han Sans CN → PingFang SC …", cls: "", usage: "企业字族：西文 Helvetica 优先，中文思源黑体 CN，全系统字体不下载", usageEn: "Enterprise stack: Helvetica first, Source Han Sans CN for CJK" },
+]
+
+// 兼容：旧引用仍可用（组件总览/其它页面）
+const typographyTokens = [...typeFamilyTokens, ...typeSizeTokens, ...typeWeightTokens]
 
 const radiusTokens = [
   { name: "--radius", value: "0.625rem", usage: "基础圆角真相源", usageEn: "Base radius source of truth" },
@@ -5515,36 +5520,58 @@ function TokensTypographyPage({ actions, lang }: { actions: React.ReactNode; lan
         </div>
         <p className="text-base leading-8 text-muted-foreground">
           {lang === "en"
-            ? "Typography tokens define the basic reading scale for pages, components, and documentation."
-            : "排版 token 定义页面、组件和文档的基础阅读层级。"}
+            ? "Typography is split into three parts: size (with heading levels), weight, and family."
+            : "排版分三部分：字号（含标题层级）、字重、字体。"}
         </p>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[680px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-4">Token</TableHead>
-                <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
-                <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
-                <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {typographyTokens.map((row) => (
-                <TableRow key={row.name}>
-                  <TableCell className="pl-4 font-medium">
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
-                  </TableCell>
-                  <TableCell>
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.value}</code>
-                  </TableCell>
-                  <TableCell>
-                    <span className={`leading-none text-foreground ${row.cls}`}>示例文字 Aa</span>
-                  </TableCell>
-                  <TableCell className="pr-4 text-muted-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+
+        {([
+          { title: lang === "en" ? "Size 字号" : "字号", desc: lang === "en" ? "Text size by hierarchy (H1–H6 / body / small)." : "决定不同层级文本的大小（H1–H6 / 正文 / 小字）。", rows: typeSizeTokens },
+          { title: lang === "en" ? "Weight 字重" : "字重", desc: lang === "en" ? "Text thickness." : "决定不同层级文本的粗细。", rows: typeWeightTokens },
+          { title: lang === "en" ? "Family 字体" : "字体", desc: lang === "en" ? "Global font family." : "全局字族。", rows: typeFamilyTokens },
+        ] as const).map((group) => (
+          <div key={group.title} className="flex flex-col gap-3">
+            <div>
+              <h2 className="text-2xl font-semibold">{group.title}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">{group.desc}</p>
+            </div>
+            <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+              <Table className="min-w-[680px]">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="pl-4">Token</TableHead>
+                    <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
+                    <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
+                    <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {group.rows.map((row) => (
+                    <TableRow key={row.name}>
+                      <TableCell className="pl-4 font-medium">
+                        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
+                      </TableCell>
+                      <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.value}</code></TableCell>
+                      <TableCell><span className={`leading-none text-foreground ${row.cls}`}>示例文字 Aa</span></TableCell>
+                      <TableCell className="pr-4 text-muted-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        ))}
+
+        <div className="rounded-lg border border-border bg-muted/40 p-5 text-sm leading-7 text-muted-foreground">
+          <p className="font-medium text-foreground">{lang === "en" ? "Font family" : "字族说明"}</p>
+          <p className="mt-1">
+            {lang === "en"
+              ? "Enterprise stack — Latin (Helvetica) first, CJK falls back to Source Han Sans CN / system fonts. All assumed available; no webfont download. Defined once at "
+              : "企业字族栈——西文 Helvetica 优先，中文回退到思源黑体 CN / 系统字体；全部按系统已装处理、不下载 webfont。一处定义在 "}
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs">--font-sans</code>
+            {lang === "en" ? " (theme/fx-theme.css)." : "（theme/fx-theme.css）。"}
+          </p>
+          <pre className="mt-3 overflow-x-auto rounded-md bg-card p-3 text-xs leading-6"><code>{`--font-sans: "Helvetica Neue", Helvetica, "Source Han Sans CN",
+  "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei", "微软雅黑", Arial, sans-serif;`}</code></pre>
         </div>
       </section>
     </>

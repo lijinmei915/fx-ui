@@ -283,7 +283,12 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 **3. 面状/反白图标**：彩色圆底（`bg-{色}-09`）+ 白色图标（`text-primary-foreground`）。
 
-**图标尺寸阶**：`size-3`(12) 内联/徽标 · `size-3.5`(14) 小按钮 · `size-4`(16) 默认 · `size-5`(20) 强调/列表 · `size-6`(24) 页面级/空状态。描边 lucide 默认 strokeWidth 2，密集 UI 可用 1.5。
+**图标尺寸阶**：`size-3`(12) 内联/徽标 · `size-3.5`(14) 小按钮 · `size-4`(16) 默认 · `size-5`(20) 强调/列表 · `size-6`(24) 页面级/空状态。
+
+**粗细 / 形态（weight）**：Phosphor 的粗细靠 `weight` 选档（thin/light/regular/bold/fill/duotone），不是数字 strokeWidth。
+- **全站默认 `weight="regular"`**（线性），在 `src/main.tsx` 的 `IconContext.Provider` 一处设定，不逐个图标改粗细。
+- **线性 vs 面型是语义切换**（对齐 iOS/Material 惯例）：默认/未选态用线性（regular），**选中/激活/强调态用 `weight="fill"`（面型）**。
+- 要整体更细，改 IconContext 的默认 weight（如 `light`），属全局决策，不在单个图标上乱调。
 
 > 兼容别名：`--fx-icon-dark`=neutrals-20、`--fx-icon-gray`=neutrals-11、`--fx-icon-light`=neutrals-01，供 shadcn 组件的 `text-icon` / `text-icon-muted` 使用。
 

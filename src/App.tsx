@@ -5969,9 +5969,24 @@ export function SearchAction() {
           </div>
         </div>
 
-        {/* 3. 面状/反白图标 */}
+        {/* 3. 面型图标（weight=fill） */}
         <div className="rounded-lg border border-border bg-card p-5">
-          <p className="mb-3 text-sm font-medium">{lang === "en" ? "3. Filled / reverse — colored circle + white icon" : "3. 面状/反白图标 — 彩色圆底 + 白色图标"}</p>
+          <p className="mb-1 text-sm font-medium">{lang === "en" ? "3. Solid (面型) — weight=\"fill\"" : "3. 面型图标 — weight=\"fill\"（实心填充）"}</p>
+          <p className="mb-3 text-xs text-muted-foreground">{lang === "en" ? "Same icon, line vs solid. Use solid for selected/active or emphasis." : "同一图标，线性 vs 面型；选中态、激活态或强调时用面型。"}</p>
+          <div className="flex flex-wrap items-center gap-6">
+            {[HomeIcon, CheckCircleIcon, BellIcon, StarIcon, UserIcon, DatabaseIcon].map((Icon, i) => (
+              <span key={i} className="flex items-center gap-2 text-foreground">
+                <Icon className="size-6" weight="regular" />
+                <span className="text-muted-foreground/40">→</span>
+                <Icon className="size-6 text-primary" weight="fill" />
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* 3b. 面状/反白图标：彩色圆底 + 白色面型图标 */}
+        <div className="rounded-lg border border-border bg-card p-5">
+          <p className="mb-3 text-sm font-medium">{lang === "en" ? "3b. Filled-reverse — colored circle + white solid icon" : "3b. 面状/反白 — 彩色圆底 + 白色面型图标"}</p>
           <div className="flex flex-wrap items-center gap-4">
             {[
               { bg: "var(--fx-brand-09)", Icon: HomeIcon },
@@ -5982,7 +5997,7 @@ export function SearchAction() {
               { bg: "var(--fx-purple-09)", Icon: UserIcon },
             ].map(({ bg, Icon }, i) => (
               <span key={i} className="flex size-10 items-center justify-center rounded-full" style={{ backgroundColor: bg }}>
-                <Icon className="size-5" style={{ color: "var(--fx-neutrals-01)" }} />
+                <Icon className="size-5" weight="fill" style={{ color: "var(--fx-neutrals-01)" }} />
               </span>
             ))}
           </div>

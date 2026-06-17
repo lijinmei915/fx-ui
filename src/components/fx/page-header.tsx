@@ -12,11 +12,11 @@ function PageHeader({ title, description, eyebrow, actions }: PageHeaderProps) {
     <header className="flex flex-col gap-3 border-b border-border pb-4 md:flex-row md:items-end md:justify-between">
       <div className="min-w-0 space-y-1">
         {eyebrow ? (
-          <p className="text-xs font-medium text-muted-foreground">{eyebrow}</p>
+          <p className="text-fx-12 font-medium text-muted-foreground">{eyebrow}</p>
         ) : null}
         <h1 className="text-xl font-semibold leading-tight text-foreground">{title}</h1>
         {description ? (
-          <p className="max-w-3xl text-sm leading-6 text-muted-foreground">{description}</p>
+          <p className="max-w-3xl text-fx-13 leading-6 text-muted-foreground">{description}</p>
         ) : null}
       </div>
       {actions ? <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div> : null}

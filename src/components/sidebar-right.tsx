@@ -59,15 +59,15 @@ export function SidebarRight({
           <SidebarGroupContent>
             <Card>
               <CardHeader className="flex-row items-center justify-between space-y-0">
-                <CardTitle className="text-sm text-primary">React</CardTitle>
+                <CardTitle className="text-fx-13 text-primary">React</CardTitle>
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <span className="text-xs">TSX</span>
+                  <span className="text-fx-12">TSX</span>
                   <CircleIcon className="size-3" />
                   <CopyIcon className="size-3.5" />
                 </div>
               </CardHeader>
               <CardContent>
-                <pre className="overflow-x-auto rounded-md bg-muted/50 p-3 text-xs leading-6 text-muted-foreground">
+                <pre className="overflow-x-auto rounded-md bg-muted/50 p-3 text-fx-12 leading-6 text-muted-foreground">
                   <code>{codeSample}</code>
                 </pre>
               </CardContent>
@@ -79,10 +79,10 @@ export function SidebarRight({
           <SidebarGroupContent>
             <Card>
               <CardHeader>
-                <CardTitle className="text-sm">CLI</CardTitle>
+                <CardTitle className="text-fx-13">CLI</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="rounded-lg border border-border bg-muted/50 p-3 text-xs leading-6 text-muted-foreground">
+                <div className="rounded-lg border border-border bg-muted/50 p-3 text-fx-12 leading-6 text-muted-foreground">
                   <div>npm install fx-ui</div>
                   <div>pnpm add fx-ui</div>
                   <Separator className="my-2" />

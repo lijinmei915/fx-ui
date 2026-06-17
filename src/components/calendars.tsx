@@ -36,7 +36,7 @@ export function Calendars({
               className="group/collapsible"
             >
               <SidebarGroupLabel
-                className="group/label w-full text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                className="group/label w-full text-fx-13 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 render={<CollapsibleTrigger />}
               >
                 {calendar.name}{" "}

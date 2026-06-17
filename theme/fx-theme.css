@@ -336,6 +336,9 @@
   --popover: #FFFFFF;
   --popover-foreground: var(--fx-neutrals-20);
 
+  /* 遮罩/蒙层：从最深中性灰派生，透明度烤进 token 本身（半透明），组件直接 bg-overlay */
+  --overlay: oklch(from var(--fx-neutrals-20) l c h / 0.2);
+
   --primary: var(--fx-brand-09);     /* ★ 品牌色 → 主按钮/强调（唯一真相：色板 09 阶） */
   --primary-foreground: #FFFFFF;
 
@@ -435,6 +438,7 @@
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+  --color-overlay: var(--overlay);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);

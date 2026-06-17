@@ -1502,6 +1502,12 @@
       "usage": "浮层文字"
     },
     {
+      "name": "--overlay",
+      "value": "oklch(from var(--fx-neutrals-20) l c h / 0.2)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
       "name": "--primary",
       "value": "var(--fx-brand-09)",
       "category": "action-state",

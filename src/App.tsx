@@ -1028,13 +1028,22 @@ const tokenRadiusAnchors = [
   { label: "圆角档位", labelEn: "Radius scale", href: "#tokens-radius-scale" },
   { label: "计算方式", labelEn: "How computed", href: "#tokens-radius-compute" },
 ]
-const tokenSpacingAnchors = [{ label: "间距", labelEn: "Spacing", href: "#tokens-spacing" }]
+const tokenSpacingAnchors = [
+  { label: "间距档位", labelEn: "Spacing scale", href: "#tokens-spacing-scale" },
+  { label: "计算方式", labelEn: "How computed", href: "#tokens-spacing-compute" },
+]
 const tokenShadowAnchors = [
   { label: "阴影档位", labelEn: "Elevation levels", href: "#tokens-shadow-scale" },
   { label: "计算方式", labelEn: "How computed", href: "#tokens-shadow-compute" },
 ]
-const tokenMotionAnchors = [{ label: "动效", labelEn: "Motion", href: "#tokens-motion" }]
-const tokenLayerAnchors = [{ label: "层级", labelEn: "Layer", href: "#tokens-layer" }]
+const tokenMotionAnchors = [
+  { label: "时长档位", labelEn: "Duration scale", href: "#tokens-motion-duration" },
+  { label: "原语与规则", labelEn: "Primitives & rules", href: "#tokens-motion-primitives" },
+]
+const tokenLayerAnchors = [
+  { label: "层级档位", labelEn: "Layer levels", href: "#tokens-layer-scale" },
+  { label: "分层逻辑", labelEn: "Layering logic", href: "#tokens-layer-logic" },
+]
 const layoutAnchors = [
   { label: "栅格系统", labelEn: "Grid", href: "#layout-grid" },
   { label: "响应式断点", labelEn: "Breakpoints", href: "#layout-breakpoints" },
@@ -2390,6 +2399,7 @@ const semanticTokenGroups = [
       { name: "muted",    value: "", sourceToken: "--fx-neutrals-03", tailwind: "bg-muted",     usage: "次级背景 — 代码块、表格斑马纹、输入框底色；ghost/outline 悬浮底",   usageEn: "Subtle background — code blocks, table stripes, input fill; ghost/outline hover" },
       { name: "accent",   value: "", sourceToken: "--fx-orange-01",   tailwind: "bg-accent",    usage: "交互高亮背景 — 列表/菜单项悬浮态",                              usageEn: "Hover highlight background — list / menu item hover" },
       { name: "secondary", value: "", sourceToken: "--fx-neutrals-03", tailwind: "bg-secondary", usage: "弱操作背景 — secondary 按钮默认底",                              usageEn: "Low-emphasis action background — secondary button base" },
+      { name: "overlay",   value: "", sourceToken: "--overlay",        tailwind: "bg-overlay",   usage: "遮罩蒙层 — 弹窗/抽屉背后的半透明压暗（透明度内置，直接用）",     usageEn: "Scrim — semi-transparent dim behind dialogs / sheets (alpha built in)" },
     ],
   },
   {
@@ -2544,13 +2554,15 @@ const radiusTokens = [
 ]
 
 const spacingTokens = [
-  { name: "gap-1", value: "0.25rem / 4px", usage: "紧凑图标、微小内部间隔", usageEn: "Tight icon gaps and tiny internal spacing" },
-  { name: "gap-2", value: "0.5rem / 8px", usage: "按钮图标、表单项内部间隔", usageEn: "Button icons and internal form item spacing" },
-  { name: "gap-3", value: "0.75rem / 12px", usage: "章节标题与说明之间", usageEn: "Between a section title and its description" },
-  { name: "gap-4", value: "1rem / 16px", usage: "卡片内容、表单字段之间", usageEn: "Card content and gaps between form fields" },
-  { name: "gap-5", value: "1.25rem / 20px", usage: "章节标题组与主体内容之间", usageEn: "Between a section heading group and body content" },
-  { name: "gap-6", value: "1.5rem / 24px", usage: "页面区块、小型章节之间", usageEn: "Page blocks and small sections" },
-  { name: "gap-10", value: "2.5rem / 40px", usage: "文档章节、主内容分组之间", usageEn: "Documentation sections and major content groups" },
+  { name: "gap-0", step: 0, px: 0, value: "0 / 0px", usage: "无间距 — 紧贴、去掉默认间隙", usageEn: "No gap — flush, remove default spacing" },
+  { name: "gap-0.5", step: 0.5, px: 2, value: "0.125rem / 2px", usage: "极紧凑 — 图标与文字、徽标内部", usageEn: "Ultra-tight — icon-text, badge internals" },
+  { name: "gap-1", step: 1, px: 4, value: "0.25rem / 4px", usage: "紧凑图标、微小内部间隔", usageEn: "Tight icon gaps and tiny internal spacing" },
+  { name: "gap-2", step: 2, px: 8, value: "0.5rem / 8px", usage: "按钮图标、表单项内部间隔", usageEn: "Button icons and internal form item spacing" },
+  { name: "gap-3", step: 3, px: 12, value: "0.75rem / 12px", usage: "章节标题与说明之间", usageEn: "Between a section title and its description" },
+  { name: "gap-4", step: 4, px: 16, value: "1rem / 16px", usage: "卡片内容、表单字段之间", usageEn: "Card content and gaps between form fields" },
+  { name: "gap-5", step: 5, px: 20, value: "1.25rem / 20px", usage: "章节标题组与主体内容之间", usageEn: "Between a section heading group and body content" },
+  { name: "gap-6", step: 6, px: 24, value: "1.5rem / 24px", usage: "页面区块、小型章节之间", usageEn: "Page blocks and small sections" },
+  { name: "gap-10", step: 10, px: 40, value: "2.5rem / 40px", usage: "文档章节、主内容分组之间", usageEn: "Documentation sections and major content groups" },
 ]
 
 const shadowTokens = [
@@ -5922,29 +5934,62 @@ function TokensSpacingPage({ actions, lang }: { actions: React.ReactNode; lang: 
           lead={lang === "en" ? "Spacing tokens keep page rhythm, component density, and documentation layout consistent. Prefer Tailwind spacing utilities instead of one-off pixel values." : "间距 token 用来统一页面节奏、组件密度和文档排版。优先使用 Tailwind 间距工具类，不临时手写像素值。"}
           actions={actions}
         />
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[640px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-4">Token</TableHead>
-                <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
-                <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {spacingTokens.map((row) => (
-                <TableRow key={row.name}>
-                  <TableCell className="pl-4 font-medium">
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
-                  </TableCell>
-                  <TableCell>
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.value}</code>
-                  </TableCell>
-                  <TableCell className="pr-4 text-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+        {/* 间距档位 */}
+        <div id="tokens-spacing-scale" className="flex flex-col gap-3 scroll-mt-24">
+          <div>
+            <h2 className="text-2xl font-semibold">{lang === "en" ? "Spacing scale 间距档位" : "间距档位"}</h2>
+            <p className="mt-1 text-fx-13 text-muted-foreground">
+              {lang === "en"
+                ? "Common steps off the 4px base. Example bar shows the real size; per-step usage is in the Usage column."
+                : "基于 4px 基准的常用档位。示例长条是真实大小，逐档场景见右侧。"}
+            </p>
+          </div>
+          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+            <Table className="min-w-[720px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="pl-4">Token</TableHead>
+                  <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
+                  <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {spacingTokens.map((row) => (
+                  <TableRow key={row.name} className="hover:bg-transparent">
+                    <TableCell className="pl-4 font-medium">
+                      <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
+                    </TableCell>
+                    <TableCell>
+                      <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.value}</code>
+                    </TableCell>
+                    <TableCell>
+                      <div className="h-4 rounded bg-primary/70" style={{ width: `${row.px}px` }} />
+                    </TableCell>
+                    <TableCell className="pr-4 text-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+
+        {/* 计算方式 */}
+        <div id="tokens-spacing-compute" className="flex flex-col gap-3 scroll-mt-24">
+          <div>
+            <h2 className="text-2xl font-semibold">{lang === "en" ? "How it's computed 计算方式" : "计算方式"}</h2>
+            <p className="mt-1 text-fx-13 text-muted-foreground">
+              {lang === "en"
+                ? "Every spacing utility is the 4px base unit times the step number — a 4-point grid."
+                : "每个间距 = 4px 基准单位 × 档位数字，构成 4 点网格。"}
+            </p>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-5 text-fx-13 text-muted-foreground">
+            <p><span className="font-medium text-foreground">{lang === "en" ? "Base unit" : "基准单位"}</span>：<code className="rounded bg-muted px-1 text-fx-12">--spacing = 0.25rem（4px）</code>{lang === "en" ? " (Tailwind default)." : "（Tailwind 默认）。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Formula" : "公式"}</span>：<code className="rounded bg-muted px-1 text-fx-12">gap-n = calc(var(--spacing) * n)</code>{lang === "en" ? "，e.g. gap-4 = 4×4 = 16px, gap-6 = 4×6 = 24px." : "，如 gap-4 = 4×4 = 16px、gap-6 = 4×6 = 24px。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "4-point grid" : "4 点网格"}</span>：{lang === "en" ? "all spacing snaps to multiples of 4px, so rhythm stays even and predictable across pages." : "所有间距都落在 4px 的倍数上，页面节奏统一、可预测，不出现 5/7/13 这种随手值。"}</p>
+            <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Rule" : "用法"}</span>：{lang === "en" ? "use Tailwind spacing utilities (gap/p/m/space) — never hand-write arbitrary px. Same knob as padding/margin/gap." : "一律用 Tailwind 间距工具类（gap / p / m / space），不手写任意 px；padding、margin、gap 共用这一套刻度。"}</p>
+          </div>
         </div>
       </section>
     </>
@@ -6028,6 +6073,9 @@ function TokensShadowPage({ actions, lang }: { actions: React.ReactNode; lang: L
 }
 
 function TokensMotionPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  const [replayKey, setReplayKey] = useState(0)
+  const durationRows = motionTokens.filter((r) => r.name.startsWith("duration-"))
+  const primitiveRows = motionTokens.filter((r) => !r.name.startsWith("duration-"))
   return (
     <>
       <section id="tokens-motion" className="flex flex-col gap-6">
@@ -6037,25 +6085,79 @@ function TokensMotionPage({ actions, lang }: { actions: React.ReactNode; lang: L
           lead={lang === "en" ? "Motion follows the shadcn components already in the project: tw-animate-css utilities, short durations, and data-state driven enter/exit transitions." : "动效沿用项目里 shadcn 组件已经在使用的模式：tw-animate-css 工具类、短时长、以及由 data-state 驱动的进入退出。"}
           actions={actions}
         />
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[720px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-4">Token / Utility</TableHead>
-                <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {motionTokens.map((row) => (
-                <TableRow key={row.name}>
-                  <TableCell className="pl-4 font-medium">
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
-                  </TableCell>
-                  <TableCell className="pr-4 text-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+
+        {/* 时长档位 */}
+        <div id="tokens-motion-duration" className="flex flex-col gap-3 scroll-mt-24">
+          <div>
+            <h2 className="text-2xl font-semibold">{lang === "en" ? "Duration scale 时长档位" : "时长档位"}</h2>
+            <p className="mt-1 text-fx-13 text-muted-foreground">
+              {lang === "en" ? "Short, tiered durations — small overlays snap fast, larger movement eases a bit longer. Click to replay." : "短促、分档：小浮层快、位移大的稍慢。点按钮可重播示例。"}
+            </p>
+          </div>
+          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+            <div className="flex justify-end p-3">
+              <Button size="sm" variant="outline" onClick={() => setReplayKey((k) => k + 1)}>{lang === "en" ? "Replay all" : "重播全部"}</Button>
+            </div>
+            <Table className="min-w-[720px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="pl-4">Token</TableHead>
+                  <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {durationRows.map((row) => (
+                  <TableRow key={row.name} className="hover:bg-transparent">
+                    <TableCell className="pl-4 font-medium">
+                      <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
+                    </TableCell>
+                    <TableCell>
+                      <div className="w-40 overflow-hidden rounded bg-muted/40 p-1">
+                        <div key={replayKey} className={`h-6 w-16 rounded bg-primary/70 ${row.name} animate-in fade-in-0 slide-in-from-left-24 ease-out`} />
+                      </div>
+                    </TableCell>
+                    <TableCell className="pr-4 text-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+
+        {/* 原语与规则 */}
+        <div id="tokens-motion-primitives" className="flex flex-col gap-3 scroll-mt-24">
+          <div>
+            <h2 className="text-2xl font-semibold">{lang === "en" ? "Primitives & rules 原语与规则" : "原语与规则"}</h2>
+            <p className="mt-1 text-fx-13 text-muted-foreground">
+              {lang === "en" ? "Composed from a few primitives, driven by state — not hand-written keyframes." : "由几个原语组合、靠状态驱动，不手写关键帧。"}
+            </p>
+          </div>
+          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+            <Table className="min-w-[720px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="pl-4">Token / Utility</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {primitiveRows.map((row) => (
+                  <TableRow key={row.name} className="hover:bg-transparent">
+                    <TableCell className="pl-4 font-medium">
+                      <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
+                    </TableCell>
+                    <TableCell className="pr-4 text-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-5 text-fx-13 text-muted-foreground">
+            <p><span className="font-medium text-foreground">{lang === "en" ? "Short" : "短促"}</span>：{lang === "en" ? "100–200ms; UI motion is feedback, not spectacle." : "100–200ms 区间；界面动效是反馈，不是表演。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "State driven" : "状态驱动"}</span>：{lang === "en" ? "enter/exit triggered by data-open / data-closed / data-state, not manual timers." : "进入/退出由 data-open / data-closed / data-state 触发，不手动计时。"}</p>
+            <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Rule" : "用法"}</span>：{lang === "en" ? "compose fade / zoom / slide via tw-animate-css utilities; don't invent one-off keyframes per page." : "用 tw-animate-css 工具类组合 fade / zoom / slide，不为单页临时写关键帧动画。"}</p>
+          </div>
         </div>
       </section>
     </>
@@ -6072,25 +6174,66 @@ function TokensLayerPage({ actions, lang }: { actions: React.ReactNode; lang: La
           lead={lang === "en" ? "Layer rules document the z-index scale already used by shadcn overlays. Avoid inventing new z-index values unless a real collision appears." : "层级规则记录 shadcn 浮层已经在用的 z-index 习惯。除非真的出现遮挡冲突，不要临时发明新的 z-index。"}
           actions={actions}
         />
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[720px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-4">Token</TableHead>
-                <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {layerTokens.map((row) => (
-                <TableRow key={row.name}>
-                  <TableCell className="pl-4 font-medium">
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
-                  </TableCell>
-                  <TableCell className="pr-4 text-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
-                </TableRow>
+        {/* 层级档位 */}
+        <div id="tokens-layer-scale" className="flex flex-col gap-3 scroll-mt-24">
+          <div>
+            <h2 className="text-2xl font-semibold">{lang === "en" ? "Layer levels 层级档位" : "层级档位"}</h2>
+            <p className="mt-1 text-fx-13 text-muted-foreground">
+              {lang === "en"
+                ? "A few fixed z-index tiers — the bigger the number, the closer to the user. Pick by what the element is, not by guessing a number."
+                : "几个固定的层级档位，数字越大越靠近用户。按元素用途选档，别凭感觉写数字。"}
+            </p>
+          </div>
+          {/* 堆叠示例：档位越高越压在上面 */}
+          <div className="rounded-lg border border-border bg-card p-5">
+            <p className="mb-3 text-fx-12 text-muted-foreground">{lang === "en" ? "Higher value stacks on top (closer to you)." : "数字越大，越压在上面（越靠近你）。"}</p>
+            <div className="relative h-32">
+              {layerTokens.map((row, i) => (
+                <div
+                  key={row.name}
+                  className="absolute flex h-12 w-48 items-center rounded-lg border border-border bg-card px-3 text-fx-12 font-medium shadow-l1"
+                  style={{ top: `${i * 18}px`, left: `${i * 48}px`, zIndex: 10 + i * 10 }}
+                >
+                  {row.name}
+                </div>
               ))}
-            </TableBody>
-          </Table>
+            </div>
+          </div>
+          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+            <Table className="min-w-[720px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="pl-4">Token</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {layerTokens.map((row) => (
+                  <TableRow key={row.name} className="hover:bg-transparent">
+                    <TableCell className="pl-4 font-medium">
+                      <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
+                    </TableCell>
+                    <TableCell className="pr-4 text-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+
+        {/* 分层逻辑 */}
+        <div id="tokens-layer-logic" className="flex flex-col gap-3 scroll-mt-24">
+          <div>
+            <h2 className="text-2xl font-semibold">{lang === "en" ? "Layering logic 分层逻辑" : "分层逻辑"}</h2>
+            <p className="mt-1 text-fx-13 text-muted-foreground">
+              {lang === "en" ? "Why a few fixed tiers instead of arbitrary numbers." : "为什么用几个固定档位，而不是随手写数字。"}
+            </p>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-5 text-fx-13 leading-relaxed text-muted-foreground">
+            <p><span className="font-medium text-foreground">{lang === "en" ? "From low to high" : "从低到高"}</span>：{lang === "en" ? "page content → local controls → fixed/stuck headers → overlays. The bigger the number, the closer to you (on top)." : "页面内容 → 局部控件 → 固定/吸顶的头部 → 弹层。数字越大，离你越近、压在越上面。"}</p>
+            <p className="mt-2"><span className="font-medium text-foreground">{lang === "en" ? "Overlays all use the top tier" : "弹层都用最高一档"}</span>：{lang === "en" ? "dialogs, dropdowns, popovers, sheets and tooltips all sit at the top tier; which one shows on top depends on who opens later, not on a bigger number." : "对话框、下拉、气泡、抽屉、提示框都用最高一档（z-50）；谁后打开谁在上，不靠更大的数字。"}</p>
+            <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Rule" : "怎么用"}</span>：{lang === "en" ? "stick to these few tiers; if something gets covered, fit it into an existing tier — don't invent a bigger number." : "只用这几档；万一被挡住，把它归到现有的某一档，别去编一个更大的数字（不然以后谁都往上加，越堆越乱）。"}</p>
+          </div>
         </div>
       </section>
     </>

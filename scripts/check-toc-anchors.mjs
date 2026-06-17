@@ -42,6 +42,9 @@ const pageModules = {
   tokenTypographyAnchors: ["tokens-typography-size", "tokens-typography-weight", "tokens-typography-family"],
   tokenRadiusAnchors: ["tokens-radius-scale", "tokens-radius-compute"],
   tokenShadowAnchors: ["tokens-shadow-scale", "tokens-shadow-compute"],
+  tokenSpacingAnchors: ["tokens-spacing-scale", "tokens-spacing-compute"],
+  tokenMotionAnchors: ["tokens-motion-duration", "tokens-motion-primitives"],
+  tokenLayerAnchors: ["tokens-layer-scale", "tokens-layer-logic"],
   layoutAnchors: ["layout-grid", "layout-breakpoints", "layout-containers"],
 }
 for (const [name, expected] of Object.entries(pageModules)) {

@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-17
+last_verified: 2026-06-18
 teaches: "公司设计 token 的基础架构、真实值和全局视觉使用规则"
 use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadcn 组件样式或判断视觉是否符合公司规范时"
 ---
@@ -45,6 +45,9 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `input` | `#C1C5CE` | `border-input` | 表单边框 |
 | `ring` | `#FF8000` | `ring-ring` | 键盘焦点和可访问性焦点环 |
 | `destructive` | `#FF522A` | `bg-destructive text-destructive-foreground` | 删除、危险、不可逆操作 |
+| `overlay` | `oklch(from neutrals-20 … / 0.2)` | `bg-overlay` | 弹窗/抽屉的**遮罩蒙层**（20%，配合组件的 `backdrop-blur-xs` 模糊，故比主流纯遮罩浅）；透明度烤进 token，直接用不加 `/x` |
+
+> 遮罩归颜色（语义色）：本质是"蒙层色 + 透明度"。从最深中性灰派生跟随色板，**透明度内置**（半透明），Dialog/Sheet/AlertDialog 直接 `bg-overlay`，不写死 `bg-black/10`。z-index 归层级、淡入归动效，是共用机制不是归属。
 
 ## 功能色（状态色）
 
@@ -147,8 +150,12 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 间距不单独造 CSS 变量，优先使用 Tailwind spacing scale，让页面节奏和 shadcn 组件密度保持一致。
 
+**计算方式**：每个间距 = 基准单位 × 档位数字。基准 `--spacing = 0.25rem（4px，Tailwind 默认）`，`gap-n = calc(var(--spacing) * n)`（如 gap-4 = 4×4 = 16px）。所有间距落在 **4px 的倍数**上（4 点网格），节奏统一可预测；padding / margin / gap 共用这一套刻度，一律用工具类、不手写任意 px。
+
 | Token | 值 | 使用场景 |
 |------|-----|----------|
+| `gap-0` | `0 / 0px` | 无间距、紧贴、去掉默认间隙 |
+| `gap-0.5` | `0.125rem / 2px` | 极紧凑：图标与文字、徽标内部 |
 | `gap-1` | `0.25rem / 4px` | 紧凑图标、微小内部间隔 |
 | `gap-2` | `0.5rem / 8px` | 按钮图标、表单项内部间隔 |
 | `gap-3` | `0.75rem / 12px` | 章节标题与说明之间 |
@@ -178,6 +185,8 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 动效沿用 shadcn 组件已经使用的模式：`tw-animate-css`、短时长、以及由 `data-open` / `data-closed` / `data-state` 驱动的进入退出。
 
+**规则**：时长短促（**100–200ms**，小浮层快、位移大的稍慢，界面动效是反馈不是表演）；进入/退出**状态驱动**（`data-open`/`data-closed`/`data-state`，不手动计时）；用 `tw-animate-css` 工具类组合 `fade`/`zoom`/`slide`，不为单页临时写关键帧。
+
 | Token / Utility | 使用场景 |
 |-----------------|----------|
 | `duration-100` | Dialog、Dropdown、Popover、Tooltip 的进入退出 |
@@ -189,6 +198,8 @@ shadcn/ui 和业务页面真正使用的语义槽。
 ## 层级
 
 层级规则记录 shadcn 浮层已经在用的 z-index 习惯。除非真的出现遮挡冲突，不要临时发明新的 z-index。
+
+**分层逻辑**：从低到高——页面内容 → 局部控件(10–20) → 固定/吸顶头部(40) → 弹层(50)，数字越大越靠近用户、压在越上面。所有弹层（对话框/下拉/气泡/抽屉/提示框）都用最高一档 `z-50`，谁后打开谁在上，不靠更大数字。万一被挡住，归到现有档，**别编更大的数字**（否则越堆越乱）。
 
 | Token | 使用场景 |
 |------|----------|

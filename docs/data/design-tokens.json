@@ -1416,26 +1416,32 @@
       "usage": "Dark Blue 01 - 行选中蓝"
     },
     {
+      "name": "--fx-shadow-color",
+      "value": "oklch(from var(--fx-neutrals-20) l c h / 0.15)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
       "name": "--fx-shadow-l1",
-      "value": "0px 2px 6px 0px rgba(0,0,0,0.15)",
+      "value": "0px 2px 6px 0px var(--fx-shadow-color)",
       "category": "palette",
       "usage": ""
     },
     {
       "name": "--fx-shadow-l2",
-      "value": "0px 4px 12px 0px rgba(0,0,0,0.15)",
+      "value": "0px 4px 12px 0px var(--fx-shadow-color)",
       "category": "palette",
       "usage": ""
     },
     {
       "name": "--fx-shadow-l3",
-      "value": "0px 6px 24px 0px rgba(0,0,0,0.15)",
+      "value": "0px 6px 24px 0px var(--fx-shadow-color)",
       "category": "palette",
       "usage": ""
     },
     {
       "name": "--fx-shadow-l1-up",
-      "value": "0px -2px 6px 0px rgba(0,0,0,0.15)",
+      "value": "0px -2px 6px 0px var(--fx-shadow-color)",
       "category": "palette",
       "usage": ""
     }

@@ -94,8 +94,8 @@
       "source": "src/App.tsx",
       "intent": "长说明不提前折行，主内容区保持可读宽度，文章内部不横向溢出。",
       "requiredSourceIncludes": [
-        "leadText: \"max-w-5xl text-lg leading-8 text-muted-foreground\"",
-        "componentLead: \"max-w-5xl break-words text-lg leading-8\"",
+        "leadText: \"max-w-5xl text-lg text-muted-foreground\"",
+        "componentLead: \"max-w-5xl break-words text-lg\"",
         "xl:grid-cols-[minmax(0,1080px)_220px]",
         "className=\"w-full min-w-0 break-words\"",
         "style={{ maxWidth: \"calc(100vw - 3rem)\" }}"

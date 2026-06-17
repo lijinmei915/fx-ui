@@ -15,6 +15,8 @@ export {
   Cube as BoxIcon,
   CheckCircle as CheckCircleIcon,
   Check as CheckIcon,
+  Info as InfoIcon,
+  XCircle as XCircleIcon,
   CaretDown as ChevronDownIcon,
   CaretLeft as ChevronLeftIcon,
   CaretRight as ChevronRightIcon,

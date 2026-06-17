@@ -236,8 +236,8 @@ const docsSpacing = {
   sectionHeader: "flex flex-col gap-3",
   sectionStackCompact: "flex flex-col gap-4",
   contentGap: "flex flex-col gap-3",
-  leadText: "max-w-5xl text-lg leading-8 text-muted-foreground",
-  componentLead: "max-w-5xl break-words text-lg leading-8",
+  leadText: "max-w-5xl text-lg text-muted-foreground",
+  componentLead: "max-w-5xl break-words text-lg",
 }
 
 type ComponentsManifest = {
@@ -1069,7 +1069,7 @@ const typographyUsageExamples = [
   },
   {
     title: "正文",
-    code: `<p className="text-base leading-8">正文说明文字…</p>`,
+    code: `<p className="text-base">正文说明文字…</p>`,
     usage: "用于段落说明、正文叙述，行高拉开方便长文阅读。",
   },
   {
@@ -1082,7 +1082,7 @@ const typographyUsageExamples = [
 const typographyRules = [
   "字号必须用 Tailwind 的语义类（text-sm / text-base / text-2xl / text-4xl），不要手写 font-size。",
   "字体统一用 font-sans（Geist / system sans-serif），不为单个页面引入新字体。",
-  "正文类文字优先配 leading-7 / leading-8，标题类文字用 leading-tight，避免行距随手调。",
+  "正文类文字优先配 /，标题类文字用 leading-tight，避免行距随手调。",
   "次要说明文字用 text-muted-foreground 而不是手写灰色色值。",
   "标题层级要按页面结构选（页面标题用 text-4xl，章节标题用 text-2xl），不要为视觉效果跳级使用。",
 ]
@@ -2451,10 +2451,10 @@ const seedColors = [
 
 // 企业 web 字号（Figma web 字体规范）：字号 + 行高，默认正文 13
 const typeSizeTokens = [
-  { name: "text-fx-18", value: "18px / 28", cls: "text-fx-18", usage: "详情页标题（配 bold）", usageEn: "Detail page title (with bold)" },
-  { name: "text-fx-15", value: "15px / 22", cls: "text-fx-15", usage: "模块/卡片/组件标题（regular 或 bold 区分）", usageEn: "Module / card / component title" },
-  { name: "text-fx-13", value: "13px / 18", cls: "text-fx-13", usage: "默认正文 — 菜单、列表、表单、大面积文案", usageEn: "Default body — menus, lists, forms" },
-  { name: "text-fx-12", value: "12px / 18", cls: "text-fx-12", usage: "提示信息、说明文字", usageEn: "Hints, helper text" },
+  { name: "text-fx-18", value: "18px / 28px", cls: "text-fx-18", usage: "详情页标题（配 bold）", usageEn: "Detail page title (with bold)" },
+  { name: "text-fx-15", value: "15px / 22px", cls: "text-fx-15", usage: "模块/卡片/组件标题（regular 或 bold 区分）", usageEn: "Module / card / component title" },
+  { name: "text-fx-13", value: "13px / 18px", cls: "text-fx-13", usage: "默认正文 — 菜单、列表、表单、大面积文案", usageEn: "Default body — menus, lists, forms" },
+  { name: "text-fx-12", value: "12px / 18px", cls: "text-fx-12", usage: "提示信息、说明文字", usageEn: "Hints, helper text" },
 ]
 
 // 字重（企业规范：Regular 400 / Medium 500 / Bold 700）
@@ -2473,10 +2473,14 @@ const typeFamilyTokens = [
 const typographyTokens = [...typeFamilyTokens, ...typeSizeTokens, ...typeWeightTokens]
 
 const radiusTokens = [
-  { name: "--radius", value: "0.625rem", usage: "基础圆角真相源", usageEn: "Base radius source of truth" },
-  { name: "rounded-md", value: "calc(var(--radius) - 2px)", usage: "按钮、输入框、小控件", usageEn: "Buttons, inputs, and compact controls" },
-  { name: "rounded-lg", value: "var(--radius)", usage: "卡片、下拉、浮层容器", usageEn: "Cards, dropdowns, and overlay containers" },
-  { name: "rounded-xl", value: "calc(var(--radius) + 4px)", usage: "Dialog、Sheet、较大区域容器", usageEn: "Dialogs, Sheets, and larger surface containers" },
+  { name: "--radius", value: "0.625rem（10px）", usage: "基础圆角真相源（= rounded-lg）", usageEn: "Base radius source of truth (= rounded-lg)" },
+  { name: "rounded-none", value: "0", usage: "表格、紧贴边缘容器、需要直角的分割块", usageEn: "Tables, flush containers, square dividers" },
+  { name: "rounded-xs", value: "calc(var(--radius) - 6px) ≈ 4px", usage: "极小元素：复选框、缩略图角、内联 code", usageEn: "Tiny elements: checkbox, thumbnail, inline code" },
+  { name: "rounded-sm", value: "calc(var(--radius) - 4px) ≈ 6px", usage: "小标签、小 chip", usageEn: "Small tags and chips" },
+  { name: "rounded-md", value: "calc(var(--radius) - 2px) ≈ 8px", usage: "按钮、输入框、小控件", usageEn: "Buttons, inputs, and compact controls" },
+  { name: "rounded-lg", value: "var(--radius) = 10px", usage: "卡片、下拉、浮层容器", usageEn: "Cards, dropdowns, and overlay containers" },
+  { name: "rounded-xl", value: "calc(var(--radius) + 4px) ≈ 14px", usage: "Dialog、Sheet、较大区域容器", usageEn: "Dialogs, Sheets, and larger surface containers" },
+  { name: "rounded-full", value: "9999px", usage: "胶囊按钮、Badge、头像、开关", usageEn: "Pills, badges, avatars, and switches" },
 ]
 
 const spacingTokens = [
@@ -2490,10 +2494,10 @@ const spacingTokens = [
 ]
 
 const shadowTokens = [
-  { name: "shadow-l1",    value: "0 2px 6px rgba(0,0,0,.15)",  usage: "浮层菜单、Dropdown — 最近层",        usageEn: "Dropdown menus and nearest-layer overlays" },
-  { name: "shadow-l2",    value: "0 4px 12px rgba(0,0,0,.15)", usage: "Sheet、侧边滑出面板 — 中层",          usageEn: "Sheet panels and mid-layer surfaces" },
-  { name: "shadow-l3",    value: "0 6px 24px rgba(0,0,0,.15)", usage: "Dialog、Modal — 最高层遮罩",          usageEn: "Dialogs and top-layer modal surfaces" },
-  { name: "shadow-l1-up", value: "0 -2px 6px rgba(0,0,0,.15)", usage: "向上弹出的浮层（如底部工具栏菜单）", usageEn: "Upward overlays such as bottom toolbar menus" },
+  { name: "shadow-l1",    value: "0 2px 6px var(--fx-shadow-color)",  usage: "浮层菜单、Dropdown — 最近层",        usageEn: "Dropdown menus and nearest-layer overlays" },
+  { name: "shadow-l2",    value: "0 4px 12px var(--fx-shadow-color)", usage: "Sheet、侧边滑出面板 — 中层",          usageEn: "Sheet panels and mid-layer surfaces" },
+  { name: "shadow-l3",    value: "0 6px 24px var(--fx-shadow-color)", usage: "Dialog、Modal — 最高层遮罩",          usageEn: "Dialogs and top-layer modal surfaces" },
+  { name: "shadow-l1-up", value: "0 -2px 6px var(--fx-shadow-color)", usage: "向上弹出的浮层（如底部工具栏菜单）", usageEn: "Upward overlays such as bottom toolbar menus" },
 ]
 // shadow-sm / shadow-md / shadow-lg 是 Tailwind 内置默认档，未映射公司 token，禁止在业务代码中语义使用
 
@@ -2612,7 +2616,7 @@ function copyTextFallback(text: string) {
 function CopyCodeBlock({ code, label, lang }: { code: string; label: string; lang: Lang }) {
   return (
     <div className="relative rounded-lg bg-muted">
-      <pre className="max-w-full overflow-x-auto p-4 pr-14 text-sm leading-7">
+      <pre className="max-w-full overflow-x-auto p-4 pr-14 text-sm">
         <code>{code}</code>
       </pre>
       <div className="absolute right-3 top-3">
@@ -3395,7 +3399,7 @@ function MarkdownPage({
           <CardTitle className="text-base">{doc.path}</CardTitle>
         </CardHeader>
         <CardContent>
-          <pre className="max-h-[70dvh] max-w-full overflow-auto rounded-lg bg-muted p-5 text-sm leading-7">
+          <pre className="max-h-[70dvh] max-w-full overflow-auto rounded-lg bg-muted p-5 text-sm">
             <code>{doc.markdown}</code>
           </pre>
         </CardContent>
@@ -3435,7 +3439,7 @@ function PlaceholderPage({
             {lang === "en" ? "Content not filled yet" : "内容暂未填充"}
           </CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-3 text-sm leading-7 text-muted-foreground">
+        <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
           <p>
             {lang === "en"
               ? "This menu item already has its own route. The page can later be filled from shadcn Blocks, component docs, or internal layout guidelines."
@@ -3551,7 +3555,7 @@ function FileRelationMap({ relations }: { relations: FileRelation[] }) {
     <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4">
       <div className="rounded-2xl border border-border bg-background/70 p-4">
         <div className="text-sm font-medium text-foreground">怎么看这张图</div>
-        <p className="mt-2 text-sm leading-7 text-muted-foreground">
+        <p className="mt-2 text-sm text-muted-foreground">
           这里不表达时间顺序，而是表达文件之间的作用关系：谁被 import、谁被读取、谁负责检查、谁产出页面或分发包。
         </p>
       </div>
@@ -3637,7 +3641,7 @@ function GraphCockpit({ lang }: { lang: Lang }) {
           <div className="text-sm font-semibold text-foreground">
             {lang === "en" ? "What this is useful for" : "这个面板真正用来干嘛"}
           </div>
-          <p className="mt-2 text-sm leading-7 text-muted-foreground">
+          <p className="mt-2 text-sm text-muted-foreground">
             {lang === "en"
               ? "The numbers are only evidence. The useful part is choosing the right source file, relation view, and check command before changing code."
               : "数字只是证据，不是结论。真正有用的是：你要改东西时，它告诉你先看哪份事实表、哪张关系图、最后跑哪个检查。"}
@@ -3664,7 +3668,7 @@ function GraphCockpit({ lang }: { lang: Lang }) {
                   <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                     <div>
                       <div className="text-sm font-semibold text-foreground">{action.title}</div>
-                      <p className="mt-1 text-sm leading-7 text-muted-foreground">{action.desc}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">{action.desc}</p>
                     </div>
                     <a href={action.href} className="text-sm font-medium text-primary hover:underline">
                       {action.linkLabel}
@@ -3702,7 +3706,7 @@ function GraphCockpit({ lang }: { lang: Lang }) {
           <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
             <div>
               <div className="text-sm font-semibold text-foreground">{lang === "en" ? "Task Routing" : "任务路由"}</div>
-              <p className="mt-1 text-sm leading-7 text-muted-foreground">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {lang === "en"
                   ? "When a user or DevInspector request arrives, AI should route it here first, then follow the matching action flow."
                   : "用户或 DevInspector 任务进来时，AI 先在这里判断走哪条工作流，再按对应行动链路执行。"}
@@ -3735,7 +3739,7 @@ function GraphCockpit({ lang }: { lang: Lang }) {
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div>
                 <div className="text-sm font-semibold text-foreground">{lang === "en" ? "Evidence Details" : "证据详情"}</div>
-                <p className="mt-1 text-sm leading-7 text-muted-foreground">
+                <p className="mt-1 text-sm text-muted-foreground">
                   {lang === "en"
                     ? "Open this when you need the graph numbers, relation split, and group evidence behind the cockpit."
                     : "需要看驾驶舱背后的图谱数字、关系分布和分组证据时再展开。"}
@@ -3776,7 +3780,7 @@ function GraphCockpit({ lang }: { lang: Lang }) {
                       </p>
                     </div>
                   </div>
-                  <p className="mt-4 text-sm leading-7 text-muted-foreground">
+                  <p className="mt-4 text-sm text-muted-foreground">
                     {lang === "en"
                       ? "Use generated edges to find raw references; use system relations to understand responsibility and impact."
                       : "自动边用来找真实引用；工程关系用来看职责和影响。两者合起来，才不会只剩一堆文件名。"}
@@ -3918,7 +3922,7 @@ function GettingStartedPage({
         <section id="governance-map-status" className={docsSpacing.sectionStack}>
           <div className={docsSpacing.sectionHeader}>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "Current Status" : "当前状态"}</h2>
-            <p className="text-base leading-8 text-muted-foreground">
+            <p className="text-base text-muted-foreground">
               {lang === "en"
                 ? "Start here when you only want to know whether the project is protected enough to keep changing."
                 : "如果你只是想知道“现在能不能继续改、风险在哪”，先看这里。"}
@@ -3931,7 +3935,7 @@ function GettingStartedPage({
                   <CardDescription>{card.title}</CardDescription>
                   <CardTitle className="text-2xl">{governanceSnapshot[card.valueKey as keyof typeof governanceSnapshot]}</CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm leading-7 text-muted-foreground">{card.desc}</CardContent>
+                <CardContent className="text-sm text-muted-foreground">{card.desc}</CardContent>
               </Card>
             ))}
           </div>
@@ -3954,7 +3958,7 @@ function GettingStartedPage({
               </div>
               <div className="rounded-xl bg-muted p-4">
                 <div className="text-sm font-semibold text-foreground">{lang === "en" ? "Change Rules" : "改动规则"}</div>
-                <ul className="mt-3 grid gap-2 text-sm leading-7 text-muted-foreground">
+                <ul className="mt-3 grid gap-2 text-sm text-muted-foreground">
                   {governanceStatus.maintenanceModel.rules.map((rule) => (
                     <li key={rule} className="flex gap-2">
                       <span className="mt-3 size-1.5 shrink-0 rounded-full bg-primary" />
@@ -3970,7 +3974,7 @@ function GettingStartedPage({
         <section id="governance-map-system" className={docsSpacing.sectionStack}>
           <div className={docsSpacing.sectionHeader}>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "System Map" : "工程运行图"}</h2>
-            <p className="text-base leading-8 text-muted-foreground">
+            <p className="text-base text-muted-foreground">
               {lang === "en"
                 ? "Use the category view to see responsibility layers, and the file relation view to see which files import, read, check, constrain, or produce each other."
                 : "分类视图看模块职责；文件关系看真实文件之间如何 import、读取、检查、约束和产出。这里关注工程文件怎么互相作用，不是时间顺序。"}
@@ -3993,7 +3997,7 @@ function GettingStartedPage({
         <section id="governance-map-freshness" className={docsSpacing.sectionStack}>
           <div className={docsSpacing.sectionHeader}>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "Freshness" : "数据新鲜度"}</h2>
-            <p className="text-base leading-8 text-muted-foreground">
+            <p className="text-base text-muted-foreground">
               {lang === "en"
                 ? "The board updates when these source files update."
                 : "这个看板的“实时”来自这些源文件，源文件变了，看板刷新后就变。"}
@@ -4026,7 +4030,7 @@ function GettingStartedPage({
         <section id="governance-map-assets" className={docsSpacing.sectionStack}>
           <div className={docsSpacing.sectionHeader}>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "Governance Assets" : "规则资产"}</h2>
-            <p className="text-base leading-8 text-muted-foreground">
+            <p className="text-base text-muted-foreground">
               {lang === "en"
                 ? "This table shows which rules already have the full anti-drift loop and which ones still need structure."
                 : "这张表看一眼就知道：哪些规则已经形成防漂闭环，哪些还只是半结构化。"}
@@ -4063,7 +4067,7 @@ function GettingStartedPage({
         <section id="governance-map-loop" className={docsSpacing.sectionStack}>
           <div className={docsSpacing.sectionHeader}>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "Governance Loop" : "治理闭环"}</h2>
-            <p className="text-base leading-8 text-muted-foreground">
+            <p className="text-base text-muted-foreground">
               {lang === "en"
                 ? "This is the rule model behind the status board."
                 : "这是现状看板背后的规则模型，平时不用先看它。"}
@@ -4076,7 +4080,7 @@ function GettingStartedPage({
                   <StepBadge index={index} />
                   <h3 className="mt-4 text-base font-semibold">{lang === "en" ? item.titleEn : item.title}</h3>
                   <code className="mt-2 block rounded bg-muted px-2 py-1 text-xs">{item.file}</code>
-                  <p className="mt-3 text-sm leading-7 text-muted-foreground">{lang === "en" ? item.descEn : item.desc}</p>
+                  <p className="mt-3 text-sm text-muted-foreground">{lang === "en" ? item.descEn : item.desc}</p>
                 </div>
               ))}
             </CardContent>
@@ -4086,7 +4090,7 @@ function GettingStartedPage({
         <section id="governance-map-references" className={docsSpacing.sectionStack}>
           <div className={docsSpacing.sectionHeader}>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "References" : "参考案例"}</h2>
-            <p className="text-base leading-8 text-muted-foreground">
+            <p className="text-base text-muted-foreground">
               {lang === "en"
                 ? "These are not copied directly. They point to mainstream patterns that match our direction."
                 : "这些不是照搬，而是说明我们的方向和主流做法接近：关系图、检查项、Policy as Code。"}
@@ -4134,7 +4138,7 @@ function GettingStartedPage({
         <section id="install-prerequisites" className={docsSpacing.sectionStack}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Prerequisites" : "接入前提"}</h2>
           <Card>
-            <CardContent className="flex flex-col gap-3 p-5 text-sm leading-7 text-muted-foreground">
+            <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
               <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>Vite + React + TypeScript。</span></div>
               <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>Tailwind CSS v4，并通过全局 CSS 承载 shadcn 语义变量。</span></div>
               <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>项目已初始化 shadcn；未初始化时先运行：</span></div>
@@ -4145,7 +4149,7 @@ function GettingStartedPage({
 
         <section id="install-components" className={docsSpacing.sectionStack}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Install Components" : "安装组件"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "fx-ui uses shadcn open-code components. Add components through the CLI instead of hand-writing base controls."
               : "fx-ui 使用 shadcn open-code 组件。基础控件通过 CLI 拉取，不手写 Button/Input/Dialog 这类组件。"}
@@ -4155,7 +4159,7 @@ function GettingStartedPage({
 
         <section id="install-theme" className={docsSpacing.sectionStack}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Install Theme" : "接入主题"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "Use theme/fx-theme.css as the runtime token source. For distribution, publish registry/fx-theme.json as a shadcn registry theme."
               : "运行时使用 theme/fx-theme.css 作为 token 真相源；对外分发时使用 registry/fx-theme.json 作为 shadcn registry:theme。"}
@@ -4169,7 +4173,7 @@ function GettingStartedPage({
         <section id="install-structure" className={docsSpacing.sectionStack}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Structure" : "目录约定"}</h2>
           <Card>
-            <CardContent className="flex flex-col gap-3 p-5 text-sm leading-7 text-muted-foreground">
+            <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
               <p><code>src/components/ui/</code>：shadcn 基础组件，CLI 拉取，open-code 可读可改。</p>
               <p><code>src/components/fx/</code>：公司组合组件，由 shadcn 组件组合而成。</p>
               <p><code>theme/fx-theme.css</code>：公司 token 真相源，改它等于全局换肤。</p>
@@ -4181,7 +4185,7 @@ function GettingStartedPage({
         <section id="install-verify" className={docsSpacing.sectionStack}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Verify" : "启动检查"}</h2>
           <Card>
-            <CardContent className="flex flex-col gap-3 p-5 text-sm leading-7 text-muted-foreground">
+            <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
               <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{lang === "en" ? "shadcn components are present in src/components/ui." : "shadcn 组件已经进入 src/components/ui。"}</span></div>
               <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{lang === "en" ? "theme/fx-theme.css is imported once at the app entry." : "theme/fx-theme.css 在应用入口只导入一次。"}</span></div>
               <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{lang === "en" ? "Run npm run check before saying the integration is complete." : "宣告接入完成前运行 npm run check。"}</span></div>
@@ -4217,7 +4221,7 @@ function GettingStartedPage({
               <div>
                 <Badge variant="secondary">SSOT</Badge>
                 <h3 className="mt-3 font-medium">theme/fx-theme.css</h3>
-                <p className="mt-2 text-sm leading-7 text-muted-foreground">
+                <p className="mt-2 text-sm text-muted-foreground">
                   {lang === "en" ? "Changing this file changes the whole system." : "改这里等于全局换肤，必须先说明影响范围。"}
                 </p>
               </div>
@@ -4257,7 +4261,7 @@ function GettingStartedPage({
         <section id="theme-flow" className={docsSpacing.sectionStack}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Change Flow" : "修改流程"}</h2>
           <Card>
-            <CardContent className="flex flex-col gap-3 p-5 text-sm leading-7 text-muted-foreground">
+            <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
               <p>1. {lang === "en" ? "Decide whether this is global theme or local component usage." : "先判断这是全局主题问题，还是局部组件用法问题。"}</p>
               <p>2. {lang === "en" ? "Global tokens go to theme/fx-theme.css; component docs go to docs/components." : "全局 token 改 theme/fx-theme.css；组件规则改 docs/components。"}</p>
               <p>3. {lang === "en" ? "Run npm run check to catch token and documentation drift." : "运行 npm run check，拦住 token 和文档漂移。"}</p>
@@ -4298,7 +4302,7 @@ function GettingStartedPage({
             ].map(([title, desc]) => (
               <Card key={title}>
                 <CardHeader><CardTitle className="text-base">{title}</CardTitle></CardHeader>
-                <CardContent className="text-sm leading-7 text-muted-foreground">{desc}</CardContent>
+                <CardContent className="text-sm text-muted-foreground">{desc}</CardContent>
               </Card>
             ))}
           </div>
@@ -4307,7 +4311,7 @@ function GettingStartedPage({
         <section id="ai-style-flow" className={docsSpacing.sectionStack}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Style Flow" : "改样式流程"}</h2>
           <Card>
-            <CardContent className="flex flex-col gap-3 p-5 text-sm leading-7 text-muted-foreground">
+            <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
               <p>1. 从页面选择器或浏览器检查工具定位源码，不手改 dist。</p>
               <p>2. 判断应该固化到组件样式、token、组合组件，还是局部页面覆盖。</p>
               <p>3. 修改组件文档或示例时，先读取对应 `src/components/ui/&lt;component&gt;.tsx`。</p>
@@ -4319,7 +4323,7 @@ function GettingStartedPage({
         <section id="ai-checks" className={docsSpacing.sectionStack}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Checks" : "交付检查"}</h2>
           <CopyCodeBlock code="npm run check" label="check" lang={lang} />
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "This runs shadcn contract checks, token drift checks, doc-site contract checks, component manifest checks, and the production build."
               : "这会同时跑 shadcn 契约、token 漂移、文档站契约、组件 manifest 和生产构建。"}
@@ -4350,7 +4354,7 @@ function GettingStartedPage({
 
         <section id="documentation-ssot" className={docsSpacing.sectionStack}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "SSOT Routes" : "SSOT 路由"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "One kind of information has one truth source. Other files should link to it instead of duplicating it."
               : "同一类信息只维护一个真相源，其他地方引用它，不复制一份新的。"}
@@ -4395,7 +4399,7 @@ function GettingStartedPage({
                 <div key={title} className="rounded-lg border border-border bg-background p-4">
                   <Badge variant="secondary">{title}</Badge>
                   <p className="mt-3 font-medium"><code>{file}</code></p>
-                  <p className="mt-2 text-sm leading-7 text-muted-foreground">{desc}</p>
+                  <p className="mt-2 text-sm text-muted-foreground">{desc}</p>
                 </div>
               ))}
             </CardContent>
@@ -4412,7 +4416,7 @@ function GettingStartedPage({
         <section id="documentation-write-rules" className={docsSpacing.sectionStack}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Write Rules" : "写入规则"}</h2>
           <Card>
-            <CardContent className="flex flex-col gap-3 p-5 text-sm leading-7 text-muted-foreground">
+            <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
               <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>新建 <code>docs/*.md</code> 时，必须同时在 <code>docs/DOCUMENTATION.md</code> 的 SSOT 表登记。</span></div>
               <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>改组件文档或示例前，先读对应 <code>src/components/ui/&lt;component&gt;.tsx</code>，不要发明源码没有的 API。</span></div>
               <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>结构事实会被代码消费时，补 <code>docs/data/*.json</code>；会随源码漂移时，再补检查脚本。</span></div>
@@ -4486,7 +4490,7 @@ function GettingStartedPage({
                 <CardHeader>
                   <CardTitle className="text-base">{title}</CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm leading-7 text-muted-foreground">
+                <CardContent className="text-sm text-muted-foreground">
                   <p><code>{script}</code></p>
                   <p className="mt-2">{desc}</p>
                 </CardContent>
@@ -4498,7 +4502,7 @@ function GettingStartedPage({
         <section id="checks-checklist" className={docsSpacing.sectionStack}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Finish Checklist" : "收尾清单"}</h2>
           <Card>
-            <CardContent className="flex flex-col gap-3 p-5 text-sm leading-7 text-muted-foreground">
+            <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
               <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>组件文档变了：读源码，核对 variant / size / 状态，再跑 <code>npm run check:components</code>。</span></div>
               <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>token 或主题变了：同步 token 文档和 JSON，再跑 <code>npm run check:tokens</code>。</span></div>
               <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>文档站导航或页面骨架变了：同步 doc-site manifest，再跑 <code>npm run check:doc-site</code>。</span></div>
@@ -4538,7 +4542,7 @@ function GettingStartedPage({
           ].map(([title, desc]) => (
             <Card key={title}>
               <CardHeader><CardTitle className="text-base">{title}</CardTitle></CardHeader>
-              <CardContent className="text-sm leading-7 text-muted-foreground">{desc}</CardContent>
+              <CardContent className="text-sm text-muted-foreground">{desc}</CardContent>
             </Card>
           ))}
         </div>
@@ -4575,7 +4579,7 @@ function GettingStartedPage({
       <section id="intro-audience" className={docsSpacing.sectionStack}>
         <h2 className="text-2xl font-semibold">{lang === "en" ? "Audience" : "适合谁用"}</h2>
         <Card>
-          <CardContent className="grid gap-3 p-5 text-sm leading-7 text-muted-foreground md:grid-cols-3">
+          <CardContent className="grid gap-3 p-5 text-sm text-muted-foreground md:grid-cols-3">
             <p><span className="font-medium text-foreground">工程师：</span>查组件 API、复制真实用法、确认 token 规则。</p>
             <p><span className="font-medium text-foreground">设计/产品：</span>查看组件语义、状态、场景和设计令牌。</p>
             <p><span className="font-medium text-foreground">AI：</span>读取 Markdown + manifest + 检查脚本，生成不漂的页面。</p>
@@ -4611,7 +4615,7 @@ function ComponentsIndexPage({ actions, lang }: { actions: React.ReactNode; lang
       <section id="components-ui" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "UI Components" : "基础组件"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "Installed shadcn/ui components and local documentation pages."
               : "已安装并在本站沉淀文档的 shadcn/ui 基础组件。"}
@@ -4635,7 +4639,7 @@ function ComponentsIndexPage({ actions, lang }: { actions: React.ReactNode; lang
       <section id="components-fx" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Compositions" : "业务组合"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "Company-level patterns composed from shadcn primitives."
               : "由 shadcn 基础组件组合出来的公司级模式。"}
@@ -4659,7 +4663,7 @@ function ComponentsIndexPage({ actions, lang }: { actions: React.ReactNode; lang
       <section id="components-agent-ui" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">Agent UI</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "Controlled generative UI surfaces for Agent responses. Agents send JSON intent; fx-ui renders trusted React components."
               : "承载 Agent 回复里的受控生成式 UI。Agent 发 JSON 意图，fx-ui 渲染可信 React 组件。"}
@@ -4707,7 +4711,7 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Overview" : "组件总览"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "A compact visual matrix for quickly scanning Button variants, sizes, states, and icon usage."
               : "紧凑展示 Button 的类型、尺寸、状态和图标用法，用来快速查看组件长什么样。"}
@@ -4719,7 +4723,7 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="preview" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Scenario examples" : "场景示例"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "Use filters to inspect all examples, variant choices, sizes, states, and icon usage from the same data source."
               : "可点选查看全部、类型、尺寸、状态和图标用法；所有示例都来自同一份结构化数据源。"}
@@ -4781,7 +4785,7 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="usage" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Usage" : "使用方式"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "Copy the import and JSX usage into product pages."
               : "把 import 和 JSX 调用复制到业务页面里使用。"}
@@ -4828,7 +4832,7 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="semantic-dom" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Semantic DOM" : "语义 DOM"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "Button source comes from shadcn/ui and remains open-code. This section records the semantic parts AI and engineers should understand."
               : "Button 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。"}
@@ -4859,7 +4863,7 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="button-tokens" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Design Tokens" : "主题变量 Design Token"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "The Button page only shows tokens consumed by this component. Open Tokens from the top nav or left sidebar for the full token system."
               : "Button 页只展示这个组件实际消费的 token。完整 token 系统请从顶部 Tokens 或左侧设计 Tokens 进入。"}
@@ -4886,7 +4890,7 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
                       <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.value}</code>
                     </div>
                   </TableCell>
-                  <TableCell className="pr-4 text-muted-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+                  <TableCell className="pr-4 text-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -4897,7 +4901,7 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="do-dont" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Do / Don’t" : "正误示例"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "These examples capture the most common mistakes for engineers and AI-generated code."
               : "这些例子记录工程师和 AI 生成代码最容易犯的错误。"}
@@ -4947,7 +4951,7 @@ function PageLead({ crumb, title, lead, actions }: { crumb: string; title: strin
           </div>
           {actions}
         </div>
-        <p className="text-base leading-8 text-muted-foreground">{lead}</p>
+        <p className="text-base text-muted-foreground">{lead}</p>
       </div>
       <Separator className="mt-2 mb-10" />
     </>
@@ -5519,7 +5523,7 @@ function TokensColorsPage({ actions, lang }: { actions: React.ReactNode; lang: L
                         {row.tailwind ? <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.tailwind}</code> : <span className="text-muted-foreground/30">—</span>}
                       </TableCell>
                       <TableCell>{getTokenExample(row.name)}</TableCell>
-                      <TableCell className="pr-4 text-muted-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+                      <TableCell className="pr-4 text-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -5627,7 +5631,7 @@ function LayoutPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
         </div>
 
         {/* 偏移 / 容器 / 嵌套 */}
-        <div className="rounded-lg border border-border bg-card p-5 text-fx-13 leading-7 text-muted-foreground">
+        <div className="rounded-lg border border-border bg-card p-5 text-fx-13 text-muted-foreground">
           <p><span className="font-medium text-foreground">{lang === "en" ? "Offset" : "偏移"}</span>：{lang === "en" ? "leave columns before content with " : "内容前留空用 "}<code className="rounded bg-muted px-1 text-fx-12">col-start-[n]</code></p>
           <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Container" : "容器/版心"}</span>：{lang === "en" ? "max-width + page padding — " : "内容最大宽度 + 页面外边距 — "}<code className="rounded bg-muted px-1 text-fx-12">max-w-7xl</code> + <code className="rounded bg-muted px-1 text-fx-12">px-4 lg:px-8</code></p>
           <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Nesting" : "嵌套"}</span>：{lang === "en" ? "a grid can nest another grid; child re-splits by /24." : "栅格内可再嵌栅格，子栅格按 1/24 重新划分。"}</p>
@@ -5639,7 +5643,7 @@ function LayoutPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="layout-breakpoints" className="flex flex-col gap-5">
         <div>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Breakpoints 响应式断点" : "响应式断点"}</h2>
-          <p className="mt-1 text-fx-13 leading-7 text-muted-foreground">
+          <p className="mt-1 text-fx-13 text-muted-foreground">
             {lang === "en"
               ? "Tailwind is mobile-first: base styles apply at every width; a prefix like lg: means \"apply only when the viewport ≥ this width\". The five values below are the min-width thresholds where layout switches."
               : "Tailwind 是移动优先：不带前缀的样式对所有宽度生效；加前缀（如 lg:）表示\"屏幕宽度 ≥ 该值时才生效\"。下面五个值就是布局切换的最小宽度门槛——窗口宽度跨过它，对应规则才接管。"}
@@ -5710,7 +5714,7 @@ function TokensTypographyPage({ actions, lang }: { actions: React.ReactNode; lan
         />
 
         {([
-          { title: lang === "en" ? "Size 字号" : "字号", desc: lang === "en" ? "Text size by hierarchy (H1–H6 / body / small)." : "决定不同层级文本的大小（H1–H6 / 正文 / 小字）。", rows: typeSizeTokens },
+          { title: lang === "en" ? "Size 字号" : "字号", desc: lang === "en" ? "Text size by hierarchy (H1–H6 / body / small). Value = font-size / line-height." : "决定不同层级文本的大小（H1–H6 / 正文 / 小字）。值 = 字号 / 行高。", rows: typeSizeTokens },
           { title: lang === "en" ? "Weight 字重" : "字重", desc: lang === "en" ? "Text thickness." : "决定不同层级文本的粗细。", rows: typeWeightTokens },
           { title: lang === "en" ? "Family 字体" : "字体", desc: lang === "en" ? "Global font family." : "全局字族。", rows: typeFamilyTokens },
         ] as const).map((group) => (
@@ -5737,7 +5741,7 @@ function TokensTypographyPage({ actions, lang }: { actions: React.ReactNode; lan
                       </TableCell>
                       <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.value}</code></TableCell>
                       <TableCell><span className={`leading-none text-foreground ${row.cls}`}>示例文字 Aa</span></TableCell>
-                      <TableCell className="pr-4 text-muted-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+                      <TableCell className="pr-4 text-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -5746,7 +5750,7 @@ function TokensTypographyPage({ actions, lang }: { actions: React.ReactNode; lan
           </div>
         ))}
 
-        <div className="rounded-lg border border-border bg-muted/40 p-5 text-sm leading-7 text-muted-foreground">
+        <div className="rounded-lg border border-border bg-muted/40 p-5 text-sm text-muted-foreground">
           <p className="font-medium text-foreground">{lang === "en" ? "Font family" : "字族说明"}</p>
           <p className="mt-1">
             {lang === "en"
@@ -5773,29 +5777,70 @@ function TokensRadiusPage({ actions, lang }: { actions: React.ReactNode; lang: L
           lead={lang === "en" ? "Radius tokens keep shadcn controls, cards, and overlays visually consistent." : "圆角 token 用来统一 shadcn 控件、卡片和浮层容器的视觉性格。"}
           actions={actions}
         />
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[680px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-4">Token</TableHead>
-                <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
-                <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {radiusTokens.map((row) => (
-                <TableRow key={row.name}>
-                  <TableCell className="pl-4 font-medium">
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
-                  </TableCell>
-                  <TableCell>
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.value}</code>
-                  </TableCell>
-                  <TableCell className="pr-4 text-muted-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+        {/* 圆角档位 */}
+        <div className="flex flex-col gap-3">
+          <div>
+            <h2 className="text-2xl font-semibold">{lang === "en" ? "Radius scale 圆角档位" : "圆角档位"}</h2>
+            <p className="mt-1 text-fx-13 text-muted-foreground">
+              {lang === "en"
+                ? "All radius steps, from square to pill — chosen by component TYPE, not size. Per-step usage is in the Usage column."
+                : "全部圆角档位，从直角到胶囊——按组件「类型」选，不是按大小选。逐档对应组件见右侧场景列。"}
+            </p>
+          </div>
+          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+            <Table className="min-w-[720px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="pl-4">Token</TableHead>
+                  <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
+                  <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {radiusTokens.map((row) => (
+                  <TableRow key={row.name}>
+                    <TableCell className="pl-4 font-medium">
+                      <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
+                    </TableCell>
+                    <TableCell>
+                      <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.value}</code>
+                    </TableCell>
+                    <TableCell>
+                      <div className={`size-10 bg-primary/15 ring-1 ring-inset ring-primary/30 ${row.name === "--radius" ? "rounded-lg" : row.name}`} />
+                    </TableCell>
+                    <TableCell className="pr-4 text-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+
+        {/* 计算方式 */}
+        <div className="flex flex-col gap-3">
+          <div>
+            <h2 className="text-2xl font-semibold">{lang === "en" ? "How it's computed 计算方式" : "计算方式"}</h2>
+            <p className="mt-1 text-fx-13 text-muted-foreground">
+              {lang === "en"
+                ? "Core steps derive from a single base via fixed ±2px steps (the shadcn convention); large steps use Tailwind defaults."
+                : "核心档由唯一基准值按固定 ±2px 步进派生（shadcn 标准做法）；大容器档用 Tailwind 默认值。"}
+            </p>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-5 text-fx-13 text-muted-foreground">
+            <p><span className="font-medium text-foreground">{lang === "en" ? "Base" : "基准"}</span>：<code className="rounded bg-muted px-1 text-fx-12">--radius = 0.625rem（10px）</code>{lang === "en" ? "，equals rounded-lg." : "，即 rounded-lg。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Core ±2px step" : "核心档 ±2px 步进"}</span>：sm = <code className="rounded bg-muted px-1 text-fx-12">base − 4px</code>，md = <code className="rounded bg-muted px-1 text-fx-12">base − 2px</code>，lg = <code className="rounded bg-muted px-1 text-fx-12">base</code>，xl = <code className="rounded bg-muted px-1 text-fx-12">base + 4px</code>{lang === "en" ? "。Changing the base shifts the whole scale together." : "。改基准值整套等量平移，差值恒定可预测。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Large steps" : "大容器档"}</span>：2xl = 16px，3xl = 24px，4xl = 32px{lang === "en" ? " (Tailwind defaults)." : "（Tailwind 默认固定值）。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">full</span>：<code className="rounded bg-muted px-1 text-fx-12">9999px</code>{lang === "en" ? "，a pill/circle, not derived from the base." : "，胶囊/圆形，不参与基准派生。"}</p>
+            <p className="mt-3 border-t border-border pt-3 font-medium text-foreground">{lang === "en" ? "Why derive instead of hard-coded values?" : "为什么用 calc 派生，不直接写固定值？"}</p>
+            <p className="mt-1">{lang === "en"
+              ? "① Single knob — change --radius and the whole scale shifts together, so a rounder/squarer brand is one edit. ② Constant step — fixed ±2px keeps neighboring steps evenly spaced, no drift like someone writing 7 and someone 9. ③ Theme-able. Hard-coded values read more directly but lose the master knob, so the doc shows the computed px too."
+              : "① 单一总开关——改 --radius 整套等量平移，想更圆/更方一处生效；② 步进恒定——固定 ±2px 让相邻档差值一致，不会有人写 7、有人写 9 漂移；③ 品牌可调。固定值更直观但失去这把总开关，所以表格里同时标了换算后的 px。"}</p>
+            <p className="mt-3 border-t border-border pt-3 font-medium text-foreground">{lang === "en" ? "Size vs radius — the 0.15–0.35 ratio band" : "尺寸与圆角——0.15~0.35 比值带"}</p>
+            <p className="mt-1">{lang === "en"
+              ? "Pick one step by component type, then apply it to all size variants and check radius ÷ height. As long as every size stays within 0.15–0.35 it shares one radius (e.g. an 8px button at 28/32/36px → 0.29/0.25/0.22, all in band). A size that falls out steps to a neighboring step automatically — > 0.4 (too round) steps down, < 0.15 (too sharp) steps up — reusing the existing scale, never a new value."
+              : "先按组件类型选一档，套到该组件所有尺寸上算「圆角 ÷ 高度」：只要每个尺寸都落在 0.15~0.35 就共用一档（如 8px 按钮在 28/32/36px → 0.29/0.25/0.22，全在带内）。掉出带的尺寸自动换到相邻档——> 0.4（太圆）下调、< 0.15（太尖）上调——复用现有阶梯，不造新值。判定靠比值算，不靠拍脑袋，也不用逐组件预先指定。"}</p>
+          </div>
         </div>
       </section>
     </>
@@ -5830,7 +5875,7 @@ function TokensSpacingPage({ actions, lang }: { actions: React.ReactNode; lang: 
                   <TableCell>
                     <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.value}</code>
                   </TableCell>
-                  <TableCell className="pr-4 text-muted-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+                  <TableCell className="pr-4 text-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -5848,36 +5893,69 @@ function TokensShadowPage({ actions, lang }: { actions: React.ReactNode; lang: L
         <PageLead
           crumb={lang === "en" ? "Design Tokens / Shadow" : "设计 Tokens / 阴影"}
           title={lang === "en" ? "Shadow" : "阴影"}
-          lead={lang === "en" ? "Shadow tokens map to Figma's Layer Style spec. Four semantic levels cover all overlay use cases. Do not use Tailwind's built-in shadow-sm / shadow-md / shadow-lg — they are not mapped to company tokens." : "阴影 token 来自 Figma「图层样式」规范，四档覆盖所有浮层场景。禁止使用 Tailwind 内置的 shadow-sm / shadow-md / shadow-lg，它们未映射公司 token。"}
+          lead={lang === "en" ? "Shadow tokens come from Figma's Layer Style spec — four levels cover every overlay. Only use shadow-l1/l2/l3/l1-up; avoid Tailwind's built-in shadow-sm/md/lg (a separate set of values that won't follow our shadow variables)." : "阴影 token 来自 Figma「图层样式」，四档覆盖所有浮层场景。只用 shadow-l1/l2/l3/l1-up，别用 Tailwind 自带的 shadow-sm/md/lg（那是另一套数值，不跟随公司变量）。"}
           actions={actions}
         />
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[720px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-4">Token</TableHead>
-                <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
-                <TableHead>{lang === "en" ? "Preview" : "预览"}</TableHead>
-                <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {shadowTokens.map((row) => (
-                <TableRow key={row.name}>
-                  <TableCell className="pl-4 font-medium">
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
-                  </TableCell>
-                  <TableCell>
-                    <code className="text-xs text-muted-foreground">{row.value}</code>
-                  </TableCell>
-                  <TableCell>
-                    <div className={`h-10 w-24 rounded-lg bg-card ${row.name}`} />
-                  </TableCell>
-                  <TableCell className="pr-4 text-muted-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+        {/* 阴影档位 */}
+        <div className="flex flex-col gap-3">
+          <div>
+            <h2 className="text-2xl font-semibold">{lang === "en" ? "Elevation levels 阴影档位" : "阴影档位"}</h2>
+            <p className="mt-1 text-fx-13 text-muted-foreground">
+              {lang === "en"
+                ? "Shadow encodes how high an element floats above the page — higher = lower & more diffuse. Pick by overlay layer; per-level usage is in the Usage column."
+                : "阴影表达元素「离页面多高」——越高、投影越往下、越散。按浮层层级选档，逐档对应组件见右侧场景列。"}
+            </p>
+          </div>
+          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+            <Table className="min-w-[720px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="pl-4">Token</TableHead>
+                  <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
+                  <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {shadowTokens.map((row) => (
+                  <TableRow key={row.name} className="hover:bg-transparent">
+                    <TableCell className="pl-4 font-medium align-middle">
+                      <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
+                    </TableCell>
+                    <TableCell className="align-middle">
+                      <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.value}</code>
+                    </TableCell>
+                    <TableCell className="align-middle">
+                      <div className="py-8">
+                        <div className={`h-10 w-24 rounded-lg bg-card ${row.name}`} />
+                      </div>
+                    </TableCell>
+                    <TableCell className="pr-4 align-middle text-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+
+        {/* 计算方式 */}
+        <div className="flex flex-col gap-3">
+          <div>
+            <h2 className="text-2xl font-semibold">{lang === "en" ? "How it's computed 计算方式" : "计算方式"}</h2>
+            <p className="mt-1 text-fx-13 text-muted-foreground">
+              {lang === "en"
+                ? "Each level is 0 {y}px {blur}px var(--fx-shadow-color), with no spread. Only y-offset and blur grow with elevation; the color stays the same."
+                : "每档 = 0 {y}px {blur}px var(--fx-shadow-color)，spread 恒为 0。随层级升高只增大 y 偏移和 blur，颜色不变。"}
+            </p>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-5 text-fx-13 text-muted-foreground">
+            <p><span className="font-medium text-foreground">{lang === "en" ? "Color knob" : "颜色总开关"}</span>：<code className="rounded bg-muted px-1 text-fx-12">--fx-shadow-color = oklch(from --fx-neutrals-20 l c h / .15)</code>{lang === "en" ? "，derived from the darkest neutral (brand-tinted) at 15% alpha — follows the palette, not hard-coded black; one place to adjust." : "，从最深中性灰（带品牌色相）派生 + 15% 透明，跟随色板而非写死纯黑；四档共用、一处调深浅。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Y-offset" : "y 偏移"}</span>：{lang === "en" ? "drop distance, +2px per level — 2 / 4 / 6 (light from top, higher floats drop further)." : "投影下移距离，每升一层 +2px——2 / 4 / 6（光从上方来，越高落得越远）。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">Blur</span>：{lang === "en" ? "softness, roughly doubles per level — 6 / 12 / 24 (higher = softer, more diffuse)." : "模糊半径，约每层翻倍——6 / 12 / 24（越高越柔、越散）。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">Spread</span>：0{lang === "en" ? " — never expand, keeps shadows clean." : "——不外扩，避免脏重。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Direction variant" : "方向变体"}</span>：{lang === "en" ? "shadow-l1-up = L1 with negative y, for overlays that pop upward (bottom toolbar menus)." : "shadow-l1-up = L1 的 y 取负，用于从下往上弹的浮层（底部工具栏菜单）。"}</p>
+            <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Why this way" : "为什么这样做"}</span>：{lang === "en" ? "layers are separated by geometry (y + blur), not by darkening color — so overlays stay light and neutral instead of muddy. Built-in Tailwind shadow-sm/md/lg are banned: they aren't mapped to company tokens and would drift." : "靠几何（y + blur）拉开层级，不靠加深颜色——浮层保持淡而中性，不发脏。只用 shadow-l1/l2/l3/l1-up，别用 Tailwind 自带的 shadow-sm/md/lg：那是另一套独立数值、不跟随公司阴影变量，混用会让全站阴影深浅对不上、以后也调不动。"}</p>
+          </div>
         </div>
       </section>
     </>
@@ -5908,7 +5986,7 @@ function TokensMotionPage({ actions, lang }: { actions: React.ReactNode; lang: L
                   <TableCell className="pl-4 font-medium">
                     <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
                   </TableCell>
-                  <TableCell className="pr-4 text-muted-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+                  <TableCell className="pr-4 text-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -5943,7 +6021,7 @@ function TokensLayerPage({ actions, lang }: { actions: React.ReactNode; lang: La
                   <TableCell className="pl-4 font-medium">
                     <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
                   </TableCell>
-                  <TableCell className="pr-4 text-muted-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+                  <TableCell className="pr-4 text-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -6084,7 +6162,7 @@ function IconPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
 
         <Card>
           <CardContent className="p-0">
-            <pre className="max-w-full overflow-x-auto p-5 text-sm leading-7">
+            <pre className="max-w-full overflow-x-auto p-5 text-sm">
               <code>{`import { SearchIcon } from "@/lib/icons"
 
 export function SearchAction() {
@@ -6269,7 +6347,7 @@ function TypographyPage({ actions, lang }: { actions: React.ReactNode; lang: Lan
           页面只需要按场景选择合适的字号和颜色组合。
         </p>
 
-        <p className="text-base leading-8">
+        <p className="text-base">
           排版 token 的真相值在 <code className="rounded bg-muted px-1.5 py-0.5">docs/TOKENS.md</code> 的"排版"小节维护，
           本页只讲"在页面里该怎么用"。
         </p>
@@ -6374,7 +6452,7 @@ function InputPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       <section id="input-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-semibold">组件总览</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Input 是基础 shadcn 组件，统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot="input"</code> 标记根节点，
             视觉由公司 token 注入，不需要也不应该手写覆盖样式。
           </p>
@@ -6395,7 +6473,7 @@ function InputPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       <section id="input-preview" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">场景示例</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             常见的四类用法：默认、搭配 Label、禁用、校验失败。
           </p>
         </div>
@@ -6459,7 +6537,7 @@ function InputPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       <section id="input-usage" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">使用方式</h2>
-          <p className="text-base leading-8 text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
+          <p className="text-base text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
         </div>
         <div className="rounded-lg border border-border bg-card p-5">
           <div className="grid gap-4">
@@ -6502,7 +6580,7 @@ function InputPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       <section id="input-semantic-dom" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">语义 DOM</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Input 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。
           </p>
         </div>
@@ -6642,7 +6720,7 @@ function SelectPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="select-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-semibold">组件总览</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Select 由 Trigger（触发器）、Content（下拉浮层）、Item（选项）等部位组合而成，
             统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot</code> 标记各部位，视觉由公司 token 注入。
           </p>
@@ -6667,7 +6745,7 @@ function SelectPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="select-preview" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">场景示例</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             常见的四类用法：默认、分组选项、紧凑尺寸、禁用。
           </p>
         </div>
@@ -6712,7 +6790,7 @@ function SelectPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="select-usage" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">使用方式</h2>
-          <p className="text-base leading-8 text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
+          <p className="text-base text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
         </div>
         <div className="rounded-lg border border-border bg-card p-5">
           <div className="grid gap-4">
@@ -6755,7 +6833,7 @@ function SelectPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="select-semantic-dom" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">语义 DOM</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Select 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。
           </p>
         </div>
@@ -6881,7 +6959,7 @@ function CheckboxPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
       <section id="checkbox-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-semibold">组件总览</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Checkbox 由根节点和选中态指示图标组成，统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot</code> 标记，
             视觉由公司 token 注入，选中态颜色取自 primary。
           </p>
@@ -6899,7 +6977,7 @@ function CheckboxPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
       <section id="checkbox-preview" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">场景示例</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             常见的四类用法：默认、受控选中态、禁用、列表内勾选。
           </p>
         </div>
@@ -6944,7 +7022,7 @@ function CheckboxPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
       <section id="checkbox-usage" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">使用方式</h2>
-          <p className="text-base leading-8 text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
+          <p className="text-base text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
         </div>
         <div className="rounded-lg border border-border bg-card p-5">
           <div className="grid gap-4">
@@ -6987,7 +7065,7 @@ function CheckboxPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
       <section id="checkbox-semantic-dom" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">语义 DOM</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Checkbox 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。
           </p>
         </div>
@@ -7107,7 +7185,7 @@ function SwitchPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="switch-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-semibold">组件总览</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Switch 由轨道根节点和可滑动滑块组成，统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot</code> 标记，
             开启态轨道颜色取自 primary。
           </p>
@@ -7125,7 +7203,7 @@ function SwitchPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="switch-preview" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">场景示例</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             常见的四类用法：默认、受控状态、紧凑尺寸、禁用。
           </p>
         </div>
@@ -7170,7 +7248,7 @@ function SwitchPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="switch-usage" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">使用方式</h2>
-          <p className="text-base leading-8 text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
+          <p className="text-base text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
         </div>
         <div className="rounded-lg border border-border bg-card p-5">
           <div className="grid gap-4">
@@ -7213,7 +7291,7 @@ function SwitchPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="switch-semantic-dom" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">语义 DOM</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Switch 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。
           </p>
         </div>
@@ -7312,7 +7390,7 @@ function TextareaPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
       <section id="textarea-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-semibold">组件总览</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Textarea 是基础 shadcn 组件，统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot="textarea"</code> 标记根节点，
             高度通过 field-sizing-content 自适应内容，不需要手写 rows 撑高度。
           </p>
@@ -7328,7 +7406,7 @@ function TextareaPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
       <section id="textarea-preview" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">场景示例</h2>
-          <p className="text-base leading-8 text-muted-foreground">常见的三类用法：默认、禁用、校验失败。</p>
+          <p className="text-base text-muted-foreground">常见的三类用法：默认、禁用、校验失败。</p>
         </div>
         <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
           <Table className="min-w-[960px]">
@@ -7371,7 +7449,7 @@ function TextareaPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
       <section id="textarea-usage" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">使用方式</h2>
-          <p className="text-base leading-8 text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
+          <p className="text-base text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
         </div>
         <div className="rounded-lg border border-border bg-card p-5">
           <div className="grid gap-4">
@@ -7414,7 +7492,7 @@ function TextareaPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
       <section id="textarea-semantic-dom" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">语义 DOM</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Textarea 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。
           </p>
         </div>
@@ -7496,7 +7574,7 @@ function TablePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       <section id="table-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-semibold">组件总览</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Table 由 Header / Body / Row / Head / Cell 等语义子组件组合而成，
             统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot</code> 标记各部位，外层容器自带横向滚动。
           </p>
@@ -7531,7 +7609,7 @@ function TablePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       <section id="table-preview" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">场景示例</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             带表尾汇总的表格，用于展示一组明细数据及其合计。
           </p>
         </div>
@@ -7570,7 +7648,7 @@ function TablePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       <section id="table-usage" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">使用方式</h2>
-          <p className="text-base leading-8 text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
+          <p className="text-base text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
         </div>
         <div className="rounded-lg border border-border bg-card p-5">
           <div className="grid gap-4">
@@ -7613,7 +7691,7 @@ function TablePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       <section id="table-semantic-dom" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">语义 DOM</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Table 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。
           </p>
         </div>
@@ -7695,7 +7773,7 @@ function CardPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
       <section id="card-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-semibold">组件总览</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Card 由 Header（标题/描述/操作区）、Content（主体）、Footer（底部）等部位组成，
             统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot</code> 标记，视觉由公司 token 注入。
           </p>
@@ -7720,7 +7798,7 @@ function CardPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
       <section id="card-preview" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">场景示例</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             常见的三类用法：数据概览卡、信息说明卡、可操作的列表项卡片。
           </p>
         </div>
@@ -7764,7 +7842,7 @@ function CardPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
       <section id="card-usage" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">使用方式</h2>
-          <p className="text-base leading-8 text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
+          <p className="text-base text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
         </div>
         <div className="rounded-lg border border-border bg-card p-5">
           <div className="grid gap-4">
@@ -7807,7 +7885,7 @@ function CardPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
       <section id="card-semantic-dom" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">语义 DOM</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Card 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。
           </p>
         </div>
@@ -7920,7 +7998,7 @@ function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       <section id="badge-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-semibold">组件总览</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Badge 提供 7 种 variant 表达不同语义级别，统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot="badge"</code> 标记，
             视觉由公司 token 注入。
           </p>
@@ -7940,7 +8018,7 @@ function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       <section id="badge-preview" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">场景示例</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             常见的三类用法：状态标记、计数提示、搭配图标。
           </p>
         </div>
@@ -7985,7 +8063,7 @@ function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       <section id="badge-usage" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">使用方式</h2>
-          <p className="text-base leading-8 text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
+          <p className="text-base text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
         </div>
         <div className="rounded-lg border border-border bg-card p-5">
           <div className="grid gap-4">
@@ -8028,7 +8106,7 @@ function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       <section id="badge-semantic-dom" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">语义 DOM</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Badge 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。
           </p>
         </div>
@@ -8143,7 +8221,7 @@ function TooltipPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }
       <section id="tooltip-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-semibold">组件总览</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Tooltip 由 Provider（统一延迟）、Trigger（触发元素）、Content（提示气泡）组成，
             页面级建议只包一层 <code className="rounded bg-muted px-1.5 py-0.5">TooltipProvider</code>，
             视觉由公司 token 注入。
@@ -8171,7 +8249,7 @@ function TooltipPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }
       <section id="tooltip-preview" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">场景示例</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             常见的三类用法：纯图标按钮说明、截断文本补全、自定义弹出方向。
           </p>
         </div>
@@ -8218,7 +8296,7 @@ function TooltipPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }
       <section id="tooltip-usage" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">使用方式</h2>
-          <p className="text-base leading-8 text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
+          <p className="text-base text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
         </div>
         <div className="rounded-lg border border-border bg-card p-5">
           <div className="grid gap-4">
@@ -8261,7 +8339,7 @@ function TooltipPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }
       <section id="tooltip-semantic-dom" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">语义 DOM</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Tooltip 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。
           </p>
         </div>
@@ -8382,7 +8460,7 @@ function DialogPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="dialog-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-semibold">组件总览</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Dialog 由 Trigger（触发）、Content（主体，含遮罩）、Header/Footer（布局分组）、
             Title/Description（语义标题与说明）组成，统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot</code> 标记。
           </p>
@@ -8413,7 +8491,7 @@ function DialogPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="dialog-preview" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">场景示例</h2>
-          <p className="text-base leading-8 text-muted-foreground">常见的两类用法：表单弹窗、确认弹窗。</p>
+          <p className="text-base text-muted-foreground">常见的两类用法：表单弹窗、确认弹窗。</p>
         </div>
         <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
           <Table className="min-w-[1000px]">
@@ -8456,7 +8534,7 @@ function DialogPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="dialog-usage" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">使用方式</h2>
-          <p className="text-base leading-8 text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
+          <p className="text-base text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
         </div>
         <div className="rounded-lg border border-border bg-card p-5">
           <div className="grid gap-4">
@@ -8499,7 +8577,7 @@ function DialogPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       <section id="dialog-semantic-dom" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">语义 DOM</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Dialog 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。
           </p>
         </div>
@@ -8617,7 +8695,7 @@ function AlertDialogPage({ actions, lang }: { actions: React.ReactNode; lang: La
       <section id="alert-dialog-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-semibold">组件总览</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Alert Dialog 与 Dialog 结构相似，但语义角色是 <code className="rounded bg-muted px-1.5 py-0.5">alertdialog</code>，
             并且默认强制用户通过 Action / Cancel 明确做出选择，不能随意关闭。
           </p>
@@ -8645,7 +8723,7 @@ function AlertDialogPage({ actions, lang }: { actions: React.ReactNode; lang: La
       <section id="alert-dialog-preview" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">场景示例</h2>
-          <p className="text-base leading-8 text-muted-foreground">常见的两类用法：破坏性操作确认、离开未保存提示。</p>
+          <p className="text-base text-muted-foreground">常见的两类用法：破坏性操作确认、离开未保存提示。</p>
         </div>
         <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
           <Table className="min-w-[1000px]">
@@ -8688,7 +8766,7 @@ function AlertDialogPage({ actions, lang }: { actions: React.ReactNode; lang: La
       <section id="alert-dialog-usage" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">使用方式</h2>
-          <p className="text-base leading-8 text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
+          <p className="text-base text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
         </div>
         <div className="rounded-lg border border-border bg-card p-5">
           <div className="grid gap-4">
@@ -8731,7 +8809,7 @@ function AlertDialogPage({ actions, lang }: { actions: React.ReactNode; lang: La
       <section id="alert-dialog-semantic-dom" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">语义 DOM</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Alert Dialog 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。
           </p>
         </div>
@@ -8852,7 +8930,7 @@ function SheetPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       <section id="sheet-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-semibold">组件总览</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Sheet 与 Dialog 结构相似，区别在于以 <code className="rounded bg-muted px-1.5 py-0.5">side</code> 控制从屏幕哪一侧滑出，
             适合承载和当前页面强相关的详情或操作。
           </p>
@@ -8883,7 +8961,7 @@ function SheetPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       <section id="sheet-preview" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">场景示例</h2>
-          <p className="text-base leading-8 text-muted-foreground">常见的两类用法：右侧编辑面板、底部操作面板。</p>
+          <p className="text-base text-muted-foreground">常见的两类用法：右侧编辑面板、底部操作面板。</p>
         </div>
         <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
           <Table className="min-w-[1000px]">
@@ -8926,7 +9004,7 @@ function SheetPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       <section id="sheet-usage" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">使用方式</h2>
-          <p className="text-base leading-8 text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
+          <p className="text-base text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
         </div>
         <div className="rounded-lg border border-border bg-card p-5">
           <div className="grid gap-4">
@@ -8969,7 +9047,7 @@ function SheetPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       <section id="sheet-semantic-dom" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">语义 DOM</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Sheet 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。
           </p>
         </div>
@@ -9072,7 +9150,7 @@ function SkeletonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
       <section id="skeleton-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-semibold">组件总览</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Skeleton 本质是一个带 <code className="rounded bg-muted px-1.5 py-0.5">animate-pulse</code> 动效的占位块，
             通过 className 控制宽高与形状来还原真实内容结构。
           </p>
@@ -9091,7 +9169,7 @@ function SkeletonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
       <section id="skeleton-preview" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">场景示例</h2>
-          <p className="text-base leading-8 text-muted-foreground">常见的两类用法：文本占位、卡片媒体占位。</p>
+          <p className="text-base text-muted-foreground">常见的两类用法：文本占位、卡片媒体占位。</p>
         </div>
         <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
           <Table className="min-w-[1000px]">
@@ -9134,7 +9212,7 @@ function SkeletonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
       <section id="skeleton-usage" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">使用方式</h2>
-          <p className="text-base leading-8 text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
+          <p className="text-base text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
         </div>
         <div className="rounded-lg border border-border bg-card p-5">
           <div className="grid gap-4">
@@ -9177,7 +9255,7 @@ function SkeletonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
       <section id="skeleton-semantic-dom" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">语义 DOM</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Skeleton 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。
           </p>
         </div>
@@ -9290,7 +9368,7 @@ function StandardDocPage({
       <section id={`${slug}-preview`} className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">场景示例</h2>
-          <p className="text-base leading-8 text-muted-foreground">常见用法与适用场景。</p>
+          <p className="text-base text-muted-foreground">常见用法与适用场景。</p>
         </div>
         <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
           <Table className="min-w-[1000px]">
@@ -9331,7 +9409,7 @@ function StandardDocPage({
       <section id={`${slug}-usage`} className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">使用方式</h2>
-          <p className="text-base leading-8 text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
+          <p className="text-base text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
         </div>
         <div className="rounded-lg border border-border bg-card p-5">
           <div className="grid gap-4">
@@ -9374,7 +9452,7 @@ function StandardDocPage({
       <section id={`${slug}-semantic-dom`} className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">语义 DOM</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。
           </p>
         </div>
@@ -10153,7 +10231,7 @@ function AgentSurfacePage({ actions, lang }: { actions: React.ReactNode; lang: L
       <section id="agent-surface-scenarios" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "High-frequency Scenarios" : "高频场景"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "Start from what company Agents actually return, then decide which blocks deserve to become stable components."
               : "先从公司 Agent 真实回复里最高频的内容出发，再决定哪些 block 值得沉淀成稳定组件。"}
@@ -10245,7 +10323,7 @@ function AgentSurfacePage({ actions, lang }: { actions: React.ReactNode; lang: L
       <section id="agent-surface-visual" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Visual Direction" : "视觉规范"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "Agent UI can borrow the lightness of consumer AI cards, but it remains a subsystem of fx-ui."
               : "Agent UI 可以借鉴 C 端 AI 卡片的轻盈感，但它仍然是 fx-ui 的视觉子系统。"}
@@ -10306,7 +10384,7 @@ function AgentSurfacePage({ actions, lang }: { actions: React.ReactNode; lang: L
       <section id="agent-surface-playground" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Mock Preview" : "Mock 预览"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "Paste or edit the Agent JSON on the left. The right side renders the real AgentSurface component."
               : "在左侧粘贴或编辑 Agent JSON，右侧会用真实 AgentSurface 组件实时渲染。"}
@@ -10381,7 +10459,7 @@ function AgentSurfacePage({ actions, lang }: { actions: React.ReactNode; lang: L
       <section id="agent-surface-demo" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Live Example" : "实时示例"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "Click a button below. The UI does not execute Agent code; it only emits an event."
               : "点击下面的按钮。UI 不会执行 Agent 代码，只会发出事件。"}
@@ -10414,7 +10492,7 @@ function AgentSurfacePage({ actions, lang }: { actions: React.ReactNode; lang: L
       <section id="agent-surface-schema" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "JSON Protocol" : "JSON 协议"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "The first version supports text, object-card, file-card, and action-row."
               : "第一版支持 text、object-card、file-card 和 action-row。"}
@@ -10426,7 +10504,7 @@ function AgentSurfacePage({ actions, lang }: { actions: React.ReactNode; lang: L
       <section id="agent-surface-strategy" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Protocol Strategy" : "协议取舍"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "fx-ui references mature generative UI ideas, but the first phase stays lightweight so real Agent cards can ship first."
               : "fx-ui 会参考成熟生成式 UI 思路，但第一阶段先保持轻协议，让真实 Agent 卡片先跑起来。"}
@@ -10472,7 +10550,7 @@ function AgentSurfacePage({ actions, lang }: { actions: React.ReactNode; lang: L
       <section id="agent-surface-safety" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Safety" : "安全边界"}</h2>
-          <p className="text-base leading-8 text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {lang === "en"
               ? "Unknown blocks are shown as unsupported. The renderer does not eval, import, or inject HTML."
               : "未知 block 会显示为不支持。渲染器不会 eval、动态 import 或注入 HTML。"}
@@ -10502,7 +10580,7 @@ function RightRail({
       <div className="sticky top-8">
         <nav className="border-l border-border pl-6">
           <div className="mb-4 text-sm font-medium text-foreground">{uiText[lang].toc}</div>
-          <div className="flex flex-col gap-1 text-sm leading-7">
+          <div className="flex flex-col gap-1 text-sm">
             {anchors.map((item) => {
               const isActive = activeAnchor === item.href
 
@@ -10651,7 +10729,7 @@ function ChartPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
           </div>
           {actions}
         </div>
-        <p className="text-base leading-8 text-muted-foreground">
+        <p className="text-base text-muted-foreground">
           {lang === "en"
             ? "Built on Recharts via shadcn chart. Colors inherit from --chart-1~10 tokens."
             : "基于 shadcn chart（Recharts 封装）。颜色继承 --chart-1~10 token，跟随主题自动切换。"}

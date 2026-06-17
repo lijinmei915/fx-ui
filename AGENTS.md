@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-06-16
+last_verified: 2026-06-17
 teaches: "AI 在 fx-ui 项目里的行为红线：不手写组件、只注入 token、保护 token 真相源"
 use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token 时"
 ---
@@ -55,6 +55,30 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 5. 最终回复必须说明：使用了哪些 shadcn 能力、是否新增 API、检查是否通过。
 
 `scripts/check-shadcn-contract.mjs` 目前只对 **Button** 做机器化契约核对（变体多、容易改坏，值得写专门脚本）。其余组件的 variant/size/状态等结构和 Button 差异很大（例如 Avatar 没有 variant/size、Sidebar 是另一套结构），硬塞进同一个脚本只会变成勉强凑数的伪检查；这些组件改动后，靠上面第 1-3 步的人工核对 + `npm run check` 基础构建检查即可，不强制加进契约脚本。
+
+---
+
+## 治理自检清单（每次新建/修改前后对照）
+
+**动手前：**
+1. **路由唯一**：这条信息/能力唯一归哪个文件？查 `docs/DOCUMENTATION.md` SSOT 表——已有归属就别另起，别和别的文档蹭。
+2. **认准真相源**：要改的是不是真相源（`theme/fx-theme.css` / `docs/data/*.json`）？是就从源头改，别从下游改。
+
+**改 token / 颜色：**
+3. 顺序铁律：**改 `theme/fx-theme.css` → 同步 `docs/TOKENS.md`+规则 → `npm run build:tokens` → 最后改组件**。顺序不能反。
+4. 交互态一律走色板阶梯（实心 09/08/10/05、浅色 01/02/03，仅浅色模式），禁 `color-mix`、禁 `/透明度`。
+
+**新建 / 改文档：**
+5. **登记**：新建 `docs/*.md` 同时①在 SSOT 表加一行 ②在 `docs/data/doc-structure.manifest.json` 声明唯一 `responsibility` + 必备章节。
+6. **不重复**：本文该写的别人不写；别人的活只放指针（link），不复制正文。
+7. **章节齐全**：对照 doc-structure 的 `requiredSections`，别产出残缺文档。
+
+**新增长期规则：**
+8. **三件套**：文字规范（MD）→ 机器事实（JSON）→ 可执行检查（script 接 `check-all.sh`）。只写 MD 会飘。
+
+**收尾：**
+9. `bash scripts/check-all.sh` 全绿才算完；`last_verified` 由 pre-commit 自动 bump，不用手填。
+10. 不确定写哪 / 该不该删——先查文档，别凭感觉。
 
 ---
 

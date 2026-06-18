@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-06-07
+last_verified: 2026-06-18
 teaches: "fx-ui 高价值结构改动的记录：改了什么、为什么改、影响到哪里"
 use_when: "需要回溯某次跨层改动的原因和影响范围时"
 ---
@@ -18,6 +18,24 @@ use_when: "需要回溯某次跨层改动的原因和影响范围时"
 - 一次连续任务合并成一条
 
 ---
+
+## 2026-06-18 — 图标库换 Tabler + 布局拆「布局/栅格」两页 + Layout 骨架组件
+
+- **改动**：图标从 Phosphor 换成 Tabler（`src/lib/icons.ts` 重映射，线宽由全局 `.tabler-icon` 控制、面型用 `*Filled`，见 DEC-009，卸载 phosphor）；布局页拆成「布局」(#layout，页面容器+尺寸) 和「栅格」(#grid，24 列+断点) 两页，借鉴 Semi；新增 fx 骨架组件 `src/components/fx/layout.tsx`（Layout/Header/Sider/Content/Footer，见 DEC-010），栅格保持 Tailwind 工具类不封 Row/Col；按钮对齐 shadcn（字重 400、梯度字号 12/13/14/16）
+- **影响**：图标线宽可调、有实心变体；布局/栅格职责分离、各有独立页；新增可复用页面骨架组件；图标/布局红线写进 `AGENTS.md`
+- **相关文件**：`src/lib/icons.ts`、`src/components/fx/layout.tsx`、`src/App.tsx`、`theme/fx-theme.css`、`docs/{TOKENS,LAYOUTS,DECISIONS}.md`、`AGENTS.md`、`scripts/check-toc-anchors.mjs`
+
+## 2026-06-18 — 自托管开源字体（Inter + Noto Sans SC）
+
+- **改动**：字体从纯系统栈改为自托管开源 webfont（`@fontsource` 引入 Inter 管西文、Noto Sans SC 管中文，见 DEC-008）；附带把 `text-fx-*` 用 `extendTailwindMerge` 登记为 font-size，修掉它被当文字颜色覆盖的 bug（小尺寸主色按钮黑字）
+- **影响**：中英文跨平台渲染一致、无版权困扰；`cn()` 不再误吞文字颜色
+- **相关文件**：`src/main.tsx`、`src/lib/utils.ts`、`theme/fx-theme.css`、`docs/{TOKENS,DECISIONS}.md`
+
+## 2026-06-16~18 — Token 层全面精修 + 交互态收敛 + 治理门禁
+
+- **改动**：颜色（单一中性灰 DEC-006、交互阶梯 DEC-005）、圆角（±2px 派生 + 比值带）、阴影（elevation + `--fx-shadow-color` 派生跟随色板）、间距（4px 网格）、层级、动效、排版（web 字号 + 行高随 token）逐页细化为"档位 + 计算方式 + 示例"；遮罩收成语义 token `--overlay`；组件浅色交互态从 `/透明度` 收到实心 token；新增可执行门禁 `check-interaction-tokens`、`check-shadow-tokens`、`check-toc-anchors`（接 check-all）
+- **影响**：token 体系可换肤、可预测、有门禁防漂；文档站七个 token 子页结构统一、目录与内容双向关联
+- **相关文件**：`theme/fx-theme.css`、`docs/TOKENS.md`、`docs/DECISIONS.md`、`docs/data/design-tokens.json`、`src/components/ui/*`、`scripts/check-*.mjs`
 
 ## 2026-06-08 — 补全全部 28 个 shadcn 基础组件的中文文档页
 

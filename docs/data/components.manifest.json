@@ -1165,6 +1165,30 @@
       ]
     },
     {
+      "name": "Layout",
+      "source": "src/components/fx/layout.tsx",
+      "docStatus": "complete",
+      "role": "页面骨架（Layout/Header/Sider/Content/Footer，参考 Semi）",
+      "category": "fx",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "root"
+      ],
+      "tokenRefs": [
+        "--background",
+        "--card",
+        "--border",
+        "--muted-foreground"
+      ],
+      "usageRules": [
+        "整页骨架用 Layout 拼装（含侧栏设 hasSider）；内容区内部分栏用 24 列栅格工具类，不再包 Row/Col。",
+        "侧栏收起(collapsed)与响应式由使用方控制；默认尺寸见 docs/LAYOUTS.md，不逐页随手定。",
+        "不要手写颜色、圆角、边框；优先用源码已有 prop 和 token。"
+      ]
+    },
+    {
       "name": "PageShell",
       "source": "src/components/fx/page-shell.tsx",
       "docStatus": "complete",

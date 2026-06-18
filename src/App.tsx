@@ -3,9 +3,15 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
   BellIcon,
+  BellFilledIcon,
   BoldIcon,
   ChevronDownIcon,
   CheckCircleIcon,
+  CheckCircleFilledIcon,
+  HomeFilledIcon,
+  UserFilledIcon,
+  DatabaseFilledIcon,
+  StarFilledIcon,
   CopyIcon,
   CreditCardIcon,
   DatabaseIcon,
@@ -474,6 +480,7 @@ const docsNav = [
     titleEn: "Layout",
     items: [
       { label: "页面布局", labelEn: "Layout", href: "#layout" },
+      { label: "栅格", labelEn: "Grid", href: "#grid" },
     ],
   },
   {
@@ -1043,9 +1050,11 @@ const tokenLayerAnchors = [
   { label: "层级档位", labelEn: "Layer levels", href: "#tokens-layer-scale" },
   { label: "分层逻辑", labelEn: "Layering logic", href: "#tokens-layer-logic" },
 ]
+const gridAnchors = [
+  { label: "栅格系统", labelEn: "Grid", href: "#grid-system" },
+  { label: "响应式断点", labelEn: "Breakpoints", href: "#grid-breakpoints" },
+]
 const layoutAnchors = [
-  { label: "栅格系统", labelEn: "Grid", href: "#layout-grid" },
-  { label: "响应式断点", labelEn: "Breakpoints", href: "#layout-breakpoints" },
   { label: "页面容器", labelEn: "Containers", href: "#layout-containers" },
 ]
 
@@ -2192,7 +2201,7 @@ const toastScenarioExamples = [
 const toastPropRows = [
   { prop: "<Toaster />", type: "组件", defaultValue: "—", desc: "全局只挂一次（已在 main.tsx 根节点）；承载所有 toast 的容器与样式。" },
   { prop: "toast(message, options?)", type: "function", defaultValue: "—", desc: "命令式调用弹出提示；从 \"sonner\" 导入，无需放进 JSX。" },
-  { prop: "toast.success / error / warning / info / loading", type: "function", defaultValue: "—", desc: "语义化变体，自动套对应图标（走 @/lib/icons 的 Phosphor 图标）。" },
+  { prop: "toast.success / error / warning / info / loading", type: "function", defaultValue: "—", desc: "语义化变体，自动套对应图标（走 @/lib/icons 的图标（Tabler））。" },
   { prop: "options.description", type: "string", defaultValue: "—", desc: "主文案下方的次要说明。" },
   { prop: "options.action", type: "{ label, onClick }", defaultValue: "—", desc: "右侧操作按钮，常用于「撤销」。" },
 ]
@@ -2547,7 +2556,7 @@ const layerTokens = [
   { name: "z-50", usage: "Dialog、Dropdown、Popover、Sheet、Tooltip 等浮层", usageEn: "Overlays such as Dialog, Dropdown, Popover, Sheet, and Tooltip" },
 ]
 
-const iconInstallCode = "npm install @phosphor-icons/react"
+const iconInstallCode = "npm install @tabler/icons-react"
 
 const docsByPage = {
   button: {
@@ -2584,7 +2593,8 @@ function getPageFromHash(hash: string) {
   if (hash === "#tokens-shadow") return "tokens-shadow"
   if (hash === "#tokens-motion") return "tokens-motion"
   if (hash === "#tokens-layer") return "tokens-layer"
-  if (hash === "#layout") return "layout"
+  if (hash === "#layout" || hash.startsWith("#layout-")) return "layout"
+  if (hash === "#grid" || hash.startsWith("#grid-")) return "grid"
   if (hash === "#icon" || hash.startsWith("#icon-")) return "icon"
   if (hash === "#intro" || hash.startsWith("#intro-")) return "intro"
   if (hash === "#install" || hash.startsWith("#install-")) return "install"
@@ -2663,6 +2673,21 @@ function CopyCodeBlock({ code, label, lang }: { code: string; label: string; lan
       </div>
     </div>
   )
+}
+
+// 按场景示例的尺寸给出规格（字重统一 400）。默认尺寸 = 高32·字14·圆角8。
+function buttonSpecById(id: string, lang: Lang) {
+  const map: Record<string, { zh: string; en: string }> = {
+    "size-xs": { zh: "高24 · 字号12 · 圆角6", en: "h24 · 12px · r6" },
+    "size-sm": { zh: "高28 · 字号13 · 圆角6", en: "h28 · 13px · r6" },
+    "size-default": { zh: "高32 · 字号14 · 圆角8", en: "h32 · 14px · r8" },
+    "size-lg": { zh: "高36 · 字号16 · 圆角8", en: "h36 · 16px · r8" },
+    "icon-only": { zh: "32×32 · 圆角8 · 图标16", en: "32×32 · r8 · icon16" },
+    "icon-only-ghost": { zh: "32×32 · 圆角8 · 图标16", en: "32×32 · r8 · icon16" },
+  }
+  const fallback = { zh: "高32 · 字号14 · 圆角8", en: "h32 · 14px · r8" }
+  const spec = map[id] ?? fallback
+  return lang === "en" ? spec.en : spec.zh
 }
 
 function ButtonScenarioPreview({ id, lang }: { id: string; lang: Lang }) {
@@ -2904,6 +2929,7 @@ function App() {
   const isToggleGroupPage = page === "toggle-group"
   const isAgentSurfacePage = page === "agent-surface"
   const isLayoutPage = page === "layout"
+  const isGridPage = page === "grid"
   const isComponentArea =
     isComponentsIndexPage ||
     componentIndexSections.some((section) =>
@@ -2927,6 +2953,8 @@ function App() {
                   ? tokenLayerAnchors
                   : isLayoutPage
       ? layoutAnchors
+                  : isGridPage
+      ? gridAnchors
                   : isIconPage
       ? iconAnchors
       : isComponentsIndexPage
@@ -3167,7 +3195,7 @@ function App() {
           </div>
         </aside>
 
-        <main ref={mainRef} className="h-full w-full min-w-0 max-w-full overflow-y-auto overflow-x-hidden">
+        <main ref={mainRef} className="fx-doc-static h-full w-full min-w-0 max-w-full overflow-y-auto overflow-x-hidden">
           <div className="mx-auto grid w-full max-w-screen-2xl grid-cols-1 gap-10 px-6 py-14 xl:grid-cols-[minmax(0,1080px)_220px] xl:justify-center xl:gap-20 xl:px-10">
             <article
               className="w-full min-w-0 break-words"
@@ -3179,6 +3207,8 @@ function App() {
                 <TokensPage actions={pageActions} lang={lang} />
               ) : isLayoutPage ? (
                 <LayoutPage actions={pageActions} lang={lang} />
+              ) : isGridPage ? (
+                <GridPage actions={pageActions} lang={lang} />
               ) : isTokensColorsPage ? (
                 <TokensColorsPage actions={pageActions} lang={lang} />
               ) : isTokensTypographyPage ? (
@@ -4773,15 +4803,16 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           ))}
           </TabsList>
         </Tabs>
-        <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
-          <Table className="min-w-[1080px]">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <Table className="min-w-[1240px]">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[160px] pl-4">{lang === "en" ? "Scenario" : "场景"}</TableHead>
-                <TableHead className="w-[160px]">{lang === "en" ? "Example" : "示例"}</TableHead>
-                <TableHead className="w-[260px]">{lang === "en" ? "Intent" : "使用意图"}</TableHead>
+                <TableHead className="w-[140px] pl-4">{lang === "en" ? "Scenario" : "场景"}</TableHead>
+                <TableHead className="w-[140px]">{lang === "en" ? "Example" : "示例"}</TableHead>
+                <TableHead className="w-[180px]">{lang === "en" ? "Spec" : "规格"}</TableHead>
+                <TableHead className="w-[240px]">{lang === "en" ? "Intent" : "使用意图"}</TableHead>
                 <TableHead>{lang === "en" ? "Constraint" : "约束"}</TableHead>
-                <TableHead className="w-[300px] pr-4">{lang === "en" ? "Recommended API" : "推荐写法"}</TableHead>
+                <TableHead className="w-[280px] pr-4">{lang === "en" ? "Recommended API" : "推荐写法"}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -4792,6 +4823,9 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
                   </TableCell>
                   <TableCell className="align-top">
                     <ButtonScenarioPreview id={example.id} lang={lang} />
+                  </TableCell>
+                  <TableCell className="align-top whitespace-normal text-foreground">
+                    <p className="text-fx-12 leading-6">{buttonSpecById(example.id, lang)}</p>
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
                     <p className="max-w-[260px] leading-6">{lang === "en" ? example.intentEn : example.intent}</p>
@@ -5567,37 +5601,16 @@ function TokensColorsPage({ actions, lang }: { actions: React.ReactNode; lang: L
   )
 }
 
-function LayoutPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
-  // 线框区域块（区域名按语言显示）
-  const t = (zh: string, en: string) => (lang === "en" ? en : zh)
-  const hd = t("头部", "Header"), mn = t("主体", "Main"), ft = t("底部", "Footer"), nv = t("导航", "Menu"), lf = t("左", "Left"), rt = t("右", "Right")
-  const B = ({ label, className = "" }: { label: string; className?: string }) => (
-    <div className={`flex items-center justify-center rounded bg-muted text-[10px] text-muted-foreground ${className}`}>{label}</div>
-  )
-  const containers = [
-    { n: "一", en: "1", desc: "最常见基础页", descEn: "Most common",
-      wire: <div className="flex h-36 flex-col gap-1"><B label={hd} className="h-6" /><B label={mn} className="flex-1" /></div> },
-    { n: "二", en: "2", desc: "带固定底部", descEn: "With footer",
-      wire: <div className="flex h-36 flex-col gap-1"><B label={hd} className="h-6" /><B label={mn} className="flex-1" /><B label={ft} className="h-6" /></div> },
-    { n: "三", en: "3", desc: "二级左侧导航", descEn: "Left menu",
-      wire: <div className="flex h-36 flex-col gap-1"><B label={hd} className="h-6" /><div className="flex flex-1 gap-1"><B label={nv} className="w-1/4" /><B label={mn} className="flex-1" /></div><B label={ft} className="h-6" /></div> },
-    { n: "四", en: "4", desc: "二级顶部导航", descEn: "Top menu",
-      wire: <div className="flex h-36 flex-col gap-1"><B label={hd} className="h-6" /><B label={nv} className="h-5" /><B label={mn} className="flex-1" /><B label={ft} className="h-6" /></div> },
-    { n: "五", en: "5", desc: "三栏·画布操作区", descEn: "3-column canvas",
-      wire: <div className="flex h-36 flex-col gap-1"><B label={hd} className="h-6" /><div className="flex flex-1 gap-1"><B label={lf} className="w-1/5" /><B label={mn} className="flex-1" /><B label={rt} className="w-1/5" /></div></div> },
-    { n: "六", en: "6", desc: "左侧一级导航 · 新版趋势", descEn: "Left primary nav · trend",
-      wire: <div className="flex h-36 gap-1"><B label={nv} className="w-1/5" /><div className="flex flex-1 flex-col gap-1"><B label={hd} className="h-6" /><B label={mn} className="flex-1" /><B label={ft} className="h-6" /></div></div> },
-  ]
+function GridPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   return (
     <>
-      <section id="layout-grid" className="flex flex-col gap-6">
+      <section id="grid-system" className="flex flex-col gap-6">
         <PageLead
-          crumb={lang === "en" ? "Foundations / Layout" : "基础 / 布局"}
-          title={lang === "en" ? "Layout" : "布局"}
-          lead={lang === "en" ? "Enterprise web layout: 24-column grid, 16px column gap, and page container patterns." : "企业 Web 布局：24 列栅格、16px 列间距、页面容器样式。来源：企业 Figma Web 端基础组件库。"}
+          crumb={lang === "en" ? "Foundations / Grid" : "基础 / 栅格"}
+          title={lang === "en" ? "Grid" : "栅格"}
+          lead={lang === "en" ? "24-column grid with 16px gutter — split content by /24, freely combined. Aligns with Semi / Ant grid conventions." : "24 列栅格、16px 列间距——内容按 /24 自由组合。对齐 Semi / Ant 栅格惯例。"}
           actions={actions}
         />
-
         <div>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Grid 栅格系统" : "栅格系统"}</h2>
           <p className="mt-1 text-fx-13 text-muted-foreground">{lang === "en" ? "24 columns, column gap = 16px (gap-4). Span by /24 with col-span-[n]." : "24 列基准，列间距 = 16px（gap-4）。分栏用 col-span-[n]（按 24 计），可 1/24 自由组合。"}</p>
@@ -5661,23 +5674,24 @@ function LayoutPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           </div>
         </div>
 
-        {/* 偏移 / 容器 / 嵌套 */}
+        {/* 偏移 / 容器 / 嵌套 / 进阶 */}
         <div className="rounded-lg border border-border bg-card p-5 text-fx-13 text-muted-foreground">
           <p><span className="font-medium text-foreground">{lang === "en" ? "Offset" : "偏移"}</span>：{lang === "en" ? "leave columns before content with " : "内容前留空用 "}<code className="rounded bg-muted px-1 text-fx-12">col-start-[n]</code></p>
           <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Container" : "容器/版心"}</span>：{lang === "en" ? "max-width + page padding — " : "内容最大宽度 + 页面外边距 — "}<code className="rounded bg-muted px-1 text-fx-12">max-w-7xl</code> + <code className="rounded bg-muted px-1 text-fx-12">px-4 lg:px-8</code></p>
           <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Nesting" : "嵌套"}</span>：{lang === "en" ? "a grid can nest another grid; child re-splits by /24." : "栅格内可再嵌栅格，子栅格按 1/24 重新划分。"}</p>
+          <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Advanced (Semi/Ant)" : "进阶（对齐 Semi/Ant）"}</span>：{lang === "en" ? "gutter accepts [horizontal, vertical] and responsive {sm,md,lg…}; recommended gutter = 16+8n. Reorder via order; offset/push/pull for fine positioning." : "列间距 gutter 支持 [水平, 垂直] 与响应式对象 {sm,md,lg…}；推荐取值 16+8n。需要改顺序用 order；offset/push/pull 做精细位移。"}</p>
         </div>
       </section>
 
       <Separator className="my-10" />
 
-      <section id="layout-breakpoints" className="flex flex-col gap-5">
+      <section id="grid-breakpoints" className="flex flex-col gap-5">
         <div>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Breakpoints 响应式断点" : "响应式断点"}</h2>
           <p className="mt-1 text-fx-13 text-muted-foreground">
             {lang === "en"
-              ? "Tailwind is mobile-first: base styles apply at every width; a prefix like lg: means \"apply only when the viewport ≥ this width\". The five values below are the min-width thresholds where layout switches."
-              : "Tailwind 是移动优先：不带前缀的样式对所有宽度生效；加前缀（如 lg:）表示\"屏幕宽度 ≥ 该值时才生效\"。下面五个值就是布局切换的最小宽度门槛——窗口宽度跨过它，对应规则才接管。"}
+              ? "Tailwind is mobile-first: base styles apply at every width; a prefix like lg: means \"apply only when the viewport ≥ this width\"."
+              : "Tailwind 是移动优先：不带前缀的样式对所有宽度生效；加前缀（如 lg:）表示\"屏幕宽度 ≥ 该值时才生效\"。"}
           </p>
         </div>
         <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
@@ -5701,7 +5715,7 @@ function LayoutPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
         <div className="rounded-lg border border-border bg-card p-5">
           <p className="mb-3 text-fx-13 text-muted-foreground">
             {lang === "en"
-              ? <>Example: <code className="rounded bg-muted px-1 text-fx-12">grid-cols-1 lg:grid-cols-3</code> — 1 column below 1024px, 3 columns at ≥1024px. Resize to see it break.</>
+              ? <>Example: <code className="rounded bg-muted px-1 text-fx-12">grid-cols-1 lg:grid-cols-3</code> — 1 column below 1024px, 3 columns at ≥1024px.</>
               : <>例子：<code className="rounded bg-muted px-1 text-fx-12">grid-cols-1 lg:grid-cols-3</code> —— 窗口 &lt; 1024px 时一列，≥ 1024px 自动变三列。拖动窗口可看到它"断"。</>}
           </p>
           <div className="grid grid-cols-1 gap-2 lg:grid-cols-3">
@@ -5709,10 +5723,40 @@ function LayoutPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           </div>
         </div>
       </section>
+    </>
+  )
+}
 
-      <Separator className="my-10" />
-
+function LayoutPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  // 线框区域块（区域名按语言显示）
+  const t = (zh: string, en: string) => (lang === "en" ? en : zh)
+  const hd = t("头部", "Header"), mn = t("主体", "Main"), ft = t("底部", "Footer"), nv = t("导航", "Menu"), lf = t("左", "Left"), rt = t("右", "Right")
+  const B = ({ label, className = "" }: { label: string; className?: string }) => (
+    <div className={`flex items-center justify-center rounded bg-muted text-[10px] text-muted-foreground ${className}`}>{label}</div>
+  )
+  const containers = [
+    { n: "一", en: "1", desc: "最常见基础页", descEn: "Most common",
+      wire: <div className="flex h-36 flex-col gap-1"><B label={hd} className="h-6" /><B label={mn} className="flex-1" /></div> },
+    { n: "二", en: "2", desc: "带固定底部", descEn: "With footer",
+      wire: <div className="flex h-36 flex-col gap-1"><B label={hd} className="h-6" /><B label={mn} className="flex-1" /><B label={ft} className="h-6" /></div> },
+    { n: "三", en: "3", desc: "二级左侧导航", descEn: "Left menu",
+      wire: <div className="flex h-36 flex-col gap-1"><B label={hd} className="h-6" /><div className="flex flex-1 gap-1"><B label={nv} className="w-1/4" /><B label={mn} className="flex-1" /></div><B label={ft} className="h-6" /></div> },
+    { n: "四", en: "4", desc: "二级顶部导航", descEn: "Top menu",
+      wire: <div className="flex h-36 flex-col gap-1"><B label={hd} className="h-6" /><B label={nv} className="h-5" /><B label={mn} className="flex-1" /><B label={ft} className="h-6" /></div> },
+    { n: "五", en: "5", desc: "三栏·画布操作区", descEn: "3-column canvas",
+      wire: <div className="flex h-36 flex-col gap-1"><B label={hd} className="h-6" /><div className="flex flex-1 gap-1"><B label={lf} className="w-1/5" /><B label={mn} className="flex-1" /><B label={rt} className="w-1/5" /></div></div> },
+    { n: "六", en: "6", desc: "左侧一级导航 · 新版趋势", descEn: "Left primary nav · trend",
+      wire: <div className="flex h-36 gap-1"><B label={nv} className="w-1/5" /><div className="flex flex-1 flex-col gap-1"><B label={hd} className="h-6" /><B label={mn} className="flex-1" /><B label={ft} className="h-6" /></div></div> },
+  ]
+  return (
+    <>
       <section id="layout-containers" className="flex flex-col gap-5">
+        <PageLead
+          crumb={lang === "en" ? "Foundations / Layout" : "基础 / 布局"}
+          title={lang === "en" ? "Layout" : "布局"}
+          lead={lang === "en" ? "Page frame patterns (header / sider / content / footer) and their default sizes. The grid system lives on its own Grid page." : "页面骨架样式（头/侧/内容/底）与默认尺寸。栅格系统单独在「栅格」页。"}
+          actions={actions}
+        />
         <div>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Page containers 页面容器" : "页面布局容器（6 种样式）"}</h2>
           <p className="mt-1 text-fx-13 text-muted-foreground">{lang === "en" ? "From simple to complex. Style 6 (left primary nav) is the recommended trend." : "从简到繁；样式六（左侧一级导航）是新版趋势，新建后台优先。"}</p>
@@ -5727,6 +5771,13 @@ function LayoutPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
               {c.wire}
             </div>
           ))}
+        </div>
+        {/* 容器默认尺寸 */}
+        <div className="rounded-lg border border-border bg-card p-5 text-fx-13 leading-7 text-muted-foreground">
+          <p className="mb-1 text-fx-13 font-medium text-foreground">{lang === "en" ? "Default container sizes" : "容器默认尺寸"}</p>
+          <p>{lang === "en" ? "Frame (header/sider/content/footer) uses flex; the 24-col grid only governs content inside." : "框架（头/侧/内容/底）用 flex 拼；24 列栅格只管内容区内部的分栏。"}</p>
+          <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Header" : "顶栏"}</span> 56px · <span className="font-medium text-foreground">{lang === "en" ? "Sider" : "侧栏"}</span> {lang === "en" ? "240 / collapsed 64" : "展开 240 / 收起 64"} · <span className="font-medium text-foreground">{lang === "en" ? "Footer" : "底栏"}</span> 48px · <span className="font-medium text-foreground">{lang === "en" ? "Content padding" : "内容内边距"}</span> {lang === "en" ? "16 (mobile) / 24 (desktop)" : "移动 16 / 桌面 24"}</p>
+          <p className="mt-1">{lang === "en" ? "Sider auto-collapses to the 64px icon rail below lg (1024px)." : "视口 < lg(1024px) 时侧栏自动收起为 64px 图标栏（或转抽屉）。"}</p>
         </div>
       </section>
     </>
@@ -6206,8 +6257,8 @@ function IconPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
 
   const iconRules = [
     {
-      zh: "统一从 @/lib/icons 导入图标（底层是 Phosphor，线性默认、面型用 weight=\"fill\"）。",
-      en: "Import icons from @/lib/icons (backed by Phosphor; regular by default, weight=\"fill\" for solid).",
+      zh: "统一从 @/lib/icons 导入图标（底层是 Tabler，线性默认、线宽由全局 .tabler-icon 控制，面型用 *Filled 变体）。",
+      en: "Import icons from @/lib/icons (backed by Tabler; outline by default, global stroke-width via .tabler-icon, *Filled for solid).",
     },
     {
       zh: "图标颜色使用 currentColor，跟随父级 text-* 语义色。",
@@ -6235,13 +6286,13 @@ function IconPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
           title={lang === "en" ? "Icon" : "Icon 图标"}
           lead={lang === "en" ? (
             <>
-              fx-ui uses <code className="rounded bg-muted px-1.5 py-0.5">Phosphor</code> (@phosphor-icons/react) as the unified icon library —
-              one icon, switch line/solid via <code className="rounded bg-muted px-1.5 py-0.5">weight</code>. Import via <code className="rounded bg-muted px-1.5 py-0.5">@/lib/icons</code>.
+              fx-ui uses <code className="rounded bg-muted px-1.5 py-0.5">Tabler</code> (@tabler/icons-react) as the unified icon library —
+              adjustable stroke-width plus <code className="rounded bg-muted px-1.5 py-0.5">*Filled</code> solid variants. Import via <code className="rounded bg-muted px-1.5 py-0.5">@/lib/icons</code>.
             </>
           ) : (
             <>
-              fx-ui 统一使用 <code className="rounded bg-muted px-1.5 py-0.5">Phosphor</code>（@phosphor-icons/react）——
-              一个图标靠 <code className="rounded bg-muted px-1.5 py-0.5">weight</code> 在线性/面型间切换，统一从 <code className="rounded bg-muted px-1.5 py-0.5">@/lib/icons</code> 导入（见 DEC-007）。
+              fx-ui 统一使用 <code className="rounded bg-muted px-1.5 py-0.5">Tabler</code>（@tabler/icons-react）——
+              线宽可调（全局 <code className="rounded bg-muted px-1.5 py-0.5">.tabler-icon</code>）+ 成套 <code className="rounded bg-muted px-1.5 py-0.5">*Filled</code> 实心变体，统一从 <code className="rounded bg-muted px-1.5 py-0.5">@/lib/icons</code> 导入（见 DEC-009）。
             </>
           )}
           actions={actions}
@@ -6276,7 +6327,7 @@ function IconPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
                 {lang === "en" ? " includes:" : " 中已经安装："}
               </p>
               <code className="rounded-lg bg-muted px-3 py-2 text-xs text-foreground">
-                "@phosphor-icons/react": "^2.1.10"
+                "@tabler/icons-react": "^3.44.0"
               </code>
             </CardContent>
           </Card>
@@ -6342,8 +6393,8 @@ export function SearchAction() {
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Icon color & size" : "图标色与尺寸"}</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             {lang === "en"
-              ? "Three icon color modes (mono / colored line / filled-reverse) + one size scale. All colors come from the palette & text hierarchy; Phosphor icons use currentColor."
-              : "图标分三类用色（单色 / 彩色线性 / 面状反白）+ 一套尺寸阶。颜色全部来自色板与文字层级，Phosphor 图标用 currentColor 跟随。"}
+              ? "Three icon color modes (mono / colored line / filled-reverse) + one size scale. All colors come from the palette & text hierarchy; icons use currentColor."
+              : "图标分三类用色（单色 / 彩色线性 / 面状反白）+ 一套尺寸阶。颜色全部来自色板与文字层级，图标用 currentColor 跟随。"}
           </p>
         </div>
 
@@ -6370,16 +6421,16 @@ export function SearchAction() {
           </div>
         </div>
 
-        {/* 3. 面型图标（weight=fill） */}
+        {/* 3. 面型图标（*Filled 变体） */}
         <div className="rounded-lg border border-border bg-card p-5">
-          <p className="mb-1 text-sm font-medium">{lang === "en" ? "3. Solid (面型) — weight=\"fill\"" : "3. 面型图标 — weight=\"fill\"（实心填充）"}</p>
-          <p className="mb-3 text-xs text-muted-foreground">{lang === "en" ? "Same icon, line vs solid. Use solid for selected/active or emphasis." : "同一图标，线性 vs 面型；选中态、激活态或强调时用面型。"}</p>
+          <p className="mb-1 text-sm font-medium">{lang === "en" ? "3. Solid (面型) — *Filled variant" : "3. 面型图标 — *Filled 变体（实心填充）"}</p>
+          <p className="mb-3 text-xs text-muted-foreground">{lang === "en" ? "Same icon, line vs solid. Use solid for selected/active or emphasis." : "同一图标，线性 vs 面型；选中态、激活态或强调时用面型（Tabler 的 *Filled）。"}</p>
           <div className="flex flex-wrap items-center gap-6">
-            {[HomeIcon, CheckCircleIcon, BellIcon, StarIcon, UserIcon, DatabaseIcon].map((Icon, i) => (
+            {[[HomeIcon, HomeFilledIcon], [CheckCircleIcon, CheckCircleFilledIcon], [BellIcon, BellFilledIcon], [StarIcon, StarFilledIcon], [UserIcon, UserFilledIcon], [DatabaseIcon, DatabaseFilledIcon]].map(([Line, Filled], i) => (
               <span key={i} className="flex items-center gap-2 text-foreground">
-                <Icon className="size-6" weight="regular" />
+                <Line className="size-6" />
                 <span className="text-muted-foreground/40">→</span>
-                <Icon className="size-6 text-primary" weight="fill" />
+                <Filled className="size-6 text-primary" />
               </span>
             ))}
           </div>
@@ -6390,15 +6441,15 @@ export function SearchAction() {
           <p className="mb-3 text-sm font-medium">{lang === "en" ? "3b. Filled-reverse — colored circle + white solid icon" : "3b. 面状/反白 — 彩色圆底 + 白色面型图标"}</p>
           <div className="flex flex-wrap items-center gap-4">
             {[
-              { bg: "var(--fx-brand-09)", Icon: HomeIcon },
-              { bg: "var(--fx-green-09)", Icon: CheckCircleIcon },
-              { bg: "var(--fx-amber-09)", Icon: BellIcon },
-              { bg: "var(--fx-red-09)", Icon: PackageIcon },
-              { bg: "var(--fx-blue-09)", Icon: DatabaseIcon },
-              { bg: "var(--fx-purple-09)", Icon: UserIcon },
+              { bg: "var(--fx-brand-09)", Icon: HomeFilledIcon },
+              { bg: "var(--fx-green-09)", Icon: CheckCircleFilledIcon },
+              { bg: "var(--fx-amber-09)", Icon: BellFilledIcon },
+              { bg: "var(--fx-red-09)", Icon: StarFilledIcon },
+              { bg: "var(--fx-blue-09)", Icon: DatabaseFilledIcon },
+              { bg: "var(--fx-purple-09)", Icon: UserFilledIcon },
             ].map(({ bg, Icon }, i) => (
               <span key={i} className="flex size-10 items-center justify-center rounded-full" style={{ backgroundColor: bg }}>
-                <Icon className="size-5" weight="fill" style={{ color: "var(--fx-neutrals-01)" }} />
+                <Icon className="size-5" style={{ color: "var(--fx-neutrals-01)" }} />
               </span>
             ))}
           </div>
@@ -6422,7 +6473,7 @@ export function SearchAction() {
               </span>
             ))}
           </div>
-          <p className="mt-4 text-xs text-muted-foreground">{lang === "en" ? "Weight: Phosphor thin/light/regular/bold/fill/duotone; default regular (line), fill for solid." : "粗细：Phosphor 用 weight（thin/light/regular/bold/fill/duotone），默认 regular 线性，fill 面型。"}</p>
+          <p className="mt-4 text-xs text-muted-foreground">{lang === "en" ? "Stroke: Tabler stroke-width is adjustable (global .tabler-icon = 1.75); solid uses *Filled variants." : "线宽：Tabler 的 stroke-width 可调（全局 .tabler-icon = 1.75）；面型用 *Filled 变体。"}</p>
         </div>
       </section>
 

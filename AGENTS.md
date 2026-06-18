@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-06-17
+last_verified: 2026-06-18
 teaches: "AI 在 fx-ui 项目里的行为红线：不手写组件、只注入 token、保护 token 真相源"
 use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token 时"
 ---
@@ -33,6 +33,8 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 - 需要改某个组件样式 → 改它的 Tailwind class 或 token，不重写
 - 需要升级已有 shadcn 组件 → 先说明升级原因，只处理相关组件，对比本地源码和上游差异，保留 fx-ui token、文档契约和 `data-slot` 语义，再跑 `npm run check`
 - 不确定用什么颜色/圆角 → 查 `docs/TOKENS.md`，用公司 token，别写死十六进制
+- 图标统一从 `@/lib/icons` 导入（底层 **Tabler**，见 DEC-009）：线性默认，线宽由全局 `.tabler-icon { stroke-width: 1.75 }` 一处控制；面型/选中态用 `*Filled` 变体。**不引第二个图标库、不手写 SVG、不逐个图标硬调线宽或加描边**；缺图标就在 `src/lib/icons.ts` 加一行 Tabler 映射
+- 布局分两层（见 DEC-010）：**整页骨架**用 fx 组件 `Layout`（`src/components/fx/layout.tsx`，Header/Sider/Content/Footer）；**内容区分栏**用 Tailwind 24 列栅格工具类（`grid-cols-[repeat(24,…)]`/`col-span-[n]`/`gap-x/y`）。**不要给栅格封 `Row/Col` 组件**（Tailwind 类名已是栅格能力，再包多此一举）；尺寸默认值见 `docs/LAYOUTS.md`
 - 不确定一条信息该写进哪份文档（CHANGELOG / DECISIONS / LESSONS / 新建文档…）→ 先查 `docs/DOCUMENTATION.md` 的 SSOT 路由表；新建 `docs/*.md` 时必须同时在该表里登记一行，否则会变成孤岛文档
 - 用户说"记住这个规则"→ **先判断类型**：设计/架构/产品决策 → `docs/DECISIONS.md`；AI 行为偏好/跨项目约定 → memory；不要两个都写
 - **任何涉及 token 的改动，按固定顺序：① 先改 `theme/fx-theme.css`（真相源）② 同步 `docs/TOKENS.md` + 相关规则/`DECISIONS.md` ③ 跑 `npm run build:tokens` 重建 manifest ④ 最后才改组件等映射处**。顺序不能反——先改组件后补 token 会漂移

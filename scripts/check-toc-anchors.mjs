@@ -45,7 +45,8 @@ const pageModules = {
   tokenSpacingAnchors: ["tokens-spacing-scale", "tokens-spacing-compute"],
   tokenMotionAnchors: ["tokens-motion-duration", "tokens-motion-primitives"],
   tokenLayerAnchors: ["tokens-layer-scale", "tokens-layer-logic"],
-  layoutAnchors: ["layout-grid", "layout-breakpoints", "layout-containers"],
+  gridAnchors: ["grid-system", "grid-breakpoints"],
+  layoutAnchors: ["layout-containers"],
 }
 for (const [name, expected] of Object.entries(pageModules)) {
   const block = anchorBlocks.find(([, n]) => n === name)

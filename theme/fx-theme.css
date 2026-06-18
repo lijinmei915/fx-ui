@@ -555,3 +555,16 @@
     @apply font-sans;
   }
 }
+
+/* 文档站展示表：行不可点，关掉 Table 默认的行 hover 高亮（业务里真实数据表用 Table 仍保留 hover）。
+   选择器特异性 (0,3,0) 高于工具类 hover:bg-muted (0,2,0)，可覆盖。 */
+.fx-doc-static [data-slot="table-row"]:hover {
+  background-color: transparent;
+}
+
+/* 图标线宽（Tabler）：全局默认描边粗细，一处统管，需要更粗/更细改这一个值。
+   1.75 介于偏细(1.5)和 shadcn/lucide(2)之间；CSS stroke-width 覆盖图标自带属性。
+   面型(*Filled)是实心填充、无描边，不受影响。 */
+.tabler-icon {
+  stroke-width: 1.75;
+}

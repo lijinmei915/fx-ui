@@ -34,7 +34,7 @@ function ConfirmDangerDialog({
       <AlertDialogTrigger render={trigger} />
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogMedia className="bg-destructive/10 text-destructive">
+          <AlertDialogMedia className="bg-destructive-light text-destructive">
             <AlertTriangleIcon />
           </AlertDialogMedia>
           <AlertDialogTitle>{title}</AlertDialogTitle>

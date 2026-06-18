@@ -48,6 +48,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `overlay` | `oklch(from neutrals-20 … / 0.2)` | `bg-overlay` | 弹窗/抽屉的**遮罩蒙层**（20%，配合组件的 `backdrop-blur-xs` 模糊，故比主流纯遮罩浅）；透明度烤进 token，直接用不加 `/x` |
 
 > 遮罩归颜色（语义色）：本质是"蒙层色 + 透明度"。从最深中性灰派生跟随色板，**透明度内置**（半透明），Dialog/Sheet/AlertDialog 直接 `bg-overlay`，不写死 `bg-black/10`。z-index 归层级、淡入归动效，是共用机制不是归属。
+> 遮罩的**模糊**也收成 token：`--overlay-blur = 2px`，组件用 `backdrop-blur-[var(--overlay-blur)]`，浓淡/模糊一处统管。
 
 ## 功能色（状态色）
 
@@ -142,7 +143,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 **字重**：`font-normal`(400) 常规·正文 / `font-medium`(500) 中等·标签·按钮·菜单 / `font-bold`(**700**) 加粗·标题·强调。
 
-**字族**：`--font-sans` = `"Helvetica Neue", Helvetica, "Source Han Sans CN", "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei", "微软雅黑", Arial, sans-serif`（西文 Helvetica 优先，中文思源黑体 CN，全系统字体、零下载）。
+**字族**：`--font-sans` = `"Inter Variable", "Noto Sans SC", "Helvetica Neue", "PingFang SC", "Microsoft Yahei", "微软雅黑", Arial, sans-serif`。**自托管开源字体（OFL，无版权）**：西文/数字用 **Inter**，中文用 **Noto Sans SC（= 思源黑体简体）**，跨平台一致；后面是系统兜底。Inter 不含中文，中文自动落到 Noto Sans SC。在 `src/main.tsx` 引入 `@fontsource-variable/inter` + `@fontsource/noto-sans-sc`（400/500/700，按 unicode-range 懒加载）。
 
 > 完整企业字号阶（11/14/16/20/22/28 + 中英双套语义变量名 Large Title/Title1/Body1…）见 Figma 字体规范；fx-ui web 当前只落地上面四档，按需再补。
 

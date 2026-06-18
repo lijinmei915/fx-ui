@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/design-tokens",
-  "updatedAt": "2026-06-17",
+  "updatedAt": "2026-06-18",
   "truthSource": "theme/fx-theme.css",
   "humanDoc": "docs/TOKENS.md",
   "note": "主项目采用 shadcn 友好的三层结构：primitive -> semantic -> componentUsage。报告 skill 的 Seed -> Map -> Alias -> Component 四层结构可作为独立 HTML 输出参考，但不替代本项目的 shadcn semantic slots。",
@@ -115,7 +115,7 @@
     },
     {
       "name": "--fx-orange-01",
-      "value": "oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "value": "oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
       "category": "palette.orange",
       "usage": "浅色背景、弱提示或状态底色"
     },
@@ -187,7 +187,7 @@
     },
     {
       "name": "--fx-brand-01",
-      "value": "oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "value": "oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
       "category": "palette",
       "usage": ""
     },
@@ -259,7 +259,7 @@
     },
     {
       "name": "--fx-orange-warning-01",
-      "value": "oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "value": "oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
       "category": "palette.orange-warning",
       "usage": "浅色背景、弱提示或状态底色"
     },
@@ -331,7 +331,7 @@
     },
     {
       "name": "--fx-amber-01",
-      "value": "oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "value": "oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
       "category": "palette",
       "usage": ""
     },
@@ -403,7 +403,7 @@
     },
     {
       "name": "--fx-yellow-01",
-      "value": "oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "value": "oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
       "category": "palette.yellow",
       "usage": "浅色背景、弱提示或状态底色"
     },
@@ -475,7 +475,7 @@
     },
     {
       "name": "--fx-lime-01",
-      "value": "oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "value": "oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
       "category": "palette",
       "usage": ""
     },
@@ -547,7 +547,7 @@
     },
     {
       "name": "--fx-yellow-green-01",
-      "value": "oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "value": "oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
       "category": "palette.yellow-green",
       "usage": "浅色背景、弱提示或状态底色"
     },
@@ -619,7 +619,7 @@
     },
     {
       "name": "--fx-green-01",
-      "value": "oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "value": "oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
       "category": "palette.green",
       "usage": "浅色背景、弱提示或状态底色"
     },
@@ -691,7 +691,7 @@
     },
     {
       "name": "--fx-teal-01",
-      "value": "oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "value": "oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
       "category": "palette.teal",
       "usage": "浅色背景、弱提示或状态底色"
     },
@@ -763,7 +763,7 @@
     },
     {
       "name": "--fx-cyan-01",
-      "value": "oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "value": "oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
       "category": "palette",
       "usage": ""
     },
@@ -835,7 +835,7 @@
     },
     {
       "name": "--fx-blue-01",
-      "value": "oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "value": "oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
       "category": "palette.blue",
       "usage": "浅色背景、弱提示或状态底色"
     },
@@ -907,7 +907,7 @@
     },
     {
       "name": "--fx-purple-01",
-      "value": "oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "value": "oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
       "category": "palette.purple",
       "usage": "浅色背景、弱提示或状态底色"
     },
@@ -979,7 +979,7 @@
     },
     {
       "name": "--fx-pink-01",
-      "value": "oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "value": "oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
       "category": "palette",
       "usage": ""
     },
@@ -1051,7 +1051,7 @@
     },
     {
       "name": "--fx-red-01",
-      "value": "oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.93) calc(c * 0.04) h)",
+      "value": "oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
       "category": "palette.red",
       "usage": "浅色背景、弱提示或状态底色"
     },
@@ -1508,6 +1508,12 @@
       "usage": ""
     },
     {
+      "name": "--overlay-blur",
+      "value": "2px",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
       "name": "--primary",
       "value": "var(--fx-brand-09)",
       "category": "action-state",
@@ -1767,7 +1773,7 @@
     },
     {
       "name": "--font-sans",
-      "value": "\"Helvetica Neue\", Helvetica, \"Source Han Sans CN\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft Yahei\", \"微软雅黑\", Arial, sans-serif",
+      "value": "\"Inter Variable\", \"Noto Sans SC\", \"Helvetica Neue\", \"PingFang SC\", \"Microsoft Yahei\", \"微软雅黑\", Arial, sans-serif",
       "category": "font-source",
       "usage": "默认字体族"
     },

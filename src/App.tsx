@@ -482,7 +482,6 @@ const docsNav = [
     items: [
       { label: "按钮", labelEn: "Button", href: "#button" },
       { label: "按钮组", labelEn: "Button Group", href: "#button-group" },
-      { label: "文字", labelEn: "Typography", href: "#typography" },
       { label: "图标", labelEn: "Icon", href: "#icon" },
       { label: "分隔线", labelEn: "Separator", href: "#separator" },
       { label: "头像", labelEn: "Avatar", href: "#avatar" },
@@ -1059,13 +1058,6 @@ const iconAnchors = [
   { label: "AI 规则", labelEn: "AI Rules", href: "#icon-ai-rules" },
 ]
 
-const typographyAnchors = [
-  { label: "概览", href: "#typography-overview" },
-  { label: "字号阶梯", href: "#typography-scale" },
-  { label: "使用方式", href: "#typography-usage" },
-  { label: "使用规则", href: "#typography-rules" },
-]
-
 const agentSurfaceAnchors = [
   { label: "组件总览", labelEn: "Overview", href: "#agent-surface-overview" },
   { label: "高频场景", labelEn: "Scenarios", href: "#agent-surface-scenarios" },
@@ -1075,37 +1067,6 @@ const agentSurfaceAnchors = [
   { label: "JSON 协议", labelEn: "JSON protocol", href: "#agent-surface-schema" },
   { label: "协议取舍", labelEn: "Protocol strategy", href: "#agent-surface-strategy" },
   { label: "安全边界", labelEn: "Safety", href: "#agent-surface-safety" },
-]
-
-const typographyUsageExamples = [
-  {
-    title: "页面标题",
-    code: `<h1 className="text-4xl font-semibold leading-tight">页面标题</h1>`,
-    usage: "用于文档页、详情页的最顶层标题，全页只出现一次。",
-  },
-  {
-    title: "章节标题",
-    code: `<h2 className="text-2xl font-semibold">章节标题</h2>`,
-    usage: "用于页面内的分组小节标题，配合 Separator 分隔不同章节。",
-  },
-  {
-    title: "正文",
-    code: `<p className="text-base">正文说明文字…</p>`,
-    usage: "用于段落说明、正文叙述，行高拉开方便长文阅读。",
-  },
-  {
-    title: "辅助说明",
-    code: `<p className="text-sm text-muted-foreground">表格、菜单里的次要说明文字</p>`,
-    usage: "用于表格、菜单、表单提示等次要信息，颜色降级为 muted-foreground。",
-  },
-]
-
-const typographyRules = [
-  "字号必须用 Tailwind 的语义类（text-sm / text-base / text-2xl / text-4xl），不要手写 font-size。",
-  "字体统一用 font-sans（Geist / system sans-serif），不为单个页面引入新字体。",
-  "正文类文字优先配 /，标题类文字用 leading-tight，避免行距随手调。",
-  "次要说明文字用 text-muted-foreground 而不是手写灰色色值。",
-  "标题层级要按页面结构选（页面标题用 text-4xl，章节标题用 text-2xl），不要为视觉效果跳级使用。",
 ]
 
 const inputAnchors = [
@@ -2536,11 +2497,9 @@ const typeWeightTokens = [
 
 // 字族（企业真实栈）
 const typeFamilyTokens = [
-  { name: "--font-sans", value: "Helvetica Neue → Source Han Sans CN → PingFang SC …", cls: "", usage: "企业字族：西文 Helvetica 优先，中文思源黑体 CN，全系统字体不下载", usageEn: "Enterprise stack: Helvetica first, Source Han Sans CN for CJK" },
+  { name: "--font-sans", value: "Inter Variable → Noto Sans SC → 系统兜底", cls: "", usage: "自托管开源字体（OFL）：西文 Inter，中文 Noto Sans SC（思源黑体简体），跨平台一致", usageEn: "Self-hosted OFL fonts: Inter for Latin, Noto Sans SC for CJK" },
 ]
 
-// 兼容：旧引用仍可用（组件总览/其它页面）
-const typographyTokens = [...typeFamilyTokens, ...typeSizeTokens, ...typeWeightTokens]
 
 const radiusTokens = [
   { name: "--radius", value: "0.625rem（10px）", usage: "基础圆角真相源（= rounded-lg）", usageEn: "Base radius source of truth (= rounded-lg)" },
@@ -2915,7 +2874,6 @@ function App() {
     page === "install" ||
     page === "theme" ||
     isGovernancePage
-  const isTypographyPage = page === "typography"
   const isInputPage = page === "input"
   const isSelectPage = page === "select"
   const isCheckboxPage = page === "checkbox"
@@ -2977,8 +2935,6 @@ function App() {
         ? gettingStartedAnchors[page as GettingStartedPage]
         : isButtonPage
           ? buttonAnchors
-          : isTypographyPage
-          ? typographyAnchors
           : isInputPage
             ? inputAnchors
             : isSelectPage
@@ -3245,8 +3201,6 @@ function App() {
                 <GettingStartedPage actions={pageActions} page={page as GettingStartedPage} lang={lang} />
               ) : isButtonPage ? (
                 <ButtonPage actions={pageActions} lang={lang} />
-              ) : isTypographyPage ? (
-                <TypographyPage actions={pageActions} lang={lang} />
               ) : isInputPage ? (
                 <InputPage actions={pageActions} lang={lang} />
               ) : isSelectPage ? (
@@ -5831,13 +5785,13 @@ function TokensTypographyPage({ actions, lang }: { actions: React.ReactNode; lan
           <p className="font-medium text-foreground">{lang === "en" ? "Font family" : "字族说明"}</p>
           <p className="mt-1">
             {lang === "en"
-              ? "Enterprise stack — Latin (Helvetica) first, CJK falls back to Source Han Sans CN / system fonts. All assumed available; no webfont download. Defined once at "
-              : "企业字族栈——西文 Helvetica 优先，中文回退到思源黑体 CN / 系统字体；全部按系统已装处理、不下载 webfont。一处定义在 "}
+              ? "Self-hosted open-source fonts (OFL, no licensing worry): Inter for Latin/digits, Noto Sans SC (= Source Han Sans Simplified) for CJK — consistent across platforms. Inter has no CJK, so Chinese falls to Noto Sans SC; system fonts only as last resort. Defined once at "
+              : "自托管开源字体（OFL，无版权困扰）：西文/数字用 Inter，中文用 Noto Sans SC（即思源黑体简体），跨平台一致。Inter 不含中文，中文自动落到 Noto Sans SC；系统字体只作最后兜底。一处定义在 "}
             <code className="rounded bg-muted px-1.5 py-0.5 text-xs">--font-sans</code>
-            {lang === "en" ? " (theme/fx-theme.css)." : "（theme/fx-theme.css）。"}
+            {lang === "en" ? " (theme/fx-theme.css), imported in src/main.tsx via @fontsource." : "（theme/fx-theme.css），在 src/main.tsx 用 @fontsource 引入。"}
           </p>
-          <pre className="mt-3 overflow-x-auto rounded-md bg-card p-3 text-xs leading-6"><code>{`--font-sans: "Helvetica Neue", Helvetica, "Source Han Sans CN",
-  "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei", "微软雅黑", Arial, sans-serif;`}</code></pre>
+          <pre className="mt-3 overflow-x-auto rounded-md bg-card p-3 text-xs leading-6"><code>{`--font-sans: "Inter Variable", "Noto Sans SC",
+  "Helvetica Neue", "PingFang SC", "Microsoft Yahei", "微软雅黑", Arial, sans-serif;`}</code></pre>
         </div>
       </section>
     </>
@@ -6528,108 +6482,6 @@ export function SearchAction() {
               <div key={rule.zh} className="flex gap-2">
                 <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
                 <span>{lang === "en" ? rule.en : rule.zh}</span>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      </section>
-    </>
-  )
-}
-
-function TypographyPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
-  return (
-    <>
-      <section id="typography-overview" className="flex flex-col gap-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="mb-3 text-sm text-muted-foreground">通用 / 文字</p>
-            <h1 className="text-4xl font-semibold leading-tight">文字 Typography</h1>
-          </div>
-          {actions}
-        </div>
-
-        <p className={docsSpacing.leadText}>
-          fx-ui 的字号、字重、行高全部走 Tailwind 的语义类，不单独定义一套排版组件。
-          统一字体是 <code className="rounded bg-muted px-1.5 py-0.5">font-sans</code>（Geist / system sans-serif），
-          页面只需要按场景选择合适的字号和颜色组合。
-        </p>
-
-        <p className="text-base">
-          排版 token 的真相值在 <code className="rounded bg-muted px-1.5 py-0.5">docs/TOKENS.md</code> 的"排版"小节维护，
-          本页只讲"在页面里该怎么用"。
-        </p>
-      </section>
-
-      <Separator className="my-10" />
-
-      <section id="typography-scale" className="flex flex-col gap-5">
-        <div>
-          <h2 className="text-2xl font-semibold">字号阶梯</h2>
-          <p className="mt-2 text-sm text-muted-foreground">从正文到页面标题的常用字号，按使用场景挑选，不要新增字号。</p>
-        </div>
-
-        <div className="overflow-hidden rounded-xl border border-border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>类名</TableHead>
-                <TableHead>值</TableHead>
-                <TableHead>使用场景</TableHead>
-                <TableHead>预览</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {typographyTokens.map((token) => (
-                <TableRow key={token.name}>
-                  <TableCell>
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{token.name}</code>
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{token.value}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{token.usage}</TableCell>
-                  <TableCell>
-                    <span className={token.name}>文字示例 Aa</span>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-
-      <Separator className="my-10" />
-
-      <section id="typography-usage" className="flex flex-col gap-5">
-        <div>
-          <h2 className="text-2xl font-semibold">使用方式</h2>
-          <p className="mt-2 text-sm text-muted-foreground">页面里最常见的四类文字组合，直接照抄类名即可。</p>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-2">
-          {typographyUsageExamples.map((example) => (
-            <Card key={example.title}>
-              <CardHeader>
-                <CardTitle className="text-base">{example.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-3">
-                <p className="text-sm text-muted-foreground">{example.usage}</p>
-                <CopyCodeBlock code={example.code} label={example.title} lang={lang} />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      <Separator className="my-10" />
-
-      <section id="typography-rules" className="flex flex-col gap-4">
-        <h2 className="text-2xl font-semibold">使用规则</h2>
-        <Card>
-          <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
-            {typographyRules.map((rule) => (
-              <div key={rule} className="flex gap-2">
-                <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
-                <span>{rule}</span>
               </div>
             ))}
           </CardContent>

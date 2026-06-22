@@ -10,6 +10,7 @@ import {
   CheckCircleFilledIcon,
   HomeFilledIcon,
   DatabaseFilledIcon,
+  UserFilledIcon,
   StarFilledIcon,
   CopyIcon,
   CreditCardIcon,
@@ -28,7 +29,7 @@ import {
   UserIcon,
 } from "@/lib/icons"
 
-import { Badge } from "@/components/ui/badge"
+import { Badge, Indicator } from "@/components/ui/badge"
 import {
   ChartContainer,
   ChartTooltip,
@@ -133,7 +134,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Avatar, AvatarFallback, AvatarImage, AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage, AvatarGroup, AvatarGroupCount, avatarInitials } from "@/components/ui/avatar"
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -1443,6 +1444,13 @@ const badgeScenarioExamples = [
     rule: "使用 render={<a href=\"...\" />}，不要嵌套 <a>，也不要用 onClick 把 Badge 伪装成 Button。",
     code: `<Badge variant="link" render={<a href="/releases/v1.2.0" />}>\n  v1.2.0\n</Badge>`,
   },
+  {
+    id: "indicator",
+    title: "角标（红点/数字）",
+    intent: "图标按钮（通知铃铛/消息）、导航项、Tab 上的未读红点或未读数。",
+    rule: "用 Indicator 包裹载体，dot 红点 / count 数字（超 max 显示「max+」），自动定位右上角；角标是通用能力，不写进具体组件内部。",
+    code: `import { Indicator } from "@/components/ui/badge"\n\n<Indicator dot>\n  <Button size="icon" variant="outline" aria-label="通知"><BellIcon /></Button>\n</Indicator>\n<Indicator count={5}>…</Indicator>\n<Indicator count={120} max={99}>…</Indicator>  // 99+`,
+  },
 ]
 
 const badgeVariantRows = [
@@ -1459,6 +1467,8 @@ const badgePropRows = [
   { prop: "variant", type: "\"default\" | \"secondary\" | \"destructive\" | \"success\" | \"outline\" | \"ghost\" | \"link\"", defaultValue: "default", desc: "视觉强调级别，对应不同语义场景" },
   { prop: "render", type: "ReactElement | (props, state) => ReactElement", defaultValue: "—", desc: "自定义根节点渲染（如渲染成 <a> 实现链接徽标）" },
   { prop: "className", type: "string", defaultValue: "—", desc: "在保留基础样式的前提下追加 Tailwind 类名" },
+  { prop: "Indicator.dot / count", type: "boolean / number", defaultValue: "—", desc: "角标：dot 红点、count 未读数（超 max 显示「max+」）；传 children 时自动定位到右上角" },
+  { prop: "Indicator.max / tone", type: "number / \"destructive\" | \"primary\"", defaultValue: "99 / destructive", desc: "数字溢出阈值与角标配色" },
 ]
 
 const badgeSemanticDomRows = [
@@ -1726,24 +1736,124 @@ const avatarScenarioExamples = [
   {
     id: "single",
     title: "单头像",
+    group: "type",
     intent: "展示单个用户身份，图片加载失败时回退到文字缩写。",
     rule: "AvatarFallback 用姓名首字母或图标兜底，避免空白占位。",
     code: `<Avatar>\n  <AvatarImage src="/avatars/01.png" alt="张三" />\n  <AvatarFallback>张</AvatarFallback>\n</Avatar>`,
   },
   {
+    id: "shape",
+    title: "形状",
+    group: "type",
+    intent: "用户头像用圆形；企业、项目、群组、应用图标用方形。",
+    rule: "shape=\"square\" 切方形，圆角走 token（rounded-lg），不写死像素。",
+    code: `<Avatar shape="square">\n  <AvatarImage src="/logo.png" alt="项目 A" />\n  <AvatarFallback>A</AvatarFallback>\n</Avatar>`,
+  },
+  {
+    id: "colorful",
+    title: "彩色文字头像",
+    group: "type",
+    intent: "无头像图时，按姓名上色区分用户，避免一片灰。",
+    rule: "AvatarFallback colorful 在 6 色系（brand/green/amber/red/blue/purple）里按内容 hash 轮循环取色，实底 08 + 白字反白，不逐个写死颜色。",
+    code: `<Avatar>\n  <AvatarFallback colorful>张三</AvatarFallback>\n</Avatar>`,
+  },
+  {
+    id: "icon",
+    title: "图标兜底",
+    group: "type",
+    intent: "匿名 / 无名用户，连姓名缩写都没有时用通用图标兜底。",
+    rule: "AvatarFallback colorful 放面型图标（UserFilledIcon），彩底 + 白图标反白；无姓名 seed 统一取首色。",
+    code: `<Avatar>\n  <AvatarFallback colorful><UserFilledIcon /></AvatarFallback>\n</Avatar>`,
+  },
+  {
+    id: "initials",
+    title: "文字缩写",
+    group: "type",
+    intent: "无头像图时，从姓名自动取缩写（中/英不同规则）。",
+    rule: "中文≤2字全取、≥3取末2字（名）；英文单名取首字母、全名取首末两词首字母，统一大写。",
+    code: `import { avatarInitials } from "@/components/ui/avatar"\n\n<AvatarFallback colorful>{avatarInitials("欧阳娜娜")}</AvatarFallback> // 娜娜\n<AvatarFallback colorful>{avatarInitials("John Doe")}</AvatarFallback> // JD`,
+  },
+  {
     id: "group",
     title: "头像组",
+    group: "type",
     intent: "在评论区、协作者列表等场景里堆叠展示多个用户。",
-    rule: "用 AvatarGroup 控制重叠间距，超出数量用 AvatarGroupCount 折叠显示。",
-    code: `<AvatarGroup>\n  <Avatar><AvatarFallback>A</AvatarFallback></Avatar>\n  <Avatar><AvatarFallback>B</AvatarFallback></Avatar>\n  <AvatarGroupCount>+3</AvatarGroupCount>\n</AvatarGroup>`,
+    rule: "AvatarGroup max 自动折叠 +N；或手动放 AvatarGroupCount。",
+    code: `<AvatarGroup max={3}>\n  <Avatar><AvatarFallback>A</AvatarFallback></Avatar>\n  <Avatar><AvatarFallback>B</AvatarFallback></Avatar>\n  <Avatar><AvatarFallback>C</AvatarFallback></Avatar>\n  <Avatar><AvatarFallback>D</AvatarFallback></Avatar>\n</AvatarGroup>`,
+  },
+  {
+    id: "clickable",
+    title: "可点击头像",
+    group: "type",
+    intent: "头像作为入口，点击跳转到个人主页 / 用户卡片。",
+    rule: "用 render 渲染成 <a>/<button>，加 cursor-pointer 与 focus-visible 焦点环；不要给 Avatar 绑裸 onClick 当按钮。",
+    code: `<Avatar\n  render={<a href="/u/zhang" />}\n  className="cursor-pointer outline-none transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"\n>\n  <AvatarImage src="/avatars/01.png" alt="张三" />\n  <AvatarFallback>张</AvatarFallback>\n</Avatar>`,
+  },
+  {
+    id: "group-hover",
+    title: "头像组 +N 悬停",
+    group: "type",
+    intent: "协作者较多时，折叠的 +N 悬停展开剩余成员名单。",
+    rule: "手动模式：Tooltip 包住 AvatarGroupCount，content 列出被折叠的成员；不要把名单堆在页面上。",
+    code: `<AvatarGroup>\n  <Avatar><AvatarFallback>A</AvatarFallback></Avatar>\n  <Avatar><AvatarFallback>B</AvatarFallback></Avatar>\n  <Tooltip>\n    <TooltipTrigger render={<AvatarGroupCount>+3</AvatarGroupCount>} />\n    <TooltipContent>王五、赵六、孙七</TooltipContent>\n  </Tooltip>\n</AvatarGroup>`,
+  },
+  {
+    id: "size-xs",
+    title: "超小 xs",
+    group: "size",
+    spec: "20px",
+    intent: "表格行内、紧凑列表里的身份标识。",
+    rule: "最小档，只放缩写或小图，不塞状态点。",
+    code: `<Avatar size="xs"><AvatarFallback>张</AvatarFallback></Avatar>`,
+  },
+  {
+    id: "size-sm",
+    title: "小 sm",
+    group: "size",
+    spec: "24px",
+    intent: "列表项、评论区的用户头像。",
+    rule: "高密度区域用，配 text-fx-12 缩写。",
+    code: `<Avatar size="sm"><AvatarFallback>张</AvatarFallback></Avatar>`,
+  },
+  {
+    id: "size-default",
+    title: "默认 default",
+    group: "size",
+    spec: "32px",
+    intent: "常规身份展示，业务首选档。",
+    rule: "大多数场景用这一档。",
+    code: `<Avatar><AvatarFallback>张</AvatarFallback></Avatar>`,
+  },
+  {
+    id: "size-lg",
+    title: "大 lg",
+    group: "size",
+    spec: "40px",
+    intent: "卡片头部、详情区的强调身份。",
+    rule: "需要更强存在感时用。",
+    code: `<Avatar size="lg"><AvatarFallback>张</AvatarFallback></Avatar>`,
+  },
+  {
+    id: "size-xl",
+    title: "超大 xl",
+    group: "size",
+    spec: "48px",
+    intent: "个人主页、页面级身份展示。",
+    rule: "页面级用，不在密集列表里用。",
+    code: `<Avatar size="xl"><AvatarFallback>张</AvatarFallback></Avatar>`,
   },
 ]
+const avatarScenarioFilters = [
+  { value: "type", label: "类型", labelEn: "Type" },
+  { value: "size", label: "尺寸", labelEn: "Size" },
+]
 const avatarPropRows = [
-  { prop: "Avatar", type: "size?: \"default\" | \"sm\" | \"lg\"", defaultValue: "\"default\"", desc: "头像容器，size 控制整体尺寸（影响子元素的联动样式）。" },
+  { prop: "Avatar.size", type: "\"xs\" | \"sm\" | \"default\" | \"lg\" | \"xl\"", defaultValue: "\"default\"", desc: "尺寸档（20/24/32/40/48），子元素随档联动缩放。" },
+  { prop: "Avatar.shape", type: "\"circle\" | \"square\"", defaultValue: "\"circle\"", desc: "形状；square 用 rounded-lg token 圆角，常用于企业/项目/群组。" },
   { prop: "AvatarImage", type: "AvatarPrimitive.Image.Props", defaultValue: "—", desc: "实际图片，加载失败时自动让出位置给 AvatarFallback。" },
-  { prop: "AvatarFallback", type: "AvatarPrimitive.Fallback.Props", defaultValue: "—", desc: "图片缺省时的兜底内容，常用姓名缩写或图标。" },
-  { prop: "AvatarBadge", type: "React.ComponentProps<\"span\">", defaultValue: "—", desc: "叠加在右下角的状态点（如在线状态），随 size 自动缩放。" },
-  { prop: "AvatarGroup / AvatarGroupCount", type: "React.ComponentProps<\"div\">", defaultValue: "—", desc: "头像组容器与“+N”计数占位，用于堆叠展示多个用户。" },
+  { prop: "AvatarFallback.colorful", type: "boolean", defaultValue: "false", desc: "兜底文字按内容 hash 自动取色板背景色 + 反白文字，便于区分用户。" },
+  { prop: "AvatarBadge.status", type: "\"online\" | \"away\" | \"busy\" | \"offline\"", defaultValue: "—", desc: "右下角状态点的 presence 语义色：在线绿 / 离开黄 / 忙红 / 离线灰；随 size 自动缩放。" },
+  { prop: "AvatarGroup.max", type: "number", defaultValue: "—", desc: "最多展示几个头像，超出自动折叠为“+N”（AvatarGroupCount）。" },
 ]
 const avatarSemanticDomRows = [
   { part: "[data-slot=\"avatar\"][data-size]", desc: "头像容器，data-size 标记当前尺寸档位（default/sm/lg）。" },
@@ -1753,8 +1863,10 @@ const avatarSemanticDomRows = [
 ]
 const avatarDoDontRows = [
   { do: "始终提供 AvatarFallback 兜底内容。", dont: "只放 AvatarImage，图裂时显示空白圆圈。" },
-  { do: "用首字母缩写（1-2 个字）做兜底文案。", dont: "塞入完整姓名导致文字溢出圆形容器。" },
-  { do: "头像组按真实数量折叠，超出部分用 AvatarGroupCount。", dont: "无限堆叠头像，挤占横向空间。" },
+  { do: "用首字母缩写（1-2 个字）做兜底文案。", dont: "塞入完整姓名导致文字溢出容器。" },
+  { do: "人物用 circle、企业/项目/群组用 square。", dont: "给用户头像用方形、给应用图标用圆形，语义混乱。" },
+  { do: "彩色文字头像用 colorful 自动上色。", dont: "给每个头像手写 bg-[#xxx] 背景色。" },
+  { do: "头像组用 max 自动折叠 +N。", dont: "无限堆叠头像，挤占横向空间。" },
 ]
 
 const breadcrumbAnchors = [
@@ -1812,7 +1924,6 @@ const buttonGroupScenarioExamples = [
     id: "basic",
     title: "操作组合",
     group: "type",
-    spec: "高32 · 圆角8 · 横向",
     intent: "把强相关的多个操作按钮合并为一组，弱化彼此边界。",
     rule: "组内按钮 variant 保持一致，避免主次操作混在一起。",
     code: `<ButtonGroup>\n  <Button variant="outline">复制</Button>\n  <Button variant="outline">分享</Button>\n  <Button variant="outline">归档</Button>\n</ButtonGroup>`,
@@ -1821,7 +1932,6 @@ const buttonGroupScenarioExamples = [
     id: "split",
     title: "拆分按钮",
     group: "type",
-    spec: "高32 · 圆角8 · 主操作+图标",
     intent: "主操作 + 下拉箭头，把主操作与「更多选项」合并。",
     rule: "主操作在前，箭头用 size=icon 收纳更多动作（配 DropdownMenu）。",
     code: `<ButtonGroup>\n  <Button variant="outline">保存</Button>\n  <Button variant="outline" size="icon" aria-label="更多">\n    <ChevronDownIcon />\n  </Button>\n</ButtonGroup>`,
@@ -1830,7 +1940,6 @@ const buttonGroupScenarioExamples = [
     id: "vertical",
     title: "垂直方向",
     group: "type",
-    spec: "高32 · 圆角8 · 竖向",
     intent: "侧边工具栏等纵向排列的按钮组。",
     rule: "用 orientation=\"vertical\"，自动合并上下边框。",
     code: `<ButtonGroup orientation="vertical">\n  <Button variant="outline">上移</Button>\n  <Button variant="outline">居中</Button>\n  <Button variant="outline">下移</Button>\n</ButtonGroup>`,
@@ -4008,7 +4117,7 @@ function GettingStartedPage({
                 <ul className="mt-3 grid gap-2 text-sm text-muted-foreground">
                   {governanceStatus.maintenanceModel.rules.map((rule) => (
                     <li key={rule} className="flex gap-2">
-                      <span className="mt-3 size-1.5 shrink-0 rounded-full bg-primary" />
+                      <span className="mt-3 size-1.5 shrink-0 rounded-full bg-success" />
                       <span>{rule}</span>
                     </li>
                   ))}
@@ -4734,12 +4843,60 @@ function ComponentsIndexPage({ actions, lang }: { actions: React.ReactNode; lang
   )
 }
 
-function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
-  const [scenarioFilter, setScenarioFilter] = useState<ButtonScenarioFilter>("category")
-  const filteredScenarioExamples = buttonScenarioExamples.filter((example) => {
-    return example.group === scenarioFilter
-  })
+// 全站统一的「场景示例」表：场景 / 示例 / [规格] / 使用意图 / 约束 / 推荐写法。
+// 列宽与换行规范见 docs/DOC_SITE_DESIGN.md「表格」。调用方传入已按 lang 本地化的 rows + preview 节点。
+type ScenarioRow = { key: string; group?: string; title: string; preview: React.ReactNode; spec?: string; intent: string; constraint: string; code: string }
+function ScenarioTable({ rows, filters, lang }: { rows: ScenarioRow[]; filters?: { value: string; label: string; labelEn?: string }[]; lang: Lang }) {
+  const [filter, setFilter] = useState(filters?.[0]?.value ?? "all")
+  const shown = filters ? rows.filter((r) => r.group === filter) : rows
+  // 规格列只在当前显示的行真的有规格时才出现（≈只在「尺寸」分组出现），避免类型/用法 tab 显示一列重复规格
+  const hasSpec = shown.some((r) => r.spec)
+  return (
+    <>
+      {filters ? (
+        <Tabs value={filter} onValueChange={setFilter} aria-label={lang === "en" ? "Filter examples" : "筛选场景"}>
+          <TabsList className="flex h-auto flex-wrap justify-start">
+            {filters.map((f) => (
+              <TabsTrigger key={f.value} value={f.value}>{lang === "en" ? (f.labelEn ?? f.label) : f.label}</TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+      ) : null}
+      <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <Table className="w-auto">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="pl-4">{lang === "en" ? "Scenario" : "场景"}</TableHead>
+              <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
+              {hasSpec ? <TableHead>{lang === "en" ? "Spec" : "规格"}</TableHead> : null}
+              <TableHead>{lang === "en" ? "Intent" : "使用意图"}</TableHead>
+              <TableHead>{lang === "en" ? "Constraint" : "约束"}</TableHead>
+              <TableHead className="pr-4">{lang === "en" ? "Recommended API" : "推荐写法"}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {shown.map((r) => (
+              <TableRow key={r.key}>
+                <TableCell className="pl-4 align-top"><span className="font-medium">{r.title}</span></TableCell>
+                <TableCell className="align-top"><div className="w-max">{r.preview}</div></TableCell>
+                {hasSpec ? <TableCell className="align-top text-foreground"><div className="w-max text-fx-12">{r.spec ?? "—"}</div></TableCell> : null}
+                <TableCell className="align-top whitespace-normal text-muted-foreground"><div className="max-w-[240px] break-words">{r.intent}</div></TableCell>
+                <TableCell className="align-top whitespace-normal text-muted-foreground"><div className="max-w-[260px] break-words">{r.constraint}</div></TableCell>
+                <TableCell className="pr-4 align-top">
+                  <div className="max-w-[360px] overflow-x-auto rounded-lg bg-muted">
+                    <pre className="w-max px-3 py-2 text-fx-12"><code>{r.code}</code></pre>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </>
+  )
+}
 
+function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   return (
     <div className={docsSpacing.pageStack}>
       <section id="button" className="flex flex-col gap-2">
@@ -4772,61 +4929,20 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
               : "按类型、尺寸、状态、图标分组查看用法；所有示例都来自同一份结构化数据源。"}
           </p>
         </div>
-        <Tabs
-          value={scenarioFilter}
-          onValueChange={(value) => setScenarioFilter(value as ButtonScenarioFilter)}
-          aria-label={lang === "en" ? "Filter Button examples" : "筛选 Button 示例"}
-        >
-          <TabsList className="flex h-auto flex-wrap justify-start">
-          {buttonScenarioFilters.map((filter) => (
-            <TabsTrigger key={filter.value} value={filter.value}>
-              {lang === "en" ? filter.labelEn : filter.label}
-            </TabsTrigger>
-          ))}
-          </TabsList>
-        </Tabs>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[1080px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-4">{lang === "en" ? "Scenario" : "场景"}</TableHead>
-                <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
-                <TableHead>{lang === "en" ? "Spec" : "规格"}</TableHead>
-                <TableHead className="w-[240px]">{lang === "en" ? "Intent" : "使用意图"}</TableHead>
-                <TableHead>{lang === "en" ? "Constraint" : "约束"}</TableHead>
-                <TableHead className="w-[300px] pr-4">{lang === "en" ? "Recommended API" : "推荐写法"}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredScenarioExamples.map((example) => (
-                <TableRow key={example.id}>
-                  <TableCell className="pl-4 align-top whitespace-nowrap">
-                    <span className="font-medium">{lang === "en" ? example.titleEn : example.title}</span>
-                  </TableCell>
-                  <TableCell className="align-top">
-                    <ButtonScenarioPreview id={example.id} lang={lang} />
-                  </TableCell>
-                  <TableCell className="align-top whitespace-nowrap text-foreground">
-                    <p className="text-fx-12 leading-6">{buttonSpecById(example.id, lang)}</p>
-                  </TableCell>
-                  <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="max-w-[260px] leading-6">{lang === "en" ? example.intentEn : example.intent}</p>
-                  </TableCell>
-                  <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="min-w-[220px] leading-6">{lang === "en" ? example.ruleEn : example.rule}</p>
-                  </TableCell>
-                  <TableCell className="pr-4 align-top whitespace-normal">
-                    <div className="flex max-w-[300px] flex-col gap-2">
-                      <code className="overflow-x-auto rounded-lg bg-muted px-3 py-2 text-xs leading-6">
-                        {example.code}
-                      </code>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+        <ScenarioTable
+          lang={lang}
+          filters={buttonScenarioFilters}
+          rows={buttonScenarioExamples.map((example) => ({
+            key: example.id,
+            group: example.group,
+            title: lang === "en" ? example.titleEn : example.title,
+            preview: <ButtonScenarioPreview id={example.id} lang={lang} />,
+            spec: example.group === "size" ? buttonSpecById(example.id, lang) : undefined,
+            intent: lang === "en" ? example.intentEn : example.intent,
+            constraint: lang === "en" ? example.ruleEn : example.rule,
+            code: example.code,
+          }))}
+        />
       </section>
 
       <section id="usage" className={docsSpacing.sectionStack}>
@@ -4921,7 +5037,7 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {buttonDoDontRows.map((row) => (
                 <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
                   <span>{lang === "en" ? row.doEn : row.do}</span>
                 </div>
               ))}
@@ -6208,7 +6324,6 @@ const iconScenarioFilters = [
 
 function IconPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   const iconImportCode = `import { SearchIcon, HomeFilledIcon } from "@/lib/icons"`
-  const [iconScenarioFilter, setIconScenarioFilter] = useState("type")
 
   const iconSemanticRows = [
     { part: "svg.tabler-icon", desc: "每个图标渲染为带 .tabler-icon 类的 <svg>，全局在此类上统一 stroke-width，不要逐个图标改线宽。", descEn: "Each icon renders as <svg class=\"tabler-icon\">; stroke-width is set globally on this class." },
@@ -6419,41 +6534,19 @@ function IconPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
             {lang === "en" ? "Common usages and where each fits." : "常见用法与适用场景。"}
           </p>
         </div>
-        <Tabs value={iconScenarioFilter} onValueChange={setIconScenarioFilter} aria-label={lang === "en" ? "Filter icon examples" : "筛选图标示例"}>
-          <TabsList className="flex h-auto flex-wrap justify-start">
-            {iconScenarioFilters.map((f) => (
-              <TabsTrigger key={f.value} value={f.value}>{lang === "en" ? f.labelEn : f.label}</TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
-        <div className="fx-doc-static max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[1000px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-4">{lang === "en" ? "Scenario" : "场景"}</TableHead>
-                <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
-                <TableHead className="w-[240px]">{lang === "en" ? "Intent" : "使用意图"}</TableHead>
-                <TableHead>{lang === "en" ? "Constraint" : "约束"}</TableHead>
-                <TableHead className="w-[300px] pr-4">{lang === "en" ? "Recommended API" : "推荐写法"}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {iconScenarios.filter((s) => s.group === iconScenarioFilter).map((s) => (
-                <TableRow key={s.title}>
-                  <TableCell className="pl-4 align-top whitespace-nowrap">
-                    <span className="font-medium">{lang === "en" ? s.titleEn : s.title}</span>
-                  </TableCell>
-                  <TableCell className="align-top">{s.preview}</TableCell>
-                  <TableCell className="align-top text-muted-foreground">{lang === "en" ? s.intentEn : s.intent}</TableCell>
-                  <TableCell className="align-top text-muted-foreground">{lang === "en" ? s.constraintEn : s.constraint}</TableCell>
-                  <TableCell className="pr-4 align-top">
-                    <pre className="max-w-full overflow-x-auto rounded-lg bg-muted p-3 text-xs"><code>{s.code}</code></pre>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+        <ScenarioTable
+          lang={lang}
+          filters={iconScenarioFilters}
+          rows={iconScenarios.map((s) => ({
+            key: s.title,
+            group: s.group,
+            title: lang === "en" ? s.titleEn : s.title,
+            preview: s.preview,
+            intent: lang === "en" ? s.intentEn : s.intent,
+            constraint: lang === "en" ? s.constraintEn : s.constraint,
+            code: s.code,
+          }))}
+        />
       </section>
 
       <section id="icon-usage" className={docsSpacing.sectionStack}>
@@ -6544,7 +6637,7 @@ function IconPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {iconDoDontRows.map((row) => (
                 <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
                   <span>{lang === "en" ? row.doEn : row.do}</span>
                 </div>
               ))}
@@ -6655,13 +6748,13 @@ function InputPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
                     )}
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="max-w-[260px] leading-6">{example.intent}</p>
+                    <p className="min-w-[180px] max-w-[260px] leading-6">{example.intent}</p>
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="min-w-[220px] leading-6">{example.rule}</p>
+                    <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
-                  <TableCell className="pr-4 align-top whitespace-normal">
-                    <code className="overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                  <TableCell className="w-[360px] pr-4 align-top">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -6757,7 +6850,7 @@ function InputPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {inputDoDontRows.map((row) => (
                 <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
                   <span>{row.do}</span>
                 </div>
               ))}
@@ -6911,13 +7004,13 @@ function SelectPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
                     <SelectPreview id={example.id} />
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="max-w-[260px] leading-6">{example.intent}</p>
+                    <p className="min-w-[180px] max-w-[260px] leading-6">{example.intent}</p>
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="min-w-[220px] leading-6">{example.rule}</p>
+                    <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
-                  <TableCell className="pr-4 align-top whitespace-normal">
-                    <code className="overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                  <TableCell className="w-[360px] pr-4 align-top">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -7013,7 +7106,7 @@ function SelectPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {selectDoDontRows.map((row) => (
                 <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
                   <span>{row.do}</span>
                 </div>
               ))}
@@ -7146,13 +7239,13 @@ function CheckboxPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
                     <CheckboxPreview id={example.id} />
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="max-w-[260px] leading-6">{example.intent}</p>
+                    <p className="min-w-[180px] max-w-[260px] leading-6">{example.intent}</p>
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="min-w-[220px] leading-6">{example.rule}</p>
+                    <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
-                  <TableCell className="pr-4 align-top whitespace-normal">
-                    <code className="overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                  <TableCell className="w-[360px] pr-4 align-top">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -7248,7 +7341,7 @@ function CheckboxPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {checkboxDoDontRows.map((row) => (
                 <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
                   <span>{row.do}</span>
                 </div>
               ))}
@@ -7375,13 +7468,13 @@ function SwitchPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
                     <SwitchPreview id={example.id} />
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="max-w-[260px] leading-6">{example.intent}</p>
+                    <p className="min-w-[180px] max-w-[260px] leading-6">{example.intent}</p>
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="min-w-[220px] leading-6">{example.rule}</p>
+                    <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
-                  <TableCell className="pr-4 align-top whitespace-normal">
-                    <code className="overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                  <TableCell className="w-[360px] pr-4 align-top">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -7477,7 +7570,7 @@ function SwitchPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {switchDoDontRows.map((row) => (
                 <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
                   <span>{row.do}</span>
                 </div>
               ))}
@@ -7579,13 +7672,13 @@ function TextareaPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
                     <TextareaPreview id={example.id} />
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="max-w-[260px] leading-6">{example.intent}</p>
+                    <p className="min-w-[180px] max-w-[260px] leading-6">{example.intent}</p>
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="min-w-[220px] leading-6">{example.rule}</p>
+                    <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
-                  <TableCell className="pr-4 align-top whitespace-normal">
-                    <code className="overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                  <TableCell className="w-[360px] pr-4 align-top">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -7681,7 +7774,7 @@ function TextareaPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {textareaDoDontRows.map((row) => (
                 <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
                   <span>{row.do}</span>
                 </div>
               ))}
@@ -7883,7 +7976,7 @@ function TablePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {tableDoDontRows.map((row) => (
                 <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
                   <span>{row.do}</span>
                 </div>
               ))}
@@ -8080,7 +8173,7 @@ function CardPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {cardDoDontRows.map((row) => (
                 <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
                   <span>{row.do}</span>
                 </div>
               ))}
@@ -8118,6 +8211,16 @@ function BadgePreview({ id }: { id: string }) {
 
   if (id === "count") {
     return <Badge variant="outline">+12</Badge>
+  }
+
+  if (id === "indicator") {
+    return (
+      <div className="flex items-center gap-6">
+        <Indicator dot><BellIcon className="size-6 text-foreground" /></Indicator>
+        <Indicator count={5}><BellIcon className="size-6 text-foreground" /></Indicator>
+        <Indicator count={120} max={99}><BellIcon className="size-6 text-foreground" /></Indicator>
+      </div>
+    )
   }
 
   if (id === "link") {
@@ -8202,13 +8305,13 @@ function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
                     <BadgePreview id={example.id} />
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="max-w-[260px] leading-6">{example.intent}</p>
+                    <p className="min-w-[180px] max-w-[260px] leading-6">{example.intent}</p>
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="min-w-[220px] leading-6">{example.rule}</p>
+                    <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
-                  <TableCell className="pr-4 align-top whitespace-normal">
-                    <code className="overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                  <TableCell className="w-[360px] pr-4 align-top">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -8304,7 +8407,7 @@ function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {badgeDoDontRows.map((row) => (
                 <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
                   <span>{row.do}</span>
                 </div>
               ))}
@@ -8540,7 +8643,7 @@ function TooltipPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {tooltipDoDontRows.map((row) => (
                 <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
                   <span>{row.do}</span>
                 </div>
               ))}
@@ -8679,13 +8782,13 @@ function DialogPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
                     <DialogPreview id={example.id} />
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="max-w-[260px] leading-6">{example.intent}</p>
+                    <p className="min-w-[180px] max-w-[260px] leading-6">{example.intent}</p>
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="min-w-[220px] leading-6">{example.rule}</p>
+                    <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
-                  <TableCell className="pr-4 align-top whitespace-normal">
-                    <code className="overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                  <TableCell className="w-[360px] pr-4 align-top">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -8781,7 +8884,7 @@ function DialogPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {dialogDoDontRows.map((row) => (
                 <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
                   <span>{row.do}</span>
                 </div>
               ))}
@@ -8914,13 +9017,13 @@ function AlertDialogPage({ actions, lang }: { actions: React.ReactNode; lang: La
                     <AlertDialogPreview id={example.id} />
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="max-w-[260px] leading-6">{example.intent}</p>
+                    <p className="min-w-[180px] max-w-[260px] leading-6">{example.intent}</p>
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="min-w-[220px] leading-6">{example.rule}</p>
+                    <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
-                  <TableCell className="pr-4 align-top whitespace-normal">
-                    <code className="overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                  <TableCell className="w-[360px] pr-4 align-top">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -9016,7 +9119,7 @@ function AlertDialogPage({ actions, lang }: { actions: React.ReactNode; lang: La
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {alertDialogDoDontRows.map((row) => (
                 <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
                   <span>{row.do}</span>
                 </div>
               ))}
@@ -9155,13 +9258,13 @@ function SheetPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
                     <SheetPreview id={example.id} />
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="max-w-[260px] leading-6">{example.intent}</p>
+                    <p className="min-w-[180px] max-w-[260px] leading-6">{example.intent}</p>
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="min-w-[220px] leading-6">{example.rule}</p>
+                    <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
-                  <TableCell className="pr-4 align-top whitespace-normal">
-                    <code className="overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                  <TableCell className="w-[360px] pr-4 align-top">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -9257,7 +9360,7 @@ function SheetPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {sheetDoDontRows.map((row) => (
                 <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
                   <span>{row.do}</span>
                 </div>
               ))}
@@ -9366,13 +9469,13 @@ function SkeletonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
                     <SkeletonPreview id={example.id} />
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="max-w-[260px] leading-6">{example.intent}</p>
+                    <p className="min-w-[180px] max-w-[260px] leading-6">{example.intent}</p>
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="min-w-[220px] leading-6">{example.rule}</p>
+                    <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
-                  <TableCell className="pr-4 align-top whitespace-normal">
-                    <code className="overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                  <TableCell className="w-[360px] pr-4 align-top">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -9468,7 +9571,7 @@ function SkeletonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {skeletonDoDontRows.map((row) => (
                 <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
                   <span>{row.do}</span>
                 </div>
               ))}
@@ -9524,11 +9627,6 @@ function StandardDocPage({
   actions: React.ReactNode
   lang: Lang
 }) {
-  const [scenarioFilter, setScenarioFilter] = useState(scenarioFilters?.[0]?.value ?? "all")
-  const hasSpec = scenarioExamples.some((e) => e.spec)
-  const shownExamples = scenarioFilters
-    ? scenarioExamples.filter((e) => e.group === scenarioFilter)
-    : scenarioExamples
   return (
     <div className={docsSpacing.pageStack}>
       <section id={slug} className="flex flex-col gap-2">
@@ -9555,55 +9653,20 @@ function StandardDocPage({
           <h2 className="text-2xl font-semibold">场景示例</h2>
           <p className="text-base text-muted-foreground">常见用法与适用场景。</p>
         </div>
-        {scenarioFilters ? (
-          <Tabs value={scenarioFilter} onValueChange={setScenarioFilter} aria-label="筛选场景">
-            <TabsList className="flex h-auto flex-wrap justify-start">
-              {scenarioFilters.map((f) => (
-                <TabsTrigger key={f.value} value={f.value}>{lang === "en" ? (f.labelEn ?? f.label) : f.label}</TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
-        ) : null}
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className={hasSpec ? "min-w-[1080px]" : "min-w-[960px]"}>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-4">场景</TableHead>
-                <TableHead>示例</TableHead>
-                {hasSpec ? <TableHead>规格</TableHead> : null}
-                <TableHead className="w-[240px]">使用意图</TableHead>
-                <TableHead>约束</TableHead>
-                <TableHead className="w-[300px] pr-4">推荐写法</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {shownExamples.map((example) => (
-                <TableRow key={example.id}>
-                  <TableCell className="pl-4 align-top whitespace-nowrap">
-                    <span className="font-medium">{example.title}</span>
-                  </TableCell>
-                  <TableCell className="align-top">{renderScenarioPreview(example.id)}</TableCell>
-                  {hasSpec ? (
-                    <TableCell className="align-top whitespace-nowrap text-foreground">
-                      <p className="text-fx-12 leading-6">{example.spec ?? "—"}</p>
-                    </TableCell>
-                  ) : null}
-                  <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="max-w-[260px] leading-6">{example.intent}</p>
-                  </TableCell>
-                  <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="min-w-[220px] leading-6">{example.rule}</p>
-                  </TableCell>
-                  <TableCell className="pr-4 align-top whitespace-normal">
-                    <code className="overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
-                      {example.code}
-                    </code>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+        <ScenarioTable
+          lang={lang}
+          filters={scenarioFilters}
+          rows={scenarioExamples.map((example) => ({
+            key: example.id,
+            group: example.group,
+            title: example.title,
+            preview: renderScenarioPreview(example.id),
+            spec: example.spec,
+            intent: example.intent,
+            constraint: example.rule,
+            code: example.code,
+          }))}
+        />
       </section>
 
       <section id={`${slug}-usage`} className={docsSpacing.sectionStack}>
@@ -9691,7 +9754,7 @@ function StandardDocPage({
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {doDontRows.map((row) => (
                 <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
                   <span>{row.do}</span>
                 </div>
               ))}
@@ -9721,7 +9784,7 @@ function AvatarPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
     <StandardDocPage
       slug="avatar"
       title="Avatar 头像"
-      lead="展示用户或实体身份的圆形图像，支持图片加载失败时回退到文字缩写，并可组合成头像组。"
+      lead="展示用户或实体身份的图像，支持图片加载失败回退、圆/方形、彩色文字头像与头像组。"
       overview={
         <>
           <Avatar>
@@ -9732,18 +9795,63 @@ function AvatarPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
         </>
       }
       scenarioExamples={avatarScenarioExamples}
+      scenarioFilters={avatarScenarioFilters}
       renderScenarioPreview={(id) =>
         id === "single" ? (
           <Avatar>
             <AvatarImage src="https://github.com/shadcn.png" alt="张三" />
             <AvatarFallback>张</AvatarFallback>
           </Avatar>
-        ) : (
-          <AvatarGroup>
-            <Avatar><AvatarFallback>A</AvatarFallback></Avatar>
-            <Avatar><AvatarFallback>B</AvatarFallback></Avatar>
-            <AvatarGroupCount>+3</AvatarGroupCount>
+        ) : id === "shape" ? (
+          <div className="flex items-center gap-3">
+            <Avatar><AvatarImage src="https://github.com/shadcn.png" alt="用户" /><AvatarFallback colorful>李</AvatarFallback></Avatar>
+            <Avatar shape="square"><AvatarImage src="https://github.com/vercel.png" alt="项目" /><AvatarFallback colorful>项</AvatarFallback></Avatar>
+          </div>
+        ) : id === "colorful" ? (
+          <div className="flex items-center gap-3">
+            {["张三", "王五", "赵六"].map((n) => (
+              <Avatar key={n}><AvatarFallback colorful>{n[0]}</AvatarFallback></Avatar>
+            ))}
+          </div>
+        ) : id === "initials" ? (
+          <div className="flex items-center gap-3">
+            {["欧阳娜娜", "王小明", "John Doe"].map((n) => (
+              <Avatar key={n}><AvatarFallback colorful>{avatarInitials(n)}</AvatarFallback></Avatar>
+            ))}
+          </div>
+        ) : id === "icon" ? (
+          <div className="flex items-center gap-3">
+            <Avatar><AvatarFallback colorful><UserFilledIcon className="size-4" /></AvatarFallback></Avatar>
+            <Avatar shape="square"><AvatarFallback colorful><UserFilledIcon className="size-4" /></AvatarFallback></Avatar>
+          </div>
+        ) : id === "group" ? (
+          <AvatarGroup max={3}>
+            <Avatar><AvatarFallback colorful>A</AvatarFallback></Avatar>
+            <Avatar><AvatarFallback colorful>B</AvatarFallback></Avatar>
+            <Avatar><AvatarFallback colorful>C</AvatarFallback></Avatar>
+            <Avatar><AvatarFallback colorful>D</AvatarFallback></Avatar>
           </AvatarGroup>
+        ) : id === "clickable" ? (
+          <Avatar
+            render={<a href="#avatar" />}
+            className="cursor-pointer outline-none transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <AvatarImage src="https://github.com/shadcn.png" alt="张三" />
+            <AvatarFallback>张</AvatarFallback>
+          </Avatar>
+        ) : id === "group-hover" ? (
+          <AvatarGroup>
+            <Avatar><AvatarFallback colorful>张</AvatarFallback></Avatar>
+            <Avatar><AvatarFallback colorful>王</AvatarFallback></Avatar>
+            <Tooltip>
+              <TooltipTrigger render={<AvatarGroupCount className="cursor-pointer">+3</AvatarGroupCount>} />
+              <TooltipContent>王五、赵六、孙七</TooltipContent>
+            </Tooltip>
+          </AvatarGroup>
+        ) : (
+          <Avatar size={id.replace("size-", "") as "xs" | "sm" | "default" | "lg" | "xl"}>
+            <AvatarFallback>张</AvatarFallback>
+          </Avatar>
         )
       }
       importCode={`import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"`}
@@ -10114,7 +10222,7 @@ function SeparatorPage({ actions, lang }: { actions: React.ReactNode; lang: Lang
       scenarioExamples={separatorScenarioExamples}
       renderScenarioPreview={(id) =>
         id === "horizontal" ? (
-          <div className="flex w-[200px] flex-col gap-3">
+          <div className="flex w-fit flex-col gap-3">
             <p className="text-sm">第一段内容</p>
             <Separator />
             <p className="text-sm">第二段内容</p>

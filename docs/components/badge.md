@@ -110,7 +110,42 @@ AI 选择 Badge 时按这个顺序判断：
 </Badge>
 ```
 
+### 角标：红点 / 未读数（Indicator）
+
+- 使用意图：**图标按钮（通知铃铛/消息）、导航项、Tab** 上的未读**红点**或**未读数**——这几类是主流通知角标最常见的载体；头像未读数是 IM 场景的特化。
+- 规则：用 `Indicator` 承载角标，是**跨组件通用能力**，不写进具体组件内部。`dot` 红点、`count` 数字（超 `max` 显示「max+」，`count<=0` 默认不显示）；传 `children` 时自动 relative 包裹并定位右上角。
+- 定位（量化）：角标几何中心对齐**载体右上角顶点**——`absolute top-0 right-0` + `translate-x-1/2 -translate-y-1/2`（用 translate **百分比**而非固定 px 偏移，dot/99+ 不管多宽锚点都一致、向两侧对称展开，不会越宽越往里盖图标）。
+  - 「中心对齐」指**角标自己的几何中心钉在右上角顶点**，不是"水平居中"——角标本就该在右上角。
+  - 为什么不用其它对齐：**右边缘对齐**（右边固定、向左长）会让宽角标盖住图标；**左边缘对齐**（左边固定、向右长）会让宽角标向外飘、与载体脱节、并排右边参差。**中心对齐**两边对称展开，是 MUI/Ant 的主流默认。
+  - 区分：**盖在元素角上的角标** → 中心对齐（本组件）；**跟在文字后的计数**（如菜单项「消息 ⑤」）→ 行内向右排，是另一种用法，不走 Indicator 的角标定位。
+- 与载体的间隙：不用 margin/gap，用 `ring-2 ring-background`（2px 同底色描边）在角标四周留白。
+- 尺寸：红点 `size-2`(8px)；数字 `h-4`(16) / `min-w-4`(16) / `px-1`(4) / 字 `10px`。
+- 载体：挂在**图标按钮**等有 padding/边界的载体上（图标居中、角标挂在角的留白处），不要直接挂裸小图标——角标比图标还宽时会盖住图形。
+
+```tsx
+import { Indicator } from "@/components/ui/badge"
+
+<Indicator dot>
+  <Button size="icon" variant="outline" aria-label="通知"><BellIcon /></Button>
+</Indicator>
+<Indicator count={5}>…</Indicator>
+<Indicator count={120} max={99}>…</Indicator>  // 显示 99+
+```
+
 ## API {#api}
+
+`Indicator`（角标）：
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `dot` | 红点模式（无数字） | `boolean` | `false` |
+| `count` | 未读数；超 `max` 显示「max+」，`<=0` 默认不显示 | `number` | - |
+| `max` | 数字溢出阈值 | `number` | `99` |
+| `showZero` | `count=0` 时也显示 | `boolean` | `false` |
+| `tone` | 角标配色 | `'destructive' \| 'primary'` | `'destructive'` |
+| `children` | 被标记元素；传入则包裹并定位右上角，不传则独立内联 | `ReactNode` | - |
+
+`Badge`（标签 chip）：
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |

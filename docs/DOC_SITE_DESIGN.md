@@ -187,6 +187,7 @@ Primitive -> Semantic -> Component Usage
 
 - **场景示例的筛选 tab**：场景较多需分组时用筛选 tab。**不要「全部」tab**，默认选中第一个分组；维度要对该组件有意义（Button = 类型/尺寸/状态/图标，ButtonGroup = 类型/尺寸，Icon = 用色/用法）。
 - **尺寸类分组逐档一行**：凡是「尺寸」分组，必须每个尺寸（xs/sm/default/lg）单独一行，写清各档的规格 + 用在什么情况 + 约束，对齐 Button 尺寸表，不要用一行「不同尺寸」糊弄过去。
+- **规格列只在「尺寸」分组出现**：规格是量化尺寸口径（高/字号/圆角），只对尺寸维度有意义；类型/用法等场景不要塞规格（会重复或牵强）。`ScenarioTable` 的规格列按"当前 tab 显示的行是否有 spec"动态显示——只给尺寸场景的行写 `spec`，类型/用法行不写。
 
 **② Token 页**（颜色/圆角/阴影/间距/排版/层级/动效）——结构不同：
 
@@ -230,9 +231,13 @@ Primitive -> Semantic -> Component Usage
 - 不用表格承载长段落说明。
 - **列宽与换行**（防止挤成竖排断词）：
   - **短标签列**（场景 / 规格 / 属性名）→ `whitespace-nowrap` + **不设固定宽度**，让它按内容自适应收窄；设了固定宽度短内容会留一大段空隙，宽窄不一。
-  - **长文本列**（使用意图 / 约束 / 说明）→ `whitespace-normal` + `min-width`，允许换行、保证可读宽度。
-  - **代码列**（推荐写法）→ 不换行、单元格内横向滚动。
+  - **长文本列**（使用意图 / 约束 / 说明）→ `whitespace-normal` + **必须同时给 `min-w` 和 `max-w`**（如意图 `min-w-[180px] max-w-[260px]`）。只给 `max-w` 不给 `min-w`，会被相邻超宽列挤成一行两三字的竖排——这是反例。
+  - **代码列**（推荐写法）→ 代码用 **`block max-w-[360px] overflow-x-auto whitespace-pre`**，让长代码在**单元格内横向滚动**。注意 inline `<code>` 上的 `overflow-x-auto` 不生效，必须 `block`/`pre`，否则不换行的长代码会撑爆整表、把别的列挤扁、还被截断。
   - **整表**靠容器 `overflow-x-auto` + 足够 `min-w` 撑开横滚，列多就滚，**不靠压窄列**。
+  - **列宽自适应做法（推荐）**：表用 `w-auto`（覆盖 shadcn `Table` 默认的 `w-full`）走 `table-layout: auto`，列宽随内容自动取最宽——短内容窄、不留大空当。**上限**靠在单元格内包一层 `<div className="max-w-[..]">`（`<td>` 自己的 `max-width` 在 auto 布局会被忽略，必须套 div）。
+  - **文本列必须显式 `whitespace-normal`**：shadcn `TableCell` 默认带 `whitespace-nowrap`，不覆盖就不换行——auto 布局下文字会把列撑得极宽、甚至溢出**盖到隔壁列**（"叠在一起"事故）。文本/规格/场景列单元格加 `whitespace-normal`，长串再加 `break-words`。
+  - **代码列**：`<div className="max-w-[360px] overflow-x-auto">` 套 `<pre className="w-max …">`，长代码在格内横滚、不撑表。
+  - 全站场景示例统一走 `ScenarioTable` 组件（`src/App.tsx`），列宽/换行只在这一处维护，不要各页再手写一套。
 
 ### 代码块
 

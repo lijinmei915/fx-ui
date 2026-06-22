@@ -50,7 +50,7 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
 - 类型：display
 - 语义 DOM：data-slot="avatar"、data-slot="avatar-image"、data-slot="avatar-fallback"、data-slot="avatar-badge"、data-slot="avatar-group"、data-slot="avatar-group-count"
 - 原生/数据状态：root
-- 变体：无独立 variant prop
+- 能力：`size`（xs/sm/default/lg/xl = 20/24/32/40/48）、`shape`（circle/square）、`AvatarFallback colorful`（按内容 hash 取色板色）、`AvatarBadge status`（在线状态点：online 绿/away 黄/busy 红/offline 灰）、`AvatarGroup max`（超出自动折叠 +N）
 - 导出项：Avatar、AvatarImage、AvatarFallback、AvatarGroup、AvatarGroupCount、AvatarBadge
 
 ## 场景示例 {#examples}
@@ -75,7 +75,51 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
 
 ## API {#api}
 
-该组件以源码导出的子组件和原生 props 为准。使用前读取 `src/components/ui/avatar.tsx`，不要凭空发明 API。
+以源码导出为准（`src/components/ui/avatar.tsx`），核心 props：
+
+| 属性 | 类型 | 默认 | 说明 |
+| --- | --- | --- | --- |
+| `Avatar.size` | `"xs" \| "sm" \| "default" \| "lg" \| "xl"` | `"default"` | 尺寸档 20/24/32/40/48，子元素随档联动 |
+| `Avatar.shape` | `"circle" \| "square"` | `"circle"` | 形状；square 用 `rounded-lg` token 圆角 |
+| `AvatarFallback.colorful` | `boolean` | `false` | 兜底文字按内容 hash 取色板色，实底（08 阶）+ 白字反白（参考 Gmail，08 比满饱和 09 柔半阶） |
+| `AvatarBadge.status` | `"online" \| "away" \| "busy" \| "offline"` | — | 右下角 presence 状态点：在线绿 / 离开黄 / 忙红 / 离线灰（参考 Slack/Teams）|
+| `AvatarGroup.max` | `number` | — | 最多展示几个，超出折叠为 `+N` |
+| `avatarInitials(name)` | `(string) => string` | — | 工具函数，从姓名取缩写（见下方取值逻辑） |
+
+### 可点击头像 {#clickable}
+
+头像作为入口（跳个人主页 / 用户卡片）时，用 `render` 把它渲染成 `<a>`/`<button>`，并加 `cursor-pointer` + `focus-visible` 焦点环；不要给 Avatar 绑裸 `onClick` 当按钮（缺少语义与键盘可达性）。
+
+```tsx
+<Avatar render={<a href="/u/zhang" />} className="cursor-pointer transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring">
+  <AvatarImage src="/avatars/01.png" alt="张三" />
+  <AvatarFallback>张</AvatarFallback>
+</Avatar>
+```
+
+### 头像组 +N 悬停看全部 {#group-hover}
+
+协作者较多时，折叠的 `+N` 悬停展开剩余成员名单：手动模式下用 `Tooltip` 包住 `AvatarGroupCount`，`TooltipContent` 列出被折叠的成员，不要把名单平铺在页面上。
+
+```tsx
+<AvatarGroup>
+  <Avatar>…</Avatar>
+  <Avatar>…</Avatar>
+  <Tooltip>
+    <TooltipTrigger render={<AvatarGroupCount>+3</AvatarGroupCount>} />
+    <TooltipContent>王五、赵六、孙七</TooltipContent>
+  </Tooltip>
+</AvatarGroup>
+```
+
+### 兜底文字取值逻辑 {#initials}
+
+`avatarInitials(name)` 的缩写规则（参考主流）：
+
+- **中文**：≤2 字全取（「张三」→张三）；≥3 字取**末两字**（名），「欧阳娜娜」→娜娜、「王小明」→小明。
+- **英文**：单名取首字母（Alice→A）；全名取**首末两词首字母**（John Doe→JD），统一大写。
+
+颜色：`colorful` 按内容 hash 在 6 色系（brand/green/amber/red/blue/purple）里取一色，浅底（03 阶）+ 同色系深字（11 阶），不写死颜色、不直引满饱和 09 阶。
 
 
 ## Semantic DOM {#semantic-dom}
@@ -114,8 +158,9 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
 
 - 展示组件只负责呈现数据或身份，不承载提交类动作。
 - 状态语义优先用现有 variant 或组合组件，不手写颜色。
-- `AvatarFallback` 必须存在，图片失败或用户无头像时仍有可读身份。
-- 头像尺寸用外层 `className` 的布局尺寸控制，不改内部图片裁切逻辑。
+- `AvatarFallback` 必须存在，图片失败或用户无头像时仍有可读身份；兜底内容三选一：文字缩写（`avatarInitials`）、彩色文字（`colorful`）、或通用图标（匿名/无名用户，`colorful` + 面型 `UserFilledIcon`，实底白图标反白）。
+- 尺寸用 `size` prop（xs/sm/default/lg/xl），不手写 `size-*` 覆盖；人物用 `circle`、企业/项目/群组用 `shape="square"`。
+- 无头像图时用 `AvatarFallback colorful` 自动上色，不逐个写死背景色。
 - 使用 Avatar 前必须以 src/components/ui/avatar.tsx 为真实 API。
 - 不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。
 - className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。

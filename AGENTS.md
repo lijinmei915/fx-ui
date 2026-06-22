@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-06-18
+last_verified: 2026-06-22
 teaches: "AI 在 fx-ui 项目里的行为红线：不手写组件、只注入 token、保护 token 真相源"
 use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token 时"
 ---
@@ -77,6 +77,8 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 
 **新增长期规则：**
 8. **三件套**：文字规范（MD）→ 机器事实（JSON）→ 可执行检查（script 接 `check-all.sh`）。只写 MD 会飘。
+8b. **防膨胀**：规则一旦有 check 兜底，MD 只留"一句意图 + 指向 check"，**判定细节别在 MD 复述**；清单型事实（组件 prop、页面骨架）放 manifest，不抄进 MD。规范文档应越来越薄，不是越堆越长。
+8c. **检查不必一一接入**：加 check 前先过三门槛——①高价值且易静默漂移 ②机器能客观判定 ③构建/人工抓不到；不满足就靠 build + 人工核对 + 文字规范。**同类机械规则合并到一个脚本**（如禁用 import 都进 `check-imports.mjs`），不要一规则一脚本，否则检查也会膨胀。
 
 **收尾：**
 9. `bash scripts/check-all.sh` 全绿才算完；`last_verified` 由 pre-commit 自动 bump，不用手填。

@@ -9,7 +9,6 @@ import {
   CheckCircleIcon,
   CheckCircleFilledIcon,
   HomeFilledIcon,
-  UserFilledIcon,
   DatabaseFilledIcon,
   StarFilledIcon,
   CopyIcon,
@@ -25,7 +24,6 @@ import {
   SettingsIcon,
   SparklesIcon,
   StarIcon,
-  TerminalIcon,
   UnderlineIcon,
   UserIcon,
 } from "@/lib/icons"
@@ -64,7 +62,7 @@ import {
   Cell,
 } from "recharts"
 import { Button } from "@/components/ui/button"
-import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from "@/components/ui/button-group"
+import { ButtonGroup } from "@/components/ui/button-group"
 import {
   Card,
   CardAction,
@@ -203,7 +201,7 @@ import iconMarkdown from "../docs/components/icon.md?raw"
 import tokensMarkdown from "../docs/TOKENS.md?raw"
 
 type Lang = "zh" | "en"
-type ButtonScenarioFilter = "all" | "category" | "size" | "state" | "icon" | "combo"
+type ButtonScenarioFilter = "category" | "size" | "state" | "icon"
 
 const uiText = {
   zh: {
@@ -241,6 +239,7 @@ const docsSpacing = {
   pageStack: "flex flex-col gap-10",
   sectionStack: "flex flex-col gap-5",
   sectionHeader: "flex flex-col gap-3",
+  sectionDesc: "text-base text-muted-foreground",
   sectionStackCompact: "flex flex-col gap-4",
   contentGap: "flex flex-col gap-3",
   leadText: "max-w-5xl text-lg text-muted-foreground",
@@ -479,8 +478,8 @@ const docsNav = [
     title: "布局",
     titleEn: "Layout",
     items: [
-      { label: "页面布局", labelEn: "Layout", href: "#layout" },
       { label: "栅格", labelEn: "Grid", href: "#grid" },
+      { label: "布局", labelEn: "Layout", href: "#layout" },
     ],
   },
   {
@@ -706,15 +705,7 @@ const propRows = [
   { prop: "render", type: "ReactElement | (props, state) => ReactElement", defaultValue: "undefined", desc: "把按钮样式渲染到自定义元素上（如 <a>），相当于 Base UI 版本的 asChild", descEn: "Render the button styling onto a custom element (e.g. <a>); Base UI's equivalent of asChild" },
 ]
 
-const buttonTokenRows = [
-  { name: "primary", value: "#FF8000", usage: "主操作按钮、激活态、重点链接", usageEn: "Primary actions, active states, key links" },
-  { name: "primary-foreground", value: "#FFFFFF", usage: "主色背景上的文字和图标", usageEn: "Text and icons on primary backgrounds" },
-  { name: "ring", value: "#FF8000", usage: "键盘聚焦与可访问性焦点环", usageEn: "Keyboard focus and accessibility rings" },
-]
-
 const buttonImportCode = `import { Button } from "@/components/ui/button"`
-
-const buttonUsageCode = `<Button variant="outline">Button</Button>`
 
 const buttonScenarioExamples = [
   {
@@ -941,29 +932,13 @@ const buttonScenarioExamples = [
     props: ["disabled", "Spinner", "data-icon: inline-start"],
     code: '<Button disabled><Spinner data-icon="inline-start" />提交中</Button>',
   },
-  {
-    id: "button-group",
-    title: "按钮组合",
-    titleEn: "Button group",
-    intent: "工具栏、分段操作等需要把多个按钮视觉上连成一体的场景。",
-    intentEn: "Toolbars and segmented actions where multiple buttons should read as one unit.",
-    rule: "用 ButtonGroup 包裹，不要靠手写负 margin 拼接按钮边框。",
-    ruleEn: "Wrap with ButtonGroup instead of hand-rolling negative margins to merge button borders.",
-    variant: "outline",
-    size: "default",
-    group: "combo",
-    props: ["ButtonGroup", "variant: outline", "size: default"],
-    code: '<ButtonGroup>\n  <Button variant="outline">复制</Button>\n  <Button variant="outline">剪切</Button>\n  <Button variant="outline">粘贴</Button>\n</ButtonGroup>',
-  },
 ] as const
 
 const buttonScenarioFilters: { value: ButtonScenarioFilter; label: string; labelEn: string }[] = [
-  { value: "all", label: "全部", labelEn: "All" },
   { value: "category", label: "类型", labelEn: "Variant" },
   { value: "size", label: "尺寸", labelEn: "Size" },
   { value: "state", label: "状态", labelEn: "State" },
   { value: "icon", label: "图标", labelEn: "Icon" },
-  { value: "combo", label: "组合", labelEn: "Group" },
 ]
 
 const semanticDomRows = [
@@ -972,31 +947,11 @@ const semanticDomRows = [
   { part: "content", desc: "按钮文本内容，保持单行动作短语，避免塞入说明文案。", descEn: "Button text content. Keep it as a concise action phrase." },
 ]
 
-const buttonDosDonts = [
-  {
-    title: "不要手写品牌色",
-    titleEn: "Do not hard-code brand color",
-    wrong: '<Button className="bg-[#FF8000]">保存</Button>',
-    right: "<Button>保存</Button>",
-  },
-  {
-    title: "危险操作使用 destructive",
-    titleEn: "Use destructive for dangerous actions",
-    wrong: "<Button>删除项目</Button>",
-    right: '<Button variant="destructive">删除项目</Button>',
-  },
-  {
-    title: "加载态用组合，不发明 loading prop",
-    titleEn: "Compose loading states instead of inventing a loading prop",
-    wrong: "<Button loading>提交</Button>",
-    right: "<Button disabled><Spinner data-icon=\"inline-start\" />提交中</Button>",
-  },
-  {
-    title: "按钮内图标不手写尺寸",
-    titleEn: "Do not manually size icons inside Button",
-    wrong: '<PackageIcon className="size-4" />',
-    right: '<PackageIcon data-icon="inline-start" />',
-  },
+const buttonDoDontRows = [
+  { do: "用默认样式与语义 token，颜色交给主题。", doEn: "Use default styles and semantic tokens; leave color to the theme.", dont: "手写 bg-[#FF8000] 等品牌色硬编码。", dontEn: "Hard-code brand colors like bg-[#FF8000]." },
+  { do: "危险操作用 variant=\"destructive\"。", doEn: "Use variant=\"destructive\" for dangerous actions.", dont: "用默认按钮承载删除等危险操作。", dontEn: "Use a default button for destructive actions like delete." },
+  { do: "加载态用 disabled + Spinner 组合。", doEn: "Compose loading with disabled + Spinner.", dont: "发明 loading prop（<Button loading>）。", dontEn: "Invent a loading prop (<Button loading>)." },
+  { do: "按钮内图标用 data-icon 标位，尺寸交给 Button。", doEn: "Mark icons with data-icon; let Button own the size.", dont: "给按钮内图标手写 size-4 等尺寸。", dontEn: "Hard-code icon size like size-4 inside Button." },
 ]
 
 const buttonAnchors = [
@@ -1005,7 +960,6 @@ const buttonAnchors = [
   { label: "使用方式", labelEn: "Usage", href: "#usage" },
   { label: "API", href: "#props" },
   { label: "语义 DOM", labelEn: "Semantic DOM", href: "#semantic-dom" },
-  { label: "设计 Token", labelEn: "Design Token", href: "#button-tokens" },
   { label: "正误示例", labelEn: "Do / Don’t", href: "#do-dont" },
 ]
 
@@ -1060,11 +1014,12 @@ const layoutAnchors = [
 
 const iconAnchors = [
   { label: "图标库", labelEn: "Icon Library", href: "#icon-library" },
-  { label: "安装状态", labelEn: "Installation", href: "#icon-install" },
-  { label: "代码演示", labelEn: "Examples", href: "#icon-examples" },
-  { label: "图标色与尺寸", labelEn: "Color & Size", href: "#icon-color" },
-  { label: "使用规则", labelEn: "Usage Rules", href: "#icon-rules" },
-  { label: "AI 规则", labelEn: "AI Rules", href: "#icon-ai-rules" },
+  { label: "组件总览", labelEn: "Overview", href: "#icon-overview" },
+  { label: "场景示例", labelEn: "Scenario examples", href: "#icon-preview" },
+  { label: "使用方式", labelEn: "Usage", href: "#icon-usage" },
+  { label: "API", href: "#icon-props" },
+  { label: "语义 DOM", labelEn: "Semantic DOM", href: "#icon-semantic-dom" },
+  { label: "正误示例", labelEn: "Do / Don’t", href: "#icon-do-dont" },
 ]
 
 const agentSurfaceAnchors = [
@@ -1854,19 +1809,72 @@ const buttonGroupAnchors = [
 ]
 const buttonGroupScenarioExamples = [
   {
-    id: "split",
+    id: "basic",
     title: "操作组合",
+    group: "type",
+    spec: "高32 · 圆角8 · 横向",
     intent: "把强相关的多个操作按钮合并为一组，弱化彼此边界。",
     rule: "组内按钮 variant 保持一致，避免主次操作混在一起。",
     code: `<ButtonGroup>\n  <Button variant="outline">复制</Button>\n  <Button variant="outline">分享</Button>\n  <Button variant="outline">归档</Button>\n</ButtonGroup>`,
   },
   {
-    id: "with-text",
-    title: "带文案标签",
-    intent: "用 ButtonGroupText 在按钮组里插入说明性文案或图标。",
-    rule: "文案块仅作辅助说明，不承载点击交互。",
-    code: `<ButtonGroup>\n  <ButtonGroupText>排序</ButtonGroupText>\n  <ButtonGroupSeparator />\n  <Button variant="outline">最新</Button>\n  <Button variant="outline">最热</Button>\n</ButtonGroup>`,
+    id: "split",
+    title: "拆分按钮",
+    group: "type",
+    spec: "高32 · 圆角8 · 主操作+图标",
+    intent: "主操作 + 下拉箭头，把主操作与「更多选项」合并。",
+    rule: "主操作在前，箭头用 size=icon 收纳更多动作（配 DropdownMenu）。",
+    code: `<ButtonGroup>\n  <Button variant="outline">保存</Button>\n  <Button variant="outline" size="icon" aria-label="更多">\n    <ChevronDownIcon />\n  </Button>\n</ButtonGroup>`,
   },
+  {
+    id: "vertical",
+    title: "垂直方向",
+    group: "type",
+    spec: "高32 · 圆角8 · 竖向",
+    intent: "侧边工具栏等纵向排列的按钮组。",
+    rule: "用 orientation=\"vertical\"，自动合并上下边框。",
+    code: `<ButtonGroup orientation="vertical">\n  <Button variant="outline">上移</Button>\n  <Button variant="outline">居中</Button>\n  <Button variant="outline">下移</Button>\n</ButtonGroup>`,
+  },
+  {
+    id: "size-xs",
+    title: "超小尺寸",
+    group: "size",
+    spec: "高24 · 字号12 · 圆角6",
+    intent: "极紧凑的工具栏、表格内联里的分段操作。",
+    rule: "只用于密度很高的局部操作；整组统一 xs，不与其它尺寸混排。",
+    code: `<ButtonGroup>\n  <Button variant="outline" size="xs">复制</Button>\n  <Button variant="outline" size="xs">粘贴</Button>\n</ButtonGroup>`,
+  },
+  {
+    id: "size-sm",
+    title: "小尺寸",
+    group: "size",
+    spec: "高28 · 字号13 · 圆角6",
+    intent: "筛选栏、表格行、紧凑表单里的分段按钮组。",
+    rule: "空间受限时用；整组统一 sm，不用于页面主行动区。",
+    code: `<ButtonGroup>\n  <Button variant="outline" size="sm">复制</Button>\n  <Button variant="outline" size="sm">粘贴</Button>\n</ButtonGroup>`,
+  },
+  {
+    id: "size-default",
+    title: "默认尺寸",
+    group: "size",
+    spec: "高32 · 字号14 · 圆角8",
+    intent: "页面正文、常规工具栏的操作组合。",
+    rule: "按钮组的首选尺寸；整组统一 default。",
+    code: `<ButtonGroup>\n  <Button variant="outline">复制</Button>\n  <Button variant="outline">粘贴</Button>\n</ButtonGroup>`,
+  },
+  {
+    id: "size-lg",
+    title: "大尺寸",
+    group: "size",
+    spec: "高36 · 字号16 · 圆角8",
+    intent: "需要更强触达的分段操作，如营销页、空状态。",
+    rule: "谨慎使用，不在密集列表里用；整组统一 lg。",
+    code: `<ButtonGroup>\n  <Button variant="outline" size="lg">复制</Button>\n  <Button variant="outline" size="lg">粘贴</Button>\n</ButtonGroup>`,
+  },
+]
+const buttonGroupScenarioFilters = [
+  { value: "type", label: "类型", labelEn: "Type" },
+  { value: "size", label: "尺寸", labelEn: "Size" },
 ]
 const buttonGroupPropRows = [
   { prop: "ButtonGroup", type: "orientation?: \"horizontal\" | \"vertical\"", defaultValue: "\"horizontal\"", desc: "按钮组容器，自动合并相邻按钮的圆角与边框。" },
@@ -2556,8 +2564,6 @@ const layerTokens = [
   { name: "z-50", usage: "Dialog、Dropdown、Popover、Sheet、Tooltip 等浮层", usageEn: "Overlays such as Dialog, Dropdown, Popover, Sheet, and Tooltip" },
 ]
 
-const iconInstallCode = "npm install @tabler/icons-react"
-
 const docsByPage = {
   button: {
     title: "Button",
@@ -2739,15 +2745,6 @@ function ButtonScenarioPreview({ id, lang }: { id: string; lang: Lang }) {
       </Button>
     )
   }
-  if (id === "button-group") {
-    return (
-      <ButtonGroup>
-        <Button variant="outline">{lang === "en" ? "Copy" : "复制"}</Button>
-        <Button variant="outline">{lang === "en" ? "Cut" : "剪切"}</Button>
-        <Button variant="outline">{lang === "en" ? "Paste" : "粘贴"}</Button>
-      </ButtonGroup>
-    )
-  }
   return <Button>{lang === "en" ? "Save" : "保存"}</Button>
 }
 
@@ -2764,7 +2761,7 @@ function ButtonOverview({ lang }: { lang: Lang }) {
             ))}
         </div>
       </div>
-      <Separator />
+      <div className="border-t border-dashed border-border" />
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Sizes" : "尺寸"}</h3>
         <div className="flex flex-wrap items-center gap-3">
@@ -2788,7 +2785,7 @@ function ButtonOverview({ lang }: { lang: Lang }) {
           </Button>
         </div>
       </div>
-      <Separator />
+      <div className="border-t border-dashed border-border" />
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Interaction states" : "交互状态"}</h3>
         <div className="flex flex-wrap items-center gap-3">
@@ -2800,23 +2797,12 @@ function ButtonOverview({ lang }: { lang: Lang }) {
           <Button disabled>{lang === "en" ? "Disabled" : "禁用"}</Button>
         </div>
       </div>
-      <Separator />
+      <div className="border-t border-dashed border-border" />
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Icons" : "图标"}</h3>
         <div className="flex flex-wrap items-center gap-3">
           {buttonScenarioExamples
             .filter((example) => example.group === "icon")
-            .map((example) => (
-              <ButtonScenarioPreview key={example.id} id={example.id} lang={lang} />
-            ))}
-        </div>
-      </div>
-      <Separator />
-      <div className="grid gap-3">
-        <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Combinations" : "组合"}</h3>
-        <div className="flex flex-wrap items-center gap-3">
-          {buttonScenarioExamples
-            .filter((example) => example.group === "combo")
             .map((example) => (
               <ButtonScenarioPreview key={example.id} id={example.id} lang={lang} />
             ))}
@@ -4749,24 +4735,20 @@ function ComponentsIndexPage({ actions, lang }: { actions: React.ReactNode; lang
 }
 
 function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
-  const [scenarioFilter, setScenarioFilter] = useState<ButtonScenarioFilter>("all")
+  const [scenarioFilter, setScenarioFilter] = useState<ButtonScenarioFilter>("category")
   const filteredScenarioExamples = buttonScenarioExamples.filter((example) => {
-    return scenarioFilter === "all" || example.group === scenarioFilter
+    return example.group === scenarioFilter
   })
 
   return (
     <div className={docsSpacing.pageStack}>
       <section id="button" className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-4xl font-semibold leading-tight">{lang === "en" ? "Button" : "Button 按钮"}</h1>
-          </div>
-          {actions}
-        </div>
-
-        <p className={docsSpacing.componentLead}>
-          {lang === "en" ? "A button starts an immediate action." : "按钮用于开始一个即时操作。"}
-        </p>
+        <PageLead
+          crumb={lang === "en" ? "Components / Button" : "组件 / Button 按钮"}
+          title={lang === "en" ? "Button" : "Button 按钮"}
+          lead={lang === "en" ? "A button starts an immediate action." : "按钮用于开始一个即时操作。"}
+          actions={actions}
+        />
       </section>
 
       <section id="overview" className={docsSpacing.sectionStack}>
@@ -4786,8 +4768,8 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Scenario examples" : "场景示例"}</h2>
           <p className="text-base text-muted-foreground">
             {lang === "en"
-              ? "Use filters to inspect all examples, variant choices, sizes, states, and icon usage from the same data source."
-              : "可点选查看全部、类型、尺寸、状态和图标用法；所有示例都来自同一份结构化数据源。"}
+              ? "Filter by variant, size, state, or icon usage — all examples come from the same structured data source."
+              : "按类型、尺寸、状态、图标分组查看用法；所有示例都来自同一份结构化数据源。"}
           </p>
         </div>
         <Tabs
@@ -4804,27 +4786,27 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           </TabsList>
         </Tabs>
         <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[1240px]">
+          <Table className="min-w-[1080px]">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[140px] pl-4">{lang === "en" ? "Scenario" : "场景"}</TableHead>
-                <TableHead className="w-[140px]">{lang === "en" ? "Example" : "示例"}</TableHead>
-                <TableHead className="w-[180px]">{lang === "en" ? "Spec" : "规格"}</TableHead>
+                <TableHead className="pl-4">{lang === "en" ? "Scenario" : "场景"}</TableHead>
+                <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
+                <TableHead>{lang === "en" ? "Spec" : "规格"}</TableHead>
                 <TableHead className="w-[240px]">{lang === "en" ? "Intent" : "使用意图"}</TableHead>
                 <TableHead>{lang === "en" ? "Constraint" : "约束"}</TableHead>
-                <TableHead className="w-[280px] pr-4">{lang === "en" ? "Recommended API" : "推荐写法"}</TableHead>
+                <TableHead className="w-[300px] pr-4">{lang === "en" ? "Recommended API" : "推荐写法"}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredScenarioExamples.map((example) => (
                 <TableRow key={example.id}>
-                  <TableCell className="pl-4 align-top whitespace-normal">
+                  <TableCell className="pl-4 align-top whitespace-nowrap">
                     <span className="font-medium">{lang === "en" ? example.titleEn : example.title}</span>
                   </TableCell>
                   <TableCell className="align-top">
                     <ButtonScenarioPreview id={example.id} lang={lang} />
                   </TableCell>
-                  <TableCell className="align-top whitespace-normal text-foreground">
+                  <TableCell className="align-top whitespace-nowrap text-foreground">
                     <p className="text-fx-12 leading-6">{buttonSpecById(example.id, lang)}</p>
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
@@ -4852,15 +4834,12 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Usage" : "使用方式"}</h2>
           <p className="text-base text-muted-foreground">
             {lang === "en"
-              ? "Copy the import and JSX usage into product pages."
-              : "把 import 和 JSX 调用复制到业务页面里使用。"}
+              ? "Copy the import; JSX usage is in the recommended API column of Scenario examples above."
+              : "复制 import 即可；具体 JSX 写法见上方「场景示例」的推荐写法列。"}
           </p>
         </div>
         <div className="rounded-lg border border-border bg-card p-5">
-          <div className="grid gap-4">
-            <CopyCodeBlock code={buttonImportCode} label="Import" lang={lang} />
-            <CopyCodeBlock code={buttonUsageCode} label={lang === "en" ? "JSX" : "调用"} lang={lang} />
-          </div>
+          <CopyCodeBlock code={buttonImportCode} label="Import" lang={lang} />
         </div>
       </section>
 
@@ -4925,44 +4904,6 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
         </div>
       </section>
 
-      <section id="button-tokens" className={docsSpacing.sectionStack}>
-        <div className={docsSpacing.sectionHeader}>
-          <h2 className="text-2xl font-semibold">{lang === "en" ? "Design Tokens" : "主题变量 Design Token"}</h2>
-          <p className="text-base text-muted-foreground">
-            {lang === "en"
-              ? "The Button page only shows tokens consumed by this component. Open Tokens from the top nav or left sidebar for the full token system."
-              : "Button 页只展示这个组件实际消费的 token。完整 token 系统请从顶部 Tokens 或左侧设计 Tokens 进入。"}
-          </p>
-        </div>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[560px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-4">Token</TableHead>
-                <TableHead>{lang === "en" ? "Value" : "当前值"}</TableHead>
-                <TableHead className="pr-4">{lang === "en" ? "Usage" : "用途"}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {buttonTokenRows.map((row) => (
-                <TableRow key={row.name}>
-                  <TableCell className="pl-4 font-medium">
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <span className="size-4 rounded-full border border-border bg-primary" />
-                      <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.value}</code>
-                    </div>
-                  </TableCell>
-                  <TableCell className="pr-4 text-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-
       <section id="do-dont" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Do / Don’t" : "正误示例"}</h2>
@@ -4972,28 +4913,33 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
               : "这些例子记录工程师和 AI 生成代码最容易犯的错误。"}
           </p>
         </div>
-        <div className="grid gap-4">
-          {buttonDosDonts.map((row) => (
-            <Card key={row.title}>
-              <CardHeader>
-                <CardTitle className="text-base">{lang === "en" ? row.titleEn : row.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="grid gap-3 md:grid-cols-2">
-                <div className="flex flex-col gap-2">
-                  <Badge variant="secondary" className="w-fit">{lang === "en" ? "Don’t" : "不推荐"}</Badge>
-                  <pre className="max-w-full overflow-x-auto rounded-lg bg-muted p-3 text-xs text-muted-foreground">
-                    <code>{row.wrong}</code>
-                  </pre>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base text-foreground">{lang === "en" ? "Do" : "推荐 Do"}</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
+              {buttonDoDontRows.map((row) => (
+                <div key={`do-${row.do}`} className="flex gap-2">
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span>{lang === "en" ? row.doEn : row.do}</span>
                 </div>
-                <div className="flex flex-col gap-2">
-                  <Badge variant="outline" className="w-fit">{lang === "en" ? "Do" : "推荐"}</Badge>
-                  <pre className="max-w-full overflow-x-auto rounded-lg bg-muted p-3 text-xs">
-                    <code>{row.right}</code>
-                  </pre>
+              ))}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base text-foreground">{lang === "en" ? "Don’t" : "避免 Don't"}</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
+              {buttonDoDontRows.map((row) => (
+                <div key={`dont-${row.dont}`} className="flex gap-2">
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
+                  <span>{lang === "en" ? row.dontEn : row.dont}</span>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+              ))}
+            </CardContent>
+          </Card>
         </div>
       </section>
     </div>
@@ -5613,7 +5559,7 @@ function GridPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
         />
         <div>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Grid 栅格系统" : "栅格系统"}</h2>
-          <p className="mt-1 text-fx-13 text-muted-foreground">{lang === "en" ? "24 columns, column gap = 16px (gap-4). Span by /24 with col-span-[n]." : "24 列基准，列间距 = 16px（gap-4）。分栏用 col-span-[n]（按 24 计），可 1/24 自由组合。"}</p>
+          <p className="mt-2 text-base text-muted-foreground">{lang === "en" ? "24 columns, column gap = 16px (gap-4). Span by /24 with col-span-[n]." : "24 列基准，列间距 = 16px（gap-4）。分栏用 col-span-[n]（按 24 计），可 1/24 自由组合。"}</p>
         </div>
         <div>
           <p className="mb-2 text-fx-13 font-medium">{lang === "en" ? "24 columns (16px gap)" : "24 列栅格（列间距 16px）"}</p>
@@ -5688,7 +5634,7 @@ function GridPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
       <section id="grid-breakpoints" className="flex flex-col gap-5">
         <div>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Breakpoints 响应式断点" : "响应式断点"}</h2>
-          <p className="mt-1 text-fx-13 text-muted-foreground">
+          <p className="mt-2 text-base text-muted-foreground">
             {lang === "en"
               ? "Tailwind is mobile-first: base styles apply at every width; a prefix like lg: means \"apply only when the viewport ≥ this width\"."
               : "Tailwind 是移动优先：不带前缀的样式对所有宽度生效；加前缀（如 lg:）表示\"屏幕宽度 ≥ 该值时才生效\"。"}
@@ -5759,7 +5705,7 @@ function LayoutPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
         />
         <div>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Page containers 页面容器" : "页面布局容器（6 种样式）"}</h2>
-          <p className="mt-1 text-fx-13 text-muted-foreground">{lang === "en" ? "From simple to complex. Style 6 (left primary nav) is the recommended trend." : "从简到繁；样式六（左侧一级导航）是新版趋势，新建后台优先。"}</p>
+          <p className="mt-2 text-base text-muted-foreground">{lang === "en" ? "From simple to complex. Style 6 (left primary nav) is the recommended trend." : "从简到繁；样式六（左侧一级导航）是新版趋势，新建后台优先。"}</p>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {containers.map((c) => (
@@ -5863,7 +5809,7 @@ function TokensRadiusPage({ actions, lang }: { actions: React.ReactNode; lang: L
         <div id="tokens-radius-scale" className="flex flex-col gap-3 scroll-mt-24">
           <div>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "Radius scale 圆角档位" : "圆角档位"}</h2>
-            <p className="mt-1 text-fx-13 text-muted-foreground">
+            <p className="mt-2 text-base text-muted-foreground">
               {lang === "en"
                 ? "All radius steps, from square to pill — chosen by component TYPE, not size. Per-step usage is in the Usage column."
                 : "全部圆角档位，从直角到胶囊——按组件「类型」选，不是按大小选。逐档对应组件见右侧场景列。"}
@@ -5903,7 +5849,7 @@ function TokensRadiusPage({ actions, lang }: { actions: React.ReactNode; lang: L
         <div id="tokens-radius-compute" className="flex flex-col gap-3 scroll-mt-24">
           <div>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "How it's computed 计算方式" : "计算方式"}</h2>
-            <p className="mt-1 text-fx-13 text-muted-foreground">
+            <p className="mt-2 text-base text-muted-foreground">
               {lang === "en"
                 ? "Core steps derive from a single base via fixed ±2px steps (the shadcn convention); large steps use Tailwind defaults."
                 : "核心档由唯一基准值按固定 ±2px 步进派生（shadcn 标准做法）；大容器档用 Tailwind 默认值。"}
@@ -5943,7 +5889,7 @@ function TokensSpacingPage({ actions, lang }: { actions: React.ReactNode; lang: 
         <div id="tokens-spacing-scale" className="flex flex-col gap-3 scroll-mt-24">
           <div>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "Spacing scale 间距档位" : "间距档位"}</h2>
-            <p className="mt-1 text-fx-13 text-muted-foreground">
+            <p className="mt-2 text-base text-muted-foreground">
               {lang === "en"
                 ? "Common steps off the 4px base. Example bar shows the real size; per-step usage is in the Usage column."
                 : "基于 4px 基准的常用档位。示例长条是真实大小，逐档场景见右侧。"}
@@ -5983,7 +5929,7 @@ function TokensSpacingPage({ actions, lang }: { actions: React.ReactNode; lang: 
         <div id="tokens-spacing-compute" className="flex flex-col gap-3 scroll-mt-24">
           <div>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "How it's computed 计算方式" : "计算方式"}</h2>
-            <p className="mt-1 text-fx-13 text-muted-foreground">
+            <p className="mt-2 text-base text-muted-foreground">
               {lang === "en"
                 ? "Every spacing utility is the 4px base unit times the step number — a 4-point grid."
                 : "每个间距 = 4px 基准单位 × 档位数字，构成 4 点网格。"}
@@ -6015,7 +5961,7 @@ function TokensShadowPage({ actions, lang }: { actions: React.ReactNode; lang: L
         <div id="tokens-shadow-scale" className="flex flex-col gap-3 scroll-mt-24">
           <div>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "Elevation levels 阴影档位" : "阴影档位"}</h2>
-            <p className="mt-1 text-fx-13 text-muted-foreground">
+            <p className="mt-2 text-base text-muted-foreground">
               {lang === "en"
                 ? "Shadow encodes how high an element floats above the page — higher = lower & more diffuse. Pick by overlay layer; per-level usage is in the Usage column."
                 : "阴影表达元素「离页面多高」——越高、投影越往下、越散。按浮层层级选档，逐档对应组件见右侧场景列。"}
@@ -6057,7 +6003,7 @@ function TokensShadowPage({ actions, lang }: { actions: React.ReactNode; lang: L
         <div id="tokens-shadow-compute" className="flex flex-col gap-3 scroll-mt-24">
           <div>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "How it's computed 计算方式" : "计算方式"}</h2>
-            <p className="mt-1 text-fx-13 text-muted-foreground">
+            <p className="mt-2 text-base text-muted-foreground">
               {lang === "en"
                 ? "Each level is 0 {y}px {blur}px var(--fx-shadow-color), with no spread. Only y-offset and blur grow with elevation; the color stays the same."
                 : "每档 = 0 {y}px {blur}px var(--fx-shadow-color)，spread 恒为 0。随层级升高只增大 y 偏移和 blur，颜色不变。"}
@@ -6095,19 +6041,21 @@ function TokensMotionPage({ actions, lang }: { actions: React.ReactNode; lang: L
         <div id="tokens-motion-duration" className="flex flex-col gap-3 scroll-mt-24">
           <div>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "Duration scale 时长档位" : "时长档位"}</h2>
-            <p className="mt-1 text-fx-13 text-muted-foreground">
+            <p className="mt-2 text-base text-muted-foreground">
               {lang === "en" ? "Short, tiered durations — small overlays snap fast, larger movement eases a bit longer. Click to replay." : "短促、分档：小浮层快、位移大的稍慢。点按钮可重播示例。"}
             </p>
           </div>
           <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-            <div className="flex justify-end p-3">
-              <Button size="sm" variant="outline" onClick={() => setReplayKey((k) => k + 1)}>{lang === "en" ? "Replay all" : "重播全部"}</Button>
-            </div>
             <Table className="min-w-[720px]">
               <TableHeader>
                 <TableRow>
                   <TableHead className="pl-4">Token</TableHead>
-                  <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
+                  <TableHead>
+                    <span className="inline-flex items-center gap-2">
+                      {lang === "en" ? "Example" : "示例"}
+                      <Button size="xs" variant="outline" onClick={() => setReplayKey((k) => k + 1)}>{lang === "en" ? "Play" : "播放"}</Button>
+                    </span>
+                  </TableHead>
                   <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
                 </TableRow>
               </TableHeader>
@@ -6134,7 +6082,7 @@ function TokensMotionPage({ actions, lang }: { actions: React.ReactNode; lang: L
         <div id="tokens-motion-primitives" className="flex flex-col gap-3 scroll-mt-24">
           <div>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "Primitives & rules 原语与规则" : "原语与规则"}</h2>
-            <p className="mt-1 text-fx-13 text-muted-foreground">
+            <p className="mt-2 text-base text-muted-foreground">
               {lang === "en" ? "Composed from a few primitives, driven by state — not hand-written keyframes." : "由几个原语组合、靠状态驱动，不手写关键帧。"}
             </p>
           </div>
@@ -6183,7 +6131,7 @@ function TokensLayerPage({ actions, lang }: { actions: React.ReactNode; lang: La
         <div id="tokens-layer-scale" className="flex flex-col gap-3 scroll-mt-24">
           <div>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "Layer levels 层级档位" : "层级档位"}</h2>
-            <p className="mt-1 text-fx-13 text-muted-foreground">
+            <p className="mt-2 text-base text-muted-foreground">
               {lang === "en"
                 ? "A few fixed z-index tiers — the bigger the number, the closer to the user. Pick by what the element is, not by guessing a number."
                 : "几个固定的层级档位，数字越大越靠近用户。按元素用途选档，别凭感觉写数字。"}
@@ -6230,7 +6178,7 @@ function TokensLayerPage({ actions, lang }: { actions: React.ReactNode; lang: La
         <div id="tokens-layer-logic" className="flex flex-col gap-3 scroll-mt-24">
           <div>
             <h2 className="text-2xl font-semibold">{lang === "en" ? "Layering logic 分层逻辑" : "分层逻辑"}</h2>
-            <p className="mt-1 text-fx-13 text-muted-foreground">
+            <p className="mt-2 text-base text-muted-foreground">
               {lang === "en" ? "Why a few fixed tiers instead of arbitrary numbers." : "为什么用几个固定档位，而不是随手写数字。"}
             </p>
           </div>
@@ -6245,300 +6193,379 @@ function TokensLayerPage({ actions, lang }: { actions: React.ReactNode; lang: La
   )
 }
 
+const iconPropRows = [
+  { prop: "size", type: "number", defaultValue: "24", desc: "图标边长（px），等价于同时设置 width/height；项目内更推荐用 className 的 size-* 控制", descEn: "Icon edge length in px (sets width/height). Prefer size-* via className in this project" },
+  { prop: "stroke", type: "number", defaultValue: "2", desc: "线宽；项目用全局 .tabler-icon = 1.75 统一覆盖，一般不单独传", descEn: "Stroke width; globally overridden to 1.75 via .tabler-icon, rarely set per-icon" },
+  { prop: "color", type: "string", defaultValue: "'currentColor'", desc: "描边/填充色；默认跟随父级文字色，优先用 text-* 语义类而非写死颜色", descEn: "Stroke/fill color; defaults to currentColor. Prefer text-* over hard-coded values" },
+  { prop: "className", type: "string", defaultValue: "—", desc: "追加 Tailwind 类，常用 size-* 控制尺寸、text-* 控制颜色", descEn: "Extra Tailwind classes; commonly size-* for sizing and text-* for color" },
+  { prop: "data-icon", type: "'inline-start' | 'inline-end'", defaultValue: "—", desc: "放进 Button 时标记图标位置，尺寸交给 Button 接管，不再手写 size-*", descEn: "Marks icon placement inside Button; Button then controls sizing" },
+]
+
+const iconScenarioFilters = [
+  { value: "type", label: "类型", labelEn: "Type" },
+  { value: "size", label: "尺寸", labelEn: "Size" },
+]
+
 function IconPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
-  const iconSamples = [
-    { name: "SearchIcon", icon: SearchIcon, usage: "搜索、筛选、查询入口", usageEn: "Search, filter, query entry" },
-    { name: "SettingsIcon", icon: SettingsIcon, usage: "配置、偏好设置", usageEn: "Settings and preferences" },
-    { name: "DatabaseIcon", icon: DatabaseIcon, usage: "数据源、表、存储", usageEn: "Data sources, tables, storage" },
-    { name: "BellIcon", icon: BellIcon, usage: "通知、提醒", usageEn: "Notifications and reminders" },
-    { name: "CheckCircleIcon", icon: CheckCircleIcon, usage: "成功、完成、校验通过", usageEn: "Success, completed, validated" },
-    { name: "SparklesIcon", icon: SparklesIcon, usage: "AI、智能生成、推荐", usageEn: "AI, generation, recommendations" },
+  const iconImportCode = `import { SearchIcon, HomeFilledIcon } from "@/lib/icons"`
+  const [iconScenarioFilter, setIconScenarioFilter] = useState("type")
+
+  const iconSemanticRows = [
+    { part: "svg.tabler-icon", desc: "每个图标渲染为带 .tabler-icon 类的 <svg>，全局在此类上统一 stroke-width，不要逐个图标改线宽。", descEn: "Each icon renders as <svg class=\"tabler-icon\">; stroke-width is set globally on this class." },
+    { part: "currentColor", desc: "描边/填充默认取 currentColor，跟随父级 text-* 语义色；改色改父级文字色即可。", descEn: "Stroke/fill default to currentColor and follow the parent text color." },
+    { part: "data-icon", desc: "图标放进 Button 时用 data-icon=\"inline-start | inline-end\" 标位，由 Button 决定尺寸与间距。", descEn: "Inside Button, data-icon marks placement; Button owns size and spacing." },
   ]
 
-  const iconRules = [
+  const iconDoDontRows = [
+    { do: "颜色用 currentColor / text-* 跟随语义色。", doEn: "Use currentColor / text-* to follow semantic color.", dont: "给图标写死 color=\"#FF8000\" 等颜色。", dontEn: "Hard-code icon color like color=\"#FF8000\"." },
+    { do: "按钮内图标用 data-icon 标位，尺寸交给 Button。", doEn: "Mark icons in Button with data-icon; Button owns size.", dont: "给按钮内图标手写 size-4 等尺寸。", dontEn: "Hard-code icon size like size-4 inside Button." },
+    { do: "纯图标按钮加 aria-label。", doEn: "Give icon-only buttons an aria-label.", dont: "纯图标按钮不给可访问名称。", dontEn: "Omit accessible names on icon-only buttons." },
+    { do: "统一从 @/lib/icons 导入。", doEn: "Import from @/lib/icons.", dont: "引入第二个图标库（如 lucide-react）。", dontEn: "Add a second icon library like lucide-react." },
+  ]
+
+  const iconScenarios = [
     {
-      zh: "统一从 @/lib/icons 导入图标（底层是 Tabler，线性默认、线宽由全局 .tabler-icon 控制，面型用 *Filled 变体）。",
-      en: "Import icons from @/lib/icons (backed by Tabler; outline by default, global stroke-width via .tabler-icon, *Filled for solid).",
+      title: "单色图标", titleEn: "Monochrome", group: "type",
+      preview: (
+        <span className="flex items-center gap-3">
+          <HomeIcon className="size-5 text-foreground" />
+          <HomeIcon className="size-5 text-muted-foreground" />
+          <HomeIcon className="size-5 text-foreground-disabled" />
+        </span>
+      ),
+      intent: "绝大多数场景，跟随文字层级。", intentEn: "Most cases; follows the text hierarchy.",
+      constraint: "默认 text-foreground；次要降到 text-muted-foreground、禁用 text-foreground-disabled。", constraintEn: "Default text-foreground; muted for secondary, foreground-disabled for disabled.",
+      code: '<HomeIcon className="size-5 text-foreground" />',
     },
     {
-      zh: "图标颜色使用 currentColor，跟随父级 text-* 语义色。",
-      en: "Use currentColor so icons follow semantic text colors.",
+      title: "彩色语义图标", titleEn: "Colored semantic", group: "type",
+      preview: (
+        <span className="flex items-center gap-2">
+          <CheckCircleIcon className="size-5 text-success" />
+          <BellIcon className="size-5 text-warning" />
+          <PackageIcon className="size-5 text-destructive" />
+        </span>
+      ),
+      intent: "表达状态或品牌强调。", intentEn: "Convey status or brand emphasis.",
+      constraint: "只用 success / warning / destructive 等语义色 token。", constraintEn: "Use only semantic color tokens.",
+      code: '<CheckCircleIcon className="size-5 text-success" />',
     },
     {
-      zh: "图标放进 Button 时必须使用 data-icon，不手写尺寸覆盖。",
-      en: "Use data-icon inside Button and do not override icon size manually.",
+      title: "面型", titleEn: "Solid", group: "type",
+      preview: <HomeFilledIcon className="size-5 text-primary" />,
+      intent: "选中、激活或需要强调时，由线性切换为面型。", intentEn: "Switch from line to solid for selected/active/emphasis.",
+      constraint: "用 Tabler 的 *Filled 变体，不手写填充路径。", constraintEn: "Use Tabler *Filled variants, not hand-drawn fills.",
+      code: '<HomeFilledIcon className="size-5 text-primary" />',
     },
     {
-      zh: "纯图标按钮必须提供 aria-label。",
-      en: "Icon-only buttons must provide an aria-label.",
+      title: "反白圆底", titleEn: "Filled-reverse", group: "type",
+      preview: (
+        <span className="flex size-9 items-center justify-center rounded-full bg-primary">
+          <HomeFilledIcon className="size-5 text-primary-foreground" />
+        </span>
+      ),
+      intent: "头像、入口或状态徽标等需要色块承托的场景。", intentEn: "Avatars, entries, and status badges that need a color chip.",
+      constraint: "圆底用 bg-primary 主题色，图标用 text-primary-foreground 反白。", constraintEn: "Circle uses bg-primary; icon uses text-primary-foreground.",
+      code: '<span className="rounded-full bg-primary">\n  <HomeFilledIcon className="text-primary-foreground" />\n</span>',
     },
     {
-      zh: "业务图标优先选择通用语义，不为单个页面临时创造一套风格。",
-      en: "Choose broadly semantic icons and avoid page-specific icon styles.",
+      title: "按钮内图标", titleEn: "Icon in Button", group: "type",
+      preview: (
+        <Button>
+          <SearchIcon data-icon="inline-start" />
+          {lang === "en" ? "Search" : "搜索"}
+        </Button>
+      ),
+      intent: "操作按钮带前/后置图标。", intentEn: "Action buttons with a leading/trailing icon.",
+      constraint: "用 data-icon 标位，尺寸交给 Button，不写 size-*。", constraintEn: "Mark with data-icon; Button controls size, no size-*.",
+      code: '<Button><SearchIcon data-icon="inline-start" />搜索</Button>',
+    },
+    {
+      title: "纯图标按钮", titleEn: "Icon-only Button", group: "type",
+      preview: (
+        <Button size="icon" aria-label={lang === "en" ? "Notifications" : "通知"}>
+          <BellIcon data-icon="inline-start" />
+        </Button>
+      ),
+      intent: "工具栏等空间紧凑、含义明确的操作。", intentEn: "Compact toolbar actions with clear meaning.",
+      constraint: "必须提供 aria-label。", constraintEn: "Must provide an aria-label.",
+      code: '<Button size="icon" aria-label="通知"><BellIcon data-icon="inline-start" /></Button>',
+    },
+    {
+      title: "行内说明图标", titleEn: "Inline supporting", group: "type",
+      preview: (
+        <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
+          <SparklesIcon className="size-4" />
+          {lang === "en" ? "AI generated" : "AI 生成"}
+        </span>
+      ),
+      intent: "正文、提示中的辅助说明图标。", intentEn: "Supporting icons inside body text or hints.",
+      constraint: "用 text-muted-foreground，尺寸跟随文字。", constraintEn: "Use text-muted-foreground; size follows text.",
+      code: '<span className="text-muted-foreground"><SparklesIcon className="size-4" /> AI 生成</span>',
+    },
+    {
+      title: "size-3 · 12px", titleEn: "size-3 · 12px", group: "size",
+      preview: <SettingsIcon className="size-3" />,
+      intent: "内联、徽标等极小空间。", intentEn: "Inline and badges in very tight space.",
+      constraint: "跟随 12/13 小字号，不再放大。", constraintEn: "Pairs with 12/13 text; don't scale up.",
+      code: '<SettingsIcon className="size-3" />',
+    },
+    {
+      title: "size-4 · 16px", titleEn: "size-4 · 16px", group: "size",
+      preview: <SettingsIcon className="size-4" />,
+      intent: "默认尺寸，正文与按钮内的首选。", intentEn: "Default size; preferred in body text and buttons.",
+      constraint: "大多数场景用这一档；按钮内交给 data-icon。", constraintEn: "Use for most cases; inside Button use data-icon.",
+      code: '<SettingsIcon className="size-4" />',
+    },
+    {
+      title: "size-5 · 20px", titleEn: "size-5 · 20px", group: "size",
+      preview: <SettingsIcon className="size-5" />,
+      intent: "列表项、卡片标题旁的强调图标。", intentEn: "Emphasis icons next to list items or card titles.",
+      constraint: "用于需要稍强存在感的场景，不滥用。", constraintEn: "For slightly stronger presence; don't overuse.",
+      code: '<SettingsIcon className="size-5" />',
+    },
+    {
+      title: "size-6 · 24px", titleEn: "size-6 · 24px", group: "size",
+      preview: <SettingsIcon className="size-6" />,
+      intent: "页面级、空状态的大图标。", intentEn: "Page-level and empty-state large icons.",
+      constraint: "谨慎使用，不在密集文本里塞大图标。", constraintEn: "Use sparingly; avoid large icons in dense text.",
+      code: '<SettingsIcon className="size-6" />',
     },
   ]
 
   return (
-    <>
-      <section id="icon-library" className="flex flex-col gap-6">
+    <div className={docsSpacing.pageStack}>
+      <section id="icon-library" className="flex flex-col gap-2">
         <PageLead
           crumb={lang === "en" ? "General / Icon" : "通用 / Icon"}
           title={lang === "en" ? "Icon" : "Icon 图标"}
-          lead={lang === "en" ? (
-            <>
-              fx-ui uses <code className="rounded bg-muted px-1.5 py-0.5">Tabler</code> (@tabler/icons-react) as the unified icon library —
-              adjustable stroke-width plus <code className="rounded bg-muted px-1.5 py-0.5">*Filled</code> solid variants. Import via <code className="rounded bg-muted px-1.5 py-0.5">@/lib/icons</code>.
-            </>
-          ) : (
-            <>
-              fx-ui 统一使用 <code className="rounded bg-muted px-1.5 py-0.5">Tabler</code>（@tabler/icons-react）——
-              线宽可调（全局 <code className="rounded bg-muted px-1.5 py-0.5">.tabler-icon</code>）+ 成套 <code className="rounded bg-muted px-1.5 py-0.5">*Filled</code> 实心变体，统一从 <code className="rounded bg-muted px-1.5 py-0.5">@/lib/icons</code> 导入（见 DEC-009）。
-            </>
-          )}
+          lead={lang === "en"
+            ? "Icons convey actions, status, and objects. fx-ui uses Tabler line icons, imported from @/lib/icons."
+            : "图标用于传达动作、状态与对象。fx-ui 统一使用 Tabler 线性图标，从 @/lib/icons 导入。"}
           actions={actions}
         />
       </section>
 
-      <section id="icon-install" className="flex flex-col gap-4">
-        <h2 className="text-2xl font-semibold">{lang === "en" ? "Installation" : "安装状态"}</h2>
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">{lang === "en" ? "Project config" : "项目配置"}</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              <p>
-                <code className="rounded bg-muted px-1.5 py-0.5 text-xs">components.json</code>
-                {lang === "en" ? " declares:" : " 中："}
-              </p>
-              <code className="rounded-lg bg-muted px-3 py-2 text-xs text-foreground">
-                "iconLibrary": "lucide"
-              </code>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">{lang === "en" ? "Dependency" : "依赖包"}</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              <p>
-                <code className="rounded bg-muted px-1.5 py-0.5 text-xs">package.json</code>
-                {lang === "en" ? " includes:" : " 中已经安装："}
-              </p>
-              <code className="rounded-lg bg-muted px-3 py-2 text-xs text-foreground">
-                "@tabler/icons-react": "^3.44.0"
-              </code>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card className="min-w-0 max-w-full">
-          <CardContent className="p-0">
-            <div className="flex items-center gap-4 border-b border-border px-4 py-3 text-sm text-muted-foreground">
-              <TerminalIcon className="size-4" />
-              <span className="rounded-lg border border-border bg-card px-3 py-1 text-foreground">npm</span>
-              <span>pnpm</span>
-              <span>yarn</span>
-              <CopyIcon className="ml-auto size-4" />
-            </div>
-            <pre className="max-w-full overflow-x-auto p-5 text-sm">
-              <code>{iconInstallCode}</code>
-            </pre>
-          </CardContent>
-        </Card>
-      </section>
-
-      <Separator className="my-10" />
-
-      <section id="icon-examples" className="flex flex-col gap-5">
-        <h2 className="text-2xl font-semibold">{lang === "en" ? "Examples" : "代码演示"}</h2>
-        <div className="grid gap-4 md:grid-cols-2">
-          {iconSamples.map((item) => {
-            const Icon = item.icon
-
-            return (
-              <Card key={item.name}>
-                <CardContent className="flex items-center gap-4 p-4">
-                  <div className="flex size-10 items-center justify-center rounded-lg border border-border bg-muted text-foreground">
-                    <Icon className="size-5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-medium">{item.name}</div>
-                    <div className="text-sm text-muted-foreground">{lang === "en" ? item.usageEn : item.usage}</div>
-                  </div>
-                </CardContent>
-              </Card>
-            )
-          })}
-        </div>
-
-        <Card>
-          <CardContent className="p-0">
-            <pre className="max-w-full overflow-x-auto p-5 text-sm">
-              <code>{`import { SearchIcon } from "@/lib/icons"
-
-export function SearchAction() {
-  return <SearchIcon className="size-4 text-muted-foreground" />
-}`}</code>
-            </pre>
-          </CardContent>
-        </Card>
-      </section>
-
-      <Separator className="my-10" />
-
-      <section id="icon-color" className="flex flex-col gap-5">
-        <div>
-          <h2 className="text-2xl font-semibold">{lang === "en" ? "Icon color & size" : "图标色与尺寸"}</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
+      <section id="icon-overview" className={docsSpacing.sectionStack}>
+        <div className="flex flex-col gap-1">
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Overview" : "组件总览"}</h2>
+          <p className={docsSpacing.sectionDesc}>
             {lang === "en"
-              ? "Three icon color modes (mono / colored line / filled-reverse) + one size scale. All colors come from the palette & text hierarchy; icons use currentColor."
-              : "图标分三类用色（单色 / 彩色线性 / 面状反白）+ 一套尺寸阶。颜色全部来自色板与文字层级，图标用 currentColor 跟随。"}
+              ? "A compact look at icon types and sizes, to quickly scan what icons look like."
+              : "紧凑展示图标的类型与尺寸，用来快速查看图标长什么样。"}
           </p>
         </div>
-
-        {/* 1. 单色图标 */}
-        <div className="rounded-lg border border-border bg-card p-5">
-          <p className="mb-3 text-sm font-medium">{lang === "en" ? "1. Monochrome — follow text hierarchy" : "1. 单色图标 — 跟随文字四级层级"}</p>
-          <div className="flex flex-wrap gap-6 text-sm">
-            <div className="flex flex-col items-center gap-1.5"><HomeIcon className="size-6 text-foreground" /><code className="text-xs text-muted-foreground">text-foreground</code><span className="text-xs text-muted-foreground">主图标</span></div>
-            <div className="flex flex-col items-center gap-1.5"><HomeIcon className="size-6 text-muted-foreground" /><code className="text-xs text-muted-foreground">text-muted-foreground</code><span className="text-xs text-muted-foreground">次图标</span></div>
-            <div className="flex flex-col items-center gap-1.5"><HomeIcon className="size-6 text-foreground-disabled" /><code className="text-xs text-muted-foreground">text-foreground-disabled</code><span className="text-xs text-muted-foreground">禁用</span></div>
-            <div className="flex flex-col items-center gap-1.5"><span className="flex size-9 items-center justify-center rounded-md bg-foreground"><HomeIcon className="size-6 text-primary-foreground" /></span><code className="text-xs text-muted-foreground">text-primary-foreground</code><span className="text-xs text-muted-foreground">反白（深底）</span></div>
+        <div className="grid gap-6 rounded-lg border border-border bg-card p-6">
+          <div className="grid gap-3">
+            <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Monochrome line" : "单色线性"}</h3>
+            <div className="flex flex-wrap items-center gap-6 text-foreground">
+              <HomeIcon className="size-6" />
+              <CheckCircleIcon className="size-6" />
+              <BellIcon className="size-6" />
+              <StarIcon className="size-6" />
+              <DatabaseIcon className="size-6" />
+            </div>
           </div>
-        </div>
-
-        {/* 2. 彩色线性图标 */}
-        <div className="rounded-lg border border-border bg-card p-5">
-          <p className="mb-3 text-sm font-medium">{lang === "en" ? "2. Colored line — semantic / brand colors" : "2. 彩色线性图标 — 语义/品牌色"}</p>
-          <div className="flex flex-wrap items-center gap-6">
-            <span className="flex flex-col items-center gap-1.5"><CheckCircleIcon className="size-6 text-primary" /><span className="text-xs text-muted-foreground">primary</span></span>
-            <span className="flex flex-col items-center gap-1.5"><CheckCircleIcon className="size-6 text-success" /><span className="text-xs text-muted-foreground">success</span></span>
-            <span className="flex flex-col items-center gap-1.5"><BellIcon className="size-6 text-warning" /><span className="text-xs text-muted-foreground">warning</span></span>
-            <span className="flex flex-col items-center gap-1.5"><PackageIcon className="size-6 text-destructive" /><span className="text-xs text-muted-foreground">destructive</span></span>
-            <span className="flex flex-col items-center gap-1.5"><DatabaseIcon className="size-6 text-info" /><span className="text-xs text-muted-foreground">info</span></span>
+          <div className="border-t border-dashed border-border" />
+          <div className="grid gap-3">
+            <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Colored line" : "彩色线性"}</h3>
+            <div className="flex flex-wrap items-center gap-6">
+              <HomeIcon className="size-6 text-primary" />
+              <CheckCircleIcon className="size-6 text-success" />
+              <BellIcon className="size-6 text-warning" />
+              <StarIcon className="size-6 text-destructive" />
+              <DatabaseIcon className="size-6 text-info" />
+            </div>
           </div>
-        </div>
-
-        {/* 3. 面型图标（*Filled 变体） */}
-        <div className="rounded-lg border border-border bg-card p-5">
-          <p className="mb-1 text-sm font-medium">{lang === "en" ? "3. Solid (面型) — *Filled variant" : "3. 面型图标 — *Filled 变体（实心填充）"}</p>
-          <p className="mb-3 text-xs text-muted-foreground">{lang === "en" ? "Same icon, line vs solid. Use solid for selected/active or emphasis." : "同一图标，线性 vs 面型；选中态、激活态或强调时用面型（Tabler 的 *Filled）。"}</p>
-          <div className="flex flex-wrap items-center gap-6">
-            {[[HomeIcon, HomeFilledIcon], [CheckCircleIcon, CheckCircleFilledIcon], [BellIcon, BellFilledIcon], [StarIcon, StarFilledIcon], [UserIcon, UserFilledIcon], [DatabaseIcon, DatabaseFilledIcon]].map(([Line, Filled], i) => (
-              <span key={i} className="flex items-center gap-2 text-foreground">
-                <Line className="size-6" />
-                <span className="text-muted-foreground/40">→</span>
-                <Filled className="size-6 text-primary" />
-              </span>
-            ))}
+          <div className="border-t border-dashed border-border" />
+          <div className="grid gap-3">
+            <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Solid" : "面型"}</h3>
+            <div className="flex flex-wrap items-center gap-6 text-primary">
+              <HomeFilledIcon className="size-6" />
+              <CheckCircleFilledIcon className="size-6" />
+              <BellFilledIcon className="size-6" />
+              <StarFilledIcon className="size-6" />
+              <DatabaseFilledIcon className="size-6" />
+            </div>
           </div>
-        </div>
-
-        {/* 3b. 面状/反白图标：彩色圆底 + 白色面型图标 */}
-        <div className="rounded-lg border border-border bg-card p-5">
-          <p className="mb-3 text-sm font-medium">{lang === "en" ? "3b. Filled-reverse — colored circle + white solid icon" : "3b. 面状/反白 — 彩色圆底 + 白色面型图标"}</p>
-          <div className="flex flex-wrap items-center gap-4">
-            {[
-              { bg: "var(--fx-brand-09)", Icon: HomeFilledIcon },
-              { bg: "var(--fx-green-09)", Icon: CheckCircleFilledIcon },
-              { bg: "var(--fx-amber-09)", Icon: BellFilledIcon },
-              { bg: "var(--fx-red-09)", Icon: StarFilledIcon },
-              { bg: "var(--fx-blue-09)", Icon: DatabaseFilledIcon },
-              { bg: "var(--fx-purple-09)", Icon: UserFilledIcon },
-            ].map(({ bg, Icon }, i) => (
-              <span key={i} className="flex size-10 items-center justify-center rounded-full" style={{ backgroundColor: bg }}>
-                <Icon className="size-5" style={{ color: "var(--fx-neutrals-01)" }} />
-              </span>
-            ))}
+          <div className="border-t border-dashed border-border" />
+          <div className="grid gap-3">
+            <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Reverse" : "反白"}</h3>
+            <div className="flex flex-wrap items-center gap-6">
+              <span className="flex size-9 items-center justify-center rounded-md bg-primary"><HomeIcon className="size-5 text-primary-foreground" /></span>
+              <span className="flex size-9 items-center justify-center rounded-md bg-primary"><HomeFilledIcon className="size-5 text-primary-foreground" /></span>
+              <span className="flex size-9 items-center justify-center rounded-full bg-primary"><HomeIcon className="size-5 text-primary-foreground" /></span>
+              <span className="flex size-9 items-center justify-center rounded-full bg-primary"><HomeFilledIcon className="size-5 text-primary-foreground" /></span>
+            </div>
           </div>
-        </div>
-
-        {/* 4. 图标尺寸 */}
-        <div className="rounded-lg border border-border bg-card p-5">
-          <p className="mb-3 text-sm font-medium">{lang === "en" ? "4. Size scale" : "4. 图标尺寸阶"}</p>
-          <div className="flex flex-wrap items-end gap-6">
-            {[
-              { cls: "size-3", px: "12", scene: "内联/徽标" },
-              { cls: "size-3.5", px: "14", scene: "小按钮 sm" },
-              { cls: "size-4", px: "16", scene: "默认" },
-              { cls: "size-5", px: "20", scene: "强调/列表" },
-              { cls: "size-6", px: "24", scene: "页面级/空状态" },
-            ].map(({ cls, px, scene }) => (
-              <span key={cls} className="flex flex-col items-center gap-1.5 text-foreground">
-                <SettingsIcon className={cls} />
-                <code className="text-xs text-muted-foreground">{cls} · {px}px</code>
-                <span className="text-xs text-muted-foreground">{scene}</span>
-              </span>
-            ))}
+          <div className="border-t border-dashed border-border" />
+          <div className="grid gap-3">
+            <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Size" : "尺寸"}</h3>
+            <div className="flex flex-wrap items-end gap-6 text-foreground">
+              <SettingsIcon className="size-3" />
+              <SettingsIcon className="size-3.5" />
+              <SettingsIcon className="size-4" />
+              <SettingsIcon className="size-5" />
+              <SettingsIcon className="size-6" />
+            </div>
           </div>
-          <p className="mt-4 text-xs text-muted-foreground">{lang === "en" ? "Stroke: Tabler stroke-width is adjustable (global .tabler-icon = 1.75); solid uses *Filled variants." : "线宽：Tabler 的 stroke-width 可调（全局 .tabler-icon = 1.75）；面型用 *Filled 变体。"}</p>
         </div>
       </section>
 
-      <Separator className="my-10" />
-
-      <section id="icon-rules" className="flex flex-col gap-5">
-        <h2 className="text-2xl font-semibold">{lang === "en" ? "Usage Rules" : "使用规则"}</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[680px]">
+      <section id="icon-preview" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Scenario examples" : "场景示例"}</h2>
+          <p className={docsSpacing.sectionDesc}>
+            {lang === "en" ? "Common usages and where each fits." : "常见用法与适用场景。"}
+          </p>
+        </div>
+        <Tabs value={iconScenarioFilter} onValueChange={setIconScenarioFilter} aria-label={lang === "en" ? "Filter icon examples" : "筛选图标示例"}>
+          <TabsList className="flex h-auto flex-wrap justify-start">
+            {iconScenarioFilters.map((f) => (
+              <TabsTrigger key={f.value} value={f.value}>{lang === "en" ? f.labelEn : f.label}</TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+        <div className="fx-doc-static max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <Table className="min-w-[1000px]">
             <TableHeader>
               <TableRow>
                 <TableHead className="pl-4">{lang === "en" ? "Scenario" : "场景"}</TableHead>
-                <TableHead>{lang === "en" ? "Pattern" : "写法"}</TableHead>
-                <TableHead className="pr-4">{lang === "en" ? "Rule" : "规则"}</TableHead>
+                <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
+                <TableHead className="w-[240px]">{lang === "en" ? "Intent" : "使用意图"}</TableHead>
+                <TableHead>{lang === "en" ? "Constraint" : "约束"}</TableHead>
+                <TableHead className="w-[300px] pr-4">{lang === "en" ? "Recommended API" : "推荐写法"}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell className="pl-4 font-medium">{lang === "en" ? "Icon in Button" : "按钮内图标"}</TableCell>
-                <TableCell>
-                  <code className="rounded bg-muted px-1.5 py-0.5 text-xs">data-icon="inline-start"</code>
-                </TableCell>
-                <TableCell className="pr-4 text-muted-foreground">
-                  {lang === "en" ? "Button controls the icon size. Do not write size classes directly." : "尺寸由 Button 控制，不直接写 size class。"}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="pl-4 font-medium">{lang === "en" ? "Icon-only Button" : "纯图标按钮"}</TableCell>
-                <TableCell>
-                  <code className="rounded bg-muted px-1.5 py-0.5 text-xs">aria-label</code>
-                </TableCell>
-                <TableCell className="pr-4 text-muted-foreground">
-                  {lang === "en" ? "Provide an accessible name." : "必须提供可访问名称。"}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="pl-4 font-medium">{lang === "en" ? "Inline supporting icon" : "普通说明图标"}</TableCell>
-                <TableCell>
-                  <code className="rounded bg-muted px-1.5 py-0.5 text-xs">text-muted-foreground</code>
-                </TableCell>
-                <TableCell className="pr-4 text-muted-foreground">
-                  {lang === "en" ? "Use semantic text colors instead of hard-coded colors." : "使用语义文字色，不写硬编码颜色。"}
-                </TableCell>
-              </TableRow>
+              {iconScenarios.filter((s) => s.group === iconScenarioFilter).map((s) => (
+                <TableRow key={s.title}>
+                  <TableCell className="pl-4 align-top whitespace-nowrap">
+                    <span className="font-medium">{lang === "en" ? s.titleEn : s.title}</span>
+                  </TableCell>
+                  <TableCell className="align-top">{s.preview}</TableCell>
+                  <TableCell className="align-top text-muted-foreground">{lang === "en" ? s.intentEn : s.intent}</TableCell>
+                  <TableCell className="align-top text-muted-foreground">{lang === "en" ? s.constraintEn : s.constraint}</TableCell>
+                  <TableCell className="pr-4 align-top">
+                    <pre className="max-w-full overflow-x-auto rounded-lg bg-muted p-3 text-xs"><code>{s.code}</code></pre>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </div>
       </section>
 
-      <Separator className="my-10" />
-
-      <section id="icon-ai-rules" className="flex flex-col gap-5">
-        <h2 className="text-2xl font-semibold">{lang === "en" ? "AI Rules" : "AI 规则"}</h2>
-        <Card>
-          <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
-            {iconRules.map((rule) => (
-              <div key={rule.zh} className="flex gap-2">
-                <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
-                <span>{lang === "en" ? rule.en : rule.zh}</span>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+      <section id="icon-usage" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Usage" : "使用方式"}</h2>
+          <p className={docsSpacing.sectionDesc}>
+            {lang === "en"
+              ? "Already installed; import from @/lib/icons. JSX patterns are in the recommended API column above."
+              : "图标库已装好，无需单独安装；统一从 @/lib/icons 导入。具体 JSX 写法见上方「场景示例」的推荐写法列。"}
+          </p>
+        </div>
+        <div className="rounded-lg border border-border bg-card p-5">
+          <CopyCodeBlock code={iconImportCode} label="Import" lang={lang} />
+        </div>
       </section>
-    </>
+
+      <section id="icon-props" className={docsSpacing.sectionStack}>
+        <h2 className="text-2xl font-semibold">{lang === "en" ? "API Props" : "API 属性"}</h2>
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <Table className="min-w-[640px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">{lang === "en" ? "Prop" : "属性"}</TableHead>
+                <TableHead>{lang === "en" ? "Type" : "类型"}</TableHead>
+                <TableHead>{lang === "en" ? "Default" : "默认值"}</TableHead>
+                <TableHead className="pr-4">{lang === "en" ? "Description" : "描述"}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {iconPropRows.map((row) => (
+                <TableRow key={row.prop}>
+                  <TableCell className="pl-4 font-medium">{row.prop}</TableCell>
+                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.type}</code></TableCell>
+                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.defaultValue}</code></TableCell>
+                  <TableCell className="pr-4 text-muted-foreground">{lang === "en" ? row.descEn : row.desc}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </section>
+
+      <section id="icon-semantic-dom" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Semantic DOM" : "语义 DOM"}</h2>
+          <p className={docsSpacing.sectionDesc}>
+            {lang === "en"
+              ? "Icons come from Tabler. These are the semantic parts AI and engineers should understand."
+              : "图标来自 Tabler。这里记录 AI 和工程师应该理解的语义部位。"}
+          </p>
+        </div>
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <Table className="min-w-[560px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">{lang === "en" ? "Part" : "部位"}</TableHead>
+                <TableHead className="pr-4">{lang === "en" ? "Description" : "说明"}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {iconSemanticRows.map((row) => (
+                <TableRow key={row.part}>
+                  <TableCell className="pl-4 font-medium">
+                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.part}</code>
+                  </TableCell>
+                  <TableCell className="pr-4 text-muted-foreground">{lang === "en" ? row.descEn : row.desc}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </section>
+
+      <section id="icon-do-dont" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Do / Don’t" : "正误示例"}</h2>
+          <p className={docsSpacing.sectionDesc}>
+            {lang === "en"
+              ? "The most common icon mistakes for engineers and AI-generated code."
+              : "工程师和 AI 生成代码最容易犯的图标错误。"}
+          </p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base text-foreground">{lang === "en" ? "Do" : "推荐 Do"}</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
+              {iconDoDontRows.map((row) => (
+                <div key={`do-${row.do}`} className="flex gap-2">
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span>{lang === "en" ? row.doEn : row.do}</span>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base text-foreground">{lang === "en" ? "Don’t" : "避免 Don't"}</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
+              {iconDoDontRows.map((row) => (
+                <div key={`dont-${row.dont}`} className="flex gap-2">
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
+                  <span>{lang === "en" ? row.dontEn : row.dont}</span>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+    </div>
   )
 }
 
@@ -6718,7 +6745,10 @@ function InputPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       </section>
 
       <section id="input-do-dont" className={docsSpacing.sectionStack}>
-        <h2 className="text-2xl font-semibold">正误示例</h2>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">正误示例</h2>
+          <p className="text-base text-muted-foreground">工程师和 AI 生成代码最容易犯的错误，照着做即可。</p>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
@@ -6971,7 +7001,10 @@ function SelectPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       </section>
 
       <section id="select-do-dont" className={docsSpacing.sectionStack}>
-        <h2 className="text-2xl font-semibold">正误示例</h2>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">正误示例</h2>
+          <p className="text-base text-muted-foreground">工程师和 AI 生成代码最容易犯的错误，照着做即可。</p>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
@@ -7203,7 +7236,10 @@ function CheckboxPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
       </section>
 
       <section id="checkbox-do-dont" className={docsSpacing.sectionStack}>
-        <h2 className="text-2xl font-semibold">正误示例</h2>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">正误示例</h2>
+          <p className="text-base text-muted-foreground">工程师和 AI 生成代码最容易犯的错误，照着做即可。</p>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
@@ -7429,7 +7465,10 @@ function SwitchPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       </section>
 
       <section id="switch-do-dont" className={docsSpacing.sectionStack}>
-        <h2 className="text-2xl font-semibold">正误示例</h2>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">正误示例</h2>
+          <p className="text-base text-muted-foreground">工程师和 AI 生成代码最容易犯的错误，照着做即可。</p>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
@@ -7630,7 +7669,10 @@ function TextareaPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
       </section>
 
       <section id="textarea-do-dont" className={docsSpacing.sectionStack}>
-        <h2 className="text-2xl font-semibold">正误示例</h2>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">正误示例</h2>
+          <p className="text-base text-muted-foreground">工程师和 AI 生成代码最容易犯的错误，照着做即可。</p>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
@@ -7829,7 +7871,10 @@ function TablePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       </section>
 
       <section id="table-do-dont" className={docsSpacing.sectionStack}>
-        <h2 className="text-2xl font-semibold">正误示例</h2>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">正误示例</h2>
+          <p className="text-base text-muted-foreground">工程师和 AI 生成代码最容易犯的错误，照着做即可。</p>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
@@ -8023,7 +8068,10 @@ function CardPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
       </section>
 
       <section id="card-do-dont" className={docsSpacing.sectionStack}>
-        <h2 className="text-2xl font-semibold">正误示例</h2>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">正误示例</h2>
+          <p className="text-base text-muted-foreground">工程师和 AI 生成代码最容易犯的错误，照着做即可。</p>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
@@ -8244,7 +8292,10 @@ function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       </section>
 
       <section id="badge-do-dont" className={docsSpacing.sectionStack}>
-        <h2 className="text-2xl font-semibold">正误示例</h2>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">正误示例</h2>
+          <p className="text-base text-muted-foreground">工程师和 AI 生成代码最容易犯的错误，照着做即可。</p>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
@@ -8477,7 +8528,10 @@ function TooltipPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }
       </section>
 
       <section id="tooltip-do-dont" className={docsSpacing.sectionStack}>
-        <h2 className="text-2xl font-semibold">正误示例</h2>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">正误示例</h2>
+          <p className="text-base text-muted-foreground">工程师和 AI 生成代码最容易犯的错误，照着做即可。</p>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
@@ -8715,7 +8769,10 @@ function DialogPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       </section>
 
       <section id="dialog-do-dont" className={docsSpacing.sectionStack}>
-        <h2 className="text-2xl font-semibold">正误示例</h2>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">正误示例</h2>
+          <p className="text-base text-muted-foreground">工程师和 AI 生成代码最容易犯的错误，照着做即可。</p>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
@@ -8947,7 +9004,10 @@ function AlertDialogPage({ actions, lang }: { actions: React.ReactNode; lang: La
       </section>
 
       <section id="alert-dialog-do-dont" className={docsSpacing.sectionStack}>
-        <h2 className="text-2xl font-semibold">正误示例</h2>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">正误示例</h2>
+          <p className="text-base text-muted-foreground">工程师和 AI 生成代码最容易犯的错误，照着做即可。</p>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
@@ -9185,7 +9245,10 @@ function SheetPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       </section>
 
       <section id="sheet-do-dont" className={docsSpacing.sectionStack}>
-        <h2 className="text-2xl font-semibold">正误示例</h2>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">正误示例</h2>
+          <p className="text-base text-muted-foreground">工程师和 AI 生成代码最容易犯的错误，照着做即可。</p>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
@@ -9393,7 +9456,10 @@ function SkeletonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
       </section>
 
       <section id="skeleton-do-dont" className={docsSpacing.sectionStack}>
-        <h2 className="text-2xl font-semibold">正误示例</h2>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">正误示例</h2>
+          <p className="text-base text-muted-foreground">工程师和 AI 生成代码最容易犯的错误，照着做即可。</p>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
@@ -9433,6 +9499,7 @@ function StandardDocPage({
   lead,
   overview,
   scenarioExamples,
+  scenarioFilters,
   renderScenarioPreview,
   importCode,
   usageCode,
@@ -9446,7 +9513,8 @@ function StandardDocPage({
   title: string
   lead: string
   overview: React.ReactNode
-  scenarioExamples: { id: string; title: string; intent: string; rule: string; code: string }[]
+  scenarioExamples: { id: string; title: string; intent: string; rule: string; code: string; group?: string; spec?: string }[]
+  scenarioFilters?: { value: string; label: string; labelEn?: string }[]
   renderScenarioPreview: (id: string) => React.ReactNode
   importCode: string
   usageCode: string
@@ -9456,6 +9524,11 @@ function StandardDocPage({
   actions: React.ReactNode
   lang: Lang
 }) {
+  const [scenarioFilter, setScenarioFilter] = useState(scenarioFilters?.[0]?.value ?? "all")
+  const hasSpec = scenarioExamples.some((e) => e.spec)
+  const shownExamples = scenarioFilters
+    ? scenarioExamples.filter((e) => e.group === scenarioFilter)
+    : scenarioExamples
   return (
     <div className={docsSpacing.pageStack}>
       <section id={slug} className="flex flex-col gap-2">
@@ -9469,7 +9542,8 @@ function StandardDocPage({
 
       <section id={`${slug}-overview`} className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
-          <h2 className="text-2xl font-semibold">组件总览</h2>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Overview" : "组件总览"}</h2>
+          <p className="text-base text-muted-foreground">{lang === "en" ? "A compact look at the component to quickly see what it looks like." : "紧凑展示该组件的样子，用来快速查看长什么样。"}</p>
         </div>
         <Card>
           <CardContent className="flex items-center gap-3 p-5">{overview}</CardContent>
@@ -9481,24 +9555,39 @@ function StandardDocPage({
           <h2 className="text-2xl font-semibold">场景示例</h2>
           <p className="text-base text-muted-foreground">常见用法与适用场景。</p>
         </div>
-        <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
-          <Table className="min-w-[1000px]">
+        {scenarioFilters ? (
+          <Tabs value={scenarioFilter} onValueChange={setScenarioFilter} aria-label="筛选场景">
+            <TabsList className="flex h-auto flex-wrap justify-start">
+              {scenarioFilters.map((f) => (
+                <TabsTrigger key={f.value} value={f.value}>{lang === "en" ? (f.labelEn ?? f.label) : f.label}</TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        ) : null}
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <Table className={hasSpec ? "min-w-[1080px]" : "min-w-[960px]"}>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[160px] pl-4">场景</TableHead>
-                <TableHead className="w-[200px]">示例</TableHead>
-                <TableHead className="w-[260px]">使用意图</TableHead>
+                <TableHead className="pl-4">场景</TableHead>
+                <TableHead>示例</TableHead>
+                {hasSpec ? <TableHead>规格</TableHead> : null}
+                <TableHead className="w-[240px]">使用意图</TableHead>
                 <TableHead>约束</TableHead>
-                <TableHead className="w-[360px] pr-4">推荐写法</TableHead>
+                <TableHead className="w-[300px] pr-4">推荐写法</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {scenarioExamples.map((example) => (
+              {shownExamples.map((example) => (
                 <TableRow key={example.id}>
-                  <TableCell className="pl-4 align-top whitespace-normal">
+                  <TableCell className="pl-4 align-top whitespace-nowrap">
                     <span className="font-medium">{example.title}</span>
                   </TableCell>
                   <TableCell className="align-top">{renderScenarioPreview(example.id)}</TableCell>
+                  {hasSpec ? (
+                    <TableCell className="align-top whitespace-nowrap text-foreground">
+                      <p className="text-fx-12 leading-6">{example.spec ?? "—"}</p>
+                    </TableCell>
+                  ) : null}
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
                     <p className="max-w-[260px] leading-6">{example.intent}</p>
                   </TableCell>
@@ -9520,12 +9609,12 @@ function StandardDocPage({
       <section id={`${slug}-usage`} className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">使用方式</h2>
-          <p className="text-base text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
+          <p className="text-base text-muted-foreground">{usageCode ? "把 import 和完整组装写法复制到业务页面里使用。" : "复制 import 即可；具体 JSX 写法见上方「场景示例」的推荐写法列。"}</p>
         </div>
         <div className="rounded-lg border border-border bg-card p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={importCode} label="Import" lang={lang} />
-            <CopyCodeBlock code={usageCode} label="调用" lang={lang} />
+            {usageCode ? <CopyCodeBlock code={usageCode} label="调用" lang={lang} /> : null}
           </div>
         </div>
       </section>
@@ -9590,7 +9679,10 @@ function StandardDocPage({
       </section>
 
       <section id={`${slug}-do-dont`} className={docsSpacing.sectionStack}>
-        <h2 className="text-2xl font-semibold">正误示例</h2>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">正误示例</h2>
+          <p className="text-base text-muted-foreground">工程师和 AI 生成代码最容易犯的错误，照着做即可。</p>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
@@ -9722,31 +9814,84 @@ function ButtonGroupPage({ actions, lang }: { actions: React.ReactNode; lang: La
       title="Button Group 按钮组"
       lead="把强相关的多个操作按钮合并为一组，自动合并相邻边框与圆角，弱化彼此边界。"
       overview={
-        <ButtonGroup>
-          <Button variant="outline">复制</Button>
-          <Button variant="outline">分享</Button>
-          <Button variant="outline">归档</Button>
-        </ButtonGroup>
+        <div className="flex w-full flex-col gap-6">
+          <div className="grid gap-3">
+            <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
+            <div className="flex flex-wrap items-center gap-4">
+              <ButtonGroup>
+                <Button variant="outline">复制</Button>
+                <Button variant="outline">分享</Button>
+                <Button variant="outline">归档</Button>
+              </ButtonGroup>
+              <ButtonGroup>
+                <Button variant="outline">保存</Button>
+                <Button size="icon" variant="outline" aria-label="更多"><ChevronDownIcon /></Button>
+              </ButtonGroup>
+            </div>
+          </div>
+          <div className="border-t border-dashed border-border" />
+          <div className="grid gap-3">
+            <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Orientation" : "方向"}</h3>
+            <div className="flex flex-wrap items-start gap-4">
+              <ButtonGroup>
+                <Button variant="outline">上一步</Button>
+                <Button variant="outline">下一步</Button>
+              </ButtonGroup>
+              <ButtonGroup orientation="vertical">
+                <Button variant="outline">上移</Button>
+                <Button variant="outline">居中</Button>
+                <Button variant="outline">下移</Button>
+              </ButtonGroup>
+            </div>
+          </div>
+          <div className="border-t border-dashed border-border" />
+          <div className="grid gap-3">
+            <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Size (from inner Button)" : "尺寸（随内部按钮）"}</h3>
+            <div className="flex flex-wrap items-center gap-4">
+              {([
+                { size: "xs", zh: "超小", en: "XS" },
+                { size: "sm", zh: "小", en: "SM" },
+                { size: "default", zh: "默认", en: "Default" },
+                { size: "lg", zh: "大", en: "Large" },
+              ] as const).map((s) => (
+                <ButtonGroup key={s.size}>
+                  <Button size={s.size} variant="outline">{lang === "en" ? s.en : s.zh}</Button>
+                  <Button size={s.size} variant="outline">{lang === "en" ? s.en : s.zh}</Button>
+                </ButtonGroup>
+              ))}
+            </div>
+          </div>
+        </div>
       }
       scenarioExamples={buttonGroupScenarioExamples}
+      scenarioFilters={buttonGroupScenarioFilters}
       renderScenarioPreview={(id) =>
         id === "split" ? (
+          <ButtonGroup>
+            <Button size="sm" variant="outline">保存</Button>
+            <Button size="icon-sm" variant="outline" aria-label="更多"><ChevronDownIcon /></Button>
+          </ButtonGroup>
+        ) : id === "vertical" ? (
+          <ButtonGroup orientation="vertical">
+            <Button size="sm" variant="outline">上移</Button>
+            <Button size="sm" variant="outline">居中</Button>
+            <Button size="sm" variant="outline">下移</Button>
+          </ButtonGroup>
+        ) : id.startsWith("size-") ? (
+          <ButtonGroup>
+            <Button size={id.replace("size-", "") as "xs" | "sm" | "default" | "lg"} variant="outline">复制</Button>
+            <Button size={id.replace("size-", "") as "xs" | "sm" | "default" | "lg"} variant="outline">粘贴</Button>
+          </ButtonGroup>
+        ) : (
           <ButtonGroup>
             <Button size="sm" variant="outline">复制</Button>
             <Button size="sm" variant="outline">分享</Button>
             <Button size="sm" variant="outline">归档</Button>
           </ButtonGroup>
-        ) : (
-          <ButtonGroup>
-            <ButtonGroupText>排序</ButtonGroupText>
-            <ButtonGroupSeparator />
-            <Button size="sm" variant="outline">最新</Button>
-            <Button size="sm" variant="outline">最热</Button>
-          </ButtonGroup>
         )
       }
-      importCode={`import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from "@/components/ui/button-group"`}
-      usageCode={`<ButtonGroup>\n  <Button variant="outline">复制</Button>\n  <Button variant="outline">分享</Button>\n  <Button variant="outline">归档</Button>\n</ButtonGroup>`}
+      importCode={`import { ButtonGroup } from "@/components/ui/button-group"`}
+      usageCode=""
       propRows={buttonGroupPropRows}
       semanticDomRows={buttonGroupSemanticDomRows}
       doDontRows={buttonGroupDoDontRows}

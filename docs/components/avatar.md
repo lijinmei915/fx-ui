@@ -80,7 +80,7 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
 | 属性 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |
 | `Avatar.size` | `"xs" \| "sm" \| "default" \| "lg" \| "xl"` | `"default"` | 尺寸档 20/24/32/40/48，子元素随档联动 |
-| `Avatar.shape` | `"circle" \| "square"` | `"circle"` | 形状；square 用 `rounded-lg` token 圆角 |
+| `Avatar.shape` | `"circle" \| "square"` | `"circle"` | 形状；square 用 `rounded-lg` token 圆角。无 logo 时按实体类型用类型图标兜底：企业 Building / 项目 Folder / 群组 Users / 应用 Apps（彩底白图标反白）；也可用名称前缀简称（企业取前 1-2 字，区别于人名取末字）|
 | `AvatarFallback.colorful` | `boolean` | `false` | 兜底文字按内容 hash 取色板色，实底（08 阶）+ 白字反白（参考 Gmail，08 比满饱和 09 柔半阶） |
 | `AvatarBadge.status` | `"online" \| "away" \| "busy" \| "offline"` | — | 右下角 presence 状态点：在线绿 / 离开黄 / 忙红 / 离线灰（参考 Slack/Teams）|
 | `AvatarGroup.max` | `number` | — | 最多展示几个，超出折叠为 `+N` |
@@ -110,6 +110,24 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
     <TooltipContent>王五、赵六、孙七</TooltipContent>
   </Tooltip>
 </AvatarGroup>
+```
+
+### 群组头像：堆叠 vs 拼接 {#group-modes}
+
+多用户群组头像有两种模式，别混用：
+
+- **堆叠**（overlap，`AvatarGroup`）→ 协作者列表、评论区，头像横向重叠 + `+N` 折叠。
+- **拼接**（composite 宫格）→ 群聊 / 多人会话头像，把成员头像按人数拼进一个方形。**成员有头像图就拼真实图（`AvatarImage`），无图才 `colorful` 文字兜底。** **按人数自适应**：2 左右各半、3 上 1 下 2（首格 `col-span-2`）、4 田字 2×2、≥5 取前 4（或九宫格）。格间用 `gap-px` + 容器 `bg-border` 留细缝；子项 `rounded-none`、外层 `rounded-lg overflow-hidden` 裁切。
+
+```tsx
+<div className="grid size-10 grid-cols-2 overflow-hidden rounded-lg">
+  {members.slice(0, 4).map((m) => (
+    <Avatar className="size-full rounded-none">
+      <AvatarImage src={m.avatar} />
+      <AvatarFallback colorful>{m.name[0]}</AvatarFallback>
+    </Avatar>
+  ))}
+</div>
 ```
 
 ### 兜底文字取值逻辑 {#initials}

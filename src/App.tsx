@@ -11,6 +11,7 @@ import {
   HomeFilledIcon,
   DatabaseFilledIcon,
   UserFilledIcon,
+  FolderFilledIcon,
   StarFilledIcon,
   CopyIcon,
   CreditCardIcon,
@@ -1737,25 +1738,17 @@ const avatarScenarioExamples = [
     id: "single",
     title: "单头像",
     group: "type",
-    intent: "展示单个用户身份，图片加载失败时回退到文字缩写。",
-    rule: "AvatarFallback 用姓名首字母或图标兜底，避免空白占位。",
-    code: `<Avatar>\n  <AvatarImage src="/avatars/01.png" alt="张三" />\n  <AvatarFallback>张</AvatarFallback>\n</Avatar>`,
+    intent: "展示单个用户身份，图片加载失败回退到文字缩写；作入口时可点击跳转。",
+    rule: "AvatarFallback 用首字母/图标兜底；作入口时用 render 渲染成 <a>/<button> + cursor-pointer + focus-visible 焦点环，不绑裸 onClick。",
+    code: `<Avatar>\n  <AvatarImage src="/avatars/01.png" alt="张三" />\n  <AvatarFallback>张</AvatarFallback>\n</Avatar>\n\n// 作入口时\n<Avatar render={<a href="/u/zhang" />} className="cursor-pointer hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring">…</Avatar>`,
   },
   {
     id: "shape",
     title: "形状",
     group: "type",
     intent: "用户头像用圆形；企业、项目、群组、应用图标用方形。",
-    rule: "shape=\"square\" 切方形，圆角走 token（rounded-lg），不写死像素。",
-    code: `<Avatar shape="square">\n  <AvatarImage src="/logo.png" alt="项目 A" />\n  <AvatarFallback>A</AvatarFallback>\n</Avatar>`,
-  },
-  {
-    id: "colorful",
-    title: "彩色文字头像",
-    group: "type",
-    intent: "无头像图时，按姓名上色区分用户，避免一片灰。",
-    rule: "AvatarFallback colorful 在 6 色系（brand/green/amber/red/blue/purple）里按内容 hash 轮循环取色，实底 08 + 白字反白，不逐个写死颜色。",
-    code: `<Avatar>\n  <AvatarFallback colorful>张三</AvatarFallback>\n</Avatar>`,
+    rule: "shape=\"square\" 切方形，圆角走 token（rounded-lg）。有 logo 放 AvatarImage（配色随 logo）；无 logo 按实体类型用类型图标兜底（彩底白图标反白）：企业 Building / 项目 Folder / 群组 Users / 应用 Apps；也可用名称前缀简称（企业取前 1-2 字，区别于人名取末字）。",
+    code: `<Avatar shape="square">\n  <AvatarImage src="/logo.png" alt="项目 A" />\n  <AvatarFallback colorful><FolderFilledIcon /></AvatarFallback>  {/* 项目用 Folder；企业 Building、群组 Users、应用 Apps */}\n</Avatar>`,
   },
   {
     id: "icon",
@@ -1767,35 +1760,27 @@ const avatarScenarioExamples = [
   },
   {
     id: "initials",
-    title: "文字缩写",
+    title: "文字兜底",
     group: "type",
-    intent: "无头像图时，从姓名自动取缩写（中/英不同规则）。",
-    rule: "中文≤2字全取、≥3取末2字（名）；英文单名取首字母、全名取首末两词首字母，统一大写。",
+    intent: "无头像图时，从姓名取缩写 + 按姓名上色区分用户。",
+    rule: "缩写用 avatarInitials（中文≤2全取/≥3取末2字、英文单名首字母/全名首末两词首字母，统一大写）；colorful 在 6 色系按 hash 轮循取色（实底 08 + 白字反白）。",
     code: `import { avatarInitials } from "@/components/ui/avatar"\n\n<AvatarFallback colorful>{avatarInitials("欧阳娜娜")}</AvatarFallback> // 娜娜\n<AvatarFallback colorful>{avatarInitials("John Doe")}</AvatarFallback> // JD`,
   },
   {
     id: "group",
     title: "头像组",
     group: "type",
-    intent: "在评论区、协作者列表等场景里堆叠展示多个用户。",
-    rule: "AvatarGroup max 自动折叠 +N；或手动放 AvatarGroupCount。",
-    code: `<AvatarGroup max={3}>\n  <Avatar><AvatarFallback>A</AvatarFallback></Avatar>\n  <Avatar><AvatarFallback>B</AvatarFallback></Avatar>\n  <Avatar><AvatarFallback>C</AvatarFallback></Avatar>\n  <Avatar><AvatarFallback>D</AvatarFallback></Avatar>\n</AvatarGroup>`,
-  },
-  {
-    id: "clickable",
-    title: "可点击头像",
-    group: "type",
-    intent: "头像作为入口，点击跳转到个人主页 / 用户卡片。",
-    rule: "用 render 渲染成 <a>/<button>，加 cursor-pointer 与 focus-visible 焦点环；不要给 Avatar 绑裸 onClick 当按钮。",
-    code: `<Avatar\n  render={<a href="/u/zhang" />}\n  className="cursor-pointer outline-none transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"\n>\n  <AvatarImage src="/avatars/01.png" alt="张三" />\n  <AvatarFallback>张</AvatarFallback>\n</Avatar>`,
-  },
-  {
-    id: "group-hover",
-    title: "头像组 +N 悬停",
-    group: "type",
-    intent: "协作者较多时，折叠的 +N 悬停展开剩余成员名单。",
-    rule: "手动模式：Tooltip 包住 AvatarGroupCount，content 列出被折叠的成员；不要把名单堆在页面上。",
+    intent: "在评论区、协作者列表等场景堆叠展示多个用户；折叠的 +N 可悬停看全部。",
+    rule: "AvatarGroup max 自动折叠 +N；需要悬停看名单时改手动模式，用 Tooltip 包住 AvatarGroupCount。",
     code: `<AvatarGroup>\n  <Avatar><AvatarFallback>A</AvatarFallback></Avatar>\n  <Avatar><AvatarFallback>B</AvatarFallback></Avatar>\n  <Tooltip>\n    <TooltipTrigger render={<AvatarGroupCount>+3</AvatarGroupCount>} />\n    <TooltipContent>王五、赵六、孙七</TooltipContent>\n  </Tooltip>\n</AvatarGroup>`,
+  },
+  {
+    id: "composite",
+    title: "群组拼接",
+    group: "type",
+    intent: "群聊 / 多人会话头像：把成员头像按人数拼进一个方形宫格。",
+    rule: "成员有头像图就拼真实图（AvatarImage），无图才 colorful 文字兜底。按人数自适应：2 左右各半、3 上 1 下 2（首格 col-span-2）、4 田字 2×2、≥5 取前 4（或九宫格）。格间用 gap-px + 容器 bg-border 留细缝；子项 rounded-none、外层 rounded-lg overflow-hidden 裁切。和「堆叠 AvatarGroup」是两种群组模式——群聊用拼接、协作列表用堆叠。",
+    code: `// 3 人：上 1 下 2，优先真实头像图\n<div className="grid size-10 grid-cols-2 grid-rows-2 overflow-hidden rounded-lg">\n  <Avatar className="col-span-2 size-full rounded-none">\n    <AvatarImage src={m.avatar} /><AvatarFallback colorful>{m.name[0]}</AvatarFallback>\n  </Avatar>\n  <Avatar className="size-full rounded-none">…</Avatar>\n  <Avatar className="size-full rounded-none">…</Avatar>\n</div>`,
   },
   {
     id: "size-xs",
@@ -9805,13 +9790,7 @@ function AvatarPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
         ) : id === "shape" ? (
           <div className="flex items-center gap-3">
             <Avatar><AvatarImage src="https://github.com/shadcn.png" alt="用户" /><AvatarFallback colorful>李</AvatarFallback></Avatar>
-            <Avatar shape="square"><AvatarImage src="https://github.com/vercel.png" alt="项目" /><AvatarFallback colorful>项</AvatarFallback></Avatar>
-          </div>
-        ) : id === "colorful" ? (
-          <div className="flex items-center gap-3">
-            {["张三", "王五", "赵六"].map((n) => (
-              <Avatar key={n}><AvatarFallback colorful>{n[0]}</AvatarFallback></Avatar>
-            ))}
+            <Avatar shape="square"><AvatarFallback colorful><FolderFilledIcon className="size-4" /></AvatarFallback></Avatar>
           </div>
         ) : id === "initials" ? (
           <div className="flex items-center gap-3">
@@ -9825,29 +9804,37 @@ function AvatarPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
             <Avatar shape="square"><AvatarFallback colorful><UserFilledIcon className="size-4" /></AvatarFallback></Avatar>
           </div>
         ) : id === "group" ? (
-          <AvatarGroup max={3}>
-            <Avatar><AvatarFallback colorful>A</AvatarFallback></Avatar>
-            <Avatar><AvatarFallback colorful>B</AvatarFallback></Avatar>
-            <Avatar><AvatarFallback colorful>C</AvatarFallback></Avatar>
-            <Avatar><AvatarFallback colorful>D</AvatarFallback></Avatar>
-          </AvatarGroup>
-        ) : id === "clickable" ? (
-          <Avatar
-            render={<a href="#avatar" />}
-            className="cursor-pointer outline-none transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <AvatarImage src="https://github.com/shadcn.png" alt="张三" />
-            <AvatarFallback>张</AvatarFallback>
-          </Avatar>
-        ) : id === "group-hover" ? (
           <AvatarGroup>
-            <Avatar><AvatarFallback colorful>张</AvatarFallback></Avatar>
-            <Avatar><AvatarFallback colorful>王</AvatarFallback></Avatar>
+            {["张三", "王五", "赵六"].map((n) => (
+              <Avatar key={n}><AvatarFallback colorful>{avatarInitials(n)}</AvatarFallback></Avatar>
+            ))}
             <Tooltip>
               <TooltipTrigger render={<AvatarGroupCount className="cursor-pointer">+3</AvatarGroupCount>} />
-              <TooltipContent>王五、赵六、孙七</TooltipContent>
+              <TooltipContent>李四、孙七、周八</TooltipContent>
             </Tooltip>
           </AvatarGroup>
+        ) : id === "composite" ? (
+          <div className="flex items-center gap-3">
+            {/* 2 人：左右各半 */}
+            <div className="grid size-10 grid-cols-2 overflow-hidden rounded-lg">
+              {[["张", 1], ["王", 2]].map(([c, i]) => (
+                <Avatar key={c} className="size-full rounded-none"><AvatarImage src={`https://i.pravatar.cc/80?img=${i}`} /><AvatarFallback colorful className="size-full rounded-none text-[8px]">{c}</AvatarFallback></Avatar>
+              ))}
+            </div>
+            {/* 3 人：上 1 下 2 */}
+            <div className="grid size-10 grid-cols-2 grid-rows-2 overflow-hidden rounded-lg">
+              <Avatar className="col-span-2 size-full rounded-none"><AvatarImage src="https://i.pravatar.cc/80?img=1" /><AvatarFallback colorful className="size-full rounded-none text-[8px]">张</AvatarFallback></Avatar>
+              {[["王", 2], ["赵", 3]].map(([c, i]) => (
+                <Avatar key={c} className="size-full rounded-none"><AvatarImage src={`https://i.pravatar.cc/80?img=${i}`} /><AvatarFallback colorful className="size-full rounded-none text-[8px]">{c}</AvatarFallback></Avatar>
+              ))}
+            </div>
+            {/* 4 人：田字 */}
+            <div className="grid size-10 grid-cols-2 grid-rows-2 overflow-hidden rounded-lg">
+              {[["张", 1], ["王", 2], ["赵", 3], ["李", 4]].map(([c, i]) => (
+                <Avatar key={c} className="size-full rounded-none"><AvatarImage src={`https://i.pravatar.cc/80?img=${i}`} /><AvatarFallback colorful className="size-full rounded-none text-[8px]">{c}</AvatarFallback></Avatar>
+              ))}
+            </div>
+          </div>
         ) : (
           <Avatar size={id.replace("size-", "") as "xs" | "sm" | "default" | "lg" | "xl"}>
             <AvatarFallback>张</AvatarFallback>

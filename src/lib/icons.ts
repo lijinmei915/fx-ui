@@ -29,6 +29,7 @@ export {
   IconFileCode as FileCodeIcon,
   IconFileText as FileTextIcon,
   IconFolder as FolderIcon,
+  IconFolderFilled as FolderFilledIcon,
   IconHome as HomeIcon,
   IconInfoCircle as InfoIcon,
   IconItalic as ItalicIcon,

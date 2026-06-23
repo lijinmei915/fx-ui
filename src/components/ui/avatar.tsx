@@ -84,9 +84,10 @@ function AvatarFallback({
       data-slot="avatar-fallback"
       style={toneStyle}
       className={cn(
-        "flex size-full items-center justify-center rounded-[inherit] text-fx-13",
+        // 字号≈头像 0.4 倍，保证 2 个中文字不挤：xs9 / sm11 / default12 / lg15 / xl18
+        "flex size-full items-center justify-center rounded-[inherit] text-fx-12",
         colorful ? "" : "bg-muted text-muted-foreground",
-        "group-data-[size=xs]/avatar:text-fx-12 group-data-[size=sm]/avatar:text-fx-12",
+        "group-data-[size=xs]/avatar:text-[9px] group-data-[size=sm]/avatar:text-[11px] group-data-[size=lg]/avatar:text-fx-15 group-data-[size=xl]/avatar:text-fx-18",
         className
       )}
       {...props}

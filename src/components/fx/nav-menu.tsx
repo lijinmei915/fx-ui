@@ -3,7 +3,7 @@ import type { ReactNode } from "react"
 import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip"
 import { ChevronDownIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon, SearchIcon, PlusIcon } from "@/lib/icons"
 
 // 导航菜单（单面板侧边栏，1:1 参照 Figma「AI交互探索」侧边栏，token 全用 fx-theme）。
@@ -45,13 +45,13 @@ function NavRailItem({
       data-active={!boxed && active ? "" : undefined}
       className={cn(
         "flex flex-col items-center justify-center gap-1 text-[11px] leading-[14px] text-foreground outline-none transition-colors cursor-pointer",
-        "hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/50",
+        "focus-visible:ring-2 focus-visible:ring-ring/50",
         "[&_svg:not([class*='size-'])]:size-[18px] [&_svg]:shrink-0",
         boxed
-          // 页面入口：居中全圆角方块，仅 hover 高亮
-          ? "mx-auto size-9 rounded-lg"
-          // 应用入口：左圆角，选中=白底左圆角 + 主色加粗
-          : "ml-1 rounded-l-lg py-2 data-active:bg-card data-active:font-bold data-active:text-primary data-active:[&_svg]:text-primary",
+          // 页面入口：居中全圆角方块；hover/按下变白底 + 图标主色，和菜单选中态统一
+          ? "mx-auto size-9 rounded-lg hover:bg-card hover:text-primary active:bg-card active:text-primary-active"
+          // 应用入口：左圆角，hover 灰底；选中=白底左圆角 + 主色加粗
+          : "ml-1 rounded-l-lg py-2 hover:bg-muted data-active:bg-card data-active:font-bold data-active:text-primary data-active:[&_svg]:text-primary",
         className
       )}
       {...props}
@@ -194,10 +194,12 @@ function NavMenuItem({
   // 收起态信息不全（仅图标 / 截断文案），用气泡补全完整文案。
   if (collapsed) {
     return (
-      <Tooltip>
-        <TooltipTrigger render={button} />
-        <TooltipContent side="right">{label}</TooltipContent>
-      </Tooltip>
+      <TooltipProvider delay={100}>
+        <Tooltip>
+          <TooltipTrigger render={button} />
+          <TooltipContent side="right">{label}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     )
   }
   return button
@@ -211,21 +213,23 @@ function NavMenuFooter({ collapsed, onToggle, className }: { collapsed?: boolean
       data-slot="nav-menu-footer"
       className={cn("flex shrink-0 items-center", collapsed ? "justify-center" : "justify-end px-2", className)}
     >
-      <Tooltip>
-        <TooltipTrigger
-          render={
-            <button
-              type="button"
-              aria-label={tip}
-              onClick={onToggle}
-              className="text-muted-foreground outline-none cursor-pointer hover:text-foreground focus-visible:text-foreground [&_svg]:size-4"
-            >
-              {collapsed ? <ChevronsRightIcon /> : <ChevronsLeftIcon />}
-            </button>
-          }
-        />
-        <TooltipContent side="right">{tip}</TooltipContent>
-      </Tooltip>
+      <TooltipProvider delay={100}>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <button
+                type="button"
+                aria-label={tip}
+                onClick={onToggle}
+                className="text-muted-foreground outline-none cursor-pointer hover:text-foreground focus-visible:text-foreground [&_svg]:size-4"
+              >
+                {collapsed ? <ChevronsRightIcon /> : <ChevronsLeftIcon />}
+              </button>
+            }
+          />
+          <TooltipContent side="right">{tip}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </div>
   )
 }

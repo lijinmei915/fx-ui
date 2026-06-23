@@ -71,3 +71,7 @@ export {
   IconUserFilled as UserFilledIcon,
   IconDatabaseFilled as DatabaseFilledIcon,
 } from "@tabler/icons-react"
+
+// 自定义/上传图标：统一从这里出口（与内置 Tabler 图标同一入口）。
+// 接入第三方图标库同理——在上面 import 段加 `IconX as XIcon` 即可，调用方无需感知来源。
+export { ContractIcon, ContractFilledIcon } from "@/lib/icons-custom"

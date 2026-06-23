@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-18
+last_verified: 2026-06-24
 teaches: "公司设计 token 的基础架构、真实值和全局视觉使用规则"
 use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadcn 组件样式或判断视觉是否符合公司规范时"
 ---
@@ -321,6 +321,12 @@ shadcn/ui 和业务页面真正使用的语义槽。
 - **线性 vs 面型是语义切换**（对齐 iOS/Material 惯例）：默认/未选态用线性，**选中/激活/强调态用 `*Filled` 实心变体**（如 `IconStarFilled`）。
 - 个别图标要单独调线宽，可传 `stroke={n}`（默认 2 被全局 CSS 覆盖为 1.75）。
 - **线端/拐角圆角**：由 `stroke-linecap` / `stroke-linejoin` 决定，Tabler 默认即 `round`（圆头圆角，柔和、主流），无需设置。要改硬朗方头，在 `.tabler-icon` 加 `stroke-linecap: butt`（或 `square`）、`stroke-linejoin: miter` 一处统管。Tabler 只有这一套圆头线性风格，没有 Material 那种 Rounded/Sharp 字族切换。
+
+**来源与接入（见 DEC-013）**：图标支持三种来源——内置 Tabler / 第三方库 / 上传自定义，全部从唯一出口 `@/lib/icons` 引用，并登记进 `docs/data/icons.manifest.json`（`name + keywords` 让 AI 按语义检索取用）。
+- **内置**：在 `src/lib/icons.ts` 用 `IconX as XIcon` 映射稳定别名。
+- **第三方库**：同样在 `icons.ts` 映射出口，调用方不感知来源；注册表 `source` 记 `thirdparty:<库名>`。
+- **上传自定义**：SVG 组件放 `src/lib/icons-custom.tsx`（`currentColor` + `viewBox 0 0 24 24`），从 `icons.ts` re-export；上传第三方 SVG 必须先消毒（删 `<script>`/`on*`/外链/写死色值，强制 currentColor）。
+- 调用方禁止裸 `<svg>` / `<img src=*.svg>`；新增图标须同步登记，否则 `npm run check:icons` 不通过。
 
 > 兼容别名：`--fx-icon-dark`=neutrals-20、`--fx-icon-gray`=neutrals-11、`--fx-icon-light`=neutrals-01，供 shadcn 组件的 `text-icon` / `text-icon-muted` 使用。
 

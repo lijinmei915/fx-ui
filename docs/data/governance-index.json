@@ -12,7 +12,11 @@
       "format": "fx-ui/components-manifest",
       "purpose": "登记基础组件和公司组合组件的源码、文档状态、API 契约和 AI 可读规则。",
       "ownerRole": "component-governance",
-      "consumedBy": ["src/App.tsx", "scripts/check-components-manifest.mjs", "scripts/check-doc-site-contract.mjs"],
+      "consumedBy": [
+        "src/App.tsx",
+        "scripts/check-components-manifest.mjs",
+        "scripts/check-doc-site-contract.mjs"
+      ],
       "checkCommand": "npm run check:components"
     },
     {
@@ -21,7 +25,11 @@
       "format": "fx-ui/agent-ui-manifest",
       "purpose": "登记 AgentSurface 支持的 block、action、禁用字段和安全兜底规则。",
       "ownerRole": "agent-ui-governance",
-      "consumedBy": ["src/App.tsx", "src/components/fx/agent-surface.tsx", "scripts/check-agent-ui-contract.mjs"],
+      "consumedBy": [
+        "src/App.tsx",
+        "src/components/fx/agent-surface.tsx",
+        "scripts/check-agent-ui-contract.mjs"
+      ],
       "checkCommand": "npm run check:agent-ui"
     },
     {
@@ -30,7 +38,10 @@
       "format": "fx-ui/agent-ui-visual-manifest",
       "purpose": "登记 Agent UI 独立视觉规范：C 端参考方向、视觉原则、密度规则和 block 视觉边界。",
       "ownerRole": "agent-ui-governance",
-      "consumedBy": ["src/App.tsx", "scripts/check-agent-ui-contract.mjs"],
+      "consumedBy": [
+        "src/App.tsx",
+        "scripts/check-agent-ui-contract.mjs"
+      ],
       "checkCommand": "npm run check:agent-ui"
     },
     {
@@ -39,7 +50,10 @@
       "format": "fx-ui/design-tokens",
       "purpose": "登记 token 分层、语义槽和组件消费规则。",
       "ownerRole": "token-governance",
-      "consumedBy": ["src/App.tsx", "scripts/check-doc-site-contract.mjs"],
+      "consumedBy": [
+        "src/App.tsx",
+        "scripts/check-doc-site-contract.mjs"
+      ],
       "checkCommand": "npm run check:tokens"
     },
     {
@@ -48,7 +62,9 @@
       "format": "fx-ui/doc-site-manifest",
       "purpose": "登记文档站顶部导航、左侧导航、内容区、右侧目录和必需数据源。",
       "ownerRole": "doc-site-governance",
-      "consumedBy": ["scripts/check-doc-site-contract.mjs"],
+      "consumedBy": [
+        "scripts/check-doc-site-contract.mjs"
+      ],
       "checkCommand": "npm run check:doc-site"
     },
     {
@@ -57,7 +73,10 @@
       "format": "fx-ui/system-relations",
       "purpose": "登记工程运行图里的文件关系：来源文件、作用方式、作用对象和运行结果。",
       "ownerRole": "architecture-governance",
-      "consumedBy": ["src/App.tsx", "scripts/check-doc-site-contract.mjs"],
+      "consumedBy": [
+        "src/App.tsx",
+        "scripts/check-doc-site-contract.mjs"
+      ],
       "checkCommand": "npm run check:doc-site"
     },
     {
@@ -66,7 +85,10 @@
       "format": "fx-ui/governance-status",
       "purpose": "登记现状看板的当前状态卡、数据新鲜度、规则资产、治理闭环、行动链路、任务路由、参考案例和下一步队列。",
       "ownerRole": "status-governance",
-      "consumedBy": ["src/App.tsx", "scripts/check-doc-site-contract.mjs"],
+      "consumedBy": [
+        "src/App.tsx",
+        "scripts/check-doc-site-contract.mjs"
+      ],
       "checkCommand": "npm run check:doc-site"
     },
     {
@@ -75,7 +97,9 @@
       "format": "project-graph.v0.3",
       "purpose": "登记项目知识图谱快照，并合入 system-relations 的工程关系摘要，供现状看板显示节点、边、stale 和关系统计。",
       "ownerRole": "knowledge-graph-governance",
-      "consumedBy": ["src/App.tsx"],
+      "consumedBy": [
+        "src/App.tsx"
+      ],
       "checkCommand": "bash scripts/build-project-graph.sh"
     },
     {
@@ -84,8 +108,23 @@
       "format": "fx-ui/doc-structure",
       "purpose": "登记每个治理文档的唯一职责（responsibility，路由不打架）和必备章节（防 AI 产出残缺）。",
       "ownerRole": "docs-governance",
-      "consumedBy": ["scripts/check-doc-structure.mjs"],
+      "consumedBy": [
+        "scripts/check-doc-structure.mjs"
+      ],
       "checkCommand": "node scripts/check-doc-structure.mjs"
+    },
+    {
+      "id": "icons-manifest",
+      "path": "docs/data/icons.manifest.json",
+      "format": "fx-ui/icons-manifest",
+      "purpose": "登记图标的来源(内置/第三方/上传)、name、keywords、线型/面型，让 AI 按语义检索取用并防注册表与源码漂移。",
+      "ownerRole": "icon-governance",
+      "consumedBy": [
+        "src/lib/icons.ts",
+        "src/lib/icons-custom.tsx",
+        "scripts/check-icons.mjs"
+      ],
+      "checkCommand": "npm run check:icons"
     }
   ]
 }

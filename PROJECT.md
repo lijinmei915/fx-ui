@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: status
-last_verified: 2026-06-17
+last_verified: 2026-06-24
 teaches: "fx-ui 当前进度、当前优先级和已知边界（定位/技术栈/架构见各自专文）"
 use_when: "AI 需要判断 fx-ui 现在做到哪、下一步该做什么时"
 ---
@@ -38,3 +38,7 @@ use_when: "AI 需要判断 fx-ui 现在做到哪、下一步该做什么时"
 - 暂不扫老 Element 库（二期再说）
 - token 真相源是 `theme/fx-theme.css`，改它影响全局
 - 当前交互阶梯仅浅色模式，深色模式未定
+
+## 想法储备（未排期）
+
+- **token 可视化调试页**：做个可视化拖/调 token 实时预览的页面（参考字节 Semi DSM 的设计系统管理器体验），改 `theme/fx-theme.css` 变量即时看全站效果，降低换肤/调色门槛。

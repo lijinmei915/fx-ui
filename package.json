@@ -11,6 +11,7 @@
     "check:tokens": "bash scripts/check-tokens-sync.sh",
     "check:doc-site": "node scripts/check-doc-site-contract.mjs",
     "check:components": "node scripts/check-components-manifest.mjs",
+    "check:icons": "node scripts/check-icons.mjs",
     "check:agent-ui": "node scripts/check-agent-ui-contract.mjs",
     "check:all": "bash scripts/check-all.sh",
     "build:tokens": "node scripts/build-design-tokens.mjs",

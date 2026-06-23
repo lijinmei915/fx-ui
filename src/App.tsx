@@ -9771,7 +9771,7 @@ function LinkOverview({ lang }: { lang: Lang }) {
         <div className="flex flex-wrap items-center gap-5">
           <Link href="#link">{lang === "en" ? "Basic link" : "基础文字链接"}</Link>
           <Link href="#link" underline="always">{lang === "en" ? "Underlined link" : "下划线文字链接"}</Link>
-          {linkTones.map((t) => (
+          {linkTones.filter((t) => t.tone !== "standard").map((t) => (
             <Link key={t.tone} href="#link" tone={t.tone}>{t.label}链接</Link>
           ))}
         </div>

@@ -1289,7 +1289,7 @@
       "name": "NavMenu",
       "source": "src/components/fx/nav-menu.tsx",
       "docStatus": "complete",
-      "role": "单面板导航侧边栏（头部+搜索+菜单树+底部），1:1 还原设计稿",
+      "role": "导航菜单：一级应用栏(NavRail) + 单面板二级菜单，1:1 还原设计稿",
       "category": "fx",
       "nativeStates": [
         "default",
@@ -1298,6 +1298,8 @@
         "expanded"
       ],
       "semanticDom": [
+        "data-slot=\"nav-rail\"",
+        "data-slot=\"nav-rail-item\"",
         "data-slot=\"nav-menu\"",
         "data-slot=\"nav-menu-header\"",
         "data-slot=\"nav-menu-search\"",
@@ -1316,9 +1318,9 @@
         "--ring"
       ],
       "usageRules": [
-        "使用 NavMenu 前必须以 src/components/fx/nav-menu.tsx 为真实 API。",
-        "单面板 200px：NavMenuHeader + NavMenuSearch + NavMenuList(NavMenuItem) + NavMenuFooter。",
-        "菜单项用 active 表选中(bg-accent 浅品牌底 + 中粗)、indent 表嵌套、expandable 表可折叠分组；不要手写颜色和状态样式。",
+        "使用前必须以 src/components/fx/nav-menu.tsx 为真实 API。",
+        "一级用 NavRail/NavRailItem(64px)，二级用 NavMenu(展开 200/收起 48) + Header/Search/List/Item/Footer；两者可组合也可单用。",
+        "选中态：二级 bg-accent(浅品牌底)、一级 bg-card 白底左圆角 + 主色加粗；不要手写颜色和状态样式。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ]
     }

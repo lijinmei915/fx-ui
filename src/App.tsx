@@ -6,6 +6,12 @@ import {
   BellIcon,
   BellFilledIcon,
   BoldIcon,
+  BuildingIcon,
+  ChartLineIcon,
+  MapPinIcon,
+  ReportMoneyIcon,
+  TargetIcon,
+  SitemapIcon,
   ChevronDownIcon,
   CheckCircleIcon,
   CheckCircleFilledIcon,
@@ -98,7 +104,7 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { AgentSurface, type AgentSurfaceEvent, type AgentSurfaceSchema } from "@/components/fx/agent-surface"
-import { NavMenu, NavMenuHeader, NavMenuSearch, NavMenuList, NavMenuItem, NavMenuFooter } from "@/components/fx/nav-menu"
+import { NavRail, NavRailItem, NavMenu, NavMenuHeader, NavMenuSearch, NavMenuList, NavMenuItem, NavMenuFooter } from "@/components/fx/nav-menu"
 import componentsManifestRaw from "../docs/data/components.manifest.json?raw"
 import designTokensManifestRaw from "../docs/data/design-tokens.json?raw"
 import docSiteManifestRaw from "../docs/data/doc-site.manifest.json?raw"
@@ -1027,6 +1033,7 @@ const layoutAnchors = [
 
 const navMenuAnchors = [
   { label: "组件总览", labelEn: "Overview", href: "#nav-menu-overview" },
+  { label: "一级+二级组合", labelEn: "Combined", href: "#nav-menu-combined" },
   { label: "状态", labelEn: "States", href: "#nav-menu-states" },
   { label: "尺寸", labelEn: "Sizes", href: "#nav-menu-sizes" },
   { label: "结构", labelEn: "Anatomy", href: "#nav-menu-anatomy" },
@@ -5914,30 +5921,78 @@ function GridPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
 function NavMenuPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   const [selected, setSelected] = useState("home")
   const [open, setOpen] = useState<Record<string, boolean>>({ cust: true })
+  const [collapsed, setCollapsed] = useState(false)
   const toggle = (id: string) => setOpen((o) => ({ ...o, [id]: !o[id] }))
-  const custChildren = ["客户", "销售记录", "客户地址", "客户财务信息", "联系人", "商机2.0", "商机评审"]
+  const c = collapsed
+  const custChildren = [
+    { label: "客户", icon: <BuildingIcon /> },
+    { label: "销售记录", icon: <ChartLineIcon /> },
+    { label: "客户地址", icon: <MapPinIcon /> },
+    { label: "客户财务信息", icon: <ReportMoneyIcon /> },
+    { label: "联系人", icon: <UserIcon /> },
+    { label: "商机2.0", icon: <TargetIcon /> },
+    { label: "商机评审", icon: <SitemapIcon /> },
+  ]
   const demo = (
-    <NavMenu>
-      <NavMenuHeader title="CRM" viewName={lang === "en" ? "View" : "视图名称"} />
-      <NavMenuSearch placeholder={lang === "en" ? "Search" : "搜索"} onAdd={() => {}} />
+    <NavMenu collapsed={c}>
+      <NavMenuHeader title="CRM" viewName={lang === "en" ? "View" : "视图名称"} collapsed={c} />
+      <NavMenuSearch placeholder={lang === "en" ? "Search" : "搜索"} onAdd={() => {}} collapsed={c} />
       <NavMenuList>
-        <NavMenuItem icon={<HomeIcon />} label={lang === "en" ? "Home" : "首页"} active={selected === "home"} onClick={() => setSelected("home")} />
-        <NavMenuItem icon={<StarIcon />} label={lang === "en" ? "Recent" : "最近使用"} active={selected === "recent"} onClick={() => setSelected("recent")} />
-        <NavMenuItem icon={<BellIcon />} label="CRM提醒" active={selected === "remind"} onClick={() => setSelected("remind")} />
-        <NavMenuItem icon={<CheckCircleIcon />} label="CRM待办" active={selected === "todo"} onClick={() => setSelected("todo")} />
-        <NavMenuItem expandable expanded={open.cust} label={lang === "en" ? "Customers & deals" : "客户及商机管理"} onClick={() => toggle("cust")} />
-        {open.cust && custChildren.map((c) => (
-          <NavMenuItem key={c} indent icon={<FolderIcon />} label={c} active={selected === c} onClick={() => setSelected(c)} />
+        <NavMenuItem icon={<HomeIcon />} label={lang === "en" ? "Home" : "首页"} active={selected === "home"} collapsed={c} onClick={() => setSelected("home")} />
+        <NavMenuItem icon={<StarIcon />} label={lang === "en" ? "Recent" : "最近使用"} active={selected === "recent"} collapsed={c} onClick={() => setSelected("recent")} />
+        <NavMenuItem icon={<BellIcon />} label="CRM提醒" active={selected === "remind"} collapsed={c} onClick={() => setSelected("remind")} />
+        <NavMenuItem icon={<CheckCircleIcon />} label="CRM待办" active={selected === "todo"} collapsed={c} onClick={() => setSelected("todo")} />
+        <NavMenuItem expandable expanded={open.cust} label={lang === "en" ? "Customers & deals" : "客户及商机管理"} collapsed={c} onClick={() => toggle("cust")} />
+        {!c && open.cust && custChildren.map((cc) => (
+          <NavMenuItem key={cc.label} indent icon={cc.icon} label={cc.label} active={selected === cc.label} onClick={() => setSelected(cc.label)} />
         ))}
-        <NavMenuItem expandable expanded={open.order} label={lang === "en" ? "Orders & payments" : "订单及回款管理"} onClick={() => toggle("order")} />
-        <NavMenuItem expandable expanded={open.pre} label={lang === "en" ? "Pre-sales projects" : "售前项目管理"} onClick={() => toggle("pre")} />
-        <NavMenuItem expandable expanded={open.deliver} label={lang === "en" ? "Delivery projects" : "交付实施项目"} onClick={() => toggle("deliver")} />
-        <NavMenuItem expandable expanded={open.loss} label={lang === "en" ? "Loss management" : "项目损失管理"} onClick={() => toggle("loss")} />
-        <NavMenuItem icon={<DatabaseIcon />} label={lang === "en" ? "Dashboard" : "数据驾驶舱"} active={selected === "dash"} onClick={() => setSelected("dash")} />
-        <NavMenuItem icon={<UserFilledIcon />} label={lang === "en" ? "People" : "人员"} active={selected === "people"} onClick={() => setSelected("people")} />
+        <NavMenuItem expandable expanded={open.order} label={lang === "en" ? "Orders & payments" : "订单及回款管理"} collapsed={c} onClick={() => toggle("order")} />
+        <NavMenuItem expandable expanded={open.pre} label={lang === "en" ? "Pre-sales projects" : "售前项目管理"} collapsed={c} onClick={() => toggle("pre")} />
+        <NavMenuItem expandable expanded={open.deliver} label={lang === "en" ? "Delivery projects" : "交付实施项目"} collapsed={c} onClick={() => toggle("deliver")} />
+        <NavMenuItem expandable expanded={open.loss} label={lang === "en" ? "Loss management" : "项目损失管理"} collapsed={c} onClick={() => toggle("loss")} />
+        <NavMenuItem icon={<DatabaseIcon />} label={lang === "en" ? "Dashboard" : "数据驾驶舱"} active={selected === "dash"} collapsed={c} onClick={() => setSelected("dash")} />
+        <NavMenuItem icon={<UserIcon />} label={lang === "en" ? "People" : "人员"} active={selected === "people"} collapsed={c} onClick={() => setSelected("people")} />
       </NavMenuList>
-      <NavMenuFooter />
+      <NavMenuFooter collapsed={c} onToggle={() => setCollapsed((v) => !v)} />
     </NavMenu>
+  )
+  // 无图标版：菜单项不带图标；收起态(48px)显示居中文案而非图标。
+  const [niSel, setNiSel] = useState("首页")
+  const [niCol, setNiCol] = useState(false)
+  const niItems = ["首页", "最近使用", "CRM提醒", "CRM待办", "客户及商机管理", "订单及回款管理", "售前项目管理", "交付实施项目", "项目损失管理", "数据驾驶舱", "人员"]
+  const noIconDemo = (
+    <NavMenu collapsed={niCol}>
+      <NavMenuHeader title="CRM" viewName={lang === "en" ? "View" : "视图名称"} collapsed={niCol} />
+      <NavMenuSearch placeholder={lang === "en" ? "Search" : "搜索"} onAdd={() => {}} collapsed={niCol} />
+      <NavMenuList>
+        {niItems.map((n) => (
+          <NavMenuItem key={n} label={n} active={niSel === n} collapsed={niCol} onClick={() => setNiSel(n)} />
+        ))}
+      </NavMenuList>
+      <NavMenuFooter collapsed={niCol} onToggle={() => setNiCol((v) => !v)} />
+    </NavMenu>
+  )
+  // 一级导航 + 二级菜单组合（左 64px 应用栏紧贴右侧菜单面板）。
+  const [railApp, setRailApp] = useState("crm")
+  const railApps = [
+    { id: "qx", icon: <BellIcon />, activeIcon: <BellFilledIcon />, label: "企信" },
+    { id: "crm", icon: <FolderIcon />, activeIcon: <FolderFilledIcon />, label: "CRM" },
+    { id: "work", icon: <BuildingIcon />, label: "工作" },
+    { id: "todo", icon: <CheckCircleIcon />, activeIcon: <CheckCircleFilledIcon />, label: "待办" },
+    { id: "cal", icon: <StarIcon />, activeIcon: <StarFilledIcon />, label: "日程" },
+    { id: "train", icon: <ChartLineIcon />, label: "培训助手" },
+    { id: "agent", icon: <UserIcon />, activeIcon: <UserFilledIcon />, label: "代理通" },
+    { id: "more", icon: <DatabaseIcon />, activeIcon: <DatabaseFilledIcon />, label: "更多" },
+  ]
+  const comboDemo = (
+    <div className="flex h-full">
+      <NavRail footer={<NavRailItem boxed icon={<SettingsIcon />} aria-label="设置" />}>
+        {railApps.map((a) => (
+          <NavRailItem key={a.id} icon={a.icon} activeIcon={a.activeIcon} label={a.label} active={railApp === a.id} onClick={() => setRailApp(a.id)} />
+        ))}
+      </NavRail>
+      {demo}
+    </div>
   )
   return (
     <>
@@ -5948,8 +6003,20 @@ function NavMenuPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }
           lead={lang === "en" ? "Single-panel sidebar (200px): header (title + view) · search + add · scrollable menu tree · footer. 1:1 with the design spec, fx-ui tokens." : "单面板侧边栏（200px）：头部（标题 + 视图）· 搜索 + 新增 · 可滚动菜单树 · 底部。1:1 还原设计稿，token 用 fx-ui。"}
           actions={actions}
         />
-        <div className="h-[520px] w-fit rounded-xl bg-muted/40 p-5">{demo}</div>
-        <p className="text-base text-muted-foreground">{lang === "en" ? "Click items to select; click a group row to expand/collapse." : "点菜单项选中；点带箭头的分组行展开/收起。"}</p>
+        <div className="flex flex-wrap items-start gap-5">
+          <div className="flex h-[520px] rounded-xl bg-muted/40 p-5">{demo}</div>
+          <div className="flex flex-col gap-2">
+            <span className="text-fx-13 font-medium text-foreground">{lang === "en" ? "No-icon variant" : "无图标版"}</span>
+            <div className="flex h-[520px] rounded-xl bg-muted/40 p-5">{noIconDemo}</div>
+          </div>
+        </div>
+        <p className="text-base text-muted-foreground">{lang === "en" ? "Click items to select; click a group row to expand/collapse; the footer arrow collapses the panel to 48px. The no-icon variant shows centered text when collapsed (instead of an icon)." : "点菜单项选中；点带箭头的分组行展开/收起；点底部箭头把面板收起为 48px。无图标版收起时显示居中文案（而非图标）。"}</p>
+      </section>
+
+      <section id="nav-menu-combined" className="flex flex-col gap-3">
+        <h2 className="text-2xl font-semibold">{lang === "en" ? "First-level rail + second-level menu" : "一级导航 + 二级菜单组合"}</h2>
+        <p className="text-base text-muted-foreground">{lang === "en" ? "A 64px app rail (icon 18 + 11px label, selected = white tab with left radius + bold primary) sits flush against the second-level menu panel." : "左侧 64px 一级应用栏（图标 18 + 11px 文案，选中=白底左圆角 + 主色加粗）紧贴右侧二级菜单面板。"}</p>
+        <div className="flex h-[560px] w-fit rounded-xl bg-muted/40 p-5">{comboDemo}</div>
       </section>
 
       <section id="nav-menu-states" className="flex flex-col gap-3">
@@ -5958,13 +6025,13 @@ function NavMenuPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }
         <div className="rounded-lg border border-border bg-card p-4 text-fx-13 leading-7 text-muted-foreground">
           <p><span className="font-medium text-foreground">{lang === "en" ? "Default" : "默认"}</span> — {lang === "en" ? "transparent background, foreground text." : "透明底、常规文字色。"}</p>
           <p><span className="font-medium text-foreground">{lang === "en" ? "Hover" : "悬停"}</span> — bg-muted。</p>
-          <p><span className="font-medium text-foreground">{lang === "en" ? "Selected" : "选中"}</span> — bg-accent{lang === "en" ? " (light brand tint) + medium weight." : "（浅品牌底 #fff7e6）+ 中粗。"}</p>
+          <p><span className="font-medium text-foreground">{lang === "en" ? "Selected" : "选中"}</span> — bg-accent{lang === "en" ? " (light brand tint, --accent token) + medium weight." : "（浅品牌底，--accent token）+ 中粗。"}</p>
         </div>
       </section>
 
       <section id="nav-menu-sizes" className="flex flex-col gap-3">
         <h2 className="text-2xl font-semibold">{lang === "en" ? "Sizes" : "尺寸"}</h2>
-        <p className="text-base text-muted-foreground">{lang === "en" ? "Panel 200px (zh/ja/ko) or 250px (other locales). Padding 12, block gap 8; item p-8 rounded-8, icon 16, text 13; nested items indent 26px." : "面板宽 200px（简中/繁中/日/韩）或 250px（其他语种）。内边距 12、块间距 8；菜单项 p-8 圆角 8、图标 16、文字 13；嵌套子项左缩进 26px。"}</p>
+        <p className="text-base text-muted-foreground">{lang === "en" ? "Height: fills the parent (h-full / 100% viewport, mainstream) — header / search / footer stay fixed, the menu list takes the rest and scrolls. Width 200px (zh/ja/ko) or 250px (other locales), collapsed 48px. Padding 12, block gap 8; item p-8 rounded-8, icon 16, text 13; nested items indent 26px. Collapsed shows icons only, centered, with tooltips. No-icon variant collapsed shows the first 2 characters centered, full text in tooltip." : "高度：跟随父容器撑满（h-full / 视口 100%，对齐主流）——头部 / 搜索 / 底部固定，中间菜单列表占满剩余高度并滚动。宽度展开 200px（简中/繁中/日/韩）或 250px（其他语种），收起 48px。内边距 12、块间距 8；菜单项 p-8 圆角 8、图标 16、文字 13；嵌套子项左缩进 26px。收起态仅居中图标 + 气泡补全文案；无图标版收起时取前两个字居中显示，完整文案走气泡。"}</p>
       </section>
 
       <section id="nav-menu-anatomy" className="flex flex-col gap-3">

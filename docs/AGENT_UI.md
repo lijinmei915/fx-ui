@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-06-13
+last_verified: 2026-06-23
 teaches: "fx-ui Agent UI 的生成式界面协议：Agent 发 JSON，前端渲染本地 React 组件，action 只作为事件"
 use_when: "要让公司 Agent 在对话里生成卡片、文件、对象信息或操作按钮时"
 ---

@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-07
+last_verified: 2026-06-23
 teaches: "fx-ui 怎么验收一次改动——文档是否健康、AI 行为是否守规矩、设计是否一致"
 use_when: "完成一次主要改动后，收尾前过一遍这份 checklist"
 ---

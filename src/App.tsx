@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  LinkIcon,
   BellIcon,
   BellFilledIcon,
   BoldIcon,
@@ -179,6 +180,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
+import { Link } from "@/components/ui/link"
 import { Spinner } from "@/components/ui/spinner"
 import {
   Table,
@@ -492,6 +494,7 @@ const docsNav = [
       { label: "按钮组", labelEn: "Button Group", href: "#button-group" },
       { label: "图标", labelEn: "Icon", href: "#icon" },
       { label: "分隔线", labelEn: "Separator", href: "#separator" },
+      { label: "链接", labelEn: "Link", href: "#link" },
       { label: "头像", labelEn: "Avatar", href: "#avatar" },
     ],
   },
@@ -936,11 +939,12 @@ const buttonScenarioExamples = [
   },
 ] as const
 
+// tab 顺序规范：类型 → 状态 → 图标 → 尺寸（各组件只保留自有维度；语义色归类型）
 const buttonScenarioFilters: { value: ButtonScenarioFilter; label: string; labelEn: string }[] = [
   { value: "category", label: "类型", labelEn: "Variant" },
-  { value: "size", label: "尺寸", labelEn: "Size" },
   { value: "state", label: "状态", labelEn: "State" },
   { value: "icon", label: "图标", labelEn: "Icon" },
+  { value: "size", label: "尺寸", labelEn: "Size" },
 ]
 
 const semanticDomRows = [
@@ -954,6 +958,11 @@ const buttonDoDontRows = [
   { do: "危险操作用 variant=\"destructive\"。", doEn: "Use variant=\"destructive\" for dangerous actions.", dont: "用默认按钮承载删除等危险操作。", dontEn: "Use a default button for destructive actions like delete." },
   { do: "加载态用 disabled + Spinner 组合。", doEn: "Compose loading with disabled + Spinner.", dont: "发明 loading prop（<Button loading>）。", dontEn: "Invent a loading prop (<Button loading>)." },
   { do: "按钮内图标用 data-icon 标位，尺寸交给 Button。", doEn: "Mark icons with data-icon; let Button own the size.", dont: "给按钮内图标手写 size-4 等尺寸。", dontEn: "Hard-code icon size like size-4 inside Button." },
+  { do: "一组操作只突出一个主按钮，其余用次按钮。", doEn: "Keep a single primary button per group; make the rest secondary.", dont: "同时摆多个主按钮，主次不分。", dontEn: "Stack multiple primary buttons with no clear hierarchy." },
+  { do: "操作无明显主次时，整组用次按钮最稳妥。", doEn: "When actions are equal in weight, an all-secondary group is safest.", dont: "无主次却全用主按钮抢视觉。", dontEn: "Make every button primary when none truly leads." },
+  { do: "多个按钮之间留出间隔。", doEn: "Leave spacing between adjacent buttons.", dont: "按钮连在一起，易和 Radio / 分段控件混淆。", dontEn: "Glue buttons together so they look like a radio / segmented control." },
+  { do: "删除等高风险操作用 destructive 红色按钮，搭配“取消”。", doEn: "Use a destructive (red) button for risky actions like delete, paired with “Cancel”.", dont: "把主按钮“保存”和红色“删除”并排，误导用户。", dontEn: "Place a primary “Save” next to a red “Delete”, misleading users." },
+  { do: "文案用明确动词传达操作结果（发布 / 删除 / 登录）。", doEn: "Use clear verbs that convey the outcome (Publish / Delete / Sign in).", dont: "用含糊文案（保存 / 保存并新建）说不清后果。", dontEn: "Use vague labels that don’t spell out the consequence." },
 ]
 
 const buttonAnchors = [
@@ -1740,7 +1749,7 @@ const avatarScenarioExamples = [
     group: "type",
     intent: "展示单个用户身份，图片加载失败回退到文字缩写；作入口时可点击跳转。",
     rule: "AvatarFallback 用首字母/图标兜底；作入口时用 render 渲染成 <a>/<button> + cursor-pointer + focus-visible 焦点环，不绑裸 onClick。",
-    code: `<Avatar>\n  <AvatarImage src="/avatars/01.png" alt="张三" />\n  <AvatarFallback>张</AvatarFallback>\n</Avatar>\n\n// 作入口时\n<Avatar render={<a href="/u/zhang" />} className="cursor-pointer hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring">…</Avatar>`,
+    code: `<Avatar>\n  <AvatarImage src="/avatars/01.jpg" alt="陈昊" />\n  <AvatarFallback>陈</AvatarFallback>\n</Avatar>\n\n// 作入口时\n<Avatar render={<a href="/u/chen" />} className="cursor-pointer hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring">…</Avatar>`,
   },
   {
     id: "shape",
@@ -1779,8 +1788,8 @@ const avatarScenarioExamples = [
     title: "群组拼接",
     group: "type",
     intent: "群聊 / 多人会话头像：把成员头像按人数拼进一个方形宫格。",
-    rule: "成员有头像图就拼真实图（AvatarImage），无图才 colorful 文字兜底。按人数自适应：2 左右各半、3 上 1 下 2（首格 col-span-2）、4 田字 2×2、≥5 取前 4（或九宫格）。格间用 gap-px + 容器 bg-border 留细缝；子项 rounded-none、外层 rounded-lg overflow-hidden 裁切。和「堆叠 AvatarGroup」是两种群组模式——群聊用拼接、协作列表用堆叠。",
-    code: `// 3 人：上 1 下 2，优先真实头像图\n<div className="grid size-10 grid-cols-2 grid-rows-2 overflow-hidden rounded-lg">\n  <Avatar className="col-span-2 size-full rounded-none">\n    <AvatarImage src={m.avatar} /><AvatarFallback colorful>{m.name[0]}</AvatarFallback>\n  </Avatar>\n  <Avatar className="size-full rounded-none">…</Avatar>\n  <Avatar className="size-full rounded-none">…</Avatar>\n</div>`,
+    rule: "成员有头像图就拼真实图（AvatarImage），无图才 colorful 文字兜底。每格按 1:1 正方形排，贴外边、仅格间留缝（容器 bg-muted + gap），缝隙与人数不满处露灰底。按人数自适应：2 左右居中、3 上 1 下 2、4 田字 2×2、≥5 取前 4。子项 rounded-none、外层 rounded-lg overflow-hidden 裁切。和「堆叠 AvatarGroup」是两种群组模式——群聊用拼接、协作列表用堆叠。",
+    code: `// 3 人：上 1 下 2，1:1 方格 + 灰底色仅格间留缝\n<div className="flex size-10 flex-col items-center justify-center gap-[2px] overflow-hidden rounded-lg bg-muted">\n  <Avatar className="size-[19px] rounded-none">\n    <AvatarImage src={m1.avatar} /><AvatarFallback colorful>{m1.name[0]}</AvatarFallback>\n  </Avatar>\n  <div className="flex gap-[2px]">\n    <Avatar className="size-[19px] rounded-none">…</Avatar>\n    <Avatar className="size-[19px] rounded-none">…</Avatar>\n  </div>\n</div>`,
   },
   {
     id: "size-xs",
@@ -2187,6 +2196,114 @@ const separatorDoDontRows = [
   { do: "用它分隔弱关联的内容区块。", dont: "在每一行文字之间都加分隔线，制造视觉噪音。" },
   { do: "垂直分隔时确保父容器有固定高度（如 h-5）。", dont: "不设置高度直接使用，导致分隔线塌陷不可见。" },
   { do: "分隔线与内容之间留出呼吸间距。", dont: "让分隔线紧贴文字，看起来像下划线。" },
+]
+
+const linkAnchors = [
+  { label: "组件总览", labelEn: "Overview", href: "#link-overview" },
+  { label: "场景示例", labelEn: "Scenario examples", href: "#link-preview" },
+  { label: "使用方式", labelEn: "Usage", href: "#link-usage" },
+  { label: "API", href: "#link-props" },
+  { label: "语义 DOM", labelEn: "Semantic DOM", href: "#link-semantic-dom" },
+  { label: "正误示例", labelEn: "Do / Don’t", href: "#link-do-dont" },
+]
+const linkScenarioFilters = [
+  { value: "type", label: "类型", labelEn: "Type" },
+  { value: "state", label: "状态", labelEn: "State" },
+  { value: "icon", label: "图标", labelEn: "Icon" },
+  { value: "size", label: "尺寸", labelEn: "Size" },
+]
+const linkTones = [
+  { tone: "standard", label: "标准" },
+  { tone: "default", label: "默认" },
+  { tone: "primary", label: "主要" },
+  { tone: "success", label: "成功" },
+  { tone: "warning", label: "警告" },
+  { tone: "danger", label: "危险" },
+] as const
+const linkScenarioExamples = [
+  {
+    id: "basic",
+    title: "基础文字链接",
+    group: "type",
+    intent: "默认类型，悬停时才出现下划线，适合大多数跳转场景。",
+    rule: "underline 默认 hover；作真实跳转给 href，不要用裸 onClick 伪装链接。",
+    code: `<Link href="/docs">基础文字链接</Link>`,
+  },
+  {
+    id: "underline",
+    title: "下划线文字链接",
+    group: "type",
+    intent: "常驻下划线，强调“这是可点链接”，常用于正文内联。",
+    rule: "underline=\"always\" 常驻下划线；语义靠 tone，不手写 text-decoration。",
+    code: `<Link href="/docs" underline="always">下划线文字链接</Link>`,
+  },
+  {
+    id: "icon",
+    title: "带图标",
+    group: "icon",
+    intent: "前置图标增强识别，后置复制/外链图标提示动作。",
+    rule: "图标用 data-icon 标位，size-[1em] 随字号缩放，不手写图标尺寸。",
+    code: `<Link href="/repo"><LinkIcon data-icon="inline-start" />仓库</Link>\n<Link href="/copy">复制链接<CopyIcon data-icon="inline-end" /></Link>`,
+  },
+  {
+    id: "tones",
+    title: "语义色",
+    group: "type",
+    intent: "用 tone 表达语境：标准、默认、主要、成功、警告、危险。",
+    rule: "tone 在 6 档间取；颜色全走 token，不手写色值。",
+    code: `<Link tone="primary" href="/x">主要链接</Link>\n<Link tone="danger" href="/x">危险链接</Link>`,
+  },
+  {
+    id: "disabled",
+    title: "禁用态",
+    group: "state",
+    intent: "无权限或暂不可用的链接，悬停显示禁止光标。",
+    rule: "用 disabled 降透明 + cursor-not-allowed 并去掉 href 阻止跳转；不要只改颜色假装禁用。",
+    code: `<Link href="/locked" disabled>暂不可用</Link>`,
+  },
+  {
+    id: "size-sm",
+    title: "小 sm",
+    group: "size",
+    spec: "12px",
+    intent: "辅助说明、表格内的紧凑链接。",
+    rule: "高密度区域用，配 text-fx-12。",
+    code: `<Link size="sm" href="/x">小链接</Link>`,
+  },
+  {
+    id: "size-default",
+    title: "默认 default",
+    group: "size",
+    spec: "14px",
+    intent: "正文与常规场景的首选档。",
+    rule: "大多数场景用这一档。",
+    code: `<Link href="/x">默认链接</Link>`,
+  },
+  {
+    id: "size-lg",
+    title: "大 lg",
+    group: "size",
+    spec: "16px",
+    intent: "卡片头部、强调区的链接。",
+    rule: "需要更强存在感时用。",
+    code: `<Link size="lg" href="/x">大链接</Link>`,
+  },
+]
+const linkPropRows = [
+  { prop: "tone", type: "\"standard\" | \"default\" | \"primary\" | \"success\" | \"warning\" | \"danger\"", defaultValue: "\"standard\"", desc: "语义色档，对应链接的语义场景。" },
+  { prop: "underline", type: "\"hover\" | \"always\"", defaultValue: "\"hover\"", desc: "类型：基础链接（悬停出下划线）或下划线链接（常驻）。" },
+  { prop: "size", type: "\"sm\" | \"default\" | \"lg\"", defaultValue: "\"default\"", desc: "尺寸档（12 / 14 / 16px），图标随字号缩放。" },
+  { prop: "disabled", type: "boolean", defaultValue: "false", desc: "禁用态，去除指针事件并降透明度。" },
+  { prop: "...props", type: "React.ComponentProps<\"a\">", defaultValue: "—", desc: "原生 a 属性，如 href、target、rel。" },
+]
+const linkSemanticDomRows = [
+  { part: "[data-slot=\"link\"][data-tone][data-underline][data-size]", desc: "链接本体，data-tone/underline/size 标记语义色、类型与档位并驱动样式。" },
+]
+const linkDoDontRows = [
+  { do: "导航类文字跳转用 Link，并提供真实 href。", dont: "手写 <a> 再贴一堆颜色类伪装链接。" },
+  { do: "用 tone 表达语义色（如 danger 表示风险操作说明）。", dont: "给链接手写 text-[#xxx] 硬编码颜色。" },
+  { do: "强操作（提交、删除按钮）改用 Button。", dont: "把 Link 当按钮，用 onClick 触发表单提交。" },
+  { do: "图标用 data-icon 标位，尺寸交给 Link。", dont: "给链接内图标手写 size-4 等尺寸。" },
 ]
 
 const sidebarAnchors = [
@@ -3000,6 +3117,7 @@ function App() {
   const isDropdownMenuPage = page === "dropdown-menu"
   const isPopoverPage = page === "popover"
   const isSeparatorPage = page === "separator"
+  const isLinkPage = page === "link"
   const isSidebarPage = page === "sidebar"
   const isSpinnerPage = page === "spinner"
   const isToastPage = page === "toast"
@@ -3085,6 +3203,8 @@ function App() {
                                                   ? popoverAnchors
                                                   : isSeparatorPage
                                                     ? separatorAnchors
+                                                    : isLinkPage
+                                                    ? linkAnchors
                                                     : isSidebarPage
                                                       ? sidebarAnchors
                                                       : isSpinnerPage
@@ -3353,6 +3473,8 @@ function App() {
                 <PopoverPage actions={pageActions} lang={lang} />
               ) : isSeparatorPage ? (
                 <SeparatorPage actions={pageActions} lang={lang} />
+              ) : isLinkPage ? (
+                <LinkPage actions={pageActions} lang={lang} />
               ) : isSidebarPage ? (
                 <SidebarPage actions={pageActions} lang={lang} />
               ) : isSpinnerPage ? (
@@ -4851,7 +4973,7 @@ function ScenarioTable({ rows, filters, lang }: { rows: ScenarioRow[]; filters?:
         <Table className="w-auto">
           <TableHeader>
             <TableRow>
-              <TableHead className="pl-4">{lang === "en" ? "Scenario" : "场景"}</TableHead>
+              <TableHead className="pl-4">{lang === "en" ? "Usage" : "用法"}</TableHead>
               <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
               {hasSpec ? <TableHead>{lang === "en" ? "Spec" : "规格"}</TableHead> : null}
               <TableHead>{lang === "en" ? "Intent" : "使用意图"}</TableHead>
@@ -4868,8 +4990,8 @@ function ScenarioTable({ rows, filters, lang }: { rows: ScenarioRow[]; filters?:
                 <TableCell className="align-top whitespace-normal text-muted-foreground"><div className="max-w-[240px] break-words">{r.intent}</div></TableCell>
                 <TableCell className="align-top whitespace-normal text-muted-foreground"><div className="max-w-[260px] break-words">{r.constraint}</div></TableCell>
                 <TableCell className="pr-4 align-top">
-                  <div className="max-w-[360px] overflow-x-auto rounded-lg bg-muted">
-                    <pre className="w-max px-3 py-2 text-fx-12"><code>{r.code}</code></pre>
+                  <div className="max-w-[360px] rounded-lg bg-muted">
+                    <pre className="px-3 py-2 text-fx-12 whitespace-pre-wrap break-words"><code>{r.code}</code></pre>
                   </div>
                 </TableCell>
               </TableRow>
@@ -5616,7 +5738,7 @@ function TokensColorsPage({ actions, lang }: { actions: React.ReactNode; lang: L
                     <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
                     <TableHead>Tailwind</TableHead>
                     <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
-                    <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
+                    <TableHead className="pr-4">{lang === "en" ? "Usage" : "用法"}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -5859,7 +5981,7 @@ function TokensTypographyPage({ actions, lang }: { actions: React.ReactNode; lan
                     <TableHead className="pl-4">Token</TableHead>
                     <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
                     <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
-                    <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
+                    <TableHead className="pr-4">{lang === "en" ? "Usage" : "用法"}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -5923,7 +6045,7 @@ function TokensRadiusPage({ actions, lang }: { actions: React.ReactNode; lang: L
                   <TableHead className="pl-4">Token</TableHead>
                   <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
                   <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
-                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "用法"}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -6003,7 +6125,7 @@ function TokensSpacingPage({ actions, lang }: { actions: React.ReactNode; lang: 
                   <TableHead className="pl-4">Token</TableHead>
                   <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
                   <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
-                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "用法"}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -6075,7 +6197,7 @@ function TokensShadowPage({ actions, lang }: { actions: React.ReactNode; lang: L
                   <TableHead className="pl-4">Token</TableHead>
                   <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
                   <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
-                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "用法"}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -6157,7 +6279,7 @@ function TokensMotionPage({ actions, lang }: { actions: React.ReactNode; lang: L
                       <Button size="xs" variant="outline" onClick={() => setReplayKey((k) => k + 1)}>{lang === "en" ? "Play" : "播放"}</Button>
                     </span>
                   </TableHead>
-                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "用法"}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -6192,7 +6314,7 @@ function TokensMotionPage({ actions, lang }: { actions: React.ReactNode; lang: L
               <TableHeader>
                 <TableRow>
                   <TableHead className="pl-4">Token / Utility</TableHead>
-                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "用法"}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -6258,7 +6380,7 @@ function TokensLayerPage({ actions, lang }: { actions: React.ReactNode; lang: La
               <TableHeader>
                 <TableRow>
                   <TableHead className="pl-4">Token</TableHead>
-                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "场景"}</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "用法"}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -6697,7 +6819,7 @@ function InputPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
           <Table className="min-w-[960px]">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[160px] pl-4">场景</TableHead>
+                <TableHead className="w-[160px] pl-4">用法</TableHead>
                 <TableHead className="w-[220px]">示例</TableHead>
                 <TableHead className="w-[260px]">使用意图</TableHead>
                 <TableHead>约束</TableHead>
@@ -6739,7 +6861,7 @@ function InputPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
                     <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
                   <TableCell className="w-[360px] pr-4 align-top">
-                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -6972,7 +7094,7 @@ function SelectPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           <Table className="min-w-[1040px]">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[160px] pl-4">场景</TableHead>
+                <TableHead className="w-[160px] pl-4">用法</TableHead>
                 <TableHead className="w-[220px]">示例</TableHead>
                 <TableHead className="w-[260px]">使用意图</TableHead>
                 <TableHead>约束</TableHead>
@@ -6995,7 +7117,7 @@ function SelectPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
                     <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
                   <TableCell className="w-[360px] pr-4 align-top">
-                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -7207,7 +7329,7 @@ function CheckboxPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
           <Table className="min-w-[1040px]">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[160px] pl-4">场景</TableHead>
+                <TableHead className="w-[160px] pl-4">用法</TableHead>
                 <TableHead className="w-[220px]">示例</TableHead>
                 <TableHead className="w-[260px]">使用意图</TableHead>
                 <TableHead>约束</TableHead>
@@ -7230,7 +7352,7 @@ function CheckboxPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
                     <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
                   <TableCell className="w-[360px] pr-4 align-top">
-                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -7436,7 +7558,7 @@ function SwitchPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           <Table className="min-w-[1040px]">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[160px] pl-4">场景</TableHead>
+                <TableHead className="w-[160px] pl-4">用法</TableHead>
                 <TableHead className="w-[220px]">示例</TableHead>
                 <TableHead className="w-[260px]">使用意图</TableHead>
                 <TableHead>约束</TableHead>
@@ -7459,7 +7581,7 @@ function SwitchPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
                     <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
                   <TableCell className="w-[360px] pr-4 align-top">
-                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -7640,7 +7762,7 @@ function TextareaPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
           <Table className="min-w-[960px]">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[160px] pl-4">场景</TableHead>
+                <TableHead className="w-[160px] pl-4">用法</TableHead>
                 <TableHead className="w-[240px]">示例</TableHead>
                 <TableHead className="w-[260px]">使用意图</TableHead>
                 <TableHead>约束</TableHead>
@@ -7663,7 +7785,7 @@ function TextareaPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
                     <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
                   <TableCell className="w-[360px] pr-4 align-top">
-                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -8273,7 +8395,7 @@ function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
           <Table className="min-w-[960px]">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[160px] pl-4">场景</TableHead>
+                <TableHead className="w-[160px] pl-4">用法</TableHead>
                 <TableHead className="w-[220px]">示例</TableHead>
                 <TableHead className="w-[260px]">使用意图</TableHead>
                 <TableHead>约束</TableHead>
@@ -8296,7 +8418,7 @@ function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
                     <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
                   <TableCell className="w-[360px] pr-4 align-top">
-                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -8508,7 +8630,7 @@ function TooltipPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }
             <Table className="min-w-[1000px]">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[180px] pl-4">场景</TableHead>
+                  <TableHead className="w-[180px] pl-4">用法</TableHead>
                   <TableHead className="w-[200px]">示例</TableHead>
                   <TableHead className="w-[260px]">使用意图</TableHead>
                   <TableHead>约束</TableHead>
@@ -8531,7 +8653,7 @@ function TooltipPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }
                       <p className="min-w-[220px] leading-6">{example.rule}</p>
                     </TableCell>
                     <TableCell className="pr-4 align-top whitespace-normal">
-                      <code className="overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                      <code className="overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                         {example.code}
                       </code>
                     </TableCell>
@@ -8750,7 +8872,7 @@ function DialogPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           <Table className="min-w-[1000px]">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[160px] pl-4">场景</TableHead>
+                <TableHead className="w-[160px] pl-4">用法</TableHead>
                 <TableHead className="w-[200px]">示例</TableHead>
                 <TableHead className="w-[260px]">使用意图</TableHead>
                 <TableHead>约束</TableHead>
@@ -8773,7 +8895,7 @@ function DialogPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
                     <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
                   <TableCell className="w-[360px] pr-4 align-top">
-                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -8985,7 +9107,7 @@ function AlertDialogPage({ actions, lang }: { actions: React.ReactNode; lang: La
           <Table className="min-w-[1000px]">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[180px] pl-4">场景</TableHead>
+                <TableHead className="w-[180px] pl-4">用法</TableHead>
                 <TableHead className="w-[200px]">示例</TableHead>
                 <TableHead className="w-[260px]">使用意图</TableHead>
                 <TableHead>约束</TableHead>
@@ -9008,7 +9130,7 @@ function AlertDialogPage({ actions, lang }: { actions: React.ReactNode; lang: La
                     <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
                   <TableCell className="w-[360px] pr-4 align-top">
-                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -9226,7 +9348,7 @@ function SheetPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
           <Table className="min-w-[1000px]">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[160px] pl-4">场景</TableHead>
+                <TableHead className="w-[160px] pl-4">用法</TableHead>
                 <TableHead className="w-[200px]">示例</TableHead>
                 <TableHead className="w-[260px]">使用意图</TableHead>
                 <TableHead>约束</TableHead>
@@ -9249,7 +9371,7 @@ function SheetPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
                     <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
                   <TableCell className="w-[360px] pr-4 align-top">
-                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -9437,7 +9559,7 @@ function SkeletonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
           <Table className="min-w-[1000px]">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[160px] pl-4">场景</TableHead>
+                <TableHead className="w-[160px] pl-4">用法</TableHead>
                 <TableHead className="w-[200px]">示例</TableHead>
                 <TableHead className="w-[260px]">使用意图</TableHead>
                 <TableHead>约束</TableHead>
@@ -9460,7 +9582,7 @@ function SkeletonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
                     <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
                   </TableCell>
                   <TableCell className="w-[360px] pr-4 align-top">
-                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre rounded-lg bg-muted px-3 py-2 text-xs leading-6">
+                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-muted px-3 py-2 text-xs leading-6">
                       {example.code}
                     </code>
                   </TableCell>
@@ -9581,11 +9703,113 @@ function SkeletonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
   )
 }
 
+function AvatarOverview({ lang }: { lang: Lang }) {
+  return (
+    <div className="grid gap-6 rounded-lg border border-border bg-card p-6">
+      <div className="grid gap-3">
+        <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
+        <div className="flex flex-wrap items-center gap-4">
+          <Avatar><AvatarImage src="/avatars/01.jpg" alt="陈昊" /><AvatarFallback>陈</AvatarFallback></Avatar>
+          <Avatar shape="square"><AvatarFallback colorful><FolderFilledIcon className="size-4" /></AvatarFallback></Avatar>
+          <Avatar><AvatarFallback colorful><UserFilledIcon className="size-4" /></AvatarFallback></Avatar>
+          <Avatar><AvatarFallback colorful>{avatarInitials("欧阳娜娜")}</AvatarFallback></Avatar>
+          <AvatarGroup>
+            {["张三", "王五", "赵六"].map((n) => (
+              <Avatar key={n}><AvatarFallback colorful>{avatarInitials(n)}</AvatarFallback></Avatar>
+            ))}
+            <AvatarGroupCount>+3</AvatarGroupCount>
+          </AvatarGroup>
+          <div className="grid size-8 grid-cols-2 grid-rows-2 gap-[2px] overflow-hidden rounded-lg bg-muted">
+            {[["陈", "01"], ["林", "02"], ["苏", "03"], ["周", "04"]].map(([c, f]) => (
+              <Avatar key={f} className="size-full rounded-none"><AvatarImage src={`/avatars/${f}.jpg`} /><AvatarFallback colorful className="size-full rounded-none text-[8px]">{c}</AvatarFallback></Avatar>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="border-t border-dashed border-border" />
+      <div className="grid gap-3">
+        <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Sizes" : "尺寸"}</h3>
+        <div className="flex flex-wrap items-end gap-3">
+          {(["xs", "sm", "default", "lg", "xl"] as const).map((s) => (
+            <Avatar key={s} size={s}><AvatarImage src="/avatars/01.jpg" alt="陈昊" /><AvatarFallback>陈</AvatarFallback></Avatar>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function SeparatorOverview({ lang }: { lang: Lang }) {
+  return (
+    <div className="grid gap-6 rounded-lg border border-border bg-card p-6">
+      <div className="grid gap-3">
+        <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
+        <div className="flex flex-wrap items-center gap-8">
+          <div className="flex max-w-[200px] flex-col gap-3">
+            <p className="text-sm">{lang === "en" ? "First block" : "第一段内容"}</p>
+            <Separator />
+            <p className="text-sm">{lang === "en" ? "Second block" : "第二段内容"}</p>
+          </div>
+          <div className="flex h-5 items-center gap-3 text-sm">
+            <span>{lang === "en" ? "Edit" : "编辑"}</span>
+            <Separator orientation="vertical" />
+            <span>{lang === "en" ? "Share" : "分享"}</span>
+            <Separator orientation="vertical" />
+            <span>{lang === "en" ? "Delete" : "删除"}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function LinkOverview({ lang }: { lang: Lang }) {
+  return (
+    <div className="grid gap-6 rounded-lg border border-border bg-card p-6">
+      <div className="grid gap-3">
+        <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
+        <div className="flex flex-wrap items-center gap-5">
+          <Link href="#link">{lang === "en" ? "Basic link" : "基础文字链接"}</Link>
+          <Link href="#link" underline="always">{lang === "en" ? "Underlined link" : "下划线文字链接"}</Link>
+          {linkTones.map((t) => (
+            <Link key={t.tone} href="#link" tone={t.tone}>{t.label}链接</Link>
+          ))}
+        </div>
+      </div>
+      <div className="border-t border-dashed border-border" />
+      <div className="grid gap-3">
+        <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "State" : "状态"}</h3>
+        <div className="flex flex-wrap items-center gap-5">
+          <Link href="#link" disabled>{lang === "en" ? "Disabled" : "禁用"}</Link>
+        </div>
+      </div>
+      <div className="border-t border-dashed border-border" />
+      <div className="grid gap-3">
+        <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Icon" : "图标"}</h3>
+        <div className="flex flex-wrap items-center gap-5">
+          <Link href="#link"><LinkIcon data-icon="inline-start" />{lang === "en" ? "With icon" : "带图标"}</Link>
+          <Link href="#link">{lang === "en" ? "Copy link" : "复制链接"}<CopyIcon data-icon="inline-end" /></Link>
+        </div>
+      </div>
+      <div className="border-t border-dashed border-border" />
+      <div className="grid gap-3">
+        <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Sizes" : "尺寸"}</h3>
+        <div className="flex flex-wrap items-baseline gap-5">
+          <Link href="#link" size="sm">{lang === "en" ? "Small" : "小 sm"}</Link>
+          <Link href="#link">{lang === "en" ? "Default" : "默认 default"}</Link>
+          <Link href="#link" size="lg">{lang === "en" ? "Large" : "大 lg"}</Link>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function StandardDocPage({
   slug,
   title,
   lead,
   overview,
+  overviewMatrix,
   scenarioExamples,
   scenarioFilters,
   renderScenarioPreview,
@@ -9601,6 +9825,7 @@ function StandardDocPage({
   title: string
   lead: string
   overview: React.ReactNode
+  overviewMatrix?: React.ReactNode
   scenarioExamples: { id: string; title: string; intent: string; rule: string; code: string; group?: string; spec?: string }[]
   scenarioFilters?: { value: string; label: string; labelEn?: string }[]
   renderScenarioPreview: (id: string) => React.ReactNode
@@ -9628,9 +9853,13 @@ function StandardDocPage({
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Overview" : "组件总览"}</h2>
           <p className="text-base text-muted-foreground">{lang === "en" ? "A compact look at the component to quickly see what it looks like." : "紧凑展示该组件的样子，用来快速查看长什么样。"}</p>
         </div>
-        <Card>
-          <CardContent className="flex items-center gap-3 p-5">{overview}</CardContent>
-        </Card>
+        {overviewMatrix ? (
+          overviewMatrix
+        ) : (
+          <Card>
+            <CardContent className="flex items-center gap-3 p-5">{overview}</CardContent>
+          </Card>
+        )}
       </section>
 
       <section id={`${slug}-preview`} className={docsSpacing.sectionStack}>
@@ -9770,26 +9999,19 @@ function AvatarPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
       slug="avatar"
       title="Avatar 头像"
       lead="展示用户或实体身份的图像，支持图片加载失败回退、圆/方形、彩色文字头像与头像组。"
-      overview={
-        <>
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="用户头像" />
-            <AvatarFallback>张</AvatarFallback>
-          </Avatar>
-          <span className="text-sm text-muted-foreground">图片加载失败时自动回退到 AvatarFallback</span>
-        </>
-      }
+      overview={null}
+      overviewMatrix={<AvatarOverview lang={lang} />}
       scenarioExamples={avatarScenarioExamples}
       scenarioFilters={avatarScenarioFilters}
       renderScenarioPreview={(id) =>
         id === "single" ? (
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="张三" />
-            <AvatarFallback>张</AvatarFallback>
+            <AvatarImage src="/avatars/01.jpg" alt="陈昊" />
+            <AvatarFallback>陈</AvatarFallback>
           </Avatar>
         ) : id === "shape" ? (
           <div className="flex items-center gap-3">
-            <Avatar><AvatarImage src="https://github.com/shadcn.png" alt="用户" /><AvatarFallback colorful>李</AvatarFallback></Avatar>
+            <Avatar><AvatarImage src="/avatars/03.jpg" alt="苏婷" /><AvatarFallback colorful>苏</AvatarFallback></Avatar>
             <Avatar shape="square"><AvatarFallback colorful><FolderFilledIcon className="size-4" /></AvatarFallback></Avatar>
           </div>
         ) : id === "initials" ? (
@@ -9799,10 +10021,7 @@ function AvatarPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
             ))}
           </div>
         ) : id === "icon" ? (
-          <div className="flex items-center gap-3">
-            <Avatar><AvatarFallback colorful><UserFilledIcon className="size-4" /></AvatarFallback></Avatar>
-            <Avatar shape="square"><AvatarFallback colorful><UserFilledIcon className="size-4" /></AvatarFallback></Avatar>
-          </div>
+          <Avatar><AvatarFallback colorful><UserFilledIcon className="size-4" /></AvatarFallback></Avatar>
         ) : id === "group" ? (
           <AvatarGroup>
             {["张三", "王五", "赵六"].map((n) => (
@@ -9815,23 +10034,25 @@ function AvatarPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           </AvatarGroup>
         ) : id === "composite" ? (
           <div className="flex items-center gap-3">
-            {/* 2 人：左右各半 */}
-            <div className="grid size-10 grid-cols-2 overflow-hidden rounded-lg">
-              {[["张", 1], ["王", 2]].map(([c, i]) => (
-                <Avatar key={c} className="size-full rounded-none"><AvatarImage src={`https://i.pravatar.cc/80?img=${i}`} /><AvatarFallback colorful className="size-full rounded-none text-[8px]">{c}</AvatarFallback></Avatar>
+            {/* 2 人：左右两个方格，垂直居中、贴边，上下露灰底 */}
+            <div className="flex size-10 items-center justify-center gap-[2px] overflow-hidden rounded-lg bg-muted">
+              {[["陈", "01"], ["苏", "03"]].map(([c, f]) => (
+                <Avatar key={f} className="size-[19px] rounded-none"><AvatarImage src={`/avatars/${f}.jpg`} /><AvatarFallback colorful className="size-full rounded-none text-[8px]">{c}</AvatarFallback></Avatar>
               ))}
             </div>
-            {/* 3 人：上 1 下 2 */}
-            <div className="grid size-10 grid-cols-2 grid-rows-2 overflow-hidden rounded-lg">
-              <Avatar className="col-span-2 size-full rounded-none"><AvatarImage src="https://i.pravatar.cc/80?img=1" /><AvatarFallback colorful className="size-full rounded-none text-[8px]">张</AvatarFallback></Avatar>
-              {[["王", 2], ["赵", 3]].map(([c, i]) => (
-                <Avatar key={c} className="size-full rounded-none"><AvatarImage src={`https://i.pravatar.cc/80?img=${i}`} /><AvatarFallback colorful className="size-full rounded-none text-[8px]">{c}</AvatarFallback></Avatar>
-              ))}
+            {/* 3 人：上 1 下 2，上格居中、左右露灰底 */}
+            <div className="flex size-10 flex-col items-center justify-center gap-[2px] overflow-hidden rounded-lg bg-muted">
+              <Avatar className="size-[19px] rounded-none"><AvatarImage src="/avatars/01.jpg" /><AvatarFallback colorful className="size-full rounded-none text-[8px]">陈</AvatarFallback></Avatar>
+              <div className="flex gap-[2px]">
+                {[["林", "02"], ["苏", "03"]].map(([c, f]) => (
+                  <Avatar key={f} className="size-[19px] rounded-none"><AvatarImage src={`/avatars/${f}.jpg`} /><AvatarFallback colorful className="size-full rounded-none text-[8px]">{c}</AvatarFallback></Avatar>
+                ))}
+              </div>
             </div>
-            {/* 4 人：田字 */}
-            <div className="grid size-10 grid-cols-2 grid-rows-2 overflow-hidden rounded-lg">
-              {[["张", 1], ["王", 2], ["赵", 3], ["李", 4]].map(([c, i]) => (
-                <Avatar key={c} className="size-full rounded-none"><AvatarImage src={`https://i.pravatar.cc/80?img=${i}`} /><AvatarFallback colorful className="size-full rounded-none text-[8px]">{c}</AvatarFallback></Avatar>
+            {/* 4 人：田字 2×2，贴边、仅格间留缝 */}
+            <div className="grid size-10 grid-cols-2 grid-rows-2 gap-[2px] overflow-hidden rounded-lg bg-muted">
+              {[["陈", "01"], ["林", "02"], ["苏", "03"], ["周", "04"]].map(([c, f]) => (
+                <Avatar key={f} className="size-full rounded-none"><AvatarImage src={`/avatars/${f}.jpg`} /><AvatarFallback colorful className="size-full rounded-none text-[8px]">{c}</AvatarFallback></Avatar>
               ))}
             </div>
           </div>
@@ -9842,7 +10063,7 @@ function AvatarPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
         )
       }
       importCode={`import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"`}
-      usageCode={`<Avatar>\n  <AvatarImage src="/avatars/01.png" alt="张三" />\n  <AvatarFallback>张</AvatarFallback>\n</Avatar>`}
+      usageCode={`<Avatar>\n  <AvatarImage src="/avatars/01.jpg" alt="陈昊" />\n  <AvatarFallback>陈</AvatarFallback>\n</Avatar>`}
       propRows={avatarPropRows}
       semanticDomRows={avatarSemanticDomRows}
       doDontRows={avatarDoDontRows}
@@ -10197,15 +10418,8 @@ function SeparatorPage({ actions, lang }: { actions: React.ReactNode; lang: Lang
       slug="separator"
       title="Separator 分隔线"
       lead="用于区隔弱关联的内容区块，支持水平与垂直两种方向。"
-      overview={
-        <div className="flex h-5 w-full items-center gap-3 text-sm text-muted-foreground">
-          <span>编辑</span>
-          <Separator orientation="vertical" />
-          <span>分享</span>
-          <Separator orientation="vertical" />
-          <span>删除</span>
-        </div>
-      }
+      overview={null}
+      overviewMatrix={<SeparatorOverview lang={lang} />}
       scenarioExamples={separatorScenarioExamples}
       renderScenarioPreview={(id) =>
         id === "horizontal" ? (
@@ -10229,6 +10443,51 @@ function SeparatorPage({ actions, lang }: { actions: React.ReactNode; lang: Lang
       propRows={separatorPropRows}
       semanticDomRows={separatorSemanticDomRows}
       doDontRows={separatorDoDontRows}
+      actions={actions}
+      lang={lang}
+    />
+  )
+}
+
+function LinkPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  return (
+    <StandardDocPage
+      slug="link"
+      title="Link 链接"
+      lead="用于页面内跳转或外部导航的文字链接，支持语义色与三档尺寸。"
+      overview={null}
+      overviewMatrix={<LinkOverview lang={lang} />}
+      scenarioExamples={linkScenarioExamples}
+      scenarioFilters={linkScenarioFilters}
+      renderScenarioPreview={(id) =>
+        id === "basic" ? (
+          <Link href="#link">基础文字链接</Link>
+        ) : id === "underline" ? (
+          <Link href="#link" underline="always">下划线文字链接</Link>
+        ) : id === "icon" ? (
+          <div className="flex items-center gap-4">
+            <Link href="#link"><LinkIcon data-icon="inline-start" />仓库</Link>
+            <Link href="#link">复制链接<CopyIcon data-icon="inline-end" /></Link>
+          </div>
+        ) : id === "tones" ? (
+          <div className="flex flex-wrap items-center gap-4">
+            {linkTones.map((t) => (
+              <Link key={t.tone} href="#link" tone={t.tone}>{t.label}链接</Link>
+            ))}
+          </div>
+        ) : id === "disabled" ? (
+          <Link href="#link" disabled>暂不可用</Link>
+        ) : (
+          <Link href="#link" size={id.replace("size-", "") as "sm" | "default" | "lg"}>
+            {id === "size-sm" ? "小链接" : id === "size-lg" ? "大链接" : "默认链接"}
+          </Link>
+        )
+      }
+      importCode={`import { Link } from "@/components/ui/link"`}
+      usageCode={`<Link href="/docs">打开文档</Link>`}
+      propRows={linkPropRows}
+      semanticDomRows={linkSemanticDomRows}
+      doDontRows={linkDoDontRows}
       actions={actions}
       lang={lang}
     />

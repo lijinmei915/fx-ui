@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/components-manifest",
-  "updatedAt": "2026-06-12",
+  "updatedAt": "2026-06-23",
   "truthSource": "src/components/ui",
   "note": "机器可读组件事实表。所有 ui 基础组件和 fx 组合组件均已登记为 complete；具体契约以源码、Markdown 和本 manifest 共同校验。",
   "componentLayers": [
@@ -169,6 +169,58 @@
         "使用 Breadcrumb 前必须以 src/components/ui/breadcrumb.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Link",
+      "source": "src/components/ui/link.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/link.md",
+      "category": "navigation",
+      "nativeStates": [
+        "hover",
+        "active",
+        "focus-visible",
+        "disabled"
+      ],
+      "semanticDom": [
+        "data-slot=\"link\""
+      ],
+      "tokenRefs": [
+        "--link",
+        "--link-hover",
+        "--link-active",
+        "--foreground-secondary",
+        "--primary",
+        "--success",
+        "--success-hover",
+        "--success-active",
+        "--warning",
+        "--warning-hover",
+        "--warning-active",
+        "--destructive",
+        "--destructive-hover",
+        "--destructive-active",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 Link 前必须以 src/components/ui/link.tsx 为真实 API。",
+        "用 tone 表达语义色、size 控制档位，不要手写颜色、下划线和状态样式。",
+        "强操作（提交/删除按钮）不用 Link 伪装，改用 Button。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ],
+      "variants": [
+        "standard",
+        "default",
+        "primary",
+        "success",
+        "warning",
+        "danger"
+      ],
+      "sizes": [
+        "sm",
+        "default",
+        "lg"
       ]
     },
     {

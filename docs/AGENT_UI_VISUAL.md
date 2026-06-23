@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-06-13
+last_verified: 2026-06-23
 teaches: "fx-ui Agent UI 的视觉规范：参考 C 端轻卡片体验，但仍使用 fx-ui token 和 shadcn 基础组件"
 use_when: "要设计或修改 AgentSurface、Agent 卡片、Agent action、Agent 结果流视觉时"
 ---

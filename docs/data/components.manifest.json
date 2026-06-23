@@ -1284,6 +1284,43 @@
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ]
+    },
+    {
+      "name": "NavMenu",
+      "source": "src/components/fx/nav-menu.tsx",
+      "docStatus": "complete",
+      "role": "单面板导航侧边栏（头部+搜索+菜单树+底部），1:1 还原设计稿",
+      "category": "fx",
+      "nativeStates": [
+        "default",
+        "hover",
+        "active",
+        "expanded"
+      ],
+      "semanticDom": [
+        "data-slot=\"nav-menu\"",
+        "data-slot=\"nav-menu-header\"",
+        "data-slot=\"nav-menu-search\"",
+        "data-slot=\"nav-menu-list\"",
+        "data-slot=\"nav-menu-item\"",
+        "data-slot=\"nav-menu-footer\""
+      ],
+      "tokenRefs": [
+        "--card",
+        "--border",
+        "--input",
+        "--muted",
+        "--muted-foreground",
+        "--accent",
+        "--foreground",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 NavMenu 前必须以 src/components/fx/nav-menu.tsx 为真实 API。",
+        "单面板 200px：NavMenuHeader + NavMenuSearch + NavMenuList(NavMenuItem) + NavMenuFooter。",
+        "菜单项用 active 表选中(bg-accent 浅品牌底 + 中粗)、indent 表嵌套、expandable 表可折叠分组；不要手写颜色和状态样式。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
     }
   ],
   "checks": [

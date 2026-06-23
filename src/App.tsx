@@ -98,6 +98,7 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { AgentSurface, type AgentSurfaceEvent, type AgentSurfaceSchema } from "@/components/fx/agent-surface"
+import { NavMenu, NavMenuHeader, NavMenuSearch, NavMenuList, NavMenuItem, NavMenuFooter } from "@/components/fx/nav-menu"
 import componentsManifestRaw from "../docs/data/components.manifest.json?raw"
 import designTokensManifestRaw from "../docs/data/design-tokens.json?raw"
 import docSiteManifestRaw from "../docs/data/doc-site.manifest.json?raw"
@@ -532,6 +533,7 @@ const docsNav = [
       { label: "标签页", labelEn: "Tabs", href: "#tabs" },
       { label: "下拉菜单", labelEn: "Dropdown Menu", href: "#dropdown-menu" },
       { label: "侧边栏", labelEn: "Sidebar", href: "#sidebar" },
+      { label: "导航菜单", labelEn: "Nav Menu", href: "#nav-menu" },
     ],
   },
   {
@@ -1021,6 +1023,13 @@ const gridAnchors = [
 ]
 const layoutAnchors = [
   { label: "页面容器", labelEn: "Containers", href: "#layout-containers" },
+]
+
+const navMenuAnchors = [
+  { label: "组件总览", labelEn: "Overview", href: "#nav-menu-overview" },
+  { label: "状态", labelEn: "States", href: "#nav-menu-states" },
+  { label: "尺寸", labelEn: "Sizes", href: "#nav-menu-sizes" },
+  { label: "结构", labelEn: "Anatomy", href: "#nav-menu-anatomy" },
 ]
 
 const iconAnchors = [
@@ -2811,6 +2820,7 @@ function getPageFromHash(hash: string) {
   if (hash === "#tokens-motion") return "tokens-motion"
   if (hash === "#tokens-layer") return "tokens-layer"
   if (hash === "#layout" || hash.startsWith("#layout-")) return "layout"
+  if (hash === "#nav-menu" || hash.startsWith("#nav-menu-")) return "nav-menu"
   if (hash === "#grid" || hash.startsWith("#grid-")) return "grid"
   if (hash === "#icon" || hash.startsWith("#icon-")) return "icon"
   if (hash === "#intro" || hash.startsWith("#intro-")) return "intro"
@@ -3127,6 +3137,7 @@ function App() {
   const isToggleGroupPage = page === "toggle-group"
   const isAgentSurfacePage = page === "agent-surface"
   const isLayoutPage = page === "layout"
+  const isNavMenuPage = page === "nav-menu"
   const isGridPage = page === "grid"
   const isComponentArea =
     isComponentsIndexPage ||
@@ -3151,6 +3162,8 @@ function App() {
                   ? tokenLayerAnchors
                   : isLayoutPage
       ? layoutAnchors
+                  : isNavMenuPage
+      ? navMenuAnchors
                   : isGridPage
       ? gridAnchors
                   : isIconPage
@@ -3407,6 +3420,8 @@ function App() {
                 <TokensPage actions={pageActions} lang={lang} />
               ) : isLayoutPage ? (
                 <LayoutPage actions={pageActions} lang={lang} />
+              ) : isNavMenuPage ? (
+                <NavMenuPage actions={pageActions} lang={lang} />
               ) : isGridPage ? (
                 <GridPage actions={pageActions} lang={lang} />
               ) : isTokensColorsPage ? (
@@ -5890,6 +5905,76 @@ function GridPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
           <div className="grid grid-cols-1 gap-2 lg:grid-cols-3">
             {[0, 1, 2].map((i) => <div key={i} className="flex h-12 items-center justify-center rounded bg-muted text-fx-12 text-muted-foreground">{i + 1}</div>)}
           </div>
+        </div>
+      </section>
+    </>
+  )
+}
+
+function NavMenuPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  const [selected, setSelected] = useState("home")
+  const [open, setOpen] = useState<Record<string, boolean>>({ cust: true })
+  const toggle = (id: string) => setOpen((o) => ({ ...o, [id]: !o[id] }))
+  const custChildren = ["客户", "销售记录", "客户地址", "客户财务信息", "联系人", "商机2.0", "商机评审"]
+  const demo = (
+    <NavMenu>
+      <NavMenuHeader title="CRM" viewName={lang === "en" ? "View" : "视图名称"} />
+      <NavMenuSearch placeholder={lang === "en" ? "Search" : "搜索"} onAdd={() => {}} />
+      <NavMenuList>
+        <NavMenuItem icon={<HomeIcon />} label={lang === "en" ? "Home" : "首页"} active={selected === "home"} onClick={() => setSelected("home")} />
+        <NavMenuItem icon={<StarIcon />} label={lang === "en" ? "Recent" : "最近使用"} active={selected === "recent"} onClick={() => setSelected("recent")} />
+        <NavMenuItem icon={<BellIcon />} label="CRM提醒" active={selected === "remind"} onClick={() => setSelected("remind")} />
+        <NavMenuItem icon={<CheckCircleIcon />} label="CRM待办" active={selected === "todo"} onClick={() => setSelected("todo")} />
+        <NavMenuItem expandable expanded={open.cust} label={lang === "en" ? "Customers & deals" : "客户及商机管理"} onClick={() => toggle("cust")} />
+        {open.cust && custChildren.map((c) => (
+          <NavMenuItem key={c} indent icon={<FolderIcon />} label={c} active={selected === c} onClick={() => setSelected(c)} />
+        ))}
+        <NavMenuItem expandable expanded={open.order} label={lang === "en" ? "Orders & payments" : "订单及回款管理"} onClick={() => toggle("order")} />
+        <NavMenuItem expandable expanded={open.pre} label={lang === "en" ? "Pre-sales projects" : "售前项目管理"} onClick={() => toggle("pre")} />
+        <NavMenuItem expandable expanded={open.deliver} label={lang === "en" ? "Delivery projects" : "交付实施项目"} onClick={() => toggle("deliver")} />
+        <NavMenuItem expandable expanded={open.loss} label={lang === "en" ? "Loss management" : "项目损失管理"} onClick={() => toggle("loss")} />
+        <NavMenuItem icon={<DatabaseIcon />} label={lang === "en" ? "Dashboard" : "数据驾驶舱"} active={selected === "dash"} onClick={() => setSelected("dash")} />
+        <NavMenuItem icon={<UserFilledIcon />} label={lang === "en" ? "People" : "人员"} active={selected === "people"} onClick={() => setSelected("people")} />
+      </NavMenuList>
+      <NavMenuFooter />
+    </NavMenu>
+  )
+  return (
+    <>
+      <section id="nav-menu-overview" className="flex flex-col gap-5">
+        <PageLead
+          crumb={lang === "en" ? "Components / Nav Menu" : "组件 / 导航菜单"}
+          title={lang === "en" ? "Nav Menu 导航菜单" : "导航菜单"}
+          lead={lang === "en" ? "Single-panel sidebar (200px): header (title + view) · search + add · scrollable menu tree · footer. 1:1 with the design spec, fx-ui tokens." : "单面板侧边栏（200px）：头部（标题 + 视图）· 搜索 + 新增 · 可滚动菜单树 · 底部。1:1 还原设计稿，token 用 fx-ui。"}
+          actions={actions}
+        />
+        <div className="h-[520px] w-fit rounded-xl bg-muted/40 p-5">{demo}</div>
+        <p className="text-base text-muted-foreground">{lang === "en" ? "Click items to select; click a group row to expand/collapse." : "点菜单项选中；点带箭头的分组行展开/收起。"}</p>
+      </section>
+
+      <section id="nav-menu-states" className="flex flex-col gap-3">
+        <h2 className="text-2xl font-semibold">{lang === "en" ? "States" : "状态"}</h2>
+        <p className="text-base text-muted-foreground">{lang === "en" ? "Three states for a menu item." : "菜单项三态。"}</p>
+        <div className="rounded-lg border border-border bg-card p-4 text-fx-13 leading-7 text-muted-foreground">
+          <p><span className="font-medium text-foreground">{lang === "en" ? "Default" : "默认"}</span> — {lang === "en" ? "transparent background, foreground text." : "透明底、常规文字色。"}</p>
+          <p><span className="font-medium text-foreground">{lang === "en" ? "Hover" : "悬停"}</span> — bg-muted。</p>
+          <p><span className="font-medium text-foreground">{lang === "en" ? "Selected" : "选中"}</span> — bg-accent{lang === "en" ? " (light brand tint) + medium weight." : "（浅品牌底 #fff7e6）+ 中粗。"}</p>
+        </div>
+      </section>
+
+      <section id="nav-menu-sizes" className="flex flex-col gap-3">
+        <h2 className="text-2xl font-semibold">{lang === "en" ? "Sizes" : "尺寸"}</h2>
+        <p className="text-base text-muted-foreground">{lang === "en" ? "Panel 200px (zh/ja/ko) or 250px (other locales). Padding 12, block gap 8; item p-8 rounded-8, icon 16, text 13; nested items indent 26px." : "面板宽 200px（简中/繁中/日/韩）或 250px（其他语种）。内边距 12、块间距 8；菜单项 p-8 圆角 8、图标 16、文字 13；嵌套子项左缩进 26px。"}</p>
+      </section>
+
+      <section id="nav-menu-anatomy" className="flex flex-col gap-3">
+        <h2 className="text-2xl font-semibold">{lang === "en" ? "Anatomy" : "结构"}</h2>
+        <div className="rounded-lg border border-border bg-card p-4 text-fx-13 leading-7 text-muted-foreground">
+          <p><code>NavMenu</code> — {lang === "en" ? "single 200px panel root." : "单面板根容器（200px）。"}</p>
+          <p><code>NavMenuHeader</code> — {lang === "en" ? "title + view name + chevron." : "标题 + 视图名 + 展开箭头。"}</p>
+          <p><code>NavMenuSearch</code> — {lang === "en" ? "search input + add button." : "搜索框 + 新增按钮。"}</p>
+          <p><code>NavMenuList / NavMenuItem</code> — {lang === "en" ? "scrollable tree; item supports active / indent (nested) / expandable (group)." : "可滚动树；菜单项支持 选中 / 嵌套缩进 / 可折叠分组。"}</p>
+          <p><code>NavMenuFooter</code> — {lang === "en" ? "settings + collapse." : "设置 + 收起。"}</p>
         </div>
       </section>
     </>

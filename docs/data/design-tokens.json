@@ -1490,6 +1490,12 @@
       "usage": "浮起控件白底（outline 按钮等），与 card 同值、语义独立"
     },
     {
+      "name": "--surface-disabled",
+      "value": "var(--fx-neutrals-02)",
+      "category": "surface-text",
+      "usage": "控件禁用底（outline 按钮禁用态），比 surface 略灰"
+    },
+    {
       "name": "--card-foreground",
       "value": "var(--fx-neutrals-20)",
       "category": "surface-text",
@@ -1656,6 +1662,12 @@
       "value": "var(--fx-blue-10)",
       "category": "shadcn-semantic",
       "usage": ""
+    },
+    {
+      "name": "--link-disabled",
+      "value": "var(--fx-blue-05)",
+      "category": "shadcn-semantic",
+      "usage": "链接禁用态（淡化蓝）"
     },
     {
       "name": "--border-subtle",

@@ -333,6 +333,7 @@
   --card: #FFFFFF;
   --card-foreground: var(--fx-neutrals-20);
   --surface: var(--fx-neutrals-01);  /* 浮起控件白底（outline 按钮/白底图标按钮等），与 card 同值但语义独立：card=容器、surface=控件表面 */
+  --surface-disabled: var(--fx-neutrals-02);  /* 控件禁用底（如 outline 按钮禁用态），比 surface 略灰 */
 
   --popover: #FFFFFF;
   --popover-foreground: var(--fx-neutrals-20);
@@ -371,6 +372,7 @@
   --link: var(--fx-blue-09);
   --link-hover: var(--fx-blue-08);
   --link-active: var(--fx-blue-10);
+  --link-disabled: var(--fx-blue-05);
 
   /* 边框三档（走中性轴）：弱 04 / 默认 05 / 强 08；input 07 为可交互元素边框 */
   --border-faint: var(--fx-neutrals-03);
@@ -441,6 +443,7 @@
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-surface: var(--surface);
+  --color-surface-disabled: var(--surface-disabled);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-overlay: var(--overlay);
@@ -475,6 +478,7 @@
   --color-link: var(--link);
   --color-link-hover: var(--link-hover);
   --color-link-active: var(--link-active);
+  --color-link-disabled: var(--link-disabled);
   --color-destructive-hover: var(--destructive-hover);
   --color-destructive-active: var(--destructive-active);
   --color-destructive-disabled: var(--destructive-disabled);

@@ -18,6 +18,7 @@ tokens:
   - border
   - ring
   - success
+  - warning
 status: complete
 ---
 
@@ -53,7 +54,7 @@ import { Badge } from "@/components/ui/badge"
 
 - 语义 DOM：Base UI `useRender` 注入 `slot: "badge"`，运行时用于定位 `data-slot="badge"`
 - 原生/数据状态：`hover`、`focus-visible`、`aria-invalid`
-- 样式变体：`default`、`secondary`、`destructive`、`success`、`outline`、`ghost`、`link`
+- 样式变体：`default`、`secondary`、`destructive`、`success`、`warning`、`outline`、`ghost`、`link`
 - 尺寸变体：无独立 `size` prop
 - 图标：图标放入 Badge 时使用 `data-icon="inline-start"` 或 `data-icon="inline-end"`
 - 链接徽标：需要可点击跳转时使用 `render={<a href="..." />}`，不要在 Badge 里嵌套 `<a>`
@@ -149,7 +150,7 @@ import { Indicator } from "@/components/ui/badge"
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `variant` | 样式变体 | `'default' \| 'secondary' \| 'destructive' \| 'success' \| 'outline' \| 'ghost' \| 'link'` | `'default'` |
+| `variant` | 样式变体 | `'default' \| 'secondary' \| 'destructive' \| 'success' \| 'warning' \| 'outline' \| 'ghost' \| 'link'` | `'default'` |
 | `render` | 自定义根节点渲染，例如渲染成 `<a>` 实现链接徽标 | `ReactElement \| (props, state) => ReactElement` | - |
 | `aria-invalid` | 校验失败状态 | `boolean` | `false` |
 | `className` | 追加布局类，不用于硬覆盖 token 视觉 | `string` | - |

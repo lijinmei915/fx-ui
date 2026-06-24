@@ -153,6 +153,17 @@ AI 选择 Button 时按这个顺序判断：
 <Button variant="ghost">查看详情</Button>
 ```
 
+### 无底色操作（plain）
+
+- 使用意图：表格操作列的纯图标增删改查等，无边框无底色，hover 只变色不变底。
+- 规则：variant 叫 `plain`（无边框无底色，hover 只变色）；配合 `tone`（default 中性 / primary 主色 / link 链接色 / danger 危险）分色；纯图标必须补 `aria-label` + Tooltip。带底色的弱化按钮仍用 `ghost`（悬浮出底色），两者并存。
+- 分组：`类型`
+- 关键属性：`variant: "plain"`，`tone: "danger"`。
+
+```tsx
+<Button variant="plain" tone="danger" size="icon-sm" aria-label="删除"><Trash2Icon /></Button>
+```
+
 ### 超小尺寸
 
 - 使用意图：极紧凑的工具栏、表格内联操作。
@@ -344,6 +355,22 @@ Button 支持 `@base-ui/react/button` 的原生 button props，并额外支持�
 - 图标放在按钮内时，图标使用 `data-icon`，不要直接写 `size-4`。
 - `className` 只用于布局、宽度或间距，不用于覆盖组件颜色。
 - 当前 Button 没有内置 `loading` prop；Loading = `disabled + Spinner`。
+
+### 组合规则（4 个正交轴，自由组合，不造新组件）
+
+Button 只有一个组件，靠 4 个**互相独立**的轴组合，任意搭配都合法，**不要为某个组合新建组件或新 variant**：
+
+| 轴 | prop | 取值 | 管什么 |
+| --- | --- | --- | --- |
+| 类型 | `variant` | default / secondary / outline / ghost / destructive / link / plain | 语义层级与底色 |
+| 尺寸 | `size` | xs / sm / default / lg / icon-* | 高度、内边距、字号、图标-文字 gap |
+| 分色 | `tone` | default / primary / link / danger | **仅 `plain` 生效**，给无底色按钮分色 |
+| 状态 | 原生 | `disabled`（+ Spinner = loading） | 交互态 |
+
+- 选择顺序：先按语义选 `variant` → 按密度/场景选 `size` → 若是 `plain` 再选 `tone` → 状态按需加。
+- 任意 `variant` 都能配任意 `size` 与状态（正交），例如 `<Button variant="plain" size="sm" tone="danger">`、`<Button variant="outline" size="lg" disabled>`。
+- `tone` 只对 `plain` 有意义；实心/描边/ghost 的颜色由 `variant` 决定，不要叠 `tone`。
+- 纯图标（任意 variant + `size="icon-*"`）必须补 `aria-label` + Tooltip。
 
 ## 正误示例 {#do-dont}
 

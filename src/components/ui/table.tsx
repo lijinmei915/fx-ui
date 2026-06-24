@@ -1,27 +1,48 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { ChevronUpIcon, ChevronDownIcon, ChevronsUpDownIcon } from "@/lib/icons"
 
-function Table({ className, ...props }: React.ComponentProps<"table">) {
+function Table({
+  className,
+  density = "default",
+  bordered = false,
+  ...props
+}: React.ComponentProps<"table"> & { density?: "default" | "compact"; bordered?: boolean }) {
   return (
     <div
       data-slot="table-container"
-      className="relative w-full overflow-x-auto"
+      // 默认无边框（贴公司列表页）；bordered 时套圆角描边卡片
+      className={cn(
+        "relative w-full overflow-x-auto",
+        bordered && "overflow-hidden rounded-xl border border-border-subtle bg-card"
+      )}
     >
       <table
         data-slot="table"
-        className={cn("w-full caption-bottom text-fx-13", className)}
+        data-density={density}
+        className={cn("group/table w-full caption-bottom text-fx-13", className)}
         {...props}
       />
     </div>
   )
 }
 
-function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
+function TableHeader({
+  className,
+  sticky,
+  ...props
+}: React.ComponentProps<"thead"> & { sticky?: boolean }) {
   return (
     <thead
       data-slot="table-header"
-      className={cn("[&_tr]:border-b", className)}
+      className={cn(
+        // 表头白底，靠「加粗文字 + 更深的下边线(neutrals05)」和表体区分（对齐公司列表页）
+        "[&_tr]:border-b [&_tr]:border-border",
+        // 吸顶：滚动时表头固定。需配合外层容器固定高度 + overflow-y-auto
+        sticky && "sticky top-0 z-10 bg-card [&_th]:bg-card",
+        className
+      )}
       {...props}
     />
   )
@@ -42,7 +63,7 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
     <tfoot
       data-slot="table-footer"
       className={cn(
-        "border-t bg-muted font-medium [&>tr]:last:border-b-0",
+        "border-t border-border-subtle bg-muted font-medium [&>tr]:last:border-b-0",
         className
       )}
       {...props}
@@ -55,7 +76,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
     <tr
       data-slot="table-row"
       className={cn(
-        "border-b transition-colors hover:bg-muted has-aria-expanded:bg-muted data-[state=selected]:bg-muted",
+        "border-b border-border-subtle transition-colors hover:bg-muted has-aria-expanded:bg-muted data-[state=selected]:bg-muted",
         className
       )}
       {...props}
@@ -63,25 +84,83 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   )
 }
 
-function TableHead({ className, ...props }: React.ComponentProps<"th">) {
+const alignClass = (align?: "left" | "center" | "right") =>
+  align === "right" ? "text-right" : align === "center" ? "text-center" : "text-left"
+
+// 固定列：横向滚动时贴边不动。需不透明底遮挡滚动内容，并用内阴影做分隔线。
+const pinnedClass = (pinned?: "left" | "right") =>
+  pinned === "right"
+    ? "sticky right-0 z-[1] bg-card shadow-[inset_1px_0_0_var(--border-subtle)]"
+    : pinned === "left"
+      ? "sticky left-0 z-[1] bg-card shadow-[inset_-1px_0_0_var(--border-subtle)]"
+      : ""
+
+function TableHead({
+  className,
+  align,
+  pinned,
+  sortable,
+  sorted = false,
+  onSort,
+  children,
+  ...props
+}: React.ComponentProps<"th"> & {
+  align?: "left" | "center" | "right"
+  pinned?: "left" | "right"
+  sortable?: boolean
+  sorted?: "asc" | "desc" | false
+  onSort?: () => void
+}) {
   return (
     <th
       data-slot="table-head"
+      data-sorted={sorted || undefined}
       className={cn(
-        "h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-0",
+        "h-10 px-2 align-middle font-semibold whitespace-nowrap text-foreground group-data-[density=compact]/table:h-9 [&:has([role=checkbox])]:pr-0",
+        alignClass(align),
+        pinnedClass(pinned),
         className
       )}
       {...props}
-    />
+    >
+      {sortable ? (
+        <button
+          type="button"
+          onClick={onSort}
+          className={cn(
+            "inline-flex items-center gap-1 font-medium outline-none select-none hover:text-foreground data-[sorted]:text-foreground [&_svg]:size-3.5 [&_svg]:shrink-0",
+            align === "right" && "flex-row-reverse"
+          )}
+        >
+          {children}
+          {sorted === "asc" ? (
+            <ChevronUpIcon />
+          ) : sorted === "desc" ? (
+            <ChevronDownIcon />
+          ) : (
+            <ChevronsUpDownIcon className="text-muted-foreground" />
+          )}
+        </button>
+      ) : (
+        children
+      )}
+    </th>
   )
 }
 
-function TableCell({ className, ...props }: React.ComponentProps<"td">) {
+function TableCell({
+  className,
+  align,
+  pinned,
+  ...props
+}: React.ComponentProps<"td"> & { align?: "left" | "center" | "right"; pinned?: "left" | "right" }) {
   return (
     <td
       data-slot="table-cell"
       className={cn(
-        "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0",
+        "p-2 align-middle whitespace-nowrap group-data-[density=compact]/table:h-9 group-data-[density=compact]/table:py-0 [&:has([role=checkbox])]:pr-0",
+        alignClass(align),
+        pinnedClass(pinned),
         className
       )}
       {...props}

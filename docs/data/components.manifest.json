@@ -137,6 +137,7 @@
         "secondary",
         "destructive",
         "success",
+        "warning",
         "outline",
         "ghost",
         "link"
@@ -260,7 +261,8 @@
         "secondary",
         "ghost",
         "destructive",
-        "link"
+        "link",
+        "plain"
       ],
       "sizes": [
         "default",
@@ -733,6 +735,30 @@
         "使用 Separator 前必须以 src/components/ui/separator.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Pagination",
+      "source": "src/components/ui/pagination.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/pagination.md",
+      "category": "navigation",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "data-slot=\"pagination\"",
+        "data-slot=\"pagination-ellipsis\""
+      ],
+      "tokenRefs": [
+        "--primary",
+        "--border",
+        "--muted-foreground"
+      ],
+      "usageRules": [
+        "使用 Pagination 前必须以 src/components/ui/pagination.tsx 为真实 API。",
+        "受控用法：自己持有 page 状态并在 onPageChange 更新；用 total + pageSize 推导页数。",
+        "className 只用于布局或外部间距，不用于覆盖组件自身基础视觉。"
       ]
     },
     {

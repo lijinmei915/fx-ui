@@ -1,5 +1,5 @@
 import type { DevInspectorConfigOverrides } from "@lijinmei-810/dev-inspector"
-import { SearchIcon } from "@/lib/icons"
+import { SearchIcon, Trash2Icon } from "@/lib/icons"
 
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
@@ -84,6 +84,18 @@ export const devInspectorConfig: DevInspectorConfigOverrides = {
           capabilities: ["点击", "hover", "focus-visible"],
           tokenRefs: ["--primary", "--ring"],
           render: () => <Button variant="link">打开文档</Button>,
+        },
+        {
+          id: "button-plain",
+          label: "Plain",
+          group: "Variant",
+          propsLabel: "variant=plain / tone=danger / size=icon-sm",
+          selector:
+            '[data-component="Button"][data-variant="plain"]',
+          usage: "表格操作列纯图标，无底色、hover 只变色；tone 分色。",
+          capabilities: ["点击", "hover", "focus-visible", "disabled"],
+          tokenRefs: ["--muted-foreground", "--destructive", "--primary"],
+          render: () => <Button variant="plain" tone="danger" size="icon-sm" aria-label="删除"><Trash2Icon /></Button>,
         },
         ...(["xs", "sm", "default", "lg"] as const).map((size) => ({
           id: `button-size-${size}`,

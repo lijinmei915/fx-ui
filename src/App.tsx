@@ -5,6 +5,9 @@ import {
   ArrowRightIcon,
   LinkIcon,
   PlusIcon,
+  EyeIcon,
+  PencilIcon,
+  Trash2Icon,
   BellIcon,
   BellFilledIcon,
   BoldIcon,
@@ -163,6 +166,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Pagination } from "@/components/ui/pagination"
 import { Avatar, AvatarFallback, AvatarImage, AvatarGroup, AvatarGroupCount, avatarInitials } from "@/components/ui/avatar"
 import {
   Breadcrumb,
@@ -560,6 +564,7 @@ const docsNav = [
       { label: "下拉菜单", labelEn: "Dropdown Menu", href: "#dropdown-menu" },
       { label: "侧边栏", labelEn: "Sidebar", href: "#sidebar" },
       { label: "导航菜单", labelEn: "Nav Menu", href: "#nav-menu" },
+      { label: "分页器", labelEn: "Pagination", href: "#pagination" },
     ],
   },
   {
@@ -957,13 +962,13 @@ const buttonScenarioExamples = [
     titleEn: "Disabled state",
     intent: "权限不足、表单未完成或提交中，暂时不可触发。",
     intentEn: "Temporarily unavailable actions, such as insufficient permissions, incomplete forms, or pending submit.",
-    rule: "使用 disabled 表达不可操作，不要只降低透明度伪装禁用。",
-    ruleEn: "Use disabled for unavailable actions. Do not fake disabled state with opacity alone.",
+    rule: "使用 disabled 表达不可操作；各变体禁用态走语义 token（实心禁用色），不用透明度伪装。",
+    ruleEn: "Use disabled for unavailable actions. Each variant uses semantic disabled tokens, not opacity.",
     variant: "default",
     size: "default",
     group: "state",
     props: ["variant: default", "size: default", "disabled"],
-    code: "<Button disabled>提交中</Button>",
+    code: '<Button disabled>主操作</Button>\n<Button variant="outline" disabled>描边</Button>\n<Button variant="destructive" disabled>危险</Button>',
   },
   {
     id: "loading",
@@ -978,6 +983,20 @@ const buttonScenarioExamples = [
     group: "state",
     props: ["disabled", "Spinner", "data-icon: inline-start"],
     code: '<Button disabled><Spinner data-icon="inline-start" />提交中</Button>',
+  },
+  {
+    id: "plain",
+    title: "无底色按钮",
+    titleEn: "Plain button",
+    intent: "表格操作列、行内弱化操作；无边框无底色，hover 只变色。",
+    intentEn: "Table row actions and quiet inline buttons; borderless, color-only hover.",
+    rule: "用 variant=\"plain\" + tone（中性 / 主色 / 危险）；纯图标补 aria-label + Tooltip。",
+    ruleEn: "Use variant=\"plain\" with tone (neutral / primary / danger). Icon-only needs aria-label + Tooltip.",
+    variant: "plain",
+    size: "default",
+    group: "category",
+    props: ["variant: plain", "tone: default | primary | danger"],
+    code: '<Button variant="plain" tone="danger">删除</Button>',
   },
 ] as const
 
@@ -1433,10 +1452,12 @@ const tableDemoRows = [
 ]
 
 const tablePropRows = [
-  { prop: "Table", type: "组件", defaultValue: "—", desc: "外层容器，自带横向滚动和文字大小设置" },
-  { prop: "TableHeader / TableBody / TableFooter", type: "组件", defaultValue: "—", desc: "表头、表体、表尾分组容器，对应 thead / tbody / tfoot" },
-  { prop: "TableRow", type: "组件", defaultValue: "—", desc: "表格行，自带 hover 态和选中态背景" },
-  { prop: "TableHead / TableCell", type: "组件", defaultValue: "—", desc: "表头单元格 / 数据单元格" },
+  { prop: "Table", type: "density?: \"default\" | \"compact\" / bordered?: boolean", defaultValue: "density=\"default\" bordered=false", desc: "外层容器，自带横向滚动；compact 行高 36px；默认无边框（贴公司列表页），bordered 套圆角描边卡片" },
+  { prop: "TableHeader", type: "sticky?: boolean", defaultValue: "false", desc: "表头容器；sticky 时滚动吸顶（需外层固定高度 + overflow-auto）" },
+  { prop: "TableBody / TableFooter", type: "组件", defaultValue: "—", desc: "表体 / 表尾分组容器，对应 tbody / tfoot" },
+  { prop: "TableRow", type: "data-state?: \"selected\"", defaultValue: "—", desc: "表格行，自带 hover 态；data-state=selected 高亮选中行" },
+  { prop: "TableHead", type: "align? / pinned? / sortable? / sorted? / onSort?", defaultValue: "—", desc: "表头单元格：align 对齐、pinned 固定列、sortable 可排序（点击切 升/降/无 + 箭头）" },
+  { prop: "TableCell", type: "align?: \"left\"|\"center\"|\"right\" / pinned?: \"left\"|\"right\"", defaultValue: "—", desc: "数据单元格：align 对齐（数字常用 right），pinned 横向滚动时贴边固定" },
   { prop: "TableCaption", type: "组件", defaultValue: "—", desc: "表格的整体说明文字，渲染在表格下方" },
 ]
 
@@ -1535,6 +1556,7 @@ const badgeScenarioExamples = [
 const badgeVariantRows = [
   { variant: "default", usage: "品牌强调，主要操作标记（如当前版本、推荐）" },
   { variant: "success", usage: "成功/完成态（如已支付、已完成、校验通过）" },
+  { variant: "warning", usage: "提醒/警告态（如待审核、即将到期、VIP 标记）" },
   { variant: "secondary", usage: "中性态，次要或过程态信息（如处理中、草稿）" },
   { variant: "destructive", usage: "错误/警示态（如已失败、已过期）" },
   { variant: "outline", usage: "弱化态，适合密集列表中的轻量标签" },
@@ -2196,6 +2218,54 @@ const dropdownMenuAnchors = [
   { label: "API", href: "#dropdown-menu-props" },
   { label: "语义 DOM", href: "#dropdown-menu-semantic-dom" },
   { label: "正误示例", href: "#dropdown-menu-do-dont" },
+]
+const paginationAnchors = [
+  { label: "组件总览", href: "#pagination-overview" },
+  { label: "场景示例", href: "#pagination-preview" },
+  { label: "使用方式", href: "#pagination-usage" },
+  { label: "API", href: "#pagination-props" },
+  { label: "语义 DOM", href: "#pagination-semantic-dom" },
+  { label: "正误示例", href: "#pagination-do-dont" },
+]
+const paginationPropRows = [
+  { prop: "page", type: "number", defaultValue: "—", desc: "当前页（从 1 开始，受控）" },
+  { prop: "total", type: "number", defaultValue: "—", desc: "数据总条数，用于推导总页数" },
+  { prop: "pageSize", type: "number", defaultValue: "10", desc: "每页条数" },
+  { prop: "siblingCount", type: "number", defaultValue: "1", desc: "当前页两侧各保留的页码数，超出用省略号" },
+  { prop: "showTotal", type: "boolean", defaultValue: "true", desc: "是否显示「共 N 条」总数" },
+  { prop: "onPageChange", type: "(page: number) => void", defaultValue: "—", desc: "翻页回调，外部更新 page 状态" },
+]
+const paginationSemanticDomRows = [
+  { part: "[data-slot=\"pagination\"]", desc: "分页器根节点（nav），role=navigation、aria-label=分页。" },
+  { part: "[data-slot=\"pagination-ellipsis\"]", desc: "省略号占位，页码过多时收起中间页。" },
+]
+const paginationDoDontRows = [
+  { do: "受控用法：自己持有 page 状态，在 onPageChange 更新。", dont: "把页码列表和省略号逻辑在业务页里手搓一遍。" },
+  { do: "用 total + pageSize 推导页数。", dont: "手算 totalPages 再传一堆零散 props。" },
+  { do: "页码很多时依赖内置省略号收起。", dont: "一次平铺几十个页码按钮。" },
+]
+const paginationScenarioExamples = [
+  {
+    id: "basic",
+    title: "基础分页",
+    intent: "列表/表格底部翻页，页码不多时全部平铺。",
+    rule: "受控：page + onPageChange；total + pageSize 推导页数。",
+    code: `<Pagination page={page} total={48} pageSize={10} onPageChange={setPage} />`,
+  },
+  {
+    id: "ellipsis",
+    title: "大量页码（省略号）",
+    intent: "页数很多时，首尾页常驻、当前页两侧各留 siblingCount 个，其余收省略号。",
+    rule: "用 siblingCount 控制两侧页码数；不要手动拼省略号。",
+    code: `<Pagination page={page} total={1930} pageSize={10} siblingCount={1} onPageChange={setPage} />`,
+  },
+  {
+    id: "no-total",
+    title: "不显示总数",
+    intent: "空间紧凑或总数无意义时，隐藏「共 N 条」。",
+    rule: "showTotal={false} 只留页码与翻页箭头。",
+    code: `<Pagination page={page} total={48} pageSize={10} showTotal={false} onPageChange={setPage} />`,
+  },
 ]
 const dropdownMenuScenarioFilters = [
   { value: "type", label: "类型" },
@@ -2996,6 +3066,7 @@ function getPageFromHash(hash: string) {
   if (hash === "#tokens-layer") return "tokens-layer"
   if (hash === "#layout" || hash.startsWith("#layout-")) return "layout"
   if (hash === "#nav-menu" || hash.startsWith("#nav-menu-")) return "nav-menu"
+  if (hash === "#pagination" || hash.startsWith("#pagination-")) return "pagination"
   if (hash === "#grid" || hash.startsWith("#grid-")) return "grid"
   if (hash === "#icon" || hash.startsWith("#icon-")) return "icon"
   if (hash === "#intro" || hash.startsWith("#intro-")) return "intro"
@@ -3139,7 +3210,17 @@ function ButtonScenarioPreview({ id, lang }: { id: string; lang: Lang }) {
       </Button>
     )
   }
-  if (id === "disabled") return <Button disabled>{lang === "en" ? "Submitting" : "提交中"}</Button>
+  if (id === "disabled")
+    return (
+      <div className="flex flex-wrap items-center gap-3">
+        <Button disabled>{lang === "en" ? "Primary" : "主操作"}</Button>
+        <Button variant="secondary" disabled>{lang === "en" ? "Secondary" : "次操作"}</Button>
+        <Button variant="outline" disabled>{lang === "en" ? "Outline" : "描边"}</Button>
+        <Button variant="destructive" disabled>{lang === "en" ? "Destructive" : "危险"}</Button>
+        <Button variant="ghost" disabled>{lang === "en" ? "Ghost" : "幽灵"}</Button>
+        <Button variant="link" disabled>{lang === "en" ? "Link" : "链接"}</Button>
+      </div>
+    )
   if (id === "loading") {
     return (
       <Button disabled>
@@ -3148,6 +3229,14 @@ function ButtonScenarioPreview({ id, lang }: { id: string; lang: Lang }) {
       </Button>
     )
   }
+  if (id === "plain")
+    return (
+      <div className="flex flex-wrap items-center gap-2">
+        <Button variant="plain">{lang === "en" ? "View" : "查看"}</Button>
+        <Button variant="plain" tone="primary">{lang === "en" ? "Edit" : "编辑"}</Button>
+        <Button variant="plain" tone="danger">{lang === "en" ? "Delete" : "删除"}</Button>
+      </div>
+    )
   return <Button>{lang === "en" ? "Save" : "保存"}</Button>
 }
 
@@ -3187,6 +3276,14 @@ function ButtonOverview({ lang }: { lang: Lang }) {
             <PackageIcon data-icon="inline-start" />
           </Button>
         </div>
+        {/* 尺寸对所有 variant 正交生效（plain/ghost/outline 同样跟随 xs/sm/default/lg） */}
+        <p className="text-fx-12 text-muted-foreground">{lang === "en" ? "Size applies to every variant — e.g. plain:" : "尺寸对所有变体生效，例如无底色 plain："}</p>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button variant="plain" size="xs">XS</Button>
+          <Button variant="plain" size="sm">SM</Button>
+          <Button variant="plain">Default</Button>
+          <Button variant="plain" size="lg">Large</Button>
+        </div>
       </div>
       <div className="border-t border-dashed border-border" />
       <div className="grid gap-3">
@@ -3209,6 +3306,10 @@ function ButtonOverview({ lang }: { lang: Lang }) {
             .map((example) => (
               <ButtonScenarioPreview key={example.id} id={example.id} lang={lang} />
             ))}
+          {/* 无底色图标按钮（plain）：图标+文字 / 纯图标，tone 分色 */}
+          <Button variant="plain" tone="primary"><PlusIcon data-icon="inline-start" />{lang === "en" ? "New" : "新建"}</Button>
+          <Button variant="plain" size="icon-sm" aria-label={lang === "en" ? "View" : "查看"}><EyeIcon /></Button>
+          <Button variant="plain" tone="danger" size="icon-sm" aria-label={lang === "en" ? "Delete" : "删除"}><Trash2Icon /></Button>
         </div>
       </div>
     </div>
@@ -3307,6 +3408,7 @@ function App() {
   const isCalendarPage = page === "calendar"
   const isCollapsiblePage = page === "collapsible"
   const isDropdownMenuPage = page === "dropdown-menu"
+  const isPaginationPage = page === "pagination"
   const isPopoverPage = page === "popover"
   const isSeparatorPage = page === "separator"
   const isLinkPage = page === "link"
@@ -3394,6 +3496,8 @@ function App() {
                                               ? collapsibleAnchors
                                               : isDropdownMenuPage
                                                 ? dropdownMenuAnchors
+                                                : isPaginationPage
+                                                ? paginationAnchors
                                                 : isPopoverPage
                                                   ? popoverAnchors
                                                   : isSeparatorPage
@@ -3666,6 +3770,8 @@ function App() {
                 <CollapsiblePage actions={pageActions} lang={lang} />
               ) : isDropdownMenuPage ? (
                 <DropdownMenuPage actions={pageActions} lang={lang} />
+              ) : isPaginationPage ? (
+                <PaginationPage actions={pageActions} lang={lang} />
               ) : isPopoverPage ? (
                 <PopoverPage actions={pageActions} lang={lang} />
               ) : isSeparatorPage ? (
@@ -8379,6 +8485,255 @@ function TextareaPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
   )
 }
 
+function PaginationPreview({ total, pageSize = 10, siblingCount, showTotal, initial = 1 }: { total: number; pageSize?: number; siblingCount?: number; showTotal?: boolean; initial?: number }) {
+  const [page, setPage] = useState(initial)
+  return <Pagination page={page} total={total} pageSize={pageSize} siblingCount={siblingCount} showTotal={showTotal} onPageChange={setPage} className="justify-start" />
+}
+
+function PaginationPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  return (
+    <StandardDocPage
+      slug="pagination"
+      title="Pagination 分页器"
+      lead="分页浏览大量数据，提供页码、上一页/下一页与省略号；页码过多自动收起。"
+      overview={<PaginationPreview total={48} />}
+      scenarioExamples={paginationScenarioExamples}
+      renderScenarioPreview={(id) =>
+        id === "ellipsis" ? (
+          <PaginationPreview total={1930} siblingCount={1} initial={6} />
+        ) : id === "no-total" ? (
+          <PaginationPreview total={48} showTotal={false} />
+        ) : (
+          <PaginationPreview total={48} />
+        )
+      }
+      importCode={`import { Pagination } from "@/components/ui/pagination"`}
+      usageCode={`const [page, setPage] = useState(1)\n\n<Pagination\n  page={page}\n  total={193}\n  pageSize={10}\n  onPageChange={setPage}\n/>`}
+      propRows={paginationPropRows}
+      semanticDomRows={paginationSemanticDomRows}
+      doDontRows={paginationDoDontRows}
+      actions={actions}
+      lang={lang}
+    />
+  )
+}
+
+// 表格操作列纯图标按钮：无底色（variant=plain）、按语义分色（tone）、hover 只变色 + Tooltip + aria-label
+function IconAction({ icon, label, tone = "default" }: { icon: React.ReactNode; label: string; tone?: "default" | "primary" | "danger" }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger render={<Button variant="plain" tone={tone} size="icon-sm" aria-label={label}>{icon}</Button>} />
+      <TooltipContent>{label}</TooltipContent>
+    </Tooltip>
+  )
+}
+
+// 业务表演示数据（对齐公司 Figma：链接首列 / 头像 / 级别 Badge / 金额右对齐 / 操作）
+const tableBizRows = [
+  { id: 1, name: "三川德众血浆采集有限公司", owner: "文木", level: "VIP客户", levelVariant: "warning" as const, dept: "销售部", product: "罗技 G604 LIGHTSPEED 无线游戏鼠…", amount: 1530.17, date: "2023-12-17" },
+  { id: 2, name: "邱特云顶生态环境技术有限公司", owner: "文木", level: "重要客户", levelVariant: "success" as const, dept: "市场部", product: "Razer DeathAdder V2 无线游戏鼠标…", amount: 1634.25, date: "2023-12-18" },
+  { id: 3, name: "洛阳金升玄经贸有限公司", owner: "文木", level: "一般客户", levelVariant: "secondary" as const, dept: "研发部", product: "Corsair Dark Core RGB SE 无线游戏…", amount: 1745.09, date: "2023-12-19" },
+  { id: 4, name: "绵阳中诚祥财鑫管理有限公司", owner: "文木", level: "一般客户", levelVariant: "secondary" as const, dept: "人事部", product: "华硕 ROG Gladius II 烈焰战刃竞技版…", amount: 1862.47, date: "2023-12-20" },
+  { id: 5, name: "鹤庆华聚顺科技有限公司", owner: "文木", level: "VIP客户", levelVariant: "warning" as const, dept: "财务部", product: "HyperX Pulsefire Haste 无线轻量竞技…", amount: 1960.68, date: "2023-12-21" },
+  { id: 6, name: "平顶山泽大壵贸科技公司", owner: "文木", level: "重要客户", levelVariant: "success" as const, dept: "客服部", product: "SteelSeries Rival 3 无线雷神游戏…", amount: 2101.58, date: "2023-12-22" },
+  { id: 7, name: "新乡市佳谷投资有限公司", owner: "文木", level: "VIP客户", levelVariant: "warning" as const, dept: "IT部", product: "Cooler Master MM821 无线竞技游戏…", amount: 2224.13, date: "2023-12-23" },
+  { id: 8, name: "信阳瑞丰文化传播有限公司", owner: "文木", level: "一般客户", levelVariant: "secondary" as const, dept: "法务部", product: "Logitech G Pro X Superlight 无线游…", amount: 2345.99, date: "2023-12-24" },
+]
+const TABLE_PAGE_SIZE = 5
+
+
+function TableBusinessDemo() {
+  const [selected, setSelected] = useState<Set<number>>(new Set())
+  const [sort, setSort] = useState<"asc" | "desc" | false>(false)
+  const [page, setPage] = useState(1)
+
+  const sorted = sort
+    ? [...tableBizRows].sort((a, b) => (sort === "asc" ? a.amount - b.amount : b.amount - a.amount))
+    : tableBizRows
+  const pageRows = sorted.slice((page - 1) * TABLE_PAGE_SIZE, page * TABLE_PAGE_SIZE)
+  const pageIds = pageRows.map((r) => r.id)
+  const allChecked = pageIds.every((id) => selected.has(id))
+  const someChecked = pageIds.some((id) => selected.has(id))
+
+  const toggleAll = () =>
+    setSelected((s) => {
+      const next = new Set(s)
+      if (allChecked) pageIds.forEach((id) => next.delete(id))
+      else pageIds.forEach((id) => next.add(id))
+      return next
+    })
+  const toggleOne = (id: number) =>
+    setSelected((s) => {
+      const next = new Set(s)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+
+  return (
+    <div className="overflow-x-auto">
+      {selected.size > 0 && (
+        <div className="flex items-center gap-3 border-b border-border-subtle bg-muted px-3 py-2 text-fx-13">
+          <span className="text-muted-foreground">已选 <span className="font-medium text-foreground">{selected.size}</span> 项</span>
+          <Button size="sm" variant="outline">批量导出</Button>
+          <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())}>取消选择</Button>
+        </div>
+      )}
+      <Table density="compact">
+        <TableHeader>
+          <TableRow className="hover:bg-transparent">
+            <TableHead className="w-10 pl-3">
+              <Checkbox checked={allChecked} indeterminate={!allChecked && someChecked} onCheckedChange={toggleAll} aria-label="全选" />
+            </TableHead>
+            <TableHead>客户名称</TableHead>
+            <TableHead>负责人</TableHead>
+            <TableHead>客户级别</TableHead>
+            <TableHead>负责人部门</TableHead>
+            <TableHead>产品名称</TableHead>
+            <TableHead align="right" sortable sorted={sort} onSort={() => setSort(sort === "desc" ? "asc" : sort === "asc" ? false : "desc")}>金额(元)</TableHead>
+            <TableHead>最后修改时间</TableHead>
+            <TableHead align="right" className="pr-3">操作</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {pageRows.map((row) => (
+            <TableRow key={row.id} data-state={selected.has(row.id) ? "selected" : undefined}>
+              <TableCell className="pl-3"><Checkbox checked={selected.has(row.id)} onCheckedChange={() => toggleOne(row.id)} aria-label={`选择 ${row.name}`} /></TableCell>
+              <TableCell><a href="#table" className="text-link hover:text-link-hover active:text-link-active hover:underline">{row.name}</a></TableCell>
+              <TableCell>
+                <span className="inline-flex items-center gap-1.5">
+                  <Avatar className="size-5"><AvatarFallback colorful>{avatarInitials(row.owner)}</AvatarFallback></Avatar>
+                  {row.owner}
+                </span>
+              </TableCell>
+              <TableCell><Badge variant={row.levelVariant}>{row.level}</Badge></TableCell>
+              <TableCell className="text-muted-foreground">{row.dept}</TableCell>
+              <TableCell className="max-w-[200px] truncate text-muted-foreground">{row.product}</TableCell>
+              <TableCell align="right" className="text-fx-12 tabular-nums">{row.amount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}</TableCell>
+              <TableCell className="text-muted-foreground">{row.date}</TableCell>
+              <TableCell align="right" className="pr-3">
+                <TooltipProvider delay={100}>
+                  <span className="inline-flex items-center gap-1">
+                    <IconAction icon={<EyeIcon />} label="查看" />
+                    <IconAction icon={<PencilIcon />} label="编辑" />
+                    <IconAction icon={<Trash2Icon />} label="删除" tone="danger" />
+                  </span>
+                </TooltipProvider>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <div className="border-t border-border-subtle">
+        <Pagination page={page} total={tableBizRows.length} pageSize={TABLE_PAGE_SIZE} onPageChange={setPage} className="px-2 py-3" />
+      </div>
+    </div>
+  )
+}
+
+function TableAdvancedDemo() {
+  return (
+    <div className="overflow-x-auto">
+      <div className="scrollbar-thin max-h-72 overflow-auto">
+        <Table density="compact" className="min-w-[920px]">
+          <TableHeader sticky>
+            <TableRow className="hover:bg-transparent">
+              <TableHead>客户名称</TableHead>
+              <TableHead>负责人</TableHead>
+              <TableHead>客户级别</TableHead>
+              <TableHead>负责人部门</TableHead>
+              <TableHead>产品名称</TableHead>
+              <TableHead align="right">金额(元)</TableHead>
+              <TableHead>最后修改时间</TableHead>
+              <TableHead align="right" pinned="right" className="pr-3">操作</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {tableBizRows.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell><a href="#table" className="text-link hover:text-link-hover active:text-link-active hover:underline">{row.name}</a></TableCell>
+                <TableCell>
+                  <span className="inline-flex items-center gap-1.5">
+                    <Avatar className="size-5"><AvatarFallback colorful>{avatarInitials(row.owner)}</AvatarFallback></Avatar>
+                    {row.owner}
+                  </span>
+                </TableCell>
+                <TableCell><Badge variant={row.levelVariant}>{row.level}</Badge></TableCell>
+                <TableCell className="text-muted-foreground">{row.dept}</TableCell>
+                <TableCell className="max-w-[200px] truncate text-muted-foreground">{row.product}</TableCell>
+                <TableCell align="right" className="text-fx-12 tabular-nums">{row.amount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}</TableCell>
+                <TableCell className="text-muted-foreground">{row.date}</TableCell>
+                <TableCell align="right" pinned="right" className="pr-3">
+                  <TooltipProvider delay={100}>
+                    <span className="inline-flex items-center gap-1">
+                      <IconAction icon={<EyeIcon />} label="查看" />
+                      <IconAction icon={<PencilIcon />} label="编辑" />
+                      <IconAction icon={<Trash2Icon />} label="删除" tone="danger" />
+                    </span>
+                  </TooltipProvider>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  )
+}
+
+function TableLoadingDemo() {
+  return (
+    <div className="overflow-x-auto">
+      <Table density="compact">
+        <TableHeader>
+          <TableRow className="hover:bg-transparent">
+            <TableHead>客户名称</TableHead>
+            <TableHead>负责人</TableHead>
+            <TableHead>客户级别</TableHead>
+            <TableHead align="right">金额(元)</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <TableRow key={i} className="hover:bg-transparent">
+              <TableCell><Skeleton className="h-4 w-44" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+              <TableCell><Skeleton className="h-5 w-14 rounded-full" /></TableCell>
+              <TableCell align="right"><Skeleton className="ml-auto h-4 w-16" /></TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  )
+}
+
+function TableEmptyDemo() {
+  return (
+    <div className="overflow-x-auto">
+      <Table density="compact">
+        <TableHeader>
+          <TableRow className="hover:bg-transparent">
+            <TableHead>客户名称</TableHead>
+            <TableHead>负责人</TableHead>
+            <TableHead>客户级别</TableHead>
+            <TableHead align="right">金额(元)</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow className="hover:bg-transparent">
+            <TableCell colSpan={4}>
+              <div className="flex flex-col items-center justify-center gap-1 py-12 text-muted-foreground">
+                <DatabaseIcon className="size-7 opacity-40" />
+                <span className="text-fx-13">暂无数据</span>
+              </div>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </div>
+  )
+}
+
 function TablePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   const tableImportCode = `import {\n  Table,\n  TableBody,\n  TableCaption,\n  TableCell,\n  TableHead,\n  TableHeader,\n  TableRow,\n} from "@/components/ui/table"`
   const tableUsageCode = `<Table>\n  <TableCaption>最近的订单记录</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead>订单号</TableHead>\n      <TableHead>客户</TableHead>\n      <TableHead>状态</TableHead>\n      <TableHead className="text-right">金额</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    {orders.map((order) => (\n      <TableRow key={order.id}>\n        <TableCell>{order.id}</TableCell>\n        <TableCell>{order.customer}</TableCell>\n        <TableCell><Badge variant="outline">{order.status}</Badge></TableCell>\n        <TableCell className="text-right">{order.amount}</TableCell>\n      </TableRow>\n    ))}\n  </TableBody>\n</Table>`
@@ -8405,7 +8760,7 @@ function TablePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
             统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot</code> 标记各部位，外层容器自带横向滚动。
           </p>
         </div>
-        <div className="overflow-hidden rounded-xl border border-border">
+        <div className="overflow-hidden rounded-xl border border-border bg-card">
           <Table>
             <TableCaption>最近的订单记录</TableCaption>
             <TableHeader>
@@ -8436,38 +8791,67 @@ function TablePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">场景示例</h2>
           <p className="text-base text-muted-foreground">
-            带表尾汇总的表格，用于展示一组明细数据及其合计。
+            对齐公司列表页：链接首列、负责人头像、级别 Badge、金额右对齐排序、行选中 + 批量操作、分页。
           </p>
         </div>
-        <div className="overflow-hidden rounded-xl border border-border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>订单号</TableHead>
-                <TableHead>客户</TableHead>
-                <TableHead>状态</TableHead>
-                <TableHead className="text-right">金额</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {tableDemoRows.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell className="font-medium">{row.id}</TableCell>
-                  <TableCell>{row.customer}</TableCell>
-                  <TableCell>
-                    <Badge variant={row.status === "已支付" ? "success" : "outline"}>{row.status}</Badge>
-                  </TableCell>
-                  <TableCell className="text-right">{row.amount}</TableCell>
+
+        <div className="flex flex-col gap-2">
+          <h3 className="text-base font-medium">业务列表（可选中 · 可排序 · 分页）</h3>
+          <p className="text-fx-13 text-muted-foreground">勾选行出现批量操作条；点「金额」表头切换升/降序；底部主流页码分页。</p>
+          <TableBusinessDemo />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <h3 className="text-base font-medium">带表尾汇总</h3>
+          <p className="text-fx-13 text-muted-foreground">用 TableFooter 展示一组明细的合计。</p>
+          <div className="overflow-x-auto">
+            <Table density="compact">
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead>订单号</TableHead>
+                  <TableHead>客户</TableHead>
+                  <TableHead>状态</TableHead>
+                  <TableHead align="right">金额</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TableCell colSpan={3}>合计</TableCell>
-                <TableCell className="text-right">¥4,280</TableCell>
-              </TableRow>
-            </TableFooter>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {tableDemoRows.map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell className="font-medium">{row.id}</TableCell>
+                    <TableCell>{row.customer}</TableCell>
+                    <TableCell>
+                      <Badge variant={row.status === "已支付" ? "success" : "outline"}>{row.status}</Badge>
+                    </TableCell>
+                    <TableCell align="right" className="text-fx-12 tabular-nums">{row.amount}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TableCell colSpan={3}>合计</TableCell>
+                  <TableCell align="right">¥4,280</TableCell>
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <h3 className="text-base font-medium">吸顶表头 + 固定操作列</h3>
+          <p className="text-fx-13 text-muted-foreground">列多需横向滚动时：表头吸顶、操作列贴右固定（带分隔阴影），上下滚动表头不动。</p>
+          <TableAdvancedDemo />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <h3 className="text-base font-medium">加载态</h3>
+          <p className="text-fx-13 text-muted-foreground">数据加载中用骨架行占位，保持表格结构不跳动。</p>
+          <TableLoadingDemo />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <h3 className="text-base font-medium">空状态</h3>
+          <p className="text-fx-13 text-muted-foreground">无数据时居中提示「暂无数据」。</p>
+          <TableEmptyDemo />
         </div>
       </section>
 

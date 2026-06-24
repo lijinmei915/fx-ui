@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-07
+last_verified: 2026-06-25
 teaches: "fx-ui 当前的 UI 规则、token 使用方式和设计边界"
 use_when: "做 UI/视觉相关改动前，判断该走哪条规则、参考哪份文档"
 ---
@@ -24,6 +24,21 @@ use_when: "做 UI/视觉相关改动前，判断该走哪条规则、参考哪�
 - token 真相源是 `theme/fx-theme.css`，查表看 `docs/TOKENS.md`
 - 布局规则从真实页面沉淀，记在 `docs/LAYOUTS.md`，不凭空制定
 - `@theme inline` 不能用 `var()` 引用具体色值（Tailwind v4 编译期限制），必须直写色值——这条踩坑记录见 `HANDOFF.md`
+
+## 组件变体与组合规范（所有组件通用）
+
+> 核心：一个组件 = 一组**正交轴**，靠 props 自由组合，**不为某种外观/组合单独建组件**。决策见 `docs/DECISIONS.md` DEC-019。
+
+- **用正交轴定义可配置维度**，不堆组件。常见轴：
+  - `variant` —— 语义/类型（如 default / outline / ghost / destructive / link / plain）
+  - `size` —— 尺寸（xs / sm / default / lg / icon-*），管高度、内边距、字号、图标-文字 gap
+  - `tone` / 语义色 —— 按组件而定（如 Button 的 plain 用 tone 分 中性/主色/危险；Badge 用 variant 表达 success/warning 等）
+  - 状态 —— 原生或 data 态（`disabled` / `data-checked` / `data-state=open` 等）
+- **轴之间正交**：任意 `variant × size × tone × 状态` 组合都合法，按需用 props 拼（如 `<Button variant="plain" size="sm" tone="danger">`），**不新建组合组件、不滥加 variant**。
+- **视觉值全走 token**：变体只切换语义 token 槽（bg/text/border/disabled 等），不在组件层写死颜色/尺寸；交互态用 `*-hover / *-active / *-disabled` token，不用透明度伪装。
+- **选择顺序**：先按语义选 `variant` → 按密度/场景选 `size` → 需要分色再选 `tone` → 状态按需加。
+- **何时才真正新增 variant / 组件**：仅当出现现有轴**表达不了的新语义**时（如「无底色按钮 plain」是 ghost 之外的新语义）；新增必须同步 `components.manifest.json` + 组件文档 + 一条 DEC。
+- **文档展示**：场景示例按轴（类型/尺寸/状态/图标）分 tab 展示，**不铺全矩阵**（组合爆炸）；组件总览并排展示各轴并体现"可正交组合"。
 
 ## 参考文档
 

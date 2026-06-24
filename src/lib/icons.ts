@@ -75,6 +75,8 @@ export {
   IconStarOff as StarOffIcon,
   IconTerminal2 as TerminalIcon,
   IconTrash as Trash2Icon,
+  IconEye as EyeIcon,
+  IconPencil as PencilIcon,
   IconUnderline as UnderlineIcon,
   IconUser as UserIcon,
   IconCircleX as XCircleIcon,

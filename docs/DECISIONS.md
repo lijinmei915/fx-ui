@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-06-24
+last_verified: 2026-06-25
 teaches: "fx-ui 重要的技术/协作决策记录：选了什么、放弃了什么、为什么"
 use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论"
 ---
@@ -214,6 +214,18 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **选中样式统一**：多选（CheckboxItem）与单选（RadioItem）的**选中项文字样式一致**——主色橙字 + 加粗 + 橙勾（`data-checked:font-medium data-checked:text-primary`）。原多选选中是中性黑勾、不变色，用户看不出"已选/可被选择"；统一成橙色高亮后，单/多选靠"能否多选"区分，不靠颜色
 - **影响**：`dropdown-menu.tsx` 的 Content 尺寸类、CheckboxItem/RadioItem 选中色；文档 API 表与搜索场景约束
 - **相关文件**：`src/components/ui/dropdown-menu.tsx`、`src/App.tsx`
+
+### DEC-019: 组件用正交 prop 组合，不为组合造新组件（全站通用）
+
+- **日期**：2026-06-25
+- **状态**：已决定
+- **适用范围**：所有组件（不限 Button）；通用规范正文见 `docs/DESIGN_STANDARDS.md`「组件变体与组合规范」
+- **决定**：每个组件 = 一组**正交轴**，靠 props 组合：`variant`（语义/类型）/ `size`（尺寸）/ `tone` 或语义色（按组件）/ 原生·data 状态。任意组合合法，按需拼（如 `<Button variant="plain" size="sm" tone="danger">`）
+- **放弃**：为某个组合单独封装组件（如 PlainSmallDangerButton）或滥加 variant；会组合爆炸、架空 variant/token 体系
+- **规则**：① 选择顺序 variant → size →（需要才）tone → 状态；② 视觉值全走 token，交互态用 `*-hover/active/disabled` 不用透明度；③ 纯图标必须 aria-label + Tooltip；④ 仅当出现现有轴表达不了的新语义才加 variant/组件（如 Button 的 `plain` 无底色），并同步 manifest + 文档 + DEC
+- **文档展示**：场景示例按轴分 tab，不铺全矩阵；组件总览并排各轴并体现正交可组合（如 plain 跟随尺寸）
+- **首例落地**：Button 新增 `plain` 变体 + `tone`（中性/主色/链接/危险），用于表格操作列、行内弱化操作
+- **相关文件**：`docs/DESIGN_STANDARDS.md`、`src/components/ui/button.tsx`、`docs/components/button.md`、`src/App.tsx`
 
 ## 相关文件
 

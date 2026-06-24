@@ -235,20 +235,27 @@ function NavMenuItem({
       )}
       {...props}
     >
-      {/* 折叠箭头只在展开态显示；收起态(整面板 peek)显示项自己的图标，保持一列干净图标 */}
-      {expandable && !collapsed ? (
+      {/* 前置：无图标的可折叠项用前置折叠箭头（前台分组）；其它显示图标。收起态只显示图标。 */}
+      {expandable && !icon && !collapsed ? (
         <ChevronRightIcon className={cn("transition-transform", expanded && "rotate-90")} />
       ) : (
         icon
       )}
-      {/* 展开：左对齐文案；收起且无图标(无图标版)：居中显示文案；收起且有图标：仅图标。 */}
+      {/* 展开：左对齐文案；收起且无图标：居中 2 字标识；收起且有图标：仅图标。 */}
       {!collapsed ? (
         <span className="flex-1 truncate">{label}</span>
       ) : !icon ? (
         <span className="w-full text-center whitespace-nowrap">{collapsedLabel(label)}</span>
       ) : null}
-      {/* 右侧跳转箭头（后台菜单：点进下级页面，区别于 expandable 的前置折叠箭头） */}
-      {arrow && !collapsed && <ChevronRightIcon className="size-3 shrink-0 text-muted-foreground" />}
+      {/* 后置箭头：有图标的可折叠项 = 右侧旋转箭头(>关 ∨开)；arrow 跳转项 = 右侧静态箭头(>) */}
+      {!collapsed && ((expandable && icon) || arrow) && (
+        <ChevronRightIcon
+          className={cn(
+            "size-3 shrink-0 text-muted-foreground",
+            expandable && icon && cn("transition-transform", expanded && "rotate-90")
+          )}
+        />
+      )}
     </button>
   )
   // 收起态信息不全（仅图标 / 截断文案），用气泡补全完整文案。

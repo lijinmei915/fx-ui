@@ -86,8 +86,22 @@ function NavRailItem({
   return button
 }
 
-// NavMenu：单面板根容器，展开 200 / 收起 48，纵向 头部/搜索/列表/底部。
-function NavMenu({ children, className, collapsed }: DivProps & { collapsed?: boolean }) {
+// NavMenu：单面板根容器，展开 200。
+// collapseMode：收起形态——
+//   "rail"（默认）：收起成 48px 图标栏（适合每项都有图标的菜单，如后台）。
+//   "strip"：收起成 12px 细条（Notion 式，适合含无图标分类标题的菜单，如前台对象菜单）；
+//            细条不画内容，靠 hover 整面板临时滑出（peek）来选子项。
+function NavMenu({ children, className, collapsed, collapseMode = "rail" }: DivProps & { collapsed?: boolean; collapseMode?: "rail" | "strip" }) {
+  if (collapsed && collapseMode === "strip") {
+    return (
+      <div
+        data-slot="nav-menu"
+        data-collapsed=""
+        aria-hidden
+        className={cn("h-full w-3 shrink-0 rounded-lg bg-card transition-[width]", className)}
+      />
+    )
+  }
   return (
     <div
       data-slot="nav-menu"

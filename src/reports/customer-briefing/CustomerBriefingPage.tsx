@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge"
+import { Tag } from "@/components/ui/tag"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import {
@@ -53,7 +53,7 @@ function ConfidenceBadge({ confidence }: { confidence: string }) {
     unknown: { label: "未知", variant: "outline" },
   }
   const item = map[confidence] ?? { label: confidence, variant: "outline" as const }
-  return <Badge variant={item.variant}>{item.label}</Badge>
+  return <Tag variant={item.variant}>{item.label}</Tag>
 }
 
 function LevelBadge({ level }: { level: string }) {
@@ -64,7 +64,7 @@ function LevelBadge({ level }: { level: string }) {
     unknown: { label: "未知", variant: "outline" },
   }
   const item = map[level] ?? { label: level, variant: "outline" as const }
-  return <Badge variant={item.variant}>{item.label}</Badge>
+  return <Tag variant={item.variant}>{item.label}</Tag>
 }
 
 function AttitudeBadge({ attitude }: { attitude: string }) {
@@ -76,11 +76,11 @@ function AttitudeBadge({ attitude }: { attitude: string }) {
     unknown: { label: "未知", variant: "outline" },
   }
   const item = map[attitude] ?? { label: attitude, variant: "outline" as const }
-  return <Badge variant={item.variant}>{item.label}</Badge>
+  return <Tag variant={item.variant}>{item.label}</Tag>
 }
 
 function StageBadge({ stage }: { stage: string }) {
-  return <Badge variant="outline">{stage}</Badge>
+  return <Tag variant="outline">{stage}</Tag>
 }
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
@@ -105,7 +105,7 @@ function ProfileSection({ profile }: { profile: CustomerBriefingData["r01_custom
             {profile.industry} · {profile.segment} · {profile.location}
           </p>
         </div>
-        <Badge variant="secondary">{profile.deal_status}</Badge>
+        <Tag variant="secondary">{profile.deal_status}</Tag>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
         <p className="text-sm text-foreground">{profile.business_description}</p>
@@ -259,7 +259,7 @@ function RelationshipSection({
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <SectionTitle>关系温度</SectionTitle>
-        <Badge variant="secondary">总体温度 {temperature.overall_temperature} · {temperature.trend}</Badge>
+        <Tag variant="secondary">总体温度 {temperature.overall_temperature} · {temperature.trend}</Tag>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
         <p className="text-sm text-muted-foreground">{temperature.reason}</p>
@@ -348,7 +348,7 @@ function DecisionChainSection({
                   <span className="ml-1 text-xs text-muted-foreground">{person.title}</span>
                 </TableCell>
                 <TableCell>
-                  <Badge variant="outline">{person.role}</Badge>
+                  <Tag variant="outline">{person.role}</Tag>
                 </TableCell>
                 <TableCell>
                   <LevelBadge level={person.influence_level} />
@@ -463,7 +463,7 @@ function OpportunitySection({
                 <TableRow key={opportunity.opportunity_id}>
                   <TableCell className="font-medium text-foreground">{opportunity.name}</TableCell>
                   <TableCell>
-                    <Badge variant="outline">{opportunity.stage}</Badge>
+                    <Tag variant="outline">{opportunity.stage}</Tag>
                   </TableCell>
                   <TableCell className="text-muted-foreground">{opportunity.amount}</TableCell>
                   <TableCell className="text-muted-foreground">{opportunity.probability}</TableCell>
@@ -483,7 +483,7 @@ function OpportunitySection({
               {overview.usage_scope.user_groups.map((group, index) => (
                 <li key={index}>
                   <span className="text-foreground">{group.group}</span>（{group.scale}）— {group.core_need}
-                  <Badge variant="outline" className="ml-2">{group.priority}</Badge>
+                  <Tag variant="outline" className="ml-2">{group.priority}</Tag>
                 </li>
               ))}
             </ul>
@@ -552,7 +552,7 @@ function PainList({
       <ul className="flex flex-col gap-1.5">
         {items.map((item, index) => (
           <li key={index} className="flex items-start gap-2 text-sm">
-            <Badge variant="outline" className="mt-0.5 shrink-0">{item.badge}</Badge>
+            <Tag variant="outline" className="mt-0.5 shrink-0">{item.badge}</Tag>
             <div>
               <span className="text-foreground">{item.text}</span>
               <p className="text-xs text-muted-foreground">{item.detail}</p>
@@ -703,7 +703,7 @@ function HistoryFinancialSection({
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <SectionTitle>历史合作与财务健康</SectionTitle>
-        <Badge variant="secondary">{lifecycle.lifecycle_stage}</Badge>
+        <Tag variant="secondary">{lifecycle.lifecycle_stage}</Tag>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-4">

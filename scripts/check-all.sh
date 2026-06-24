@@ -28,6 +28,7 @@ run_check "浮层阴影 token 检查"    node scripts/check-shadow-tokens.mjs
 run_check "目录锚点关联检查"      node scripts/check-toc-anchors.mjs
 run_check "组件文档 API 检查"     node scripts/check-component-docs.mjs
 run_check "交互态 token 检查"     node scripts/check-interaction-tokens.mjs
+run_check "组件体检硬伤检查"      node scripts/check-component-hygiene.mjs
 run_check "导入约定检查"          node scripts/check-imports.mjs
 run_check "文档站骨架契约检查"    node scripts/check-doc-site-contract.mjs
 run_check "组件 manifest 检查"    node scripts/check-components-manifest.mjs

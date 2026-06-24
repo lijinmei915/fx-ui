@@ -1,6 +1,6 @@
 import { AlertCircleIcon, FileTextIcon, LightbulbIcon } from "@/lib/icons"
 
-import { Badge } from "@/components/ui/badge"
+import { Tag } from "@/components/ui/tag"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -203,7 +203,7 @@ function AgentSurfaceBlockView({
               <CardTitle className="text-[15px] font-semibold">{block.title}</CardTitle>
               <CardDescription className="break-words">{block.filename}</CardDescription>
             </div>
-            {block.meta ? <Badge variant="outline" className="rounded-full font-normal">{block.meta}</Badge> : null}
+            {block.meta ? <Tag variant="outline" className="rounded-full font-normal">{block.meta}</Tag> : null}
           </div>
         </CardHeader>
         {block.summary || block.actions?.length ? (

@@ -202,36 +202,34 @@ if (!input) {
   }
 }
 
+// Tag 标签（行内 pill：状态 variant + 分类 color），承接原 Badge 的 pill 职责
+const tag = (manifest.uiComponents ?? []).find((component) => component.name === "Tag")
+if (!tag) {
+  errors.push("Tag must be present in components manifest")
+} else {
+  const [tagSource, tagDoc, appSource] = await Promise.all([
+    readText(tag.source),
+    readText(tag.doc),
+    readText("src/App.tsx"),
+  ])
+  const sourceVariants = extractVariantKeys(tagSource, "variant")
+
+  if (!sameMembers(sourceVariants, tag.variants ?? [])) {
+    errors.push(`Tag variants drift: source=[${sourceVariants.join(", ")}], manifest=[${(tag.variants ?? []).join(", ")}]`)
+  }
+
+  assertIncludes(tagDoc, tag.variants ?? [], "Tag doc variants", errors)
+  assertIncludes(appSource, tag.variants ?? [], "Tag page variants", errors)
+  assertIncludes(tagSource, ["useRender", "slot: \"tag\"", "render"], "Tag source Base UI render", errors)
+}
+
+// Badge 角标（dot/count），纯组件、无 variant
 const badge = (manifest.uiComponents ?? []).find((component) => component.name === "Badge")
 if (!badge) {
   errors.push("Badge must be present in components manifest")
 } else {
-  const [badgeSource, badgeDoc, appSource] = await Promise.all([
-    readText(badge.source),
-    readText(badge.doc),
-    readText("src/App.tsx"),
-  ])
-  const sourceVariants = extractVariantKeys(badgeSource, "variant")
-
-  if (!sameMembers(sourceVariants, badge.variants ?? [])) {
-    errors.push(`Badge variants drift: source=[${sourceVariants.join(", ")}], manifest=[${(badge.variants ?? []).join(", ")}]`)
-  }
-
-  assertIncludes(badgeDoc, badge.variants ?? [], "Badge doc variants", errors)
-  assertIncludes(appSource, badge.variants ?? [], "Badge page variants", errors)
-  assertIncludes(badgeDoc, ["render", "data-icon", "slot: \"badge\"", "Badge 不是 Button"], "Badge doc render and semantic rules", errors)
-  assertIncludes(badgeSource, ["useRender", "slot: \"badge\"", "render"], "Badge source Base UI render", errors)
-
-  const forbiddenBadgeDocs = [
-    "Badge 提供 6 种 variant",
-    "当前源码未暴露 data-slot",
-    "<Badge>\n  <a",
-  ]
-  for (const forbidden of forbiddenBadgeDocs) {
-    if (badgeDoc.includes(forbidden) || appSource.includes(forbidden)) {
-      errors.push(`Badge docs may imply outdated or invalid usage: ${forbidden}`)
-    }
-  }
+  const badgeSource = await readText(badge.source)
+  assertIncludes(badgeSource, ["data-slot=\"badge\"", "dot", "count"], "Badge 角标 source", errors)
 }
 
 if (errors.length > 0) {

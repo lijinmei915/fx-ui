@@ -1,0 +1,24 @@
+{
+  "format": "fx-ui/component-hygiene-baseline",
+  "note": "存量违规豁免清单（grandfather）。脚本只对清单外的新增违规 ❌ fail。体检修复一个组件后，从这里删掉对应条目；清空 = 全站干净。条目格式 '文件名::规则'。",
+  "allow": [
+    "tabs.tsx::disabled-opacity",
+    "link.tsx::disabled-opacity",
+    "label.tsx::disabled-opacity",
+    "calendar.tsx::disabled-opacity",
+    "switch.tsx::disabled-opacity",
+    "checkbox.tsx::disabled-opacity",
+    "select.tsx::disabled-opacity",
+    "toggle.tsx::disabled-opacity",
+    "textarea.tsx::disabled-opacity",
+    "sidebar.tsx::disabled-opacity",
+    "dropdown-menu.tsx::disabled-opacity",
+    "input.tsx::disabled-opacity",
+    "tabs.tsx::disabled-pointer-events",
+    "sidebar.tsx::disabled-pointer-events",
+    "toggle.tsx::disabled-pointer-events",
+    "select.tsx::disabled-pointer-events",
+    "dropdown-menu.tsx::disabled-pointer-events",
+    "input.tsx::disabled-pointer-events"
+  ]
+}

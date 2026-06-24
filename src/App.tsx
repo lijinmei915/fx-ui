@@ -60,7 +60,8 @@ import {
   UserIcon,
 } from "@/lib/icons"
 
-import { Badge, Indicator } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge"
+import { Tag } from "@/components/ui/tag"
 import {
   ChartContainer,
   ChartTooltip,
@@ -550,6 +551,7 @@ const docsNav = [
       { label: "表格", labelEn: "Table", href: "#table" },
       { label: "卡片", labelEn: "Card", href: "#card" },
       { label: "图表", labelEn: "Chart", href: "#chart" },
+      { label: "标签", labelEn: "Tag", href: "#tag" },
       { label: "徽标", labelEn: "Badge", href: "#badge" },
       { label: "提示", labelEn: "Tooltip", href: "#tooltip" },
       { label: "折叠面板", labelEn: "Collapsible", href: "#collapsible" },
@@ -1506,83 +1508,92 @@ const cardDoDontRows = [
   { do: "卡片只承载内容容器职责，交互逻辑放在业务组件里。", dont: "把 Card 包装成带状态管理的黑盒业务组件。" },
 ]
 
+const tagAnchors = [
+  { label: "组件总览", href: "#tag-overview" },
+  { label: "场景示例", href: "#tag-preview" },
+  { label: "使用方式", href: "#tag-usage" },
+  { label: "API", href: "#tag-props" },
+  { label: "语义 DOM", href: "#tag-semantic-dom" },
+  { label: "正误示例", href: "#tag-do-dont" },
+]
 const badgeAnchors = [
   { label: "组件总览", href: "#badge-overview" },
   { label: "场景示例", href: "#badge-preview" },
   { label: "使用方式", href: "#badge-usage" },
   { label: "API", href: "#badge-props" },
   { label: "语义 DOM", href: "#badge-semantic-dom" },
-  { label: "正误示例", href: "#badge-do-dont" },
 ]
 
-const badgeScenarioExamples = [
+const tagScenarioExamples = [
   {
     id: "status",
     title: "状态标记",
     intent: "在表格、列表里标记数据的当前状态。",
     rule: "成功态用 success，中性态用 secondary 或 outline，错误态用 destructive。",
-    code: `<Badge variant="success">已支付</Badge>\n<Badge variant="secondary">处理中</Badge>\n<Badge variant="destructive">已失败</Badge>`,
+    code: `<Tag variant="success">已支付</Tag>\n<Tag variant="secondary">处理中</Tag>\n<Tag variant="destructive">已失败</Tag>`,
   },
   {
-    id: "count",
-    title: "计数提示",
-    intent: "展示未读数量、新增条目数等数字提示。",
-    rule: "数字内容保持简短，避免在 Badge 里塞长文本。",
-    code: `<Badge variant="outline">+12</Badge>`,
+    id: "color",
+    title: "分类打标（多彩）",
+    intent: "给客户/对象贴分类标签，颜色代表类别而非状态（如 高意向、华东区）。",
+    rule: "用 color（red/amber/.../purple/pink）软色打标；颜色=类别，不要和状态 variant 混用语义。",
+    code: `<Tag color="purple">高意向</Tag>\n<Tag color="blue">华东区</Tag>\n<Tag color="green">已签约</Tag>`,
   },
   {
     id: "icon",
     title: "搭配图标",
     intent: "用图标强化语义，如校验通过、AI 生成标记。",
-    rule: "图标放进 Badge 时用 data-icon 标记位置，不手写尺寸覆盖。",
-    code: `<Badge variant="secondary">\n  <CheckCircleIcon data-icon="inline-start" />\n  已校验\n</Badge>`,
-  },
-  {
-    id: "link",
-    title: "链接徽标",
-    intent: "版本号、分类标签等需要跳转到详情或筛选结果。",
-    rule: "使用 render={<a href=\"...\" />}，不要嵌套 <a>，也不要用 onClick 把 Badge 伪装成 Button。",
-    code: `<Badge variant="link" render={<a href="/releases/v1.2.0" />}>\n  v1.2.0\n</Badge>`,
-  },
-  {
-    id: "indicator",
-    title: "角标（红点/数字）",
-    intent: "图标按钮（通知铃铛/消息）、导航项、Tab 上的未读红点或未读数。",
-    rule: "用 Indicator 包裹载体，dot 红点 / count 数字（超 max 显示「max+」），自动定位右上角；角标是通用能力，不写进具体组件内部。",
-    code: `import { Indicator } from "@/components/ui/badge"\n\n<Indicator dot>\n  <Button size="icon" variant="outline" aria-label="通知"><BellIcon /></Button>\n</Indicator>\n<Indicator count={5}>…</Indicator>\n<Indicator count={120} max={99}>…</Indicator>  // 99+`,
+    rule: "图标放进 Tag 时用 data-icon 标记位置，不手写尺寸覆盖。",
+    code: `<Tag variant="secondary">\n  <CheckCircleIcon data-icon="inline-start" />\n  已校验\n</Tag>`,
   },
 ]
 
-const badgeVariantRows = [
-  { variant: "default", usage: "品牌强调，主要操作标记（如当前版本、推荐）" },
+const tagVariantRows = [
+  { variant: "default", usage: "品牌强调，主要标记（如当前版本、推荐）" },
   { variant: "success", usage: "成功/完成态（如已支付、已完成、校验通过）" },
   { variant: "warning", usage: "提醒/警告态（如待审核、即将到期、VIP 标记）" },
   { variant: "secondary", usage: "中性态，次要或过程态信息（如处理中、草稿）" },
   { variant: "destructive", usage: "错误/警示态（如已失败、已过期）" },
   { variant: "outline", usage: "弱化态，适合密集列表中的轻量标签" },
-  { variant: "ghost", usage: "更弱化的标记，适合悬浮态、非重点信息" },
-  { variant: "link", usage: "可点击跳转的轻量标签，外观接近链接" },
+]
+const tagColorList = ["red", "amber", "yellow", "lime", "green", "teal", "cyan", "blue", "purple", "pink"] as const
+
+const tagPropRows = [
+  { prop: "variant", type: "\"default\" | \"secondary\" | \"destructive\" | \"success\" | \"warning\" | \"outline\"", defaultValue: "default", desc: "状态语义配色" },
+  { prop: "color", type: "\"none\" | \"red\" | \"amber\" | … | \"purple\" | \"pink\"", defaultValue: "none", desc: "分类打标多彩软色（设置后覆盖 variant 配色），颜色=类别" },
+  { prop: "render", type: "ReactElement | (props, state) => ReactElement", defaultValue: "—", desc: "自定义根节点渲染（Base UI render）" },
+  { prop: "className", type: "string", defaultValue: "—", desc: "在保留基础样式的前提下追加布局/间距类名" },
 ]
 
 const badgePropRows = [
-  { prop: "variant", type: "\"default\" | \"secondary\" | \"destructive\" | \"success\" | \"outline\" | \"ghost\" | \"link\"", defaultValue: "default", desc: "视觉强调级别，对应不同语义场景" },
-  { prop: "render", type: "ReactElement | (props, state) => ReactElement", defaultValue: "—", desc: "自定义根节点渲染（如渲染成 <a> 实现链接徽标）" },
-  { prop: "className", type: "string", defaultValue: "—", desc: "在保留基础样式的前提下追加 Tailwind 类名" },
-  { prop: "Indicator.dot / count", type: "boolean / number", defaultValue: "—", desc: "角标：dot 红点、count 未读数（超 max 显示「max+」）；传 children 时自动定位到右上角" },
-  { prop: "Indicator.max / tone", type: "number / \"destructive\" | \"primary\"", defaultValue: "99 / destructive", desc: "数字溢出阈值与角标配色" },
+  { prop: "dot", type: "boolean", defaultValue: "false", desc: "红点（不显示数字）" },
+  { prop: "count", type: "number", defaultValue: "—", desc: "未读数；超过 max 显示「max+」" },
+  { prop: "max", type: "number", defaultValue: "99", desc: "数字溢出阈值" },
+  { prop: "showZero", type: "boolean", defaultValue: "false", desc: "count<=0 时是否仍显示 0" },
+  { prop: "tone", type: "\"destructive\" | \"primary\"", defaultValue: "destructive", desc: "角标配色" },
 ]
 
-const badgeSemanticDomRows = [
-  { part: "slot: \"badge\"", desc: "源码传给 Base UI useRender 的状态，运行时用于标记徽标根节点" },
-  { part: "data-slot=\"badge\"", desc: "运行时语义定位，承载圆角、内边距、背景与文字色" },
+const tagSemanticDomRows = [
+  { part: "slot: \"tag\"", desc: "源码传给 Base UI useRender 的状态，标记标签根节点" },
   { part: "data-icon=\"inline-start\" / \"inline-end\"", desc: "标记图标在文字前/后的位置，驱动间距样式" },
 ]
 
+const tagDoDontRows = [
+  { do: "状态用 variant（成功/中性/错误），分类打标用 color。", dont: "用自定义颜色 className 硬造标签。" },
+  { do: "内容保持简短（状态词、分类词、图标+短词）。", dont: "把长句子塞进 Tag。" },
+  { do: "图标用 data-icon 标记位置。", dont: "手写图标尺寸覆盖默认布局。" },
+  { do: "需要跳转用链接或 Button。", dont: "给 Tag 加 onClick 当按钮用。" },
+]
+
+const badgeSemanticDomRows = [
+  { part: "data-slot=\"badge\"", desc: "角标本体（红点/数字），承载圆角、底色与反白文字" },
+  { part: "data-slot=\"badge-root\"", desc: "传 children 时包裹载体的相对定位容器" },
+]
+
 const badgeDoDontRows = [
-  { do: "用 variant 表达语义级别（成功/中性/错误）。", dont: "用自定义颜色 className 表达状态语义。" },
-  { do: "内容保持简短（状态词、数字、图标+短词）。", dont: "把长句子或多行说明塞进 Badge。" },
-  { do: "图标用 data-icon 标记位置。", dont: "手写图标尺寸和间距覆盖默认布局。" },
-  { do: "需要跳转时用 render 渲染成链接徽标。", dont: "在 Badge 里嵌套 a，或用 onClick 把 Badge 伪装成 Button。" },
+  { do: "角标 dot 表示有更新、count 表示未读数。", dont: "用角标承载行内状态/分类标签（那是 Tag）。" },
+  { do: "数字溢出用 max（显示「max+」）。", dont: "把长文本塞进角标。" },
+  { do: "用 children 包裹载体自动定位右上角。", dont: "用 className 硬改定位/配色。" },
 ]
 
 const tooltipAnchors = [
@@ -3067,6 +3078,7 @@ function getPageFromHash(hash: string) {
   if (hash === "#layout" || hash.startsWith("#layout-")) return "layout"
   if (hash === "#nav-menu" || hash.startsWith("#nav-menu-")) return "nav-menu"
   if (hash === "#pagination" || hash.startsWith("#pagination-")) return "pagination"
+  if (hash === "#tag" || hash.startsWith("#tag-")) return "tag"
   if (hash === "#grid" || hash.startsWith("#grid-")) return "grid"
   if (hash === "#icon" || hash.startsWith("#icon-")) return "icon"
   if (hash === "#intro" || hash.startsWith("#intro-")) return "intro"
@@ -3397,6 +3409,7 @@ function App() {
   const isTablePage = page === "table"
   const isCardPage = page === "card"
   const isBadgePage = page === "badge"
+  const isTagPage = page === "tag"
   const isTooltipPage = page === "tooltip"
   const isDialogPage = page === "dialog"
   const isAlertDialogPage = page === "alert-dialog"
@@ -3474,6 +3487,8 @@ function App() {
                         ? cardAnchors
                         : isBadgePage
                           ? badgeAnchors
+                        : isTagPage
+                          ? tagAnchors
                           : isTooltipPage
                             ? tooltipAnchors
                             : isDialogPage
@@ -3615,7 +3630,7 @@ function App() {
         <div className="flex h-14 items-center gap-6 px-6">
           <div className="flex items-center gap-3">
             <div className="text-2xl font-bold text-primary">fx-ui</div>
-            <Badge variant="outline">v1.2.0</Badge>
+            <Tag variant="outline">v1.2.0</Tag>
           </div>
 
           <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
@@ -3748,6 +3763,8 @@ function App() {
                 <CardPage actions={pageActions} lang={lang} />
               ) : isBadgePage ? (
                 <BadgePage actions={pageActions} lang={lang} />
+              ) : isTagPage ? (
+                <TagPage actions={pageActions} lang={lang} />
               ) : isTooltipPage ? (
                 <TooltipPage actions={pageActions} lang={lang} />
               ) : isDialogPage ? (
@@ -4085,7 +4102,7 @@ function FileRelationRow({ relation }: { relation: FileRelation }) {
         <code className="mt-1 block break-words rounded-lg bg-muted px-2 py-1.5 text-xs text-foreground">{relation.source}</code>
       </div>
       <div className="flex items-center xl:justify-center">
-        <Badge variant={relation.emphasis ? "default" : "secondary"}>{relation.action}</Badge>
+        <Tag variant={relation.emphasis ? "default" : "secondary"}>{relation.action}</Tag>
       </div>
       <div>
         <div className="text-xs font-medium text-muted-foreground">作用对象</div>
@@ -4100,15 +4117,15 @@ function FileRelationRow({ relation }: { relation: FileRelation }) {
 }
 
 function StepBadge({ index }: { index: number }) {
-  return <Badge variant="outline">{String(index + 1).padStart(2, "0")}</Badge>
+  return <Tag variant="outline">{String(index + 1).padStart(2, "0")}</Tag>
 }
 
 function CountBadge({ children }: { children: React.ReactNode }) {
-  return <Badge variant="outline">{children}</Badge>
+  return <Tag variant="outline">{children}</Tag>
 }
 
 function StatusBadge({ status }: { status: string }) {
-  return <Badge variant="outline">{status}</Badge>
+  return <Tag variant="outline">{status}</Tag>
 }
 
 function FileRelationMap({ relations }: { relations: FileRelation[] }) {
@@ -4199,7 +4216,7 @@ function GraphCockpit({ lang }: { lang: Lang }) {
                 : "把自动扫描的项目图谱和人工整理的工程关系放在一起看。"}
             </CardDescription>
           </div>
-          <Badge variant="outline">project-graph.v0.3</Badge>
+          <Tag variant="outline">project-graph.v0.3</Tag>
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-5">
@@ -4278,7 +4295,7 @@ function GraphCockpit({ lang }: { lang: Lang }) {
                   : "用户或 DevInspector 任务进来时，AI 先在这里判断走哪条工作流，再按对应行动链路执行。"}
               </p>
             </div>
-            <Badge variant="outline">{taskRoutes.length}</Badge>
+            <Tag variant="outline">{taskRoutes.length}</Tag>
           </div>
 
           <div className="mt-4 grid gap-3 md:grid-cols-2">
@@ -4286,7 +4303,7 @@ function GraphCockpit({ lang }: { lang: Lang }) {
               <div key={route.id} className="rounded-xl border border-border bg-card p-3">
                 <div className="flex flex-wrap items-center gap-2">
                   <div className="text-sm font-semibold text-foreground">{route.label}</div>
-                  <Badge variant="outline">{route.flowTitle}</Badge>
+                  <Tag variant="outline">{route.flowTitle}</Tag>
                 </div>
                 <p className="mt-2 text-xs leading-5 text-muted-foreground">{route.firstDecision}</p>
                 <div className="mt-3 flex flex-wrap gap-1.5">
@@ -4785,7 +4802,7 @@ function GettingStartedPage({
           <Card>
             <CardContent className="grid gap-4 p-5 md:grid-cols-2">
               <div>
-                <Badge variant="secondary">SSOT</Badge>
+                <Tag variant="secondary">SSOT</Tag>
                 <h3 className="mt-3 font-medium">theme/fx-theme.css</h3>
                 <p className="mt-2 text-sm text-muted-foreground">
                   {lang === "en" ? "Changing this file changes the whole system." : "改这里等于全局换肤，必须先说明影响范围。"}
@@ -4963,7 +4980,7 @@ function GettingStartedPage({
                 ["可执行检查", "scripts/check-*.mjs", "把规则接入 npm run check，防止页面和文档漂。"],
               ].map(([title, file, desc]) => (
                 <div key={title} className="rounded-lg border border-border bg-background p-4">
-                  <Badge variant="secondary">{title}</Badge>
+                  <Tag variant="secondary">{title}</Tag>
                   <p className="mt-3 font-medium"><code>{file}</code></p>
                   <p className="mt-2 text-sm text-muted-foreground">{desc}</p>
                 </div>
@@ -5512,7 +5529,7 @@ function TokensPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
 
       <section id="tokens-architecture" className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
-          <Badge variant="secondary" className="w-fit">{lang === "en" ? "Token System" : "Token 系统"}</Badge>
+          <Tag variant="secondary" className="w-fit">{lang === "en" ? "Token System" : "Token 系统"}</Tag>
           <h2 className="text-2xl font-semibold">{lang === "en" ? "Token architecture" : "基础架构"}</h2>
         </div>
 
@@ -8530,14 +8547,14 @@ function IconAction({ icon, label, tone = "default" }: { icon: React.ReactNode; 
 
 // 业务表演示数据（对齐公司 Figma：链接首列 / 头像 / 级别 Badge / 金额右对齐 / 操作）
 const tableBizRows = [
-  { id: 1, name: "三川德众血浆采集有限公司", owner: "文木", level: "VIP客户", levelVariant: "warning" as const, dept: "销售部", product: "罗技 G604 LIGHTSPEED 无线游戏鼠…", amount: 1530.17, date: "2023-12-17" },
-  { id: 2, name: "邱特云顶生态环境技术有限公司", owner: "文木", level: "重要客户", levelVariant: "success" as const, dept: "市场部", product: "Razer DeathAdder V2 无线游戏鼠标…", amount: 1634.25, date: "2023-12-18" },
-  { id: 3, name: "洛阳金升玄经贸有限公司", owner: "文木", level: "一般客户", levelVariant: "secondary" as const, dept: "研发部", product: "Corsair Dark Core RGB SE 无线游戏…", amount: 1745.09, date: "2023-12-19" },
-  { id: 4, name: "绵阳中诚祥财鑫管理有限公司", owner: "文木", level: "一般客户", levelVariant: "secondary" as const, dept: "人事部", product: "华硕 ROG Gladius II 烈焰战刃竞技版…", amount: 1862.47, date: "2023-12-20" },
-  { id: 5, name: "鹤庆华聚顺科技有限公司", owner: "文木", level: "VIP客户", levelVariant: "warning" as const, dept: "财务部", product: "HyperX Pulsefire Haste 无线轻量竞技…", amount: 1960.68, date: "2023-12-21" },
-  { id: 6, name: "平顶山泽大壵贸科技公司", owner: "文木", level: "重要客户", levelVariant: "success" as const, dept: "客服部", product: "SteelSeries Rival 3 无线雷神游戏…", amount: 2101.58, date: "2023-12-22" },
-  { id: 7, name: "新乡市佳谷投资有限公司", owner: "文木", level: "VIP客户", levelVariant: "warning" as const, dept: "IT部", product: "Cooler Master MM821 无线竞技游戏…", amount: 2224.13, date: "2023-12-23" },
-  { id: 8, name: "信阳瑞丰文化传播有限公司", owner: "文木", level: "一般客户", levelVariant: "secondary" as const, dept: "法务部", product: "Logitech G Pro X Superlight 无线游…", amount: 2345.99, date: "2023-12-24" },
+  { id: 1, name: "三川德众血浆采集有限公司", owner: "文木", level: "VIP客户", levelVariant: "warning" as const, tags: [{ label: "高意向", color: "purple" as const }, { label: "华东区", color: "blue" as const }], dept: "销售部", product: "罗技 G604 LIGHTSPEED 无线游戏鼠…", amount: 1530.17, date: "2023-12-17" },
+  { id: 2, name: "邱特云顶生态环境技术有限公司", owner: "文木", level: "重要客户", levelVariant: "success" as const, tags: [{ label: "待续约", color: "green" as const }], dept: "市场部", product: "Razer DeathAdder V2 无线游戏鼠标…", amount: 1634.25, date: "2023-12-18" },
+  { id: 3, name: "洛阳金升玄经贸有限公司", owner: "文木", level: "一般客户", levelVariant: "secondary" as const, tags: [{ label: "待跟进", color: "amber" as const }], dept: "研发部", product: "Corsair Dark Core RGB SE 无线游戏…", amount: 1745.09, date: "2023-12-19" },
+  { id: 4, name: "绵阳中诚祥财鑫管理有限公司", owner: "文木", level: "一般客户", levelVariant: "secondary" as const, tags: [{ label: "新客", color: "cyan" as const }], dept: "人事部", product: "华硕 ROG Gladius II 烈焰战刃竞技版…", amount: 1862.47, date: "2023-12-20" },
+  { id: 5, name: "鹤庆华聚顺科技有限公司", owner: "文木", level: "VIP客户", levelVariant: "warning" as const, tags: [{ label: "高意向", color: "purple" as const }, { label: "大客户", color: "red" as const }], dept: "财务部", product: "HyperX Pulsefire Haste 无线轻量竞技…", amount: 1960.68, date: "2023-12-21" },
+  { id: 6, name: "平顶山泽大壵贸科技公司", owner: "文木", level: "重要客户", levelVariant: "success" as const, tags: [{ label: "待续约", color: "green" as const }], dept: "客服部", product: "SteelSeries Rival 3 无线雷神游戏…", amount: 2101.58, date: "2023-12-22" },
+  { id: 7, name: "新乡市佳谷投资有限公司", owner: "文木", level: "VIP客户", levelVariant: "warning" as const, tags: [{ label: "高意向", color: "purple" as const }], dept: "IT部", product: "Cooler Master MM821 无线竞技游戏…", amount: 2224.13, date: "2023-12-23" },
+  { id: 8, name: "信阳瑞丰文化传播有限公司", owner: "文木", level: "一般客户", levelVariant: "secondary" as const, tags: [{ label: "待跟进", color: "amber" as const }], dept: "法务部", product: "Logitech G Pro X Superlight 无线游…", amount: 2345.99, date: "2023-12-24" },
 ]
 const TABLE_PAGE_SIZE = 5
 
@@ -8587,6 +8604,7 @@ function TableBusinessDemo() {
             <TableHead>客户名称</TableHead>
             <TableHead>负责人</TableHead>
             <TableHead>客户级别</TableHead>
+            <TableHead>标签</TableHead>
             <TableHead>负责人部门</TableHead>
             <TableHead>产品名称</TableHead>
             <TableHead align="right" sortable sorted={sort} onSort={() => setSort(sort === "desc" ? "asc" : sort === "asc" ? false : "desc")}>金额(元)</TableHead>
@@ -8605,7 +8623,12 @@ function TableBusinessDemo() {
                   {row.owner}
                 </span>
               </TableCell>
-              <TableCell><Badge variant={row.levelVariant}>{row.level}</Badge></TableCell>
+              <TableCell><Tag variant={row.levelVariant}>{row.level}</Tag></TableCell>
+              <TableCell>
+                <span className="inline-flex gap-1">
+                  {row.tags.map((t) => <Tag key={t.label} color={t.color}>{t.label}</Tag>)}
+                </span>
+              </TableCell>
               <TableCell className="text-muted-foreground">{row.dept}</TableCell>
               <TableCell className="max-w-[200px] truncate text-muted-foreground">{row.product}</TableCell>
               <TableCell align="right" className="text-fx-12 tabular-nums">{row.amount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}</TableCell>
@@ -8657,7 +8680,7 @@ function TableAdvancedDemo() {
                     {row.owner}
                   </span>
                 </TableCell>
-                <TableCell><Badge variant={row.levelVariant}>{row.level}</Badge></TableCell>
+                <TableCell><Tag variant={row.levelVariant}>{row.level}</Tag></TableCell>
                 <TableCell className="text-muted-foreground">{row.dept}</TableCell>
                 <TableCell className="max-w-[200px] truncate text-muted-foreground">{row.product}</TableCell>
                 <TableCell align="right" className="text-fx-12 tabular-nums">{row.amount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}</TableCell>
@@ -8736,7 +8759,7 @@ function TableEmptyDemo() {
 
 function TablePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   const tableImportCode = `import {\n  Table,\n  TableBody,\n  TableCaption,\n  TableCell,\n  TableHead,\n  TableHeader,\n  TableRow,\n} from "@/components/ui/table"`
-  const tableUsageCode = `<Table>\n  <TableCaption>最近的订单记录</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead>订单号</TableHead>\n      <TableHead>客户</TableHead>\n      <TableHead>状态</TableHead>\n      <TableHead className="text-right">金额</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    {orders.map((order) => (\n      <TableRow key={order.id}>\n        <TableCell>{order.id}</TableCell>\n        <TableCell>{order.customer}</TableCell>\n        <TableCell><Badge variant="outline">{order.status}</Badge></TableCell>\n        <TableCell className="text-right">{order.amount}</TableCell>\n      </TableRow>\n    ))}\n  </TableBody>\n</Table>`
+  const tableUsageCode = `<Table>\n  <TableCaption>最近的订单记录</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead>订单号</TableHead>\n      <TableHead>客户</TableHead>\n      <TableHead>状态</TableHead>\n      <TableHead className="text-right">金额</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    {orders.map((order) => (\n      <TableRow key={order.id}>\n        <TableCell>{order.id}</TableCell>\n        <TableCell>{order.customer}</TableCell>\n        <TableCell><Tag variant="outline">{order.status}</Tag></TableCell>\n        <TableCell className="text-right">{order.amount}</TableCell>\n      </TableRow>\n    ))}\n  </TableBody>\n</Table>`
 
   return (
     <div className={docsSpacing.pageStack}>
@@ -8777,7 +8800,7 @@ function TablePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
                   <TableCell className="font-medium">{row.id}</TableCell>
                   <TableCell>{row.customer}</TableCell>
                   <TableCell>
-                    <Badge variant={row.status === "已支付" ? "success" : "outline"}>{row.status}</Badge>
+                    <Tag variant={row.status === "已支付" ? "success" : "outline"}>{row.status}</Tag>
                   </TableCell>
                   <TableCell className="text-right">{row.amount}</TableCell>
                 </TableRow>
@@ -8820,7 +8843,7 @@ function TablePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
                     <TableCell className="font-medium">{row.id}</TableCell>
                     <TableCell>{row.customer}</TableCell>
                     <TableCell>
-                      <Badge variant={row.status === "已支付" ? "success" : "outline"}>{row.status}</Badge>
+                      <Tag variant={row.status === "已支付" ? "success" : "outline"}>{row.status}</Tag>
                     </TableCell>
                     <TableCell align="right" className="text-fx-12 tabular-nums">{row.amount}</TableCell>
                   </TableRow>
@@ -9046,7 +9069,7 @@ function CardPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
               头部右上角放置操作入口，交给 CardAction 自动布局对齐。
             </CardContent>
             <CardFooter>
-              <Badge variant="outline">已启用</Badge>
+              <Tag variant="outline">已启用</Tag>
             </CardFooter>
           </Card>
         </div>
@@ -9162,91 +9185,85 @@ function CardPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   )
 }
 
-function BadgePreview({ id }: { id: string }) {
+function TagPreview({ id }: { id: string }) {
   if (id === "status") {
     return (
       <div className="flex flex-wrap gap-2">
-        <Badge variant="success">已支付</Badge>
-        <Badge variant="secondary">处理中</Badge>
-        <Badge variant="destructive">已失败</Badge>
+        <Tag variant="success">已支付</Tag>
+        <Tag variant="secondary">处理中</Tag>
+        <Tag variant="destructive">已失败</Tag>
       </div>
     )
   }
-
-  if (id === "count") {
-    return <Badge variant="outline">+12</Badge>
-  }
-
-  if (id === "indicator") {
+  if (id === "color") {
     return (
-      <div className="flex items-center gap-6">
-        <Indicator dot><BellIcon className="size-6 text-foreground" /></Indicator>
-        <Indicator count={5}><BellIcon className="size-6 text-foreground" /></Indicator>
-        <Indicator count={120} max={99}><BellIcon className="size-6 text-foreground" /></Indicator>
+      <div className="flex flex-wrap gap-2">
+        <Tag color="purple">高意向</Tag>
+        <Tag color="blue">华东区</Tag>
+        <Tag color="green">已签约</Tag>
       </div>
     )
   }
-
-  if (id === "link") {
-    return (
-      <Badge variant="link" render={<a href="#badge" />}>
-        v1.2.0
-      </Badge>
-    )
-  }
-
   return (
-    <Badge variant="secondary">
+    <Tag variant="secondary">
       <CheckCircleIcon data-icon="inline-start" />
       已校验
-    </Badge>
+    </Tag>
   )
 }
 
-function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
-  const badgeImportCode = `import { Badge } from "@/components/ui/badge"`
-  const badgeUsageCode = `<Badge variant="success">已支付</Badge>\n<Badge variant="secondary">处理中</Badge>\n<Badge variant="destructive">已失败</Badge>`
+function TagPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  const tagImportCode = `import { Tag } from "@/components/ui/tag"`
+  const tagUsageCode = `<Tag variant="success">已支付</Tag>\n<Tag color="purple">高意向</Tag>`
 
   return (
     <div className={docsSpacing.pageStack}>
-      <section id="badge" className="flex flex-col gap-2">
+      <section id="tag" className="flex flex-col gap-2">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
-            <h1 className="text-4xl font-semibold leading-tight">Badge 徽标</h1>
+            <h1 className="text-4xl font-semibold leading-tight">Tag 标签</h1>
           </div>
           {actions}
         </div>
         <p className={docsSpacing.componentLead}>
-          展示简短的状态、计数或分类标记，常用于表格、列表、卡片角标。
+          行内的状态/分类小标签：状态用 variant，分类打标用多彩 color。角标红点/数字请用 Badge。
         </p>
       </section>
 
-      <section id="badge-overview" className={docsSpacing.sectionStack}>
+      <section id="tag-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-semibold">组件总览</h2>
           <p className="text-base text-muted-foreground">
-            Badge 提供 7 种 variant 表达不同语义级别，统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot="badge"</code> 标记，
-            视觉由公司 token 注入。
+            两条正交轴：<code className="rounded bg-muted px-1.5 py-0.5">variant</code> 状态语义、<code className="rounded bg-muted px-1.5 py-0.5">color</code> 分类打标多彩。
           </p>
         </div>
         <Card>
           <CardContent className="flex flex-col gap-4 p-5">
-            {badgeVariantRows.map((row) => (
-              <div key={row.variant} className="flex items-center gap-3">
-                <Badge variant={row.variant as React.ComponentProps<typeof Badge>["variant"]}>{row.variant}</Badge>
-                <span className="text-sm text-muted-foreground">{row.usage}</span>
+            <div className="flex flex-col gap-1">
+              <span className="text-sm font-medium text-muted-foreground">状态 variant</span>
+              <div className="flex flex-wrap items-center gap-2">
+                {tagVariantRows.map((row) => (
+                  <Tag key={row.variant} variant={row.variant as React.ComponentProps<typeof Tag>["variant"]}>{row.variant}</Tag>
+                ))}
               </div>
-            ))}
+            </div>
+            <div className="border-t border-dashed border-border" />
+            <div className="flex flex-col gap-1">
+              <span className="text-sm font-medium text-muted-foreground">分类打标 color（软色 = 浅底 + 彩字 + 描边）</span>
+              <div className="flex flex-wrap items-center gap-2">
+                {tagColorList.map((c) => (
+                  <Tag key={c} color={c}>{c}</Tag>
+                ))}
+              </div>
+            </div>
           </CardContent>
         </Card>
       </section>
 
-      <section id="badge-preview" className={docsSpacing.sectionStack}>
+      <section id="tag-preview" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">场景示例</h2>
-          <p className="text-base text-muted-foreground">
-            常见的三类用法：状态标记、计数提示、搭配图标。
-          </p>
+          <p className="text-base text-muted-foreground">状态标记、分类打标、搭配图标。</p>
         </div>
         <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
           <Table className="min-w-[960px]">
@@ -9260,13 +9277,13 @@ function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
               </TableRow>
             </TableHeader>
             <TableBody>
-              {badgeScenarioExamples.map((example) => (
+              {tagScenarioExamples.map((example) => (
                 <TableRow key={example.id}>
                   <TableCell className="pl-4 align-top whitespace-normal">
                     <span className="font-medium">{example.title}</span>
                   </TableCell>
                   <TableCell className="align-top">
-                    <BadgePreview id={example.id} />
+                    <TagPreview id={example.id} />
                   </TableCell>
                   <TableCell className="align-top whitespace-normal text-muted-foreground">
                     <p className="min-w-[180px] max-w-[260px] leading-6">{example.intent}</p>
@@ -9284,6 +9301,163 @@ function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
             </TableBody>
           </Table>
         </div>
+      </section>
+
+      <section id="tag-usage" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">使用方式</h2>
+          <p className="text-base text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
+        </div>
+        <div className="rounded-lg border border-border bg-card p-5">
+          <div className="grid gap-4">
+            <CopyCodeBlock code={tagImportCode} label="Import" lang={lang} />
+            <CopyCodeBlock code={tagUsageCode} label="调用" lang={lang} />
+          </div>
+        </div>
+      </section>
+
+      <section id="tag-props" className={docsSpacing.sectionStack}>
+        <h2 className="text-2xl font-semibold">API 属性</h2>
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <Table className="min-w-[640px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">属性</TableHead>
+                <TableHead>类型</TableHead>
+                <TableHead>默认值</TableHead>
+                <TableHead className="pr-4">描述</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {tagPropRows.map((row) => (
+                <TableRow key={row.prop}>
+                  <TableCell className="pl-4 font-medium">{row.prop}</TableCell>
+                  <TableCell>
+                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.type}</code>
+                  </TableCell>
+                  <TableCell>
+                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.defaultValue}</code>
+                  </TableCell>
+                  <TableCell className="pr-4 text-muted-foreground">{row.desc}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </section>
+
+      <section id="tag-semantic-dom" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">语义 DOM</h2>
+          <p className="text-base text-muted-foreground">
+            Tag 保持 open-code。这里记录 AI 和工程师应该理解的语义部位。
+          </p>
+        </div>
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <Table className="min-w-[560px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">部位</TableHead>
+                <TableHead className="pr-4">说明</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {tagSemanticDomRows.map((row) => (
+                <TableRow key={row.part}>
+                  <TableCell className="pl-4 font-medium">
+                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.part}</code>
+                  </TableCell>
+                  <TableCell className="pr-4 text-muted-foreground">{row.desc}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </section>
+
+      <section id="tag-do-dont" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">正误示例</h2>
+          <p className="text-base text-muted-foreground">工程师和 AI 生成代码最容易犯的错误，照着做即可。</p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base text-foreground">推荐 Do</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
+              {tagDoDontRows.map((row) => (
+                <div key={`do-${row.do}`} className="flex gap-2">
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
+                  <span>{row.do}</span>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base text-foreground">避免 Don't</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
+              {tagDoDontRows.map((row) => (
+                <div key={`dont-${row.dont}`} className="flex gap-2">
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
+                  <span>{row.dont}</span>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+// Badge 角标（dot/count）独立文档页
+function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  const badgeImportCode = `import { Badge } from "@/components/ui/badge"`
+  const badgeUsageCode = `<Badge dot>\n  <Button size="icon" variant="outline" aria-label="通知"><BellIcon /></Button>\n</Badge>\n<Badge count={5}>…</Badge>\n<Badge count={120} max={99}>…</Badge>  // 99+`
+  return (
+    <div className={docsSpacing.pageStack}>
+      <section id="badge" className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <h1 className="text-4xl font-semibold leading-tight">Badge 角标</h1>
+          </div>
+          {actions}
+        </div>
+        <p className={docsSpacing.componentLead}>
+          贴在头像、图标、按钮右上角的通知红点 / 未读数字。行内状态/分类标签请用 Tag。
+        </p>
+      </section>
+
+      <section id="badge-overview" className={docsSpacing.sectionStack}>
+        <div className="flex flex-col gap-1">
+          <h2 className="text-2xl font-semibold">组件总览</h2>
+          <p className="text-base text-muted-foreground">dot 红点 / count 未读数；传 children 自动定位载体右上角。</p>
+        </div>
+        <Card>
+          <CardContent className="flex items-center gap-8 p-6">
+            <Badge dot><BellIcon className="size-6 text-foreground" /></Badge>
+            <Badge count={5}><BellIcon className="size-6 text-foreground" /></Badge>
+            <Badge count={120} max={99}><BellIcon className="size-6 text-foreground" /></Badge>
+            <Badge count={8} tone="primary"><BellIcon className="size-6 text-foreground" /></Badge>
+          </CardContent>
+        </Card>
+      </section>
+
+      <section id="badge-preview" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">场景示例</h2>
+          <p className="text-base text-muted-foreground">导航/图标/头像上的未读提示。</p>
+        </div>
+        <Card>
+          <CardContent className="flex items-center gap-8 p-6">
+            <Badge dot><Button size="icon" variant="outline" aria-label="通知"><BellIcon /></Button></Badge>
+            <Badge count={5}><Button size="icon" variant="outline" aria-label="消息"><BellIcon /></Button></Badge>
+            <Badge count={120} max={99}><Avatar><AvatarFallback colorful>李</AvatarFallback></Avatar></Badge>
+          </CardContent>
+        </Card>
       </section>
 
       <section id="badge-usage" className={docsSpacing.sectionStack}>
@@ -9315,12 +9489,8 @@ function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
               {badgePropRows.map((row) => (
                 <TableRow key={row.prop}>
                   <TableCell className="pl-4 font-medium">{row.prop}</TableCell>
-                  <TableCell>
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.type}</code>
-                  </TableCell>
-                  <TableCell>
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.defaultValue}</code>
-                  </TableCell>
+                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.type}</code></TableCell>
+                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.defaultValue}</code></TableCell>
                   <TableCell className="pr-4 text-muted-foreground">{row.desc}</TableCell>
                 </TableRow>
               ))}
@@ -9332,9 +9502,7 @@ function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       <section id="badge-semantic-dom" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">语义 DOM</h2>
-          <p className="text-base text-muted-foreground">
-            Badge 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。
-          </p>
+          <p className="text-base text-muted-foreground">角标语义部位。</p>
         </div>
         <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
           <Table className="min-w-[560px]">
@@ -9347,9 +9515,7 @@ function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
             <TableBody>
               {badgeSemanticDomRows.map((row) => (
                 <TableRow key={row.part}>
-                  <TableCell className="pl-4 font-medium">
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.part}</code>
-                  </TableCell>
+                  <TableCell className="pl-4 font-medium"><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.part}</code></TableCell>
                   <TableCell className="pr-4 text-muted-foreground">{row.desc}</TableCell>
                 </TableRow>
               ))}
@@ -9361,32 +9527,22 @@ function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
       <section id="badge-do-dont" className={docsSpacing.sectionStack}>
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">正误示例</h2>
-          <p className="text-base text-muted-foreground">工程师和 AI 生成代码最容易犯的错误，照着做即可。</p>
+          <p className="text-base text-muted-foreground">角标与标签别混用。</p>
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">推荐 Do</CardTitle>
-            </CardHeader>
+            <CardHeader><CardTitle className="text-base text-foreground">推荐 Do</CardTitle></CardHeader>
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {badgeDoDontRows.map((row) => (
-                <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
-                  <span>{row.do}</span>
-                </div>
+                <div key={`do-${row.do}`} className="flex gap-2"><span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" /><span>{row.do}</span></div>
               ))}
             </CardContent>
           </Card>
           <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">避免 Don't</CardTitle>
-            </CardHeader>
+            <CardHeader><CardTitle className="text-base text-foreground">避免 Don't</CardTitle></CardHeader>
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {badgeDoDontRows.map((row) => (
-                <div key={`dont-${row.dont}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
-                  <span>{row.dont}</span>
-                </div>
+                <div key={`dont-${row.dont}`} className="flex gap-2"><span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" /><span>{row.dont}</span></div>
               ))}
             </CardContent>
           </Card>
@@ -12061,7 +12217,7 @@ function AgentSurfacePage({ actions, lang }: { actions: React.ReactNode; lang: L
           <Card>
             <CardHeader>
               <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="outline">phase-1</Badge>
+                <Tag variant="outline">phase-1</Tag>
                 <CardTitle className="text-base">{lang === "en" ? "Implemented blocks" : "已落地能力"}</CardTitle>
               </div>
               <CardDescription>
@@ -12100,7 +12256,7 @@ function AgentSurfacePage({ actions, lang }: { actions: React.ReactNode; lang: L
                 <div key={block} className="flex flex-col gap-3 rounded-xl border border-border bg-background p-4">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <CardTitle className="text-base">{title}</CardTitle>
-                    <Badge variant="secondary">{block}</Badge>
+                    <Tag variant="secondary">{block}</Tag>
                   </div>
                   <p className="text-sm leading-6 text-foreground">{userSees}</p>
                   <p className="text-sm leading-6 text-muted-foreground">{rule}</p>
@@ -12111,7 +12267,7 @@ function AgentSurfacePage({ actions, lang }: { actions: React.ReactNode; lang: L
           <Card>
             <CardHeader>
               <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="secondary">phase-2</Badge>
+                <Tag variant="secondary">phase-2</Tag>
                 <CardTitle className="text-base">{lang === "en" ? "To validate" : "待验证场景"}</CardTitle>
               </div>
               <CardDescription>
@@ -12132,7 +12288,7 @@ function AgentSurfacePage({ actions, lang }: { actions: React.ReactNode; lang: L
                     <div className="font-medium text-foreground">{title}</div>
                     <p className="text-sm leading-6 text-muted-foreground">{desc}</p>
                   </div>
-                  <Badge variant="outline">{block}</Badge>
+                  <Tag variant="outline">{block}</Tag>
                 </div>
               ))}
             </CardContent>

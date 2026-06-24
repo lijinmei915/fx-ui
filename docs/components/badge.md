@@ -1,44 +1,31 @@
 ---
 category: Components
-group: 通用
+group: 数据展示
 title: Badge
-subtitle: 徽标
-description: 展示简短状态、计数或分类标记，常用于表格、列表和卡片角标。
+subtitle: 角标
+description: 贴在载体右上角的通知红点 / 未读数字。
 source: src/components/ui/badge.tsx
 theme: theme/fx-theme.css
 tokens:
   - primary
-  - primary-foreground
-  - secondary
-  - secondary-foreground
-  - foreground
-  - muted
-  - muted-foreground
   - destructive
-  - border
-  - ring
-  - success
-  - warning
+  - background
 status: complete
 ---
 
-# Badge 徽标
+# Badge 角标
 
-Badge 用于展示简短状态、计数或分类标记，常见于表格、列表、卡片角标和版本标记。
+贴在头像、图标、按钮等载体右上角的通知红点（dot）或未读数字（count）。行内的状态/分类标签请用 Tag。
 
-源码来自 shadcn/ui，进入项目后保持 open-code。公司视觉通过 `theme/fx-theme.css` 的语义 token 注入，不通过手写颜色 class 或重新封装实现。
+源码来自项目自建，保持 open-code。公司视觉通过 `theme/fx-theme.css` 的语义 token 注入。
 
-AI 生成页面时应优先用 Badge 的 `variant` 表达语义，不要把 Badge 当 Button 用，也不要把长句说明塞进 Badge。
+AI 使用 Badge 前必须先以 `src/components/ui/badge.tsx` 为真实 API。
 
 ## 来源 {#source}
-
-源码位于：
 
 ```txt
 src/components/ui/badge.tsx
 ```
-
-该组件来自 shadcn/ui，进入项目后保持 open-code。公司视觉通过 `theme/fx-theme.css` 的语义 token 注入。
 
 ## 使用方式 {#usage}
 
@@ -47,205 +34,94 @@ import { Badge } from "@/components/ui/badge"
 ```
 
 ```tsx
-<Badge variant="success">已支付</Badge>
+<Badge dot>
+  <Button size="icon" variant="outline" aria-label="通知"><BellIcon /></Button>
+</Badge>
+<Badge count={5}>…</Badge>
+<Badge count={120} max={99}>…</Badge>  {/* 99+ */}
 ```
 
 ## 组件总览 {#overview}
 
-- 语义 DOM：Base UI `useRender` 注入 `slot: "badge"`，运行时用于定位 `data-slot="badge"`
-- 原生/数据状态：`hover`、`focus-visible`、`aria-invalid`
-- 样式变体：`default`、`secondary`、`destructive`、`success`、`warning`、`outline`、`ghost`、`link`
-- 尺寸变体：无独立 `size` prop
-- 图标：图标放入 Badge 时使用 `data-icon="inline-start"` 或 `data-icon="inline-end"`
-- 链接徽标：需要可点击跳转时使用 `render={<a href="..." />}`，不要在 Badge 里嵌套 `<a>`
+- 类型：display（角标 dot/count）
+- 语义 DOM：data-slot="badge"（角标本体）/ data-slot="badge-root"（包裹载体的定位容器）
+- 用法：传 children 时包裹元素并定位右上角；不传则独立内联渲染
+- 数字：count>max 显示「max+」；count<=0 默认不渲染（showZero 强制 0）
+- 导出项：Badge
 
 ## 场景示例 {#examples}
 
-AI 选择 Badge 时按这个顺序判断：
+### 推荐场景
 
-1. 先判断内容类型：状态、计数、分类、版本、可点击链接。
-2. 再选择 `variant`：成功用 `success`，失败/风险用 `destructive`，中性过程态用 `secondary` 或 `outline`。
-3. 再判断是否可点击。可点击徽标用 `render` 渲染为链接，不要用 Badge 代替 Button。
-4. 最后控制内容长度。Badge 只放短词、短数字、图标 + 短词；长说明应该放正文、Tooltip 或表格列说明。
-
-### 状态标记
-
-- 使用意图：在表格、列表里标记数据的当前状态。
-- 规则：成功态用 `success`，中性态用 `secondary` 或 `outline`，错误态用 `destructive`。
+- 使用意图：导航/图标/头像上的未读提示——红点表示"有更新"，数字表示"未读数"。
+- 规则：dot 用于无需具体数量的提示；count 用于可计数；溢出用 max。
 
 ```tsx
-<Badge variant="success">已支付</Badge>
-<Badge variant="secondary">处理中</Badge>
-<Badge variant="destructive">已失败</Badge>
+<Badge dot><BellIcon /></Badge>
+<Badge count={5}><BellIcon /></Badge>
 ```
 
-### 计数提示
+### 不适合场景
 
-- 使用意图：展示未读数量、新增条目数等数字提示。
-- 规则：数字内容保持简短，避免在 Badge 里塞长文本。
-
-```tsx
-<Badge variant="outline">+12</Badge>
-```
-
-### 搭配图标
-
-- 使用意图：用图标强化语义，如校验通过、AI 生成标记。
-- 规则：图标放进 Badge 时用 `data-icon` 标记位置，不手写尺寸覆盖。
-
-```tsx
-<Badge variant="secondary">
-  <CheckCircleIcon data-icon="inline-start" />
-  已校验
-</Badge>
-```
-
-### 链接徽标
-
-- 使用意图：版本号、分类标签等需要跳转到详情或筛选结果。
-- 规则：使用 `render={<a href="..." />}`，不要嵌套 `<a>`，也不要用 `onClick` 把 Badge 伪装成 Button。
-
-```tsx
-<Badge variant="link" render={<a href="/releases/v1.2.0" />}>
-  v1.2.0
-</Badge>
-```
-
-### 角标：红点 / 未读数（Indicator）
-
-- 使用意图：**图标按钮（通知铃铛/消息）、导航项、Tab** 上的未读**红点**或**未读数**——这几类是主流通知角标最常见的载体；头像未读数是 IM 场景的特化。
-- 规则：用 `Indicator` 承载角标，是**跨组件通用能力**，不写进具体组件内部。`dot` 红点、`count` 数字（超 `max` 显示「max+」，`count<=0` 默认不显示）；传 `children` 时自动 relative 包裹并定位右上角。
-- 定位（量化）：角标几何中心对齐**载体右上角顶点**——`absolute top-0 right-0` + `translate-x-1/2 -translate-y-1/2`（用 translate **百分比**而非固定 px 偏移，dot/99+ 不管多宽锚点都一致、向两侧对称展开，不会越宽越往里盖图标）。
-  - 「中心对齐」指**角标自己的几何中心钉在右上角顶点**，不是"水平居中"——角标本就该在右上角。
-  - 为什么不用其它对齐：**右边缘对齐**（右边固定、向左长）会让宽角标盖住图标；**左边缘对齐**（左边固定、向右长）会让宽角标向外飘、与载体脱节、并排右边参差。**中心对齐**两边对称展开，是 MUI/Ant 的主流默认。
-  - 区分：**盖在元素角上的角标** → 中心对齐（本组件）；**跟在文字后的计数**（如菜单项「消息 ⑤」）→ 行内向右排，是另一种用法，不走 Indicator 的角标定位。
-- 与载体的间隙：不用 margin/gap，用 `ring-2 ring-background`（2px 同底色描边）在角标四周留白。
-- 尺寸：红点 `size-2`(8px)；数字 `h-4`(16) / `min-w-4`(16) / `px-1`(4) / 字 `10px`。
-- 载体：挂在**图标按钮**等有 padding/边界的载体上（图标居中、角标挂在角的留白处），不要直接挂裸小图标——角标比图标还宽时会盖住图形。
-
-```tsx
-import { Indicator } from "@/components/ui/badge"
-
-<Indicator dot>
-  <Button size="icon" variant="outline" aria-label="通知"><BellIcon /></Button>
-</Indicator>
-<Indicator count={5}>…</Indicator>
-<Indicator count={120} max={99}>…</Indicator>  // 显示 99+
-```
+- 不要用 Badge 承载行内状态/分类标签（那是 Tag 的职责）。
+- 不通过 `className` 硬改位置/颜色覆盖组件定位与配色。
 
 ## API {#api}
 
-`Indicator`（角标）：
+该组件以源码导出的 props 为准。使用前读取 `src/components/ui/badge.tsx`。
 
-| 属性 | 说明 | 类型 | 默认值 |
+| Prop | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `dot` | 红点模式（无数字） | `boolean` | `false` |
-| `count` | 未读数；超 `max` 显示「max+」，`<=0` 默认不显示 | `number` | - |
-| `max` | 数字溢出阈值 | `number` | `99` |
-| `showZero` | `count=0` 时也显示 | `boolean` | `false` |
-| `tone` | 角标配色 | `'destructive' \| 'primary'` | `'destructive'` |
-| `children` | 被标记元素；传入则包裹并定位右上角，不传则独立内联 | `ReactNode` | - |
-
-`Badge`（标签 chip）：
-
-| 属性 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| `variant` | 样式变体 | `'default' \| 'secondary' \| 'destructive' \| 'success' \| 'warning' \| 'outline' \| 'ghost' \| 'link'` | `'default'` |
-| `render` | 自定义根节点渲染，例如渲染成 `<a>` 实现链接徽标 | `ReactElement \| (props, state) => ReactElement` | - |
-| `aria-invalid` | 校验失败状态 | `boolean` | `false` |
-| `className` | 追加布局类，不用于硬覆盖 token 视觉 | `string` | - |
-| `...props` | 透传到底层 `span` 或 `render` 指定的元素 | `useRender.ComponentProps<"span">` | - |
+| `dot` | `boolean` | `false` | 红点（不显示数字） |
+| `count` | `number` | — | 未读数；超过 max 显示「max+」 |
+| `max` | `number` | `99` | 数字溢出阈值 |
+| `showZero` | `boolean` | `false` | count<=0 时是否仍显示 0 |
+| `tone` | `'destructive' \| 'primary'` | `'destructive'` | 角标配色 |
 
 ## Semantic DOM {#semantic-dom}
 
 | 部位 | 说明 |
 | --- | --- |
-| `slot: "badge"` | 源码传给 Base UI `useRender` 的状态，运行时用于标记 Badge 根节点 |
-| `data-slot="badge"` | 运行时语义定位，承载圆角、内边距、背景与文字色 |
-| `data-icon="inline-start"` | 前置图标位置标记，驱动左侧间距 |
-| `data-icon="inline-end"` | 后置图标位置标记，驱动右侧间距 |
+| `data-slot="badge"` | 角标本体（红点/数字） |
+| `data-slot="badge-root"` | 包裹载体的相对定位容器（传 children 时出现） |
 
 ## 状态标记 {#states}
 
 | 状态 | 说明 |
 | --- | --- |
-| `hover` | 可点击或链接徽标的悬停反馈，来自源码状态样式 |
-| `focus-visible` | 键盘焦点态，必须保留可访问焦点环 |
-| `aria-invalid` | 校验失败语义，同时驱动错误态样式 |
+| `root` | 纯展示，无交互态 |
 
 ## 主题变量 Design Token {#design-token}
 
 | Token | 用途 |
 | --- | --- |
-| `--primary` | default / link 的品牌强调色 |
-| `--primary-foreground` | default 背景上的文字和图标 |
-| `--secondary` | secondary 的中性背景 |
-| `--secondary-foreground` | secondary 的文字和图标 |
-| `--foreground` | outline 的文字 |
-| `--muted` | outline / ghost 的 hover 背景 |
-| `--muted-foreground` | outline / ghost hover 后的弱化文字 |
-| `--destructive` | destructive 的错误/风险语义 |
-| `--border` | outline 的边框 |
-| `--ring` | focus-visible 焦点环 |
-| `--success` | success 的成功/完成语义 |
+| `--destructive` | 默认角标底色（提示红） |
+| `--primary` | tone="primary" 角标底色 |
+| `--primary-foreground` | 角标内的数字/文字（反白） |
+| `--background` | 角标外圈描边（与载体分隔的 ring） |
 
 完整 token 规则见 `docs/TOKENS.md`。
 
 ## AI Rules {#ai-rules}
 
-- 使用 Badge 前必须先读取 `src/components/ui/badge.tsx`，以源码为真实 API。
-- 用 `variant` 表达状态语义，不要手写颜色、圆角、边框和状态样式。
-- Badge 只承载短状态、短数字或分类词；长说明放正文、Tooltip 或表格说明。
-- Badge 不是 Button；触发操作用 Button，需要跳转时用 `render={<a />}`。
-- 图标放入 Badge 时用 `data-icon` 标记位置，不手写图标尺寸。
-- `className` 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。
-- 只能使用源码中存在的 variant，不要发明新的变体名。
-- 当前源码没有独立 `size` prop；不要因为布局需要发明 size。
-- 修改文档、示例或 AI 数据源后，必须同步 `docs/data/components.manifest.json` 并运行 `npm run check:components`。
+- Badge 是角标（dot/count），贴载体右上角；行内状态/分类标签用 Tag。
+- 使用 Badge 前必须以 src/components/ui/badge.tsx 为真实 API。
+- className 只用于布局或外部间距，不用于覆盖定位与配色。
 
 ## 正误示例 {#do-dont}
 
-### 不要硬覆盖 token 视觉
+### 角标用 Badge、标签用 Tag
 
 不推荐：
 
 ```tsx
-<Badge className="bg-green-500 text-white">已支付</Badge>
+// 不要用角标 Badge 当行内状态标签
+<Badge>已支付</Badge>
 ```
 
 推荐：
 
 ```tsx
-<Badge variant="success">已支付</Badge>
-```
-
-### 不要把长说明塞进 Badge
-
-不推荐：
-
-```tsx
-<Badge>该订单已经付款完成，可以进入下一步发货流程</Badge>
-```
-
-推荐：
-
-```tsx
-<Badge variant="success">已支付</Badge>
-```
-
-### 链接徽标用 render
-
-不推荐：
-
-```tsx
-// 不要在 Badge 内部嵌套链接元素
-<Badge>{/* nested link */}</Badge>
-```
-
-推荐：
-
-```tsx
-<Badge variant="link" render={<a href="/releases/v1.2.0" />}>
-  v1.2.0
-</Badge>
+<Tag variant="success">已支付</Tag>
+<Badge count={5}><BellIcon /></Badge>
 ```

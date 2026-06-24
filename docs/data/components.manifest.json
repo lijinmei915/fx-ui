@@ -105,32 +105,52 @@
       "doc": "docs/components/badge.md",
       "category": "display",
       "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "data-slot=\"badge\"",
+        "data-slot=\"badge-root\""
+      ],
+      "tokenRefs": [
+        "--primary",
+        "--primary-foreground",
+        "--destructive",
+        "--background"
+      ],
+      "usageRules": [
+        "Badge 是角标（通知红点 dot / 未读数 count），贴在载体右上角；行内状态/分类标签用 Tag。",
+        "使用 Badge 前必须以 src/components/ui/badge.tsx 为真实 API。",
+        "count 超过 max 显示「max+」；count<=0 默认不渲染（showZero 强制 0）。",
+        "className 只用于布局或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "Tag",
+      "source": "src/components/ui/tag.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/tag.md",
+      "category": "display",
+      "nativeStates": [
         "hover",
         "focus-visible",
         "aria-invalid"
       ],
       "semanticDom": [
-        "slot: \"badge\""
+        "slot: \"tag\""
       ],
       "tokenRefs": [
         "--primary",
-        "--primary-foreground",
         "--secondary",
-        "--secondary-foreground",
-        "--foreground",
-        "--muted",
-        "--muted-foreground",
+        "--success",
+        "--warning",
         "--destructive",
-        "--border",
-        "--ring",
-        "--success"
+        "--border"
       ],
       "usageRules": [
-        "使用 Badge 前必须以 src/components/ui/badge.tsx 为真实 API。",
-        "用 variant 表达状态语义，不要手写颜色、圆角、边框和状态样式。",
-        "Badge 只承载短状态、短数字或分类词；长说明放正文、Tooltip 或表格说明。",
-        "需要跳转时用 render 渲染成链接徽标，不要在 Badge 里嵌套 a。",
-        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+        "使用 Tag 前必须以 src/components/ui/tag.tsx 为真实 API。",
+        "variant 表达状态语义（success/warning/…）；color 表达分类打标（多彩预设色，颜色=类别不是状态）。",
+        "Tag 是非交互标记，不承载跳转/点击；需要跳转用链接或 Button。",
+        "className 只用于布局或外部间距，不用于覆盖组件自身基础视觉。"
       ],
       "variants": [
         "default",
@@ -138,9 +158,7 @@
         "destructive",
         "success",
         "warning",
-        "outline",
-        "ghost",
-        "link"
+        "outline"
       ]
     },
     {

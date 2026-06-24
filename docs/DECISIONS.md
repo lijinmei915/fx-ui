@@ -237,6 +237,17 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **首例落地**：Button 新增 `plain` 变体 + `tone`（中性/主色/链接/危险），用于表格操作列、行内弱化操作
 - **相关文件**：`docs/DESIGN_STANDARDS.md`、`src/components/ui/button.tsx`、`docs/components/button.md`、`src/App.tsx`
 
+### DEC-021: 拆分 Badge（角标）与 Tag（标签），对齐 Ant 模型
+
+- **日期**：2026-06-25
+- **状态**：已决定
+- **决定**：把原来混在一个 Badge 里的两件事拆开——**Badge = 角标**（贴载体右上角的 dot 红点 / count 未读数）；**Tag = 标签**（行内状态/分类小药丸，`variant` 状态 + `color` 多彩分类打标）。对齐 Ant Design 的 Badge/Tag 分工
+- **放弃**：shadcn 的"单 Badge 兼顾 pill + indicator"——语义混淆，用户分不清；也放弃 Badge 的 `ghost`/`link` 变体（非主流，已删）
+- **新增能力**：Tag 的 `color` 分类打标（red/amber/…/purple/pink，软色=色板 01 底 + 07 字 + 03 描边），用于"客户下面贴标签"这类 CRM 打标
+- **迁移**：全站原 `<Badge variant=…>`（行内标签）→ `<Tag>`；原 `<Indicator>`（角标）→ `<Badge>`；表格级别/客户标签、agent-surface、CustomerBriefing 等全部迁移
+- **影响**：新增 `src/components/ui/tag.tsx` + `docs/components/tag.md` + Tag 文档页/导航/路由；`badge.tsx` 瘦身为角标、`badge.md` 改写；manifest 加 Tag、Badge 改角标；`check-components-manifest.mjs` 的 pill 断言改指向 Tag
+- **相关文件**：`src/components/ui/tag.tsx`、`src/components/ui/badge.tsx`、`docs/components/tag.md`、`docs/components/badge.md`、`docs/data/components.manifest.json`、`scripts/check-components-manifest.mjs`、`src/App.tsx`
+
 ## 相关文件
 
 | 文件 | 关系 |

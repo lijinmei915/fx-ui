@@ -332,6 +332,7 @@
 
   --card: #FFFFFF;
   --card-foreground: var(--fx-neutrals-20);
+  --surface: var(--fx-neutrals-01);  /* 浮起控件白底（outline 按钮/白底图标按钮等），与 card 同值但语义独立：card=容器、surface=控件表面 */
 
   --popover: #FFFFFF;
   --popover-foreground: var(--fx-neutrals-20);
@@ -438,6 +439,7 @@
   --color-foreground-disabled: var(--foreground-disabled);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
+  --color-surface: var(--surface);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-overlay: var(--overlay);

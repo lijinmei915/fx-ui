@@ -1484,6 +1484,12 @@
       "usage": "卡片和内容容器背景"
     },
     {
+      "name": "--surface",
+      "value": "var(--fx-neutrals-01)",
+      "category": "surface-text",
+      "usage": "浮起控件白底（outline 按钮等），与 card 同值、语义独立"
+    },
+    {
       "name": "--card-foreground",
       "value": "var(--fx-neutrals-20)",
       "category": "surface-text",

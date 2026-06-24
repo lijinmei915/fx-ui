@@ -28,6 +28,8 @@ export {
   IconChevronUp as ChevronUpIcon,
   IconChevronsLeft as ChevronsLeftIcon,
   IconChevronsRight as ChevronsRightIcon,
+  IconLock as LockIcon,
+  IconLockOpen as LockOpenIcon,
   IconSelector as ChevronsUpDownIcon,
   IconCircle as CircleIcon,
   IconCode as Code2Icon,

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip"
-import { ChevronDownIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon, SearchIcon, PlusIcon } from "@/lib/icons"
+import { ChevronDownIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon, LockOpenIcon, SearchIcon, PlusIcon } from "@/lib/icons"
 
 // 导航菜单（单面板侧边栏，1:1 参照 Figma「AI交互探索」侧边栏，token 全用 fx-theme）。
 // 结构（自上而下）：头部(标题 + 视图名 + 展开) → 搜索行(搜索框 + 新增) → 菜单树(滚动) → 底部(设置 + 收起)。
@@ -205,9 +205,19 @@ function NavMenuItem({
   return button
 }
 
-// NavMenuFooter：底部操作区，仅收起/展开双箭头，靠右（收起时居中）；hover 气泡提示。
-function NavMenuFooter({ collapsed, onToggle, className }: { collapsed?: boolean; onToggle?: () => void; className?: string }) {
-  const tip = collapsed ? "展开" : "收起"
+// NavMenuFooter：底部操作区，hover 气泡提示。
+// 两种模式：① 默认——收起/展开双箭头（onToggle）；② 传 onPin 时启用「固定导航」——
+//   未固定且面板展开（hover 临时展开）时显示锁(固定导航)，点击固定；已固定时显示收起箭头。
+function NavMenuFooter({
+  collapsed,
+  pinned,
+  onToggle,
+  onPin,
+  className,
+}: { collapsed?: boolean; pinned?: boolean; onToggle?: () => void; onPin?: () => void; className?: string }) {
+  const pinMode = !!onPin && !collapsed && !pinned
+  const tip = pinMode ? "固定导航" : collapsed ? "展开" : "收起"
+  const icon = pinMode ? <LockOpenIcon /> : collapsed ? <ChevronsRightIcon /> : <ChevronsLeftIcon />
   return (
     <div
       data-slot="nav-menu-footer"
@@ -220,10 +230,10 @@ function NavMenuFooter({ collapsed, onToggle, className }: { collapsed?: boolean
               <button
                 type="button"
                 aria-label={tip}
-                onClick={onToggle}
+                onClick={pinMode ? onPin : onToggle}
                 className="text-muted-foreground outline-none cursor-pointer hover:text-foreground focus-visible:text-foreground [&_svg]:size-4"
               >
-                {collapsed ? <ChevronsRightIcon /> : <ChevronsLeftIcon />}
+                {icon}
               </button>
             }
           />

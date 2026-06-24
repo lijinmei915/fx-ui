@@ -38,6 +38,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `background` | `#F7F8FA` | `bg-background` | 页面底色 |
 | `foreground` | `#181C25` | `text-foreground` | 主文字 |
 | `card` | `#FFFFFF` | `bg-card text-card-foreground` | 卡片、浮层、内容容器 |
+| `surface` | `#FFFFFF` | `bg-surface` | 浮起控件白底（outline 按钮等）；与 card 同值、语义独立（card=容器，surface=控件表面） |
 | `muted` | `#F2F3F5` | `bg-muted` | 次级背景、弱按钮、代码块 |
 | `muted-foreground` | `#91959E` | `text-muted-foreground` | 辅助说明、弱信息 |
 | `accent` | `#F2F4FB` | `bg-accent text-accent-foreground` | 悬浮态、轻量高亮背景 |

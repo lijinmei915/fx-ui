@@ -163,6 +163,16 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **影响**：新增 `src/lib/icons-custom.tsx`、`docs/data/icons.manifest.json`、`scripts/check-icons.mjs`（接入 check-all、`npm run check:icons`）；`governance-index.json` 登记 icons-manifest dataset；上传第三方 SVG 必须先消毒（删 `<script>`/`on*`/外链/写死色值，强制 currentColor）；线型/面型成对沿用 DEC-009
 - **相关文件**：`src/lib/icons.ts`、`src/lib/icons-custom.tsx`、`docs/data/icons.manifest.json`、`scripts/check-icons.mjs`、`docs/TOKENS.md`（图标小节）
 
+### DEC-014: 新增 `--surface` 控件表面 token，outline 按钮用白(bg-surface)不用页面灰
+
+- **日期**：2026-06-24
+- **状态**：已决定
+- **决定**：新增语义 token **`--surface`（= 白，独立于 `--card`）**，表示"浮起控件的白底表面"；Button `outline` 变体底色从 `bg-background` 改为 **`bg-surface`**。hover/active 仍 `bg-muted`（灰）
+- **放弃**：① 沿用 shadcn 的 `bg-background`；② 在每处手写 `className="bg-card"` 打补丁；③ 直接借 `--card`——值对但语义错（card 是"容器底色"，不是"控件表面"）
+- **原因**：shadcn `outline` 用 `bg-background` 假设页面底为白；本项目 `--background = #F7F8FA`（浅灰），描边按钮因此变灰、与设计稿"白底描边"不符。颜色必须走 token（换肤/暗色/单一真相），但白色不能借 `--card`（名实冲突）——所以单立 `--surface`：card 用 `--card`、控件白底用 `--surface`，底值同为白、语义各归各。其它 token 的"借用"（accent 当 hover 底、muted 多用途）值与意图尚贴近，暂不拆，避免 token 过度膨胀
+- **影响**：新增 `--surface` / `--color-surface`（fx-theme.css）、登记 design-tokens.json 与 TOKENS.md；所有 outline 按钮（导出/继续/图标按钮/NavMenu 的 +/搜索等）统一白底描边
+- **相关文件**：`theme/fx-theme.css`、`docs/TOKENS.md`、`docs/data/design-tokens.json`、`src/components/ui/button.tsx`、`src/components/fx/nav-menu.tsx`、`src/App.tsx`
+
 ## 相关文件
 
 | 文件 | 关系 |

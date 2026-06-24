@@ -3,6 +3,7 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
   LinkIcon,
+  PlusIcon,
   BellIcon,
   BellFilledIcon,
   BoldIcon,
@@ -918,6 +919,20 @@ const buttonScenarioExamples = [
     code: '<Button variant="ghost" size="icon" aria-label="打开组件包"><PackageIcon data-icon="inline-start" /></Button>',
   },
   {
+    id: "icon-only-outline",
+    title: "白底图标按钮",
+    titleEn: "Outlined icon button",
+    intent: "搜索框旁的新增、工具栏等需要描边白底、轻量但有边界的图标操作。",
+    intentEn: "Add-next-to-search or toolbar actions needing an outlined white icon button.",
+    rule: "用 variant=\"outline\"（描边白底）+ size=\"icon-sm\"（28px）；必须有 aria-label。",
+    ruleEn: "Use variant=\"outline\" (white, bordered) with size=\"icon-sm\" (28px); aria-label required.",
+    variant: "outline",
+    size: "icon-sm",
+    group: "icon",
+    props: ["variant: outline", "size: icon-sm", "aria-label", "data-icon"],
+    code: '<Button variant="outline" size="icon-sm" aria-label="新增"><PlusIcon data-icon="inline-start" /></Button>',
+  },
+  {
     id: "disabled",
     title: "禁用状态",
     titleEn: "Disabled state",
@@ -1033,10 +1048,29 @@ const layoutAnchors = [
 
 const navMenuAnchors = [
   { label: "组件总览", labelEn: "Overview", href: "#nav-menu-overview" },
-  { label: "一级+二级组合", labelEn: "Combined", href: "#nav-menu-combined" },
-  { label: "状态", labelEn: "States", href: "#nav-menu-states" },
-  { label: "尺寸", labelEn: "Sizes", href: "#nav-menu-sizes" },
-  { label: "结构", labelEn: "Anatomy", href: "#nav-menu-anatomy" },
+  { label: "场景示例", labelEn: "Scenario examples", href: "#nav-menu-preview" },
+  { label: "使用方式", labelEn: "Usage", href: "#nav-menu-usage" },
+  { label: "API", href: "#nav-menu-props" },
+  { label: "语义 DOM", labelEn: "Semantic DOM", href: "#nav-menu-semantic-dom" },
+  { label: "正误示例", labelEn: "Do / Don’t", href: "#nav-menu-do-dont" },
+]
+const navMenuPropRows = [
+  { prop: "NavRail / NavRailItem", type: "icon, activeIcon?, label?, active?, boxed?", defaultValue: "—", desc: "一级应用栏（64px）与项；boxed=页面入口形态（白底方块、无白底左圆角选中）。", descEn: "64px app rail and items; boxed = page-entry style." },
+  { prop: "NavMenu.collapsed", type: "boolean", defaultValue: "false", desc: "二级面板收起为 48px 图标栏。", descEn: "Collapse the panel to a 48px rail." },
+  { prop: "NavMenuItem", type: "icon?, label, active?, indent?, expandable?, expanded?, collapsed?", defaultValue: "—", desc: "菜单项；active 选中、indent 嵌套缩进、expandable 可折叠分组。", descEn: "Menu item; active/indent/expandable group." },
+  { prop: "NavMenuHeader / NavMenuSearch / NavMenuFooter", type: "title, viewName? / placeholder, onAdd? / onToggle?", defaultValue: "—", desc: "头部（标题+视图）、搜索行（搜索框+新增）、底部（收起双箭头 + 气泡）。", descEn: "Header / search row / footer (collapse toggle)." },
+]
+const navMenuSemanticDomRows = [
+  { part: "[data-slot=\"nav-rail\"] / [data-slot=\"nav-rail-item\"][data-active]", desc: "一级应用栏与项，data-active 标记选中。", descEn: "App rail and items; data-active marks selection." },
+  { part: "[data-slot=\"nav-menu\"][data-collapsed]", desc: "二级面板根，data-collapsed 标记收起态。", descEn: "Second-level panel; data-collapsed marks collapsed." },
+  { part: "[data-slot=\"nav-menu-item\"][data-active]", desc: "菜单项，data-active 标记选中（浅品牌底）。", descEn: "Menu item; data-active marks selection." },
+  { part: "[data-slot=\"nav-menu-header\"] / -search / -list / -footer", desc: "头部 / 搜索 / 列表 / 底部分区。", descEn: "Header / search / list / footer regions." },
+]
+const navMenuDoDontRows = [
+  { do: "一级用 NavRail、二级用 NavMenu，可单用也可组合。", doEn: "Use NavRail for level-1, NavMenu for level-2; standalone or combined.", dont: "把整套导航重写成裸 div + 手写样式。", dontEn: "Rewrite the whole nav as raw divs with hand-written styles." },
+  { do: "选中态用 active（二级浅品牌底 / 一级白底左圆角 + 主色）。", doEn: "Use active for selection (level-2 tint / level-1 white tab + primary).", dont: "手写 bg-[#xxx] 表达选中。", dontEn: "Hand-code bg-[#xxx] for the selected state." },
+  { do: "收起用 collapsed；信息不全处靠气泡补全文案。", doEn: "Use collapsed; rely on tooltip to complete labels.", dont: "收起后直接截断文案不给气泡。", dontEn: "Clip labels on collapse without a tooltip." },
+  { do: "图标走 @/lib/icons；选中用面型 activeIcon。", doEn: "Icons from @/lib/icons; use filled activeIcon when selected.", dont: "塞裸 <svg> 或写死图标尺寸/颜色。", dontEn: "Inline raw <svg> or hard-code icon size/color." },
 ]
 
 const iconAnchors = [
@@ -2961,6 +2995,13 @@ function ButtonScenarioPreview({ id, lang }: { id: string; lang: Lang }) {
     return (
       <Button variant="ghost" size="icon" aria-label={lang === "en" ? "Open package" : "打开组件包"}>
         <PackageIcon data-icon="inline-start" />
+      </Button>
+    )
+  }
+  if (id === "icon-only-outline") {
+    return (
+      <Button variant="outline" size="icon-sm" aria-label={lang === "en" ? "Add" : "新增"}>
+        <PlusIcon data-icon="inline-start" />
       </Button>
     )
   }
@@ -5921,9 +5962,11 @@ function GridPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
 function NavMenuPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   const [selected, setSelected] = useState("home")
   const [open, setOpen] = useState<Record<string, boolean>>({ cust: true })
-  const [collapsed, setCollapsed] = useState(false)
+  const [pinned, setPinned] = useState(true)
+  const [hovered, setHovered] = useState(false)
   const toggle = (id: string) => setOpen((o) => ({ ...o, [id]: !o[id] }))
-  const c = collapsed
+  // 固定导航：pinned 固定展开；未固定时折叠成 48px 图标栏，hover 临时展开（flyout）
+  const c = !pinned && !hovered
   const custChildren = [
     { label: "客户", icon: <BuildingIcon /> },
     { label: "销售记录", icon: <ChartLineIcon /> },
@@ -5934,6 +5977,7 @@ function NavMenuPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }
     { label: "商机评审", icon: <SitemapIcon /> },
   ]
   const demo = (
+    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
     <NavMenu collapsed={c}>
       <NavMenuHeader title="CRM" viewName={lang === "en" ? "View" : "视图名称"} collapsed={c} />
       <NavMenuSearch placeholder={lang === "en" ? "Search" : "搜索"} onAdd={() => {}} collapsed={c} />
@@ -5953,8 +5997,9 @@ function NavMenuPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }
         <NavMenuItem icon={<DatabaseIcon />} label={lang === "en" ? "Dashboard" : "数据驾驶舱"} active={selected === "dash"} collapsed={c} onClick={() => setSelected("dash")} />
         <NavMenuItem icon={<UserIcon />} label={lang === "en" ? "People" : "人员"} active={selected === "people"} collapsed={c} onClick={() => setSelected("people")} />
       </NavMenuList>
-      <NavMenuFooter collapsed={c} onToggle={() => setCollapsed((v) => !v)} />
+      <NavMenuFooter collapsed={c} pinned={pinned} onToggle={() => setPinned(false)} onPin={() => setPinned(true)} />
     </NavMenu>
+    </div>
   )
   // 无图标版：菜单项不带图标；收起态(48px)显示居中文案而非图标。
   const [niSel, setNiSel] = useState("首页")
@@ -5994,57 +6039,140 @@ function NavMenuPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }
       {demo}
     </div>
   )
+  const railDemo = (
+    <NavRail footer={<NavRailItem boxed icon={<SettingsIcon />} aria-label="设置" />}>
+      {railApps.map((a) => (
+        <NavRailItem key={a.id} icon={a.icon} activeIcon={a.activeIcon} label={a.label} active={railApp === a.id} onClick={() => setRailApp(a.id)} />
+      ))}
+    </NavRail>
+  )
+  const box = (node: React.ReactNode) => <div className="flex h-[420px] overflow-auto rounded-lg bg-muted/40 p-3">{node}</div>
+  const navMenuScenarioRows = [
+    { key: "rail", title: lang === "en" ? "App rail" : "一级导航", preview: box(railDemo), intent: "在多应用/多模块间切换的最外层入口（企信、CRM、工作…）。", constraint: "选中=白底左圆角 + 主色加粗 + 面型 activeIcon；底部 boxed 页面入口。", code: `<NavRail footer={<NavRailItem boxed icon={<SettingsIcon />} />}>\n  <NavRailItem icon={<FolderIcon />} activeIcon={<FolderFilledIcon />} label="CRM" active />\n</NavRail>` },
+    { key: "second", title: lang === "en" ? "Second-level menu" : "二级菜单", preview: box(demo), intent: "进入某应用后的页面级导航，承载该应用的功能树。", constraint: "默认固定展开；点收起后变 48px 图标栏，hover 临时展开（flyout），底部锁=固定导航。选中用 active、分组用 expandable；图标走 @/lib/icons。", code: `<NavMenu collapsed={collapsed}>\n  <NavMenuHeader title="CRM" viewName="视图名称" collapsed={collapsed} />\n  <NavMenuSearch onAdd={...} collapsed={collapsed} />\n  <NavMenuList>…</NavMenuList>\n  <NavMenuFooter collapsed={collapsed} onToggle={...} />\n</NavMenu>` },
+    { key: "no-icon", title: lang === "en" ? "No-icon variant" : "无图标版", preview: box(noIconDemo), intent: "功能项没有合适图标、或想更克制时，用纯文字导航（图标可配置：传不传 icon）。", constraint: "菜单项不传 icon 即无图标；同样可折叠，收起时取首部短标识（英文整段≤3 / 中文前 2 字）居中。", code: `<NavMenuItem label="首页" active />  // 不传 icon 即无图标版` },
+  ]
+  const importCode = `import {\n  NavRail, NavRailItem,\n  NavMenu, NavMenuHeader, NavMenuSearch, NavMenuList, NavMenuItem, NavMenuFooter,\n} from "@/components/fx/nav-menu"`
+  const usageCode = `<NavMenu>\n  <NavMenuHeader title="CRM" viewName="视图名称" />\n  <NavMenuSearch placeholder="搜索" onAdd={() => {}} />\n  <NavMenuList>\n    <NavMenuItem icon={<HomeIcon />} label="首页" active />\n    <NavMenuItem expandable expanded label="客户及商机管理" />\n    <NavMenuItem indent icon={<BuildingIcon />} label="客户" />\n  </NavMenuList>\n  <NavMenuFooter onToggle={...} />\n</NavMenu>`
   return (
-    <>
-      <section id="nav-menu-overview" className="flex flex-col gap-5">
+    <div className={docsSpacing.pageStack}>
+      <section id="nav-menu" className="flex flex-col gap-2">
         <PageLead
           crumb={lang === "en" ? "Components / Nav Menu" : "组件 / 导航菜单"}
           title={lang === "en" ? "Nav Menu 导航菜单" : "导航菜单"}
-          lead={lang === "en" ? "Single-panel sidebar (200px): header (title + view) · search + add · scrollable menu tree · footer. 1:1 with the design spec, fx-ui tokens." : "单面板侧边栏（200px）：头部（标题 + 视图）· 搜索 + 新增 · 可滚动菜单树 · 底部。1:1 还原设计稿，token 用 fx-ui。"}
+          lead={lang === "en" ? "Company two-tier navigation: 64px app rail + single-panel menu (200/48px). 1:1 with the design spec, fx-ui tokens." : "公司双层导航：64px 一级应用栏 + 单面板二级菜单（展开 200 / 收起 48px）。1:1 还原设计稿，token 用 fx-ui。"}
           actions={actions}
         />
-        <div className="flex flex-wrap items-start gap-5">
-          <div className="flex h-[520px] rounded-xl bg-muted/40 p-5">{demo}</div>
-          <div className="flex flex-col gap-2">
-            <span className="text-fx-13 font-medium text-foreground">{lang === "en" ? "No-icon variant" : "无图标版"}</span>
-            <div className="flex h-[520px] rounded-xl bg-muted/40 p-5">{noIconDemo}</div>
-          </div>
+      </section>
+
+      <section id="nav-menu-overview" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Overview" : "组件总览"}</h2>
+          <p className="text-base text-muted-foreground">{lang === "en" ? "App rail + second-level menu working together; click apps / items to switch, the footer arrow collapses the panel." : "一级应用栏 + 二级菜单的组合形态；点应用 / 菜单项切换，底部箭头收起面板。"}</p>
         </div>
-        <p className="text-base text-muted-foreground">{lang === "en" ? "Click items to select; click a group row to expand/collapse; the footer arrow collapses the panel to 48px. The no-icon variant shows centered text when collapsed (instead of an icon)." : "点菜单项选中；点带箭头的分组行展开/收起；点底部箭头把面板收起为 48px。无图标版收起时显示居中文案（而非图标）。"}</p>
+        <div className="flex h-[560px] w-fit rounded-xl border border-border bg-muted/40 p-5">{comboDemo}</div>
       </section>
 
-      <section id="nav-menu-combined" className="flex flex-col gap-3">
-        <h2 className="text-2xl font-semibold">{lang === "en" ? "First-level rail + second-level menu" : "一级导航 + 二级菜单组合"}</h2>
-        <p className="text-base text-muted-foreground">{lang === "en" ? "A 64px app rail (icon 18 + 11px label, selected = white tab with left radius + bold primary) sits flush against the second-level menu panel." : "左侧 64px 一级应用栏（图标 18 + 11px 文案，选中=白底左圆角 + 主色加粗）紧贴右侧二级菜单面板。"}</p>
-        <div className="flex h-[560px] w-fit rounded-xl bg-muted/40 p-5">{comboDemo}</div>
-      </section>
-
-      <section id="nav-menu-states" className="flex flex-col gap-3">
-        <h2 className="text-2xl font-semibold">{lang === "en" ? "States" : "状态"}</h2>
-        <p className="text-base text-muted-foreground">{lang === "en" ? "Three states for a menu item." : "菜单项三态。"}</p>
-        <div className="rounded-lg border border-border bg-card p-4 text-fx-13 leading-7 text-muted-foreground">
-          <p><span className="font-medium text-foreground">{lang === "en" ? "Default" : "默认"}</span> — {lang === "en" ? "transparent background, foreground text." : "透明底、常规文字色。"}</p>
-          <p><span className="font-medium text-foreground">{lang === "en" ? "Hover" : "悬停"}</span> — bg-muted。</p>
-          <p><span className="font-medium text-foreground">{lang === "en" ? "Selected" : "选中"}</span> — bg-accent{lang === "en" ? " (light brand tint, --accent token) + medium weight." : "（浅品牌底，--accent token）+ 中粗。"}</p>
+      <section id="nav-menu-preview" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Scenario examples" : "场景示例"}</h2>
+          <p className="text-base text-muted-foreground">{lang === "en" ? "Forms and states; all from the same building blocks." : "各形态与状态；均由同一套零件组合。"}</p>
         </div>
+        <ScenarioTable lang={lang} rows={navMenuScenarioRows} />
       </section>
 
-      <section id="nav-menu-sizes" className="flex flex-col gap-3">
-        <h2 className="text-2xl font-semibold">{lang === "en" ? "Sizes" : "尺寸"}</h2>
-        <p className="text-base text-muted-foreground">{lang === "en" ? "Height: fills the parent (h-full / 100% viewport, mainstream) — header / search / footer stay fixed, the menu list takes the rest and scrolls. Width 200px (zh/ja/ko) or 250px (other locales), collapsed 48px. Padding 12, block gap 8; item p-8 rounded-8, icon 16, text 13; nested items indent 26px. Collapsed shows icons only, centered, with tooltips. No-icon variant collapsed shows the first 2 characters centered, full text in tooltip." : "高度：跟随父容器撑满（h-full / 视口 100%，对齐主流）——头部 / 搜索 / 底部固定，中间菜单列表占满剩余高度并滚动。宽度展开 200px（简中/繁中/日/韩）或 250px（其他语种），收起 48px。内边距 12、块间距 8；菜单项 p-8 圆角 8、图标 16、文字 13；嵌套子项左缩进 26px。收起态仅居中图标 + 气泡补全文案；无图标版收起时取前两个字居中显示，完整文案走气泡。"}</p>
-      </section>
-
-      <section id="nav-menu-anatomy" className="flex flex-col gap-3">
-        <h2 className="text-2xl font-semibold">{lang === "en" ? "Anatomy" : "结构"}</h2>
-        <div className="rounded-lg border border-border bg-card p-4 text-fx-13 leading-7 text-muted-foreground">
-          <p><code>NavMenu</code> — {lang === "en" ? "single 200px panel root." : "单面板根容器（200px）。"}</p>
-          <p><code>NavMenuHeader</code> — {lang === "en" ? "title + view name + chevron." : "标题 + 视图名 + 展开箭头。"}</p>
-          <p><code>NavMenuSearch</code> — {lang === "en" ? "search input + add button." : "搜索框 + 新增按钮。"}</p>
-          <p><code>NavMenuList / NavMenuItem</code> — {lang === "en" ? "scrollable tree; item supports active / indent (nested) / expandable (group)." : "可滚动树；菜单项支持 选中 / 嵌套缩进 / 可折叠分组。"}</p>
-          <p><code>NavMenuFooter</code> — {lang === "en" ? "settings + collapse." : "设置 + 收起。"}</p>
+      <section id="nav-menu-usage" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Usage" : "使用方式"}</h2>
+          <p className="text-base text-muted-foreground">{lang === "en" ? "Import the parts and compose; rail and menu are independent." : "按需导入零件组合；一级栏与二级菜单相互独立。"}</p>
+        </div>
+        <div className="flex flex-col gap-4 rounded-lg border border-border bg-card p-5">
+          <CopyCodeBlock code={importCode} label="Import" lang={lang} />
+          <CopyCodeBlock code={usageCode} label="Usage" lang={lang} />
         </div>
       </section>
-    </>
+
+      <section id="nav-menu-props" className={docsSpacing.sectionStack}>
+        <h2 className="text-2xl font-semibold">{lang === "en" ? "API Props" : "API 属性"}</h2>
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <Table className="min-w-[640px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">{lang === "en" ? "Prop" : "属性"}</TableHead>
+                <TableHead>{lang === "en" ? "Type" : "类型"}</TableHead>
+                <TableHead>{lang === "en" ? "Default" : "默认值"}</TableHead>
+                <TableHead className="pr-4">{lang === "en" ? "Description" : "描述"}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {navMenuPropRows.map((row) => (
+                <TableRow key={row.prop}>
+                  <TableCell className="pl-4 font-medium">{row.prop}</TableCell>
+                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.type}</code></TableCell>
+                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.defaultValue}</code></TableCell>
+                  <TableCell className="pr-4 text-muted-foreground">{lang === "en" ? row.descEn : row.desc}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </section>
+
+      <section id="nav-menu-semantic-dom" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Semantic DOM" : "语义 DOM"}</h2>
+          <p className="text-base text-muted-foreground">{lang === "en" ? "Semantic parts AI and engineers should target." : "AI 和工程师应该理解的语义部位。"}</p>
+        </div>
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <Table className="min-w-[560px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">{lang === "en" ? "Part" : "部位"}</TableHead>
+                <TableHead className="pr-4">{lang === "en" ? "Description" : "说明"}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {navMenuSemanticDomRows.map((row) => (
+                <TableRow key={row.part}>
+                  <TableCell className="pl-4 font-medium"><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.part}</code></TableCell>
+                  <TableCell className="pr-4 text-muted-foreground">{lang === "en" ? row.descEn : row.desc}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </section>
+
+      <section id="nav-menu-do-dont" className={docsSpacing.sectionStack}>
+        <div className={docsSpacing.sectionHeader}>
+          <h2 className="text-2xl font-semibold">{lang === "en" ? "Do / Don’t" : "正误示例"}</h2>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Card>
+            <CardHeader><CardTitle className="text-base text-foreground">{lang === "en" ? "Do" : "推荐 Do"}</CardTitle></CardHeader>
+            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
+              {navMenuDoDontRows.map((row) => (
+                <div key={`do-${row.do}`} className="flex gap-2">
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
+                  <span>{lang === "en" ? row.doEn : row.do}</span>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader><CardTitle className="text-base text-foreground">{lang === "en" ? "Don’t" : "避免 Don't"}</CardTitle></CardHeader>
+            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
+              {navMenuDoDontRows.map((row) => (
+                <div key={`dont-${row.dont}`} className="flex gap-2">
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
+                  <span>{lang === "en" ? row.dontEn : row.dont}</span>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+    </div>
   )
 }
 

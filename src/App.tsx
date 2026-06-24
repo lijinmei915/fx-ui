@@ -8,6 +8,14 @@ import {
   BellFilledIcon,
   BoldIcon,
   BuildingIcon,
+  BoxIcon,
+  BriefcaseIcon,
+  CalendarIcon,
+  ChecklistIcon,
+  HeadsetIcon,
+  MessageCircleIcon,
+  SchoolIcon,
+  LayoutGridIcon,
   ChartLineIcon,
   MapPinIcon,
   ReportMoneyIcon,
@@ -105,7 +113,7 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { AgentSurface, type AgentSurfaceEvent, type AgentSurfaceSchema } from "@/components/fx/agent-surface"
-import { NavRail, NavRailItem, NavMenu, NavMenuHeader, NavMenuSearch, NavMenuList, NavMenuItem, NavMenuFooter } from "@/components/fx/nav-menu"
+import { NavRail, NavRailItem, NavMenu, NavMenuHeader, NavMenuSearch, NavMenuList, NavMenuGroupLabel, NavMenuItem, NavMenuFooter } from "@/components/fx/nav-menu"
 import componentsManifestRaw from "../docs/data/components.manifest.json?raw"
 import designTokensManifestRaw from "../docs/data/design-tokens.json?raw"
 import docSiteManifestRaw from "../docs/data/doc-site.manifest.json?raw"
@@ -6020,14 +6028,14 @@ function NavMenuPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }
   // 一级导航 + 二级菜单组合（左 64px 应用栏紧贴右侧菜单面板）。
   const [railApp, setRailApp] = useState("crm")
   const railApps = [
-    { id: "qx", icon: <BellIcon />, activeIcon: <BellFilledIcon />, label: "企信" },
+    { id: "qx", icon: <MessageCircleIcon />, label: "企信" },
     { id: "crm", icon: <FolderIcon />, activeIcon: <FolderFilledIcon />, label: "CRM" },
-    { id: "work", icon: <BuildingIcon />, label: "工作" },
-    { id: "todo", icon: <CheckCircleIcon />, activeIcon: <CheckCircleFilledIcon />, label: "待办" },
-    { id: "cal", icon: <StarIcon />, activeIcon: <StarFilledIcon />, label: "日程" },
-    { id: "train", icon: <ChartLineIcon />, label: "培训助手" },
-    { id: "agent", icon: <UserIcon />, activeIcon: <UserFilledIcon />, label: "代理通" },
-    { id: "more", icon: <DatabaseIcon />, activeIcon: <DatabaseFilledIcon />, label: "更多" },
+    { id: "work", icon: <BriefcaseIcon />, label: "工作" },
+    { id: "todo", icon: <ChecklistIcon />, label: "待办" },
+    { id: "cal", icon: <CalendarIcon />, label: "日程" },
+    { id: "train", icon: <SchoolIcon />, label: "培训助手" },
+    { id: "agent", icon: <HeadsetIcon />, label: "代理通" },
+    { id: "more", icon: <LayoutGridIcon />, label: "更多" },
   ]
   const comboDemo = (
     <div className="flex h-full">
@@ -6046,11 +6054,56 @@ function NavMenuPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }
       ))}
     </NavRail>
   )
+  // 后台菜单：顶部仅搜索；不可选灰色分组标题（折叠成短横线）；可折叠成 48px 图标栏、hover 悬浮展开、底部锁固定。
+  // 支持一级展开（分组下的功能项）与二级展开（expandable 项内联展开子项）。
+  const [backPinned, setBackPinned] = useState(true)
+  const [backHovered, setBackHovered] = useState(false)
+  const [backOpen, setBackOpen] = useState<Record<string, boolean>>({ "b-ent": true })
+  const bc = !backPinned && !backHovered
+  const backToggle = (id: string) => setBackOpen((o) => ({ ...o, [id]: !o[id] }))
+  const backDemo = (
+    <div onMouseEnter={() => setBackHovered(true)} onMouseLeave={() => setBackHovered(false)}>
+    <NavMenu collapsed={bc}>
+      <NavMenuSearch placeholder="搜索" collapsed={bc} />
+      <NavMenuList>
+        <NavMenuGroupLabel collapsed={bc}>系统管理</NavMenuGroupLabel>
+        <NavMenuItem icon={<HomeIcon />} label="管理首页" collapsed={bc} active={selected === "b-home"} onClick={() => setSelected("b-home")} />
+        <NavMenuItem icon={<BuildingIcon />} label="企业设置" expandable expanded={backOpen["b-ent"]} collapsed={bc} onClick={() => backToggle("b-ent")} />
+        {!bc && backOpen["b-ent"] && (
+          <>
+            {["许可信息", "企业信息设置", "多组织设置", "员工功能设置", "工作时间", "假期", "手机号隐私设置", "个性化推荐设置", "域名管理", "强制通知设置"].map((l) => (
+              <NavMenuItem key={l} indent label={l} active={selected === l} onClick={() => setSelected(l)} />
+            ))}
+            {/* 二级展开：企业安全设置 → 子项再缩进一级 */}
+            <NavMenuItem indent label="企业安全设置" expandable expanded={backOpen["b-ent-sec"]} onClick={() => backToggle("b-ent-sec")} />
+            {backOpen["b-ent-sec"] && ["分管小组", "账号安全设置", "通讯录安全设置", "设备绑定", "单点登录"].map((l) => (
+              <NavMenuItem key={l} indent={2} label={l} active={selected === l} onClick={() => setSelected(l)} />
+            ))}
+          </>
+        )}
+        <NavMenuItem icon={<SitemapIcon />} label="组织架构管理" arrow collapsed={bc} active={selected === "b-org"} onClick={() => setSelected("b-org")} />
+        <NavMenuItem icon={<UserIcon />} label="角色权限管理" arrow collapsed={bc} active={selected === "b-role"} onClick={() => setSelected("b-role")} />
+        <NavMenuGroupLabel collapsed={bc}>CRM平台管理</NavMenuGroupLabel>
+        <NavMenuItem icon={<BoxIcon />} label="对象管理" expandable expanded={backOpen["b-obj"]} collapsed={bc} onClick={() => backToggle("b-obj")} />
+        {!bc && backOpen["b-obj"] && (
+          <>
+            <NavMenuItem indent label="预设对象" active={selected === "b-obj-1"} onClick={() => setSelected("b-obj-1")} />
+            <NavMenuItem indent label="自定义对象" active={selected === "b-obj-2"} onClick={() => setSelected("b-obj-2")} />
+          </>
+        )}
+        <NavMenuItem icon={<SitemapIcon />} label="流程管理" arrow collapsed={bc} active={selected === "b-flow"} onClick={() => setSelected("b-flow")} />
+        <NavMenuItem icon={<ReportMoneyIcon />} label="数据权限管理" arrow collapsed={bc} active={selected === "b-data"} onClick={() => setSelected("b-data")} />
+      </NavMenuList>
+      <NavMenuFooter collapsed={bc} pinned={backPinned} onToggle={() => setBackPinned(false)} onPin={() => setBackPinned(true)} />
+    </NavMenu>
+    </div>
+  )
   const box = (node: React.ReactNode) => <div className="flex h-[420px] overflow-auto rounded-lg bg-muted/40 p-3">{node}</div>
   const navMenuScenarioRows = [
     { key: "rail", title: lang === "en" ? "App rail" : "一级导航", preview: box(railDemo), intent: "在多应用/多模块间切换的最外层入口（企信、CRM、工作…）。", constraint: "选中=白底左圆角 + 主色加粗 + 面型 activeIcon；底部 boxed 页面入口。", code: `<NavRail footer={<NavRailItem boxed icon={<SettingsIcon />} />}>\n  <NavRailItem icon={<FolderIcon />} activeIcon={<FolderFilledIcon />} label="CRM" active />\n</NavRail>` },
     { key: "second", title: lang === "en" ? "Second-level menu" : "二级菜单", preview: box(demo), intent: "进入某应用后的页面级导航，承载该应用的功能树。", constraint: "默认固定展开；点收起后变 48px 图标栏，hover 临时展开（flyout），底部锁=固定导航。选中用 active、分组用 expandable；图标走 @/lib/icons。", code: `<NavMenu collapsed={collapsed}>\n  <NavMenuHeader title="CRM" viewName="视图名称" collapsed={collapsed} />\n  <NavMenuSearch onAdd={...} collapsed={collapsed} />\n  <NavMenuList>…</NavMenuList>\n  <NavMenuFooter collapsed={collapsed} onToggle={...} />\n</NavMenu>` },
     { key: "no-icon", title: lang === "en" ? "No-icon variant" : "无图标版", preview: box(noIconDemo), intent: "功能项没有合适图标、或想更克制时，用纯文字导航（图标可配置：传不传 icon）。", constraint: "菜单项不传 icon 即无图标；同样可折叠，收起时取首部短标识（英文整段≤3 / 中文前 2 字）居中。", code: `<NavMenuItem label="首页" active />  // 不传 icon 即无图标版` },
+    { key: "back", title: lang === "en" ? "Back-office menu" : "后台菜单", preview: box(backDemo), intent: "管理后台/设置中心的导航：纯搜索 + 分节标题 + 跳转入口。", constraint: "顶部仅 NavMenuSearch；分节用 NavMenuGroupLabel（折叠成短横线）；arrow 项「>」进下级页面、expandable 项内联展开二级子项；可折叠成 48px 图标栏，hover 悬浮展开、底部锁固定（与二级菜单同一套交互）。", code: `<NavMenu>\n  <NavMenuSearch placeholder="搜索" />\n  <NavMenuList>\n    <NavMenuGroupLabel>系统管理</NavMenuGroupLabel>\n    <NavMenuItem icon={<BuildingIcon />} label="企业设置" arrow />\n  </NavMenuList>\n  <NavMenuFooter />\n</NavMenu>` },
   ]
   const importCode = `import {\n  NavRail, NavRailItem,\n  NavMenu, NavMenuHeader, NavMenuSearch, NavMenuList, NavMenuItem, NavMenuFooter,\n} from "@/components/fx/nav-menu"`
   const usageCode = `<NavMenu>\n  <NavMenuHeader title="CRM" viewName="视图名称" />\n  <NavMenuSearch placeholder="搜索" onAdd={() => {}} />\n  <NavMenuList>\n    <NavMenuItem icon={<HomeIcon />} label="首页" active />\n    <NavMenuItem expandable expanded label="客户及商机管理" />\n    <NavMenuItem indent icon={<BuildingIcon />} label="客户" />\n  </NavMenuList>\n  <NavMenuFooter onToggle={...} />\n</NavMenu>`

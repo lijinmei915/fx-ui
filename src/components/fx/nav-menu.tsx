@@ -1,4 +1,4 @@
-import type { ReactNode } from "react"
+import { useEffect, useRef, useState, type ReactNode } from "react"
 
 import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
@@ -38,7 +38,19 @@ function NavRailItem({
   className,
   ...props
 }: { icon: ReactNode; activeIcon?: ReactNode; label?: string; active?: boolean; boxed?: boolean } & React.ComponentProps<"button">) {
-  return (
+  // 仅当文字真的被截断（scrollWidth > clientWidth）时才启用气泡，没超出不弹。
+  const labelRef = useRef<HTMLSpanElement>(null)
+  const [truncated, setTruncated] = useState(false)
+  useEffect(() => {
+    const el = labelRef.current
+    if (!el) return
+    const check = () => setTruncated(el.scrollWidth > el.clientWidth)
+    check()
+    const ro = new ResizeObserver(check)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [label])
+  const button = (
     <button
       type="button"
       data-slot="nav-rail-item"
@@ -50,16 +62,28 @@ function NavRailItem({
         boxed
           // 页面入口：居中全圆角方块；hover/按下变白底 + 图标主色，和菜单选中态统一
           ? "mx-auto size-9 rounded-lg hover:bg-card hover:text-primary active:bg-card active:text-primary-active"
-          // 应用入口：左圆角，hover 灰底；选中=白底左圆角 + 主色加粗
-          : "ml-1 rounded-l-lg py-2 hover:bg-muted data-active:bg-card data-active:font-bold data-active:text-primary data-active:[&_svg]:text-primary",
+          // 应用入口：左圆角；未选中才 hover 灰底；选中=白底左圆角 + 主色加粗（选中不再变 hover 底色）
+          : "ml-1 rounded-l-lg py-2 not-data-active:hover:bg-muted data-active:bg-card data-active:font-bold data-active:text-primary data-active:[&_svg]:text-primary",
         className
       )}
       {...props}
     >
       {active && activeIcon ? activeIcon : icon}
-      {!boxed && label && <span className="max-w-full truncate px-1">{label}</span>}
+      {!boxed && label && <span ref={labelRef} className="max-w-full truncate px-1">{label}</span>}
     </button>
   )
+  // 文字超出 64px 被截断时，才用气泡补全完整名（与收起提示一致）。
+  if (!boxed && label && truncated) {
+    return (
+      <TooltipProvider delay={100}>
+        <Tooltip>
+          <TooltipTrigger render={button} />
+          <TooltipContent side="right">{label}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    )
+  }
+  return button
 }
 
 // NavMenu：单面板根容器，展开 200 / 收起 48，纵向 头部/搜索/列表/底部。
@@ -129,7 +153,24 @@ function NavMenuSearch({
 // NavMenuList：菜单树滚动区。
 function NavMenuList({ children, className }: DivProps) {
   return (
-    <div data-slot="nav-menu-list" className={cn("flex w-full flex-1 flex-col overflow-y-auto", className)}>
+    <div data-slot="nav-menu-list" className={cn("flex w-full flex-1 flex-col gap-1 overflow-y-auto", className)}>
+      {children}
+    </div>
+  )
+}
+
+// NavMenuGroupLabel：分组/区块标题，不可选（仅作分节，如后台菜单的「系统管理」）。
+// 收起时退化为一条 16px 短横线分隔（替代文字标题）。
+function NavMenuGroupLabel({ children, className, collapsed }: DivProps & { collapsed?: boolean }) {
+  if (collapsed) {
+    return (
+      <div data-slot="nav-menu-group-label" className="flex h-[30px] items-center justify-center">
+        <span className="h-px w-4 bg-muted-foreground" />
+      </div>
+    )
+  }
+  return (
+    <div data-slot="nav-menu-group-label" className={cn("px-2 pt-3 pb-1 text-fx-13 text-muted-foreground select-none", className)}>
       {children}
     </div>
   )
@@ -151,16 +192,18 @@ function NavMenuItem({
   expandable,
   expanded,
   collapsed,
+  arrow,
   className,
   ...props
 }: {
   icon?: ReactNode
   label: string
   active?: boolean
-  indent?: boolean
+  indent?: boolean | 1 | 2
   expandable?: boolean
   expanded?: boolean
   collapsed?: boolean
+  arrow?: boolean
 } & React.ComponentProps<"button">) {
   const button = (
     <button
@@ -168,11 +211,11 @@ function NavMenuItem({
       data-slot="nav-menu-item"
       data-active={active ? "" : undefined}
       className={cn(
-        "flex items-center gap-1 rounded-lg text-fx-13 outline-none transition-colors cursor-pointer",
-        "text-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/50",
+        "flex shrink-0 items-center gap-1 rounded-lg text-fx-13 outline-none transition-colors cursor-pointer",
+        "text-foreground not-data-active:hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/50",
         "data-active:bg-accent data-active:font-medium data-active:[&_svg]:text-primary",
         // 收起：居中 36px 正方块（选中底色呈方形）；展开：占满整行、左对齐，嵌套缩进。
-        collapsed ? "mx-auto size-9 justify-center" : cn("w-full p-2 text-left", indent && "pl-[26px]"),
+        collapsed ? "mx-auto size-9 justify-center" : cn("w-full p-2 text-left", indent === 2 ? "pl-[40px]" : indent && "pl-[26px]"),
         "[&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
         className
       )}
@@ -189,6 +232,8 @@ function NavMenuItem({
       ) : !icon && !expandable ? (
         <span className="w-full text-center whitespace-nowrap">{collapsedLabel(label)}</span>
       ) : null}
+      {/* 右侧跳转箭头（后台菜单：点进下级页面，区别于 expandable 的前置折叠箭头） */}
+      {arrow && !collapsed && <ChevronRightIcon className="size-3 shrink-0 text-muted-foreground" />}
     </button>
   )
   // 收起态信息不全（仅图标 / 截断文案），用气泡补全完整文案。
@@ -244,4 +289,4 @@ function NavMenuFooter({
   )
 }
 
-export { NavRail, NavRailItem, NavMenu, NavMenuHeader, NavMenuSearch, NavMenuList, NavMenuItem, NavMenuFooter }
+export { NavRail, NavRailItem, NavMenu, NavMenuHeader, NavMenuSearch, NavMenuList, NavMenuGroupLabel, NavMenuItem, NavMenuFooter }

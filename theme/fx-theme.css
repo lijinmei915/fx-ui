@@ -570,3 +570,28 @@
 .tabler-icon {
   stroke-width: 1.75;
 }
+
+/* 细滚动条工具类：细(6px)、圆头、半透明中性灰、hover 才显现、轨道透明。
+   主流侧栏滚动条做法（Notion/Linear/VS Code）。滑块色走 token，不写死灰。
+   套用：给可滚动容器加 className="scrollbar-thin"。 */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+.scrollbar-thin:hover {
+  scrollbar-color: var(--fx-neutrals-07) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 9999px;
+}
+.scrollbar-thin:hover::-webkit-scrollbar-thumb {
+  background: var(--fx-neutrals-07);
+}

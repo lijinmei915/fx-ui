@@ -167,7 +167,7 @@ function NavMenuSearch({
 // NavMenuList：菜单树滚动区。
 function NavMenuList({ children, className }: DivProps) {
   return (
-    <div data-slot="nav-menu-list" className={cn("flex w-full flex-1 flex-col gap-1 overflow-y-auto", className)}>
+    <div data-slot="nav-menu-list" className={cn("scrollbar-thin flex w-full flex-1 flex-col gap-1 overflow-y-auto", className)}>
       {children}
     </div>
   )
@@ -244,7 +244,7 @@ function NavMenuItem({
       {/* 展开：左对齐文案；收起且无图标(无图标版)：居中显示文案；收起且有图标：仅图标。 */}
       {!collapsed ? (
         <span className="flex-1 truncate">{label}</span>
-      ) : !icon && !expandable ? (
+      ) : !icon ? (
         <span className="w-full text-center whitespace-nowrap">{collapsedLabel(label)}</span>
       ) : null}
       {/* 右侧跳转箭头（后台菜单：点进下级页面，区别于 expandable 的前置折叠箭头） */}

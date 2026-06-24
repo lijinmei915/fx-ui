@@ -1,8 +1,26 @@
-> **接手时间**：2026-06-22
+> **接手时间**：2026-06-25
 > **项目根目录**：fx-ui
-> **当前状态**：组件文档结构统一收口——图标页重写为标准 7 段式、正误示例全站统一两列形式、筛选去「全部」、模块说明字号固定、按钮禁用态光标修正；新增组件文档 API / 导入约定门禁。已提交推送 main（公开仓库，同事可拉）
-> **下一步**：1）其余组件页逐个对照新规范（PageLead lead 写法、模块说明 text-base、正误两列、尺寸分组逐档）巡检；2）toggle/table/tabs/sidebar 等 `/透明度`、旧 `bg-muted` hover 收敛（DEC-005 尾巴）；3）回到 Agent UI 真实视觉方向（见下方旧交接）
-> **风险**：`theme/fx-theme.css` 是 token 真相源，动它即全局换肤；交互阶梯仅浅色模式；改 token 按顺序 改 CSS→TOKENS/规则→`npm run build:tokens`→再改组件（见 AGENTS.md）
+> **当前状态**：Table 业务化 + 新增 Pagination 组件 + Button 体系扩展（plain/tone/禁用 token 化/gap 适配）+ 沉淀「组件正交组合规范」。已提交 main（`d9a99bf`、`265a432`），待推送
+> **下一步**：1）其余组件按 DESIGN_STANDARDS 新「组件变体与组合规范」核对（是否有该用正交轴却堆组件/滥加 variant）；2）DEC-005 尾巴（toggle/tabs/sidebar 的 `/透明度`、旧 hover）仍未收敛；3）下拉菜单「多选/单选选中样式」待定（见下）
+> **风险**：`theme/fx-theme.css` 是 token 真相源，动它即全局换肤；改 token 按顺序 改 CSS→design-tokens.json→`npm run build:tokens`→再改组件（见 AGENTS.md）
+
+---
+
+## 本轮（2026-06-25）Table 业务化 + Pagination + Button 体系 + 组合规范
+
+**主线：把 Table 做成贴公司列表页的业务表，补齐 Pagination 组件，扩展 Button（无底色 plain + tone + 禁用 token 化），并把"组件怎么组合"沉淀成全站规范。**
+
+已完成：
+- **Table**：`table.tsx` 加 `density`(compact=36px)、`TableHead` 的 `sortable/align`、`TableCell/Head` 的 `pinned`(固定列)、`TableHeader sticky`(吸顶)、`bordered`(默认无边框，对齐公司列表页)；表头白底+加粗+深下边线(neutrals05)、表体淡线(neutrals04)。业务表场景：链接首列/头像/级别 Badge/金额右对齐排序/行选中+批量操作条/纯图标操作(查看·编辑·删除)/加载骨架/空状态
+- **Pagination（新组件）**：`src/components/ui/pagination.tsx`，主流页码+省略号+上下页(受控)；完整文档页 + 导航/路由/锚点 + manifest + `pagination.md`
+- **Badge**：新增 `warning` 变体(琥珀浅底)，级别 tag 对齐 Figma
+- **Button**：① 禁用态去 `opacity-50`、改语义禁用色 token(危险/链接保留淡本色)，新增 `--surface-disabled`(neutrals-02)/`--link-disabled`(blue-05)；② 新增 `plain` 变体(无底色文字/图标，hover 只变色) + `tone`(中性/主色/链接/危险，仅 plain 生效)；③ 图标-文字 gap 按尺寸适配(4px / lg 8px)；④ link 变体去 hover 下划线(B 端风)
+- **规范**：`DESIGN_STANDARDS.md` 新增「组件变体与组合规范」(正交轴，全站通用)；`DECISIONS.md` DEC-018(下拉尺寸+选中)、DEC-019(组件正交组合，全站)、DEC-020(禁用态改 token，取代 DEC-011)
+
+未收口（下一任注意）：
+- **下拉菜单 多选/单选选中样式**待定：曾探讨"单选橙字、多选中性"vs"都橙字"，未拍板（当前都橙字）
+- 其余组件未按 DEC-019/组合规范逐个核对
+- DEC-005 尾巴仍在
 
 ---
 

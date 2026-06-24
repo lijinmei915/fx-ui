@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from "react"
+import { cn } from "@/lib/utils"
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -29,7 +30,9 @@ import {
   TargetIcon,
   SitemapIcon,
   ChevronDownIcon,
+  ChevronRightIcon,
   CheckCircleIcon,
+  CheckIcon,
   CheckCircleFilledIcon,
   HomeFilledIcon,
   DatabaseFilledIcon,
@@ -101,12 +104,12 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import {
@@ -2194,29 +2197,101 @@ const dropdownMenuAnchors = [
   { label: "语义 DOM", href: "#dropdown-menu-semantic-dom" },
   { label: "正误示例", href: "#dropdown-menu-do-dont" },
 ]
+const dropdownMenuScenarioFilters = [
+  { value: "type", label: "类型" },
+  { value: "state", label: "选项状态" },
+]
 const dropdownMenuScenarioExamples = [
   {
-    id: "actions",
-    title: "操作菜单",
-    intent: "在表格行、卡片右上角等位置收纳次级操作。",
-    rule: "危险操作（如删除）用 variant=\"destructive\" 区分，并放在分组末尾。",
-    code: `<DropdownMenu>\n  <DropdownMenuTrigger render={<Button variant="ghost" size="icon">⋯</Button>} />\n  <DropdownMenuContent>\n    <DropdownMenuItem>编辑</DropdownMenuItem>\n    <DropdownMenuItem>复制</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant="destructive">删除</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>`,
+    id: "normal",
+    title: "普通",
+    group: "type",
+    intent: "最常见的一组动作：编辑、复制、删除等。",
+    rule: "危险操作（如删除）用 variant=\"destructive\" 放末尾；需要分区时再用「分割线」场景。",
+    code: `<DropdownMenu>\n  <DropdownMenuTrigger render={<Button variant="ghost" size="icon">⋯</Button>} />\n  <DropdownMenuContent>\n    <DropdownMenuItem>编辑</DropdownMenuItem>\n    <DropdownMenuItem>复制</DropdownMenuItem>\n    <DropdownMenuItem>重命名</DropdownMenuItem>\n    <DropdownMenuItem variant="destructive">删除</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>`,
   },
   {
-    id: "user-menu",
-    title: "用户菜单",
-    intent: "导航栏头像点击后展示账户相关的快捷入口。",
-    rule: "用 DropdownMenuLabel 和 Separator 区分账户信息与操作分组。",
-    code: `<DropdownMenu>\n  <DropdownMenuTrigger render={<Button variant="ghost" size="icon"><UserIcon /></Button>} />\n  <DropdownMenuContent>\n    <DropdownMenuLabel>我的账户</DropdownMenuLabel>\n    <DropdownMenuSeparator />\n    <DropdownMenuGroup>\n      <DropdownMenuItem>个人设置 <DropdownMenuShortcut>⌘S</DropdownMenuShortcut></DropdownMenuItem>\n      <DropdownMenuItem>账单 <DropdownMenuShortcut>⌘B</DropdownMenuShortcut></DropdownMenuItem>\n    </DropdownMenuGroup>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant="destructive">退出登录</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>`,
+    id: "icon",
+    title: "有图标",
+    group: "type",
+    intent: "每项左侧带图标，强化识别（如设置、账单、退出）。",
+    rule: "图标统一 16px、放文字前；同一菜单要么都带图标、要么都不带。",
+    code: `<DropdownMenuItem><UserIcon /> 个人资料</DropdownMenuItem>\n<DropdownMenuItem><CreditCardIcon /> 账单与订阅</DropdownMenuItem>`,
+  },
+  {
+    id: "group",
+    title: "文字分组",
+    group: "type",
+    intent: "用小标题文字（Label）按类别组织菜单（如账户信息 / 操作）；要用线分组见「线分组」场景。",
+    rule: "DropdownMenuLabel 必须放在 DropdownMenuGroup 内；快捷键用 DropdownMenuShortcut。",
+    code: `<DropdownMenuGroup>\n  <DropdownMenuLabel>账户</DropdownMenuLabel>  {/* Label 必须在 Group 内 */}\n  <DropdownMenuItem>个人资料</DropdownMenuItem>\n  <DropdownMenuItem>账单与订阅</DropdownMenuItem>\n</DropdownMenuGroup>\n<DropdownMenuGroup>\n  <DropdownMenuLabel>偏好</DropdownMenuLabel>\n  <DropdownMenuItem>通知</DropdownMenuItem>\n  <DropdownMenuItem>外观</DropdownMenuItem>\n</DropdownMenuGroup>`,
+  },
+  {
+    id: "divider",
+    title: "线分组",
+    group: "type",
+    intent: "用分割线把不同类别的操作分区（线分组），默认无分割线。",
+    rule: "用 DropdownMenuSeparator 分区；不要每项之间都加，只在类别切换处加。",
+    code: `<DropdownMenuItem>编辑</DropdownMenuItem>\n<DropdownMenuSeparator />\n<DropdownMenuItem variant="destructive">删除</DropdownMenuItem>`,
+  },
+  {
+    id: "submenu",
+    title: "有子级",
+    group: "type",
+    intent: "操作有下级选项时（如「移动到 →」某个项目），用子菜单收纳；最多 3 级。",
+    rule: "用 DropdownMenuSub / SubTrigger / SubContent；含子级的项都带 ► 箭头，最末级（无子级）不带；最多 3 级，再深改用 Dialog。",
+    code: `<DropdownMenuSub>\n  <DropdownMenuSubTrigger>移动到</DropdownMenuSubTrigger>\n  <DropdownMenuSubContent>\n    <DropdownMenuItem>我的文档</DropdownMenuItem>\n    <DropdownMenuItem>共享空间</DropdownMenuItem>\n  </DropdownMenuSubContent>\n</DropdownMenuSub>`,
+  },
+  {
+    id: "search",
+    title: "有搜索",
+    group: "type",
+    intent: "选项很多时，顶部放搜索框边输入边过滤（如选负责人、选对象）。",
+    rule: "选项多且需过滤时优先用 Combobox；搜索无结果时显示居中 muted「无匹配结果」（上下留白 24px）。",
+    code: `<DropdownMenuContent>\n  <Input placeholder="搜索" value={q} onChange={...} />\n  {items.filter(i => i.includes(q)).map(i => (\n    <DropdownMenuItem key={i}>{i}</DropdownMenuItem>\n  ))}\n</DropdownMenuContent>`,
+  },
+  {
+    id: "sticky",
+    title: "有吸底",
+    group: "type",
+    intent: "列表可滚动，但底部固定一个常驻操作（如「+ 新建」）。",
+    rule: "选项区独立滚动（max-h + overflow），吸底操作放在滚动区外、分割线之下。",
+    code: `<DropdownMenuContent>\n  <div className="max-h-48 overflow-y-auto">…选项…</div>\n  <DropdownMenuSeparator />\n  <DropdownMenuItem>＋ 新建</DropdownMenuItem>\n</DropdownMenuContent>`,
+  },
+  {
+    id: "checkbox",
+    title: "多选",
+    group: "state",
+    intent: "菜单内切换多个开关，如表格「显示哪些列」。",
+    rule: "用 DropdownMenuCheckboxItem（checked + onCheckedChange）；菜单不自动关闭，可连续勾选。",
+    code: `<DropdownMenuCheckboxItem checked={cols.name} onCheckedChange={...}>\n  姓名\n</DropdownMenuCheckboxItem>`,
+  },
+  {
+    id: "radio",
+    title: "单选",
+    group: "state",
+    intent: "菜单内单选一个值，如排序方式、视图密度；当前值用主色橙字 + 对勾标记（通用选中态）。",
+    rule: "用 DropdownMenuRadioGroup（value + onValueChange）；选中项即「选中态」，全菜单通用。",
+    code: `<DropdownMenuRadioGroup value={sort} onValueChange={setSort}>\n  <DropdownMenuRadioItem value="new">最新优先</DropdownMenuRadioItem>\n  <DropdownMenuRadioItem value="old">最早优先</DropdownMenuRadioItem>\n</DropdownMenuRadioGroup>`,
+  },
+  {
+    id: "disabled",
+    title: "禁用",
+    group: "state",
+    intent: "某个选项当前不可用（无权限、条件不满足）时禁用它。",
+    rule: "用 DropdownMenuItem disabled；禁用项变灰、不可点击、不响应 hover——灰显即禁用标识，不额外加图标（主流做法）。",
+    code: `<DropdownMenuItem disabled>归档</DropdownMenuItem>`,
   },
 ]
 const dropdownMenuPropRows = [
   { prop: "DropdownMenu / DropdownMenuTrigger", type: "MenuPrimitive.Root.Props / Trigger.Props", defaultValue: "—", desc: "根节点与触发器，常用 render 包裹 Button 自定义外观。" },
-  { prop: "DropdownMenuContent", type: "side? / align? / sideOffset?", defaultValue: "side=\"bottom\" align=\"start\"", desc: "菜单弹层，定位 props 决定弹出方向与对齐方式。" },
+  { prop: "DropdownMenuContent", type: "side? / align? / sideOffset?", defaultValue: "side=\"bottom\" align=\"start\"", desc: "菜单弹层，定位 props 决定弹出方向与对齐方式。尺寸规范：默认宽度按内容自适应（内容窄时即最小宽 160px，最宽 320px、超长截断），最大高 320px（约 10 项，超出滚动）；选择型可加 w-(--anchor-width) 跟随触发器。" },
   { prop: "DropdownMenuItem", type: "variant?: \"default\" | \"destructive\" / inset?", defaultValue: "\"default\"", desc: "菜单项，destructive 用于危险操作的视觉强调。" },
   { prop: "DropdownMenuLabel / DropdownMenuSeparator", type: "—", defaultValue: "—", desc: "分组标题与分隔线，用于组织菜单结构。" },
   { prop: "DropdownMenuShortcut", type: "React.ComponentProps<\"span\">", defaultValue: "—", desc: "靠右展示的快捷键提示文案。" },
-  { prop: "DropdownMenuCheckboxItem / RadioGroup / RadioItem", type: "checked? / value?", defaultValue: "—", desc: "复选 / 单选型菜单项，用于菜单内的状态切换。" },
+  { prop: "DropdownMenuCheckboxItem", type: "checked? / onCheckedChange?", defaultValue: "—", desc: "复选型菜单项（菜单内多选开关，勾选不自动关闭）。" },
+  { prop: "DropdownMenuRadioGroup / RadioItem", type: "value? / onValueChange? / value", defaultValue: "—", desc: "单选组与单选项，菜单内单选一个值（排序、密度等）。" },
+  { prop: "DropdownMenuSub / SubTrigger / SubContent", type: "—", defaultValue: "—", desc: "子菜单（二级展开），用于「移动到→」这类有下一级的操作。" },
 ]
 const dropdownMenuSemanticDomRows = [
   { part: "[data-slot=\"dropdown-menu-trigger\"]", desc: "触发器，自动同步 aria-expanded / aria-haspopup。" },
@@ -5105,7 +5180,8 @@ function ScenarioTable({ rows, filters, lang }: { rows: ScenarioRow[]; filters?:
           </TableHeader>
           <TableBody>
             {shown.map((r) => (
-              <TableRow key={r.key}>
+              <TableRow key={r.key} className="hover:bg-transparent has-aria-expanded:bg-transparent">
+
                 <TableCell className="pl-4 align-top"><span className="font-medium">{r.title}</span></TableCell>
                 <TableCell className="align-top"><div className="w-max">{r.preview}</div></TableCell>
                 {hasSpec ? <TableCell className="align-top text-foreground"><div className="w-max text-fx-12">{r.spec ?? "—"}</div></TableCell> : null}
@@ -10802,51 +10878,270 @@ function CollapsiblePage({ actions, lang }: { actions: React.ReactNode; lang: La
   )
 }
 
+// 文档用常开菜单面板：各类型默认全摊开（设计稿一样平铺），但项可悬浮高亮、可点击。
+// 复用与真实 DropdownMenuContent 一致的视觉（bg-popover / shadow-l1 / 圆角 / 32px 项 / 选中橙字+对勾）。
+function StaticMenu({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <div className={cn("flex w-max min-w-[160px] max-w-[320px] flex-col rounded-lg bg-popover p-1 text-popover-foreground shadow-l1", className)}>{children}</div>
+}
+function MItem({ icon, label, selected, checked, arrow, danger, disabled, onClick }: { icon?: React.ReactNode; label: string; selected?: boolean; checked?: boolean; arrow?: boolean; danger?: boolean; disabled?: boolean; onClick?: () => void }) {
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={onClick}
+      className={cn(
+        "flex min-h-8 w-full items-center gap-1.5 rounded-md px-1.5 text-left text-fx-13 outline-none select-none [&>svg]:size-4 [&>svg]:shrink-0",
+        disabled
+          ? "cursor-not-allowed text-foreground-disabled"
+          : danger
+            ? "text-destructive hover:bg-destructive-light"
+            : "hover:bg-muted",
+        selected && !disabled && "font-medium text-primary"
+      )}
+    >
+      {icon}
+      <span className="flex-1 truncate">{label}</span>
+      {!disabled && (selected || checked) && <CheckIcon className={cn("size-4", selected ? "text-primary" : "text-foreground")} />}
+      {arrow && <ChevronRightIcon className="size-3 text-muted-foreground" />}
+    </button>
+  )
+}
+function MGroup({ children }: { children: React.ReactNode }) {
+  return <div className="px-1.5 pt-3 pb-0.5 text-fx-11 text-[var(--fx-neutrals-10)] select-none first:pt-1.5">{children}</div>
+}
+function MLine({ full }: { full?: boolean }) {
+  return <div className={cn("my-1 h-px bg-border-faint", full ? "-mx-1" : "mx-1.5")} />
+}
+// 多选：点击切换勾选
+function CheckboxMenuDemo() {
+  const [on, setOn] = useState<Record<string, boolean>>({ 姓名: true, 状态: true, 创建时间: false })
+  return (
+    <StaticMenu>
+      <MGroup>显示列</MGroup>
+      {["姓名", "状态", "创建时间"].map((k) => (
+        <MItem key={k} label={k} selected={on[k]} onClick={() => setOn((s) => ({ ...s, [k]: !s[k] }))} />
+      ))}
+    </StaticMenu>
+  )
+}
+// 单选 / 选中态：点击切换唯一选中项；mode=check 用普通对勾，mode=selected 用橙字+对勾
+function ChoiceMenuDemo({ label, options, initial, mode, className }: { label?: string; options: string[]; initial: string; mode: "check" | "selected"; className?: string }) {
+  const [val, setVal] = useState(initial)
+  return (
+    <StaticMenu className={className}>
+      {label && <MGroup>{label}</MGroup>}
+      {options.map((o) => (
+        <MItem
+          key={o}
+          label={o}
+          onClick={() => setVal(o)}
+          {...(mode === "selected" ? { selected: val === o } : { checked: val === o })}
+        />
+      ))}
+    </StaticMenu>
+  )
+}
+// 有搜索：输入实时过滤 + 可点选
+function SearchMenuDemo() {
+  const all = ["张三", "李四", "王五", "赵六"]
+  const [q, setQ] = useState("")
+  const list = all.filter((n) => n.includes(q))
+  return (
+    <StaticMenu>
+      <div className="p-1">
+        <div className="flex h-7 items-center gap-1.5 rounded-lg border border-input px-2 text-fx-13">
+          <SearchIcon className="size-3.5 text-muted-foreground" />
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="搜索"
+            className="w-full bg-transparent outline-none placeholder:text-foreground-disabled"
+          />
+        </div>
+      </div>
+      {list.length ? (
+        list.map((n) => <MItem key={n} label={n} />)
+      ) : (
+        <div className="px-1.5 py-6 text-center text-fx-13 text-muted-foreground">无匹配结果</div>
+      )}
+    </StaticMenu>
+  )
+}
+
+function DropdownMenuOverview({ lang }: { lang: Lang }) {
+  return (
+    <div className="grid gap-6 rounded-lg border border-border bg-card p-6">
+      <div className="grid gap-3">
+        <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
+        <div className="flex flex-wrap items-start gap-4">
+          {/* 普通 */}
+          <StaticMenu>
+            <MItem label="编辑" />
+            <MItem label="复制" />
+            <MItem label="删除" danger />
+          </StaticMenu>
+          {/* 有图标 */}
+          <StaticMenu>
+            <MItem icon={<UserIcon />} label="个人资料" />
+            <MItem icon={<CreditCardIcon />} label="账单与订阅" />
+            <MItem icon={<LogOutIcon />} label="退出登录" danger />
+          </StaticMenu>
+          {/* 文字分组 */}
+          <StaticMenu>
+            <MGroup>账户</MGroup>
+            <MItem label="个人资料" />
+            <MGroup>偏好</MGroup>
+            <MItem label="通知" />
+          </StaticMenu>
+          {/* 线分组 */}
+          <StaticMenu>
+            <MItem label="编辑" />
+            <MItem label="复制" />
+            <MLine />
+            <MItem label="删除" danger />
+          </StaticMenu>
+          {/* 有子级 */}
+          <StaticMenu>
+            <MItem label="重命名" />
+            <MItem label="移动到" arrow />
+            <MItem label="删除" danger />
+          </StaticMenu>
+          {/* 有搜索 */}
+          <StaticMenu>
+            <div className="p-1">
+              <div className="flex h-7 items-center gap-1.5 rounded-lg border border-input px-2 text-fx-13 text-foreground-disabled">
+                <SearchIcon className="size-3.5" /> 搜索
+              </div>
+            </div>
+            <MItem label="张三" />
+            <MItem label="李四" />
+          </StaticMenu>
+          {/* 有吸底 */}
+          <StaticMenu>
+            <MItem label="项目 A" />
+            <MItem label="项目 B" />
+            <MLine full />
+            <MItem icon={<PlusIcon />} label="新建项目" />
+          </StaticMenu>
+        </div>
+      </div>
+      <div className="border-t border-dashed border-border" />
+      <div className="grid gap-3">
+        <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Option states" : "选项状态"}</h3>
+        <div className="flex flex-wrap items-start gap-4">
+          {/* 多选 */}
+          <StaticMenu>
+            <MGroup>多选</MGroup>
+            <MItem label="姓名" selected />
+            <MItem label="状态" selected />
+            <MItem label="创建时间" />
+          </StaticMenu>
+          {/* 单选 */}
+          <StaticMenu>
+            <MGroup>单选</MGroup>
+            <MItem label="最新优先" selected />
+            <MItem label="最早优先" />
+          </StaticMenu>
+          {/* 禁用 */}
+          <StaticMenu>
+            <MItem label="编辑" />
+            <MItem label="归档" disabled />
+            <MItem label="删除" danger />
+          </StaticMenu>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function DropdownMenuPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   return (
     <StandardDocPage
       slug="dropdown-menu"
       title="Dropdown Menu 下拉菜单"
       lead="点击触发器后弹出的操作菜单，用于在有限空间里收纳多个次级操作。"
-      overview={
-        <DropdownMenu>
-          <DropdownMenuTrigger render={<Button variant="outline">打开菜单</Button>} />
-          <DropdownMenuContent>
-            <DropdownMenuLabel>我的账户</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>个人设置 <DropdownMenuShortcut>⌘S</DropdownMenuShortcut></DropdownMenuItem>
-            <DropdownMenuItem>账单 <DropdownMenuShortcut>⌘B</DropdownMenuShortcut></DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">退出登录</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      }
+      overview={null}
+      overviewMatrix={<DropdownMenuOverview lang={lang} />}
       scenarioExamples={dropdownMenuScenarioExamples}
+      scenarioFilters={dropdownMenuScenarioFilters}
       renderScenarioPreview={(id) =>
-        id === "actions" ? (
+        id === "normal" ? (
+          <StaticMenu>
+            <MItem label="编辑" />
+            <MItem label="复制" />
+            <MItem label="重命名" />
+            <MItem label="删除" danger />
+          </StaticMenu>
+        ) : id === "icon" ? (
+          <StaticMenu>
+            <MItem icon={<UserIcon />} label="个人资料" />
+            <MItem icon={<CreditCardIcon />} label="账单与订阅" />
+            <MItem icon={<SettingsIcon />} label="设置" />
+            <MItem icon={<LogOutIcon />} label="退出登录" danger />
+          </StaticMenu>
+        ) : id === "submenu" ? (
           <DropdownMenu>
-            <DropdownMenuTrigger render={<Button size="sm" variant="ghost">操作 ⋯</Button>} />
+            <DropdownMenuTrigger render={<Button size="sm" variant="outline">操作 <ChevronDownIcon data-icon="inline-end" /></Button>} />
             <DropdownMenuContent>
-              <DropdownMenuItem>编辑</DropdownMenuItem>
-              <DropdownMenuItem>复制</DropdownMenuItem>
-              <DropdownMenuSeparator />
+              <DropdownMenuItem>重命名</DropdownMenuItem>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>移动到</DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>我的文档</DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuItem>工作</DropdownMenuItem>
+                      <DropdownMenuItem>个人</DropdownMenuItem>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+                  <DropdownMenuItem>共享空间</DropdownMenuItem>
+                  <DropdownMenuItem>收藏夹</DropdownMenuItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
               <DropdownMenuItem variant="destructive">删除</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        ) : id === "checkbox" ? (
+          <CheckboxMenuDemo />
+        ) : id === "radio" ? (
+          <ChoiceMenuDemo label="排序方式" options={["最新优先", "最早优先", "按名称"]} initial="最新优先" mode="selected" />
+        ) : id === "disabled" ? (
+          <StaticMenu>
+            <MItem label="编辑" />
+            <MItem label="复制" />
+            <MItem label="归档" disabled />
+            <MItem label="删除" danger />
+          </StaticMenu>
+        ) : id === "search" ? (
+          <SearchMenuDemo />
+        ) : id === "sticky" ? (
+          <StaticMenu>
+            <div className="scrollbar-thin -mx-1 -mt-1 max-h-40 overflow-y-auto px-1 pt-1">
+              {["项目 A", "项目 B", "项目 C", "项目 D", "项目 E", "项目 F", "项目 G"].map((i) => (
+                <MItem key={i} label={i} />
+              ))}
+            </div>
+            <MLine full />
+            <MItem icon={<PlusIcon />} label="新建项目" />
+          </StaticMenu>
+        ) : id === "divider" ? (
+          <StaticMenu>
+            <MItem label="编辑" />
+            <MItem label="复制" />
+            <MLine />
+            <MItem label="归档" />
+            <MLine />
+            <MItem label="删除" danger />
+          </StaticMenu>
         ) : (
-          <DropdownMenu>
-            <DropdownMenuTrigger render={<Button size="sm" variant="outline"><UserIcon className="size-4" /> 账户</Button>} />
-            <DropdownMenuContent>
-              <DropdownMenuLabel>我的账户</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem><CreditCardIcon /> 账单</DropdownMenuItem>
-                <DropdownMenuItem><SettingsIcon /> 设置</DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive"><LogOutIcon /> 退出登录</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <StaticMenu>
+            <MGroup>账户</MGroup>
+            <MItem label="个人资料" />
+            <MItem label="账单与订阅" />
+            <MGroup>偏好</MGroup>
+            <MItem label="通知" />
+            <MItem label="外观" />
+          </StaticMenu>
         )
       }
       importCode={`import {\n  DropdownMenu,\n  DropdownMenuContent,\n  DropdownMenuItem,\n  DropdownMenuLabel,\n  DropdownMenuSeparator,\n  DropdownMenuTrigger,\n} from "@/components/ui/dropdown-menu"`}

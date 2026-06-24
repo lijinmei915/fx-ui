@@ -373,6 +373,7 @@
   --link-active: var(--fx-blue-10);
 
   /* 边框三档（走中性轴）：弱 04 / 默认 05 / 强 08；input 07 为可交互元素边框 */
+  --border-faint: var(--fx-neutrals-03);
   --border-subtle: var(--fx-neutrals-04);
   --border: var(--fx-neutrals-05);
   --border-strong: var(--fx-neutrals-08);
@@ -453,6 +454,7 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-border-faint: var(--border-faint);
   --color-border-subtle: var(--border-subtle);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
@@ -517,7 +519,8 @@
 
   /* 企业 web 字体规范（Figma）：字号 + 行高成对。默认正文 13。
      工具类 text-fx-{12/13/15/18}，业务页面/组件用这套；文档站自身展示标题不受影响。
-     层级：18 详情页标题 / 15 模块·卡片标题 / 13 默认正文 / 12 提示说明。 */
+     层级：18 详情页标题 / 15 模块·卡片标题 / 13 默认正文 / 12 提示说明 / 11 分组小标题等辅助。 */
+  --text-fx-11: 11px;  --text-fx-11--line-height: 16px;
   --text-fx-12: 12px;  --text-fx-12--line-height: 18px;
   --text-fx-13: 13px;  --text-fx-13--line-height: 18px;
   --text-fx-15: 15px;  --text-fx-15--line-height: 22px;

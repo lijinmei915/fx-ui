@@ -203,6 +203,18 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **影响**：`src/components/ui/*` 全部 import 自 `@base-ui/react`（无 `@radix-ui`）；写/改组件用 `render` prop 组合；package.json 只依赖 `@base-ui/react`
 - **相关文件**：`package.json`、`src/components/ui/*`
 
+### DEC-018: 下拉菜单尺寸规范 + 选项状态选中样式统一
+
+- **日期**：2026-06-24
+- **状态**：已决定
+- **尺寸**：`DropdownMenuContent`——**默认宽度按内容自适应**（auto），内容窄时即**最小宽 160px**，最宽 **320px**（超长文本截断）；最大高 **320px**（约 10 项，超出列表区滚动，细滚动条），同时受视口可用高度约束：`max-h-[min(20rem,var(--available-height))]`。选择型（菜单宽 = 触发器宽）由调用方加 `w-(--anchor-width)` opt-in，不再作为默认
+- **放弃**：默认强制 `w-(--anchor-width)`（图标触发器会被撑到与按钮等宽，操作菜单不合理）、无上限的 `min-w-32`
+- **原因**：主流区间（shadcn 128 起 / Ant ~160 / Linear·Notion 实测 200–280），取 160–320 覆盖操作菜单与选择器；硬上限避免菜单顶到屏幕边或无限撑宽
+- **搜索空状态**：无匹配时显示居中 muted「无匹配结果」，上下留白 24px（`py-6 text-center`）
+- **选中样式统一**：多选（CheckboxItem）与单选（RadioItem）的**选中项文字样式一致**——主色橙字 + 加粗 + 橙勾（`data-checked:font-medium data-checked:text-primary`）。原多选选中是中性黑勾、不变色，用户看不出"已选/可被选择"；统一成橙色高亮后，单/多选靠"能否多选"区分，不靠颜色
+- **影响**：`dropdown-menu.tsx` 的 Content 尺寸类、CheckboxItem/RadioItem 选中色；文档 API 表与搜索场景约束
+- **相关文件**：`src/components/ui/dropdown-menu.tsx`、`src/App.tsx`
+
 ## 相关文件
 
 | 文件 | 关系 |

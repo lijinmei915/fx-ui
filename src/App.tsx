@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { Fragment, useEffect, useRef, useState } from "react"
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -41,6 +41,7 @@ import {
   DatabaseIcon,
   FileCodeIcon,
   FolderIcon,
+  FileTextIcon,
   HomeIcon,
   ItalicIcon,
   LogOutIcon,
@@ -1936,25 +1937,68 @@ const breadcrumbAnchors = [
   { label: "语义 DOM", href: "#breadcrumb-semantic-dom" },
   { label: "正误示例", href: "#breadcrumb-do-dont" },
 ]
+const breadcrumbScenarioFilters = [
+  { value: "type", label: "类型", labelEn: "Type" },
+  { value: "size", label: "尺寸", labelEn: "Size" },
+]
 const breadcrumbScenarioExamples = [
   {
     id: "basic",
     title: "基础路径",
+    group: "type",
     intent: "展示当前页面在层级结构中的位置，支持逐级返回。",
     rule: "最后一级用 BreadcrumbPage 标记当前页，不可点击。",
     code: `<Breadcrumb>\n  <BreadcrumbList>\n    <BreadcrumbItem><BreadcrumbLink href="#">首页</BreadcrumbLink></BreadcrumbItem>\n    <BreadcrumbSeparator />\n    <BreadcrumbItem><BreadcrumbPage>详情</BreadcrumbPage></BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>`,
   },
   {
+    id: "icon",
+    title: "带图标",
+    group: "type",
+    intent: "每级前面带图标增强识别，默认不带；图标随字号缩放。",
+    rule: "把图标放进 BreadcrumbLink / BreadcrumbPage 的 children（图标在前、文字在后），不手写尺寸。",
+    code: `<BreadcrumbItem>\n  <BreadcrumbLink href="#"><HomeIcon />首页</BreadcrumbLink>\n</BreadcrumbItem>`,
+  },
+  {
     id: "collapsed",
     title: "折叠中间层级",
-    intent: "层级过深时用省略号收起中间项，保留首尾关键节点。",
-    rule: "用 BreadcrumbEllipsis 收起，不要让路径换行挤占页面头部。",
-    code: `<Breadcrumb>\n  <BreadcrumbList>\n    <BreadcrumbItem><BreadcrumbLink href="#">首页</BreadcrumbLink></BreadcrumbItem>\n    <BreadcrumbSeparator />\n    <BreadcrumbItem><BreadcrumbEllipsis /></BreadcrumbItem>\n    <BreadcrumbSeparator />\n    <BreadcrumbItem><BreadcrumbPage>详情</BreadcrumbPage></BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>`,
+    group: "type",
+    intent: "层级超过 4 级时收起中间项，保留首尾关键节点；点「…」下拉列出被折叠的层级、可跳转。",
+    rule: "仅超过 4 级才折叠；BreadcrumbEllipsis 包进 DropdownMenu 做成可点；下拉项是真链接（render 成 <a>），点了跳到该祖先页、面包屑随路由重渲染（纯导航，无选中态）。",
+    code: `<BreadcrumbItem>\n  <DropdownMenu>\n    <DropdownMenuTrigger render={<button aria-label="展开折叠的层级"><BreadcrumbEllipsis /></button>} />\n    <DropdownMenuContent align="start">\n      <DropdownMenuItem render={<a href="/activity" />}>活动管理</DropdownMenuItem>\n      <DropdownMenuItem render={<a href="/activity/2024" />}>2024 春季</DropdownMenuItem>\n    </DropdownMenuContent>\n  </DropdownMenu>\n</BreadcrumbItem>`,
+  },
+  {
+    id: "size-lg",
+    title: "大 lg",
+    group: "size",
+    spec: "15px",
+    intent: "标题区、详情页头部等强调路径的场景。",
+    rule: "BreadcrumbList size=\"lg\"，字号 15。",
+    code: `<BreadcrumbList size="lg">…</BreadcrumbList>`,
+  },
+  {
+    id: "size-default",
+    title: "默认 default",
+    group: "size",
+    spec: "13px",
+    intent: "常规页面头部路径，业务首选档。",
+    rule: "默认档，字号 13。",
+    code: `<BreadcrumbList>…</BreadcrumbList>`,
+  },
+  {
+    id: "size-sm",
+    title: "小 sm",
+    group: "size",
+    spec: "12px",
+    intent: "弹窗、卡片内等空间紧凑的路径。",
+    rule: "BreadcrumbList size=\"sm\"，字号 12。",
+    code: `<BreadcrumbList size="sm">…</BreadcrumbList>`,
   },
 ]
 const breadcrumbPropRows = [
   { prop: "Breadcrumb", type: "React.ComponentProps<\"nav\">", defaultValue: "—", desc: "根容器，自带 aria-label=\"breadcrumb\"。" },
   { prop: "BreadcrumbList / BreadcrumbItem", type: "React.ComponentProps<\"ol\"> / <\"li\">", defaultValue: "—", desc: "列表与列表项，负责排版与间距。" },
+  { prop: "BreadcrumbList.size", type: "\"sm\" | \"default\" | \"lg\"", defaultValue: "\"default\"", desc: "尺寸档（12 / 13 / 15px），字号驱动整条面包屑，图标随字号缩放。" },
+  { prop: "图标（icon）", type: "ReactNode（放进 Link/Page children）", defaultValue: "—", desc: "默认不带；需要时把图标放进 BreadcrumbLink/BreadcrumbPage 的 children，图标在前、随字号缩放。" },
   { prop: "BreadcrumbLink", type: "render?: ReactElement", defaultValue: "—", desc: "可点击的层级链接，支持 render 自定义底层标签。" },
   { prop: "BreadcrumbPage", type: "React.ComponentProps<\"span\">", defaultValue: "—", desc: "当前页标记，自动加 aria-current=\"page\"，不可点击。" },
   { prop: "BreadcrumbSeparator / BreadcrumbEllipsis", type: "React.ComponentProps<\"li\"> / <\"span\">", defaultValue: "—", desc: "分隔符（默认箭头图标）与省略号折叠占位。" },
@@ -10427,6 +10471,51 @@ function AvatarPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
 }
 
 function BreadcrumbDocPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  // 折叠示例：有状态，点祖先项（含下拉里折叠的中间层级）把"当前页"挪到那一级，面包屑随之变短——演示导航后的变化，不真跳转。
+  const crumbPath = ["首页", "活动管理", "2024 春季", "线下活动", "活动列表", "详情"]
+  const [crumbEnd, setCrumbEnd] = useState(crumbPath.length - 1)
+  const go = (i: number) => (e: React.MouseEvent) => { e.preventDefault(); setCrumbEnd(i) }
+  const visible = crumbPath.slice(0, crumbEnd + 1)
+  const collapsedDemo =
+    visible.length <= 4 ? (
+      <Breadcrumb>
+        <BreadcrumbList>
+          {visible.map((label, i) => (
+            <Fragment key={label}>
+              {i > 0 && <BreadcrumbSeparator />}
+              <BreadcrumbItem>
+                {i === visible.length - 1 ? (
+                  <BreadcrumbPage>{label}</BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink href="#" onClick={go(i)}>{label}</BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+            </Fragment>
+          ))}
+        </BreadcrumbList>
+      </Breadcrumb>
+    ) : (
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem><BreadcrumbLink href="#" onClick={go(0)}>{visible[0]}</BreadcrumbLink></BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger render={<button type="button" aria-label="展开折叠的层级" className="flex items-center outline-none cursor-pointer"><BreadcrumbEllipsis /></button>} />
+              <DropdownMenuContent align="start">
+                {visible.slice(1, visible.length - 2).map((label, idx) => (
+                  <DropdownMenuItem key={label} onClick={() => setCrumbEnd(idx + 1)}>{label}</DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem><BreadcrumbLink href="#" onClick={go(visible.length - 2)}>{visible[visible.length - 2]}</BreadcrumbLink></BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem><BreadcrumbPage>{visible[visible.length - 1]}</BreadcrumbPage></BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    )
   return (
     <StandardDocPage
       slug="breadcrumb"
@@ -10444,6 +10533,7 @@ function BreadcrumbDocPage({ actions, lang }: { actions: React.ReactNode; lang: 
         </Breadcrumb>
       }
       scenarioExamples={breadcrumbScenarioExamples}
+      scenarioFilters={breadcrumbScenarioFilters}
       renderScenarioPreview={(id) =>
         id === "basic" ? (
           <Breadcrumb>
@@ -10453,14 +10543,26 @@ function BreadcrumbDocPage({ actions, lang }: { actions: React.ReactNode; lang: 
               <BreadcrumbItem><BreadcrumbPage>详情</BreadcrumbPage></BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-        ) : (
+        ) : id === "icon" ? (
           <Breadcrumb>
             <BreadcrumbList>
+              <BreadcrumbItem><BreadcrumbLink href="#"><HomeIcon />首页</BreadcrumbLink></BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem><BreadcrumbLink href="#"><FolderIcon />项目</BreadcrumbLink></BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem><BreadcrumbPage><FileTextIcon />详情</BreadcrumbPage></BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        ) : id === "collapsed" ? (
+          collapsedDemo
+        ) : (
+          <Breadcrumb>
+            <BreadcrumbList size={id.replace("size-", "") as "sm" | "default" | "lg"}>
               <BreadcrumbItem><BreadcrumbLink href="#">首页</BreadcrumbLink></BreadcrumbItem>
               <BreadcrumbSeparator />
-              <BreadcrumbItem><BreadcrumbEllipsis /></BreadcrumbItem>
+              <BreadcrumbItem><BreadcrumbLink href="#">活动管理</BreadcrumbLink></BreadcrumbItem>
               <BreadcrumbSeparator />
-              <BreadcrumbItem><BreadcrumbPage>详情</BreadcrumbPage></BreadcrumbItem>
+              <BreadcrumbItem><BreadcrumbPage>活动列表</BreadcrumbPage></BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
         )

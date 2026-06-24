@@ -16,12 +16,25 @@ function Breadcrumb({ className, ...props }: React.ComponentProps<"nav">) {
   )
 }
 
-function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
+// 尺寸档（对齐企业 web 规范）：lg=15 / default=13 / sm=12，字号驱动整条面包屑。
+const breadcrumbSizes = {
+  lg: "text-fx-15",
+  default: "text-fx-13",
+  sm: "text-fx-12",
+} as const
+
+function BreadcrumbList({
+  className,
+  size = "default",
+  ...props
+}: React.ComponentProps<"ol"> & { size?: keyof typeof breadcrumbSizes }) {
   return (
     <ol
       data-slot="breadcrumb-list"
+      data-size={size}
       className={cn(
-        "flex flex-wrap items-center gap-1.5 text-fx-13 wrap-break-word text-muted-foreground",
+        "flex flex-wrap items-center gap-1.5 wrap-break-word text-muted-foreground",
+        breadcrumbSizes[size],
         className
       )}
       {...props}
@@ -48,7 +61,8 @@ function BreadcrumbLink({
     defaultTagName: "a",
     props: mergeProps<"a">(
       {
-        className: cn("transition-colors hover:text-foreground", className),
+        // 默认不带图标；需要图标时把 icon 放进 children，自动 inline 排版并按字号缩放
+        className: cn("inline-flex items-center gap-1 transition-colors hover:text-foreground [&>svg]:size-[1.15em] [&>svg]:shrink-0", className),
       },
       props
     ),
@@ -66,7 +80,7 @@ function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
       role="link"
       aria-disabled="true"
       aria-current="page"
-      className={cn("font-normal text-foreground", className)}
+      className={cn("inline-flex items-center gap-1 font-normal text-foreground [&>svg]:size-[1.15em] [&>svg]:shrink-0", className)}
       {...props}
     />
   )

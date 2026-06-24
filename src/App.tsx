@@ -1981,8 +1981,8 @@ const breadcrumbScenarioExamples = [
     group: "size",
     spec: "13px",
     intent: "常规页面头部路径，业务首选档。",
-    rule: "默认档，字号 13。",
-    code: `<BreadcrumbList>…</BreadcrumbList>`,
+    rule: "默认档，字号 13（size 可省略，默认即 default）。",
+    code: `<BreadcrumbList size="default">…</BreadcrumbList>`,
   },
   {
     id: "size-sm",
@@ -10521,16 +10521,59 @@ function BreadcrumbDocPage({ actions, lang }: { actions: React.ReactNode; lang: 
       slug="breadcrumb"
       title="Breadcrumb 面包屑"
       lead="展示当前页面在层级结构中的位置，帮助用户理解所处位置并快速返回上级。"
-      overview={
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem><BreadcrumbLink href="#">首页</BreadcrumbLink></BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem><BreadcrumbLink href="#">项目</BreadcrumbLink></BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem><BreadcrumbPage>详情</BreadcrumbPage></BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+      overview={null}
+      overviewMatrix={
+        <div className="grid gap-6 rounded-lg border border-border bg-card p-6">
+          <div className="grid gap-3">
+            <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
+            <div className="flex flex-col gap-3">
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem><BreadcrumbLink href="#">首页</BreadcrumbLink></BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem><BreadcrumbLink href="#">项目</BreadcrumbLink></BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem><BreadcrumbPage>详情</BreadcrumbPage></BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem><BreadcrumbLink href="#"><HomeIcon />首页</BreadcrumbLink></BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem><BreadcrumbLink href="#"><FolderIcon />项目</BreadcrumbLink></BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem><BreadcrumbPage><FileTextIcon />详情</BreadcrumbPage></BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem><BreadcrumbLink href="#">首页</BreadcrumbLink></BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem><BreadcrumbEllipsis /></BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem><BreadcrumbPage>详情</BreadcrumbPage></BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
+          </div>
+          <div className="border-t border-dashed border-border" />
+          <div className="grid gap-3">
+            <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Sizes" : "尺寸"}</h3>
+            <div className="flex flex-col gap-3">
+              {(["lg", "default", "sm"] as const).map((s) => (
+                <Breadcrumb key={s}>
+                  <BreadcrumbList size={s}>
+                    <BreadcrumbItem><BreadcrumbLink href="#">首页</BreadcrumbLink></BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem><BreadcrumbLink href="#">活动管理</BreadcrumbLink></BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem><BreadcrumbPage>活动列表</BreadcrumbPage></BreadcrumbItem>
+                  </BreadcrumbList>
+                </Breadcrumb>
+              ))}
+            </div>
+          </div>
+        </div>
       }
       scenarioExamples={breadcrumbScenarioExamples}
       scenarioFilters={breadcrumbScenarioFilters}

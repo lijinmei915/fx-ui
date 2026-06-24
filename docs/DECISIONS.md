@@ -193,6 +193,16 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **影响**：定了再改 `NavMenuFooter`（控件）与前台 demo 的折叠交互；可能去掉 pin/onPin 与 hover-peek
 - **相关文件**：`src/components/fx/nav-menu.tsx`（NavMenuFooter）、`src/App.tsx`（NavMenu 前台 demo）
 
+### DEC-017: 无头组件底层用 Base UI，而非 Radix
+
+- **日期**：2026-06-24
+- **状态**：已决定
+- **决定**：基础组件（Dropdown/Tooltip/Select/Menu/Dialog…）的无头底层统一用 **Base UI（`@base-ui/react`）**，不引入 Radix。组合走 Base UI 的 `render` prop 模式（`render={<a/>}`），不是 Radix 的 `asChild`
+- **放弃**：Radix Primitives（shadcn 经典底层）、Headless UI、Ark UI、React Aria
+- **原因**：Base UI 是 **Radix + MUI Base 原班人马合并后的"下一代"无头库**，能力对标 Radix 不缩水、API 更统一、锚点定位内置、更新最活跃（Radix 团队主力已转此），shadcn 新版也在迁。选它是踩在主流演进方向上，不是偏门；对项目实际差别只是组合语法（`render` vs `asChild`）
+- **影响**：`src/components/ui/*` 全部 import 自 `@base-ui/react`（无 `@radix-ui`）；写/改组件用 `render` prop 组合；package.json 只依赖 `@base-ui/react`
+- **相关文件**：`package.json`、`src/components/ui/*`
+
 ## 相关文件
 
 | 文件 | 关系 |

@@ -5994,14 +5994,14 @@ function NavMenuPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }
         <NavMenuItem icon={<StarIcon />} label={lang === "en" ? "Recent" : "最近使用"} active={selected === "recent"} collapsed={c} onClick={() => setSelected("recent")} />
         <NavMenuItem icon={<BellIcon />} label="CRM提醒" active={selected === "remind"} collapsed={c} onClick={() => setSelected("remind")} />
         <NavMenuItem icon={<CheckCircleIcon />} label="CRM待办" active={selected === "todo"} collapsed={c} onClick={() => setSelected("todo")} />
-        <NavMenuItem expandable expanded={open.cust} label={lang === "en" ? "Customers & deals" : "客户及商机管理"} collapsed={c} onClick={() => toggle("cust")} />
+        <NavMenuItem icon={<FolderIcon />} expandable expanded={open.cust} label={lang === "en" ? "Customers & deals" : "客户及商机管理"} collapsed={c} onClick={() => toggle("cust")} />
         {!c && open.cust && custChildren.map((cc) => (
           <NavMenuItem key={cc.label} indent icon={cc.icon} label={cc.label} active={selected === cc.label} onClick={() => setSelected(cc.label)} />
         ))}
-        <NavMenuItem expandable expanded={open.order} label={lang === "en" ? "Orders & payments" : "订单及回款管理"} collapsed={c} onClick={() => toggle("order")} />
-        <NavMenuItem expandable expanded={open.pre} label={lang === "en" ? "Pre-sales projects" : "售前项目管理"} collapsed={c} onClick={() => toggle("pre")} />
-        <NavMenuItem expandable expanded={open.deliver} label={lang === "en" ? "Delivery projects" : "交付实施项目"} collapsed={c} onClick={() => toggle("deliver")} />
-        <NavMenuItem expandable expanded={open.loss} label={lang === "en" ? "Loss management" : "项目损失管理"} collapsed={c} onClick={() => toggle("loss")} />
+        <NavMenuItem icon={<ReportMoneyIcon />} expandable expanded={open.order} label={lang === "en" ? "Orders & payments" : "订单及回款管理"} collapsed={c} onClick={() => toggle("order")} />
+        <NavMenuItem icon={<BriefcaseIcon />} expandable expanded={open.pre} label={lang === "en" ? "Pre-sales projects" : "售前项目管理"} collapsed={c} onClick={() => toggle("pre")} />
+        <NavMenuItem icon={<ChecklistIcon />} expandable expanded={open.deliver} label={lang === "en" ? "Delivery projects" : "交付实施项目"} collapsed={c} onClick={() => toggle("deliver")} />
+        <NavMenuItem icon={<ChartLineIcon />} expandable expanded={open.loss} label={lang === "en" ? "Loss management" : "项目损失管理"} collapsed={c} onClick={() => toggle("loss")} />
         <NavMenuItem icon={<DatabaseIcon />} label={lang === "en" ? "Dashboard" : "数据驾驶舱"} active={selected === "dash"} collapsed={c} onClick={() => setSelected("dash")} />
         <NavMenuItem icon={<UserIcon />} label={lang === "en" ? "People" : "人员"} active={selected === "people"} collapsed={c} onClick={() => setSelected("people")} />
       </NavMenuList>

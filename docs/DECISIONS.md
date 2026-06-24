@@ -173,6 +173,16 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **影响**：新增 `--surface` / `--color-surface`（fx-theme.css）、登记 design-tokens.json 与 TOKENS.md；所有 outline 按钮（导出/继续/图标按钮/NavMenu 的 +/搜索等）统一白底描边
 - **相关文件**：`theme/fx-theme.css`、`docs/TOKENS.md`、`docs/data/design-tokens.json`、`src/components/ui/button.tsx`、`src/components/fx/nav-menu.tsx`、`src/App.tsx`
 
+### DEC-015: 二级菜单子项要不要图标，按「对象型 vs 功能型」分
+
+- **日期**：2026-06-24
+- **状态**：已决定
+- **决定**：导航二级（内联子菜单）子项是否带图标，按导航性质分两套——**对象型导航子项带图标，功能型导航子项纯文字 + 缩进**。CRM 前台菜单的二级子项（客户、销售记录、联系人…）是业务**对象**，带图标（图标=对象标识）；后台/设置类菜单的二级子项（许可信息、部门管理…）是**功能页**，纯文字靠缩进表达层级
+- **放弃**：一刀切"二级子项一律去图标"（主流后台常见做法）；也放弃"全都加图标"
+- **原因**：主流后台（Ant/飞书/Element）二级子项确实多为纯文字——因为功能项无身份、加图标反而削弱缩进的层级感、窄栏更挤。但 CRM 的二级是「对象导航」（类似 Salesforce 对象级导航），每个对象是有身份的实体，图标是对象标识不是装饰，带图标合理且有辨识价值。所以判定标准是"子项代表对象还是功能"，不是"在第几级"
+- **影响**：NavMenu 前台 demo 子项带图标、后台 demo 子项纯文字，两套并存即正确，不需统一；折叠态走整面板 peek（顶层图标列，子项收起隐藏、hover 展开才显示，见 NavMenu）
+- **相关文件**：`src/components/fx/nav-menu.tsx`、`src/App.tsx`（NavMenu 前台/后台 demo）
+
 ## 相关文件
 
 | 文件 | 关系 |

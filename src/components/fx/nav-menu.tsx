@@ -221,7 +221,8 @@ function NavMenuItem({
       )}
       {...props}
     >
-      {expandable ? (
+      {/* 折叠箭头只在展开态显示；收起态(整面板 peek)显示项自己的图标，保持一列干净图标 */}
+      {expandable && !collapsed ? (
         <ChevronRightIcon className={cn("transition-transform", expanded && "rotate-90")} />
       ) : (
         icon

@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-06-25
+last_verified: 2026-06-26
 teaches: "AI 在 fx-ui 项目里的行为红线：不手写组件、只注入 token、保护 token 真相源"
 use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token 时"
 ---
@@ -17,6 +17,8 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 
 ## 🚫 红线（违反就是做错了）
 
+> 🧭 **动手前先查 `docs/MAP.md` 产物路由表**：任意产物（组件/recipe/token/图标/页面路由/视觉基线/规则/检查）住哪、怎么新增登记、谁来 check，那张表一站式分流——**别靠猜、别一通找**。不在表里的新种类，先去表里加一行再动手。
+
 1. **不要手写组件。** 一律用 `npx shadcn@latest add <组件名>` 拉现成的。
    - 反例：用 CSS/JSX 手搓一个 Button —— 这是错的，shadcn 有现成的。
 2. **不要封装黑盒。** shadcn 组件以 open-code 进 `src/components/ui/`，源码可见可改。
@@ -24,6 +26,12 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 4. **不要乱改 token 真相源。** `theme/fx-theme.css` 是公司视觉的 SSOT，改它 = 全局换肤，必须先向用户说明再动。
 5. **不要自动同步 shadcn 上游。** shadcn 官网 / registry 更新不等于本项目必须更新；只有遇到 bug、安全、可访问性或明确业务需要时，才按单个组件评估升级，且不得盲目覆盖本地源码。
 6. **不要手写重拼组装结构。** 搭页面 / 组合 UI 时，只能用现有组件 + 现有 token，且必须**搬运库里已有的成形用法**（组件文档页 / demo / example 里的写法），整段复用或抽成共享件，**只换数据 props**。禁止：重新推导一套组装结构、自创简化版、杜撰 props/数据形态。库里缺的能力 → 标"需沉淀为组件"交给用户，**绝不临时手搓填补**。反例：照搬真实组件却重写了导航的组装与交互（漏掉折叠/hover/选中）—— 这是错的，应复用既有 `comboDemo`。
+7. **不改组件外观——要变体，不要覆盖。**（对齐主流治理型设计系统 Polaris/Spectrum：调用处覆盖组件视觉 = 坏味道）
+   - 调用 / 组合 / recipe 处：用组件的 **props / variant** 表达差异，**禁止在调用处用 className 覆盖组件视觉**——颜色 / 圆角(`rounded-*`) / 边框(`border-*`) / 底色 / 内部间距。
+   - 需要新外观 → **在组件层加一个 variant**，走治理（manifest + 文档 + DEC），不在页面里 ad-hoc 覆盖。
+   - className 只许用于**把组件放进布局**（外层容器的定位 / 宽度）；布局间距也照搬库里既有范例的写法，不自创（见红线 6）。
+   - 改了页面 / 组合 / 视觉，**收尾必跑 `npm run test:visual` 看截图**（见自检清单 #10），没多余缝隙/圆角/漂移才算完。
+   - 反例：给 `NavMenu` 加 `rounded-none border-r` 改它的圆角/边框 = 改外观（该加 variant 或别改）；给外层加范例没有的 `gap-2` = 偏离照搬（违反红线 6）。
 
 ---
 
@@ -83,12 +91,14 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 
 **收尾：**
 9. `bash scripts/check-all.sh` 全绿才算完；`last_verified` 由 pre-commit 自动 bump，不用手填。
-10. 不确定写哪 / 该不该删——先查文档，别凭感觉。
+10. **改了页面/组合/视觉 → 必须 `npm run test:visual` 并肉眼核对截图**（基线在 `tests/visual.spec.ts-snapshots/`），确认没多余缝隙/圆角/对齐漂移，再宣告完成。没看截图就说"好了" = 没做完。
+11. 不确定写哪 / 该不该删——先查文档，别凭感觉。
 
 ---
 
 ## 必读文件
 
+0. `docs/MAP.md` — 仓库地图/产物路由表（加或找任何产物前先查它）
 1. `PROJECT.md` — 项目定位和当前进度
 2. `docs/ARCHITECTURE.md` — 三层体系：基础组件、公司组合组件、页面 Blocks / 布局规范
 3. `theme/fx-theme.css` — 公司 token（改这里要谨慎）

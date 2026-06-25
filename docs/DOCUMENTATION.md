@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-06-17
+last_verified: 2026-06-26
 teaches: "fx-ui 的文档分工边界、SSOT 规则——一条信息该写进哪个文件"
 use_when: "不确定一条新信息该记录到哪份文档时，先查这里的 SSOT 表和判断示例"
 ---
@@ -48,6 +48,8 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 
 | 问题 | SSOT |
 |------|------|
+| 任意产物住哪/怎么新增登记/谁 check（按种类分流总入口） | `docs/MAP.md` |
+| 怎么装配一个页面（流程/决策树/可用区块） | `docs/PAGES.md` |
 | 怎么开始用 | `README.md` |
 | 产品定位和设计方向 | `PRODUCT.md` |
 | AI 怎么行动 | `AGENTS.md` |
@@ -142,7 +144,7 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 ---
 layer: knowledge | governance
 type: spec | status | log | architecture
-last_verified: 2026-06-17
+last_verified: 2026-06-26
 teaches: "这份文档回答什么问题"
 use_when: "什么场景下应该先查这份文档"
 ---

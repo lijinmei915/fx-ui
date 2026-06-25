@@ -22,6 +22,8 @@
     { "path": "docs/CHANGELOG.md", "responsibility": "结构性变更记录", "requiredSections": [] },
     { "path": "docs/LESSONS.md", "responsibility": "错误模式复盘与新增约束", "requiredSections": ["如何记录一条教训", "教训列表"] },
     { "path": "docs/DOCUMENTATION.md", "responsibility": "文档分工 SSOT 与写哪里的路由", "requiredSections": ["SSOT 原则", "核心文件边界", "文档头部规范"] },
+    { "path": "docs/MAP.md", "responsibility": "仓库地图：按产物种类分流的总路由（住哪/登记/谁check）", "requiredSections": ["产物路由表", "怎么用"] },
+    { "path": "docs/PAGES.md", "responsibility": "页面装配 playbook：怎么拼一个页面（流程/决策树/可用区块）", "requiredSections": ["装配流程", "决策树", "可用区块"] },
     { "path": "docs/KNOWLEDGE_SCHEMA.md", "responsibility": "文档 frontmatter 字段与取值规范", "requiredSections": ["Frontmatter 字段", "新增文件接入规则"] },
     { "path": "docs/NAMING.md", "responsibility": "文档命名与放置位置", "requiredSections": ["总原则", "docs/ 工程文档"] },
     { "path": "docs/DOC_SITE_DESIGN.md", "responsibility": "文档站自身的页面结构与改样式流程", "requiredSections": ["样式来源", "页面骨架", "改样式流程"] },

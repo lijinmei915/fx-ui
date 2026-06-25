@@ -14,3 +14,8 @@ dist
 .env
 .env.local
 .env.*.local
+
+# Playwright 视觉回归：基线截图(tests/**-snapshots/)要提交，运行产物不提交
+/test-results/
+/playwright-report/
+/blob-report/

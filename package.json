@@ -15,7 +15,9 @@
     "check:agent-ui": "node scripts/check-agent-ui-contract.mjs",
     "check:all": "bash scripts/check-all.sh",
     "build:tokens": "node scripts/build-design-tokens.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:visual": "playwright test",
+    "test:visual:update": "playwright test --update-snapshots"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
@@ -38,6 +40,7 @@
   },
   "devDependencies": {
     "@lijinmei-810/dev-inspector-vite": "^0.1.2",
+    "@playwright/test": "^1.61.1",
     "@tailwindcss/vite": "^4.3.0",
     "@types/react": "^19.2.16",
     "@types/react-dom": "^19.2.3",

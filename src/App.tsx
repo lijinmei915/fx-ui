@@ -13108,14 +13108,14 @@ function CustomerListTemplate({ actions, lang }: { actions: React.ReactNode; lan
             <div className="flex min-w-0 flex-1 flex-col bg-card">
               {/* 页头 */}
               <div className="flex h-12 shrink-0 items-center justify-between gap-3 border-b border-border-subtle px-4">
-                <div className="flex items-center gap-2 text-fx-15">
+                <div className="flex shrink-0 items-center gap-2 whitespace-nowrap text-fx-15">
                   <span className="font-medium text-foreground">客户</span>
                   <span className="text-border">|</span>
                   <button className="inline-flex items-center gap-1 text-foreground outline-none hover:text-primary">
                     全部客户 <ChevronDownIcon className="size-4 text-muted-foreground" />
                   </button>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex shrink-0 items-center gap-2">
                   <Button size="sm"><PlusIcon data-icon="inline-start" />新建</Button>
                   <Button variant="outline" size="sm">智能表单</Button>
                   <Button variant="outline" size="sm">导入</Button>

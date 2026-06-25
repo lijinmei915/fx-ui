@@ -129,6 +129,7 @@
       "source": "src/components/ui/tag.tsx",
       "docStatus": "complete",
       "doc": "docs/components/tag.md",
+      "figma": "https://www.figma.com/design/k98zObf0bN7OKGVwpCyjBd/Web%E7%AB%AF%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6%E5%BA%93?node-id=13057-4564",
       "category": "display",
       "nativeStates": [
         "hover",

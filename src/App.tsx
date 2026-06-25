@@ -1522,6 +1522,7 @@ const badgeAnchors = [
   { label: "使用方式", href: "#badge-usage" },
   { label: "API", href: "#badge-props" },
   { label: "语义 DOM", href: "#badge-semantic-dom" },
+  { label: "正误示例", href: "#badge-do-dont" },
 ]
 
 const tagScenarioExamples = [
@@ -1571,6 +1572,11 @@ const badgePropRows = [
   { prop: "max", type: "number", defaultValue: "99", desc: "数字溢出阈值" },
   { prop: "showZero", type: "boolean", defaultValue: "false", desc: "count<=0 时是否仍显示 0" },
   { prop: "tone", type: "\"destructive\" | \"primary\"", defaultValue: "destructive", desc: "角标配色" },
+]
+const badgeScenarioExamples = [
+  { id: "dot", title: "红点", intent: "图标/导航上的「有更新」提示，无需具体数量。", rule: "dot 包裹载体，自动定位右上角。", code: `<Badge dot>\n  <BellIcon />\n</Badge>` },
+  { id: "count", title: "未读数", intent: "通知/消息的未读条数。", rule: "用 count；count<=0 默认不渲染（showZero 强制 0）。", code: `<Badge count={5}>\n  <BellIcon />\n</Badge>` },
+  { id: "overflow", title: "溢出 99+", intent: "数量很大时收口，避免撑宽。", rule: "用 max 设阈值，超出显示「max+」。", code: `<Badge count={120} max={99}>\n  <BellIcon />\n</Badge>` },
 ]
 
 const tagSemanticDomRows = [
@@ -9186,7 +9192,7 @@ function CardPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
 }
 
 function TagPreview({ id }: { id: string }) {
-  if (id === "status") {
+  if (id === "status")
     return (
       <div className="flex flex-wrap gap-2">
         <Tag variant="success">已支付</Tag>
@@ -9194,8 +9200,7 @@ function TagPreview({ id }: { id: string }) {
         <Tag variant="destructive">已失败</Tag>
       </div>
     )
-  }
-  if (id === "color") {
+  if (id === "color")
     return (
       <div className="flex flex-wrap gap-2">
         <Tag color="purple">高意向</Tag>
@@ -9203,7 +9208,6 @@ function TagPreview({ id }: { id: string }) {
         <Tag color="green">已签约</Tag>
       </div>
     )
-  }
   return (
     <Tag variant="secondary">
       <CheckCircleIcon data-icon="inline-start" />
@@ -9212,343 +9216,86 @@ function TagPreview({ id }: { id: string }) {
   )
 }
 
-function TagPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
-  const tagImportCode = `import { Tag } from "@/components/ui/tag"`
-  const tagUsageCode = `<Tag variant="success">已支付</Tag>\n<Tag color="purple">高意向</Tag>`
-
+function TagOverview() {
   return (
-    <div className={docsSpacing.pageStack}>
-      <section id="tag" className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-4xl font-semibold leading-tight">Tag 标签</h1>
-          </div>
-          {actions}
+    <div className="grid gap-4 rounded-xl bg-card p-6 ring-1 ring-border-subtle shadow-l1">
+      <div className="flex flex-col gap-1.5">
+        <span className="text-sm font-medium text-muted-foreground">状态 variant</span>
+        <div className="flex flex-wrap items-center gap-2">
+          {tagVariantRows.map((row) => (
+            <Tag key={row.variant} variant={row.variant as React.ComponentProps<typeof Tag>["variant"]}>{row.variant}</Tag>
+          ))}
         </div>
-        <p className={docsSpacing.componentLead}>
-          行内的状态/分类小标签：状态用 variant，分类打标用多彩 color。角标红点/数字请用 Badge。
-        </p>
-      </section>
-
-      <section id="tag-overview" className={docsSpacing.sectionStack}>
-        <div className="flex flex-col gap-1">
-          <h2 className="text-2xl font-semibold">组件总览</h2>
-          <p className="text-base text-muted-foreground">
-            两条正交轴：<code className="rounded bg-muted px-1.5 py-0.5">variant</code> 状态语义、<code className="rounded bg-muted px-1.5 py-0.5">color</code> 分类打标多彩。
-          </p>
+      </div>
+      <div className="border-t border-dashed border-border" />
+      <div className="flex flex-col gap-1.5">
+        <span className="text-sm font-medium text-muted-foreground">分类打标 color（软色 = 浅底 + 彩字 + 描边）</span>
+        <div className="flex flex-wrap items-center gap-2">
+          {tagColorList.map((c) => (
+            <Tag key={c} color={c}>{c}</Tag>
+          ))}
         </div>
-        <Card>
-          <CardContent className="flex flex-col gap-4 p-5">
-            <div className="flex flex-col gap-1">
-              <span className="text-sm font-medium text-muted-foreground">状态 variant</span>
-              <div className="flex flex-wrap items-center gap-2">
-                {tagVariantRows.map((row) => (
-                  <Tag key={row.variant} variant={row.variant as React.ComponentProps<typeof Tag>["variant"]}>{row.variant}</Tag>
-                ))}
-              </div>
-            </div>
-            <div className="border-t border-dashed border-border" />
-            <div className="flex flex-col gap-1">
-              <span className="text-sm font-medium text-muted-foreground">分类打标 color（软色 = 浅底 + 彩字 + 描边）</span>
-              <div className="flex flex-wrap items-center gap-2">
-                {tagColorList.map((c) => (
-                  <Tag key={c} color={c}>{c}</Tag>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </section>
-
-      <section id="tag-preview" className={docsSpacing.sectionStack}>
-        <div className={docsSpacing.sectionHeader}>
-          <h2 className="text-2xl font-semibold">场景示例</h2>
-          <p className="text-base text-muted-foreground">状态标记、分类打标、搭配图标。</p>
-        </div>
-        <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
-          <Table className="min-w-[960px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[160px] pl-4">用法</TableHead>
-                <TableHead className="w-[220px]">示例</TableHead>
-                <TableHead className="w-[260px]">使用意图</TableHead>
-                <TableHead>约束</TableHead>
-                <TableHead className="w-[320px] pr-4">推荐写法</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {tagScenarioExamples.map((example) => (
-                <TableRow key={example.id}>
-                  <TableCell className="pl-4 align-top whitespace-normal">
-                    <span className="font-medium">{example.title}</span>
-                  </TableCell>
-                  <TableCell className="align-top">
-                    <TagPreview id={example.id} />
-                  </TableCell>
-                  <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="min-w-[180px] max-w-[260px] leading-6">{example.intent}</p>
-                  </TableCell>
-                  <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
-                  </TableCell>
-                  <TableCell className="w-[360px] pr-4 align-top">
-                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-muted px-3 py-2 text-xs leading-6">
-                      {example.code}
-                    </code>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-
-      <section id="tag-usage" className={docsSpacing.sectionStack}>
-        <div className={docsSpacing.sectionHeader}>
-          <h2 className="text-2xl font-semibold">使用方式</h2>
-          <p className="text-base text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
-        </div>
-        <div className="rounded-lg border border-border bg-card p-5">
-          <div className="grid gap-4">
-            <CopyCodeBlock code={tagImportCode} label="Import" lang={lang} />
-            <CopyCodeBlock code={tagUsageCode} label="调用" lang={lang} />
-          </div>
-        </div>
-      </section>
-
-      <section id="tag-props" className={docsSpacing.sectionStack}>
-        <h2 className="text-2xl font-semibold">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[640px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-4">属性</TableHead>
-                <TableHead>类型</TableHead>
-                <TableHead>默认值</TableHead>
-                <TableHead className="pr-4">描述</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {tagPropRows.map((row) => (
-                <TableRow key={row.prop}>
-                  <TableCell className="pl-4 font-medium">{row.prop}</TableCell>
-                  <TableCell>
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.type}</code>
-                  </TableCell>
-                  <TableCell>
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.defaultValue}</code>
-                  </TableCell>
-                  <TableCell className="pr-4 text-muted-foreground">{row.desc}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-
-      <section id="tag-semantic-dom" className={docsSpacing.sectionStack}>
-        <div className={docsSpacing.sectionHeader}>
-          <h2 className="text-2xl font-semibold">语义 DOM</h2>
-          <p className="text-base text-muted-foreground">
-            Tag 保持 open-code。这里记录 AI 和工程师应该理解的语义部位。
-          </p>
-        </div>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[560px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-4">部位</TableHead>
-                <TableHead className="pr-4">说明</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {tagSemanticDomRows.map((row) => (
-                <TableRow key={row.part}>
-                  <TableCell className="pl-4 font-medium">
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.part}</code>
-                  </TableCell>
-                  <TableCell className="pr-4 text-muted-foreground">{row.desc}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-
-      <section id="tag-do-dont" className={docsSpacing.sectionStack}>
-        <div className={docsSpacing.sectionHeader}>
-          <h2 className="text-2xl font-semibold">正误示例</h2>
-          <p className="text-base text-muted-foreground">工程师和 AI 生成代码最容易犯的错误，照着做即可。</p>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">推荐 Do</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {tagDoDontRows.map((row) => (
-                <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
-                  <span>{row.do}</span>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">避免 Don't</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {tagDoDontRows.map((row) => (
-                <div key={`dont-${row.dont}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
-                  <span>{row.dont}</span>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+      </div>
     </div>
   )
 }
 
-// Badge 角标（dot/count）独立文档页
-function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
-  const badgeImportCode = `import { Badge } from "@/components/ui/badge"`
-  const badgeUsageCode = `<Badge dot>\n  <Button size="icon" variant="outline" aria-label="通知"><BellIcon /></Button>\n</Badge>\n<Badge count={5}>…</Badge>\n<Badge count={120} max={99}>…</Badge>  // 99+`
+function TagPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   return (
-    <div className={docsSpacing.pageStack}>
-      <section id="badge" className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-4xl font-semibold leading-tight">Badge 角标</h1>
-          </div>
-          {actions}
-        </div>
-        <p className={docsSpacing.componentLead}>
-          贴在头像、图标、按钮右上角的通知红点 / 未读数字。行内状态/分类标签请用 Tag。
-        </p>
-      </section>
+    <StandardDocPage
+      slug="tag"
+      title="Tag 标签"
+      lead="行内的状态/分类小标签：状态用 variant，分类打标用多彩 color。角标红点/数字请用 Badge。"
+      overview={null}
+      overviewMatrix={<TagOverview />}
+      scenarioExamples={tagScenarioExamples}
+      renderScenarioPreview={(id) => <TagPreview id={id} />}
+      importCode={`import { Tag } from "@/components/ui/tag"`}
+      usageCode={`<Tag variant="success">已支付</Tag>\n<Tag color="purple">高意向</Tag>`}
+      propRows={tagPropRows}
+      semanticDomRows={tagSemanticDomRows}
+      doDontRows={tagDoDontRows}
+      actions={actions}
+      lang={lang}
+    />
+  )
+}
 
-      <section id="badge-overview" className={docsSpacing.sectionStack}>
-        <div className="flex flex-col gap-1">
-          <h2 className="text-2xl font-semibold">组件总览</h2>
-          <p className="text-base text-muted-foreground">dot 红点 / count 未读数；传 children 自动定位载体右上角。</p>
-        </div>
-        <Card>
-          <CardContent className="flex items-center gap-8 p-6">
-            <Badge dot><BellIcon className="size-6 text-foreground" /></Badge>
-            <Badge count={5}><BellIcon className="size-6 text-foreground" /></Badge>
-            <Badge count={120} max={99}><BellIcon className="size-6 text-foreground" /></Badge>
-            <Badge count={8} tone="primary"><BellIcon className="size-6 text-foreground" /></Badge>
-          </CardContent>
-        </Card>
-      </section>
+function BadgePreview({ id }: { id: string }) {
+  const count = id === "count" ? 5 : id === "overflow" ? 120 : undefined
+  if (id === "dot") return <Badge dot><BellIcon className="size-6 text-foreground" /></Badge>
+  return <Badge count={count} max={99}><BellIcon className="size-6 text-foreground" /></Badge>
+}
 
-      <section id="badge-preview" className={docsSpacing.sectionStack}>
-        <div className={docsSpacing.sectionHeader}>
-          <h2 className="text-2xl font-semibold">场景示例</h2>
-          <p className="text-base text-muted-foreground">导航/图标/头像上的未读提示。</p>
-        </div>
-        <Card>
-          <CardContent className="flex items-center gap-8 p-6">
-            <Badge dot><Button size="icon" variant="outline" aria-label="通知"><BellIcon /></Button></Badge>
-            <Badge count={5}><Button size="icon" variant="outline" aria-label="消息"><BellIcon /></Button></Badge>
-            <Badge count={120} max={99}><Avatar><AvatarFallback colorful>李</AvatarFallback></Avatar></Badge>
-          </CardContent>
-        </Card>
-      </section>
-
-      <section id="badge-usage" className={docsSpacing.sectionStack}>
-        <div className={docsSpacing.sectionHeader}>
-          <h2 className="text-2xl font-semibold">使用方式</h2>
-          <p className="text-base text-muted-foreground">把 import 和 JSX 调用复制到业务页面里使用。</p>
-        </div>
-        <div className="rounded-lg border border-border bg-card p-5">
-          <div className="grid gap-4">
-            <CopyCodeBlock code={badgeImportCode} label="Import" lang={lang} />
-            <CopyCodeBlock code={badgeUsageCode} label="调用" lang={lang} />
-          </div>
-        </div>
-      </section>
-
-      <section id="badge-props" className={docsSpacing.sectionStack}>
-        <h2 className="text-2xl font-semibold">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[640px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-4">属性</TableHead>
-                <TableHead>类型</TableHead>
-                <TableHead>默认值</TableHead>
-                <TableHead className="pr-4">描述</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {badgePropRows.map((row) => (
-                <TableRow key={row.prop}>
-                  <TableCell className="pl-4 font-medium">{row.prop}</TableCell>
-                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.type}</code></TableCell>
-                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.defaultValue}</code></TableCell>
-                  <TableCell className="pr-4 text-muted-foreground">{row.desc}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-
-      <section id="badge-semantic-dom" className={docsSpacing.sectionStack}>
-        <div className={docsSpacing.sectionHeader}>
-          <h2 className="text-2xl font-semibold">语义 DOM</h2>
-          <p className="text-base text-muted-foreground">角标语义部位。</p>
-        </div>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[560px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-4">部位</TableHead>
-                <TableHead className="pr-4">说明</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {badgeSemanticDomRows.map((row) => (
-                <TableRow key={row.part}>
-                  <TableCell className="pl-4 font-medium"><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.part}</code></TableCell>
-                  <TableCell className="pr-4 text-muted-foreground">{row.desc}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-
-      <section id="badge-do-dont" className={docsSpacing.sectionStack}>
-        <div className={docsSpacing.sectionHeader}>
-          <h2 className="text-2xl font-semibold">正误示例</h2>
-          <p className="text-base text-muted-foreground">角标与标签别混用。</p>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader><CardTitle className="text-base text-foreground">推荐 Do</CardTitle></CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {badgeDoDontRows.map((row) => (
-                <div key={`do-${row.do}`} className="flex gap-2"><span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" /><span>{row.do}</span></div>
-              ))}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader><CardTitle className="text-base text-foreground">避免 Don't</CardTitle></CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {badgeDoDontRows.map((row) => (
-                <div key={`dont-${row.dont}`} className="flex gap-2"><span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" /><span>{row.dont}</span></div>
-              ))}
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+function BadgeOverview() {
+  return (
+    <div className="flex flex-wrap items-center gap-8 rounded-xl bg-card p-6 ring-1 ring-border-subtle shadow-l1">
+      <Badge dot><BellIcon className="size-6 text-foreground" /></Badge>
+      <Badge count={5}><BellIcon className="size-6 text-foreground" /></Badge>
+      <Badge count={120} max={99}><BellIcon className="size-6 text-foreground" /></Badge>
+      <Badge count={8} tone="primary"><BellIcon className="size-6 text-foreground" /></Badge>
     </div>
+  )
+}
+
+function BadgePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  return (
+    <StandardDocPage
+      slug="badge"
+      title="Badge 角标"
+      lead="贴在头像、图标、按钮右上角的通知红点 / 未读数字。行内状态/分类标签请用 Tag。"
+      overview={null}
+      overviewMatrix={<BadgeOverview />}
+      scenarioExamples={badgeScenarioExamples}
+      renderScenarioPreview={(id) => <BadgePreview id={id} />}
+      importCode={`import { Badge } from "@/components/ui/badge"`}
+      usageCode={`<Badge dot>\n  <BellIcon />\n</Badge>\n<Badge count={5}>…</Badge>`}
+      propRows={badgePropRows}
+      semanticDomRows={badgeSemanticDomRows}
+      doDontRows={badgeDoDontRows}
+      actions={actions}
+      lang={lang}
+    />
   )
 }
 

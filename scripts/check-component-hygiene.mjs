@@ -34,6 +34,15 @@ for (const file of files) {
 // 提示：baseline 里已不存在的条目（修过了），可清掉
 const stale = [...allow].filter((k) => !seen.has(k))
 
+// 提示：还没登记 Figma 设计源的 ui 组件 = 待体检时粘贴链接的清单
+let missingFigma = []
+try {
+  const manifest = JSON.parse(await readFile("docs/data/components.manifest.json", "utf8"))
+  missingFigma = (manifest.uiComponents ?? []).filter((c) => !c.figma).map((c) => c.name)
+} catch {
+  // ignore
+}
+
 if (errors.length > 0) {
   console.error("component-hygiene check failed（清单外的新增硬伤）：\n")
   for (const e of errors) console.error(`- ${e}`)
@@ -43,5 +52,8 @@ if (errors.length > 0) {
   console.log(`component-hygiene check passed：无清单外硬伤；baseline 剩 ${allow.size} 条待体检清理。`)
   if (stale.length) {
     console.log(`💡 baseline 可清理（已不再命中）：${stale.join(", ")}`)
+  }
+  if (missingFigma.length) {
+    console.log(`💡 待登记 Figma 设计源（体检时粘贴链接到 manifest figma 字段）：${missingFigma.length} 个 —— ${missingFigma.join(", ")}`)
   }
 }

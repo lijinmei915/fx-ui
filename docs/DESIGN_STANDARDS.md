@@ -45,7 +45,7 @@ use_when: "做 UI/视觉相关改动前，判断该走哪条规则、参考哪�
 > 用途：复审/新增任何组件时，按这 14 条逐项核对，确保和已沉淀的规范一致。来源是 Dropdown/Table/Button/Badge 多轮打磨的经验。
 
 **A. 设计规范与语义**
-1. **以公司 Figma 设计规范为准**（样式、尺寸、间距、配色、交互），主流（shadcn/Ant）只作兜底参考；落地时配色全走我们 token。体检每个组件前先调 Figma 对照（MCP `get_design_context` / `get_variable_defs`）
+1. **公司 Figma 为准 + 主流交叉验证**：体检前先调 Figma 对照（MCP `get_design_context` / `get_variable_defs`，节点 URL 记在 manifest `figma` 字段），同时比对主流（shadcn/Ant/Linear）。**两者分歧时，先给出"公司 vs 主流 + 建议"再让人拍板**，不盲从任一方；落地配色全走我们 token
 2. 职责单一不越界（Badge≠按钮、Tag≠角标、标记类不承载跳转）
 3. 变体只留主流要的，删非主流（如 badge 的 ghost/link）
 

@@ -57,3 +57,12 @@ export const ContractIcon = lineIcon(
 export const ContractFilledIcon = fillIcon(
   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zM8 14h8v1.5H8V14zm0 3.5h5V19H8v-1.5z" />
 )
+
+// 帮助/问号（line）：圆圈 + 平滑闭合问号 + 点，比 Tabler 的螺旋问号在小尺寸更干净，对齐公司 Figma
+export const HelpIcon = lineIcon(
+  <>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M9.4 9.2a2.7 2.7 0 0 1 5.1 1.2c0 1.8-2.5 2.3-2.5 3.6" />
+    <path d="M12 17h.01" />
+  </>
+)

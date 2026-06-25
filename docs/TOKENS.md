@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-24
+last_verified: 2026-06-25
 teaches: "公司设计 token 的基础架构、真实值和全局视觉使用规则"
 use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadcn 组件样式或判断视觉是否符合公司规范时"
 ---
@@ -280,6 +280,17 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | 11 | 49% | 弱信息/caption（`--muted-foreground`）、icon-muted |
 | 15 | 73% | 次要文字（`--foreground-secondary`） |
 | 20 | neutral-dark | 主文字（`--foreground`）、icon |
+
+### 半透明填充（自适应背景）
+
+实色 neutrals 默认「背景比我浅」；当填充控件放在**透明容器 / 未知宿主底色**上（如全局顶栏 TopBar 的搜索框、图标按钮 hover），实色会和宿主糊在一起。这两个 token 用**前景色 alpha 叠加**，叠在任意底色上都自带相对反差，且深色模式自动随前景翻转。
+
+| Token | 值 | Tailwind | 用途 |
+|-------|-----|----------|------|
+| `--fill-subtle` | `color-mix(foreground 5%, transparent)` | `bg-fill-subtle` | 透明容器上填充控件的待命底（如顶栏搜索框） |
+| `--fill-hover` | `color-mix(foreground 8%, transparent)` | `bg-fill-hover` | 同上的 hover 加深 / 无底色图标按钮 hover |
+
+> 它们是**语义填充**，不是色板色号——色板里没有半透明档。背景已知（如卡片内）时仍用实色 `muted` / `muted-hover`。
 
 ## 图表色板（BI 常用色 · 10 色）
 

@@ -1580,6 +1580,18 @@
       "usage": ""
     },
     {
+      "name": "--fill-subtle",
+      "value": "color-mix(in oklch, var(--foreground) 5%, transparent)",
+      "category": "shadcn-semantic",
+      "usage": "透明容器上填充控件的待命底（半透明，自适应宿主底色），如顶栏搜索框"
+    },
+    {
+      "name": "--fill-hover",
+      "value": "color-mix(in oklch, var(--foreground) 8%, transparent)",
+      "category": "shadcn-semantic",
+      "usage": "上述填充控件的 hover 加深 / 无底色图标按钮 hover"
+    },
+    {
       "name": "--muted-foreground",
       "value": "var(--fx-neutrals-11)",
       "category": "surface-text",

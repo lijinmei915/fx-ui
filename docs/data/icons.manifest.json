@@ -51,7 +51,8 @@
     { "name": "ChevronsRightIcon", "source": "tabler", "style": "line", "category": "navigation", "keywords": ["展开", "双箭头右", "expand", "侧栏展开"] },
     { "name": "LinkIcon", "source": "tabler", "style": "line", "category": "action", "keywords": ["链接", "外链", "link", "跳转"] },
     { "name": "ContractIcon", "source": "custom", "style": "line", "category": "object", "keywords": ["合同", "契约", "contract", "文书", "协议"] },
-    { "name": "ContractFilledIcon", "source": "custom", "style": "fill", "category": "object", "keywords": ["合同", "契约", "contract", "已选"] }
+    { "name": "ContractFilledIcon", "source": "custom", "style": "fill", "category": "object", "keywords": ["合同", "契约", "contract", "已选"] },
+    { "name": "HelpIcon", "source": "custom", "style": "line", "category": "action", "keywords": ["帮助", "问号", "help", "说明", "提示", "question"] }
   ],
   "checks": ["npm run check:icons", "npm run check"]
 }

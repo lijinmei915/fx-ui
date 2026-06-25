@@ -37,6 +37,7 @@ export {
   IconCircleCheck as CheckCircleIcon,
   IconCheck as CheckIcon,
   IconChevronDown as ChevronDownIcon,
+  IconCaretDownFilled as CaretDownFilledIcon,
   IconChevronLeft as ChevronLeftIcon,
   IconChevronRight as ChevronRightIcon,
   IconChevronUp as ChevronUpIcon,
@@ -57,8 +58,13 @@ export {
   IconFolderFilled as FolderFilledIcon,
   IconHome as HomeIcon,
   IconInfoCircle as InfoIcon,
+  IconInbox as InboxIcon,
+  IconHelpCircle as HelpCircleIcon,
   IconItalic as ItalicIcon,
   IconLayoutGrid as LayoutGridIcon,
+  IconList as ListIcon,
+  IconLayoutColumns as LayoutColumnsIcon,
+  IconRefresh as RefreshIcon,
   IconBulb as LightbulbIcon,
   IconLink as LinkIcon,
   IconLoader2 as Loader2Icon,
@@ -94,4 +100,4 @@ export {
 
 // 自定义/上传图标：统一从这里出口（与内置 Tabler 图标同一入口）。
 // 接入第三方图标库同理——在上面 import 段加 `IconX as XIcon` 即可，调用方无需感知来源。
-export { ContractIcon, ContractFilledIcon } from "@/lib/icons-custom"
+export { ContractIcon, ContractFilledIcon, HelpIcon } from "@/lib/icons-custom"

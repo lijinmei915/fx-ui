@@ -356,6 +356,10 @@
   --muted-active: var(--fx-neutrals-05);
   --muted-foreground: var(--fx-neutrals-11);
 
+  /* 半透明填充：用于"透明容器上的填充控件"（如全局顶栏搜索框），叠在任意宿主底色上都自带相对反差，不挑背景 */
+  --fill-subtle: color-mix(in oklch, var(--foreground) 5%, transparent);
+  --fill-hover: color-mix(in oklch, var(--foreground) 8%, transparent);
+
   --accent: var(--fx-orange-01);
   --accent-foreground: var(--fx-neutrals-20);
 
@@ -495,6 +499,8 @@
   --color-secondary-active:      var(--secondary-active);
   --color-muted-hover:           var(--muted-hover);
   --color-muted-active:          var(--muted-active);
+  --color-fill-subtle:           var(--fill-subtle);
+  --color-fill-hover:            var(--fill-hover);
   --color-success-light:         var(--fx-success-light);
   --color-success-light-hover:   var(--fx-success-light-hover);
   --color-success-light-active:  var(--fx-success-light-active);

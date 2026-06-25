@@ -1,8 +1,26 @@
 > **接手时间**：2026-06-25
 > **项目根目录**：fx-ui
-> **当前状态**：Table 业务化 + 新增 Pagination 组件 + Button 体系扩展（plain/tone/禁用 token 化/gap 适配）+ 沉淀「组件正交组合规范」。已提交 main（`d9a99bf`、`265a432`），待推送
-> **下一步**：1）其余组件按 DESIGN_STANDARDS 新「组件变体与组合规范」核对（是否有该用正交轴却堆组件/滥加 variant）；2）DEC-005 尾巴（toggle/tabs/sidebar 的 `/透明度`、旧 hover）仍未收敛；3）下拉菜单「多选/单选选中样式」待定（见下）
-> **风险**：`theme/fx-theme.css` 是 token 真相源，动它即全局换肤；改 token 按顺序 改 CSS→design-tokens.json→`npm run build:tokens`→再改组件（见 AGENTS.md）
+> **当前状态**：组件逐个体检中。已完成 Table 业务化、新增 Pagination/Command/Tag(拆自 Badge)、Button 全面体检（删 link 变体、plain 无底色+tone、尺寸键名改纯尺寸 xs/sm/md/lg 默认 28、图标场景拆分）。建立「组件体检清单 + hygiene 检查 + Figma 真相源登记」体检体系。已提交到 `6505c8a`，待推送
+> **下一步**：1）继续逐个组件体检（用 `docs/DESIGN_STANDARDS.md`「组件体检清单」14 条 + hygiene 脚本提示的"待登记 Figma 源 33 个"清单，每过一个登记 figma + 清 baseline）；2）DEC-005 尾巴（toggle/tabs/sidebar 的 `/透明度`、旧 hover，hygiene baseline 18 条待清）；3）下拉菜单「多选/单选选中样式」仍待定
+> **风险**：① `theme/fx-theme.css` 是 token 真相源，动它即全局换肤（改顺序 CSS→design-tokens.json→`npm run build:tokens`→组件）；② **大块改动随手提交**——本轮曾因 `git checkout` 冲掉未提交的整轮 Button 工作（靠"文档+检查即规格"补回），教训：别攒大堆未提交改动
+
+---
+
+## 本轮（2026-06-25）组件体检体系 + Button/Table/Tag/Command/Pagination
+
+**主线：建立"逐个体检"的方法论与门禁，并把 Button/Table 等核心组件按公司 Figma + 主流重做。**
+
+体检体系（方法论，最重要）：
+- **组件体检清单 14 条**：`docs/DESIGN_STANDARDS.md`「组件体检清单」——A 设计规范(公司Figma优先+主流交叉)/B 正交轴/C 颜色状态/D 结构/E 可达性/F 文档治理。过审流程：机器扫硬伤→人判软性→`governance-status` 记账
+- **hygiene 检查**：`scripts/check-component-hygiene.mjs` 精确抓 `disabled:opacity-50`/`pointer-events-none`/组件内 hex；baseline 豁免存量 18 条（新增违规❌），行内 `hygiene-ignore` 放行；并弱提示"未登记 figma 源"组件清单
+- **Figma 真相源**：manifest 加 `figma` 字段，体检时登记节点 URL（Tag/Button 已登记）
+
+组件改动：
+- **Button**：删 link 变体（跳转用 Link）；新增 plain（无底色文字/图标，无 padding、hover变色）+ tone(中性/主色/info蓝/危险)；禁用态全 token 化(DEC-020 取代 DEC-011)；**尺寸键名改纯尺寸 xs24/sm28/md32/lg36**，默认 28 由 defaultVariants 指定（双层，不再有"default"档名）；图标场景拆「无底色文字操作/无底色纯图标」；命名「XX操作」+ 总览↔tab 一一对应进 check
+- **Table**：三档行高(28/36/42)、列 ⋮ 菜单(排序常驻+冻结/筛选)、Excel 冻结到此列、maxHeight 稳定滚动、对齐公司列表页视觉
+- **Tag/Badge 拆分**(DEC-021)：Badge=角标、Tag=标签(variant 状态 + color 多彩打标)
+- **Command**(新)：⌘K 命令面板，网站搜索接入；**Pagination**(新)：主流分页
+- 决策：DEC-018~022（下拉尺寸/正交组合/拆Tag/禁用token/Button不按形态分类）
 
 ---
 

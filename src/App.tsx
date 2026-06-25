@@ -1,5 +1,6 @@
-import { Fragment, useEffect, useRef, useState } from "react"
+import { Fragment, useEffect, useMemo, useRef, useState } from "react"
 import { cn } from "@/lib/utils"
+import { CommandPalette, type CommandItem } from "@/components/ui/command"
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -569,6 +570,7 @@ const docsNav = [
       { label: "侧边栏", labelEn: "Sidebar", href: "#sidebar" },
       { label: "导航菜单", labelEn: "Nav Menu", href: "#nav-menu" },
       { label: "分页器", labelEn: "Pagination", href: "#pagination" },
+      { label: "命令面板", labelEn: "Command", href: "#command" },
     ],
   },
   {
@@ -2286,6 +2288,39 @@ const paginationScenarioExamples = [
     code: `<Pagination page={page} total={48} pageSize={10} showTotal={false} onPageChange={setPage} />`,
   },
 ]
+const commandAnchors = [
+  { label: "组件总览", href: "#command-overview" },
+  { label: "场景示例", href: "#command-preview" },
+  { label: "使用方式", href: "#command-usage" },
+  { label: "API", href: "#command-props" },
+  { label: "语义 DOM", href: "#command-semantic-dom" },
+  { label: "正误示例", href: "#command-do-dont" },
+]
+const commandPropRows = [
+  { prop: "open", type: "boolean", defaultValue: "—", desc: "是否打开（受控）" },
+  { prop: "onOpenChange", type: "(open: boolean) => void", defaultValue: "—", desc: "开关回调" },
+  { prop: "items", type: "CommandItem[]", defaultValue: "—", desc: "可搜索项：{ id, label, group?, keywords?, onSelect }" },
+  { prop: "placeholder", type: "string", defaultValue: "\"搜索…\"", desc: "搜索框占位文案" },
+  { prop: "emptyText", type: "string", defaultValue: "\"无匹配结果\"", desc: "无结果时显示的文案" },
+]
+const commandSemanticDomRows = [
+  { part: "[data-slot=\"dialog-content\"]", desc: "复用 Dialog 弹层容器，命令面板挂载其中。" },
+  { part: "[data-active=\"true\"]", desc: "当前高亮项，键盘 ↑↓ 移动、回车触发。" },
+]
+const commandDoDontRows = [
+  { do: "受控：自己持有 open，⌘K 监听由调用方加。", dont: "在业务层手搓输入框+过滤+键盘导航。" },
+  { do: "items 的 onSelect 负责跳转/执行，keywords 提升命中。", dont: "把动作逻辑塞进组件内部。" },
+  { do: "项很多时用命令面板。", dont: "几个选项也套面板，普通菜单即可。" },
+]
+const commandScenarioExamples = [
+  {
+    id: "search",
+    title: "全站搜索跳转",
+    intent: "文档站/后台的全局搜索（⌘K），输入即模糊过滤，回车跳转。",
+    rule: "items 提供 id/label/onSelect，可选 group/keywords。",
+    code: `<CommandPalette open={open} onOpenChange={setOpen} items={items} />`,
+  },
+]
 const dropdownMenuScenarioFilters = [
   { value: "type", label: "类型" },
   { value: "state", label: "选项状态" },
@@ -3087,6 +3122,7 @@ function getPageFromHash(hash: string) {
   if (hash === "#nav-menu" || hash.startsWith("#nav-menu-")) return "nav-menu"
   if (hash === "#pagination" || hash.startsWith("#pagination-")) return "pagination"
   if (hash === "#tag" || hash.startsWith("#tag-")) return "tag"
+  if (hash === "#command" || hash.startsWith("#command-")) return "command"
   if (hash === "#grid" || hash.startsWith("#grid-")) return "grid"
   if (hash === "#icon" || hash.startsWith("#icon-")) return "icon"
   if (hash === "#intro" || hash.startsWith("#intro-")) return "intro"
@@ -3341,11 +3377,45 @@ function App() {
   const [activeHash, setActiveHash] = useState(() => window.location.hash || "#components")
   const [activeAnchor, setActiveAnchor] = useState("#overview")
   const [viewMode, setViewMode] = useState<ViewMode>("page")
+  const [searchOpen, setSearchOpen] = useState(false)
   const [lang, setLang] = useState<Lang>(() => {
     const saved = window.localStorage.getItem("fx-ui-lang")
     return saved === "en" ? "en" : "zh"
   })
   const mainRef = useRef<HTMLElement>(null)
+
+  // 全站可搜索项：所有导航页面（顶部入口 + 左侧分组），模糊搜索 + Enter 跳 hash
+  const searchItems = useMemo<CommandItem[]>(() => {
+    const fromNav = docsNav.flatMap((section) =>
+      section.items.map((it) => ({
+        id: it.href,
+        label: lang === "en" ? (it.labelEn ?? it.label) : it.label,
+        group: lang === "en" ? (section.titleEn ?? section.title) : section.title,
+        keywords: `${it.label} ${it.labelEn ?? ""} ${it.href}`,
+        onSelect: () => { window.location.hash = it.href },
+      }))
+    )
+    const fromTop = topNav.map((it) => ({
+      id: it.href,
+      label: lang === "en" ? (it.labelEn ?? it.label) : it.label,
+      group: lang === "en" ? "Navigation" : "导航",
+      keywords: `${it.label} ${it.labelEn ?? ""} ${it.href}`,
+      onSelect: () => { window.location.hash = it.href },
+    }))
+    return [...fromTop, ...fromNav]
+  }, [lang])
+
+  // ⌘K / Ctrl+K 打开命令面板
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault()
+        setSearchOpen((v) => !v)
+      }
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [])
 
   const scrollTargetIntoMain = (target: HTMLElement, behavior: ScrollBehavior = "smooth") => {
     const main = mainRef.current
@@ -3430,6 +3500,7 @@ function App() {
   const isCollapsiblePage = page === "collapsible"
   const isDropdownMenuPage = page === "dropdown-menu"
   const isPaginationPage = page === "pagination"
+  const isCommandPage = page === "command"
   const isPopoverPage = page === "popover"
   const isSeparatorPage = page === "separator"
   const isLinkPage = page === "link"
@@ -3521,6 +3592,8 @@ function App() {
                                                 ? dropdownMenuAnchors
                                                 : isPaginationPage
                                                 ? paginationAnchors
+                                                : isCommandPage
+                                                ? commandAnchors
                                                 : isPopoverPage
                                                   ? popoverAnchors
                                                   : isSeparatorPage
@@ -3669,22 +3742,37 @@ function App() {
             {lang === "zh" ? "中" : "EN"}
           </Button>
 
-          <div className="hidden w-72 items-center gap-2 rounded-lg border border-input bg-card px-3 lg:flex">
+          <button
+            type="button"
+            onClick={() => setSearchOpen(true)}
+            className="hidden w-72 items-center gap-2 rounded-lg border border-input bg-card px-3 text-left outline-none transition-colors hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 lg:flex"
+          >
             <SearchIcon className="size-4 text-muted-foreground" />
-            <input
-              className="h-9 min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-              placeholder={uiText[lang].search}
-            />
-          </div>
+            <span className="h-9 min-w-0 flex-1 content-center text-sm text-muted-foreground">{uiText[lang].search}</span>
+            <kbd className="rounded border border-border-subtle bg-muted px-1.5 py-0.5 text-fx-12 text-muted-foreground">⌘K</kbd>
+          </button>
         </div>
       </header>
+
+      <CommandPalette
+        open={searchOpen}
+        onOpenChange={setSearchOpen}
+        items={searchItems}
+        placeholder={uiText[lang].search}
+        emptyText={lang === "en" ? "No results" : "无匹配结果"}
+      />
 
       <div className="grid h-[calc(100dvh-3.5rem)] min-h-0 overflow-hidden lg:grid-cols-[280px_minmax(0,1fr)]">
         <aside className="hidden min-h-0 border-r border-border lg:block">
           <div className="h-full overflow-y-auto px-8 py-10">
-            <div className="mb-6 lg:hidden">
-              <Input placeholder={uiText[lang].search} />
-            </div>
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="mb-6 flex w-full items-center gap-2 rounded-lg border border-input bg-card px-3 text-left outline-none hover:bg-muted lg:hidden"
+            >
+              <SearchIcon className="size-4 text-muted-foreground" />
+              <span className="h-9 flex-1 content-center text-sm text-muted-foreground">{uiText[lang].search}</span>
+            </button>
             <nav className="flex flex-col gap-10">
               {docsNav.map((section) => (
                 <div key={section.title} className="flex flex-col gap-1">
@@ -3797,6 +3885,8 @@ function App() {
                 <DropdownMenuPage actions={pageActions} lang={lang} />
               ) : isPaginationPage ? (
                 <PaginationPage actions={pageActions} lang={lang} />
+              ) : isCommandPage ? (
+                <CommandPage actions={pageActions} lang={lang} />
               ) : isPopoverPage ? (
                 <PopoverPage actions={pageActions} lang={lang} />
               ) : isSeparatorPage ? (
@@ -8507,6 +8597,45 @@ function TextareaPage({ actions, lang }: { actions: React.ReactNode; lang: Lang 
         </div>
       </section>
     </div>
+  )
+}
+
+function CommandDemo() {
+  const [open, setOpen] = useState(false)
+  const items: CommandItem[] = [
+    { id: "1", label: "新建项目", group: "操作", onSelect: () => {} },
+    { id: "2", label: "导入数据", group: "操作", onSelect: () => {} },
+    { id: "3", label: "客户列表", group: "页面", onSelect: () => {} },
+    { id: "4", label: "数据看板", group: "页面", onSelect: () => {} },
+    { id: "5", label: "账号设置", group: "页面", keywords: "setting profile", onSelect: () => {} },
+  ]
+  return (
+    <>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        <SearchIcon data-icon="inline-start" /> 打开命令面板（或 ⌘K）
+      </Button>
+      <CommandPalette open={open} onOpenChange={setOpen} items={items} placeholder="搜索操作或页面…" />
+    </>
+  )
+}
+function CommandPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  return (
+    <StandardDocPage
+      slug="command"
+      title="Command 命令面板"
+      lead="⌘K 命令面板：模糊搜索 + 键盘导航，用于全站快速跳转或执行命令。自建轻量实现，不引 cmdk/Radix。"
+      overview={null}
+      overviewMatrix={<div className="flex items-center gap-3 rounded-xl bg-card p-6 ring-1 ring-border-subtle shadow-l1"><CommandDemo /></div>}
+      scenarioExamples={commandScenarioExamples}
+      renderScenarioPreview={() => <CommandDemo />}
+      importCode={`import { CommandPalette, type CommandItem } from "@/components/ui/command"`}
+      usageCode={`const [open, setOpen] = useState(false)\n\nconst items: CommandItem[] = pages.map((p) => ({\n  id: p.href, label: p.label, group: p.group,\n  onSelect: () => { window.location.hash = p.href },\n}))\n\n<CommandPalette open={open} onOpenChange={setOpen} items={items} />`}
+      propRows={commandPropRows}
+      semanticDomRows={commandSemanticDomRows}
+      doDontRows={commandDoDontRows}
+      actions={actions}
+      lang={lang}
+    />
   )
 }
 

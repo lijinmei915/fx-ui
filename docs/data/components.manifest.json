@@ -781,6 +781,29 @@
       ]
     },
     {
+      "name": "Command",
+      "source": "src/components/ui/command.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/command.md",
+      "category": "navigation",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "data-active"
+      ],
+      "tokenRefs": [
+        "--muted",
+        "--foreground",
+        "--border-subtle"
+      ],
+      "usageRules": [
+        "使用 CommandPalette 前必须以 src/components/ui/command.tsx 为真实 API。",
+        "受控用法：自己持有 open 状态并在 onOpenChange 更新；items 提供可搜索项与 onSelect。",
+        "自建轻量命令面板（Dialog + Base UI），不引 cmdk/Radix；className 只用于布局或外部间距。"
+      ]
+    },
+    {
       "name": "Sheet",
       "source": "src/components/ui/sheet.tsx",
       "docStatus": "complete",

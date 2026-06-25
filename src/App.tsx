@@ -8,6 +8,8 @@ import {
   EyeIcon,
   PencilIcon,
   Trash2Icon,
+  LockIcon,
+  FilterIcon,
   BellIcon,
   BellFilledIcon,
   BoldIcon,
@@ -1454,11 +1456,11 @@ const tableDemoRows = [
 ]
 
 const tablePropRows = [
-  { prop: "Table", type: "density?: \"default\" | \"compact\" / bordered?: boolean", defaultValue: "density=\"default\" bordered=false", desc: "外层容器，自带横向滚动；compact 行高 36px；默认无边框（贴公司列表页），bordered 套圆角描边卡片" },
+  { prop: "Table", type: "density? / bordered? / maxHeight?: number | string", defaultValue: "density=\"default\" bordered=false", desc: "外层容器，自带横向滚动；density 行高(紧凑28/舒适36/宽松42)；表头固定 32px；maxHeight 配合 TableHeader sticky 启用稳定纵向滚动（自带 overscroll-contain 防回弹）；bordered 套圆角描边卡片" },
   { prop: "TableHeader", type: "sticky?: boolean", defaultValue: "false", desc: "表头容器；sticky 时滚动吸顶（需外层固定高度 + overflow-auto）" },
   { prop: "TableBody / TableFooter", type: "组件", defaultValue: "—", desc: "表体 / 表尾分组容器，对应 tbody / tfoot" },
   { prop: "TableRow", type: "data-state?: \"selected\"", defaultValue: "—", desc: "表格行，自带 hover 态；data-state=selected 高亮选中行" },
-  { prop: "TableHead", type: "align? / pinned? / sortable? / sorted? / onSort?", defaultValue: "—", desc: "表头单元格：align 对齐、pinned 固定列、sortable 可排序（点击切 升/降/无 + 箭头）" },
+  { prop: "TableHead", type: "align? / pinned? / frozenLeft? / frozenEdge? / sortable? / menuActions?", defaultValue: "—", desc: "表头单元格：align 对齐、pinned 单列贴边、frozenLeft 冻结到此列(传累加 left 偏移)+frozenEdge 标记冻结区末列加阴影、sortable 排序、menuActions 列操作 ⋮ 菜单" },
   { prop: "TableCell", type: "align?: \"left\"|\"center\"|\"right\" / pinned?: \"left\"|\"right\"", defaultValue: "—", desc: "数据单元格：align 对齐（数字常用 right），pinned 横向滚动时贴边固定" },
   { prop: "TableCaption", type: "组件", defaultValue: "—", desc: "表格的整体说明文字，渲染在表格下方" },
 ]
@@ -8551,16 +8553,88 @@ function IconAction({ icon, label, tone = "default" }: { icon: React.ReactNode; 
   )
 }
 
-// 业务表演示数据（对齐公司 Figma：链接首列 / 头像 / 级别 Badge / 金额右对齐 / 操作）
+// 基础表格演示数据（对齐公司 Figma：链接首列 / 头像负责人 / 部门，最常见形态）
+const tableBasicRows = [
+  { id: 1, name: "三门峡嘉浩咨询有限公司", owner: "孙婉茹", avatar: "/avatars/01.jpg", dept: "销售部" },
+  { id: 2, name: "郑州泰达科技有限公司", owner: "李明", avatar: "/avatars/02.jpg", dept: "技术部" },
+  { id: 3, name: "洛阳翔宇贸易有限公司", owner: "王芳", avatar: "/avatars/03.jpg", dept: "采购部" },
+]
+function TableBasicDemo() {
+  return (
+    <div className="overflow-x-auto rounded-xl bg-card ring-1 ring-border-subtle">
+      <Table>
+        <TableHeader>
+          <TableRow className="hover:bg-transparent">
+            <TableHead>客户名称</TableHead>
+            <TableHead>负责人</TableHead>
+            <TableHead>负责人部门</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {tableBasicRows.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell><a href="#table" className="text-link hover:text-link-hover active:text-link-active hover:underline">{row.name}</a></TableCell>
+              <TableCell>
+                <span className="inline-flex items-center gap-1.5">
+                  <Avatar className="size-5"><AvatarImage src={row.avatar} alt={row.owner} /><AvatarFallback colorful>{avatarInitials(row.owner)}</AvatarFallback></Avatar>
+                  {row.owner}
+                </span>
+              </TableCell>
+              <TableCell>{row.dept}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  )
+}
+
+// 行高密度表（紧凑/舒适/宽松三档，表头固定 32px）
+function TableDensityDemo({ density }: { density: "compact" | "default" | "comfortable" }) {
+  return (
+    <div className="overflow-x-auto rounded-xl bg-card ring-1 ring-border-subtle">
+      <Table density={density}>
+        <TableHeader>
+          <TableRow className="hover:bg-transparent">
+            <TableHead>客户名称</TableHead>
+            <TableHead>负责人</TableHead>
+            <TableHead>负责人部门</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {tableBasicRows.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell><a href="#table" className="text-link hover:text-link-hover active:text-link-active hover:underline">{row.name}</a></TableCell>
+              <TableCell>
+                <span className="inline-flex items-center gap-1.5">
+                  <Avatar className="size-5"><AvatarImage src={row.avatar} alt={row.owner} /><AvatarFallback colorful>{avatarInitials(row.owner)}</AvatarFallback></Avatar>
+                  {row.owner}
+                </span>
+              </TableCell>
+              <TableCell>{row.dept}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  )
+}
+
+// 客户级别 Tag：有色级别用 color 软色描边，一般客户(none)用中性 secondary（对齐公司 Figma）
+function LevelTag({ level, color }: { level: string; color: "amber" | "green" | "none" }) {
+  return color === "none" ? <Tag variant="secondary">{level}</Tag> : <Tag color={color}>{level}</Tag>
+}
+
+// 业务表演示数据（对齐公司 Figma：链接首列 / 头像 / 级别 Tag / 金额右对齐 / 操作）
 const tableBizRows = [
-  { id: 1, name: "三川德众血浆采集有限公司", owner: "文木", level: "VIP客户", levelVariant: "warning" as const, tags: [{ label: "高意向", color: "purple" as const }, { label: "华东区", color: "blue" as const }], dept: "销售部", product: "罗技 G604 LIGHTSPEED 无线游戏鼠…", amount: 1530.17, date: "2023-12-17" },
-  { id: 2, name: "邱特云顶生态环境技术有限公司", owner: "文木", level: "重要客户", levelVariant: "success" as const, tags: [{ label: "待续约", color: "green" as const }], dept: "市场部", product: "Razer DeathAdder V2 无线游戏鼠标…", amount: 1634.25, date: "2023-12-18" },
-  { id: 3, name: "洛阳金升玄经贸有限公司", owner: "文木", level: "一般客户", levelVariant: "secondary" as const, tags: [{ label: "待跟进", color: "amber" as const }], dept: "研发部", product: "Corsair Dark Core RGB SE 无线游戏…", amount: 1745.09, date: "2023-12-19" },
-  { id: 4, name: "绵阳中诚祥财鑫管理有限公司", owner: "文木", level: "一般客户", levelVariant: "secondary" as const, tags: [{ label: "新客", color: "cyan" as const }], dept: "人事部", product: "华硕 ROG Gladius II 烈焰战刃竞技版…", amount: 1862.47, date: "2023-12-20" },
-  { id: 5, name: "鹤庆华聚顺科技有限公司", owner: "文木", level: "VIP客户", levelVariant: "warning" as const, tags: [{ label: "高意向", color: "purple" as const }, { label: "大客户", color: "red" as const }], dept: "财务部", product: "HyperX Pulsefire Haste 无线轻量竞技…", amount: 1960.68, date: "2023-12-21" },
-  { id: 6, name: "平顶山泽大壵贸科技公司", owner: "文木", level: "重要客户", levelVariant: "success" as const, tags: [{ label: "待续约", color: "green" as const }], dept: "客服部", product: "SteelSeries Rival 3 无线雷神游戏…", amount: 2101.58, date: "2023-12-22" },
-  { id: 7, name: "新乡市佳谷投资有限公司", owner: "文木", level: "VIP客户", levelVariant: "warning" as const, tags: [{ label: "高意向", color: "purple" as const }], dept: "IT部", product: "Cooler Master MM821 无线竞技游戏…", amount: 2224.13, date: "2023-12-23" },
-  { id: 8, name: "信阳瑞丰文化传播有限公司", owner: "文木", level: "一般客户", levelVariant: "secondary" as const, tags: [{ label: "待跟进", color: "amber" as const }], dept: "法务部", product: "Logitech G Pro X Superlight 无线游…", amount: 2345.99, date: "2023-12-24" },
+  { id: 1, name: "三川德众血浆采集有限公司", owner: "陈昊", avatar: "/avatars/01.jpg", level: "VIP客户", levelColor: "amber" as const, tags: [{ label: "高意向", color: "purple" as const }, { label: "华东区", color: "blue" as const }], dept: "销售部", product: "罗技 G604 LIGHTSPEED 无线游戏鼠…", amount: 1530.17, date: "2023-12-17" },
+  { id: 2, name: "邱特云顶生态环境技术有限公司", owner: "林夕", avatar: "/avatars/02.jpg", level: "重要客户", levelColor: "green" as const, tags: [{ label: "待续约", color: "green" as const }], dept: "市场部", product: "Razer DeathAdder V2 无线游戏鼠标…", amount: 1634.25, date: "2023-12-18" },
+  { id: 3, name: "洛阳金升玄经贸有限公司", owner: "周婷", avatar: "/avatars/03.jpg", level: "一般客户", levelColor: "none" as const, tags: [{ label: "待跟进", color: "amber" as const }], dept: "研发部", product: "Corsair Dark Core RGB SE 无线游戏…", amount: 1745.09, date: "2023-12-19" },
+  { id: 4, name: "绵阳中诚祥财鑫管理有限公司", owner: "吴桐", avatar: "/avatars/04.jpg", level: "一般客户", levelColor: "none" as const, tags: [{ label: "新客", color: "cyan" as const }], dept: "人事部", product: "华硕 ROG Gladius II 烈焰战刃竞技版…", amount: 1862.47, date: "2023-12-20" },
+  { id: 5, name: "鹤庆华聚顺科技有限公司", owner: "陈昊", avatar: "/avatars/01.jpg", level: "VIP客户", levelColor: "amber" as const, tags: [{ label: "高意向", color: "purple" as const }, { label: "大客户", color: "red" as const }], dept: "财务部", product: "HyperX Pulsefire Haste 无线轻量竞技…", amount: 1960.68, date: "2023-12-21" },
+  { id: 6, name: "平顶山泽大壵贸科技公司", owner: "林夕", avatar: "/avatars/02.jpg", level: "重要客户", levelColor: "green" as const, tags: [{ label: "待续约", color: "green" as const }], dept: "客服部", product: "SteelSeries Rival 3 无线雷神游戏…", amount: 2101.58, date: "2023-12-22" },
+  { id: 7, name: "新乡市佳谷投资有限公司", owner: "周婷", avatar: "/avatars/03.jpg", level: "VIP客户", levelColor: "amber" as const, tags: [{ label: "高意向", color: "purple" as const }], dept: "IT部", product: "Cooler Master MM821 无线竞技游戏…", amount: 2224.13, date: "2023-12-23" },
+  { id: 8, name: "信阳瑞丰文化传播有限公司", owner: "吴桐", avatar: "/avatars/04.jpg", level: "一般客户", levelColor: "none" as const, tags: [{ label: "待跟进", color: "amber" as const }], dept: "法务部", product: "Logitech G Pro X Superlight 无线游…", amount: 2345.99, date: "2023-12-24" },
 ]
 const TABLE_PAGE_SIZE = 5
 
@@ -8593,7 +8667,7 @@ function TableBusinessDemo() {
     })
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-xl bg-card ring-1 ring-border-subtle">
       {selected.size > 0 && (
         <div className="flex items-center gap-3 border-b border-border-subtle bg-muted px-3 py-2 text-fx-13">
           <span className="text-muted-foreground">已选 <span className="font-medium text-foreground">{selected.size}</span> 项</span>
@@ -8601,7 +8675,7 @@ function TableBusinessDemo() {
           <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())}>取消选择</Button>
         </div>
       )}
-      <Table density="compact">
+      <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
             <TableHead className="w-10 pl-3">
@@ -8625,20 +8699,20 @@ function TableBusinessDemo() {
               <TableCell><a href="#table" className="text-link hover:text-link-hover active:text-link-active hover:underline">{row.name}</a></TableCell>
               <TableCell>
                 <span className="inline-flex items-center gap-1.5">
-                  <Avatar className="size-5"><AvatarFallback colorful>{avatarInitials(row.owner)}</AvatarFallback></Avatar>
+                  <Avatar className="size-5"><AvatarImage src={row.avatar} alt={row.owner} /><AvatarFallback colorful>{avatarInitials(row.owner)}</AvatarFallback></Avatar>
                   {row.owner}
                 </span>
               </TableCell>
-              <TableCell><Tag variant={row.levelVariant}>{row.level}</Tag></TableCell>
+              <TableCell><LevelTag level={row.level} color={row.levelColor} /></TableCell>
               <TableCell>
                 <span className="inline-flex gap-1">
                   {row.tags.map((t) => <Tag key={t.label} color={t.color}>{t.label}</Tag>)}
                 </span>
               </TableCell>
-              <TableCell className="text-muted-foreground">{row.dept}</TableCell>
-              <TableCell className="max-w-[200px] truncate text-muted-foreground">{row.product}</TableCell>
-              <TableCell align="right" className="text-fx-12 tabular-nums">{row.amount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}</TableCell>
-              <TableCell className="text-muted-foreground">{row.date}</TableCell>
+              <TableCell>{row.dept}</TableCell>
+              <TableCell className="max-w-[200px] truncate">{row.product}</TableCell>
+              <TableCell align="right" className="tabular-nums">{row.amount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}</TableCell>
+              <TableCell>{row.date}</TableCell>
               <TableCell align="right" className="pr-3">
                 <TooltipProvider delay={100}>
                   <span className="inline-flex items-center gap-1">
@@ -8659,38 +8733,67 @@ function TableBusinessDemo() {
   )
 }
 
+// 冻结到此列（Excel 模型）：前两列定宽，便于算累加 left 偏移
+const FROZEN_W = [240, 140] // 客户名称 / 负责人 列宽
 function TableAdvancedDemo() {
+  const [sort, setSort] = useState<{ key: "amount" | "date"; dir: "asc" | "desc" } | null>(null)
+  const [frozenUpTo, setFrozenUpTo] = useState<number>(-1) // 冻结到第几列（含）：-1 无，0 客户名称，1 负责人
+  const [levelFilter, setLevelFilter] = useState<string | null>(null)
+
+  const sortedFor = (key: "amount" | "date") => (sort?.key === key ? sort.dir : false)
+  const toggleSort = (key: "amount" | "date") =>
+    setSort((s) => (s?.key !== key ? { key, dir: "asc" } : s.dir === "asc" ? { key, dir: "desc" } : null))
+
+  let rows = levelFilter ? tableBizRows.filter((r) => r.level === levelFilter) : [...tableBizRows]
+  if (sort) {
+    rows.sort((a, b) => {
+      const v = sort.key === "amount" ? a.amount - b.amount : a.date.localeCompare(b.date)
+      return sort.dir === "asc" ? v : -v
+    })
+  }
+
+  // 第 i 列（0/1）若在冻结范围内，返回它的累加 left 偏移；否则 undefined
+  const frozenLeftOf = (i: number) => (i <= frozenUpTo ? FROZEN_W.slice(0, i).reduce((a, b) => a + b, 0) : undefined)
+  const freezeMenu = (i: number) => [
+    { label: `冻结到此列`, icon: <LockIcon />, onClick: () => setFrozenUpTo(i) },
+    ...(frozenUpTo >= 0 ? [{ label: "取消冻结", onClick: () => setFrozenUpTo(-1) }] : []),
+  ]
+  const levelMenu = [
+    { label: "只看 VIP客户", icon: <FilterIcon />, onClick: () => setLevelFilter("VIP客户") },
+    { label: "只看 重要客户", icon: <FilterIcon />, onClick: () => setLevelFilter("重要客户") },
+    { label: "显示全部", onClick: () => setLevelFilter(null) },
+  ]
+
   return (
-    <div className="overflow-x-auto">
-      <div className="scrollbar-thin max-h-72 overflow-auto">
-        <Table density="compact" className="min-w-[920px]">
-          <TableHeader sticky>
+    <div className="overflow-hidden rounded-xl bg-card ring-1 ring-border-subtle">
+      <Table className="min-w-[920px]" maxHeight={288}>
+        <TableHeader sticky>
             <TableRow className="hover:bg-transparent">
-              <TableHead>客户名称</TableHead>
-              <TableHead>负责人</TableHead>
-              <TableHead>客户级别</TableHead>
+              <TableHead style={{ width: FROZEN_W[0] }} frozenLeft={frozenLeftOf(0)} frozenEdge={frozenUpTo === 0} menuActions={freezeMenu(0)}>客户名称</TableHead>
+              <TableHead style={{ width: FROZEN_W[1] }} frozenLeft={frozenLeftOf(1)} frozenEdge={frozenUpTo === 1} menuActions={freezeMenu(1)}>负责人</TableHead>
+              <TableHead menuActions={levelMenu}>客户级别{levelFilter ? `（${levelFilter}）` : ""}</TableHead>
               <TableHead>负责人部门</TableHead>
               <TableHead>产品名称</TableHead>
-              <TableHead align="right">金额(元)</TableHead>
-              <TableHead>最后修改时间</TableHead>
+              <TableHead align="right" sortable sorted={sortedFor("amount")} onSort={() => toggleSort("amount")}>金额(元)</TableHead>
+              <TableHead sortable sorted={sortedFor("date")} onSort={() => toggleSort("date")}>最后修改时间</TableHead>
               <TableHead align="right" pinned="right" className="pr-3">操作</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {tableBizRows.map((row) => (
+            {rows.map((row) => (
               <TableRow key={row.id}>
-                <TableCell><a href="#table" className="text-link hover:text-link-hover active:text-link-active hover:underline">{row.name}</a></TableCell>
-                <TableCell>
+                <TableCell frozenLeft={frozenLeftOf(0)} frozenEdge={frozenUpTo === 0}><a href="#table" className="text-link hover:text-link-hover active:text-link-active hover:underline">{row.name}</a></TableCell>
+                <TableCell frozenLeft={frozenLeftOf(1)} frozenEdge={frozenUpTo === 1}>
                   <span className="inline-flex items-center gap-1.5">
-                    <Avatar className="size-5"><AvatarFallback colorful>{avatarInitials(row.owner)}</AvatarFallback></Avatar>
+                    <Avatar className="size-5"><AvatarImage src={row.avatar} alt={row.owner} /><AvatarFallback colorful>{avatarInitials(row.owner)}</AvatarFallback></Avatar>
                     {row.owner}
                   </span>
                 </TableCell>
-                <TableCell><Tag variant={row.levelVariant}>{row.level}</Tag></TableCell>
-                <TableCell className="text-muted-foreground">{row.dept}</TableCell>
-                <TableCell className="max-w-[200px] truncate text-muted-foreground">{row.product}</TableCell>
-                <TableCell align="right" className="text-fx-12 tabular-nums">{row.amount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}</TableCell>
-                <TableCell className="text-muted-foreground">{row.date}</TableCell>
+                <TableCell><LevelTag level={row.level} color={row.levelColor} /></TableCell>
+                <TableCell>{row.dept}</TableCell>
+                <TableCell className="max-w-[200px] truncate">{row.product}</TableCell>
+                <TableCell align="right" className="tabular-nums">{row.amount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}</TableCell>
+                <TableCell>{row.date}</TableCell>
                 <TableCell align="right" pinned="right" className="pr-3">
                   <TooltipProvider delay={100}>
                     <span className="inline-flex items-center gap-1">
@@ -8704,15 +8807,14 @@ function TableAdvancedDemo() {
             ))}
           </TableBody>
         </Table>
-      </div>
     </div>
   )
 }
 
 function TableLoadingDemo() {
   return (
-    <div className="overflow-x-auto">
-      <Table density="compact">
+    <div className="overflow-x-auto rounded-xl bg-card ring-1 ring-border-subtle">
+      <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
             <TableHead>客户名称</TableHead>
@@ -8738,8 +8840,8 @@ function TableLoadingDemo() {
 
 function TableEmptyDemo() {
   return (
-    <div className="overflow-x-auto">
-      <Table density="compact">
+    <div className="overflow-x-auto rounded-xl bg-card ring-1 ring-border-subtle">
+      <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
             <TableHead>客户名称</TableHead>
@@ -8770,15 +8872,12 @@ function TablePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
   return (
     <div className={docsSpacing.pageStack}>
       <section id="table" className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-4xl font-semibold leading-tight">Table 表格</h1>
-          </div>
-          {actions}
-        </div>
-        <p className={docsSpacing.componentLead}>
-          展示结构化的多行数据，常用于订单列表、用户管理、数据看板等场景。
-        </p>
+        <PageLead
+          crumb={lang === "en" ? "Components / Table" : "组件 / Table 表格"}
+          title="Table 表格"
+          lead="展示结构化的多行数据，常用于订单列表、用户管理、数据看板等场景。"
+          actions={actions}
+        />
       </section>
 
       <section id="table-overview" className={docsSpacing.sectionStack}>
@@ -8820,68 +8919,101 @@ function TablePage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
         <div className={docsSpacing.sectionHeader}>
           <h2 className="text-2xl font-semibold">场景示例</h2>
           <p className="text-base text-muted-foreground">
-            对齐公司列表页：链接首列、负责人头像、级别 Badge、金额右对齐排序、行选中 + 批量操作、分页。
+            按能力分组：基础展示 / 交互能力 / 高级布局。表格体积大，场景以整表演示，不挤进场景表。
           </p>
         </div>
+        <Tabs defaultValue="basic">
+          <TabsList className="flex h-auto flex-wrap justify-start">
+            <TabsTrigger value="basic">基础</TabsTrigger>
+            <TabsTrigger value="density">行高</TabsTrigger>
+            <TabsTrigger value="interactive">交互</TabsTrigger>
+            <TabsTrigger value="advanced">高级</TabsTrigger>
+          </TabsList>
 
-        <div className="flex flex-col gap-2">
-          <h3 className="text-base font-medium">业务列表（可选中 · 可排序 · 分页）</h3>
-          <p className="text-fx-13 text-muted-foreground">勾选行出现批量操作条；点「金额」表头切换升/降序；底部主流页码分页。</p>
-          <TableBusinessDemo />
-        </div>
+          <TabsContent value="basic" className="flex flex-col gap-6 pt-4">
+            <div className="flex flex-col gap-2">
+              <h3 className="text-base font-medium">基础表格</h3>
+              <p className="text-fx-13 text-muted-foreground">作为表格最常见的形态展示数据。</p>
+              <TableBasicDemo />
+            </div>
+            <div className="flex flex-col gap-2">
+              <h3 className="text-base font-medium">带表尾汇总</h3>
+              <p className="text-fx-13 text-muted-foreground">用 TableFooter 展示一组明细的合计。</p>
+              <div className="overflow-x-auto rounded-xl bg-card ring-1 ring-border-subtle">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="hover:bg-transparent">
+                      <TableHead>订单号</TableHead>
+                      <TableHead>客户</TableHead>
+                      <TableHead>状态</TableHead>
+                      <TableHead align="right">金额</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {tableDemoRows.map((row) => (
+                      <TableRow key={row.id}>
+                        <TableCell className="font-medium">{row.id}</TableCell>
+                        <TableCell>{row.customer}</TableCell>
+                        <TableCell>
+                          <Tag variant={row.status === "已支付" ? "success" : "outline"}>{row.status}</Tag>
+                        </TableCell>
+                        <TableCell align="right" className="tabular-nums">{row.amount}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                  <TableFooter>
+                    <TableRow>
+                      <TableCell colSpan={3}>合计</TableCell>
+                      <TableCell align="right">¥4,280</TableCell>
+                    </TableRow>
+                  </TableFooter>
+                </Table>
+              </div>
+            </div>
+          </TabsContent>
 
-        <div className="flex flex-col gap-2">
-          <h3 className="text-base font-medium">带表尾汇总</h3>
-          <p className="text-fx-13 text-muted-foreground">用 TableFooter 展示一组明细的合计。</p>
-          <div className="overflow-x-auto">
-            <Table density="compact">
-              <TableHeader>
-                <TableRow className="hover:bg-transparent">
-                  <TableHead>订单号</TableHead>
-                  <TableHead>客户</TableHead>
-                  <TableHead>状态</TableHead>
-                  <TableHead align="right">金额</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {tableDemoRows.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell className="font-medium">{row.id}</TableCell>
-                    <TableCell>{row.customer}</TableCell>
-                    <TableCell>
-                      <Tag variant={row.status === "已支付" ? "success" : "outline"}>{row.status}</Tag>
-                    </TableCell>
-                    <TableCell align="right" className="text-fx-12 tabular-nums">{row.amount}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TableCell colSpan={3}>合计</TableCell>
-                  <TableCell align="right">¥4,280</TableCell>
-                </TableRow>
-              </TableFooter>
-            </Table>
-          </div>
-        </div>
+          <TabsContent value="density" className="flex flex-col gap-6 pt-4">
+            <p className="text-fx-13 text-muted-foreground">为满足不同用户需求，表头保持 32px 高度不变，表体定义了三种行高尺寸：紧凑(28px)、舒适(36px)、宽松(42px)。</p>
+            <div className="flex flex-col gap-2">
+              <h3 className="text-base font-medium">紧凑(28px)</h3>
+              <TableDensityDemo density="compact" />
+            </div>
+            <div className="flex flex-col gap-2">
+              <h3 className="text-base font-medium">舒适(36px)</h3>
+              <TableDensityDemo density="default" />
+            </div>
+            <div className="flex flex-col gap-2">
+              <h3 className="text-base font-medium">宽松(42px)</h3>
+              <TableDensityDemo density="comfortable" />
+            </div>
+          </TabsContent>
 
-        <div className="flex flex-col gap-2">
-          <h3 className="text-base font-medium">吸顶表头 + 固定操作列</h3>
-          <p className="text-fx-13 text-muted-foreground">列多需横向滚动时：表头吸顶、操作列贴右固定（带分隔阴影），上下滚动表头不动。</p>
-          <TableAdvancedDemo />
-        </div>
+          <TabsContent value="interactive" className="flex flex-col gap-6 pt-4">
+            <div className="flex flex-col gap-2">
+              <h3 className="text-base font-medium">业务列表（可选中 · 可排序 · 分页）</h3>
+              <p className="text-fx-13 text-muted-foreground">勾选行出现批量操作条；点「金额」表头切换升/降序；底部主流页码分页。</p>
+              <TableBusinessDemo />
+            </div>
+          </TabsContent>
 
-        <div className="flex flex-col gap-2">
-          <h3 className="text-base font-medium">加载态</h3>
-          <p className="text-fx-13 text-muted-foreground">数据加载中用骨架行占位，保持表格结构不跳动。</p>
-          <TableLoadingDemo />
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <h3 className="text-base font-medium">空状态</h3>
-          <p className="text-fx-13 text-muted-foreground">无数据时居中提示「暂无数据」。</p>
-          <TableEmptyDemo />
-        </div>
+          <TabsContent value="advanced" className="flex flex-col gap-6 pt-4">
+            <div className="flex flex-col gap-2">
+              <h3 className="text-base font-medium">吸顶表头 + 固定列 + 列操作菜单（排序/冻结/筛选可用）</h3>
+              <p className="text-fx-13 text-muted-foreground">点「金额/修改时间」表头排序；hover「客户名称/负责人」表头出 ⋮「冻结到此列」（固定该列及左侧所有列，Excel 冻结窗格模型）；hover「客户级别」表头出 ⋮ 按级别筛选。横向滚动看冻结效果。</p>
+              <TableAdvancedDemo />
+            </div>
+            <div className="flex flex-col gap-2">
+              <h3 className="text-base font-medium">加载态</h3>
+              <p className="text-fx-13 text-muted-foreground">数据加载中用骨架行占位，保持表格结构不跳动。</p>
+              <TableLoadingDemo />
+            </div>
+            <div className="flex flex-col gap-2">
+              <h3 className="text-base font-medium">空状态</h3>
+              <p className="text-fx-13 text-muted-foreground">无数据时居中提示「暂无数据」。</p>
+              <TableEmptyDemo />
+            </div>
+          </TabsContent>
+        </Tabs>
       </section>
 
       <section id="table-usage" className={docsSpacing.sectionStack}>

@@ -17,9 +17,9 @@ export const devInspectorConfig: DevInspectorConfigOverrides = {
           id: "button-default",
           label: "Default",
           group: "Variant",
-          propsLabel: "variant=default / size=default",
+          propsLabel: "variant=default / size=sm(默认 28px)",
           selector:
-            '[data-component="Button"][data-variant="default"][data-size="default"]',
+            '[data-component="Button"][data-variant="default"][data-size="sm"]',
           usage: "页面主操作、保存、提交。",
           capabilities: ["点击", "hover", "active", "focus-visible", "disabled"],
           tokenRefs: ["--primary", "--primary-foreground", "--ring"],

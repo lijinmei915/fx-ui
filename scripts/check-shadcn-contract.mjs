@@ -60,7 +60,6 @@ const requiredStateContracts = [
   ["Button source", buttonSource, "disabled:"],
   ["Button source", buttonSource, "aria-invalid"],
   ["Button overview", appSource, "交互状态"],
-  ["Button overview", appSource, "正常"],
   ["Button overview", appSource, "<Spinner"],
   ["Button overview", appSource, "禁用"],
   ["Button Markdown", buttonDocs, "disabled"],

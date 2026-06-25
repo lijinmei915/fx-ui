@@ -51,7 +51,8 @@ const buttonVariants = cva(
     ],
     defaultVariants: {
       variant: "default",
-      size: "default",
+      // 默认尺寸 = sm(28px)，对齐公司 Figma 默认按钮高度；尺寸名 xs/sm/default/lg 不变，仅默认值指向 sm
+      size: "sm",
       tone: "default",
     },
   }
@@ -60,7 +61,7 @@ const buttonVariants = cva(
 function Button({
   className,
   variant = "default",
-  size = "default",
+  size = "sm",
   tone = "default",
   ...props
 }: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {

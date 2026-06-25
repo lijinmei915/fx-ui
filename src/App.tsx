@@ -834,35 +834,35 @@ const buttonScenarioExamples = [
     size: "xs",
     group: "size",
     props: ["variant: default", "size: xs"],
-    code: '<Button size="xs">超小尺寸</Button>',
+    code: '<Button size="xs"><PlusIcon data-icon="inline-start" />新建</Button>',
   },
   {
     id: "size-sm",
-    title: "小尺寸",
-    titleEn: "Small size",
-    intent: "筛选栏、表格行、紧凑表单等高密度区域。",
-    intentEn: "Filter bars, table rows, and compact forms.",
-    rule: "小尺寸用于空间受限场景，不用于页面主行动点。",
-    ruleEn: "Use small size in constrained spaces, not for primary page actions.",
+    title: "默认尺寸",
+    titleEn: "Default size",
+    intent: "页面正文、表单页和常规操作区域；筛选栏、表格行也用它。",
+    intentEn: "Body content, forms, standard actions; also filter bars and table rows.",
+    rule: "不写 size 即此尺寸（28px 默认）；业务页面的首选尺寸。",
+    ruleEn: "Omitting size yields this (28px default); the preferred size for product pages.",
     variant: "default",
     size: "sm",
     group: "size",
-    props: ["variant: default", "size: sm"],
-    code: '<Button size="sm">小尺寸</Button>',
+    props: ["variant: default", "省略 size = 28px"],
+    code: '<Button><PlusIcon data-icon="inline-start" />新建</Button>',
   },
   {
     id: "size-default",
-    title: "默认尺寸",
-    titleEn: "Default size",
-    intent: "页面正文、表单页和常规操作区域。",
-    intentEn: "Body content, forms, and standard action areas.",
-    rule: "默认尺寸是业务页面的首选尺寸。",
-    ruleEn: "Default size is the preferred size for product pages.",
+    title: "标准尺寸",
+    titleEn: "Standard size",
+    intent: "比默认大一档，用于宽松正文/表单等需要更大点击区的场景。",
+    intentEn: "One step larger than default, for relaxed forms and bigger hit areas.",
+    rule: "比默认(28)大一档(32)；需要显式写 size=\"default\"。",
+    ruleEn: "One tier above default (32 vs 28); set size=\"default\" explicitly.",
     variant: "default",
     size: "default",
     group: "size",
-    props: ["variant: default", "size: default"],
-    code: "<Button>默认尺寸</Button>",
+    props: ["variant: default", "size: default(32px)"],
+    code: '<Button size="default"><PlusIcon data-icon="inline-start" />新建</Button>',
   },
   {
     id: "size-lg",
@@ -876,7 +876,21 @@ const buttonScenarioExamples = [
     size: "lg",
     group: "size",
     props: ["variant: default", "size: lg"],
-    code: '<Button size="lg">大尺寸</Button>',
+    code: '<Button size="lg"><PlusIcon data-icon="inline-start" />新建</Button>',
+  },
+  {
+    id: "size-icon",
+    title: "图标按钮随尺寸",
+    titleEn: "Icon button across sizes",
+    intent: "纯图标按钮的四档方形尺寸：icon-xs/icon-sm/icon/icon-lg。",
+    intentEn: "Square icon-only sizes: icon-xs/icon-sm/icon/icon-lg.",
+    rule: "纯图标按钮必须有 aria-label；尺寸用 size=\"icon-*\"。",
+    ruleEn: "Icon-only buttons need aria-label; size via size=\"icon-*\".",
+    variant: "default",
+    size: "icon",
+    group: "size",
+    props: ["size: icon-xs / icon-sm / icon / icon-lg", "aria-label"],
+    code: '<Button size="icon-xs" aria-label="搜索"><SearchIcon /></Button>\n<Button size="icon-sm" aria-label="搜索"><SearchIcon /></Button>\n<Button size="icon" aria-label="搜索"><SearchIcon /></Button>\n<Button size="icon-lg" aria-label="搜索"><SearchIcon /></Button>',
   },
   {
     id: "icon-start",
@@ -3238,10 +3252,19 @@ function ButtonScenarioPreview({ id, lang }: { id: string; lang: Lang }) {
   if (id === "destructive") return <Button variant="destructive">{lang === "en" ? "Delete project" : "删除项目"}</Button>
   if (id === "outline") return <Button variant="outline">{lang === "en" ? "Export" : "导出"}</Button>
   if (id === "ghost") return <Button variant="ghost">{lang === "en" ? "View details" : "查看详情"}</Button>
-  if (id === "size-xs") return <Button size="xs">{lang === "en" ? "Extra small size" : "超小尺寸"}</Button>
-  if (id === "size-sm") return <Button size="sm">{lang === "en" ? "Small size" : "小尺寸"}</Button>
-  if (id === "size-default") return <Button>{lang === "en" ? "Default size" : "默认尺寸"}</Button>
-  if (id === "size-lg") return <Button size="lg">{lang === "en" ? "Large size" : "大尺寸"}</Button>
+  if (id === "size-xs") return <Button size="xs"><PlusIcon data-icon="inline-start" />{lang === "en" ? "New" : "新建"}</Button>
+  if (id === "size-sm") return <Button><PlusIcon data-icon="inline-start" />{lang === "en" ? "New" : "新建"}</Button>
+  if (id === "size-default") return <Button size="default"><PlusIcon data-icon="inline-start" />{lang === "en" ? "New" : "新建"}</Button>
+  if (id === "size-lg") return <Button size="lg"><PlusIcon data-icon="inline-start" />{lang === "en" ? "New" : "新建"}</Button>
+  if (id === "size-icon")
+    return (
+      <div className="flex flex-wrap items-center gap-3">
+        <Button size="icon-xs" aria-label={lang === "en" ? "Search" : "搜索"}><SearchIcon /></Button>
+        <Button size="icon-sm" aria-label={lang === "en" ? "Search" : "搜索"}><SearchIcon /></Button>
+        <Button size="icon" aria-label={lang === "en" ? "Search" : "搜索"}><SearchIcon /></Button>
+        <Button size="icon-lg" aria-label={lang === "en" ? "Search" : "搜索"}><SearchIcon /></Button>
+      </div>
+    )
   if (id === "icon-start") {
     return (
       <Button>
@@ -3330,77 +3353,40 @@ function ButtonScenarioPreview({ id, lang }: { id: string; lang: Lang }) {
   return <Button>{lang === "en" ? "Save" : "保存"}</Button>
 }
 
+// 总览各块的预览完全从场景示例按 group 派生（与场景 tab 一一对应、增删自动联动）。
+// 小标题用字面 h3（与场景 tab label 一致），便于 check-shadcn-contract 校验对应关系。
+function ButtonOverviewGroup({ group, lang }: { group: string; lang: Lang }) {
+  return (
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
+      {buttonScenarioExamples
+        .filter((example) => example.group === group)
+        .map((example) => (
+          <ButtonScenarioPreview key={example.id} id={example.id} lang={lang} />
+        ))}
+    </div>
+  )
+}
 function ButtonOverview({ lang }: { lang: Lang }) {
   return (
     <div className="grid gap-6 rounded-lg border border-border bg-card p-6">
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Variants" : "类型"}</h3>
-        <div className="flex flex-wrap items-center gap-3">
-          {buttonScenarioExamples
-            .filter((example) => example.group === "category")
-            .map((example) => (
-              <ButtonScenarioPreview key={example.id} id={example.id} lang={lang} />
-            ))}
-        </div>
+        <ButtonOverviewGroup group="category" lang={lang} />
       </div>
       <div className="border-t border-dashed border-border" />
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Sizes" : "尺寸"}</h3>
-        <div className="flex flex-wrap items-center gap-3">
-          <Button size="xs">XS</Button>
-          <Button size="sm">SM</Button>
-          <Button>Default</Button>
-          <Button size="lg">Large</Button>
-        </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <Button size="icon-xs" aria-label={lang === "en" ? "Extra small icon button" : "超小图标按钮"}>
-            <PackageIcon data-icon="inline-start" />
-          </Button>
-          <Button size="icon-sm" aria-label={lang === "en" ? "Small icon button" : "小图标按钮"}>
-            <PackageIcon data-icon="inline-start" />
-          </Button>
-          <Button size="icon" aria-label={lang === "en" ? "Open package" : "打开组件包"}>
-            <PackageIcon data-icon="inline-start" />
-          </Button>
-          <Button size="icon-lg" aria-label={lang === "en" ? "Large icon button" : "大图标按钮"}>
-            <PackageIcon data-icon="inline-start" />
-          </Button>
-        </div>
-        {/* 尺寸对所有 variant 正交生效（plain/ghost/outline 同样跟随 xs/sm/default/lg） */}
-        <p className="text-fx-12 text-muted-foreground">{lang === "en" ? "Size applies to every variant — e.g. plain:" : "尺寸对所有变体生效，例如无底色 plain："}</p>
-        <div className="flex flex-wrap items-center gap-3">
-          <Button variant="plain" size="xs">XS</Button>
-          <Button variant="plain" size="sm">SM</Button>
-          <Button variant="plain">Default</Button>
-          <Button variant="plain" size="lg">Large</Button>
-        </div>
+        <ButtonOverviewGroup group="size" lang={lang} />
       </div>
       <div className="border-t border-dashed border-border" />
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Interaction states" : "交互状态"}</h3>
-        <div className="flex flex-wrap items-center gap-3">
-          <Button>{lang === "en" ? "Normal" : "正常"}</Button>
-          <Button disabled>
-            <Spinner data-icon="inline-start" />
-            {lang === "en" ? "Loading" : "加载中"}
-          </Button>
-          <Button disabled>{lang === "en" ? "Disabled" : "禁用"}</Button>
-        </div>
+        <ButtonOverviewGroup group="state" lang={lang} />
       </div>
       <div className="border-t border-dashed border-border" />
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Icons" : "图标"}</h3>
-        <div className="flex flex-wrap items-center gap-3">
-          {buttonScenarioExamples
-            .filter((example) => example.group === "icon")
-            .map((example) => (
-              <ButtonScenarioPreview key={example.id} id={example.id} lang={lang} />
-            ))}
-          {/* 无底色图标按钮（plain）：图标+文字 / 纯图标，tone 分色 */}
-          <Button variant="plain" tone="primary"><PlusIcon data-icon="inline-start" />{lang === "en" ? "New" : "新建"}</Button>
-          <Button variant="plain" size="icon-sm" aria-label={lang === "en" ? "View" : "查看"}><EyeIcon /></Button>
-          <Button variant="plain" tone="danger" size="icon-sm" aria-label={lang === "en" ? "Delete" : "删除"}><Trash2Icon /></Button>
-        </div>
+        <ButtonOverviewGroup group="icon" lang={lang} />
       </div>
     </div>
   )
@@ -5438,7 +5424,7 @@ function ScenarioTable({ rows, filters, lang }: { rows: ScenarioRow[]; filters?:
               <TableRow key={r.key} className="hover:bg-transparent has-aria-expanded:bg-transparent">
 
                 <TableCell className="h-auto py-3 pl-4 align-top"><span className="font-medium">{r.title}</span></TableCell>
-                <TableCell className="h-auto py-3 align-top"><div className="max-w-[500px]">{r.preview}</div></TableCell>
+                <TableCell className="h-auto py-3 align-top"><div className="max-w-[400px]">{r.preview}</div></TableCell>
                 {hasSpec ? <TableCell className="h-auto py-3 align-top text-foreground"><div className="w-max text-fx-12">{r.spec ?? "—"}</div></TableCell> : null}
                 <TableCell className="h-auto py-3 align-top whitespace-normal text-muted-foreground"><div className="max-w-[240px] break-words leading-6">{r.intent}</div></TableCell>
                 <TableCell className="h-auto py-3 align-top whitespace-normal text-muted-foreground"><div className="max-w-[260px] break-words leading-6">{r.constraint}</div></TableCell>

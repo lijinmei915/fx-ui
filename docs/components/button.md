@@ -58,10 +58,12 @@ shadcn/ui button
 
 Figma 关键规格（默认/中尺寸）：
 
+> 默认尺寸已对齐：`defaultVariants.size = "sm"`，不写 size 时渲染 28px（对齐公司「中尺寸」默认）。尺寸名 xs/sm/default/lg 不变；其中 `size="default"`(32px) 现为"标准尺寸"（比默认大一档），不再是运行时默认值。
+
 | 项 | 公司 Figma | 当前 fx-ui | 是否对齐 |
 | --- | --- | --- | --- |
-| 默认高度 | **28px**（中：24≤h≤28） | 32px（default） | ⚠️ 偏大一档 |
-| 横向内边距 | **10px**（外间距/Button） | 12px（px-3） | ⚠️ |
+| 默认高度 | **28px**（中：24≤h≤28） | 28px（默认走 sm 档） | ✅ |
+| 横向内边距 | **10px**（外间距/Button） | sm 档 px-2.5（10px） | ✅ |
 | 圆角 | **6px**（中）/ 8px（大 h≥32） | `--radius-md` | 待核 |
 | 图标-文字间距 | **4px**（内间距/Button） | 4px（gap-1） | ✅ |
 | 字号 | **13px** Regular | 13/14（按 size） | 大体一致 |

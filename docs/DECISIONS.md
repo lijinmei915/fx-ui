@@ -248,6 +248,16 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **影响**：新增 `src/components/ui/tag.tsx` + `docs/components/tag.md` + Tag 文档页/导航/路由；`badge.tsx` 瘦身为角标、`badge.md` 改写；manifest 加 Tag、Badge 改角标；`check-components-manifest.mjs` 的 pill 断言改指向 Tag
 - **相关文件**：`src/components/ui/tag.tsx`、`src/components/ui/badge.tsx`、`docs/components/tag.md`、`docs/components/badge.md`、`docs/data/components.manifest.json`、`scripts/check-components-manifest.mjs`、`src/App.tsx`
 
+### DEC-022: Button 按"语义角色"平铺，不按"形态"（基础/描边/文字）分大类
+
+- **日期**：2026-06-25
+- **状态**：已决定
+- **决定**：Button 文档/分类以**语义角色**平铺 6 个 variant（主操作 default / 次操作 secondary / 危险 destructive / 描边 outline / 幽灵 ghost / 无底色 plain），每个场景直接对应一个源码 variant。**不引入「基础按钮 / 描边按钮 / 文字按钮」这种"形态"大类**
+- **放弃**：Ant Design / 公司 Figma 的"形态分大类 + 颜色子维度"组织方式（基础按钮里再分橙/灰/红）
+- **原因**：我们 variant 是**平铺**的，硬加"形态"层会让"基础按钮"= 一组 variant（default+secondary+destructive），文档分类与代码 variant 对不上，违反"文档以源码 variant 为准"（AI/工程师按文档找不到对应 variant）；语义角色平铺更诚实、可追溯，且对齐 shadcn。颜色已揉进 variant（destructive=红）或 plain 的 tone，不单列颜色维度
+- **影响**：Button「类型」tab 与组件总览「类型」块保持 6 个语义场景平铺；如需"形态感"只在排序/视觉编排上暗示，不新增形态层或 variant
+- **相关文件**：`src/components/ui/button.tsx`、`docs/components/button.md`、`src/App.tsx`
+
 ## 相关文件
 
 | 文件 | 关系 |

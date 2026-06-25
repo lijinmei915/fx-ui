@@ -273,6 +273,7 @@
       "doc": "docs/components/button.md",
       "docStatus": "complete",
       "devInspector": "src/dev-inspector.config.tsx",
+      "figma": "https://www.figma.com/design/k98zObf0bN7OKGVwpCyjBd/Web%E7%AB%AF%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6%E5%BA%93?node-id=11993-16779",
       "category": "action",
       "variants": [
         "default",
@@ -280,7 +281,6 @@
         "secondary",
         "ghost",
         "destructive",
-        "link",
         "plain"
       ],
       "sizes": [

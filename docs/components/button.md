@@ -51,6 +51,23 @@ fx-ui 推荐通过统一 registry / preset 接入组件、主题和 AI 规则；
 shadcn/ui button
 ```
 
+## 设计真相源（公司 Figma） {#figma-spec}
+
+> 体检 / 改 Button 视觉前，以公司 Figma「按钮设计指南」为准，主流（shadcn/Ant）作交叉参考。
+> 节点：[设计指南](https://www.figma.com/design/k98zObf0bN7OKGVwpCyjBd/Web%E7%AB%AF%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6%E5%BA%93?node-id=11993-16779)（另有 11999-26653 / 11999-46922 同源补充）。
+
+Figma 关键规格（默认/中尺寸）：
+
+| 项 | 公司 Figma | 当前 fx-ui | 是否对齐 |
+| --- | --- | --- | --- |
+| 默认高度 | **28px**（中：24≤h≤28） | 32px（default） | ⚠️ 偏大一档 |
+| 横向内边距 | **10px**（外间距/Button） | 12px（px-3） | ⚠️ |
+| 圆角 | **6px**（中）/ 8px（大 h≥32） | `--radius-md` | 待核 |
+| 图标-文字间距 | **4px**（内间距/Button） | 4px（gap-1） | ✅ |
+| 字号 | **13px** Regular | 13/14（按 size） | 大体一致 |
+
+注：上表差异是**待体检对齐项**（尚未改动，先记录留痕）；调整时连同 size 阶梯（小24 / 中28 / 大32+）一并评估，不要只改默认。
+
 ## 使用方式 {#usage}
 
 把 import 和 JSX 调用复制到业务页面里使用。fx-ui 通过统一 preset / registry 整块接入，不建议业务项目逐个安装基础组件。
@@ -120,17 +137,6 @@ AI 选择 Button 时按这个顺序判断：
 <Button variant="destructive">删除项目</Button>
 ```
 
-### 链接操作
-
-- 使用意图：弱操作或跳转入口，不承载关键提交行为。
-- 规则：用于查看详情、打开文档等轻量跳转。
-- 分组：`类型`
-- 关键属性：`variant: "link"`，`size: "default"`。
-
-```tsx
-<Button variant="link">打开文档</Button>
-```
-
 ### 描边操作
 
 - 使用意图：与主操作并列、但比 secondary 更轻的辅助操作，常用于工具栏。
@@ -156,7 +162,7 @@ AI 选择 Button 时按这个顺序判断：
 ### 无底色操作（plain）
 
 - 使用意图：表格操作列的纯图标增删改查等，无边框无底色，hover 只变色不变底。
-- 规则：variant 叫 `plain`（无边框无底色，hover 只变色）；配合 `tone`（default 中性 / primary 主色 / link 链接色 / danger 危险）分色；纯图标必须补 `aria-label` + Tooltip。带底色的弱化按钮仍用 `ghost`（悬浮出底色），两者并存。
+- 规则：variant 叫 `plain`（无边框无底色、无横向 padding、hover 只变色）；配合 `tone`（default 中性 / primary 主色 / info 蓝 / danger 危险）分色（蓝色 info 用于企业不想用品牌橙时的文字按钮，**不是跳转链接**）；纯图标必须补 `aria-label` + Tooltip。带底色的弱化按钮仍用 `ghost`（悬浮出底色）。跳转/链接用独立的 `Link` 组件，Button 不提供 link 变体。
 - 分组：`类型`
 - 关键属性：`variant: "plain"`，`tone: "danger"`。
 
@@ -308,7 +314,7 @@ Button 支持 `@base-ui/react/button` 的原生 button props，并额外支持�
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `variant` | 按钮样式变体 | `'default' \| 'outline' \| 'secondary' \| 'ghost' \| 'destructive' \| 'link'` | `'default'` |
+| `variant` | 按钮样式变体 | `'default' \| 'outline' \| 'secondary' \| 'ghost' \| 'destructive' \| 'plain'` | `'default'` |
 | `size` | 按钮尺寸 | `'default' \| 'xs' \| 'sm' \| 'lg' \| 'icon' \| 'icon-xs' \| 'icon-sm' \| 'icon-lg'` | `'default'` |
 | `disabled` | 是否禁用 | `boolean` | `false` |
 | `aria-invalid` | 是否展示错误态 | `boolean` | `false` |
@@ -362,9 +368,9 @@ Button 只有一个组件，靠 4 个**互相独立**的轴组合，任意搭配
 
 | 轴 | prop | 取值 | 管什么 |
 | --- | --- | --- | --- |
-| 类型 | `variant` | default / secondary / outline / ghost / destructive / link / plain | 语义层级与底色 |
+| 类型 | `variant` | default / secondary / outline / ghost / destructive / plain | 语义层级与底色 |
 | 尺寸 | `size` | xs / sm / default / lg / icon-* | 高度、内边距、字号、图标-文字 gap |
-| 分色 | `tone` | default / primary / link / danger | **仅 `plain` 生效**，给无底色按钮分色 |
+| 分色 | `tone` | default / primary / info / danger | **仅 `plain` 生效**，给无底色按钮分色（info=蓝） |
 | 状态 | 原生 | `disabled`（+ Spinner = loading） | 交互态 |
 
 - 选择顺序：先按语义选 `variant` → 按密度/场景选 `size` → 若是 `plain` 再选 `tone` → 状态按需加。

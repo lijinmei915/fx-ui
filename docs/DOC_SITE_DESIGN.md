@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-22
+last_verified: 2026-06-25
 teaches: "fx-ui 文档站自身的页面结构、样式边界和改样式流程"
 use_when: "要改 fx-ui 文档网站的顶部导航、侧边栏、内容区、目录、示例区、代码块或文档页展示样式时"
 depends_on: [theme/fx-theme.css, docs/TOKENS.md, docs/LAYOUTS.md, src/App.tsx]
@@ -178,7 +178,7 @@ Primitive -> Semantic -> Component Usage
 | 段 | 内容 | 要点 |
 |----|------|------|
 | 头部 | `PageLead` | 面包屑 `组件 / Xxx` + 大标题 + 一句 lead + 分隔线 |
-| 组件总览 | 真实组件预览 | 「紧凑展示该组件的样子」 |
+| 组件总览 | 真实组件预览 | 「紧凑展示该组件的样子」；**每个小标题块 = 场景示例的一个 tab（一一对应），块内示例也对应该 tab 的场景**。总览只快速展示，不加额外说明文字/旁注（说明留给场景示例的约束列） |
 | 场景示例 | 表：场景 / 示例 / 使用意图 / 约束 / 推荐写法 | 示例列在场景前；行不可点（关 hover） |
 | 使用方式 | `import` +（可选）一段**完整组装** JSX | 组合型组件（带 Provider/结构/useState，如 Sidebar/Tabs/Calendar）保留完整组装范例；用法极简、场景示例已完整覆盖的（如 Button）只留 `import`、不重复 |
 | **API 属性** | 表：**属性 / 类型 / 默认值 / 说明 四列** | **组件页和 token 页的核心区别——必须讲清可配置 prop 及其类型，不能只有名字没类型** |
@@ -218,6 +218,9 @@ Primitive -> Semantic -> Component Usage
 - 解释使用决策时优先用决策表。
 - 组合模式必须显式写出组合方式，例如 `Loading = disabled + Spinner`。
 - 不把业务场景包装成不存在的组件 API。
+- **示例预览的并排间距**：场景示例/组件总览里并排多个示例时，默认 `gap-3`（12px）。
+- **示例列宽**：场景表「示例」列容器统一 `max-w-[500px]`——不到则自适应内容宽度，超过才约束并让内部 `flex-wrap` 折行（示例多/宽时不撑爆表格）。
+- **plain 按钮无横向 padding**：`variant="plain"` 的文字/图标+文字按钮不带横向 padding（组件层已 `px-0`），间距交给调用方 gap；纯图标 plain（`size=icon-*`）保留方形点击热区。
 
 ### 表格
 
@@ -227,6 +230,7 @@ Primitive -> Semantic -> Component Usage
 - **表格正文用同一种文字色**：同一张表里的正文文字（含说明/场景列与 token/值列的 `code`）统一用 `text-foreground`，不要场景列走 `text-muted-foreground`、code 走 `text-foreground` 造成深浅不一。需要弱化的只有表头或辅助注释，不在正文行内混色。
 - **token / 值列统一用 code 胶囊**：所有 token 表的 `Token` 列和 `值` 列都用 `<code className="rounded bg-muted px-1.5 py-0.5 text-xs">` 包裹，不要某张表的"值"写成裸文本或浅灰。值带单位写全（如行高 `18px / 28px`、间距 `1rem / 16px`），含义不止一个时在该列表头或模块说明里点明（如字号列"值 = 字号 / 行高"）。
 - **示例列统一命名"示例"**：展示真实效果的列一律叫"示例"（英文 Example），不要混用"预览"。
+- **「用法」列的场景名同组同格式**：场景表第一列（「用法」）里同一个 tab 下的场景名要用统一构词。如 Button「类型」tab 统一「XX 操作」（主操作 / 次操作 / 危险操作 / 描边操作 / 幽灵操作 / 无底色操作），不要混「X 操作」和「X 按钮」。检验见 `scripts/check-shadcn-contract.mjs`（Button 类型 tab 场景名须全部以「操作」结尾）。
 - 代码较长时允许在单元格内横向滚动。
 - 不用表格承载长段落说明。
 - **列宽与换行**（防止挤成竖排断词）：

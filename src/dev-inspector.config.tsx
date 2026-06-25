@@ -74,18 +74,6 @@ export const devInspectorConfig: DevInspectorConfigOverrides = {
           render: () => <Button variant="destructive">删除项目</Button>,
         },
         {
-          id: "button-link",
-          label: "Link",
-          group: "Variant",
-          propsLabel: "variant=link / size=default",
-          selector:
-            '[data-component="Button"][data-variant="link"][data-size="default"]',
-          usage: "轻量跳转或查看文档。",
-          capabilities: ["点击", "hover", "focus-visible"],
-          tokenRefs: ["--primary", "--ring"],
-          render: () => <Button variant="link">打开文档</Button>,
-        },
-        {
           id: "button-plain",
           label: "Plain",
           group: "Variant",

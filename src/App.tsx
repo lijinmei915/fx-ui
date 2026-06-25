@@ -795,20 +795,6 @@ const buttonScenarioExamples = [
     code: '<Button variant="destructive">删除项目</Button>',
   },
   {
-    id: "link",
-    title: "链接操作",
-    titleEn: "Link action",
-    intent: "弱操作或跳转入口，不承载关键提交行为。",
-    intentEn: "Low-emphasis actions or navigation. Do not use for critical submissions.",
-    rule: "用于查看详情、打开文档等轻量跳转。",
-    ruleEn: "Use for lightweight navigation such as view details or open docs.",
-    variant: "link",
-    size: "default",
-    group: "category",
-    props: ["variant: link", "size: default"],
-    code: '<Button variant="link">打开文档</Button>',
-  },
-  {
     id: "outline",
     title: "描边操作",
     titleEn: "Outline action",
@@ -824,7 +810,7 @@ const buttonScenarioExamples = [
   },
   {
     id: "ghost",
-    title: "Ghost 操作",
+    title: "幽灵操作",
     titleEn: "Ghost action",
     intent: "工具栏、卡片内的弱化操作，不需要边框和底色来吸引注意。",
     intentEn: "Low-emphasis actions in toolbars or cards that don't need a border or fill to draw attention.",
@@ -963,6 +949,34 @@ const buttonScenarioExamples = [
     code: '<Button variant="outline" size="icon-sm" aria-label="新增"><PlusIcon data-icon="inline-start" /></Button>',
   },
   {
+    id: "plain-text-icon",
+    title: "无底色文字操作",
+    titleEn: "Plain text+icon actions",
+    intent: "表格操作列、行内弱化操作（图标+文字），无底色、hover 只变色。",
+    intentEn: "Table row / inline actions with icon+text, borderless, color-only hover.",
+    rule: "用 variant=\"plain\" + tone（中性 / 主色 / 蓝 / 危险）分色；图标用 data-icon。",
+    ruleEn: "Use variant=\"plain\" with tone (neutral / primary / blue / danger); icon via data-icon.",
+    variant: "plain",
+    size: "default",
+    group: "icon",
+    props: ["variant: plain", "tone", "data-icon"],
+    code: '<Button variant="plain"><PlusIcon data-icon="inline-start" />新建</Button>\n<Button variant="plain" tone="primary">…</Button>\n<Button variant="plain" tone="info">…</Button>\n<Button variant="plain" tone="danger">…</Button>',
+  },
+  {
+    id: "plain-icon-only",
+    title: "无底色纯图标",
+    titleEn: "Plain icon-only",
+    intent: "空间紧凑的表格行/工具栏纯图标操作，无底色、hover 只变色。",
+    intentEn: "Compact table row / toolbar icon-only actions, borderless, color-only hover.",
+    rule: "用 variant=\"plain\" + size=\"icon-*\"；纯图标必须补 aria-label + Tooltip。",
+    ruleEn: "Use variant=\"plain\" with size=\"icon-*\"; icon-only needs aria-label + Tooltip.",
+    variant: "plain",
+    size: "icon-sm",
+    group: "icon",
+    props: ["variant: plain", "size: icon-sm", "aria-label", "Tooltip"],
+    code: '<Button variant="plain" size="icon-sm" aria-label="查看"><EyeIcon /></Button>\n<Button variant="plain" tone="danger" size="icon-sm" aria-label="删除"><Trash2Icon /></Button>',
+  },
+  {
     id: "disabled",
     title: "禁用状态",
     titleEn: "Disabled state",
@@ -992,17 +1006,17 @@ const buttonScenarioExamples = [
   },
   {
     id: "plain",
-    title: "无底色按钮",
+    title: "无底色操作",
     titleEn: "Plain button",
     intent: "表格操作列、行内弱化操作；无边框无底色，hover 只变色。",
     intentEn: "Table row actions and quiet inline buttons; borderless, color-only hover.",
-    rule: "用 variant=\"plain\" + tone（中性 / 主色 / 危险）；纯图标补 aria-label + Tooltip。",
-    ruleEn: "Use variant=\"plain\" with tone (neutral / primary / danger). Icon-only needs aria-label + Tooltip.",
+    rule: "用 variant=\"plain\" + tone（中性 / 主色 / 蓝 info / 危险）；蓝色用于企业不想用品牌橙的文字按钮，非跳转链接；纯图标补 aria-label + Tooltip。",
+    ruleEn: "Use variant=\"plain\" with tone (neutral / primary / info-blue / danger). Blue is for text buttons when brand orange is undesired, not navigation.",
     variant: "plain",
     size: "default",
     group: "category",
-    props: ["variant: plain", "tone: default | primary | danger"],
-    code: '<Button variant="plain" tone="danger">删除</Button>',
+    props: ["variant: plain", "tone: default | primary | info | danger"],
+    code: '<Button variant="plain" tone="info">详情</Button>',
   },
 ] as const
 
@@ -3222,7 +3236,6 @@ function buttonSpecById(id: string, lang: Lang) {
 function ButtonScenarioPreview({ id, lang }: { id: string; lang: Lang }) {
   if (id === "secondary") return <Button variant="secondary">{lang === "en" ? "Cancel" : "取消"}</Button>
   if (id === "destructive") return <Button variant="destructive">{lang === "en" ? "Delete project" : "删除项目"}</Button>
-  if (id === "link") return <Button variant="link">{lang === "en" ? "Open docs" : "打开文档"}</Button>
   if (id === "outline") return <Button variant="outline">{lang === "en" ? "Export" : "导出"}</Button>
   if (id === "ghost") return <Button variant="ghost">{lang === "en" ? "View details" : "查看详情"}</Button>
   if (id === "size-xs") return <Button size="xs">{lang === "en" ? "Extra small size" : "超小尺寸"}</Button>
@@ -3268,13 +3281,16 @@ function ButtonScenarioPreview({ id, lang }: { id: string; lang: Lang }) {
   }
   if (id === "disabled")
     return (
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <Button disabled>{lang === "en" ? "Primary" : "主操作"}</Button>
         <Button variant="secondary" disabled>{lang === "en" ? "Secondary" : "次操作"}</Button>
         <Button variant="outline" disabled>{lang === "en" ? "Outline" : "描边"}</Button>
         <Button variant="destructive" disabled>{lang === "en" ? "Destructive" : "危险"}</Button>
         <Button variant="ghost" disabled>{lang === "en" ? "Ghost" : "幽灵"}</Button>
-        <Button variant="link" disabled>{lang === "en" ? "Link" : "链接"}</Button>
+        <Button variant="plain" disabled>{lang === "en" ? "View" : "查看"}</Button>
+        <Button variant="plain" tone="primary" disabled>{lang === "en" ? "Edit" : "编辑"}</Button>
+        <Button variant="plain" tone="info" disabled>{lang === "en" ? "Detail" : "详情"}</Button>
+        <Button variant="plain" tone="danger" disabled>{lang === "en" ? "Delete" : "删除"}</Button>
       </div>
     )
   if (id === "loading") {
@@ -3287,10 +3303,28 @@ function ButtonScenarioPreview({ id, lang }: { id: string; lang: Lang }) {
   }
   if (id === "plain")
     return (
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <Button variant="plain">{lang === "en" ? "View" : "查看"}</Button>
         <Button variant="plain" tone="primary">{lang === "en" ? "Edit" : "编辑"}</Button>
+        <Button variant="plain" tone="info">{lang === "en" ? "Detail" : "详情"}</Button>
         <Button variant="plain" tone="danger">{lang === "en" ? "Delete" : "删除"}</Button>
+      </div>
+    )
+  if (id === "plain-text-icon")
+    return (
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <Button variant="plain"><PlusIcon data-icon="inline-start" />{lang === "en" ? "New" : "新建"}</Button>
+        <Button variant="plain" tone="primary"><PencilIcon data-icon="inline-start" />{lang === "en" ? "Edit" : "编辑"}</Button>
+        <Button variant="plain" tone="info"><EyeIcon data-icon="inline-start" />{lang === "en" ? "Detail" : "详情"}</Button>
+        <Button variant="plain" tone="danger"><Trash2Icon data-icon="inline-start" />{lang === "en" ? "Delete" : "删除"}</Button>
+      </div>
+    )
+  if (id === "plain-icon-only")
+    return (
+      <div className="flex flex-wrap items-center gap-3">
+        <Button variant="plain" size="icon-sm" aria-label={lang === "en" ? "View" : "查看"}><EyeIcon /></Button>
+        <Button variant="plain" tone="info" size="icon-sm" aria-label={lang === "en" ? "Detail" : "详情"}><EyeIcon /></Button>
+        <Button variant="plain" tone="danger" size="icon-sm" aria-label={lang === "en" ? "Delete" : "删除"}><Trash2Icon /></Button>
       </div>
     )
   return <Button>{lang === "en" ? "Save" : "保存"}</Button>
@@ -5403,12 +5437,12 @@ function ScenarioTable({ rows, filters, lang }: { rows: ScenarioRow[]; filters?:
             {shown.map((r) => (
               <TableRow key={r.key} className="hover:bg-transparent has-aria-expanded:bg-transparent">
 
-                <TableCell className="pl-4 align-top"><span className="font-medium">{r.title}</span></TableCell>
-                <TableCell className="align-top"><div className="w-max">{r.preview}</div></TableCell>
-                {hasSpec ? <TableCell className="align-top text-foreground"><div className="w-max text-fx-12">{r.spec ?? "—"}</div></TableCell> : null}
-                <TableCell className="align-top whitespace-normal text-muted-foreground"><div className="max-w-[240px] break-words">{r.intent}</div></TableCell>
-                <TableCell className="align-top whitespace-normal text-muted-foreground"><div className="max-w-[260px] break-words">{r.constraint}</div></TableCell>
-                <TableCell className="pr-4 align-top">
+                <TableCell className="h-auto py-3 pl-4 align-top"><span className="font-medium">{r.title}</span></TableCell>
+                <TableCell className="h-auto py-3 align-top"><div className="max-w-[500px]">{r.preview}</div></TableCell>
+                {hasSpec ? <TableCell className="h-auto py-3 align-top text-foreground"><div className="w-max text-fx-12">{r.spec ?? "—"}</div></TableCell> : null}
+                <TableCell className="h-auto py-3 align-top whitespace-normal text-muted-foreground"><div className="max-w-[240px] break-words leading-6">{r.intent}</div></TableCell>
+                <TableCell className="h-auto py-3 align-top whitespace-normal text-muted-foreground"><div className="max-w-[260px] break-words leading-6">{r.constraint}</div></TableCell>
+                <TableCell className="h-auto py-3 pr-4 align-top">
                   <div className="max-w-[360px] rounded-lg bg-muted">
                     <pre className="px-3 py-2 text-fx-12 whitespace-pre-wrap break-words"><code>{r.code}</code></pre>
                   </div>

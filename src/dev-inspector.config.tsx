@@ -85,18 +85,18 @@ export const devInspectorConfig: DevInspectorConfigOverrides = {
           tokenRefs: ["--muted-foreground", "--destructive", "--primary"],
           render: () => <Button variant="plain" tone="danger" size="icon-sm" aria-label="删除"><Trash2Icon /></Button>,
         },
-        ...(["xs", "sm", "default", "lg"] as const).map((size) => ({
+        ...(["xs", "sm", "md", "lg"] as const).map((size) => ({
           id: `button-size-${size}`,
-          label: size === "default" ? "Default" : size.toUpperCase(),
+          label: size === "sm" ? "SM(默认)" : size.toUpperCase(),
           group: "Size",
           propsLabel: `variant=default / size=${size}`,
           selector: `[data-component="Button"][data-variant="default"][data-size="${size}"]`,
-          usage: "按页面密度选择按钮尺寸。",
+          usage: "按页面密度选择按钮尺寸（不写 size 默认 sm/28px）。",
           capabilities: ["尺寸", "点击", "focus-visible"],
           tokenRefs: ["--radius", "--primary", "--ring"],
-          render: () => <Button size={size}>{size === "default" ? "提交" : size.toUpperCase()}</Button>,
+          render: () => <Button size={size}>{size.toUpperCase()}</Button>,
         })),
-        ...(["icon-xs", "icon-sm", "icon", "icon-lg"] as const).map((size) => ({
+        ...(["icon-xs", "icon-sm", "icon-md", "icon-lg"] as const).map((size) => ({
           id: `button-size-${size}`,
           label: size,
           group: "Icon Size",

@@ -284,13 +284,13 @@
         "plain"
       ],
       "sizes": [
-        "default",
         "xs",
         "sm",
+        "md",
         "lg",
-        "icon",
         "icon-xs",
         "icon-sm",
+        "icon-md",
         "icon-lg"
       ],
       "nativeStates": [

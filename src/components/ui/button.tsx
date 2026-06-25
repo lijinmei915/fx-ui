@@ -29,17 +29,16 @@ const buttonVariants = cva(
         info: "",
         danger: "",
       },
+      // 双层：尺寸名是纯尺寸（xs24 / sm28 / md32 / lg36），不含「default」语义；
+      // 「哪个是默认」由 defaultVariants 单独声明（= sm 28px，对齐公司 Figma 默认）。
       size: {
-        default:
-          "h-8 px-3 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5",
         xs: "h-6 gap-1 px-2 text-fx-12 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
         sm: "h-7 gap-1 px-2.5 text-fx-13 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-3.5",
+        md: "h-8 px-3 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5",
         lg: "h-9 gap-2 px-4 text-base has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
-        icon: "size-8",
-        "icon-xs":
-          "size-6 in-data-[slot=button-group]:rounded-md [&_svg:not([class*='size-'])]:size-3",
-        "icon-sm":
-          "size-7 in-data-[slot=button-group]:rounded-md",
+        "icon-xs": "size-6 in-data-[slot=button-group]:rounded-md [&_svg:not([class*='size-'])]:size-3",
+        "icon-sm": "size-7 in-data-[slot=button-group]:rounded-md",
+        "icon-md": "size-8",
         "icon-lg": "size-9",
       },
     },
@@ -51,7 +50,6 @@ const buttonVariants = cva(
     ],
     defaultVariants: {
       variant: "default",
-      // 默认尺寸 = sm(28px)，对齐公司 Figma 默认按钮高度；尺寸名 xs/sm/default/lg 不变，仅默认值指向 sm
       size: "sm",
       tone: "default",
     },

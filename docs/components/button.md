@@ -58,7 +58,7 @@ shadcn/ui button
 
 Figma 关键规格（默认/中尺寸）：
 
-> 默认尺寸已对齐：`defaultVariants.size = "sm"`，不写 size 时渲染 28px（对齐公司「中尺寸」默认）。尺寸名 xs/sm/default/lg 不变；其中 `size="default"`(32px) 现为"标准尺寸"（比默认大一档），不再是运行时默认值。
+> 默认尺寸已对齐：尺寸名是纯尺寸 `xs(24) / sm(28) / md(32) / lg(36)`（双层设计——尺寸名不含「default」语义），「哪个是默认」由 `defaultVariants.size = "sm"` 单独声明，不写 size 即渲染 28px（对齐公司「中尺寸」默认）。
 
 | 项 | 公司 Figma | 当前 fx-ui | 是否对齐 |
 | --- | --- | --- | --- |
@@ -317,7 +317,7 @@ Button 支持 `@base-ui/react/button` 的原生 button props，并额外支持�
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | `variant` | 按钮样式变体 | `'default' \| 'outline' \| 'secondary' \| 'ghost' \| 'destructive' \| 'plain'` | `'default'` |
-| `size` | 按钮尺寸 | `'default' \| 'xs' \| 'sm' \| 'lg' \| 'icon' \| 'icon-xs' \| 'icon-sm' \| 'icon-lg'` | `'default'` |
+| `size` | 按钮尺寸（默认值见 defaultVariants） | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'icon-xs' \| 'icon-sm' \| 'icon-md' \| 'icon-lg'` | `'sm'`（28px） |
 | `disabled` | 是否禁用 | `boolean` | `false` |
 | `aria-invalid` | 是否展示错误态 | `boolean` | `false` |
 | `render` | 把按钮样式渲染到自定义元素上，例如 `<a>`；这是 Base UI 版本的 asChild 能力 | `ReactElement \| (props, state) => ReactElement` | - |
@@ -371,7 +371,7 @@ Button 只有一个组件，靠 4 个**互相独立**的轴组合，任意搭配
 | 轴 | prop | 取值 | 管什么 |
 | --- | --- | --- | --- |
 | 类型 | `variant` | default / secondary / outline / ghost / destructive / plain | 语义层级与底色 |
-| 尺寸 | `size` | xs / sm / default / lg / icon-* | 高度、内边距、字号、图标-文字 gap |
+| 尺寸 | `size` | xs(24) / sm(28,默认) / md(32) / lg(36) / icon-* | 高度、内边距、字号、图标-文字 gap |
 | 分色 | `tone` | default / primary / info / danger | **仅 `plain` 生效**，给无底色按钮分色（info=蓝） |
 | 状态 | 原生 | `disabled`（+ Spinner = loading） | 交互态 |
 

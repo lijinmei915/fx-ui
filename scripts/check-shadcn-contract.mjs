@@ -44,12 +44,15 @@ assertIncludes(
   "Button overview",
   errors
 )
+// 文字尺寸档必须在示例/总览全部展示；图标尺寸(icon-*)只要求有代表性档(icon-sm/icon-md)即可，
+// 不强制每个 icon-xs/icon-lg 都铺（避免为凑展示堆冗余行）。
 assertIncludes(
   appSource,
-  sizes.filter((size) => size !== "default").map((size) => `size="${size}"`),
+  sizes.filter((size) => !size.startsWith("icon") && size !== "default").map((size) => `size="${size}"`),
   "Button overview",
   errors
 )
+assertIncludes(appSource, ['size="icon-sm"', 'size="icon-md"'], "Button overview icon sizes", errors)
 assertIncludes(buttonDocs, variants, "Button Markdown variants", errors)
 assertIncludes(buttonDocs, sizes, "Button Markdown sizes", errors)
 

@@ -856,13 +856,13 @@ const buttonScenarioExamples = [
     titleEn: "Standard size",
     intent: "比默认大一档，用于宽松正文/表单等需要更大点击区的场景。",
     intentEn: "One step larger than default, for relaxed forms and bigger hit areas.",
-    rule: "比默认(28)大一档(32)；需要显式写 size=\"default\"。",
-    ruleEn: "One tier above default (32 vs 28); set size=\"default\" explicitly.",
+    rule: "比默认(28)大一档(32)；需要显式写 size=\"md\"。",
+    ruleEn: "One tier above default (32 vs 28); set size=\"md\" explicitly.",
     variant: "default",
     size: "default",
     group: "size",
     props: ["variant: default", "size: default(32px)"],
-    code: '<Button size="default"><PlusIcon data-icon="inline-start" />新建</Button>',
+    code: '<Button size="md"><PlusIcon data-icon="inline-start" />新建</Button>',
   },
   {
     id: "size-lg",
@@ -877,20 +877,6 @@ const buttonScenarioExamples = [
     group: "size",
     props: ["variant: default", "size: lg"],
     code: '<Button size="lg"><PlusIcon data-icon="inline-start" />新建</Button>',
-  },
-  {
-    id: "size-icon",
-    title: "图标按钮随尺寸",
-    titleEn: "Icon button across sizes",
-    intent: "纯图标按钮的四档方形尺寸：icon-xs/icon-sm/icon/icon-lg。",
-    intentEn: "Square icon-only sizes: icon-xs/icon-sm/icon/icon-lg.",
-    rule: "纯图标按钮必须有 aria-label；尺寸用 size=\"icon-*\"。",
-    ruleEn: "Icon-only buttons need aria-label; size via size=\"icon-*\".",
-    variant: "default",
-    size: "icon",
-    group: "size",
-    props: ["size: icon-xs / icon-sm / icon / icon-lg", "aria-label"],
-    code: '<Button size="icon-xs" aria-label="搜索"><SearchIcon /></Button>\n<Button size="icon-sm" aria-label="搜索"><SearchIcon /></Button>\n<Button size="icon" aria-label="搜索"><SearchIcon /></Button>\n<Button size="icon-lg" aria-label="搜索"><SearchIcon /></Button>',
   },
   {
     id: "icon-start",
@@ -932,7 +918,7 @@ const buttonScenarioExamples = [
     size: "icon",
     group: "icon",
     props: ["variant: default", "size: icon", "aria-label", "data-icon"],
-    code: '<Button size="icon" aria-label="打开组件包"><PackageIcon data-icon="inline-start" /></Button>',
+    code: '<Button size="icon-md" aria-label="打开组件包"><PackageIcon data-icon="inline-start" /></Button>',
   },
   {
     id: "icon-only-ghost",
@@ -946,7 +932,7 @@ const buttonScenarioExamples = [
     size: "icon",
     group: "icon",
     props: ["variant: ghost", "size: icon", "aria-label", "data-icon"],
-    code: '<Button variant="ghost" size="icon" aria-label="打开组件包"><PackageIcon data-icon="inline-start" /></Button>',
+    code: '<Button variant="ghost" size="icon-md" aria-label="打开组件包"><PackageIcon data-icon="inline-start" /></Button>',
   },
   {
     id: "icon-only-outline",
@@ -2111,7 +2097,7 @@ const buttonGroupScenarioExamples = [
     group: "type",
     intent: "主操作 + 下拉箭头，把主操作与「更多选项」合并。",
     rule: "主操作在前，箭头用 size=icon 收纳更多动作（配 DropdownMenu）。",
-    code: `<ButtonGroup>\n  <Button variant="outline">保存</Button>\n  <Button variant="outline" size="icon" aria-label="更多">\n    <ChevronDownIcon />\n  </Button>\n</ButtonGroup>`,
+    code: `<ButtonGroup>\n  <Button variant="outline">保存</Button>\n  <Button variant="outline" size="icon-md" aria-label="更多">\n    <ChevronDownIcon />\n  </Button>\n</ButtonGroup>`,
   },
   {
     id: "vertical",
@@ -2360,7 +2346,7 @@ const dropdownMenuScenarioExamples = [
     group: "type",
     intent: "最常见的一组动作：编辑、复制、删除等。",
     rule: "危险操作（如删除）用 variant=\"destructive\" 放末尾；需要分区时再用「分割线」场景。",
-    code: `<DropdownMenu>\n  <DropdownMenuTrigger render={<Button variant="ghost" size="icon">⋯</Button>} />\n  <DropdownMenuContent>\n    <DropdownMenuItem>编辑</DropdownMenuItem>\n    <DropdownMenuItem>复制</DropdownMenuItem>\n    <DropdownMenuItem>重命名</DropdownMenuItem>\n    <DropdownMenuItem variant="destructive">删除</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>`,
+    code: `<DropdownMenu>\n  <DropdownMenuTrigger render={<Button variant="ghost" size="icon-md">⋯</Button>} />\n  <DropdownMenuContent>\n    <DropdownMenuItem>编辑</DropdownMenuItem>\n    <DropdownMenuItem>复制</DropdownMenuItem>\n    <DropdownMenuItem>重命名</DropdownMenuItem>\n    <DropdownMenuItem variant="destructive">删除</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>`,
   },
   {
     id: "icon",
@@ -2471,7 +2457,7 @@ const popoverScenarioExamples = [
     title: "信息说明卡",
     intent: "点击图标展示一段补充说明，不打断当前操作流程。",
     rule: "内容应简短聚焦，复杂表单类交互优先考虑 Dialog/Sheet。",
-    code: `<Popover>\n  <PopoverTrigger render={<Button variant="ghost" size="icon">?</Button>} />\n  <PopoverContent>\n    <PopoverHeader>\n      <PopoverTitle>什么是工作区？</PopoverTitle>\n      <PopoverDescription>工作区是团队协作的基本单位，可包含多个项目。</PopoverDescription>\n    </PopoverHeader>\n  </PopoverContent>\n</Popover>`,
+    code: `<Popover>\n  <PopoverTrigger render={<Button variant="ghost" size="icon-md">?</Button>} />\n  <PopoverContent>\n    <PopoverHeader>\n      <PopoverTitle>什么是工作区？</PopoverTitle>\n      <PopoverDescription>工作区是团队协作的基本单位，可包含多个项目。</PopoverDescription>\n    </PopoverHeader>\n  </PopoverContent>\n</Popover>`,
   },
   {
     id: "quick-edit",
@@ -3254,17 +3240,8 @@ function ButtonScenarioPreview({ id, lang }: { id: string; lang: Lang }) {
   if (id === "ghost") return <Button variant="ghost">{lang === "en" ? "View details" : "查看详情"}</Button>
   if (id === "size-xs") return <Button size="xs"><PlusIcon data-icon="inline-start" />{lang === "en" ? "New" : "新建"}</Button>
   if (id === "size-sm") return <Button><PlusIcon data-icon="inline-start" />{lang === "en" ? "New" : "新建"}</Button>
-  if (id === "size-default") return <Button size="default"><PlusIcon data-icon="inline-start" />{lang === "en" ? "New" : "新建"}</Button>
+  if (id === "size-default") return <Button size="md"><PlusIcon data-icon="inline-start" />{lang === "en" ? "New" : "新建"}</Button>
   if (id === "size-lg") return <Button size="lg"><PlusIcon data-icon="inline-start" />{lang === "en" ? "New" : "新建"}</Button>
-  if (id === "size-icon")
-    return (
-      <div className="flex flex-wrap items-center gap-3">
-        <Button size="icon-xs" aria-label={lang === "en" ? "Search" : "搜索"}><SearchIcon /></Button>
-        <Button size="icon-sm" aria-label={lang === "en" ? "Search" : "搜索"}><SearchIcon /></Button>
-        <Button size="icon" aria-label={lang === "en" ? "Search" : "搜索"}><SearchIcon /></Button>
-        <Button size="icon-lg" aria-label={lang === "en" ? "Search" : "搜索"}><SearchIcon /></Button>
-      </div>
-    )
   if (id === "icon-start") {
     return (
       <Button>
@@ -3283,14 +3260,14 @@ function ButtonScenarioPreview({ id, lang }: { id: string; lang: Lang }) {
   }
   if (id === "icon-only") {
     return (
-      <Button size="icon" aria-label={lang === "en" ? "Open package" : "打开组件包"}>
+      <Button size="icon-md" aria-label={lang === "en" ? "Open package" : "打开组件包"}>
         <PackageIcon data-icon="inline-start" />
       </Button>
     )
   }
   if (id === "icon-only-ghost") {
     return (
-      <Button variant="ghost" size="icon" aria-label={lang === "en" ? "Open package" : "打开组件包"}>
+      <Button variant="ghost" size="icon-md" aria-label={lang === "en" ? "Open package" : "打开组件包"}>
         <PackageIcon data-icon="inline-start" />
       </Button>
     )
@@ -7219,13 +7196,13 @@ function IconPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
     {
       title: "纯图标按钮", titleEn: "Icon-only Button", group: "type",
       preview: (
-        <Button size="icon" aria-label={lang === "en" ? "Notifications" : "通知"}>
+        <Button size="icon-md" aria-label={lang === "en" ? "Notifications" : "通知"}>
           <BellIcon data-icon="inline-start" />
         </Button>
       ),
       intent: "工具栏等空间紧凑、含义明确的操作。", intentEn: "Compact toolbar actions with clear meaning.",
       constraint: "必须提供 aria-label。", constraintEn: "Must provide an aria-label.",
-      code: '<Button size="icon" aria-label="通知"><BellIcon data-icon="inline-start" /></Button>',
+      code: '<Button size="icon-md" aria-label="通知"><BellIcon data-icon="inline-start" /></Button>',
     },
     {
       title: "行内说明图标", titleEn: "Inline supporting", group: "type",
@@ -11283,7 +11260,7 @@ function ButtonGroupPage({ actions, lang }: { actions: React.ReactNode; lang: La
               </ButtonGroup>
               <ButtonGroup>
                 <Button variant="outline">保存</Button>
-                <Button size="icon" variant="outline" aria-label="更多"><ChevronDownIcon /></Button>
+                <Button size="icon-md" variant="outline" aria-label="更多"><ChevronDownIcon /></Button>
               </ButtonGroup>
             </div>
           </div>
@@ -11308,8 +11285,8 @@ function ButtonGroupPage({ actions, lang }: { actions: React.ReactNode; lang: La
             <div className="flex flex-wrap items-center gap-4">
               {([
                 { size: "xs", zh: "超小", en: "XS" },
-                { size: "sm", zh: "小", en: "SM" },
-                { size: "default", zh: "默认", en: "Default" },
+                { size: "sm", zh: "默认", en: "Default" },
+                { size: "md", zh: "标准", en: "Standard" },
                 { size: "lg", zh: "大", en: "Large" },
               ] as const).map((s) => (
                 <ButtonGroup key={s.size}>
@@ -11336,10 +11313,15 @@ function ButtonGroupPage({ actions, lang }: { actions: React.ReactNode; lang: La
             <Button size="sm" variant="outline">下移</Button>
           </ButtonGroup>
         ) : id.startsWith("size-") ? (
-          <ButtonGroup>
-            <Button size={id.replace("size-", "") as "xs" | "sm" | "default" | "lg"} variant="outline">复制</Button>
-            <Button size={id.replace("size-", "") as "xs" | "sm" | "default" | "lg"} variant="outline">粘贴</Button>
-          </ButtonGroup>
+          (() => {
+            const s = (id.replace("size-", "") === "default" ? "md" : id.replace("size-", "")) as "xs" | "sm" | "md" | "lg"
+            return (
+              <ButtonGroup>
+                <Button size={s} variant="outline">复制</Button>
+                <Button size={s} variant="outline">粘贴</Button>
+              </ButtonGroup>
+            )
+          })()
         ) : (
           <ButtonGroup>
             <Button size="sm" variant="outline">复制</Button>
@@ -11713,7 +11695,7 @@ function DropdownMenuPage({ actions, lang }: { actions: React.ReactNode; lang: L
         )
       }
       importCode={`import {\n  DropdownMenu,\n  DropdownMenuContent,\n  DropdownMenuItem,\n  DropdownMenuLabel,\n  DropdownMenuSeparator,\n  DropdownMenuTrigger,\n} from "@/components/ui/dropdown-menu"`}
-      usageCode={`<DropdownMenu>\n  <DropdownMenuTrigger render={<Button variant="ghost" size="icon">⋯</Button>} />\n  <DropdownMenuContent>\n    <DropdownMenuItem>编辑</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant="destructive">删除</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>`}
+      usageCode={`<DropdownMenu>\n  <DropdownMenuTrigger render={<Button variant="ghost" size="icon-md">⋯</Button>} />\n  <DropdownMenuContent>\n    <DropdownMenuItem>编辑</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant="destructive">删除</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>`}
       propRows={dropdownMenuPropRows}
       semanticDomRows={dropdownMenuSemanticDomRows}
       doDontRows={dropdownMenuDoDontRows}

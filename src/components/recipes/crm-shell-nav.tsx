@@ -52,7 +52,7 @@ function CrmShellNav() {
         ))}
       </NavRail>
       <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
-        <NavMenu collapsed={c} className="rounded-none border-r border-border-subtle">
+        <NavMenu collapsed={c}>
           <NavMenuHeader title="CRM" viewName="客户管理" collapsed={c} />
           <NavMenuSearch placeholder="搜索" onAdd={() => {}} collapsed={c} />
           <NavMenuList>

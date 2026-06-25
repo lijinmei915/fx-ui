@@ -11,6 +11,7 @@ import {
   Trash2Icon,
   LockIcon,
   FilterIcon,
+  CircleIcon,
   ListIcon,
   LayoutColumnsIcon,
   RefreshIcon,
@@ -140,7 +141,7 @@ import { AgentSurface, type AgentSurfaceEvent, type AgentSurfaceSchema } from "@
 import { NavRail, NavRailItem, NavMenu, NavMenuHeader, NavMenuSearch, NavMenuList, NavMenuGroupLabel, NavMenuItem, NavMenuFooter } from "@/components/fx/nav-menu"
 import { TopBar, TopBarBrand, TopBarDivider, TopBarApps, TopBarSearch, TopBarActions, TopBarIconButton } from "@/components/fx/top-bar"
 import { Progress } from "@/components/ui/progress"
-import { CrmShellNav } from "@/components/recipes/crm-shell-nav"
+import { CrmAppShell } from "@/components/recipes/crm-app-shell"
 import componentsManifestRaw from "../docs/data/components.manifest.json?raw"
 import designTokensManifestRaw from "../docs/data/design-tokens.json?raw"
 import docSiteManifestRaw from "../docs/data/doc-site.manifest.json?raw"
@@ -3412,6 +3413,8 @@ function ButtonOverview({ lang }: { lang: Lang }) {
 type PageEntry = {
   anchors: { label: string; labelEn?: string; href: string }[]
   render: (actions: React.ReactNode, lang: Lang, page: string) => React.ReactNode
+  // 满宽页（如整页 app 外壳模板）：去掉右侧锚点栏、收窄留白，让内容用足主区宽度
+  fullBleed?: boolean
 }
 const gettingStartedSlugs: GettingStartedPage[] = ["intro", "install", "theme", "governance-map", "ai-rules", "documentation", "checks"]
 const pageRegistry: Record<string, PageEntry> = {
@@ -3463,7 +3466,7 @@ const pageRegistry: Record<string, PageEntry> = {
   "toggle-group": { anchors: toggleGroupAnchors, render: (a, l) => <ToggleGroupPage actions={a} lang={l} /> },
   "agent-surface": { anchors: agentSurfaceAnchors, render: (a, l) => <AgentSurfacePage actions={a} lang={l} /> },
   chart: { anchors: [], render: (a, l) => <ChartPage actions={a} lang={l} /> },
-  "template-customer-list": { anchors: [], render: (a, l) => <CustomerListTemplate actions={a} lang={l} /> },
+  "template-customer-list": { anchors: [], fullBleed: true, render: (a, l) => <CustomerListTemplate actions={a} lang={l} /> },
   ...Object.fromEntries(
     gettingStartedSlugs.map((slug) => [
       slug,
@@ -3781,7 +3784,13 @@ function App() {
         </aside>
 
         <main ref={mainRef} className="fx-doc-static h-full w-full min-w-0 max-w-full overflow-y-auto overflow-x-hidden">
-          <div className="mx-auto grid w-full max-w-screen-2xl grid-cols-1 gap-10 px-6 py-14 xl:grid-cols-[minmax(0,1080px)_220px] xl:justify-center xl:gap-20 xl:px-10">
+          <div
+            className={
+              pageEntry?.fullBleed
+                ? "mx-auto grid w-full max-w-screen-2xl grid-cols-1 gap-10 px-6 py-10"
+                : "mx-auto grid w-full max-w-screen-2xl grid-cols-1 gap-10 px-6 py-14 xl:grid-cols-[minmax(0,1080px)_220px] xl:justify-center xl:gap-20 xl:px-10"
+            }
+          >
             <article
               className="w-full min-w-0 break-words"
               style={{ maxWidth: "calc(100vw - 3rem)" }}
@@ -3800,12 +3809,14 @@ function App() {
               )}
             </article>
 
-            <RightRail
-              activeAnchor={activeAnchor}
-              anchors={anchors}
-              lang={lang}
-              onAnchorSelect={scrollToAnchor}
-            />
+            {pageEntry?.fullBleed ? null : (
+              <RightRail
+                activeAnchor={activeAnchor}
+                anchors={anchors}
+                lang={lang}
+                onAnchorSelect={scrollToAnchor}
+              />
+            )}
           </div>
         </main>
       </div>
@@ -13029,7 +13040,7 @@ function ChartPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
 
 // ============ 页面模板：CRM 客户列表页（全部用现有组件拼装，1:1 参照公司 Figma 18906-9135） ============
 type TplCustomer = {
-  id: number; name: string; level: string; levelColor: "amber" | "red" | "none"
+  id: number; name: string; level: string; levelColor: "amber" | "red" | "blue"
   progress: number; progressTone: "success" | "warning" | "default"
   flag: string; phone: string; owner: string; avatar: string
 }
@@ -13037,11 +13048,11 @@ const tplCustomers: TplCustomer[] = [
   { id: 1, name: "三门峡嘉浩咨询有限公司", level: "VIP客户", levelColor: "amber", progress: 100, progressTone: "success", flag: "🇨🇳", phone: "+86 15201123044", owner: "孙婉茹", avatar: "/avatars/01.jpg" },
   { id: 2, name: "广西思锐建筑工作室", level: "VIP客户", levelColor: "amber", progress: 0, progressTone: "default", flag: "🇨🇳", phone: "+86 15001171032", owner: "吴彦琛", avatar: "/avatars/02.jpg" },
   { id: 3, name: "芜湖磊昇传播科技有限公司", level: "重要客户", levelColor: "red", progress: 0, progressTone: "default", flag: "🇨🇳", phone: "+86 13071032601", owner: "李婉婷", avatar: "/avatars/03.jpg" },
-  { id: 4, name: "商丘运昭可哲食品有限公司", level: "普通客户", levelColor: "none", progress: 100, progressTone: "success", flag: "🇨🇳", phone: "+86 13071032601", owner: "冯远海", avatar: "/avatars/04.jpg" },
-  { id: 5, name: "台州众悦贸易有限公司", level: "普通客户", levelColor: "none", progress: 60, progressTone: "warning", flag: "🇺🇸", phone: "+27 5001171032", owner: "周琳", avatar: "/avatars/05.jpg" },
+  { id: 4, name: "商丘运昭可哲食品有限公司", level: "一般客户", levelColor: "blue", progress: 100, progressTone: "success", flag: "🇨🇳", phone: "+86 13071032601", owner: "冯远海", avatar: "/avatars/04.jpg" },
+  { id: 5, name: "台州众悦贸易有限公司", level: "一般客户", levelColor: "blue", progress: 60, progressTone: "warning", flag: "🇺🇸", phone: "+27 5001171032", owner: "周琳", avatar: "/avatars/05.jpg" },
   { id: 6, name: "佳木斯晶森科技有限公司", level: "重要客户", levelColor: "red", progress: 100, progressTone: "success", flag: "🇫🇷", phone: "+86 15001171032", owner: "冯远海", avatar: "/avatars/06.jpg" },
-  { id: 7, name: "乌兰察布旭图互动科技有限公司", level: "普通客户", levelColor: "none", progress: 40, progressTone: "warning", flag: "🇨🇳", phone: "+86 13071032601", owner: "周南", avatar: "/avatars/01.jpg" },
-  { id: 8, name: "济宁金源网络科技有限公司", level: "普通客户", levelColor: "none", progress: 0, progressTone: "default", flag: "🇩🇪", phone: "+86 15001171032", owner: "李婉婷", avatar: "/avatars/02.jpg" },
+  { id: 7, name: "乌兰察布旭图互动科技有限公司", level: "一般客户", levelColor: "blue", progress: 40, progressTone: "warning", flag: "🇨🇳", phone: "+86 13071032601", owner: "周南", avatar: "/avatars/01.jpg" },
+  { id: 8, name: "济宁金源网络科技有限公司", level: "一般客户", levelColor: "blue", progress: 0, progressTone: "default", flag: "🇩🇪", phone: "+86 15001171032", owner: "李婉婷", avatar: "/avatars/02.jpg" },
 ]
 const tplViews = [
   { value: "list", label: "列表", icon: <ListIcon /> },
@@ -13084,28 +13095,8 @@ function CustomerListTemplate({ actions, lang }: { actions: React.ReactNode; lan
         />
       </section>
 
-      <TooltipProvider>
-        <div className="overflow-hidden rounded-xl border border-border bg-background shadow-l1">
-          {/* 顶栏 */}
-          <TopBar>
-            <TopBarBrand logo={<img src="/LOGO.svg" alt="" className="size-5 shrink-0 object-contain" />} name="北京易动纷享科技有限责任公司" />
-            <TopBarDivider />
-            <TopBarApps current="CRM" apps={topBarApps} onSelect={() => {}} />
-            <TopBarSearch value="" onValueChange={() => {}} scope="all" scopes={topBarScopes} onScopeChange={() => {}} placeholder="搜索" />
-            <TopBarActions>
-              <TopBarIconButton icon={<MessageCircleIcon />} label="企信" count={3} />
-              <TopBarIconButton icon={<BellIcon />} label="CRM提醒" dot />
-              <TopBarIconButton icon={<HelpIcon />} label="帮助" />
-            </TopBarActions>
-            <Avatar className="size-8"><AvatarImage src="/avatars/01.jpg" alt="李明" /><AvatarFallback colorful>李</AvatarFallback></Avatar>
-          </TopBar>
-
-          <div className="flex h-[600px] min-h-0">
-            {/* 一级应用栏 + 二级导航 */}
-            <CrmShellNav />
-
-            {/* 主区 */}
-            <div className="flex min-w-0 flex-1 flex-col bg-card">
+      {/* 外壳走 CrmAppShell recipe（TopBar + 双层导航 + 内容卡槽）；本页只提供内容 children */}
+      <CrmAppShell>
               {/* 页头 */}
               <div className="flex h-12 shrink-0 items-center justify-between gap-3 border-b border-border-subtle px-4">
                 <div className="flex shrink-0 items-center gap-2 whitespace-nowrap text-fx-15">
@@ -13164,6 +13155,7 @@ function CustomerListTemplate({ actions, lang }: { actions: React.ReactNode; lan
                   <TableHeader className="sticky top-0 z-10 bg-card">
                     <TableRow className="hover:bg-transparent">
                       <TableHead className="w-10 pl-4"><Checkbox checked={allChecked} indeterminate={someChecked && !allChecked} onCheckedChange={toggleAll} aria-label="全选" /></TableHead>
+                      <TableHead className="w-8" />
                       <TableHead>客户名称</TableHead>
                       <TableHead>客户级别</TableHead>
                       <TableHead className="w-40">跟进进度</TableHead>
@@ -13176,8 +13168,9 @@ function CustomerListTemplate({ actions, lang }: { actions: React.ReactNode; lan
                     {tplCustomers.map((c) => (
                       <TableRow key={c.id} data-selected={selected.has(c.id) ? "" : undefined}>
                         <TableCell className="pl-4"><Checkbox checked={selected.has(c.id)} onCheckedChange={() => toggleOne(c.id)} aria-label={`选择 ${c.name}`} /></TableCell>
-                        <TableCell><a href="#template-customer-list" className="text-link hover:text-link-hover hover:underline">{c.name}</a></TableCell>
-                        <TableCell><Tag color={c.levelColor === "none" ? "none" : c.levelColor}>{c.level}</Tag></TableCell>
+                        <TableCell><Button variant="plain" size="icon-sm" aria-label="定位"><CircleIcon /></Button></TableCell>
+                        <TableCell><a href="#template-customer-list" className="text-foreground hover:text-link hover:underline">{c.name}</a></TableCell>
+                        <TableCell><Tag color={c.levelColor}>{c.level}</Tag></TableCell>
                         <TableCell>
                           <span className="flex items-center gap-2">
                             <Progress value={c.progress} tone={c.progressTone} className="w-20" />
@@ -13208,10 +13201,7 @@ function CustomerListTemplate({ actions, lang }: { actions: React.ReactNode; lan
                 <span className="text-fx-12 text-muted-foreground">已选 {selected.size} 项</span>
                 <Pagination page={1} total={193} pageSize={20} onPageChange={() => {}} />
               </div>
-            </div>
-          </div>
-        </div>
-      </TooltipProvider>
+      </CrmAppShell>
     </div>
   )
 }

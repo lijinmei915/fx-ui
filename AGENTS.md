@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-06-22
+last_verified: 2026-06-25
 teaches: "AI 在 fx-ui 项目里的行为红线：不手写组件、只注入 token、保护 token 真相源"
 use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token 时"
 ---
@@ -23,6 +23,7 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 3. **不要从零写页面。** 页面用 shadcn Blocks / v0 / 内部 blocks 现成区块起步。
 4. **不要乱改 token 真相源。** `theme/fx-theme.css` 是公司视觉的 SSOT，改它 = 全局换肤，必须先向用户说明再动。
 5. **不要自动同步 shadcn 上游。** shadcn 官网 / registry 更新不等于本项目必须更新；只有遇到 bug、安全、可访问性或明确业务需要时，才按单个组件评估升级，且不得盲目覆盖本地源码。
+6. **不要手写重拼组装结构。** 搭页面 / 组合 UI 时，只能用现有组件 + 现有 token，且必须**搬运库里已有的成形用法**（组件文档页 / demo / example 里的写法），整段复用或抽成共享件，**只换数据 props**。禁止：重新推导一套组装结构、自创简化版、杜撰 props/数据形态。库里缺的能力 → 标"需沉淀为组件"交给用户，**绝不临时手搓填补**。反例：照搬真实组件却重写了导航的组装与交互（漏掉折叠/hover/选中）—— 这是错的，应复用既有 `comboDemo`。
 
 ---
 

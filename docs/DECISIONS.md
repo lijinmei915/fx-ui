@@ -258,6 +258,17 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **影响**：Button「类型」tab 与组件总览「类型」块保持 6 个语义场景平铺；如需"形态感"只在排序/视觉编排上暗示，不新增形态层或 variant
 - **相关文件**：`src/components/ui/button.tsx`、`docs/components/button.md`、`src/App.tsx`
 
+### DEC-023: 页面以 `pageRegistry` 为唯一真相源，路由/锚点/渲染全部派生
+
+- **日期**：2026-06-25
+- **状态**：已决定
+- **决定**：文档站每个页面的「slug → 锚点 + 渲染组件」集中在 `src/App.tsx` 的 `pageRegistry` 单一对象。`getPageFromHash`（hash 折叠成 slug）、右栏 `anchors`、主区渲染分发都从它派生；新增页面只改 `pageRegistry` 一处（+ `docsNav` 导航项 + manifest + md）
+- **放弃**：原先并行手写的四套结构——`getPageFromHash` 的 `if` 链、~45 个 `isXxxPage` 布尔、`anchors` 巨型三元、render 巨型三元
+- **原因**：同一份 slug 列表抄了四遍，加一个页面要在四处同时接线（TopBar 接线时漏接即 404/空锚点），是典型「多处无唯一真相」。收成 registry 后单点维护、漏接即编译报错
+- **保留**：`docsNav`/`topNav`（导航树+搜索+索引的真相源，结构不同不并入）；`isComponentsIndexPage`/`isGovernancePage`/`isComponentArea` 等**分组**判定（用于顶栏高亮，非逐页重复）；`#ai-*` 锚点前缀与 slug 不同名，`getPageFromHash` 单独兜一行
+- **影响**：`src/App.tsx` 路由层重构；后续新增/改页面以 `pageRegistry` 为准
+- **相关文件**：`src/App.tsx`
+
 ## 相关文件
 
 | 文件 | 关系 |

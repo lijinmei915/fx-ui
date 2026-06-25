@@ -1391,6 +1391,43 @@
         "选中态：二级 bg-accent(浅品牌底)、一级 bg-card 白底左圆角 + 主色加粗；不要手写颜色和状态样式。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ]
+    },
+    {
+      "name": "TopBar",
+      "source": "src/components/fx/top-bar.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/top-bar.md",
+      "figma": "https://www.figma.com/design/kZSoa7pCfxCmKjiY83tw6l/%E6%96%B0%E7%89%88WebUI?node-id=1961-152595",
+      "role": "全局应用顶栏：品牌 + 应用切换 + 全局搜索 + 工具图标 + 头像，1:1 参照公司 Figma",
+      "category": "fx",
+      "nativeStates": [
+        "default",
+        "hover",
+        "focus-within",
+        "expanded"
+      ],
+      "semanticDom": [
+        "data-slot=\"top-bar\"",
+        "data-slot=\"top-bar-brand\"",
+        "data-slot=\"top-bar-divider\"",
+        "data-slot=\"top-bar-search\"",
+        "data-slot=\"top-bar-actions\""
+      ],
+      "tokenRefs": [
+        "--card",
+        "--border",
+        "--fill-subtle",
+        "--fill-hover",
+        "--muted-foreground",
+        "--foreground",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用前必须以 src/components/fx/top-bar.tsx 为真实 API。",
+        "用子件组合：TopBar + Brand/Divider/Apps/Search/Actions/IconButton，各司其职。",
+        "应用切换、搜索词、搜索范围均受控，状态由页面持有；跳转/搜索逻辑不塞进组件内部。",
+        "工具图标必带 aria-label + Tooltip，未读用角标(Badge dot/count)；className 只用于布局，不覆盖基础视觉。"
+      ]
     }
   ],
   "checks": [

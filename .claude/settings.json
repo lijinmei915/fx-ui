@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '===== fx-ui 必读红线（SessionStart 自动注入，违反即做错）=====' && sed -n '/## 🚫 红线/,/^---/p' AGENTS.md"
+          }
+        ]
+      }
+    ]
+  }
+}

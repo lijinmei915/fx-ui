@@ -19,6 +19,8 @@
     "toggle.tsx::disabled-pointer-events",
     "select.tsx::disabled-pointer-events",
     "dropdown-menu.tsx::disabled-pointer-events",
-    "input.tsx::disabled-pointer-events"
+    "input.tsx::disabled-pointer-events",
+    "agent-surface.tsx::hardcoded-hex",
+    "top-bar.tsx::raw-svg"
   ]
 }

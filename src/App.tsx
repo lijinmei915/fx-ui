@@ -11,6 +11,12 @@ import {
   Trash2Icon,
   LockIcon,
   FilterIcon,
+  ListIcon,
+  LayoutColumnsIcon,
+  RefreshIcon,
+  MoreVerticalIcon,
+  InboxIcon,
+  HelpIcon,
   BellIcon,
   BellFilledIcon,
   BoldIcon,
@@ -132,6 +138,9 @@ import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { AgentSurface, type AgentSurfaceEvent, type AgentSurfaceSchema } from "@/components/fx/agent-surface"
 import { NavRail, NavRailItem, NavMenu, NavMenuHeader, NavMenuSearch, NavMenuList, NavMenuGroupLabel, NavMenuItem, NavMenuFooter } from "@/components/fx/nav-menu"
+import { TopBar, TopBarBrand, TopBarDivider, TopBarApps, TopBarSearch, TopBarActions, TopBarIconButton } from "@/components/fx/top-bar"
+import { Progress } from "@/components/ui/progress"
+import { CrmShellNav } from "@/components/recipes/crm-shell-nav"
 import componentsManifestRaw from "../docs/data/components.manifest.json?raw"
 import designTokensManifestRaw from "../docs/data/design-tokens.json?raw"
 import docSiteManifestRaw from "../docs/data/doc-site.manifest.json?raw"
@@ -519,6 +528,14 @@ const docsNav = [
     items: [
       { label: "栅格", labelEn: "Grid", href: "#grid" },
       { label: "布局", labelEn: "Layout", href: "#layout" },
+      { label: "顶栏", labelEn: "TopBar", href: "#top-bar" },
+    ],
+  },
+  {
+    title: "页面模板",
+    titleEn: "Templates",
+    items: [
+      { label: "客户列表页", labelEn: "Customer list", href: "#template-customer-list" },
     ],
   },
   {
@@ -2335,6 +2352,48 @@ const commandScenarioExamples = [
     code: `<CommandPalette open={open} onOpenChange={setOpen} items={items} />`,
   },
 ]
+const topBarAnchors = [
+  { label: "组件总览", labelEn: "Overview", href: "#top-bar-overview" },
+  { label: "场景示例", labelEn: "Scenario examples", href: "#top-bar-preview" },
+  { label: "使用方式", labelEn: "Usage", href: "#top-bar-usage" },
+  { label: "API", href: "#top-bar-props" },
+  { label: "语义 DOM", labelEn: "Semantic DOM", href: "#top-bar-semantic-dom" },
+  { label: "正误示例", labelEn: "Do / Don’t", href: "#top-bar-do-dont" },
+]
+const topBarPropRows = [
+  { prop: "TopBar", type: "header 容器", defaultValue: "—", desc: "全局应用顶栏外壳（48px，自身不设底色/分割线，由宿主决定），两端对齐布局子件。", descEn: "Global app top bar shell (48px, no own bg/divider)." },
+  { prop: "TopBarBrand", type: "logo?, name", defaultValue: "—", desc: "左侧品牌：logo + 公司/产品名（超长截断）。", descEn: "Brand: logo + product name." },
+  { prop: "TopBarApps", type: "current, apps, onSelect?", defaultValue: "—", desc: "应用切换：当前应用名 + 下拉选择（受控）。", descEn: "App switcher dropdown (controlled)." },
+  { prop: "TopBarSearch", type: "value, onValueChange, scope?, scopes?, onScopeChange?, placeholder?", defaultValue: "—", desc: "中部全局搜索：范围下拉 + 输入框（受控）。", descEn: "Global search: scope dropdown + input (controlled)." },
+  { prop: "TopBarActions / TopBarIconButton", type: "icon, label, dot?, count?, onClick?", defaultValue: "—", desc: "右侧工具区与图标按钮：无底色 + Tooltip + aria-label，可选角标。", descEn: "Right tools: icon buttons + tooltip + optional badge." },
+]
+const topBarSemanticDomRows = [
+  { part: "[data-slot=\"top-bar\"]", desc: "顶栏根节点（header），48px，自身不设底色/分割线。", descEn: "Top bar root (header), 48px." },
+  { part: "[data-slot=\"top-bar-brand\"] / -divider", desc: "品牌区与竖向分隔线。", descEn: "Brand region and vertical divider." },
+  { part: "[data-slot=\"top-bar-search\"]", desc: "搜索容器，focus-within 高亮边框。", descEn: "Search container; focus-within ring." },
+  { part: "[data-slot=\"top-bar-actions\"]", desc: "右侧工具按钮区。", descEn: "Right-side tool actions." },
+]
+const topBarDoDontRows = [
+  { do: "用子件组合：Brand / Apps / Search / Actions 各司其职。", doEn: "Compose with Brand / Apps / Search / Actions.", dont: "把整条顶栏写成一坨裸 div + 手写样式。", dontEn: "Hand-roll the whole bar as raw divs." },
+  { do: "应用切换、搜索、范围都受控，状态由页面持有。", doEn: "Keep app/search/scope controlled by the page.", dont: "把跳转/搜索逻辑塞进顶栏组件内部。", dontEn: "Bury navigation/search logic inside the bar." },
+  { do: "工具图标必带 aria-label + Tooltip，未读用角标。", doEn: "Icon buttons need aria-label + tooltip; badge for unread.", dont: "纯图标无说明、未读数硬塞文字里。", dontEn: "Unlabeled icons; counts crammed into text." },
+]
+const topBarScenarioExamples = [
+  {
+    id: "full",
+    title: "完整顶栏",
+    intent: "登录后的全局应用顶栏：品牌 + 应用切换 + 全局搜索 + 工具图标 + 头像。",
+    rule: "TopBar 包裹各子件，状态（当前应用 / 搜索词 / 范围）由页面受控持有。",
+    code: `<TopBar>\n  <TopBarBrand logo={<Logo />} name="纷享销客 CRM" />\n  <TopBarDivider />\n  <TopBarApps current="CRM" apps={apps} onSelect={setApp} />\n  <TopBarSearch value={q} onValueChange={setQ} scope={scope} scopes={scopes} onScopeChange={setScope} />\n  <TopBarActions>\n    <TopBarIconButton icon={<MessageCircleIcon />} label="消息" count={3} />\n    <TopBarIconButton icon={<BellIcon />} label="通知" dot />\n  </TopBarActions>\n  <Avatar>…</Avatar>\n</TopBar>`,
+  },
+  {
+    id: "search-scope",
+    title: "带范围的搜索",
+    intent: "全局搜索框前置范围下拉（全部 / 客户 / 联系人…），缩小搜索域。",
+    rule: "scopes + scope + onScopeChange 受控；不提供 scopes 时退化为纯搜索框。",
+    code: `<TopBarSearch value={q} onValueChange={setQ} scope={scope} scopes={[{key:"all",label:"全部"},{key:"cust",label:"客户"}]} onScopeChange={setScope} />`,
+  },
+]
 const dropdownMenuScenarioFilters = [
   { value: "type", label: "类型" },
   { value: "state", label: "选项状态" },
@@ -2902,7 +2961,7 @@ const semanticTokenGroups = [
   {
     role: "surface",
     label: "背景色", labelEn: "Background",
-    desc: "页面与组件背景。background/card 定义页面层级，更高层（弹窗 → Popover）靠 shadow-l1/l2/l3 区分；muted/accent/secondary 用于组件内部状态",
+    desc: "页面与组件背景。background/card 定义页面层级，更高层（弹窗 → Popover）靠 shadow-l1/l2/l3 区分；muted/accent/secondary 用于组件内部状态；fill-* 是半透明填充，用于透明容器上的控件",
     descEn: "Page and component backgrounds. background/card define elevation; higher layers use shadow-l1/l2/l3. muted/accent/secondary cover component-level states.",
     tokens: [
       { name: "background", value: "",         sourceToken: "--fx-neutrals-02",  tailwind: "bg-background", usage: "页面底色 — 应用外壳、Layout 背景",       usageEn: "App shell / page canvas" },
@@ -2911,6 +2970,8 @@ const semanticTokenGroups = [
       { name: "accent",   value: "", sourceToken: "--fx-orange-01",   tailwind: "bg-accent",    usage: "交互高亮背景 — 列表/菜单项悬浮态",                              usageEn: "Hover highlight background — list / menu item hover" },
       { name: "secondary", value: "", sourceToken: "--fx-neutrals-03", tailwind: "bg-secondary", usage: "弱操作背景 — secondary 按钮默认底",                              usageEn: "Low-emphasis action background — secondary button base" },
       { name: "overlay",   value: "", sourceToken: "--overlay",        tailwind: "bg-overlay",   usage: "遮罩蒙层 — 弹窗/抽屉背后的半透明压暗（透明度内置，直接用）",     usageEn: "Scrim — semi-transparent dim behind dialogs / sheets (alpha built in)" },
+      { name: "fill-subtle", value: "", sourceToken: "--fill-subtle", tailwind: "bg-fill-subtle", usage: "半透明填充 — 透明容器/未知底色上的填充控件待命态（如顶栏搜索框），自适应背景", usageEn: "Translucent fill — filled control on a transparent/unknown surface (e.g. top-bar search)" },
+      { name: "fill-hover",  value: "", sourceToken: "--fill-hover",  tailwind: "bg-fill-hover",  usage: "半透明填充 — 上述控件 hover 加深 / 无底色图标按钮 hover",                          usageEn: "Translucent fill — hover state of the above / ghost icon-button hover" },
     ],
   },
   {
@@ -3123,33 +3184,9 @@ function isDocPage(page: string): page is DocPage {
 }
 
 function getPageFromHash(hash: string) {
-  if (hash === "#components" || hash.startsWith("#components-")) return "components"
-  if (hash === "#tokens") return "tokens"
-  if (hash === "#tokens-colors") return "tokens-colors"
-  if (hash === "#tokens-typography") return "tokens-typography"
-  if (hash === "#tokens-radius") return "tokens-radius"
-  if (hash === "#tokens-spacing") return "tokens-spacing"
-  if (hash === "#tokens-shadow") return "tokens-shadow"
-  if (hash === "#tokens-motion") return "tokens-motion"
-  if (hash === "#tokens-layer") return "tokens-layer"
-  if (hash === "#layout" || hash.startsWith("#layout-")) return "layout"
-  if (hash === "#nav-menu" || hash.startsWith("#nav-menu-")) return "nav-menu"
-  if (hash === "#pagination" || hash.startsWith("#pagination-")) return "pagination"
-  if (hash === "#tag" || hash.startsWith("#tag-")) return "tag"
-  if (hash === "#command" || hash.startsWith("#command-")) return "command"
-  if (hash === "#grid" || hash.startsWith("#grid-")) return "grid"
-  if (hash === "#icon" || hash.startsWith("#icon-")) return "icon"
-  if (hash === "#intro" || hash.startsWith("#intro-")) return "intro"
-  if (hash === "#install" || hash.startsWith("#install-")) return "install"
-  if (hash === "#theme" || hash.startsWith("#theme-")) return "theme"
-  if (hash === "#governance-map" || hash.startsWith("#governance-map-")) return "governance-map"
+  // ai-rules 的锚点用 #ai-* 前缀（与 slug 不同名），单独兜一下；其余全部走 registry 派生
   if (hash === "#ai-rules" || hash.startsWith("#ai-")) return "ai-rules"
-  if (hash === "#documentation" || hash.startsWith("#documentation-")) return "documentation"
-  if (hash === "#checks" || hash.startsWith("#checks-")) return "checks"
-  if (buttonAnchors.some((item) => item.href === hash)) return "button"
-  if (hash === "#button") return "button"
-  if (hash === "" || hash === "#") return "components"
-  return hash.replace("#", "") || "button"
+  return resolvePageSlug(hash)
 }
 
 function getNavItemFromHash(hash: string) {
@@ -3369,6 +3406,87 @@ function ButtonOverview({ lang }: { lang: Lang }) {
   )
 }
 
+// 页面唯一真相源：slug → { 锚点, 渲染 }。
+// 路由判定(getPageFromHash 折叠)、右栏锚点、主区渲染分发都从这里派生，
+// 不再各写一套 if/三元链。新增页面只在这里加一行（+ docsNav 导航项）。
+type PageEntry = {
+  anchors: { label: string; labelEn?: string; href: string }[]
+  render: (actions: React.ReactNode, lang: Lang, page: string) => React.ReactNode
+}
+const gettingStartedSlugs: GettingStartedPage[] = ["intro", "install", "theme", "governance-map", "ai-rules", "documentation", "checks"]
+const pageRegistry: Record<string, PageEntry> = {
+  components: { anchors: componentsIndexAnchors, render: (a, l) => <ComponentsIndexPage actions={a} lang={l} /> },
+  tokens: { anchors: tokenAnchors, render: (a, l) => <TokensPage actions={a} lang={l} /> },
+  "tokens-colors": { anchors: tokenColorsAnchors, render: (a, l) => <TokensColorsPage actions={a} lang={l} /> },
+  "tokens-typography": { anchors: tokenTypographyAnchors, render: (a, l) => <TokensTypographyPage actions={a} lang={l} /> },
+  "tokens-radius": { anchors: tokenRadiusAnchors, render: (a, l) => <TokensRadiusPage actions={a} lang={l} /> },
+  "tokens-spacing": { anchors: tokenSpacingAnchors, render: (a, l) => <TokensSpacingPage actions={a} lang={l} /> },
+  "tokens-shadow": { anchors: tokenShadowAnchors, render: (a, l) => <TokensShadowPage actions={a} lang={l} /> },
+  "tokens-motion": { anchors: tokenMotionAnchors, render: (a, l) => <TokensMotionPage actions={a} lang={l} /> },
+  "tokens-layer": { anchors: tokenLayerAnchors, render: (a, l) => <TokensLayerPage actions={a} lang={l} /> },
+  icon: { anchors: iconAnchors, render: (a, l) => <IconPage actions={a} lang={l} /> },
+  grid: { anchors: gridAnchors, render: (a, l) => <GridPage actions={a} lang={l} /> },
+  layout: { anchors: layoutAnchors, render: (a, l) => <LayoutPage actions={a} lang={l} /> },
+  "top-bar": { anchors: topBarAnchors, render: (a, l) => <TopBarPage actions={a} lang={l} /> },
+  "nav-menu": { anchors: navMenuAnchors, render: (a, l) => <NavMenuPage actions={a} lang={l} /> },
+  button: { anchors: buttonAnchors, render: (a, l) => <ButtonPage actions={a} lang={l} /> },
+  input: { anchors: inputAnchors, render: (a, l) => <InputPage actions={a} lang={l} /> },
+  select: { anchors: selectAnchors, render: (a, l) => <SelectPage actions={a} lang={l} /> },
+  checkbox: { anchors: checkboxAnchors, render: (a, l) => <CheckboxPage actions={a} lang={l} /> },
+  switch: { anchors: switchAnchors, render: (a, l) => <SwitchPage actions={a} lang={l} /> },
+  textarea: { anchors: textareaAnchors, render: (a, l) => <TextareaPage actions={a} lang={l} /> },
+  table: { anchors: tableAnchors, render: (a, l) => <TablePage actions={a} lang={l} /> },
+  card: { anchors: cardAnchors, render: (a, l) => <CardPage actions={a} lang={l} /> },
+  badge: { anchors: badgeAnchors, render: (a, l) => <BadgePage actions={a} lang={l} /> },
+  tag: { anchors: tagAnchors, render: (a, l) => <TagPage actions={a} lang={l} /> },
+  tooltip: { anchors: tooltipAnchors, render: (a, l) => <TooltipPage actions={a} lang={l} /> },
+  dialog: { anchors: dialogAnchors, render: (a, l) => <DialogPage actions={a} lang={l} /> },
+  "alert-dialog": { anchors: alertDialogAnchors, render: (a, l) => <AlertDialogPage actions={a} lang={l} /> },
+  sheet: { anchors: sheetAnchors, render: (a, l) => <SheetPage actions={a} lang={l} /> },
+  skeleton: { anchors: skeletonAnchors, render: (a, l) => <SkeletonPage actions={a} lang={l} /> },
+  avatar: { anchors: avatarAnchors, render: (a, l) => <AvatarPage actions={a} lang={l} /> },
+  breadcrumb: { anchors: breadcrumbAnchors, render: (a, l) => <BreadcrumbDocPage actions={a} lang={l} /> },
+  "button-group": { anchors: buttonGroupAnchors, render: (a, l) => <ButtonGroupPage actions={a} lang={l} /> },
+  calendar: { anchors: calendarAnchors, render: (a, l) => <CalendarPage actions={a} lang={l} /> },
+  collapsible: { anchors: collapsibleAnchors, render: (a, l) => <CollapsiblePage actions={a} lang={l} /> },
+  "dropdown-menu": { anchors: dropdownMenuAnchors, render: (a, l) => <DropdownMenuPage actions={a} lang={l} /> },
+  pagination: { anchors: paginationAnchors, render: (a, l) => <PaginationPage actions={a} lang={l} /> },
+  command: { anchors: commandAnchors, render: (a, l) => <CommandPage actions={a} lang={l} /> },
+  popover: { anchors: popoverAnchors, render: (a, l) => <PopoverPage actions={a} lang={l} /> },
+  separator: { anchors: separatorAnchors, render: (a, l) => <SeparatorPage actions={a} lang={l} /> },
+  link: { anchors: linkAnchors, render: (a, l) => <LinkPage actions={a} lang={l} /> },
+  sidebar: { anchors: sidebarAnchors, render: (a, l) => <SidebarPage actions={a} lang={l} /> },
+  spinner: { anchors: spinnerAnchors, render: (a, l) => <SpinnerPage actions={a} lang={l} /> },
+  toast: { anchors: toastAnchors, render: (a, l) => <ToastPage actions={a} lang={l} /> },
+  tabs: { anchors: tabsAnchors, render: (a, l) => <TabsPage actions={a} lang={l} /> },
+  toggle: { anchors: toggleAnchors, render: (a, l) => <TogglePage actions={a} lang={l} /> },
+  "toggle-group": { anchors: toggleGroupAnchors, render: (a, l) => <ToggleGroupPage actions={a} lang={l} /> },
+  "agent-surface": { anchors: agentSurfaceAnchors, render: (a, l) => <AgentSurfacePage actions={a} lang={l} /> },
+  chart: { anchors: [], render: (a, l) => <ChartPage actions={a} lang={l} /> },
+  "template-customer-list": { anchors: [], render: (a, l) => <CustomerListTemplate actions={a} lang={l} /> },
+  ...Object.fromEntries(
+    gettingStartedSlugs.map((slug) => [
+      slug,
+      {
+        anchors: gettingStartedAnchors[slug],
+        render: (a: React.ReactNode, l: Lang, p: string) => (
+          <GettingStartedPage actions={a} page={p as GettingStartedPage} lang={l} />
+        ),
+      } satisfies PageEntry,
+    ])
+  ),
+}
+// 折叠 #slug-anchor → slug：优先精确命中，否则取最长前缀匹配（保证 tokens-colors 不被 tokens 抢）
+function resolvePageSlug(hash: string): string {
+  if (hash === "" || hash === "#") return "components"
+  const raw = hash.replace("#", "")
+  if (pageRegistry[raw]) return raw
+  const base = Object.keys(pageRegistry)
+    .filter((slug) => hash === `#${slug}` || hash.startsWith(`#${slug}-`))
+    .sort((x, y) => y.length - x.length)[0]
+  return base ?? raw ?? "components"
+}
+
 function App() {
   const [page, setPage] = useState(() => getPageFromHash(window.location.hash))
   const [activeHash, setActiveHash] = useState(() => window.location.hash || "#components")
@@ -3387,6 +3505,7 @@ function App() {
       section.items.map((it) => ({
         id: it.href,
         label: lang === "en" ? (it.labelEn ?? it.label) : it.label,
+        meta: lang === "en" ? undefined : (it.labelEn && it.labelEn !== it.label ? it.labelEn : undefined),
         group: lang === "en" ? (section.titleEn ?? section.title) : section.title,
         keywords: `${it.label} ${it.labelEn ?? ""} ${it.href}`,
         onSelect: () => { window.location.hash = it.href },
@@ -3395,6 +3514,7 @@ function App() {
     const fromTop = topNav.map((it) => ({
       id: it.href,
       label: lang === "en" ? (it.labelEn ?? it.label) : it.label,
+      meta: lang === "en" ? undefined : (it.labelEn && it.labelEn !== it.label ? it.labelEn : undefined),
       group: lang === "en" ? "Navigation" : "导航",
       keywords: `${it.label} ${it.labelEn ?? ""} ${it.href}`,
       onSelect: () => { window.location.hash = it.href },
@@ -3459,159 +3579,17 @@ function App() {
     return () => window.removeEventListener("fx-ui:view-markdown", viewMarkdown)
   }, [])
 
-  const isTokensPage = page === "tokens"
-  const isTokensColorsPage = page === "tokens-colors"
-  const isTokensTypographyPage = page === "tokens-typography"
-  const isTokensRadiusPage = page === "tokens-radius"
-  const isTokensSpacingPage = page === "tokens-spacing"
-  const isTokensShadowPage = page === "tokens-shadow"
-  const isTokensMotionPage = page === "tokens-motion"
-  const isTokensLayerPage = page === "tokens-layer"
-  const isIconPage = page === "icon"
+  // 分组判定（用于顶栏高亮、footer 等），不是逐页重复，保留
   const isComponentsIndexPage = page === "components"
-  const isButtonPage = page === "button"
   const isGovernancePage = page === "governance-map" || page === "ai-rules" || page === "documentation" || page === "checks"
-  const isGettingStartedPage =
-    page === "intro" ||
-    page === "install" ||
-    page === "theme" ||
-    isGovernancePage
-  const isInputPage = page === "input"
-  const isSelectPage = page === "select"
-  const isCheckboxPage = page === "checkbox"
-  const isSwitchPage = page === "switch"
-  const isTextareaPage = page === "textarea"
-  const isTablePage = page === "table"
-  const isCardPage = page === "card"
-  const isBadgePage = page === "badge"
-  const isTagPage = page === "tag"
-  const isTooltipPage = page === "tooltip"
-  const isDialogPage = page === "dialog"
-  const isAlertDialogPage = page === "alert-dialog"
-  const isSheetPage = page === "sheet"
-  const isSkeletonPage = page === "skeleton"
-  const isAvatarPage = page === "avatar"
-  const isBreadcrumbPage = page === "breadcrumb"
-  const isButtonGroupPage = page === "button-group"
-  const isCalendarPage = page === "calendar"
-  const isCollapsiblePage = page === "collapsible"
-  const isDropdownMenuPage = page === "dropdown-menu"
-  const isPaginationPage = page === "pagination"
-  const isCommandPage = page === "command"
-  const isPopoverPage = page === "popover"
-  const isSeparatorPage = page === "separator"
-  const isLinkPage = page === "link"
-  const isSidebarPage = page === "sidebar"
-  const isSpinnerPage = page === "spinner"
-  const isToastPage = page === "toast"
-  const isTabsPage = page === "tabs"
-  const isChartPage = page === "chart"
-  const isTogglePage = page === "toggle"
-  const isToggleGroupPage = page === "toggle-group"
-  const isAgentSurfacePage = page === "agent-surface"
-  const isLayoutPage = page === "layout"
-  const isNavMenuPage = page === "nav-menu"
-  const isGridPage = page === "grid"
   const isComponentArea =
     isComponentsIndexPage ||
     componentIndexSections.some((section) =>
       section.items.some((item) => getPageFromHash(item.href) === page),
     )
-  const anchors = isTokensPage
-    ? tokenAnchors
-    : isTokensColorsPage
-      ? tokenColorsAnchors
-      : isTokensTypographyPage
-        ? tokenTypographyAnchors
-        : isTokensRadiusPage
-          ? tokenRadiusAnchors
-          : isTokensSpacingPage
-            ? tokenSpacingAnchors
-            : isTokensShadowPage
-              ? tokenShadowAnchors
-              : isTokensMotionPage
-                ? tokenMotionAnchors
-                : isTokensLayerPage
-                  ? tokenLayerAnchors
-                  : isLayoutPage
-      ? layoutAnchors
-                  : isNavMenuPage
-      ? navMenuAnchors
-                  : isGridPage
-      ? gridAnchors
-                  : isIconPage
-      ? iconAnchors
-      : isComponentsIndexPage
-        ? componentsIndexAnchors
-      : isGettingStartedPage
-        ? gettingStartedAnchors[page as GettingStartedPage]
-        : isButtonPage
-          ? buttonAnchors
-          : isInputPage
-            ? inputAnchors
-            : isSelectPage
-              ? selectAnchors
-              : isCheckboxPage
-                ? checkboxAnchors
-                : isSwitchPage
-                  ? switchAnchors
-                  : isTextareaPage
-                    ? textareaAnchors
-                    : isTablePage
-                      ? tableAnchors
-                      : isCardPage
-                        ? cardAnchors
-                        : isBadgePage
-                          ? badgeAnchors
-                        : isTagPage
-                          ? tagAnchors
-                          : isTooltipPage
-                            ? tooltipAnchors
-                            : isDialogPage
-                              ? dialogAnchors
-                              : isAlertDialogPage
-                                ? alertDialogAnchors
-                                : isSheetPage
-                                  ? sheetAnchors
-                                  : isSkeletonPage
-                                    ? skeletonAnchors
-                                    : isAvatarPage
-                                      ? avatarAnchors
-                                      : isBreadcrumbPage
-                                        ? breadcrumbAnchors
-                                        : isButtonGroupPage
-                                          ? buttonGroupAnchors
-                                          : isCalendarPage
-                                            ? calendarAnchors
-                                            : isCollapsiblePage
-                                              ? collapsibleAnchors
-                                              : isDropdownMenuPage
-                                                ? dropdownMenuAnchors
-                                                : isPaginationPage
-                                                ? paginationAnchors
-                                                : isCommandPage
-                                                ? commandAnchors
-                                                : isPopoverPage
-                                                  ? popoverAnchors
-                                                  : isSeparatorPage
-                                                    ? separatorAnchors
-                                                    : isLinkPage
-                                                    ? linkAnchors
-                                                    : isSidebarPage
-                                                      ? sidebarAnchors
-                                                      : isSpinnerPage
-                                                        ? spinnerAnchors
-                                                        : isToastPage
-                                                          ? toastAnchors
-                                                        : isTabsPage
-                                                          ? tabsAnchors
-                                                          : isTogglePage
-                                                            ? toggleAnchors
-                                                            : isToggleGroupPage
-                                                              ? toggleGroupAnchors
-                                                              : isAgentSurfacePage
-                                                                ? agentSurfaceAnchors
-                                                                : []
+  // 当前页条目 = 唯一真相源 pageRegistry 查表
+  const pageEntry = pageRegistry[page]
+  const anchors = pageEntry?.anchors ?? []
   const docKey: DocPage | null = isDocPage(page) ? page : null
   const currentDoc = docKey ? docsByPage[docKey] : null
   const placeholderItem = getNavItemFromHash(activeHash)
@@ -3810,102 +3788,8 @@ function App() {
             >
               {viewMode === "markdown" && currentDoc ? (
                 <MarkdownPage doc={currentDoc} actions={pageActions} lang={lang} />
-              ) : isTokensPage ? (
-                <TokensPage actions={pageActions} lang={lang} />
-              ) : isLayoutPage ? (
-                <LayoutPage actions={pageActions} lang={lang} />
-              ) : isNavMenuPage ? (
-                <NavMenuPage actions={pageActions} lang={lang} />
-              ) : isGridPage ? (
-                <GridPage actions={pageActions} lang={lang} />
-              ) : isTokensColorsPage ? (
-                <TokensColorsPage actions={pageActions} lang={lang} />
-              ) : isTokensTypographyPage ? (
-                <TokensTypographyPage actions={pageActions} lang={lang} />
-              ) : isTokensRadiusPage ? (
-                <TokensRadiusPage actions={pageActions} lang={lang} />
-              ) : isTokensSpacingPage ? (
-                <TokensSpacingPage actions={pageActions} lang={lang} />
-              ) : isTokensShadowPage ? (
-                <TokensShadowPage actions={pageActions} lang={lang} />
-              ) : isTokensMotionPage ? (
-                <TokensMotionPage actions={pageActions} lang={lang} />
-              ) : isTokensLayerPage ? (
-                <TokensLayerPage actions={pageActions} lang={lang} />
-              ) : isIconPage ? (
-                <IconPage actions={pageActions} lang={lang} />
-              ) : isComponentsIndexPage ? (
-                <ComponentsIndexPage actions={pageActions} lang={lang} />
-              ) : isGettingStartedPage ? (
-                <GettingStartedPage actions={pageActions} page={page as GettingStartedPage} lang={lang} />
-              ) : isButtonPage ? (
-                <ButtonPage actions={pageActions} lang={lang} />
-              ) : isInputPage ? (
-                <InputPage actions={pageActions} lang={lang} />
-              ) : isSelectPage ? (
-                <SelectPage actions={pageActions} lang={lang} />
-              ) : isCheckboxPage ? (
-                <CheckboxPage actions={pageActions} lang={lang} />
-              ) : isSwitchPage ? (
-                <SwitchPage actions={pageActions} lang={lang} />
-              ) : isTextareaPage ? (
-                <TextareaPage actions={pageActions} lang={lang} />
-              ) : isTablePage ? (
-                <TablePage actions={pageActions} lang={lang} />
-              ) : isCardPage ? (
-                <CardPage actions={pageActions} lang={lang} />
-              ) : isBadgePage ? (
-                <BadgePage actions={pageActions} lang={lang} />
-              ) : isTagPage ? (
-                <TagPage actions={pageActions} lang={lang} />
-              ) : isTooltipPage ? (
-                <TooltipPage actions={pageActions} lang={lang} />
-              ) : isDialogPage ? (
-                <DialogPage actions={pageActions} lang={lang} />
-              ) : isAlertDialogPage ? (
-                <AlertDialogPage actions={pageActions} lang={lang} />
-              ) : isSheetPage ? (
-                <SheetPage actions={pageActions} lang={lang} />
-              ) : isSkeletonPage ? (
-                <SkeletonPage actions={pageActions} lang={lang} />
-              ) : isAvatarPage ? (
-                <AvatarPage actions={pageActions} lang={lang} />
-              ) : isBreadcrumbPage ? (
-                <BreadcrumbDocPage actions={pageActions} lang={lang} />
-              ) : isButtonGroupPage ? (
-                <ButtonGroupPage actions={pageActions} lang={lang} />
-              ) : isCalendarPage ? (
-                <CalendarPage actions={pageActions} lang={lang} />
-              ) : isCollapsiblePage ? (
-                <CollapsiblePage actions={pageActions} lang={lang} />
-              ) : isDropdownMenuPage ? (
-                <DropdownMenuPage actions={pageActions} lang={lang} />
-              ) : isPaginationPage ? (
-                <PaginationPage actions={pageActions} lang={lang} />
-              ) : isCommandPage ? (
-                <CommandPage actions={pageActions} lang={lang} />
-              ) : isPopoverPage ? (
-                <PopoverPage actions={pageActions} lang={lang} />
-              ) : isSeparatorPage ? (
-                <SeparatorPage actions={pageActions} lang={lang} />
-              ) : isLinkPage ? (
-                <LinkPage actions={pageActions} lang={lang} />
-              ) : isSidebarPage ? (
-                <SidebarPage actions={pageActions} lang={lang} />
-              ) : isSpinnerPage ? (
-                <SpinnerPage actions={pageActions} lang={lang} />
-              ) : isToastPage ? (
-                <ToastPage actions={pageActions} lang={lang} />
-              ) : isTabsPage ? (
-                <TabsPage actions={pageActions} lang={lang} />
-              ) : isTogglePage ? (
-                <TogglePage actions={pageActions} lang={lang} />
-              ) : isToggleGroupPage ? (
-                <ToggleGroupPage actions={pageActions} lang={lang} />
-              ) : isAgentSurfacePage ? (
-                <AgentSurfacePage actions={pageActions} lang={lang} />
-              ) : isChartPage ? (
-                <ChartPage actions={pageActions} lang={lang} />
+              ) : pageEntry ? (
+                pageEntry.render(pageActions, lang, page)
               ) : (
                 <PlaceholderPage
                   actions={pageActions}
@@ -5368,22 +5252,58 @@ function ComponentsIndexPage({ actions, lang }: { actions: React.ReactNode; lang
 // 全站统一的「场景示例」表：场景 / 示例 / [规格] / 使用意图 / 约束 / 推荐写法。
 // 列宽与换行规范见 docs/DOC_SITE_DESIGN.md「表格」。调用方传入已按 lang 本地化的 rows + preview 节点。
 type ScenarioRow = { key: string; group?: string; title: string; preview: React.ReactNode; spec?: string; intent: string; constraint: string; code: string }
-function ScenarioTable({ rows, filters, lang }: { rows: ScenarioRow[]; filters?: { value: string; label: string; labelEn?: string }[]; lang: Lang }) {
+function ScenarioTable({ rows, filters, lang, layout = "table" }: { rows: ScenarioRow[]; filters?: { value: string; label: string; labelEn?: string }[]; lang: Lang; layout?: "table" | "stack" }) {
   const [filter, setFilter] = useState(filters?.[0]?.value ?? "all")
   const shown = filters ? rows.filter((r) => r.group === filter) : rows
   // 规格列只在当前显示的行真的有规格时才出现（≈只在「尺寸」分组出现），避免类型/用法 tab 显示一列重复规格
   const hasSpec = shown.some((r) => r.spec)
+  const filterTabs = filters ? (
+    <Tabs value={filter} onValueChange={setFilter} aria-label={lang === "en" ? "Filter examples" : "筛选场景"}>
+      <TabsList className="flex h-auto flex-wrap justify-start">
+        {filters.map((f) => (
+          <TabsTrigger key={f.value} value={f.value}>{lang === "en" ? (f.labelEn ?? f.label) : f.label}</TabsTrigger>
+        ))}
+      </TabsList>
+    </Tabs>
+  ) : null
+  // 整宽布局：预览铺满一行在上、意图/约束/写法排在下方。用于 TopBar 这类全宽组件，窄「示例」列放不下。
+  if (layout === "stack") {
+    return (
+      <>
+        {filterTabs}
+        <div className="flex flex-col gap-5">
+          {shown.map((r) => (
+            <div key={r.key} className="overflow-hidden rounded-lg border border-border bg-card">
+              <div className="flex items-center justify-between gap-3 border-b border-border-subtle px-4 py-2.5">
+                <span className="font-medium">{r.title}</span>
+                {r.spec ? <span className="text-fx-12 text-muted-foreground">{r.spec}</span> : null}
+              </div>
+              <div className="overflow-x-auto p-5">{r.preview}</div>
+              <div className="grid gap-x-8 gap-y-3 border-t border-border-subtle p-4 md:grid-cols-[1fr_1fr_minmax(0,1.2fr)]">
+                <div className="flex flex-col gap-1">
+                  <div className="text-fx-12 font-medium text-muted-foreground">{lang === "en" ? "Intent" : "使用意图"}</div>
+                  <div className="leading-6 text-muted-foreground">{r.intent}</div>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <div className="text-fx-12 font-medium text-muted-foreground">{lang === "en" ? "Constraint" : "约束"}</div>
+                  <div className="leading-6 text-muted-foreground">{r.constraint}</div>
+                </div>
+                <div className="flex min-w-0 flex-col gap-1">
+                  <div className="text-fx-12 font-medium text-muted-foreground">{lang === "en" ? "Recommended API" : "推荐写法"}</div>
+                  <div className="rounded-lg bg-muted">
+                    <pre className="px-3 py-2 text-fx-12 break-words whitespace-pre-wrap"><code>{r.code}</code></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </>
+    )
+  }
   return (
     <>
-      {filters ? (
-        <Tabs value={filter} onValueChange={setFilter} aria-label={lang === "en" ? "Filter examples" : "筛选场景"}>
-          <TabsList className="flex h-auto flex-wrap justify-start">
-            {filters.map((f) => (
-              <TabsTrigger key={f.value} value={f.value}>{lang === "en" ? (f.labelEn ?? f.label) : f.label}</TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
-      ) : null}
+      {filterTabs}
       <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
         <Table className="w-auto">
           <TableHeader>
@@ -8669,6 +8589,91 @@ function PaginationPage({ actions, lang }: { actions: React.ReactNode; lang: Lan
   )
 }
 
+// 顶栏演示：受控持有当前应用 / 搜索词 / 搜索范围，工具图标带角标与 Tooltip
+const topBarApps = [
+  { key: "crm", label: "CRM" },
+  { key: "marketing", label: "营销通" },
+  { key: "service", label: "服务通" },
+  { key: "bi", label: "BI 智能分析" },
+]
+const topBarScopes = [
+  { key: "all", label: "全部" },
+  { key: "cust", label: "客户" },
+  { key: "contact", label: "联系人" },
+  { key: "opp", label: "商机" },
+]
+function TopBarPreview({ showScope = true }: { showScope?: boolean }) {
+  const [app, setApp] = useState("crm")
+  const [q, setQ] = useState("")
+  const [scope, setScope] = useState("all")
+  // 品牌 logo：放在 public/fx-logo.(svg|png)，换成自己的图标即可（这里用 Figma 导出的吉祥物）
+  const logo = (
+    <img src="/LOGO.svg" alt="纷享销客" className="size-5 shrink-0 object-contain" />
+  )
+  return (
+    <TooltipProvider>
+      <div className="w-full bg-background">
+        <TopBar>
+          <TopBarBrand logo={logo} name="北京易动纷享科技有限责任公司" />
+          <TopBarDivider />
+          <TopBarApps current={topBarApps.find((a) => a.key === app)!.label} apps={topBarApps} onSelect={setApp} />
+          <TopBarSearch
+            value={q}
+            onValueChange={setQ}
+            scope={showScope ? scope : undefined}
+            scopes={showScope ? topBarScopes : undefined}
+            onScopeChange={setScope}
+            placeholder="搜索"
+          />
+          <TopBarActions>
+            <TopBarIconButton icon={<MessageCircleIcon />} label="企信" count={3} />
+            <TopBarIconButton icon={<BellIcon />} label="CRM提醒" dot />
+            <TopBarIconButton icon={<CheckCircleIcon />} label="待办" />
+            <TopBarIconButton icon={<InboxIcon />} label="草稿箱" />
+            <TopBarIconButton icon={<HelpIcon />} label="帮助" />
+          </TopBarActions>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Avatar className="size-8 cursor-pointer outline-none transition-opacity hover:opacity-90 focus-visible:ring-3 focus-visible:ring-ring/50">
+                  <AvatarImage src="/avatars/01.jpg" alt="李明" />
+                  <AvatarFallback colorful>李</AvatarFallback>
+                </Avatar>
+              }
+            />
+            <DropdownMenuContent align="end" className="w-44">
+              <DropdownMenuItem>个人中心</DropdownMenuItem>
+              <DropdownMenuItem>账号设置</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem variant="destructive">退出登录</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </TopBar>
+      </div>
+    </TooltipProvider>
+  )
+}
+function TopBarPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  return (
+    <StandardDocPage
+      slug="top-bar"
+      title="TopBar 顶栏"
+      lead="全局应用顶栏：品牌、应用切换、全局搜索、工具图标与头像，48px 白底两端对齐。"
+      overview={<TopBarPreview />}
+      scenarioExamples={topBarScenarioExamples}
+      scenarioLayout="stack"
+      renderScenarioPreview={(id) => (id === "search-scope" ? <TopBarPreview /> : <TopBarPreview showScope={false} />)}
+      importCode={`import {\n  TopBar, TopBarBrand, TopBarDivider,\n  TopBarApps, TopBarSearch,\n  TopBarActions, TopBarIconButton,\n} from "@/components/fx/top-bar"`}
+      usageCode={`const [app, setApp] = useState("crm")\nconst [q, setQ] = useState("")\nconst [scope, setScope] = useState("all")\n\n<TopBar>\n  <TopBarBrand logo={<Logo />} name="纷享销客" />\n  <TopBarDivider />\n  <TopBarApps current="CRM" apps={apps} onSelect={setApp} />\n  <TopBarSearch value={q} onValueChange={setQ} scope={scope} scopes={scopes} onScopeChange={setScope} />\n  <TopBarActions>\n    <TopBarIconButton icon={<MessageCircleIcon />} label="消息" count={3} />\n    <TopBarIconButton icon={<BellIcon />} label="通知" dot />\n  </TopBarActions>\n  <Avatar>…</Avatar>\n</TopBar>`}
+      propRows={topBarPropRows}
+      semanticDomRows={topBarSemanticDomRows}
+      doDontRows={topBarDoDontRows}
+      actions={actions}
+      lang={lang}
+    />
+  )
+}
+
 // 表格操作列纯图标按钮：无底色（variant=plain）、按语义分色（tone）、hover 只变色 + Tooltip + aria-label
 function IconAction({ icon, label, tone = "default" }: { icon: React.ReactNode; label: string; tone?: "default" | "primary" | "danger" }) {
   return (
@@ -10830,6 +10835,7 @@ function StandardDocPage({
   overviewMatrix,
   scenarioExamples,
   scenarioFilters,
+  scenarioLayout,
   renderScenarioPreview,
   importCode,
   usageCode,
@@ -10846,6 +10852,7 @@ function StandardDocPage({
   overviewMatrix?: React.ReactNode
   scenarioExamples: { id: string; title: string; intent: string; rule: string; code: string; group?: string; spec?: string }[]
   scenarioFilters?: { value: string; label: string; labelEn?: string }[]
+  scenarioLayout?: "table" | "stack"
   renderScenarioPreview: (id: string) => React.ReactNode
   importCode: string
   usageCode: string
@@ -10887,6 +10894,7 @@ function StandardDocPage({
         </div>
         <ScenarioTable
           lang={lang}
+          layout={scenarioLayout}
           filters={scenarioFilters}
           rows={scenarioExamples.map((example) => ({
             key: example.id,
@@ -13015,6 +13023,195 @@ function ChartPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) 
           </Table>
         </div>
       </section>
+    </div>
+  )
+}
+
+// ============ 页面模板：CRM 客户列表页（全部用现有组件拼装，1:1 参照公司 Figma 18906-9135） ============
+type TplCustomer = {
+  id: number; name: string; level: string; levelColor: "amber" | "red" | "none"
+  progress: number; progressTone: "success" | "warning" | "default"
+  flag: string; phone: string; owner: string; avatar: string
+}
+const tplCustomers: TplCustomer[] = [
+  { id: 1, name: "三门峡嘉浩咨询有限公司", level: "VIP客户", levelColor: "amber", progress: 100, progressTone: "success", flag: "🇨🇳", phone: "+86 15201123044", owner: "孙婉茹", avatar: "/avatars/01.jpg" },
+  { id: 2, name: "广西思锐建筑工作室", level: "VIP客户", levelColor: "amber", progress: 0, progressTone: "default", flag: "🇨🇳", phone: "+86 15001171032", owner: "吴彦琛", avatar: "/avatars/02.jpg" },
+  { id: 3, name: "芜湖磊昇传播科技有限公司", level: "重要客户", levelColor: "red", progress: 0, progressTone: "default", flag: "🇨🇳", phone: "+86 13071032601", owner: "李婉婷", avatar: "/avatars/03.jpg" },
+  { id: 4, name: "商丘运昭可哲食品有限公司", level: "普通客户", levelColor: "none", progress: 100, progressTone: "success", flag: "🇨🇳", phone: "+86 13071032601", owner: "冯远海", avatar: "/avatars/04.jpg" },
+  { id: 5, name: "台州众悦贸易有限公司", level: "普通客户", levelColor: "none", progress: 60, progressTone: "warning", flag: "🇺🇸", phone: "+27 5001171032", owner: "周琳", avatar: "/avatars/05.jpg" },
+  { id: 6, name: "佳木斯晶森科技有限公司", level: "重要客户", levelColor: "red", progress: 100, progressTone: "success", flag: "🇫🇷", phone: "+86 15001171032", owner: "冯远海", avatar: "/avatars/06.jpg" },
+  { id: 7, name: "乌兰察布旭图互动科技有限公司", level: "普通客户", levelColor: "none", progress: 40, progressTone: "warning", flag: "🇨🇳", phone: "+86 13071032601", owner: "周南", avatar: "/avatars/01.jpg" },
+  { id: 8, name: "济宁金源网络科技有限公司", level: "普通客户", levelColor: "none", progress: 0, progressTone: "default", flag: "🇩🇪", phone: "+86 15001171032", owner: "李婉婷", avatar: "/avatars/02.jpg" },
+]
+const tplViews = [
+  { value: "list", label: "列表", icon: <ListIcon /> },
+  { value: "grid", label: "看板", icon: <LayoutGridIcon /> },
+  { value: "map", label: "地图", icon: <MapPinIcon /> },
+  { value: "split", label: "分栏", icon: <LayoutColumnsIcon /> },
+]
+const tplScopes = [
+  { key: "name", label: "客户名称" },
+  { key: "owner", label: "负责人" },
+  { key: "phone", label: "电话" },
+]
+
+function CustomerListTemplate({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
+  const [q, setQ] = useState("")
+  const [scope, setScope] = useState("name")
+  const [view, setView] = useState("list")
+  const [selected, setSelected] = useState<Set<number>>(new Set())
+  const allChecked = tplCustomers.every((c) => selected.has(c.id))
+  const someChecked = tplCustomers.some((c) => selected.has(c.id))
+  const toggleAll = () =>
+    setSelected((s) => (s.size === tplCustomers.length ? new Set() : new Set(tplCustomers.map((c) => c.id))))
+  const toggleOne = (id: number) =>
+    setSelected((s) => {
+      const n = new Set(s)
+      n.has(id) ? n.delete(id) : n.add(id)
+      return n
+    })
+
+  return (
+    <div className={docsSpacing.pageStack}>
+      <section id="template-customer-list" className="flex flex-col gap-2">
+        <PageLead
+          crumb={lang === "en" ? "Templates / Customer list" : "页面模板 / 客户列表页"}
+          title={lang === "en" ? "Customer list page" : "客户列表页"}
+          lead={lang === "en"
+            ? "A full CRM list page assembled entirely from existing components — top bar, nav, page header, toolbar, table and pagination."
+            : "完全用现有组件拼出的 CRM 列表页：顶栏 + 导航 + 页头 + 工具栏 + 表格 + 分页，演示组件如何组装成真实页面。"}
+          actions={actions}
+        />
+      </section>
+
+      <TooltipProvider>
+        <div className="overflow-hidden rounded-xl border border-border bg-background shadow-l1">
+          {/* 顶栏 */}
+          <TopBar>
+            <TopBarBrand logo={<img src="/LOGO.svg" alt="" className="size-5 shrink-0 object-contain" />} name="北京易动纷享科技有限责任公司" />
+            <TopBarDivider />
+            <TopBarApps current="CRM" apps={topBarApps} onSelect={() => {}} />
+            <TopBarSearch value="" onValueChange={() => {}} scope="all" scopes={topBarScopes} onScopeChange={() => {}} placeholder="搜索" />
+            <TopBarActions>
+              <TopBarIconButton icon={<MessageCircleIcon />} label="企信" count={3} />
+              <TopBarIconButton icon={<BellIcon />} label="CRM提醒" dot />
+              <TopBarIconButton icon={<HelpIcon />} label="帮助" />
+            </TopBarActions>
+            <Avatar className="size-8"><AvatarImage src="/avatars/01.jpg" alt="李明" /><AvatarFallback colorful>李</AvatarFallback></Avatar>
+          </TopBar>
+
+          <div className="flex h-[600px] min-h-0">
+            {/* 一级应用栏 + 二级导航 */}
+            <CrmShellNav />
+
+            {/* 主区 */}
+            <div className="flex min-w-0 flex-1 flex-col bg-card">
+              {/* 页头 */}
+              <div className="flex h-12 shrink-0 items-center justify-between gap-3 border-b border-border-subtle px-4">
+                <div className="flex items-center gap-2 text-fx-15">
+                  <span className="font-medium text-foreground">客户</span>
+                  <span className="text-border">|</span>
+                  <button className="inline-flex items-center gap-1 text-foreground outline-none hover:text-primary">
+                    全部客户 <ChevronDownIcon className="size-4 text-muted-foreground" />
+                  </button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button size="sm"><PlusIcon data-icon="inline-start" />新建</Button>
+                  <Button variant="outline" size="sm">智能表单</Button>
+                  <Button variant="outline" size="sm">导入</Button>
+                  <Button variant="ghost" size="icon-sm" aria-label="更多"><MoreVerticalIcon /></Button>
+                </div>
+              </div>
+
+              {/* 工具栏 */}
+              <div className="flex shrink-0 items-center justify-between gap-3 px-4 py-2.5">
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" size="sm"><FilterIcon data-icon="inline-start" />筛选</Button>
+                  <div className="flex h-8 w-64 items-center rounded-lg border border-border bg-card transition-colors focus-within:border-ring">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="inline-flex shrink-0 items-center gap-1 rounded-l-lg px-2.5 text-fx-13 text-muted-foreground outline-none hover:text-foreground [&_svg]:size-3">
+                        {tplScopes.find((s) => s.key === scope)?.label}
+                        <ChevronDownIcon />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="start">
+                        {tplScopes.map((s) => (
+                          <DropdownMenuItem key={s.key} selected={s.key === scope} onClick={() => setScope(s.key)}>{s.label}</DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <span className="h-4 w-px bg-border" />
+                    <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="搜索" className="min-w-0 flex-1 bg-transparent px-2.5 text-fx-13 outline-none placeholder:text-foreground-disabled" />
+                    <SearchIcon className="mr-2.5 size-4 shrink-0 text-muted-foreground" />
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <ToggleGroup value={[view]} onValueChange={(v) => v[0] && setView(v[0])}>
+                    {tplViews.map((vw) => (
+                      <Tooltip key={vw.value}>
+                        <TooltipTrigger render={<ToggleGroupItem value={vw.value} aria-label={vw.label}>{vw.icon}</ToggleGroupItem>} />
+                        <TooltipContent>{vw.label}</TooltipContent>
+                      </Tooltip>
+                    ))}
+                  </ToggleGroup>
+                  <Button variant="ghost" size="icon-sm" aria-label="显示设置"><SettingsIcon /></Button>
+                  <Button variant="ghost" size="icon-sm" aria-label="刷新"><RefreshIcon /></Button>
+                </div>
+              </div>
+
+              {/* 表格 */}
+              <div className="min-h-0 flex-1 overflow-auto">
+                <Table>
+                  <TableHeader className="sticky top-0 z-10 bg-card">
+                    <TableRow className="hover:bg-transparent">
+                      <TableHead className="w-10 pl-4"><Checkbox checked={allChecked} indeterminate={someChecked && !allChecked} onCheckedChange={toggleAll} aria-label="全选" /></TableHead>
+                      <TableHead>客户名称</TableHead>
+                      <TableHead>客户级别</TableHead>
+                      <TableHead className="w-40">跟进进度</TableHead>
+                      <TableHead>电话</TableHead>
+                      <TableHead>负责人</TableHead>
+                      <TableHead className="pr-4">操作</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {tplCustomers.map((c) => (
+                      <TableRow key={c.id} data-selected={selected.has(c.id) ? "" : undefined}>
+                        <TableCell className="pl-4"><Checkbox checked={selected.has(c.id)} onCheckedChange={() => toggleOne(c.id)} aria-label={`选择 ${c.name}`} /></TableCell>
+                        <TableCell><a href="#template-customer-list" className="text-link hover:text-link-hover hover:underline">{c.name}</a></TableCell>
+                        <TableCell><Tag color={c.levelColor === "none" ? "none" : c.levelColor}>{c.level}</Tag></TableCell>
+                        <TableCell>
+                          <span className="flex items-center gap-2">
+                            <Progress value={c.progress} tone={c.progressTone} className="w-20" />
+                            <span className="w-9 shrink-0 text-fx-12 tabular-nums text-muted-foreground">{c.progress}%</span>
+                          </span>
+                        </TableCell>
+                        <TableCell><span className="inline-flex items-center gap-1.5 tabular-nums"><span>{c.flag}</span>{c.phone}</span></TableCell>
+                        <TableCell>
+                          <span className="inline-flex items-center gap-1.5">
+                            <Avatar className="size-5"><AvatarImage src={c.avatar} alt={c.owner} /><AvatarFallback colorful>{avatarInitials(c.owner)}</AvatarFallback></Avatar>
+                            {c.owner}
+                          </span>
+                        </TableCell>
+                        <TableCell className="pr-4">
+                          <span className="flex items-center gap-3">
+                            <Button variant="plain" tone="info" size="sm">查看</Button>
+                            <Button variant="plain" tone="info" size="sm">编辑</Button>
+                          </span>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* 分页 */}
+              <div className="flex shrink-0 items-center justify-between border-t border-border-subtle px-4 py-2.5">
+                <span className="text-fx-12 text-muted-foreground">已选 {selected.size} 项</span>
+                <Pagination page={1} total={193} pageSize={20} onPageChange={() => {}} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </TooltipProvider>
     </div>
   )
 }

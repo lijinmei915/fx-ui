@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 export type CommandItem = {
   id: string
   label: string
+  meta?: string
   group?: string
   keywords?: string
   onSelect: () => void
@@ -97,7 +98,10 @@ function CommandPalette({
                   i === active ? "bg-muted text-foreground" : "text-foreground"
                 )}
               >
-                <span className="truncate">{it.label}</span>
+                <span className="flex min-w-0 items-baseline gap-2">
+                  <span className="truncate">{it.label}</span>
+                  {it.meta && <span className="shrink-0 text-fx-12 text-muted-foreground">{it.meta}</span>}
+                </span>
                 {it.group && <span className="shrink-0 text-fx-12 text-muted-foreground">{it.group}</span>}
               </button>
             ))

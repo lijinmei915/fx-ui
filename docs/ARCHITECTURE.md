@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-17
+last_verified: 2026-06-25
 teaches: "fx-ui 的三层生产体系：基础组件、公司组合组件、页面 Blocks（目录细节见 CODE_STRUCTURE，布局规范见 LAYOUTS）"
 use_when: "AI 要判断某个能力归哪一层、三层之间如何分工时"
 ---
@@ -70,11 +70,15 @@ shadcn 组件进入 `src/components/ui/` 后，就视为 fx-ui 的本地源码�
 
 这一层解决：公司业务组件统一、常见交互模式统一。
 
-### 3. 页面 Blocks / 布局规范层
+### 3. 页面 Blocks / Recipes / 布局规范层
 
-目录建议：`src/blocks/`、`src/layouts/`、`docs/LAYOUTS.md`
+目录：`src/components/recipes/`（已落地）、`docs/LAYOUTS.md`
 
-这一层用于快速生成完整页面，并从真实页面里抽出公司的布局规范。
+这一层用于快速生成完整页面，并从真实页面里抽出公司的布局规范。**Recipe = 可搬运的成形组合范例**：把 ui/fx 组件按真实场景拼好的标准用法（含交互），落成一个组件。**搭页面时整段搬运 recipe、只换数据，禁止手写重拼**（见 `AGENTS.md` 红线 6）。
+
+已落地 Recipes：
+
+- `CrmShellNav`（`src/components/recipes/crm-shell-nav.tsx`）：CRM 应用外壳导航 = NavRail 一级应用栏 + NavMenu 二级菜单的规范组合，全套折叠/固定/hover/选中交互。「客户列表页」模板即基于它。
 
 候选 Blocks：
 

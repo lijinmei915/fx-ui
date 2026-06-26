@@ -3704,7 +3704,7 @@ function App() {
             <Tag variant="outline">v1.2.0</Tag>
           </div>
 
-          <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
+          <nav className="hidden h-14 items-center gap-6 text-sm font-medium md:flex">
             {topNav.map((item) => {
               const isActive =
                 page === item.page ||
@@ -3715,7 +3715,11 @@ function App() {
                 <a
                   key={item.label}
                   href={item.href}
-                  className={isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"}
+                  className={
+                    isActive
+                      ? "flex h-14 items-center border-b-2 border-primary text-primary"
+                      : "flex h-14 items-center border-b-2 border-transparent text-muted-foreground hover:text-foreground"
+                  }
                 >
                   {getLabel(item, lang)}
                 </a>
@@ -3776,7 +3780,7 @@ function App() {
             <nav className="flex flex-col gap-10">
               {docsNav.map((section) => (
                 <div key={section.title} className="flex flex-col gap-1">
-                  <div className="text-sm font-medium text-muted-foreground">{lang === "en" && section.titleEn ? section.titleEn : section.title}</div>
+                  <div className="mb-1 text-xs font-bold tracking-widest text-muted-foreground uppercase">{lang === "en" && section.titleEn ? section.titleEn : section.title}</div>
                   <div className="flex flex-col gap-1.5">
                     {section.items.map((item) => {
                       const isActive =
@@ -3789,12 +3793,11 @@ function App() {
                           href={item.href}
                           className={
                             isActive
-                              ? "flex h-8 items-center rounded-lg bg-muted px-3 text-sm font-medium text-foreground"
+                              ? "flex h-8 items-center rounded-lg bg-primary/10 px-3 text-sm font-semibold text-primary"
                               : "flex h-8 items-center rounded-lg px-3 text-sm text-foreground/80 hover:bg-muted hover:text-foreground"
                           }
                         >
                           {getLabel(item, lang)}
-                          {isActive ? <span className="ml-2 size-1.5 rounded-full bg-primary" /> : null}
                         </a>
                       )
                     })}

@@ -43,7 +43,7 @@
         "documentation-ssot",
         "checks-commands",
         "docsNav.map",
-        "isActive ? <span className=\"ml-2 size-1.5 rounded-full bg-primary\" /> : null"
+        "bg-primary/10 px-3 text-sm font-semibold text-primary"
       ],
       "requiredCapabilities": [
         "group-title",

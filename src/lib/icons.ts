@@ -65,6 +65,8 @@ export {
   IconList as ListIcon,
   IconLayoutColumns as LayoutColumnsIcon,
   IconRefresh as RefreshIcon,
+  IconMoon as MoonIcon,
+  IconSun as SunIcon,
   IconBulb as LightbulbIcon,
   IconLink as LinkIcon,
   IconLoader2 as Loader2Icon,

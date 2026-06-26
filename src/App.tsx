@@ -14,6 +14,8 @@ import {
   ListIcon,
   LayoutColumnsIcon,
   RefreshIcon,
+  MoonIcon,
+  SunIcon,
   MoreVerticalIcon,
   InboxIcon,
   HelpIcon,
@@ -3502,6 +3504,11 @@ function App() {
     const saved = window.localStorage.getItem("fx-ui-lang")
     return saved === "en" ? "en" : "zh"
   })
+  const [dark, setDark] = useState<boolean>(() => window.localStorage.getItem("fx-ui-theme") === "dark")
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark)
+    window.localStorage.setItem("fx-ui-theme", dark ? "dark" : "light")
+  }, [dark])
   const mainRef = useRef<HTMLElement>(null)
 
   // 全站可搜索项：所有导航页面（顶部入口 + 左侧分组），模糊搜索 + Enter 跳 hash
@@ -3720,6 +3727,16 @@ function App() {
             onClick={() => setLang(lang === "zh" ? "en" : "zh")}
           >
             {lang === "zh" ? "中" : "EN"}
+          </Button>
+
+          <Button
+            variant="outline"
+            size="icon-sm"
+            aria-label={dark ? (lang === "en" ? "Light mode" : "浅色模式") : (lang === "en" ? "Dark mode" : "暗色模式")}
+            className="hidden md:inline-flex"
+            onClick={() => setDark((d) => !d)}
+          >
+            {dark ? <SunIcon /> : <MoonIcon />}
           </Button>
 
           <button

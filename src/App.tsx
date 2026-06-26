@@ -3390,24 +3390,24 @@ function ButtonOverviewGroup({ group, lang }: { group: string; lang: Lang }) {
 }
 function ButtonOverview({ lang }: { lang: Lang }) {
   return (
-    <div className="grid gap-6 rounded-lg border border-border bg-card p-6">
+    <div className="grid gap-6 rounded-xl border border-border bg-card p-6 shadow-l1">
       <div className="grid gap-3">
-        <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Variants" : "类型"}</h3>
+        <h3 className="text-xs font-bold tracking-widest text-muted-foreground uppercase">{lang === "en" ? "Variants" : "类型"}</h3>
         <ButtonOverviewGroup group="category" lang={lang} />
       </div>
       <div className="border-t border-dashed border-border" />
       <div className="grid gap-3">
-        <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Sizes" : "尺寸"}</h3>
+        <h3 className="text-xs font-bold tracking-widest text-muted-foreground uppercase">{lang === "en" ? "Sizes" : "尺寸"}</h3>
         <ButtonOverviewGroup group="size" lang={lang} />
       </div>
       <div className="border-t border-dashed border-border" />
       <div className="grid gap-3">
-        <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Interaction states" : "交互状态"}</h3>
+        <h3 className="text-xs font-bold tracking-widest text-muted-foreground uppercase">{lang === "en" ? "Interaction states" : "交互状态"}</h3>
         <ButtonOverviewGroup group="state" lang={lang} />
       </div>
       <div className="border-t border-dashed border-border" />
       <div className="grid gap-3">
-        <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Icons" : "图标"}</h3>
+        <h3 className="text-xs font-bold tracking-widest text-muted-foreground uppercase">{lang === "en" ? "Icons" : "图标"}</h3>
         <ButtonOverviewGroup group="icon" lang={lang} />
       </div>
     </div>

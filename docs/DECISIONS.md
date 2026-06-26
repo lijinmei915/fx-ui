@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-06-25
+last_verified: 2026-06-26
 teaches: "fx-ui 重要的技术/协作决策记录：选了什么、放弃了什么、为什么"
 use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论"
 ---
@@ -268,6 +268,21 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **保留**：`docsNav`/`topNav`（导航树+搜索+索引的真相源，结构不同不并入）；`isComponentsIndexPage`/`isGovernancePage`/`isComponentArea` 等**分组**判定（用于顶栏高亮，非逐页重复）；`#ai-*` 锚点前缀与 slug 不同名，`getPageFromHash` 单独兜一行
 - **影响**：`src/App.tsx` 路由层重构；后续新增/改页面以 `pageRegistry` 为准
 - **相关文件**：`src/App.tsx`
+
+### DEC-024: 列表页走可组合拆分，不做单体 ListPageBlock
+
+- **日期**：2026-06-26
+- **状态**：已决定方向，块待落地（#2）
+- **决定**：列表页 = `CrmAppShell`（外壳）+ `PageHeader` + `ListToolbar` + `DataTable` + `Pagination` **拼装**，不绑成一个单体 `ListPageBlock`。对齐现代主流（shadcn/TanStack：故意不出 ProTable，给可组合 DataTable 自行拼）。
+- **放弃**：单体配置式（Ant ProTable 那种一个组件吃下列/请求/工具栏/分页）——API 庞大、难偏离。
+- **要拆出的两块（薄、受控、不引 TanStack）**：
+  - `DataTable`：表格 + 勾选(全选/半选) + 行操作；中间列由 `columns`（每列一个 `cell` render 函数）驱动。
+  - `ListToolbar`：筛选按钮 + 复合搜索(scope+input) + 视图切换 + 右侧额外动作。
+  - 复用现成：`PageHeader`(fx)、`Pagination`(ui)。
+- **必须可改动（核心要求）**：列定义(`columns`)、工具栏配置、头部、行操作都做成**参数化 + 受控**，页面侧只换数据/列/配置，**不写死**。换个列表页 = 换 columns/数据，不复制结构。
+- **放置**：先落 `src/components/recipes/`（轻，只登记 ARCHITECTURE）跑通；稳定后升级到 `src/components/fx/`（对应架构候选 `EntityTable`/`SearchToolbar`，届时补 manifest+文档+check）。
+- **待办依赖**：`PageHeader` 的 `title` 现为字符串，列表页要「客户 ｜ 全部客户 ⌄」（带视图下拉）→ 需扩 `title` 支持 `ReactNode`，走组件治理（加能力，不在调用处覆盖）。
+- **相关文件**：`src/App.tsx`（`CustomerListTemplate` 内容部分待抽）、`src/components/fx/page-header.tsx`、（新）`src/components/recipes/data-table.tsx`、`list-toolbar.tsx`
 
 ## 相关文件
 

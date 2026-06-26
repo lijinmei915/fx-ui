@@ -11,7 +11,19 @@ use_when: "要生成 / 改造任意页面（列表页、表单页、详情页、
 > 用途：定死"怎么装配一个页面"的固定流程。**页面不靠"现拼"，靠"拼装现成 block + 组件"**——照流程走，生成任意页面都不出错（不手搓、不覆盖、复用现成）。
 > 产物住哪/谁 check 见 `docs/MAP.md`；布局尺寸见 `docs/LAYOUTS.md`；行为红线见 `AGENTS.md`。
 
-## 装配流程
+## 列表页：直接跑生成器（最稳，不靠手拼）
+
+做**列表页**别从零拼——跑脚手架，结构按固定模板吐出，你只填 columns/数据 → 结构层零跑偏：
+
+```bash
+npm run gen:list-page -- --name 订单 --slug order
+```
+
+它生成 `src/pages/<slug>-list.tsx`（已拼好 `CrmAppShell + ListPageHeader + ListToolbar + DataTable + Pagination`），并打印要在 `src/App.tsx` 接的 3 行（import + `pageRegistry` + `docsNav`）。接好后**只改 `columns`/`rows`**，跑 `check:all` + `test:visual`。其它页型暂无生成器 → 走下面的通用 6 步。
+
+> **强制**：`src/pages/` 里手写列表页（用了 `ListToolbar` + `DataTable` 却没 `@generated fx-ui:list-page` 标记）会被 `scripts/check-list-page-source.mjs` 拦下——列表页只能由生成器产出。
+
+## 装配流程（无生成器的页型走这个）
 
 每次按这 6 步走，不跳步：
 
@@ -56,7 +68,8 @@ block 既不能僵（不能变），也不能堆成 ProTable 那种 config 怪�
 | `CrmShellNav` | `src/components/recipes/crm-shell-nav.tsx` | CRM 双层导航（NavRail 一级 + NavMenu 二级，含折叠/固定/选中）；已被 CrmAppShell 内置 |
 | `DataTable` | `src/components/recipes/data-table.tsx` | 薄表格：勾选(全选/半选) + 行操作，中间列由 `columns` 驱动；受控、不引 TanStack |
 | `ListToolbar` | `src/components/recipes/list-toolbar.tsx` | 列表页工具栏：筛选 + 复合搜索 + 视图切换 + 右侧动作，全受控配置化 |
-| 客户列表页模板 | `src/App.tsx` `CustomerListTemplate` | 列表页范例 = `CrmAppShell` + 薄内联页头 + `ListToolbar` + `DataTable` + `Pagination`，只换 columns/数据 |
+| `ListPageHeader` | `src/components/recipes/list-page-header.tsx` | 列表页标题栏：标题 + 可选视图下拉(`views?`) + 操作插槽(`actions` 0..N) |
+| 客户列表页模板 | `src/App.tsx` `CustomerListTemplate` | 列表页范例 = `CrmAppShell` + `ListPageHeader` + `ListToolbar` + `DataTable` + `Pagination`，只换 columns/数据 |
 
 ## 正反例
 

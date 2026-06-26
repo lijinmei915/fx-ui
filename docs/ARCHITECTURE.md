@@ -84,6 +84,7 @@ shadcn 组件进入 `src/components/ui/` 后，就视为 fx-ui 的本地源码�
 - `CrmAppShell`（`src/components/recipes/crm-app-shell.tsx`）：CRM 整页外壳 = TopBar 顶栏 + CrmShellNav 双层导航 + 内容卡插槽（灰底浮卡布局）。页面只往 children 塞内容，外壳 chrome 全复用。「客户列表页」模板即基于它。
 - `DataTable`（`src/components/recipes/data-table.tsx`）：薄表格区块 = 表格 + 勾选(全选/半选) + 行操作；中间列由 `columns`（每列 `cell` render）驱动，受控，不引 TanStack。
 - `ListToolbar`（`src/components/recipes/list-toolbar.tsx`）：列表页工具栏 = 筛选 + 复合搜索(scope+input) + 视图切换 + 右侧额外动作，全受控配置化。
+- `ListPageHeader`（`src/components/recipes/list-page-header.tsx`）：列表页紧凑标题栏 = 标题 + 可选视图下拉(`views?`) + 操作插槽(`actions`，0..N 动态)。三轴变体由 props/slot 决定。
 
 候选 Blocks：
 

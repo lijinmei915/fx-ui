@@ -17,7 +17,8 @@
     "build:tokens": "node scripts/build-design-tokens.mjs",
     "preview": "vite preview",
     "test:visual": "playwright test",
-    "test:visual:update": "playwright test --update-snapshots"
+    "test:visual:update": "playwright test --update-snapshots",
+    "gen:list-page": "node scripts/gen-list-page.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",

@@ -281,7 +281,7 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
   - 复用现成：`PageHeader`(fx)、`Pagination`(ui)。
 - **必须可改动（核心要求）**：列定义(`columns`)、工具栏配置、头部、行操作都做成**参数化 + 受控**，页面侧只换数据/列/配置，**不写死**。换个列表页 = 换 columns/数据，不复制结构。
 - **放置**：先落 `src/components/recipes/`（轻，只登记 ARCHITECTURE）跑通；稳定后升级到 `src/components/fx/`（对应架构候选 `EntityTable`/`SearchToolbar`，届时补 manifest+文档+check）。
-- **待办依赖（已核对修正 2026-06-26）**：现成 fx `PageHeader` 是「内容页大标题」（`text-xl` + `pb-4`，document header 风格），**不适配**列表页要的「紧凑标题栏」（h-12 + `text-fx-15` + 视图下拉胶囊）——硬套要大量覆盖（踩红线 7）。故列表页头/底部**先保持薄内联**（页面专属）；后续若多页复用，再二选一：给 `PageHeader` 加紧凑变体（走治理），或单独沉淀 `ListPageHeader`。不复用 PageHeader 硬套。
+- **页头处理（已落地 2026-06-26）**：现成 fx `PageHeader` 是「内容页大标题」（`text-xl` + `pb-4`），不适配列表页「紧凑标题栏」（h-12 + `text-fx-15` + 视图下拉），硬套要覆盖（踩红线 7）。故**单独沉淀 `ListPageHeader` block**（`src/components/recipes/list-page-header.tsx`），三轴变体由 props/slot 决定：① `views?` 不传只剩标题、传了出「客户 ｜ 全部客户 ⌄」视图下拉；② `actions` 插槽 0..N 动态；③ 操作按钮样式（描边/主色）由页面定。**变体轴是用户明确给出的（非猜测），故 N=1 即抽**（用户决定，跳过"等第二页"默认）。`PageHeader` 留作内容页用，不强行复用。
 - **相关文件**：`src/App.tsx`（`CustomerListTemplate` 内容部分待抽）、`src/components/fx/page-header.tsx`、（新）`src/components/recipes/data-table.tsx`、`list-toolbar.tsx`
 
 ## 相关文件

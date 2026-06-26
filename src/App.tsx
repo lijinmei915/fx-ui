@@ -144,6 +144,7 @@ import { Progress } from "@/components/ui/progress"
 import { CrmAppShell } from "@/components/recipes/crm-app-shell"
 import { DataTable, type Column } from "@/components/recipes/data-table"
 import { ListToolbar } from "@/components/recipes/list-toolbar"
+import { ListPageHeader } from "@/components/recipes/list-page-header"
 import componentsManifestRaw from "../docs/data/components.manifest.json?raw"
 import designTokensManifestRaw from "../docs/data/design-tokens.json?raw"
 import docSiteManifestRaw from "../docs/data/doc-site.manifest.json?raw"
@@ -13092,6 +13093,7 @@ function CustomerListTemplate({ actions, lang }: { actions: React.ReactNode; lan
   const [q, setQ] = useState("")
   const [scope, setScope] = useState("name")
   const [view, setView] = useState("list")
+  const [headerView, setHeaderView] = useState("all")
   const [selected, setSelected] = useState<Set<string | number>>(new Set())
 
   return (
@@ -13109,22 +13111,25 @@ function CustomerListTemplate({ actions, lang }: { actions: React.ReactNode; lan
 
       {/* 外壳走 CrmAppShell recipe（TopBar + 双层导航 + 内容卡槽）；本页只提供内容 children */}
       <CrmAppShell>
-              {/* 页头 */}
-              <div className="flex h-12 shrink-0 items-center justify-between gap-3 border-b border-border-subtle px-4">
-                <div className="flex shrink-0 items-center gap-2 whitespace-nowrap text-fx-15">
-                  <span className="font-medium text-foreground">客户</span>
-                  <span className="text-border">|</span>
-                  <button className="inline-flex items-center gap-1 text-foreground outline-none hover:text-primary">
-                    全部客户 <ChevronDownIcon className="size-4 text-muted-foreground" />
-                  </button>
-                </div>
-                <div className="flex shrink-0 items-center gap-2">
-                  <Button size="sm"><PlusIcon data-icon="inline-start" />新建</Button>
-                  <Button variant="outline" size="sm">智能表单</Button>
-                  <Button variant="outline" size="sm">导入</Button>
-                  <Button variant="ghost" size="icon-sm" aria-label="更多"><MoreVerticalIcon /></Button>
-                </div>
-              </div>
+              {/* 页头：标题 + 可选视图下拉 + 操作插槽（三轴变体由 props/slot 决定）*/}
+              <ListPageHeader
+                title="客户"
+                views={[
+                  { key: "all", label: "全部客户" },
+                  { key: "mine", label: "我负责的" },
+                  { key: "sub", label: "下属负责的" },
+                ]}
+                view={headerView}
+                onViewChange={setHeaderView}
+                actions={
+                  <>
+                    <Button size="sm"><PlusIcon data-icon="inline-start" />新建</Button>
+                    <Button variant="outline" size="sm">智能表单</Button>
+                    <Button variant="outline" size="sm">导入</Button>
+                    <Button variant="outline" size="icon-sm" aria-label="更多"><MoreVerticalIcon /></Button>
+                  </>
+                }
+              />
 
               {/* 工具栏 */}
               <ListToolbar

@@ -19,3 +19,7 @@ dist
 /test-results/
 /playwright-report/
 /blob-report/
+
+# Button 页独立导出（handoff 用，不入库）
+button-page-export/
+button-page-export.zip

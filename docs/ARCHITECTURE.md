@@ -70,16 +70,20 @@ shadcn 组件进入 `src/components/ui/` 后，就视为 fx-ui 的本地源码�
 
 这一层解决：公司业务组件统一、常见交互模式统一。
 
-### 3. 页面 Blocks / Recipes / 布局规范层
+### 3. 页面 Block（区块）/ 布局规范层
 
-目录：`src/components/recipes/`（已落地）、`docs/LAYOUTS.md`
+目录：`src/components/recipes/`（已落地，文件夹历史名沿用）、`docs/LAYOUTS.md`
 
-这一层用于快速生成完整页面，并从真实页面里抽出公司的布局规范。**Recipe = 可搬运的成形组合范例**：把 ui/fx 组件按真实场景拼好的标准用法（含交互），落成一个组件。**搭页面时整段搬运 recipe、只换数据，禁止手写重拼**（见 `AGENTS.md` 红线 6）。
+> **术语统一**：本项目把这一层叫 **Block（区块）**，对齐 shadcn "blocks"。文件夹名 `recipes/` 是历史遗留、不改（改动大），**"recipe" 与 "block" 在本项目同义**。注意：Panda/Chakra 体系里 "recipe" 指单组件的样式变体（cva 那种），跟我们说的"页面区块"不是一回事。
 
-已落地 Recipes：
+这一层用于快速生成完整页面，并从真实页面里抽出公司的布局规范。**Block = 可搬运的成形组合区块**：把 ui/fx 组件按真实场景拼好的标准用法（含交互），落成一个组件。**搭页面时整段搬运 block、只换数据，禁止手写重拼**（见 `AGENTS.md` 红线 6）。
+
+已落地 Block：
 
 - `CrmShellNav`（`src/components/recipes/crm-shell-nav.tsx`）：CRM 应用外壳导航 = NavRail 一级应用栏 + NavMenu 二级菜单的规范组合，全套折叠/固定/hover/选中交互。
 - `CrmAppShell`（`src/components/recipes/crm-app-shell.tsx`）：CRM 整页外壳 = TopBar 顶栏 + CrmShellNav 双层导航 + 内容卡插槽（灰底浮卡布局）。页面只往 children 塞内容，外壳 chrome 全复用。「客户列表页」模板即基于它。
+- `DataTable`（`src/components/recipes/data-table.tsx`）：薄表格区块 = 表格 + 勾选(全选/半选) + 行操作；中间列由 `columns`（每列 `cell` render）驱动，受控，不引 TanStack。
+- `ListToolbar`（`src/components/recipes/list-toolbar.tsx`）：列表页工具栏 = 筛选 + 复合搜索(scope+input) + 视图切换 + 右侧额外动作，全受控配置化。
 
 候选 Blocks：
 

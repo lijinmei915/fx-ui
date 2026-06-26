@@ -142,6 +142,8 @@ import { NavRail, NavRailItem, NavMenu, NavMenuHeader, NavMenuSearch, NavMenuLis
 import { TopBar, TopBarBrand, TopBarDivider, TopBarApps, TopBarSearch, TopBarActions, TopBarIconButton } from "@/components/fx/top-bar"
 import { Progress } from "@/components/ui/progress"
 import { CrmAppShell } from "@/components/recipes/crm-app-shell"
+import { DataTable, type Column } from "@/components/recipes/data-table"
+import { ListToolbar } from "@/components/recipes/list-toolbar"
 import componentsManifestRaw from "../docs/data/components.manifest.json?raw"
 import designTokensManifestRaw from "../docs/data/design-tokens.json?raw"
 import docSiteManifestRaw from "../docs/data/doc-site.manifest.json?raw"
@@ -13066,21 +13068,31 @@ const tplScopes = [
   { key: "phone", label: "电话" },
 ]
 
+// 列定义（页面侧，只换数据/列；DataTable 只负责渲染 + 勾选）
+const customerColumns: Column<TplCustomer>[] = [
+  { key: "locate", header: "", headClassName: "w-8", cell: () => <Button variant="plain" size="icon-sm" aria-label="定位"><CircleIcon /></Button> },
+  { key: "name", header: "客户名称", cell: (c) => <a href="#template-customer-list" className="text-foreground hover:text-link hover:underline">{c.name}</a> },
+  { key: "level", header: "客户级别", cell: (c) => <Tag color={c.levelColor}>{c.level}</Tag> },
+  { key: "progress", header: "跟进进度", headClassName: "w-40", cell: (c) => (
+    <span className="flex items-center gap-2">
+      <Progress value={c.progress} tone={c.progressTone} className="w-20" />
+      <span className="w-9 shrink-0 text-fx-12 tabular-nums text-muted-foreground">{c.progress}%</span>
+    </span>
+  ) },
+  { key: "phone", header: "电话", cell: (c) => <span className="inline-flex items-center gap-1.5 tabular-nums"><span>{c.flag}</span>{c.phone}</span> },
+  { key: "owner", header: "负责人", cell: (c) => (
+    <span className="inline-flex items-center gap-1.5">
+      <Avatar className="size-5"><AvatarImage src={c.avatar} alt={c.owner} /><AvatarFallback colorful>{avatarInitials(c.owner)}</AvatarFallback></Avatar>
+      {c.owner}
+    </span>
+  ) },
+]
+
 function CustomerListTemplate({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   const [q, setQ] = useState("")
   const [scope, setScope] = useState("name")
   const [view, setView] = useState("list")
-  const [selected, setSelected] = useState<Set<number>>(new Set())
-  const allChecked = tplCustomers.every((c) => selected.has(c.id))
-  const someChecked = tplCustomers.some((c) => selected.has(c.id))
-  const toggleAll = () =>
-    setSelected((s) => (s.size === tplCustomers.length ? new Set() : new Set(tplCustomers.map((c) => c.id))))
-  const toggleOne = (id: number) =>
-    setSelected((s) => {
-      const n = new Set(s)
-      n.has(id) ? n.delete(id) : n.add(id)
-      return n
-    })
+  const [selected, setSelected] = useState<Set<string | number>>(new Set())
 
   return (
     <div className={docsSpacing.pageStack}>
@@ -13115,85 +13127,40 @@ function CustomerListTemplate({ actions, lang }: { actions: React.ReactNode; lan
               </div>
 
               {/* 工具栏 */}
-              <div className="flex shrink-0 items-center justify-between gap-3 px-4 py-2.5">
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm"><FilterIcon data-icon="inline-start" />筛选</Button>
-                  <div className="flex h-8 w-64 items-center rounded-lg border border-border bg-card transition-colors focus-within:border-ring">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger className="inline-flex shrink-0 items-center gap-1 rounded-l-lg px-2.5 text-fx-13 text-muted-foreground outline-none hover:text-foreground [&_svg]:size-3">
-                        {tplScopes.find((s) => s.key === scope)?.label}
-                        <ChevronDownIcon />
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="start">
-                        {tplScopes.map((s) => (
-                          <DropdownMenuItem key={s.key} selected={s.key === scope} onClick={() => setScope(s.key)}>{s.label}</DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                    <span className="h-4 w-px bg-border" />
-                    <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="搜索" className="min-w-0 flex-1 bg-transparent px-2.5 text-fx-13 outline-none placeholder:text-foreground-disabled" />
-                    <SearchIcon className="mr-2.5 size-4 shrink-0 text-muted-foreground" />
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <ToggleGroup value={[view]} onValueChange={(v) => v[0] && setView(v[0])}>
-                    {tplViews.map((vw) => (
-                      <Tooltip key={vw.value}>
-                        <TooltipTrigger render={<ToggleGroupItem value={vw.value} aria-label={vw.label}>{vw.icon}</ToggleGroupItem>} />
-                        <TooltipContent>{vw.label}</TooltipContent>
-                      </Tooltip>
-                    ))}
-                  </ToggleGroup>
-                  <Button variant="ghost" size="icon-sm" aria-label="显示设置"><SettingsIcon /></Button>
-                  <Button variant="ghost" size="icon-sm" aria-label="刷新"><RefreshIcon /></Button>
-                </div>
-              </div>
+              <ListToolbar
+                search={q}
+                onSearchChange={setQ}
+                scope={scope}
+                scopes={tplScopes}
+                onScopeChange={setScope}
+                view={view}
+                views={tplViews}
+                onViewChange={setView}
+                onFilter={() => {}}
+                actions={
+                  <>
+                    <Button variant="ghost" size="icon-sm" aria-label="显示设置"><SettingsIcon /></Button>
+                    <Button variant="ghost" size="icon-sm" aria-label="刷新"><RefreshIcon /></Button>
+                  </>
+                }
+              />
 
               {/* 表格 */}
               <div className="min-h-0 flex-1 overflow-auto">
-                <Table>
-                  <TableHeader className="sticky top-0 z-10 bg-card">
-                    <TableRow className="hover:bg-transparent">
-                      <TableHead className="w-10 pl-4"><Checkbox checked={allChecked} indeterminate={someChecked && !allChecked} onCheckedChange={toggleAll} aria-label="全选" /></TableHead>
-                      <TableHead className="w-8" />
-                      <TableHead>客户名称</TableHead>
-                      <TableHead>客户级别</TableHead>
-                      <TableHead className="w-40">跟进进度</TableHead>
-                      <TableHead>电话</TableHead>
-                      <TableHead>负责人</TableHead>
-                      <TableHead className="pr-4">操作</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {tplCustomers.map((c) => (
-                      <TableRow key={c.id} data-selected={selected.has(c.id) ? "" : undefined}>
-                        <TableCell className="pl-4"><Checkbox checked={selected.has(c.id)} onCheckedChange={() => toggleOne(c.id)} aria-label={`选择 ${c.name}`} /></TableCell>
-                        <TableCell><Button variant="plain" size="icon-sm" aria-label="定位"><CircleIcon /></Button></TableCell>
-                        <TableCell><a href="#template-customer-list" className="text-foreground hover:text-link hover:underline">{c.name}</a></TableCell>
-                        <TableCell><Tag color={c.levelColor}>{c.level}</Tag></TableCell>
-                        <TableCell>
-                          <span className="flex items-center gap-2">
-                            <Progress value={c.progress} tone={c.progressTone} className="w-20" />
-                            <span className="w-9 shrink-0 text-fx-12 tabular-nums text-muted-foreground">{c.progress}%</span>
-                          </span>
-                        </TableCell>
-                        <TableCell><span className="inline-flex items-center gap-1.5 tabular-nums"><span>{c.flag}</span>{c.phone}</span></TableCell>
-                        <TableCell>
-                          <span className="inline-flex items-center gap-1.5">
-                            <Avatar className="size-5"><AvatarImage src={c.avatar} alt={c.owner} /><AvatarFallback colorful>{avatarInitials(c.owner)}</AvatarFallback></Avatar>
-                            {c.owner}
-                          </span>
-                        </TableCell>
-                        <TableCell className="pr-4">
-                          <span className="flex items-center gap-3">
-                            <Button variant="plain" tone="info" size="sm">查看</Button>
-                            <Button variant="plain" tone="info" size="sm">编辑</Button>
-                          </span>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                <DataTable
+                  columns={customerColumns}
+                  data={tplCustomers}
+                  rowKey={(c) => c.id}
+                  selectable
+                  selected={selected}
+                  onSelectedChange={setSelected}
+                  rowActions={() => (
+                    <span className="flex items-center gap-3">
+                      <Button variant="plain" tone="info" size="sm">查看</Button>
+                      <Button variant="plain" tone="info" size="sm">编辑</Button>
+                    </span>
+                  )}
+                />
               </div>
 
               {/* 分页 */}

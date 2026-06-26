@@ -3,7 +3,7 @@ layer: governance
 type: spec
 last_verified: 2026-06-26
 teaches: "fx-ui 仓库地图：任意产物住哪、怎么新增登记、谁来检查——按产物种类一站式分流"
-use_when: "要新增或查找任何产物（组件/recipe/token/图标/页面路由/视觉基线/规则/检查）前，先来这里定位，别靠猜"
+use_when: "要新增或查找任何产物（组件/block/token/图标/页面路由/视觉基线/规则/检查）前，先来这里定位，别靠猜"
 ---
 
 # 仓库地图 · 产物路由
@@ -17,7 +17,7 @@ use_when: "要新增或查找任何产物（组件/recipe/token/图标/页面路
 |----------|--------------|-----------------|----------|
 | 基础组件 | `src/components/ui/` | `npx shadcn add` 拉 → `docs/data/components.manifest.json` + `docs/components/<x>.md` + 导航/`pageRegistry` | `check:components` |
 | 组合组件（fx） | `src/components/fx/` | 由现成 ui 组件组合 → 同上 manifest + md + 导航 | `check:components` |
-| Recipe（可搬运范例） | `src/components/recipes/` | 复用既有范例只换数据 → 在 `docs/ARCHITECTURE.md`「Blocks/Recipes 层」登记 | （暂无脚本，人工核） |
+| Block（区块；文件夹历史名 recipes/） | `src/components/recipes/` | 复用既有区块只换数据 → 在 `docs/ARCHITECTURE.md`「页面 Block 层」登记 | （暂无脚本，人工核） |
 | 页面 / 路由 | `pageRegistry`（`src/App.tsx`，唯一真相源，见 DEC-023） | **先按 `docs/PAGES.md` 装配流程拼**；再加 registry 一行（满宽页加 `fullBleed`）+ `docsNav` 导航项 | `check:doc-site` |
 | Token（颜色/圆角/间距…） | `theme/fx-theme.css` | ①改 css ②`docs/TOKENS.md` ③`docs/data/design-tokens.json` ④`build:tokens` ⑤才改组件映射（顺序不能反） | `check:tokens` |
 | 图标 | `src/lib/icons.ts`（Tabler 映射）/ `src/lib/icons-custom.tsx`（自定义 SVG） | 加一行映射或自定义组件 → `docs/data/icons.manifest.json` | `check:icons` |

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { MessageCircleIcon, BellIcon, HelpIcon } from "@/lib/icons"
 
-// Recipe（可搬运外壳）：CRM 应用外壳 = TopBar 顶栏 + CrmShellNav 双层导航 + 内容卡插槽。
+// Block（区块 / 可搬运外壳，文件夹历史名 recipes/）：CRM 应用外壳 = TopBar 顶栏 + CrmShellNav 双层导航 + 内容卡插槽。
 // 固定 chrome（顶栏/导航/头像菜单）都在这里，页面只往 children 里塞内容（页头/工具栏/表格…）。
 // 灰底 + 圆角白卡浮起布局；外壳本身不写死页面内容，换页面只换 children。
 const shellApps = [

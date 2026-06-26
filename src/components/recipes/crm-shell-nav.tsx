@@ -18,7 +18,7 @@ import {
   BuildingIcon, MapPinIcon, ReportMoneyIcon, UserIcon, TargetIcon, DatabaseIcon,
 } from "@/lib/icons"
 
-// Recipe（可搬运范例）：CRM 应用外壳导航 = 一级应用栏(NavRail) + 二级菜单(NavMenu) 的规范组合。
+// Block（区块 / 可搬运范例，文件夹历史名 recipes/）：CRM 应用外壳导航 = 一级应用栏(NavRail) + 二级菜单(NavMenu) 的规范组合。
 // 复用导航文档页 comboDemo 的成形用法，全套折叠/固定/hover 展开/选中交互；只换数据。
 // app-shell 里齐平显示（rounded-none + 右分割线）。要别的应用换 railApps/菜单数据即可，不要重写结构。
 function CrmShellNav() {

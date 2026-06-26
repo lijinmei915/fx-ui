@@ -5285,7 +5285,8 @@ function ComponentsIndexPage({ actions, lang }: { actions: React.ReactNode; lang
 // 全站统一的「场景示例」表：场景 / 示例 / [规格] / 使用意图 / 约束 / 推荐写法。
 // 列宽与换行规范见 docs/DOC_SITE_DESIGN.md「表格」。调用方传入已按 lang 本地化的 rows + preview 节点。
 type ScenarioRow = { key: string; group?: string; title: string; preview: React.ReactNode; spec?: string; intent: string; constraint: string; code: string }
-function ScenarioTable({ rows, filters, lang, layout = "table" }: { rows: ScenarioRow[]; filters?: { value: string; label: string; labelEn?: string }[]; lang: Lang; layout?: "table" | "stack" }) {
+function ScenarioTable({ rows, filters, lang, layout = "table", elevated = false }: { rows: ScenarioRow[]; filters?: { value: string; label: string; labelEn?: string }[]; lang: Lang; layout?: "table" | "stack"; elevated?: boolean }) {
+  const cardShell = elevated ? "rounded-xl shadow-l1" : "rounded-lg"
   const [filter, setFilter] = useState(filters?.[0]?.value ?? "all")
   const shown = filters ? rows.filter((r) => r.group === filter) : rows
   // 规格列只在当前显示的行真的有规格时才出现（≈只在「尺寸」分组出现），避免类型/用法 tab 显示一列重复规格
@@ -5306,7 +5307,7 @@ function ScenarioTable({ rows, filters, lang, layout = "table" }: { rows: Scenar
         {filterTabs}
         <div className="flex flex-col gap-5">
           {shown.map((r) => (
-            <div key={r.key} className="overflow-hidden rounded-lg border border-border bg-card">
+            <div key={r.key} className={`overflow-hidden border border-border bg-card ${cardShell}`}>
               <div className="flex items-center justify-between gap-3 border-b border-border-subtle px-4 py-2.5">
                 <span className="font-medium">{r.title}</span>
                 {r.spec ? <span className="text-fx-12 text-muted-foreground">{r.spec}</span> : null}
@@ -5337,7 +5338,7 @@ function ScenarioTable({ rows, filters, lang, layout = "table" }: { rows: Scenar
   return (
     <>
       {filterTabs}
-      <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+      <div className={`max-w-full overflow-x-auto border border-border bg-card ${cardShell}`}>
         <Table className="w-auto">
           <TableHeader>
             <TableRow>
@@ -5665,6 +5666,7 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
         </div>
         <ScenarioTable
           lang={lang}
+          elevated
           filters={buttonScenarioFilters}
           rows={buttonScenarioExamples.map((example) => ({
             key: example.id,
@@ -5688,14 +5690,14 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
               : "复制 import 即可；具体 JSX 写法见上方「场景示例」的推荐写法列。"}
           </p>
         </div>
-        <div className="rounded-lg border border-border bg-card p-5">
+        <div className="rounded-xl border border-border bg-card p-5 shadow-l1">
           <CopyCodeBlock code={buttonImportCode} label="Import" lang={lang} />
         </div>
       </section>
 
       <section id="props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "API Props" : "API 属性"}</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-xl border border-border bg-card shadow-l1">
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -5732,7 +5734,7 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
               : "Button 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。"}
           </p>
         </div>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-xl border border-border bg-card shadow-l1">
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -5764,7 +5766,7 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           </p>
         </div>
         <div className="grid gap-4 md:grid-cols-2">
-          <Card>
+          <Card elevated>
             <CardHeader>
               <CardTitle className="text-base text-foreground">{lang === "en" ? "Do" : "推荐 Do"}</CardTitle>
             </CardHeader>
@@ -5777,7 +5779,7 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
               ))}
             </CardContent>
           </Card>
-          <Card>
+          <Card elevated>
             <CardHeader>
               <CardTitle className="text-base text-foreground">{lang === "en" ? "Don’t" : "避免 Don't"}</CardTitle>
             </CardHeader>

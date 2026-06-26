@@ -36,3 +36,10 @@ test("Button 组件总览", async ({ page }) => {
   await expect(overview).toBeVisible()
   await expect(overview).toHaveScreenshot("button-overview.png")
 })
+
+test("Button 交互调试台", async ({ page }) => {
+  await page.goto("/#button")
+  const pg = page.locator("#playground")
+  await expect(pg).toBeVisible()
+  await expect(pg).toHaveScreenshot("button-playground.png")
+})

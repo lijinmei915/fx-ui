@@ -1069,6 +1069,7 @@ const buttonDoDontRows = [
 ]
 
 const buttonAnchors = [
+  { label: "调试台", labelEn: "Playground", href: "#playground" },
   { label: "组件总览", labelEn: "Overview", href: "#overview" },
   { label: "场景示例", labelEn: "Scenario examples", href: "#preview" },
   { label: "使用方式", labelEn: "Usage", href: "#usage" },
@@ -5369,6 +5370,178 @@ function ScenarioTable({ rows, filters, lang, layout = "table" }: { rows: Scenar
   )
 }
 
+// ── 交互调试台（playground）─────────────────────────────────────────────
+// 外壳是文档站自有 chrome（卡片/微标签/点阵预览区/Preview·Code tab），用 token 自由排版；
+// 控件一律复用现成组件：枚举属性用 ToggleGroup、文本用 Input、tab 用 Tabs variant="line"。
+function PlaygroundEyebrow({ dot, zh, en }: { dot: string; zh: string; en: string }) {
+  return (
+    <div className="mb-4 flex items-center gap-2 text-xs font-bold tracking-widest text-muted-foreground uppercase">
+      <span className={`size-1.5 rounded-full ${dot}`} />
+      {zh} <span className="font-normal text-foreground-disabled">({en})</span>
+    </div>
+  )
+}
+function PlaygroundPropLabel({ zh, prop }: { zh: string; prop: string }) {
+  return (
+    <label className="flex items-center gap-1.5 text-xs font-semibold text-foreground-secondary">
+      {zh}
+      <code className="rounded border border-border-subtle bg-muted px-1 py-0.5 font-mono text-[10px] font-normal text-muted-foreground">{prop}</code>
+    </label>
+  )
+}
+
+type PgVariant = "default" | "secondary" | "outline" | "ghost" | "destructive"
+type PgSize = "sm" | "md" | "lg"
+type PgIcon = "none" | "start" | "end" | "only"
+const PG_VARIANTS: { value: PgVariant; label: string }[] = [
+  { value: "default", label: "solid" },
+  { value: "secondary", label: "secondary" },
+  { value: "outline", label: "outline" },
+  { value: "ghost", label: "ghost" },
+  { value: "destructive", label: "danger" },
+]
+const PG_SIZES: { value: PgSize; label: string }[] = [
+  { value: "sm", label: "sm" }, { value: "md", label: "md" }, { value: "lg", label: "lg" },
+]
+const PG_ICONS: { value: PgIcon; label: string }[] = [
+  { value: "none", label: "none" }, { value: "start", label: "left" }, { value: "end", label: "right" }, { value: "only", label: "only" },
+]
+const PG_ICON_SIZE: Record<PgSize, "icon-sm" | "icon-md" | "icon-lg"> = { sm: "icon-sm", md: "icon-md", lg: "icon-lg" }
+type PgState = { variant: PgVariant; size: PgSize; icon: PgIcon; text: string; textEn: string; disabled: boolean }
+const PG_SCENARIOS: { id: string; zh: string; en: string; s: PgState }[] = [
+  { id: "primary", zh: "主操作", en: "Primary", s: { variant: "default", size: "md", icon: "none", text: "保存", textEn: "Save", disabled: false } },
+  { id: "secondary", zh: "次操作", en: "Secondary", s: { variant: "secondary", size: "md", icon: "none", text: "取消", textEn: "Cancel", disabled: false } },
+  { id: "danger", zh: "危险操作", en: "Danger", s: { variant: "destructive", size: "md", icon: "none", text: "删除项目", textEn: "Delete project", disabled: false } },
+  { id: "outline", zh: "描边操作", en: "Outline", s: { variant: "outline", size: "md", icon: "none", text: "导出", textEn: "Export", disabled: false } },
+  { id: "ghost", zh: "幽灵操作", en: "Ghost", s: { variant: "ghost", size: "md", icon: "none", text: "查看详情", textEn: "View details", disabled: false } },
+  { id: "icon-text", zh: "带有图标", en: "With icon", s: { variant: "default", size: "md", icon: "start", text: "搜索", textEn: "Search", disabled: false } },
+  { id: "icon-only", zh: "纯图标", en: "Icon only", s: { variant: "default", size: "md", icon: "only", text: "打开组件包", textEn: "Open package", disabled: false } },
+]
+
+function genButtonCode(s: PgState, label: string): string {
+  const attrs: string[] = []
+  if (s.variant !== "default") attrs.push(`variant="${s.variant}"`)
+  if (s.icon === "only") attrs.push(`size="${PG_ICON_SIZE[s.size]}"`)
+  else if (s.size !== "sm") attrs.push(`size="${s.size}"`)
+  if (s.disabled) attrs.push("disabled")
+  if (s.icon === "only") attrs.push(`aria-label="${label}"`)
+  const open = `<Button${attrs.length ? " " + attrs.join(" ") : ""}>`
+  let inner: string
+  if (s.icon === "only") inner = `<PackageIcon />`
+  else if (s.icon === "start") inner = `<SearchIcon data-icon="inline-start" />${label}`
+  else if (s.icon === "end") inner = `${label}<ChevronDownIcon data-icon="inline-end" />`
+  else inner = label
+  return `${open}${inner}</Button>`
+}
+
+function ButtonPlayground({ lang }: { lang: Lang }) {
+  const [s, setS] = useState<PgState>(PG_SCENARIOS[0].s)
+  const [tab, setTab] = useState("preview")
+  const [copied, setCopied] = useState(false)
+  const label = lang === "en" ? s.textEn : s.text
+  const activeScenario = PG_SCENARIOS.find(
+    (sc) => sc.s.variant === s.variant && sc.s.size === s.size && sc.s.icon === s.icon && sc.s.disabled === s.disabled
+  )?.id
+  const set = (patch: Partial<PgState>) => setS((prev) => ({ ...prev, ...patch }))
+  const code = genButtonCode(s, label || (lang === "en" ? "Button" : "按钮"))
+  const copy = () => { navigator.clipboard?.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 1500) }
+
+  const preview = s.icon === "only" ? (
+    <Button variant={s.variant} size={PG_ICON_SIZE[s.size]} disabled={s.disabled} aria-label={label || "按钮"}>
+      <PackageIcon />
+    </Button>
+  ) : (
+    <Button variant={s.variant} size={s.size} disabled={s.disabled}>
+      {s.icon === "start" ? <SearchIcon data-icon="inline-start" /> : null}
+      {label}
+      {s.icon === "end" ? <ChevronDownIcon data-icon="inline-end" /> : null}
+    </Button>
+  )
+
+  return (
+    <div className="overflow-hidden rounded-xl border border-border bg-card shadow-l1">
+      {/* 配置区：左场景预设 / 右实时属性 */}
+      <div className="flex flex-col border-b border-border-subtle bg-muted/40 xl:flex-row">
+        <div className="flex-1 border-b border-border-subtle p-5 xl:border-r xl:border-b-0">
+          <PlaygroundEyebrow dot="bg-info" zh={lang === "en" ? "Scenarios" : "场景预设"} en="SCENARIOS" />
+          <div className="flex flex-wrap gap-2">
+            {PG_SCENARIOS.map((sc) => (
+              <Button
+                key={sc.id}
+                variant={activeScenario === sc.id ? "secondary" : "outline"}
+                size="sm"
+                onClick={() => setS(sc.s)}
+              >
+                {lang === "en" ? sc.en : sc.zh}
+              </Button>
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-1 flex-col gap-5 p-5">
+          <PlaygroundEyebrow dot="bg-primary" zh={lang === "en" ? "Interactive props" : "实时属性"} en="INTERACTIVE PROPS" />
+          <div className="flex flex-col gap-1.5">
+            <PlaygroundPropLabel zh={lang === "en" ? "Text" : "内容"} prop="children" />
+            <Input
+              value={label}
+              disabled={s.icon === "only"}
+              onChange={(e) => set(lang === "en" ? { textEn: e.target.value } : { text: e.target.value })}
+              className="h-8 w-full max-w-72"
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <PlaygroundPropLabel zh={lang === "en" ? "Variant" : "变体"} prop="variant" />
+            <ToggleGroup value={[s.variant]} onValueChange={(v) => v[0] && set({ variant: v[0] as PgVariant })}>
+              {PG_VARIANTS.map((o) => <ToggleGroupItem key={o.value} value={o.value}>{o.label}</ToggleGroupItem>)}
+            </ToggleGroup>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <PlaygroundPropLabel zh={lang === "en" ? "Size" : "尺寸"} prop="size" />
+            <ToggleGroup value={[s.size]} onValueChange={(v) => v[0] && set({ size: v[0] as PgSize })}>
+              {PG_SIZES.map((o) => <ToggleGroupItem key={o.value} value={o.value}>{o.label}</ToggleGroupItem>)}
+            </ToggleGroup>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <PlaygroundPropLabel zh={lang === "en" ? "Icon" : "图标位置"} prop="iconLayout" />
+            <ToggleGroup value={[s.icon]} onValueChange={(v) => v[0] && set({ icon: v[0] as PgIcon })}>
+              {PG_ICONS.map((o) => <ToggleGroupItem key={o.value} value={o.value}>{o.label}</ToggleGroupItem>)}
+            </ToggleGroup>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <PlaygroundPropLabel zh={lang === "en" ? "Disabled" : "禁用"} prop="disabled" />
+            <ToggleGroup value={[String(s.disabled)]} onValueChange={(v) => v[0] && set({ disabled: v[0] === "true" })}>
+              <ToggleGroupItem value="false">False</ToggleGroupItem>
+              <ToggleGroupItem value="true">True</ToggleGroupItem>
+            </ToggleGroup>
+          </div>
+        </div>
+      </div>
+      {/* Preview / Code 切换 */}
+      <Tabs value={tab} onValueChange={setTab}>
+        <div className="flex items-center justify-between border-b border-border-subtle px-4 pt-1.5">
+          <TabsList variant="line">
+            <TabsTrigger value="preview"><EyeIcon data-icon="inline-start" />Preview</TabsTrigger>
+            <TabsTrigger value="code"><FileCodeIcon data-icon="inline-start" />Code</TabsTrigger>
+          </TabsList>
+          <Button variant="outline" size="sm" onClick={copy}>
+            {copied ? <CheckIcon data-icon="inline-start" /> : <CopyIcon data-icon="inline-start" />}
+            {copied ? (lang === "en" ? "Copied" : "已复制") : "Copy"}
+          </Button>
+        </div>
+        <TabsContent value="preview">
+          <div className="flex min-h-64 items-center justify-center bg-[radial-gradient(var(--border)_1px,transparent_0)] bg-[size:24px_24px] p-12">
+            {preview}
+          </div>
+        </TabsContent>
+        <TabsContent value="code">
+          <div className="p-4">
+            <pre className="overflow-x-auto rounded-lg bg-muted px-3 py-2.5 text-fx-12"><code>{code}</code></pre>
+          </div>
+        </TabsContent>
+      </Tabs>
+    </div>
+  )
+}
+
 function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   return (
     <div className={docsSpacing.pageStack}>
@@ -5379,6 +5552,18 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
           lead={lang === "en" ? "A button starts an immediate action." : "按钮用于开始一个即时操作。"}
           actions={actions}
         />
+      </section>
+
+      <section id="playground" className={docsSpacing.sectionStack}>
+        <div className="flex flex-col gap-1">
+          <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Playground" : "调试台"}</h2>
+          <p className="text-base text-muted-foreground">
+            {lang === "en"
+              ? "Pick a scenario or tweak props live, then copy the generated code."
+              : "选场景或实时调属性，预览随之变化，写法可一键复制。"}
+          </p>
+        </div>
+        <ButtonPlayground lang={lang} />
       </section>
 
       <section id="overview" className={docsSpacing.sectionStack}>

@@ -5464,11 +5464,15 @@ function PgSeg({ active, isAll, label, onClick }: { active: boolean; isAll?: boo
     </button>
   )
 }
-function PgSegmented({ value, onChange, options, allLabel }: { value: string; onChange: (v: string) => void; options: { value: string; label: string }[]; allLabel: string }) {
+function PgSegmented({ value, onChange, options, allLabel }: { value: string; onChange: (v: string) => void; options: { value: string; label: string }[]; allLabel?: string }) {
   return (
     <div className="flex w-fit flex-wrap items-center gap-0.5 rounded-md border border-border-subtle bg-muted p-0.5">
-      <PgSeg active={value === "all"} isAll label={allLabel} onClick={() => onChange("all")} />
-      <div className="mx-0.5 my-1 w-px self-stretch bg-border" />
+      {allLabel ? (
+        <>
+          <PgSeg active={value === "all"} isAll label={allLabel} onClick={() => onChange("all")} />
+          <div className="mx-0.5 my-1 w-px self-stretch bg-border" />
+        </>
+      ) : null}
       {options.map((o) => (
         <PgSeg key={o.value} active={value === o.value} label={o.label} onClick={() => onChange(o.value)} />
       ))}
@@ -5508,18 +5512,11 @@ function ButtonPlayground({ lang }: { lang: Lang }) {
       <div className="flex flex-col border-b border-border-subtle bg-muted/30 xl:flex-row">
         <div className="flex-1 border-b border-border-subtle p-5 xl:border-r xl:border-b-0">
           <PlaygroundEyebrow dot="bg-info" zh={lang === "en" ? "Scenarios" : "场景预设"} en="SCENARIOS" />
-          <div className="flex flex-wrap gap-2">
-            {PG_SCENARIOS.map((sc) => (
-              <Button
-                key={sc.id}
-                variant={activeScenario === sc.id ? "secondary" : "outline"}
-                size="sm"
-                onClick={() => setS(sc.s)}
-              >
-                {lang === "en" ? sc.en : sc.zh}
-              </Button>
-            ))}
-          </div>
+          <PgSegmented
+            value={activeScenario ?? ""}
+            onChange={(id) => { const sc = PG_SCENARIOS.find((x) => x.id === id); if (sc) setS(sc.s) }}
+            options={PG_SCENARIOS.map((sc) => ({ value: sc.id, label: lang === "en" ? sc.en : sc.zh }))}
+          />
           {activeSc ? (
             <div className="mt-4 space-y-3 rounded-xl border border-border-subtle bg-card p-4 shadow-l1">
               <div>

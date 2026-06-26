@@ -36,6 +36,16 @@ use_when: "要生成 / 改造任意页面（列表页、表单页、详情页、
 - 把该场景的交互（选中/折叠/分页/筛选等）内置好，对外只暴露**数据 props**。
 - 登记 `docs/ARCHITECTURE.md` 的「页面 Block 层」（以后补视觉基线）。
 
+## block 怎么处理变体
+
+block 既不能僵（不能变），也不能堆成 ProTable 那种 config 怪物。**分三层处理 + 一条铁律**：
+
+1. **已知的小变化 → 开 props/slots（有限的轴）**：把"合理会变的部分"做成可选 prop/插槽。例：`DataTable` 的 `selectable?`/`columns`/`rowActions?`、`ListToolbar` 的 `scopes?`/`views?`/`actions`。不要某部分就不传，不靠改 block。
+2. **内部组件长相不同 → 透传那个组件自己的 variant，不在 block 里覆盖**：如要紧凑表格，把 `Table` 已有的 `density` 暴露成 block 的 prop 透传下去，**不写 className 覆盖**（红线 7）。即"把内部组件已有的 variant 按需暴露成 block prop"。
+3. **变化太大 → 降一层自己拼，不给 block 加第 20 个 flag**：离群案例直接用更小的块（`DataTable` + 自拼工具栏）或原子（`Table` 直接拼）。block 只覆盖**常见形态**。这条是和 ProTable 划清界限的关键。
+
+> **铁律：变体轴按需加，不预先堆。** 第二个真实场景真要某个变体了才加那个 prop；凭空"万一要密度/排序/拖拽"全开 = 滑向 ProTable（同 N=1 不预先抽页面一个道理）。
+
 ## 可用区块
 
 > 随沉淀更新。候选（未落地）：`ListPageBlock` / `FormBlock` / `DetailBlock` / `DashboardBlock`。

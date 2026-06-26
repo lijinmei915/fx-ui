@@ -43,3 +43,10 @@ test("Button 交互调试台", async ({ page }) => {
   await expect(pg).toBeVisible()
   await expect(pg).toHaveScreenshot("button-playground.png")
 })
+
+test("Tag 交互调试台", async ({ page }) => {
+  await page.goto("/#tag")
+  const pg = page.locator("#tag-playground")
+  await expect(pg).toBeVisible()
+  await expect(pg).toHaveScreenshot("tag-playground.png")
+})

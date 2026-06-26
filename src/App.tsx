@@ -1551,6 +1551,7 @@ const cardDoDontRows = [
 ]
 
 const tagAnchors = [
+  { label: "调试台", labelEn: "Playground", href: "#tag-playground" },
   { label: "组件总览", href: "#tag-overview" },
   { label: "场景示例", href: "#tag-preview" },
   { label: "使用方式", href: "#tag-usage" },
@@ -9793,12 +9794,54 @@ function TagOverview() {
   )
 }
 
+const TAG_VARIANTS = [
+  { value: "default", label: "default" },
+  { value: "secondary", label: "secondary" },
+  { value: "success", label: "success" },
+  { value: "warning", label: "warning" },
+  { value: "destructive", label: "destructive" },
+  { value: "outline", label: "outline" },
+]
+const TAG_COLORS = [
+  { value: "none", label: "none" }, { value: "red", label: "red" }, { value: "amber", label: "amber" },
+  { value: "yellow", label: "yellow" }, { value: "lime", label: "lime" }, { value: "green", label: "green" },
+  { value: "teal", label: "teal" }, { value: "cyan", label: "cyan" }, { value: "blue", label: "blue" },
+  { value: "purple", label: "purple" }, { value: "pink", label: "pink" },
+]
+type TagVariant = "default" | "secondary" | "success" | "warning" | "destructive" | "outline"
+type TagColor = "none" | "red" | "amber" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "purple" | "pink"
+function genTagCode(variant: TagVariant, color: TagColor, label: string): string {
+  const attrs: string[] = []
+  if (variant !== "default") attrs.push(`variant="${variant}"`)
+  if (color !== "none") attrs.push(`color="${color}"`)
+  return `<Tag${attrs.length ? " " + attrs.join(" ") : ""}>${label}</Tag>`
+}
+const tagPlaygroundConfig: PgPlaygroundConfig = {
+  scenarios: [
+    { id: "default", zh: "默认", en: "Default", intent: "中性标签，不带状态情绪。", intentEn: "A neutral tag without status semantics.", values: { variant: "default", color: "none", text: "标签", textEn: "Tag" } },
+    { id: "success", zh: "成功", en: "Success", intent: "表示成功 / 已完成 / 生效中的状态。", intentEn: "Signals a success / done / active state.", values: { variant: "success", color: "none", text: "已支付", textEn: "Paid" } },
+    { id: "warning", zh: "警告", en: "Warning", intent: "表示需要注意 / 待处理的状态。", intentEn: "Signals an attention / pending state.", values: { variant: "warning", color: "none", text: "待审核", textEn: "Pending" } },
+    { id: "danger", zh: "危险", en: "Danger", intent: "表示失败 / 异常 / 已停用的状态。", intentEn: "Signals a failed / error / disabled state.", values: { variant: "destructive", color: "none", text: "已失效", textEn: "Expired" } },
+    { id: "outline", zh: "描边", en: "Outline", intent: "弱化的中性标签，描边不抢眼。", intentEn: "A low-key neutral tag with just an outline.", values: { variant: "outline", color: "none", text: "草稿", textEn: "Draft" } },
+    { id: "category", zh: "分类打标", en: "Category", intent: "分类用多彩 color（颜色=类别不是状态），color 覆盖 variant 配色。", intentEn: "Use the multicolor color axis for categories (color = category, not status); color overrides variant.", values: { variant: "default", color: "purple", text: "高意向", textEn: "High intent" } },
+  ],
+  props: [
+    { key: "text", zh: "内容", en: "Text", propName: "children", type: "text", bilingual: true },
+    { key: "variant", zh: "状态", en: "Variant", propName: "variant", type: "segment", options: TAG_VARIANTS, hasAll: true },
+    { key: "color", zh: "分类色", en: "Color", propName: "color", type: "segment", options: TAG_COLORS, hasAll: true },
+  ],
+  initial: { variant: "default", color: "none", text: "标签", textEn: "Tag" },
+  renderOne: (c, lang) => <Tag variant={c.variant as TagVariant} color={c.color as TagColor}>{(lang === "en" ? c.textEn : c.text) || "Tag"}</Tag>,
+  genCode: (c, lang) => genTagCode(c.variant as TagVariant, c.color as TagColor, (lang === "en" ? c.textEn : c.text) || "Tag"),
+}
+
 function TagPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {
   return (
     <StandardDocPage
       slug="tag"
       title="Tag 标签"
       lead="行内的状态/分类小标签：状态用 variant，分类打标用多彩 color。角标红点/数字请用 Badge。"
+      playground={<Playground config={tagPlaygroundConfig} lang={lang} />}
       overview={null}
       overviewMatrix={<TagOverview />}
       scenarioExamples={tagScenarioExamples}
@@ -11121,6 +11164,7 @@ function StandardDocPage({
   slug,
   title,
   lead,
+  playground,
   overview,
   overviewMatrix,
   scenarioExamples,
@@ -11138,6 +11182,7 @@ function StandardDocPage({
   slug: string
   title: string
   lead: string
+  playground?: React.ReactNode
   overview: React.ReactNode
   overviewMatrix?: React.ReactNode
   scenarioExamples: { id: string; title: string; intent: string; rule: string; code: string; group?: string; spec?: string }[]
@@ -11162,6 +11207,16 @@ function StandardDocPage({
           actions={actions}
         />
       </section>
+
+      {playground ? (
+        <section id={`${slug}-playground`} className={docsSpacing.sectionStack}>
+          <div className="flex flex-col gap-1">
+            <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Playground" : "调试台"}</h2>
+            <p className="text-base text-muted-foreground">{lang === "en" ? "Pick a scenario or tweak props live, then copy the generated code." : "选场景或实时调属性，预览随之变化，写法可一键复制。"}</p>
+          </div>
+          {playground}
+        </section>
+      ) : null}
 
       <section id={`${slug}-overview`} className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">

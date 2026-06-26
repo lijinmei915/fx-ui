@@ -17,8 +17,8 @@ const knownIds = new Set([
   ...[...src.matchAll(/id="([^"]+)"/g)].map((m) => m[1]),
   ...[...src.matchAll(/\bid:\s*"([^"]+)"/g)].map((m) => m[1]),
 ])
-// 2) StandardDocPage 由 slug 生成的 id：{slug} 及 6 个固定小节
-const stdSuffixes = ["", "-overview", "-preview", "-usage", "-props", "-semantic-dom", "-do-dont"]
+// 2) StandardDocPage 由 slug 生成的 id：{slug} 及固定小节（-playground 为可选槽，传 playground 时才渲染）
+const stdSuffixes = ["", "-playground", "-overview", "-preview", "-usage", "-props", "-semantic-dom", "-do-dont"]
 for (const m of src.matchAll(/slug="([^"]+)"/g)) {
   for (const suf of stdSuffixes) knownIds.add(m[1] + suf)
 }

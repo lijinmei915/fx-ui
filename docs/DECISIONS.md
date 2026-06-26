@@ -315,6 +315,16 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **影响**：`@fontsource/noto-sans-sc` 仍保留加载（作兜底）；视觉基线随中文字形变化已重定。
 - **相关文件**：`theme/fx-theme.css`（`--font-sans`）、`docs/TOKENS.md`（排版·字族）
 
+### DEC-028: 字重补 semibold(600) 档，并把文档站展示标题降一档对齐参考站
+
+- **日期**：2026-06-26
+- **状态**：已决定
+- **决定**：① 字重阶从 400/500/700 三档补为 **400/500/600/700** 四档——`font-semibold`(600) 作"次强调/小标题/卡片标题"档（500 偏轻、700 偏重之间的中间档，且文档站早已在用，此为扶正）。② 文档站**展示型标题**降一档对齐参考站 component-library-showcase：页标题 `text-4xl(36)→text-3xl(30)`、区块标题 `text-2xl(24)→text-xl(20)`，均保留 `font-bold tracking-tight`。
+- **放弃**：① 只用 700 不要 600（小标题没有合适中间字重）；② 维持 36/24 大标题（比参考站冲一档、不够克制）。
+- **原因**：参考站观感更稳，归因为标题字号小一档 + 小标题用 semibold。字色阶（slate-900/700/500/400 ↔ 我们 foreground/-secondary/muted-foreground/disabled）方向本就一致，无需动。
+- **范围边界**：只动**文档站自身展示标题**（Tailwind `text-*` 大号）；**不动业务/组件的 `text-fx-*` 企业字号阶**（那套以 Figma web 规范为准，见 DEC-004）。`font-semibold` 是 Tailwind 原生类，无需加 token CSS。
+- **相关文件**：`src/App.tsx`（标题 class）、`docs/TOKENS.md`（排版·字重）
+
 ## 相关文件
 
 | 文件 | 关系 |

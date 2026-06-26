@@ -142,7 +142,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 **行高随字号 token 自带**（上表"字号/行高"列即定义），用 `text-fx-*` 自动带上对应行高；`text-base` 走 Tailwind 默认 1.5。正文/说明**不要手写 `leading-7`/`leading-8`** 把行距抬到 2.0+——那样换行太散，不符合主流正文行高（约 1.5）。
 
-**字重**：`font-normal`(400) 常规·正文 / `font-medium`(500) 中等·标签·按钮·菜单 / `font-bold`(**700**) 加粗·标题·强调。
+**字重**：`font-normal`(400) 常规·正文 / `font-medium`(500) 中等·标签·按钮·菜单 / `font-semibold`(**600**) 次强调·小标题/卡片标题（500 偏轻、700 偏重时的中间档）/ `font-bold`(**700**) 加粗·页/区块标题·强调（见 DEC-028）。
 
 **字族**：`--font-sans` = `"Inter Variable", "PingFang SC", "苹方", "Microsoft YaHei", "微软雅黑", "Helvetica Neue", "Noto Sans SC", Arial, sans-serif`。西文/数字用 **Inter**（自托管 OFL）；中文**优先系统苹方/雅黑**（观感更精致），缺系统中文字时回退自托管 **Noto Sans SC（思源黑体）** 兜底（见 DEC-027 修订 DEC-008）。`src/main.tsx` 引入 `@fontsource-variable/inter` + `@fontsource/noto-sans-sc`（400/500/700，按 unicode-range 懒加载，仅兜底命中时下载）。
 

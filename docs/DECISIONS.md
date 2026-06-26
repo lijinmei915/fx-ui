@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-06-26
+last_verified: 2026-06-27
 teaches: "fx-ui 重要的技术/协作决策记录：选了什么、放弃了什么、为什么"
 use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论"
 ---
@@ -324,6 +324,15 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **原因**：参考站观感更稳，归因为标题字号小一档 + 小标题用 semibold。字色阶（slate-900/700/500/400 ↔ 我们 foreground/-secondary/muted-foreground/disabled）方向本就一致，无需动。
 - **范围边界**：只动**文档站自身展示标题**（Tailwind `text-*` 大号）；**不动业务/组件的 `text-fx-*` 企业字号阶**（那套以 Figma web 规范为准，见 DEC-004）。`font-semibold` 是 Tailwind 原生类，无需加 token CSS。
 - **相关文件**：`src/App.tsx`（标题 class）、`docs/TOKENS.md`（排版·字重）
+
+### DEC-029: Card 加 `elevated` 浮起变体（默认平卡）
+
+- **日期**：2026-06-27
+- **状态**：已决定
+- **决定**：`Card` 新增 `elevated?: boolean`（默认 `false`）。`false`=平卡（现状：`rounded-xl` + `ring-1`，无阴影）；`true`=加 `shadow-l1` 浮起。文档站总览卡等用 `<Card elevated>`，统一观感。
+- **放弃**：① 让所有 Card 默认带阴影——B 端业务卡通常是平的，默认浮起不合规范；② 在调用处用 `className="shadow-l1"` 覆盖——违反红线 7（要变体不要覆盖），故收成组件 variant 走治理。
+- **原因**：阴影表达 elevation，是组件该提供的正交开关；默认无、按场景 opt-in，既保持 B 端平卡习惯，又让文档站/营销页能要质感。
+- **相关文件**：`src/components/ui/card.tsx`、`docs/components/card.md`、`src/App.tsx`（StandardDocPage 总览卡用 elevated）
 
 ## 相关文件
 

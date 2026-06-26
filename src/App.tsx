@@ -11226,7 +11226,7 @@ function StandardDocPage({
         {overviewMatrix ? (
           overviewMatrix
         ) : (
-          <Card>
+          <Card elevated>
             <CardContent className="flex items-center gap-3 p-5">{overview}</CardContent>
           </Card>
         )}

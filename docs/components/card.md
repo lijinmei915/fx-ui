@@ -52,7 +52,7 @@ import { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, C
 - 类型：container
 - 语义 DOM：data-slot="card"、data-slot="card-header"、data-slot="card-title"、data-slot="card-description"、data-slot="card-action"、data-slot="card-content"、data-slot="card-footer"
 - 原生/数据状态：root
-- 变体：无独立 variant prop
+- 变体：无独立 variant prop；`size`（default/sm）控制内边距；`elevated`（boolean，默认 false）控制是否带柔和阴影 `shadow-l1`——默认平卡（B 端业务卡），文档站/营销页按需 opt-in（见 DEC-029）
 - 导出项：Card、CardHeader、CardFooter、CardTitle、CardAction、CardDescription、CardContent
 
 ## 场景示例 {#examples}

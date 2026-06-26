@@ -5407,7 +5407,19 @@ const PG_ICONS: { value: PgIcon; label: string }[] = [
   { value: "none", label: "none" }, { value: "start", label: "left" }, { value: "end", label: "right" }, { value: "only", label: "only" },
 ]
 const PG_ICON_SIZE: Record<PgSize, "icon-sm" | "icon-md" | "icon-lg"> = { sm: "icon-sm", md: "icon-md", lg: "icon-lg" }
-type PgState = { variant: PgVariant; size: PgSize; icon: PgIcon; text: string; textEn: string; disabled: boolean }
+type PgState = { variant: PgVariant | "all"; size: PgSize | "all"; icon: PgIcon | "all"; text: string; textEn: string; disabled: boolean | "all" }
+// 单个具体组合 → 一个 Button（icon-only 走 icon-* 尺寸）
+function pgButton(variant: PgVariant, size: PgSize, icon: PgIcon, disabled: boolean, label: string, key?: string) {
+  if (icon === "only")
+    return <Button key={key} variant={variant} size={PG_ICON_SIZE[size]} disabled={disabled} aria-label={label || "按钮"}><PackageIcon /></Button>
+  return (
+    <Button key={key} variant={variant} size={size} disabled={disabled}>
+      {icon === "start" ? <SearchIcon data-icon="inline-start" /> : null}
+      {label}
+      {icon === "end" ? <ChevronDownIcon data-icon="inline-end" /> : null}
+    </Button>
+  )
+}
 const PG_SCENARIOS: { id: string; zh: string; en: string; s: PgState }[] = [
   { id: "primary", zh: "主操作", en: "Primary", s: { variant: "default", size: "md", icon: "none", text: "保存", textEn: "Save", disabled: false } },
   { id: "secondary", zh: "次操作", en: "Secondary", s: { variant: "secondary", size: "md", icon: "none", text: "取消", textEn: "Cancel", disabled: false } },
@@ -5418,20 +5430,32 @@ const PG_SCENARIOS: { id: string; zh: string; en: string; s: PgState }[] = [
   { id: "icon-only", zh: "纯图标", en: "Icon only", s: { variant: "default", size: "md", icon: "only", text: "打开组件包", textEn: "Open package", disabled: false } },
 ]
 
-function genButtonCode(s: PgState, label: string): string {
+function genButtonCode(variant: PgVariant, size: PgSize, icon: PgIcon, disabled: boolean, label: string): string {
   const attrs: string[] = []
-  if (s.variant !== "default") attrs.push(`variant="${s.variant}"`)
-  if (s.icon === "only") attrs.push(`size="${PG_ICON_SIZE[s.size]}"`)
-  else if (s.size !== "sm") attrs.push(`size="${s.size}"`)
-  if (s.disabled) attrs.push("disabled")
-  if (s.icon === "only") attrs.push(`aria-label="${label}"`)
+  if (variant !== "default") attrs.push(`variant="${variant}"`)
+  if (icon === "only") attrs.push(`size="${PG_ICON_SIZE[size]}"`)
+  else if (size !== "sm") attrs.push(`size="${size}"`)
+  if (disabled) attrs.push("disabled")
+  if (icon === "only") attrs.push(`aria-label="${label}"`)
   const open = `<Button${attrs.length ? " " + attrs.join(" ") : ""}>`
   let inner: string
-  if (s.icon === "only") inner = `<PackageIcon />`
-  else if (s.icon === "start") inner = `<SearchIcon data-icon="inline-start" />${label}`
-  else if (s.icon === "end") inner = `${label}<ChevronDownIcon data-icon="inline-end" />`
+  if (icon === "only") inner = `<PackageIcon />`
+  else if (icon === "start") inner = `<SearchIcon data-icon="inline-start" />${label}`
+  else if (icon === "end") inner = `${label}<ChevronDownIcon data-icon="inline-end" />`
   else inner = label
   return `${open}${inner}</Button>`
+}
+
+// 灰底轨道分段控件（= 我们的 Tabs 默认档：muted 轨道 + 白色激活滑块 + 阴影），每个属性首项为「全部」。
+function PgSegmented({ value, onChange, options, allLabel }: { value: string; onChange: (v: string) => void; options: { value: string; label: string }[]; allLabel: string }) {
+  return (
+    <Tabs value={value} onValueChange={onChange}>
+      <TabsList>
+        <TabsTrigger value="all">{allLabel}</TabsTrigger>
+        {options.map((o) => <TabsTrigger key={o.value} value={o.value}>{o.label}</TabsTrigger>)}
+      </TabsList>
+    </Tabs>
+  )
 }
 
 function ButtonPlayground({ lang }: { lang: Lang }) {
@@ -5439,29 +5463,30 @@ function ButtonPlayground({ lang }: { lang: Lang }) {
   const [tab, setTab] = useState("preview")
   const [copied, setCopied] = useState(false)
   const label = lang === "en" ? s.textEn : s.text
+  const allLabel = lang === "en" ? "All" : "全部"
   const activeScenario = PG_SCENARIOS.find(
     (sc) => sc.s.variant === s.variant && sc.s.size === s.size && sc.s.icon === s.icon && sc.s.disabled === s.disabled
   )?.id
   const set = (patch: Partial<PgState>) => setS((prev) => ({ ...prev, ...patch }))
-  const code = genButtonCode(s, label || (lang === "en" ? "Button" : "按钮"))
-  const copy = () => { navigator.clipboard?.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 1500) }
 
-  const preview = s.icon === "only" ? (
-    <Button variant={s.variant} size={PG_ICON_SIZE[s.size]} disabled={s.disabled} aria-label={label || "按钮"}>
-      <PackageIcon />
-    </Button>
-  ) : (
-    <Button variant={s.variant} size={s.size} disabled={s.disabled}>
-      {s.icon === "start" ? <SearchIcon data-icon="inline-start" /> : null}
-      {label}
-      {s.icon === "end" ? <ChevronDownIcon data-icon="inline-end" /> : null}
-    </Button>
-  )
+  // 「全部」→ 该维度取所有取值，做笛卡尔积铺矩阵
+  const vList = (s.variant === "all" ? PG_VARIANTS.map((o) => o.value) : [s.variant]) as PgVariant[]
+  const szList = (s.size === "all" ? PG_SIZES.map((o) => o.value) : [s.size]) as PgSize[]
+  const icList = (s.icon === "all" ? PG_ICONS.map((o) => o.value) : [s.icon]) as PgIcon[]
+  const dList = (s.disabled === "all" ? [false, true] : [s.disabled]) as boolean[]
+  const items: React.ReactNode[] = []
+  let k = 0
+  for (const v of vList) for (const sz of szList) for (const ic of icList) for (const d of dList)
+    items.push(pgButton(v, sz, ic, d, label || (lang === "en" ? "Button" : "按钮"), String(k++)))
+  const isMatrix = items.length > 1
+
+  const code = genButtonCode(vList[0], szList[0], icList[0], dList[0], label || (lang === "en" ? "Button" : "按钮"))
+  const copy = () => { navigator.clipboard?.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 1500) }
 
   return (
     <div className="overflow-hidden rounded-xl border border-border bg-card shadow-l1">
       {/* 配置区：左场景预设 / 右实时属性 */}
-      <div className="flex flex-col border-b border-border-subtle bg-muted/40 xl:flex-row">
+      <div className="flex flex-col border-b border-border-subtle bg-muted/30 xl:flex-row">
         <div className="flex-1 border-b border-border-subtle p-5 xl:border-r xl:border-b-0">
           <PlaygroundEyebrow dot="bg-info" zh={lang === "en" ? "Scenarios" : "场景预设"} en="SCENARIOS" />
           <div className="flex flex-wrap gap-2">
@@ -5490,28 +5515,24 @@ function ButtonPlayground({ lang }: { lang: Lang }) {
           </div>
           <div className="flex flex-col gap-1.5">
             <PlaygroundPropLabel zh={lang === "en" ? "Variant" : "变体"} prop="variant" />
-            <ToggleGroup value={[s.variant]} onValueChange={(v) => v[0] && set({ variant: v[0] as PgVariant })}>
-              {PG_VARIANTS.map((o) => <ToggleGroupItem key={o.value} value={o.value}>{o.label}</ToggleGroupItem>)}
-            </ToggleGroup>
+            <PgSegmented value={s.variant} onChange={(v) => set({ variant: v as PgState["variant"] })} options={PG_VARIANTS} allLabel={allLabel} />
           </div>
           <div className="flex flex-col gap-1.5">
             <PlaygroundPropLabel zh={lang === "en" ? "Size" : "尺寸"} prop="size" />
-            <ToggleGroup value={[s.size]} onValueChange={(v) => v[0] && set({ size: v[0] as PgSize })}>
-              {PG_SIZES.map((o) => <ToggleGroupItem key={o.value} value={o.value}>{o.label}</ToggleGroupItem>)}
-            </ToggleGroup>
+            <PgSegmented value={s.size} onChange={(v) => set({ size: v as PgState["size"] })} options={PG_SIZES} allLabel={allLabel} />
           </div>
           <div className="flex flex-col gap-1.5">
             <PlaygroundPropLabel zh={lang === "en" ? "Icon" : "图标位置"} prop="iconLayout" />
-            <ToggleGroup value={[s.icon]} onValueChange={(v) => v[0] && set({ icon: v[0] as PgIcon })}>
-              {PG_ICONS.map((o) => <ToggleGroupItem key={o.value} value={o.value}>{o.label}</ToggleGroupItem>)}
-            </ToggleGroup>
+            <PgSegmented value={s.icon} onChange={(v) => set({ icon: v as PgState["icon"] })} options={PG_ICONS} allLabel={allLabel} />
           </div>
           <div className="flex flex-col gap-1.5">
             <PlaygroundPropLabel zh={lang === "en" ? "Disabled" : "禁用"} prop="disabled" />
-            <ToggleGroup value={[String(s.disabled)]} onValueChange={(v) => v[0] && set({ disabled: v[0] === "true" })}>
-              <ToggleGroupItem value="false">False</ToggleGroupItem>
-              <ToggleGroupItem value="true">True</ToggleGroupItem>
-            </ToggleGroup>
+            <PgSegmented
+              value={s.disabled === "all" ? "all" : String(s.disabled)}
+              onChange={(v) => set({ disabled: v === "all" ? "all" : v === "true" })}
+              options={[{ value: "true", label: "True" }, { value: "false", label: "False" }]}
+              allLabel={allLabel}
+            />
           </div>
         </div>
       </div>
@@ -5529,7 +5550,7 @@ function ButtonPlayground({ lang }: { lang: Lang }) {
         </div>
         <TabsContent value="preview">
           <div className="flex min-h-64 items-center justify-center bg-[radial-gradient(var(--border)_1px,transparent_0)] bg-[size:24px_24px] p-12">
-            {preview}
+            <div className={isMatrix ? "flex flex-wrap items-center justify-center gap-4" : ""}>{items}</div>
           </div>
         </TabsContent>
         <TabsContent value="code">

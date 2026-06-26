@@ -11,7 +11,6 @@ import {
   Trash2Icon,
   LockIcon,
   FilterIcon,
-  CircleIcon,
   ListIcon,
   LayoutColumnsIcon,
   RefreshIcon,
@@ -13070,18 +13069,21 @@ const tplScopes = [
 ]
 
 // 列定义（页面侧，只换数据/列；DataTable 只负责渲染 + 勾选）
+const tplColMenu = [
+  { label: "冻结此列" },
+  { label: "筛选" },
+]
 const customerColumns: Column<TplCustomer>[] = [
-  { key: "locate", header: "", headClassName: "w-8", cell: () => <Button variant="plain" size="icon-sm" aria-label="定位"><CircleIcon /></Button> },
-  { key: "name", header: "客户名称", cell: (c) => <a href="#template-customer-list" className="text-foreground hover:text-link hover:underline">{c.name}</a> },
-  { key: "level", header: "客户级别", cell: (c) => <Tag color={c.levelColor}>{c.level}</Tag> },
-  { key: "progress", header: "跟进进度", headClassName: "w-40", cell: (c) => (
+  { key: "name", header: "客户名称", sortable: true, sortValue: (c) => c.name, menuActions: tplColMenu, cell: (c) => <a href="#template-customer-list" className="text-foreground hover:text-link hover:underline">{c.name}</a> },
+  { key: "level", header: "客户级别", sortable: true, sortValue: (c) => c.level, menuActions: tplColMenu, cell: (c) => <Tag color={c.levelColor}>{c.level}</Tag> },
+  { key: "progress", header: "跟进进度", headClassName: "w-40", sortable: true, sortValue: (c) => c.progress, menuActions: tplColMenu, cell: (c) => (
     <span className="flex items-center gap-2">
-      <Progress value={c.progress} tone={c.progressTone} className="w-20" />
+      <Progress value={c.progress} tone={c.progressTone} className="w-[60px]" trackClassName="h-1" />
       <span className="w-9 shrink-0 text-fx-12 tabular-nums text-muted-foreground">{c.progress}%</span>
     </span>
   ) },
-  { key: "phone", header: "电话", cell: (c) => <span className="inline-flex items-center gap-1.5 tabular-nums"><span>{c.flag}</span>{c.phone}</span> },
-  { key: "owner", header: "负责人", cell: (c) => (
+  { key: "phone", header: "电话", menuActions: tplColMenu, cell: (c) => <span className="inline-flex items-center gap-1.5 tabular-nums"><span>{c.flag}</span>{c.phone}</span> },
+  { key: "owner", header: "负责人", menuActions: tplColMenu, cell: (c) => (
     <span className="inline-flex items-center gap-1.5">
       <Avatar className="size-5"><AvatarImage src={c.avatar} alt={c.owner} /><AvatarFallback colorful>{avatarInitials(c.owner)}</AvatarFallback></Avatar>
       {c.owner}
@@ -13144,14 +13146,14 @@ function CustomerListTemplate({ actions, lang }: { actions: React.ReactNode; lan
                 onFilter={() => {}}
                 actions={
                   <>
-                    <Button variant="ghost" size="icon-sm" aria-label="显示设置"><SettingsIcon /></Button>
-                    <Button variant="ghost" size="icon-sm" aria-label="刷新"><RefreshIcon /></Button>
+                    <Button variant="ghost" size="icon-sm" aria-label="显示设置" className="[&_svg]:size-3.5"><SettingsIcon /></Button>
+                    <Button variant="ghost" size="icon-sm" aria-label="刷新" className="[&_svg]:size-3.5"><RefreshIcon /></Button>
                   </>
                 }
               />
 
               {/* 表格 */}
-              <div className="min-h-0 flex-1 overflow-auto">
+              <div className="min-h-0 flex-1 overflow-auto px-3">
                 <DataTable
                   columns={customerColumns}
                   data={tplCustomers}
@@ -13168,8 +13170,8 @@ function CustomerListTemplate({ actions, lang }: { actions: React.ReactNode; lan
                 />
               </div>
 
-              {/* 分页 */}
-              <div className="flex shrink-0 items-center justify-between border-t border-border-subtle px-4 py-2.5">
+              {/* 分页：底栏整体内缩 12（分割线与内容不顶卡片边，对齐左侧 gutter）*/}
+              <div className="mx-3 flex shrink-0 items-center justify-between border-t border-border-subtle py-2.5">
                 <span className="text-fx-12 text-muted-foreground">已选 {selected.size} 项</span>
                 <Pagination page={1} total={193} pageSize={20} onPageChange={() => {}} />
               </div>

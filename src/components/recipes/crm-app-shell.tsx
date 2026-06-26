@@ -62,8 +62,8 @@ function CrmAppShell({ children, height = 600 }: { children: ReactNode; height?:
           </DropdownMenu>
         </TopBar>
 
-        {/* 灰底 + 圆角白卡浮起：rail / 二级菜单卡 / 内容卡之间留一致灰槽 */}
-        <div className="flex min-h-0 gap-2 py-2 pr-2" style={{ height }}>
+        {/* 灰底 + 圆角白卡浮起：外留白对齐公司 Figma —— 顶/左(导航↔卡)/右 各 12，底 0；导航与内容卡间隔 12 */}
+        <div className="flex min-h-0 gap-3 pt-3 pr-3" style={{ height }}>
           <CrmShellNav />
           <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-lg bg-card">{children}</div>
         </div>

@@ -143,7 +143,7 @@ function TableHead({
       data-slot="table-head"
       data-sorted={sorted || undefined}
       className={cn(
-        "group/th h-8 min-w-[112px] px-2 align-middle font-semibold whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-0",
+        "group/th h-9 min-w-[112px] px-2 align-middle font-semibold whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-0",
         alignClass(align),
         pinnedClass(pinned),
         frozenClass(frozenLeft, frozenEdge),

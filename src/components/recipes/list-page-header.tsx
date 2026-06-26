@@ -22,7 +22,7 @@ function ListPageHeader({
   actions?: ReactNode
 }) {
   return (
-    <div className="flex h-12 shrink-0 items-center justify-between gap-3 border-b border-border-subtle px-4">
+    <div className="flex shrink-0 items-center justify-between gap-3 px-4 pt-3 pb-1">
       <div className="flex shrink-0 items-center gap-2 whitespace-nowrap text-fx-15">
         <span className="font-medium text-foreground">{title}</span>
         {views && views.length > 0 && (

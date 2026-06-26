@@ -52,7 +52,11 @@
     { "name": "LinkIcon", "source": "tabler", "style": "line", "category": "action", "keywords": ["链接", "外链", "link", "跳转"] },
     { "name": "ContractIcon", "source": "custom", "style": "line", "category": "object", "keywords": ["合同", "契约", "contract", "文书", "协议"] },
     { "name": "ContractFilledIcon", "source": "custom", "style": "fill", "category": "object", "keywords": ["合同", "契约", "contract", "已选"] },
-    { "name": "HelpIcon", "source": "custom", "style": "line", "category": "action", "keywords": ["帮助", "问号", "help", "说明", "提示", "question"] }
+    { "name": "HelpIcon", "source": "custom", "style": "line", "category": "action", "keywords": ["帮助", "问号", "help", "说明", "提示", "question"] },
+    { "name": "ListIcon", "source": "tabler", "style": "line", "category": "navigation", "keywords": ["列表", "视图", "list", "列表视图"] },
+    { "name": "LayoutGridIcon", "source": "tabler", "style": "line", "category": "navigation", "keywords": ["看板", "宫格", "grid", "卡片视图", "应用"] },
+    { "name": "LayoutColumnsIcon", "source": "tabler", "style": "line", "category": "navigation", "keywords": ["分栏", "列布局", "columns", "分栏视图"] },
+    { "name": "RefreshIcon", "source": "tabler", "style": "line", "category": "action", "keywords": ["刷新", "重载", "refresh", "重新加载"] }
   ],
   "checks": ["npm run check:icons", "npm run check"]
 }

@@ -8,8 +8,8 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { FilterIcon, SearchIcon, ChevronDownIcon } from "@/lib/icons"
 
-// Block（区块，文件夹历史名 recipes/）：列表页工具栏 —— 左(筛选 + 复合搜索) + 右(视图切换 + 额外动作)。
-// 全部受控、配置化：scopes/views 传了才出对应控件；换页面只换数据/配置。
+// Block（区块，文件夹历史名 recipes/）：列表页工具栏 —— 左(筛选? + 复合搜索?) + 右(视图切换? + 额外动作?)。
+// 左右两簇全可有可没有、可配置：onFilter/onSearchChange/scopes/views/actions 各自传了才出对应控件；换页面只换配置。
 function ListToolbar({
   search,
   onSearchChange,
@@ -20,11 +20,12 @@ function ListToolbar({
   views,
   onViewChange,
   onFilter,
+  leftExtra,
   actions,
   searchPlaceholder = "搜索",
 }: {
-  search: string
-  onSearchChange: (v: string) => void
+  search?: string
+  onSearchChange?: (v: string) => void
   scope?: string
   scopes?: { key: string; label: string }[]
   onScopeChange?: (k: string) => void
@@ -32,17 +33,19 @@ function ListToolbar({
   views?: { value: string; label: string; icon: ReactNode }[]
   onViewChange?: (v: string) => void
   onFilter?: () => void
+  leftExtra?: ReactNode
   actions?: ReactNode
   searchPlaceholder?: string
 }) {
   return (
-    <div className="flex shrink-0 items-center justify-between gap-3 px-4 py-2.5">
+    <div className="flex shrink-0 items-center justify-between gap-3 px-4 pt-1 pb-2">
       <div className="flex items-center gap-2">
         {onFilter && (
           <Button variant="outline" size="sm" onClick={onFilter}><FilterIcon data-icon="inline-start" />筛选</Button>
         )}
-        {/* 复合搜索：范围下拉 + 输入 + 放大镜 */}
-        <div className="flex h-8 w-64 items-center rounded-lg border border-border bg-card transition-colors focus-within:border-ring">
+        {/* 复合搜索（可选）：传了 onSearchChange 才出；范围下拉 + 输入 + 放大镜 */}
+        {onSearchChange && (
+        <div className="flex h-7 w-[290px] items-center rounded-lg border border-border bg-card transition-colors focus-within:border-ring">
           {scopes && scopes.length > 0 && (
             <>
               <DropdownMenu>
@@ -59,13 +62,15 @@ function ListToolbar({
               <span className="h-4 w-px bg-border" />
             </>
           )}
-          <input value={search} onChange={(e) => onSearchChange(e.target.value)} placeholder={searchPlaceholder} className="min-w-0 flex-1 bg-transparent px-2.5 text-fx-13 outline-none placeholder:text-foreground-disabled" />
+          <input value={search ?? ""} onChange={(e) => onSearchChange(e.target.value)} placeholder={searchPlaceholder} className="min-w-0 flex-1 bg-transparent px-2.5 text-fx-13 outline-none placeholder:text-foreground-disabled" />
           <SearchIcon className="mr-2.5 size-4 shrink-0 text-muted-foreground" />
         </div>
+        )}
+        {leftExtra}
       </div>
       <div className="flex items-center gap-2">
         {views && views.length > 0 && (
-          <ToggleGroup value={view ? [view] : []} onValueChange={(v) => v[0] && onViewChange?.(v[0])}>
+          <ToggleGroup size="icon-sm" value={view ? [view] : []} onValueChange={(v) => v[0] && onViewChange?.(v[0])}>
             {views.map((vw) => (
               <Tooltip key={vw.value}>
                 <TooltipTrigger render={<ToggleGroupItem value={vw.value} aria-label={vw.label}>{vw.icon}</ToggleGroupItem>} />

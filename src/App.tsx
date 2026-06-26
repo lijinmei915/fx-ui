@@ -5587,12 +5587,12 @@ function ButtonPlayground({ lang }: { lang: Lang }) {
         </Button>
       </div>
       {tab === "preview" ? (
-        <div className="flex min-h-[300px] items-center justify-center bg-[radial-gradient(var(--border)_1px,transparent_0)] bg-[size:24px_24px] p-12">
+        <div className="flex min-h-[300px] items-center justify-center bg-card p-12">
           <div className={isMatrix ? "flex flex-wrap items-center justify-center gap-4" : ""}>{items}</div>
         </div>
       ) : (
-        <div className="p-4">
-          <pre className="overflow-x-auto rounded-lg bg-muted px-3 py-2.5 text-fx-12"><code>{code}</code></pre>
+        <div className="min-h-[300px] overflow-x-auto bg-foreground p-6">
+          <pre className="font-mono text-fx-13 leading-relaxed text-background/85"><code>{code}</code></pre>
         </div>
       )}
     </div>

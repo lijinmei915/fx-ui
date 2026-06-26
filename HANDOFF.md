@@ -1,8 +1,32 @@
-> **接手时间**：2026-06-25
+> **接手时间**：2026-06-26
 > **项目根目录**：fx-ui
-> **当前状态**：组件逐个体检中。已完成 Table 业务化、新增 Pagination/Command/Tag(拆自 Badge)、Button 全面体检（删 link 变体、plain 无底色+tone、尺寸键名改纯尺寸 xs/sm/md/lg 默认 28、图标场景拆分）。建立「组件体检清单 + hygiene 检查 + Figma 真相源登记」体检体系。已提交到 `6505c8a`，待推送
-> **下一步**：1）继续逐个组件体检（用 `docs/DESIGN_STANDARDS.md`「组件体检清单」14 条 + hygiene 脚本提示的"待登记 Figma 源 33 个"清单，每过一个登记 figma + 清 baseline）；2）DEC-005 尾巴（toggle/tabs/sidebar 的 `/透明度`、旧 hover，hygiene baseline 18 条待清）；3）下拉菜单「多选/单选选中样式」仍待定
-> **风险**：① `theme/fx-theme.css` 是 token 真相源，动它即全局换肤（改顺序 CSS→design-tokens.json→`npm run build:tokens`→组件）；② **大块改动随手提交**——本轮曾因 `git checkout` 冲掉未提交的整轮 Button 工作（靠"文档+检查即规格"补回），教训：别攒大堆未提交改动
+> **当前状态**：完成 **TopBar 顶栏组件 + CRM 客户列表页模板 + 页面区块化生产线**。列表页已拆成可搬运 block（`CrmAppShell`/`ListPageHeader`/`ListToolbar`/`DataTable`，在 `src/components/recipes/`），并做了 **`gen:list-page` 生成器**（一条命令吐骨架）+ **来源 lint**（手写列表页直接拦）。配套治理：仓库地图 `docs/MAP.md`、页面装配 playbook `docs/PAGES.md`、AGENTS 红线 6/7（禁手搓/禁覆盖）、SessionStart hook 注入红线、Playwright 视觉回归。全在本地 main（最新 `b82b803`），**未推云端**
+> **下一步**：1）`HANDOFF` 提示已多次提交未更新已处理；2）DataTable/ListToolbar 等 block 稳定后可升 fx（DEC-024，补 manifest+文档页）；3）继续逐个组件体检（hygiene 提示"待登记 Figma 源 33 个" + baseline 20 条待清）；4）下拉菜单「多选/单选选中样式」仍待定
+> **风险**：① `theme/fx-theme.css` 是 token 真相源，动它即全局换肤（顺序 CSS→TOKENS.md→design-tokens.json→`build:tokens`→组件）；② **大块改动随手提交**，别攒一堆未提交；③ **改页面/组合/视觉，收尾必跑 `npm run test:visual` 看截图**（红线，曾因没看截图漏掉缝隙/圆角）；④ 视觉基线是 mac/chromium 版，换机/上 CI 需重定
+
+---
+
+## 本轮（2026-06-26）TopBar + 列表页 + 区块化生产线 + 防跑偏治理
+
+**主线：从"做一个顶栏"一路做到"AI 怎么可靠地生产一个列表页"——沉淀组件/区块 + 建立防跑偏机制。**
+
+产物（都在本地 main）：
+- **TopBar**（`src/components/fx/top-bar.tsx`）：全局应用顶栏，1:1 对齐公司 Figma。透明底（换肤友好）、白底 app 卡片、灰底搜索（hover 提亮/聚焦变白）、14px 工具图标、彩色九宫格静态 SVG。新增 `--fill-subtle/--fill-hover` 半透明填充 token（自适应宿主底色）
+- **Progress**（`src/components/ui/progress.tsx`）：base-ui 进度条，tone 切语义色；不出独立文档页，作"数据展示"用于表格（用户决定）
+- **客户列表页模板**（`src/App.tsx` `CustomerListTemplate`，挂「页面模板」导航）：满宽浮卡布局，由下列 block 拼成
+- **4 个 block**（`src/components/recipes/`）：`CrmAppShell`（外壳）/`CrmShellNav`（双层导航）/`ListPageHeader`（标题+视图下拉+操作槽）/`ListToolbar`（筛选+搜索+视图切换）/`DataTable`（薄表格，columns 驱动+勾选）
+- **`gen:list-page` 生成器**（`scripts/gen-list-page.mjs`）：一条命令按模板生成列表页骨架，结构锁死、只填 columns/数据
+- **页面唯一真相源**：`pageRegistry`（DEC-023），路由/锚点/渲染全部派生
+
+防跑偏机制（重点，给下一任）：
+- **AGENTS 红线 6/7**：禁手写重拼组装；禁在调用处 className 覆盖组件外观（要变体加 variant，对齐 Polaris/Spectrum）
+- **SessionStart hook**（`.claude/settings.json`）：每次会话自动注入 AGENTS 红线块（含"先查 MAP"）
+- **仓库地图 `docs/MAP.md`**：按产物种类分流（住哪/登记/谁 check），动手前先查
+- **页面装配 playbook `docs/PAGES.md`**：列表页→直接跑生成器；其它页→6 步流程 + 决策树 + block 变体三层规则
+- **机器门禁**：hygiene lint 扩到 fx 层（+ raw-svg/颜色函数规则）；**`check-list-page-source`**（手写列表页无 `@generated` 标记即拦）；**Playwright 视觉回归**（`tests/visual.spec.ts`，`npm run test:visual`）
+- 决策：DEC-023（pageRegistry）、DEC-024（列表页可组合拆分不做单体 + ListPageHeader 落地）
+
+一句话给下个 AI：**做列表页别手搓——查 `docs/PAGES.md` → 跑 `npm run gen:list-page` → 填 columns → `check:all` + `test:visual`。**
 
 ---
 

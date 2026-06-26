@@ -3727,10 +3727,20 @@ function App() {
             })}
           </nav>
 
+          <button
+            type="button"
+            onClick={() => setSearchOpen(true)}
+            className="ml-auto hidden w-80 items-center gap-2 rounded-lg border border-input bg-card px-3 text-left outline-none transition-colors hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 lg:flex"
+          >
+            <SearchIcon className="size-4 text-muted-foreground" />
+            <span className="h-9 min-w-0 flex-1 content-center text-sm text-muted-foreground">{uiText[lang].search}</span>
+            <kbd className="rounded border border-border-subtle bg-muted px-1.5 py-0.5 text-fx-12 text-muted-foreground">⌘K</kbd>
+          </button>
+
           <Button
             variant="outline"
             size="sm"
-            className="ml-auto hidden w-[calc(2ch+12px)] px-1.5 md:inline-flex"
+            className="ml-auto hidden w-[calc(2ch+12px)] px-1.5 md:inline-flex lg:ml-0"
             onClick={() => setLang(lang === "zh" ? "en" : "zh")}
           >
             {lang === "zh" ? "中" : "EN"}
@@ -3745,16 +3755,6 @@ function App() {
           >
             {dark ? <SunIcon /> : <MoonIcon />}
           </Button>
-
-          <button
-            type="button"
-            onClick={() => setSearchOpen(true)}
-            className="hidden w-72 items-center gap-2 rounded-lg border border-input bg-card px-3 text-left outline-none transition-colors hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 lg:flex"
-          >
-            <SearchIcon className="size-4 text-muted-foreground" />
-            <span className="h-9 min-w-0 flex-1 content-center text-sm text-muted-foreground">{uiText[lang].search}</span>
-            <kbd className="rounded border border-border-subtle bg-muted px-1.5 py-0.5 text-fx-12 text-muted-foreground">⌘K</kbd>
-          </button>
         </div>
       </header>
 
@@ -3793,11 +3793,14 @@ function App() {
                           href={item.href}
                           className={
                             isActive
-                              ? "flex h-8 items-center rounded-lg bg-primary/10 px-3 text-sm font-semibold text-primary"
-                              : "flex h-8 items-center rounded-lg px-3 text-sm text-foreground/80 hover:bg-muted hover:text-foreground"
+                              ? "flex h-8 items-center justify-between gap-2 rounded-lg bg-primary/10 px-3 text-sm font-semibold text-primary"
+                              : "flex h-8 items-center justify-between gap-2 rounded-lg px-3 text-sm text-foreground/80 hover:bg-muted hover:text-foreground"
                           }
                         >
-                          {getLabel(item, lang)}
+                          <span>{getLabel(item, lang)}</span>
+                          {item.labelEn && getLabel(item, lang) !== item.labelEn ? (
+                            <span className={isActive ? "text-xs font-normal text-primary/70" : "text-xs text-muted-foreground/70"}>{item.labelEn}</span>
+                          ) : null}
                         </a>
                       )
                     })}

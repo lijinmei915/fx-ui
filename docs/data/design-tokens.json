@@ -1803,7 +1803,7 @@
     },
     {
       "name": "--font-sans",
-      "value": "\"Inter Variable\", \"Noto Sans SC\", \"Helvetica Neue\", \"PingFang SC\", \"Microsoft Yahei\", \"微软雅黑\", Arial, sans-serif",
+      "value": "\"Inter Variable\", \"PingFang SC\", \"苹方\", \"Microsoft YaHei\", \"微软雅黑\", \"Helvetica Neue\", \"Noto Sans SC\", Arial, sans-serif",
       "category": "font-source",
       "usage": "默认字体族"
     },

@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-25
+last_verified: 2026-06-26
 teaches: "公司设计 token 的基础架构、真实值和全局视觉使用规则"
 use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadcn 组件样式或判断视觉是否符合公司规范时"
 ---
@@ -144,7 +144,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 **字重**：`font-normal`(400) 常规·正文 / `font-medium`(500) 中等·标签·按钮·菜单 / `font-bold`(**700**) 加粗·标题·强调。
 
-**字族**：`--font-sans` = `"Inter Variable", "Noto Sans SC", "Helvetica Neue", "PingFang SC", "Microsoft Yahei", "微软雅黑", Arial, sans-serif`。**自托管开源字体（OFL，无版权）**：西文/数字用 **Inter**，中文用 **Noto Sans SC（= 思源黑体简体）**，跨平台一致；后面是系统兜底。Inter 不含中文，中文自动落到 Noto Sans SC。在 `src/main.tsx` 引入 `@fontsource-variable/inter` + `@fontsource/noto-sans-sc`（400/500/700，按 unicode-range 懒加载）。
+**字族**：`--font-sans` = `"Inter Variable", "PingFang SC", "苹方", "Microsoft YaHei", "微软雅黑", "Helvetica Neue", "Noto Sans SC", Arial, sans-serif`。西文/数字用 **Inter**（自托管 OFL）；中文**优先系统苹方/雅黑**（观感更精致），缺系统中文字时回退自托管 **Noto Sans SC（思源黑体）** 兜底（见 DEC-027 修订 DEC-008）。`src/main.tsx` 引入 `@fontsource-variable/inter` + `@fontsource/noto-sans-sc`（400/500/700，按 unicode-range 懒加载，仅兜底命中时下载）。
 
 > 完整企业字号阶（11/14/16/20/22/28 + 中英双套语义变量名 Large Title/Title1/Body1…）见 Figma 字体规范；fx-ui web 当前只落地上面四档，按需再补。
 

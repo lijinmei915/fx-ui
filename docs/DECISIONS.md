@@ -305,6 +305,16 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **影响**：新增 `.dark` 块；切换 UI 见 DEC（待）/HANDOFF；暗色交互阶梯方向与浅色相反（浅色 hover 变浅、暗色 hover 变亮）。深色具体取值后续按真机对比微调。
 - **相关文件**：`theme/fx-theme.css`
 
+### DEC-027: 中文字族改"优先系统苹方/雅黑，Noto Sans SC 退为兜底"（部分修订 DEC-008）
+
+- **日期**：2026-06-26
+- **状态**：已决定（部分取代 DEC-008 的中文字族选择；拉丁仍用 Inter 不变）
+- **决定**：`--font-sans` 中文优先级改为 **PingFang SC / 苹方 → Microsoft YaHei / 微软雅黑 → Noto Sans SC（兜底）**。拉丁/数字仍 Inter（对齐 showcase 默认 sans 档）。
+- **放弃**：DEC-008 "中文一律 Noto Sans SC 求跨平台一致"——实测 Noto（思源黑体）字形偏重、不如系统苹方顺眼，且与参考站（system Chinese）观感有差。
+- **原因**：观感优先。Mac/Win 用系统中文字（苹方/雅黑）更精致；缺系统中文字的环境仍回退已自托管的 Noto Sans SC，不裸奔。代价：跨平台中文字形不再 100% 一致（可接受）。
+- **影响**：`@fontsource/noto-sans-sc` 仍保留加载（作兜底）；视觉基线随中文字形变化已重定。
+- **相关文件**：`theme/fx-theme.css`（`--font-sans`）、`docs/TOKENS.md`（排版·字族）
+
 ## 相关文件
 
 | 文件 | 关系 |

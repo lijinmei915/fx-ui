@@ -439,6 +439,76 @@
   --sidebar-ring: #FF8000;
 }
 
+/* ===== 暗色模式：覆盖语义槽（class .dark 触发，见顶部 @custom-variant）=====
+   原则：表面用品牌微染 oklch（C 0.008）、由暗到亮分层；边框/分隔用白色 alpha 自适应；
+   品牌/状态色保留色相（暗底上更亮一档），软底(-light)改成暗调混色。暗色阶梯方向与浅色相反。 */
+.dark {
+  --background: oklch(from var(--fx-brand-vivid) 0.165 0.008 h);   /* 页面最底 */
+  --foreground: oklch(from var(--fx-brand-vivid) 0.955 0.006 h);
+  --foreground-secondary: oklch(from var(--fx-brand-vivid) 0.72 0.006 h);
+  --foreground-disabled: oklch(from var(--fx-brand-vivid) 0.45 0.006 h);
+
+  --card: oklch(from var(--fx-brand-vivid) 0.205 0.008 h);          /* 抬起面，比 bg 亮一档 */
+  --card-foreground: var(--foreground);
+  --surface: oklch(from var(--fx-brand-vivid) 0.205 0.008 h);
+  --surface-disabled: oklch(from var(--fx-brand-vivid) 0.235 0.008 h);
+  --popover: oklch(from var(--fx-brand-vivid) 0.225 0.008 h);
+  --popover-foreground: var(--foreground);
+
+  --overlay: oklch(0 0 0 / 0.55);
+
+  --primary: var(--fx-brand-08);                                    /* 品牌橙暗底上提一档更亮 */
+  /* primary-foreground 保持白（继承 :root），品牌橙上白字更稳 */
+
+  --secondary: oklch(from var(--fx-brand-vivid) 0.255 0.008 h);
+  --secondary-hover: oklch(from var(--fx-brand-vivid) 0.295 0.008 h);
+  --secondary-active: oklch(from var(--fx-brand-vivid) 0.335 0.008 h);
+  --secondary-foreground: var(--foreground);
+
+  --muted: oklch(from var(--fx-brand-vivid) 0.255 0.008 h);
+  --muted-hover: oklch(from var(--fx-brand-vivid) 0.295 0.008 h);
+  --muted-active: oklch(from var(--fx-brand-vivid) 0.335 0.008 h);
+  --muted-foreground: oklch(from var(--fx-brand-vivid) 0.64 0.006 h);
+
+  --accent: color-mix(in oklch, var(--fx-brand-vivid) 18%, var(--card));
+  --accent-foreground: var(--foreground);
+
+  /* 边框/输入：白色 alpha，叠在任意暗面上自适应 */
+  --border-faint: oklch(1 0 0 / 0.06);
+  --border-subtle: oklch(1 0 0 / 0.10);
+  --border: oklch(1 0 0 / 0.14);
+  --border-strong: oklch(1 0 0 / 0.26);
+  --input: oklch(1 0 0 / 0.18);
+  --ring: oklch(from var(--fx-brand-08) l c h / 0.5);
+
+  /* 链接蓝：暗底提亮 */
+  --link: var(--fx-blue-07);
+  --link-hover: var(--fx-blue-06);
+  --link-active: var(--fx-blue-08);
+  --link-disabled: oklch(from var(--fx-blue-07) l c h / 0.4);
+
+  /* 危险：实心保留，软底改暗调混色（红 + 暗面） */
+  --destructive: var(--fx-red-08);
+  --destructive-hover: var(--fx-red-07);
+  --destructive-active: var(--fx-red-09);
+  --destructive-light: color-mix(in oklch, var(--fx-red-09) 22%, var(--card));
+  --destructive-light-hover: color-mix(in oklch, var(--fx-red-09) 30%, var(--card));
+  --destructive-light-active: color-mix(in oklch, var(--fx-red-09) 38%, var(--card));
+
+  /* 状态色：实心提一档；warning 亮黄需深字 */
+  --success: var(--fx-green-08);
+  --warning: var(--fx-amber-08);
+  --warning-foreground: oklch(0.18 0 0);
+
+  /* 侧栏（Sidebar 组件，原 :root 写死浅色，暗色下覆盖）*/
+  --sidebar: oklch(from var(--fx-brand-vivid) 0.19 0.008 h);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-accent: color-mix(in oklch, var(--fx-brand-vivid) 18%, var(--card));
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: oklch(1 0 0 / 0.10);
+  --sidebar-ring: var(--fx-brand-08);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

@@ -295,6 +295,16 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **影响（落地时）**：生成器模板改为吐 config-driven 页面 + 内置设置面板；新增一个"列表页设置面板" block。
 - **相关文件**：`scripts/gen-list-page.mjs`、`src/components/recipes/*`、`docs/PAGES.md`
 
+### DEC-026: 暗色模式 token 方案（class .dark 触发，覆盖语义槽）
+
+- **日期**：2026-06-26
+- **状态**：已决定（落地 DEC-005 里挂起的"暗色以后另定"）
+- **决定**：暗色由 `theme/fx-theme.css` 的 `.dark { … }` 块**覆盖语义槽**实现（`@custom-variant dark (&:is(.dark *))` 已配，`.dark` 加在 `<html>` 即全站生效）。表面用品牌微染 oklch（C 0.008）由暗到亮分层（bg 0.165 / card 0.205 / popover 0.225 / 交互面 0.255+）；**边框/输入用白色 alpha**（`oklch(1 0 0 / .06~.26)`，叠任意暗面自适应）；前景 0.955/0.72/0.64/0.45 四级；品牌/状态色保留色相、暗底上提一档（brand-08 等），**软底 `-light` 改 `color-mix(色 + card)` 暗调**；遮罩转黑 alpha；warning 亮黄配深字。`--fill-subtle/-hover`（前景 alpha）自动适配无需改。
+- **放弃**：① 翻转整条 20 阶 neutrals（牵连大、易错）——改为只覆盖语义槽，组件用语义即自动适配；② `prefers-color-scheme` 媒体查询——用 class 切换可控、可持久化。
+- **原因**：语义槽是组件的真实引用面，覆盖它一处即全站翻；class 触发便于做切换 UI + 记忆。
+- **影响**：新增 `.dark` 块；切换 UI 见 DEC（待）/HANDOFF；暗色交互阶梯方向与浅色相反（浅色 hover 变浅、暗色 hover 变亮）。深色具体取值后续按真机对比微调。
+- **相关文件**：`theme/fx-theme.css`
+
 ## 相关文件
 
 | 文件 | 关系 |

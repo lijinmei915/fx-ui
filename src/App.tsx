@@ -5408,6 +5408,7 @@ const PG_ICONS: { value: PgIcon; label: string }[] = [
 ]
 const PG_ICON_SIZE: Record<PgSize, "icon-sm" | "icon-md" | "icon-lg"> = { sm: "icon-sm", md: "icon-md", lg: "icon-lg" }
 type PgState = { variant: PgVariant | "all"; size: PgSize | "all"; icon: PgIcon | "all"; text: string; textEn: string; disabled: boolean | "all" }
+type PgScenario = { id: string; zh: string; en: string; intent: string; intentEn: string; s: PgState }
 // 单个具体组合 → 一个 Button（icon-only 走 icon-* 尺寸）
 function pgButton(variant: PgVariant, size: PgSize, icon: PgIcon, disabled: boolean, label: string, key?: string) {
   if (icon === "only")
@@ -5420,14 +5421,14 @@ function pgButton(variant: PgVariant, size: PgSize, icon: PgIcon, disabled: bool
     </Button>
   )
 }
-const PG_SCENARIOS: { id: string; zh: string; en: string; s: PgState }[] = [
-  { id: "primary", zh: "主操作", en: "Primary", s: { variant: "default", size: "md", icon: "none", text: "保存", textEn: "Save", disabled: false } },
-  { id: "secondary", zh: "次操作", en: "Secondary", s: { variant: "secondary", size: "md", icon: "none", text: "取消", textEn: "Cancel", disabled: false } },
-  { id: "danger", zh: "危险操作", en: "Danger", s: { variant: "destructive", size: "md", icon: "none", text: "删除项目", textEn: "Delete project", disabled: false } },
-  { id: "outline", zh: "描边操作", en: "Outline", s: { variant: "outline", size: "md", icon: "none", text: "导出", textEn: "Export", disabled: false } },
-  { id: "ghost", zh: "幽灵操作", en: "Ghost", s: { variant: "ghost", size: "md", icon: "none", text: "查看详情", textEn: "View details", disabled: false } },
-  { id: "icon-text", zh: "带有图标", en: "With icon", s: { variant: "default", size: "md", icon: "start", text: "搜索", textEn: "Search", disabled: false } },
-  { id: "icon-only", zh: "纯图标", en: "Icon only", s: { variant: "default", size: "md", icon: "only", text: "打开组件包", textEn: "Open package", disabled: false } },
+const PG_SCENARIOS: PgScenario[] = [
+  { id: "primary", zh: "主操作", en: "Primary", intent: "页面或区域的主要行动点，一个操作区域建议只出现一个。", intentEn: "The primary action of a page or region; keep only one per area.", s: { variant: "default", size: "md", icon: "none", text: "保存", textEn: "Save", disabled: false } },
+  { id: "secondary", zh: "次操作", en: "Secondary", intent: "与主操作并列的次要操作，不抢焦点。", intentEn: "A secondary action beside the primary one, without stealing focus.", s: { variant: "secondary", size: "md", icon: "none", text: "取消", textEn: "Cancel", disabled: false } },
+  { id: "danger", zh: "危险操作", en: "Danger", intent: "删除等不可逆操作，用 destructive 变体提示风险。", intentEn: "Irreversible actions like delete; use the destructive variant to signal risk.", s: { variant: "destructive", size: "md", icon: "none", text: "删除项目", textEn: "Delete project", disabled: false } },
+  { id: "outline", zh: "描边操作", en: "Outline", intent: "中性次级操作，描边弱化存在感。", intentEn: "A neutral secondary action; the outline keeps it low-key.", s: { variant: "outline", size: "md", icon: "none", text: "导出", textEn: "Export", disabled: false } },
+  { id: "ghost", zh: "幽灵操作", en: "Ghost", intent: "最弱的操作，常用于工具栏 / 紧凑区域。", intentEn: "The lightest action, often used in toolbars or compact areas.", s: { variant: "ghost", size: "md", icon: "none", text: "查看详情", textEn: "View details", disabled: false } },
+  { id: "icon-text", zh: "带有图标", en: "With icon", intent: "图标 + 文案，用 data-icon 控制图标在前 / 后。", intentEn: "Icon + text; use data-icon to place the icon before or after.", s: { variant: "default", size: "md", icon: "start", text: "搜索", textEn: "Search", disabled: false } },
+  { id: "icon-only", zh: "纯图标", en: "Icon only", intent: "纯图标按钮必须配 aria-label，保证可访问性。", intentEn: "Icon-only buttons must carry an aria-label for accessibility.", s: { variant: "default", size: "md", icon: "only", text: "打开组件包", textEn: "Open package", disabled: false } },
 ]
 
 function genButtonCode(variant: PgVariant, size: PgSize, icon: PgIcon, disabled: boolean, label: string): string {
@@ -5446,15 +5447,32 @@ function genButtonCode(variant: PgVariant, size: PgSize, icon: PgIcon, disabled:
   return `${open}${inner}</Button>`
 }
 
-// 灰底轨道分段控件（= 我们的 Tabs 默认档：muted 轨道 + 白色激活滑块 + 阴影），每个属性首项为「全部」。
+// 灰底轨道分段控件（playground 自有 chrome，1:1 抄参考站细节：text-[11px]、muted 轨道、
+// 「全部」后接竖线分隔、白色激活滑块）。颜色全走 token：激活滑块 bg-card，「全部」激活描品牌色、具体值激活描主文字色。
+function PgSeg({ active, isAll, label, onClick }: { active: boolean; isAll?: boolean; label: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded-xs px-2.5 py-1 text-[11px] font-medium transition-all ${
+        active
+          ? `bg-card shadow-l1 ${isAll ? "text-primary" : "text-foreground"}`
+          : "text-muted-foreground hover:text-foreground"
+      }`}
+    >
+      {label}
+    </button>
+  )
+}
 function PgSegmented({ value, onChange, options, allLabel }: { value: string; onChange: (v: string) => void; options: { value: string; label: string }[]; allLabel: string }) {
   return (
-    <Tabs value={value} onValueChange={onChange}>
-      <TabsList>
-        <TabsTrigger value="all">{allLabel}</TabsTrigger>
-        {options.map((o) => <TabsTrigger key={o.value} value={o.value}>{o.label}</TabsTrigger>)}
-      </TabsList>
-    </Tabs>
+    <div className="flex w-fit flex-wrap items-center gap-0.5 rounded-md border border-border-subtle bg-muted p-0.5">
+      <PgSeg active={value === "all"} isAll label={allLabel} onClick={() => onChange("all")} />
+      <div className="mx-0.5 my-1 w-px self-stretch bg-border" />
+      {options.map((o) => (
+        <PgSeg key={o.value} active={value === o.value} label={o.label} onClick={() => onChange(o.value)} />
+      ))}
+    </div>
   )
 }
 
@@ -5464,9 +5482,10 @@ function ButtonPlayground({ lang }: { lang: Lang }) {
   const [copied, setCopied] = useState(false)
   const label = lang === "en" ? s.textEn : s.text
   const allLabel = lang === "en" ? "All" : "全部"
-  const activeScenario = PG_SCENARIOS.find(
+  const activeSc = PG_SCENARIOS.find(
     (sc) => sc.s.variant === s.variant && sc.s.size === s.size && sc.s.icon === s.icon && sc.s.disabled === s.disabled
-  )?.id
+  )
+  const activeScenario = activeSc?.id
   const set = (patch: Partial<PgState>) => setS((prev) => ({ ...prev, ...patch }))
 
   // 「全部」→ 该维度取所有取值，做笛卡尔积铺矩阵
@@ -5501,6 +5520,18 @@ function ButtonPlayground({ lang }: { lang: Lang }) {
               </Button>
             ))}
           </div>
+          {activeSc ? (
+            <div className="mt-4 space-y-3 rounded-xl border border-border-subtle bg-card p-4 shadow-l1">
+              <div>
+                <div className="mb-1 text-[10px] font-bold tracking-wider text-muted-foreground uppercase">{lang === "en" ? "Intent" : "使用意图"}</div>
+                <p className="text-sm leading-relaxed text-foreground-secondary">{lang === "en" ? activeSc.intentEn : activeSc.intent}</p>
+              </div>
+              <div>
+                <div className="mb-1 text-[10px] font-bold tracking-wider text-muted-foreground uppercase">{lang === "en" ? "Recommended Code" : "推荐写法"}</div>
+                <code className="block rounded border border-border-subtle bg-muted px-2 py-1.5 font-mono text-fx-12 break-words whitespace-pre-wrap text-foreground-secondary">{code}</code>
+              </div>
+            </div>
+          ) : null}
         </div>
         <div className="flex flex-1 flex-col gap-5 p-5">
           <PlaygroundEyebrow dot="bg-primary" zh={lang === "en" ? "Interactive props" : "实时属性"} en="INTERACTIVE PROPS" />

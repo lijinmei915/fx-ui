@@ -5481,30 +5481,41 @@ function PgSegmented({ value, onChange, options, allLabel }: { value: string; on
   )
 }
 
-function ButtonPlayground({ lang }: { lang: Lang }) {
-  const [s, setS] = useState<PgState>(PG_SCENARIOS[0].s)
+// ── 通用 playground 引擎（config 驱动，可复用到任意组件页）──────────────
+type PgValues = Record<string, string>
+type PgPropDef =
+  | { key: string; zh: string; en: string; propName: string; type: "segment"; options: { value: string; label: string }[]; hasAll?: boolean }
+  | { key: string; zh: string; en: string; propName: string; type: "text"; bilingual?: boolean; disabledWhen?: (v: PgValues) => boolean }
+type PgScenarioDef = { id: string; zh: string; en: string; intent: string; intentEn: string; values: PgValues }
+type PgPlaygroundConfig = {
+  scenarios: PgScenarioDef[]
+  props: PgPropDef[]
+  initial: PgValues
+  renderOne: (v: PgValues, lang: Lang) => React.ReactNode
+  genCode: (v: PgValues, lang: Lang) => string
+}
+
+function Playground({ config, lang }: { config: PgPlaygroundConfig; lang: Lang }) {
+  const [v, setV] = useState<PgValues>(config.initial)
   const [tab, setTab] = useState("preview")
   const [copied, setCopied] = useState(false)
-  const label = lang === "en" ? s.textEn : s.text
   const allLabel = lang === "en" ? "All" : "全部"
-  const activeSc = PG_SCENARIOS.find(
-    (sc) => sc.s.variant === s.variant && sc.s.size === s.size && sc.s.icon === s.icon && sc.s.disabled === s.disabled
-  )
-  const activeScenario = activeSc?.id
-  const set = (patch: Partial<PgState>) => setS((prev) => ({ ...prev, ...patch }))
+  const segKeys = config.props.filter((p) => p.type === "segment").map((p) => p.key)
+  const activeSc = config.scenarios.find((sc) => segKeys.every((key) => sc.values[key] === v[key]))
+  const set = (key: string, val: string) => setV((prev) => ({ ...prev, [key]: val }))
 
   // 「全部」→ 该维度取所有取值，做笛卡尔积铺矩阵
-  const vList = (s.variant === "all" ? PG_VARIANTS.map((o) => o.value) : [s.variant]) as PgVariant[]
-  const szList = (s.size === "all" ? PG_SIZES.map((o) => o.value) : [s.size]) as PgSize[]
-  const icList = (s.icon === "all" ? PG_ICONS.map((o) => o.value) : [s.icon]) as PgIcon[]
-  const dList = (s.disabled === "all" ? [false, true] : [s.disabled]) as boolean[]
-  const items: React.ReactNode[] = []
-  let k = 0
-  for (const v of vList) for (const sz of szList) for (const ic of icList) for (const d of dList)
-    items.push(pgButton(v, sz, ic, d, label || (lang === "en" ? "Button" : "按钮"), String(k++)))
+  let combos: PgValues[] = [v]
+  for (const p of config.props) {
+    if (p.type === "segment" && p.hasAll && v[p.key] === "all") {
+      const next: PgValues[] = []
+      for (const c of combos) for (const o of p.options) next.push({ ...c, [p.key]: o.value })
+      combos = next
+    }
+  }
+  const items = combos.map((c, i) => <Fragment key={i}>{config.renderOne(c, lang)}</Fragment>)
   const isMatrix = items.length > 1
-
-  const code = genButtonCode(vList[0], szList[0], icList[0], dList[0], label || (lang === "en" ? "Button" : "按钮"))
+  const code = config.genCode(combos[0], lang)
   const copy = () => { navigator.clipboard?.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 1500) }
 
   return (
@@ -5514,9 +5525,9 @@ function ButtonPlayground({ lang }: { lang: Lang }) {
         <div className="flex-1 border-b border-border-subtle p-5 xl:border-r xl:border-b-0">
           <PlaygroundEyebrow dot="bg-info" zh={lang === "en" ? "Scenarios" : "场景预设"} en="SCENARIOS" />
           <PgSegmented
-            value={activeScenario ?? ""}
-            onChange={(id) => { const sc = PG_SCENARIOS.find((x) => x.id === id); if (sc) setS(sc.s) }}
-            options={PG_SCENARIOS.map((sc) => ({ value: sc.id, label: lang === "en" ? sc.en : sc.zh }))}
+            value={activeSc?.id ?? ""}
+            onChange={(id) => { const sc = config.scenarios.find((x) => x.id === id); if (sc) setV(sc.values) }}
+            options={config.scenarios.map((sc) => ({ value: sc.id, label: lang === "en" ? sc.en : sc.zh }))}
           />
           {activeSc ? (
             <div className="mt-4 space-y-3 rounded-xl border border-border-subtle bg-card p-4 shadow-l1">
@@ -5533,39 +5544,23 @@ function ButtonPlayground({ lang }: { lang: Lang }) {
         </div>
         <div className="flex flex-1 flex-col gap-5 p-5">
           <PlaygroundEyebrow dot="bg-primary" zh={lang === "en" ? "Interactive props" : "实时属性"} en="INTERACTIVE PROPS" />
-          <div className="flex flex-col gap-1.5">
-            <PlaygroundPropLabel zh={lang === "en" ? "Text" : "内容"} prop="children" />
-            <Input
-              value={label}
-              disabled={s.icon === "only"}
-              onChange={(e) => set(lang === "en" ? { textEn: e.target.value } : { text: e.target.value })}
-              className="h-8 w-full max-w-72"
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <PlaygroundPropLabel zh={lang === "en" ? "Variant" : "变体"} prop="variant" />
-            <PgSegmented value={s.variant} onChange={(v) => set({ variant: v as PgState["variant"] })} options={PG_VARIANTS} allLabel={allLabel} />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <PlaygroundPropLabel zh={lang === "en" ? "Size" : "尺寸"} prop="size" />
-            <PgSegmented value={s.size} onChange={(v) => set({ size: v as PgState["size"] })} options={PG_SIZES} allLabel={allLabel} />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <PlaygroundPropLabel zh={lang === "en" ? "Icon" : "图标位置"} prop="iconLayout" />
-            <PgSegmented value={s.icon} onChange={(v) => set({ icon: v as PgState["icon"] })} options={PG_ICONS} allLabel={allLabel} />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <PlaygroundPropLabel zh={lang === "en" ? "Disabled" : "禁用"} prop="disabled" />
-            <PgSegmented
-              value={s.disabled === "all" ? "all" : String(s.disabled)}
-              onChange={(v) => set({ disabled: v === "all" ? "all" : v === "true" })}
-              options={[{ value: "true", label: "True" }, { value: "false", label: "False" }]}
-              allLabel={allLabel}
-            />
-          </div>
+          {config.props.map((p) => (
+            <div key={p.key} className="flex flex-col gap-1.5">
+              <PlaygroundPropLabel zh={lang === "en" ? p.en : p.zh} prop={p.propName} />
+              {p.type === "text" ? (
+                <Input
+                  value={(p.bilingual && lang === "en" ? v[`${p.key}En`] : v[p.key]) ?? ""}
+                  disabled={p.disabledWhen?.(v) ?? false}
+                  onChange={(e) => set(p.bilingual && lang === "en" ? `${p.key}En` : p.key, e.target.value)}
+                  className="h-8 w-full max-w-72"
+                />
+              ) : (
+                <PgSegmented value={v[p.key]} onChange={(val) => set(p.key, val)} options={p.options} allLabel={p.hasAll ? allLabel : undefined} />
+              )}
+            </div>
+          ))}
         </div>
       </div>
-      {/* Preview / Code 切换 */}
       {/* Preview / Code 行：h-12 + 微底 + 下划线 tab（激活描品牌色，1:1 抄 showcase） */}
       <div className="flex h-12 items-center justify-between border-b border-border-subtle bg-muted/30 px-4">
         <div className="flex h-full items-center gap-1">
@@ -5598,6 +5593,28 @@ function ButtonPlayground({ lang }: { lang: Lang }) {
       )}
     </div>
   )
+}
+
+// Button 的 playground 配置（把原 Button 专用逻辑收成 config，行为不变）
+const buttonPlaygroundConfig: PgPlaygroundConfig = {
+  scenarios: PG_SCENARIOS.map((sc) => ({
+    id: sc.id, zh: sc.zh, en: sc.en, intent: sc.intent, intentEn: sc.intentEn,
+    values: { variant: sc.s.variant as string, size: sc.s.size as string, icon: sc.s.icon as string, disabled: String(sc.s.disabled), text: sc.s.text, textEn: sc.s.textEn },
+  })),
+  props: [
+    { key: "text", zh: "内容", en: "Text", propName: "children", type: "text", bilingual: true, disabledWhen: (v) => v.icon === "only" },
+    { key: "variant", zh: "变体", en: "Variant", propName: "variant", type: "segment", options: PG_VARIANTS, hasAll: true },
+    { key: "size", zh: "尺寸", en: "Size", propName: "size", type: "segment", options: PG_SIZES, hasAll: true },
+    { key: "icon", zh: "图标位置", en: "Icon", propName: "iconLayout", type: "segment", options: PG_ICONS, hasAll: true },
+    { key: "disabled", zh: "禁用", en: "Disabled", propName: "disabled", type: "segment", options: [{ value: "true", label: "True" }, { value: "false", label: "False" }], hasAll: true },
+  ],
+  initial: { variant: "default", size: "md", icon: "none", disabled: "false", text: PG_SCENARIOS[0].s.text, textEn: PG_SCENARIOS[0].s.textEn },
+  renderOne: (c, lang) => pgButton(c.variant as PgVariant, c.size as PgSize, c.icon as PgIcon, c.disabled === "true", (lang === "en" ? c.textEn : c.text) || (lang === "en" ? "Button" : "按钮")),
+  genCode: (c, lang) => genButtonCode(c.variant as PgVariant, c.size as PgSize, c.icon as PgIcon, c.disabled === "true", (lang === "en" ? c.textEn : c.text) || (lang === "en" ? "Button" : "按钮")),
+}
+
+function ButtonPlayground({ lang }: { lang: Lang }) {
+  return <Playground config={buttonPlaygroundConfig} lang={lang} />
 }
 
 function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang }) {

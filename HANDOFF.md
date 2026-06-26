@@ -1,8 +1,31 @@
-> **接手时间**：2026-06-26
+> **接手时间**：2026-06-26（最新一轮：网站样式优化 + playground）
 > **项目根目录**：fx-ui
-> **当前状态**：完成 **TopBar 顶栏组件 + CRM 客户列表页模板 + 页面区块化生产线**。列表页已拆成可搬运 block（`CrmAppShell`/`ListPageHeader`/`ListToolbar`/`DataTable`，在 `src/components/recipes/`），并做了 **`gen:list-page` 生成器**（一条命令吐骨架）+ **来源 lint**（手写列表页直接拦）。配套治理：仓库地图 `docs/MAP.md`、页面装配 playbook `docs/PAGES.md`、AGENTS 红线 6/7（禁手搓/禁覆盖）、SessionStart hook 注入红线、Playwright 视觉回归。全在本地 main（最新 `b82b803`），**未推云端**
-> **下一步**：1）`HANDOFF` 提示已多次提交未更新已处理；2）DataTable/ListToolbar 等 block 稳定后可升 fx（DEC-024，补 manifest+文档页）；3）继续逐个组件体检（hygiene 提示"待登记 Figma 源 33 个" + baseline 20 条待清）；4）下拉菜单「多选/单选选中样式」仍待定
+> **当前状态**：本轮做**网站样式优化（参考桌面 component-library-showcase）+ Button 交互调试台**。① 字体气质：全站展示标题加粗收紧并降一档（4xl→3xl/2xl→xl）、字重补 semibold(600)、中文字族改优先系统苹方（DEC-027/028）；② **Button playground**（`ButtonPlayground` in `src/App.tsx`，Button 页 `#playground`）——左场景预设 + 右实时属性（变体/尺寸/图标/禁用/文本），Preview/Code 切换 + Copy 代码生成，点阵预览区，「全部」铺变体矩阵，选中场景显 使用意图/推荐写法卡片，eyebrow 微标签；分段控件 `PgSegmented` 是 playground 自有 chrome（1:1 抠 showcase：muted 轨道+白滑块+「全部」竖线分隔，色值全走 token）；③ 暗色 token 层（DEC-026）+ 切换已落地但**暂搁置**（需全 token 体系一起做）。全在本地 main，**未推云端**
+> **下一步**：1）playground **铺到其他组件页**（Input/Select/Badge…）——当前 `ButtonPlayground` 是 Button 专用（PG_VARIANTS/pgButton/genButtonCode 硬编码），铺开前先泛化成 config 驱动通用引擎（scenarios[]/props[]/render/genCode）；2）场景预设激活态若要更贴 showcase 的"软底高亮"，给 Button 加 soft 变体走治理；3）旧待办仍在：block 升 fx（DEC-024）、逐个组件体检、下拉多选/单选选中样式
 > **风险**：① `theme/fx-theme.css` 是 token 真相源，动它即全局换肤（顺序 CSS→TOKENS.md→design-tokens.json→`build:tokens`→组件）；② **大块改动随手提交**，别攒一堆未提交；③ **改页面/组合/视觉，收尾必跑 `npm run test:visual` 看截图**（红线，曾因没看截图漏掉缝隙/圆角）；④ 视觉基线是 mac/chromium 版，换机/上 CI 需重定
+
+---
+
+## 本轮（2026-06-26 晚）网站样式优化（对标 showcase）+ Button 交互调试台
+
+**主线：参考桌面 `component-library-showcase` 把文档站观感往"克制、精致"调，保 token；并新建 Button 交互 playground。**
+
+字体/排版（纯文档站展示层，未碰 `text-fx-*` 企业字号阶）：
+- 全站标题 `font-semibold`→`font-bold tracking-tight`；页/区块标题各**降一档**（4xl→3xl、2xl→xl）—— showcase 标题更小更稳（DEC-028）
+- 字重阶补 **semibold(600)**（小标题/卡片标题档，扶正早已在用的 `font-semibold`）（DEC-028）
+- **中文字族**改"优先系统苹方/雅黑，Noto Sans SC 退兜底"（拉丁仍 Inter）—— Noto 偏重不如苹方顺眼（DEC-027 部分修订 DEC-008）；已同步 TOKENS + design-tokens.json + 视觉基线
+
+Button 交互调试台（`#playground`，Button 页顶部）：
+- `ButtonPlayground`：左**场景预设**（7 个，单选）+ 右**实时属性**（变体/尺寸/图标位置/禁用=分段，内容=Input）；下方 **Preview/Code**（Tabs `variant="line"` 下划线）+ **Copy**（实时生成 JSX）；预览区**点阵网格底**
+- **「全部」**：每个属性首项，选中后预览铺该维度全变体**矩阵**（笛卡尔积）
+- 选中场景 → 左下显 **使用意图 / 推荐写法** 卡片（随场景联动）
+- **eyebrow 微标签**（圆点 + 小号大写），场景=蓝点 / 属性=橙点
+- **`PgSegmented`** 分段控件：playground 自有 chrome，1:1 抠 showcase（`text-[11px]` + muted 轨道 + 「全部」竖线分隔 + 白滑块，激活滑块 `bg-card shadow-l1`，全部激活描品牌色/具体值描主文字色）；色值全走 token，不引硬编码
+- 视觉基线新增 `button-playground.png`
+
+注意：**playground 目前 Button 专用**（PG_VARIANTS/pgButton/genButtonCode 硬编码）。铺到别的组件页前，先泛化成 config 驱动引擎，别复制粘贴。
+
+一句话给下个 AI：**样式优化只动文档站展示层 + token（走 DEC），别碰企业 `text-fx-*`；playground 要泛化再铺。**
 
 ---
 

@@ -5565,28 +5565,36 @@ function ButtonPlayground({ lang }: { lang: Lang }) {
         </div>
       </div>
       {/* Preview / Code 切换 */}
-      <Tabs value={tab} onValueChange={setTab}>
-        <div className="flex items-center justify-between border-b border-border-subtle px-4 pt-1.5">
-          <TabsList variant="line">
-            <TabsTrigger value="preview"><EyeIcon data-icon="inline-start" />Preview</TabsTrigger>
-            <TabsTrigger value="code"><FileCodeIcon data-icon="inline-start" />Code</TabsTrigger>
-          </TabsList>
-          <Button variant="outline" size="sm" onClick={copy}>
-            {copied ? <CheckIcon data-icon="inline-start" /> : <CopyIcon data-icon="inline-start" />}
-            {copied ? (lang === "en" ? "Copied" : "已复制") : "Copy"}
-          </Button>
+      {/* Preview / Code 行：h-12 + 微底 + 下划线 tab（激活描品牌色，1:1 抄 showcase） */}
+      <div className="flex h-12 items-center justify-between border-b border-border-subtle bg-muted/30 px-4">
+        <div className="flex h-full items-center gap-1">
+          {([["preview", <EyeIcon className="size-4" />, "Preview"], ["code", <FileCodeIcon className="size-4" />, "Code"]] as const).map(([t, icon, label]) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => setTab(t)}
+              className={`flex h-full items-center gap-1.5 border-b-2 px-2 text-sm font-medium transition-colors ${
+                tab === t ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {icon}{label}
+            </button>
+          ))}
         </div>
-        <TabsContent value="preview">
-          <div className="flex min-h-64 items-center justify-center bg-[radial-gradient(var(--border)_1px,transparent_0)] bg-[size:24px_24px] p-12">
-            <div className={isMatrix ? "flex flex-wrap items-center justify-center gap-4" : ""}>{items}</div>
-          </div>
-        </TabsContent>
-        <TabsContent value="code">
-          <div className="p-4">
-            <pre className="overflow-x-auto rounded-lg bg-muted px-3 py-2.5 text-fx-12"><code>{code}</code></pre>
-          </div>
-        </TabsContent>
-      </Tabs>
+        <Button variant="outline" size="sm" onClick={copy}>
+          {copied ? <CheckIcon data-icon="inline-start" className="text-success" /> : <CopyIcon data-icon="inline-start" />}
+          {copied ? (lang === "en" ? "Copied" : "已复制") : "Copy"}
+        </Button>
+      </div>
+      {tab === "preview" ? (
+        <div className="flex min-h-[300px] items-center justify-center bg-[radial-gradient(var(--border)_1px,transparent_0)] bg-[size:24px_24px] p-12">
+          <div className={isMatrix ? "flex flex-wrap items-center justify-center gap-4" : ""}>{items}</div>
+        </div>
+      ) : (
+        <div className="p-4">
+          <pre className="overflow-x-auto rounded-lg bg-muted px-3 py-2.5 text-fx-12"><code>{code}</code></pre>
+        </div>
+      )}
     </div>
   )
 }

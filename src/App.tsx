@@ -3697,7 +3697,7 @@ function App() {
 
   return (
     <div className="h-dvh overflow-hidden bg-background text-foreground">
-      <header className="relative z-40 h-14 shrink-0 border-b border-border bg-background/95 backdrop-blur">
+      <header className="relative z-40 h-14 shrink-0 border-b border-border bg-card">
         <div className="flex h-14 items-center gap-6 px-6">
           <div className="flex items-center gap-3">
             <div className="text-xl font-bold text-primary">fx-ui</div>
@@ -3730,7 +3730,7 @@ function App() {
           <button
             type="button"
             onClick={() => setSearchOpen(true)}
-            className="ml-auto hidden w-80 items-center gap-2 rounded-lg border border-input bg-card px-3 text-left outline-none transition-colors hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 lg:flex"
+            className="ml-auto hidden w-80 items-center gap-2 rounded-lg border border-input bg-background px-3 text-left outline-none transition-colors hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 lg:flex"
           >
             <SearchIcon className="size-4 text-muted-foreground" />
             <span className="h-9 min-w-0 flex-1 content-center text-sm text-muted-foreground">{uiText[lang].search}</span>
@@ -3767,7 +3767,7 @@ function App() {
       />
 
       <div className="grid h-[calc(100dvh-3.5rem)] min-h-0 overflow-hidden lg:grid-cols-[280px_minmax(0,1fr)]">
-        <aside className="hidden min-h-0 border-r border-border lg:block">
+        <aside className="hidden min-h-0 border-r border-border bg-card lg:block">
           <div className="h-full overflow-y-auto px-8 py-10">
             <button
               type="button"

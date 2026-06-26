@@ -55,6 +55,7 @@ import {
   StarFilledIcon,
   CopyIcon,
   CreditCardIcon,
+  Code2Icon,
   DatabaseIcon,
   FileCodeIcon,
   FolderIcon,
@@ -5568,7 +5569,7 @@ function ButtonPlayground({ lang }: { lang: Lang }) {
       {/* Preview / Code 行：h-12 + 微底 + 下划线 tab（激活描品牌色，1:1 抄 showcase） */}
       <div className="flex h-12 items-center justify-between border-b border-border-subtle bg-muted/30 px-4">
         <div className="flex h-full items-center gap-1">
-          {([["preview", <EyeIcon className="size-4" />, "Preview"], ["code", <FileCodeIcon className="size-4" />, "Code"]] as const).map(([t, icon, label]) => (
+          {([["preview", <EyeIcon className="size-4" />, "Preview"], ["code", <Code2Icon className="size-4" />, "Code"]] as const).map(([t, icon, label]) => (
             <button
               key={t}
               type="button"

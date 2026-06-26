@@ -3698,13 +3698,16 @@ function App() {
   return (
     <div className="h-dvh overflow-hidden bg-background text-foreground">
       <header className="relative z-40 h-14 shrink-0 border-b border-border bg-card">
-        <div className="flex h-14 items-center gap-6 px-6">
-          <div className="flex items-center gap-3">
-            <div className="text-xl font-bold text-primary">fx-ui</div>
+        <div className="flex h-14 items-center gap-8 px-6">
+          <div className="flex items-center gap-2.5">
+            <div className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <BoxIcon className="size-4" />
+            </div>
+            <div className="text-xl font-bold tracking-tight text-foreground">fx-ui</div>
             <Tag variant="outline">v1.2.0</Tag>
           </div>
 
-          <nav className="hidden h-14 items-center gap-6 text-sm font-medium md:flex">
+          <nav className="hidden h-14 items-center gap-7 text-base font-semibold md:flex">
             {topNav.map((item) => {
               const isActive =
                 page === item.page ||

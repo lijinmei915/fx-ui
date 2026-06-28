@@ -28,6 +28,58 @@ function assertIncludes(source, values, label, errors) {
   }
 }
 
+function extractConstArray(source, constName) {
+  const start = source.indexOf(`const ${constName}`)
+  if (start === -1) return ""
+  const arrStart = source.indexOf("[", start)
+  let depth = 0
+  let inString = null
+  let escaped = false
+
+  for (let index = arrStart; index < source.length; index += 1) {
+    const char = source[index]
+
+    if (inString) {
+      if (escaped) {
+        escaped = false
+      } else if (char === "\\") {
+        escaped = true
+      } else if (char === inString) {
+        inString = null
+      }
+      continue
+    }
+
+    if (char === "\"" || char === "'" || char === "`") {
+      inString = char
+      continue
+    }
+
+    if (char === "[") depth += 1
+    if (char === "]") {
+      depth -= 1
+      if (depth === 0) return source.slice(arrStart, index + 1)
+    }
+  }
+
+  return source.slice(arrStart)
+}
+
+function extractObjectBlocks(arraySource) {
+  return arraySource
+    .split(/\n\s*\},\n\s*\{/)
+    .map((block, index, list) => {
+      let next = block
+      if (index > 0) next = `{${next}`
+      if (index < list.length - 1) next = `${next}}`
+      return next
+    })
+}
+
+function extractStringProp(block, prop) {
+  return block.match(new RegExp(`${prop}:\\s*"([^"]*)"`))?.[1] ?? ""
+}
+
 const [buttonSource, appSource, buttonDocs] = await Promise.all([
   read("src/components/ui/button.tsx"),
   read("src/App.tsx"),
@@ -40,19 +92,17 @@ const sizes = extractVariantKeys(buttonSource, "size")
 
 assertIncludes(
   appSource,
-  variants.map((variant) => (variant === "default" ? "<Button>{lang === \"en\" ? \"Save\" : \"保存\"}</Button>" : `variant="${variant}"`)),
-  "Button overview",
+  variants.map((variant) => (variant === "default" ? 'variant: "default"' : `variant="${variant}"`)),
+  "Button playground",
   errors
 )
-// 文字尺寸档必须在示例/总览全部展示；图标尺寸(icon-*)只要求有代表性档(icon-sm/icon-md)即可，
-// 不强制每个 icon-xs/icon-lg 都铺（避免为凑展示堆冗余行）。
+// 文字尺寸档必须在调试台里可切换；图标尺寸属于 API 表和 Markdown 契约，不强制塞进调试台。
 assertIncludes(
   appSource,
-  sizes.filter((size) => !size.startsWith("icon") && size !== "default").map((size) => `size="${size}"`),
-  "Button overview",
+  sizes.filter((size) => !size.startsWith("icon") && size !== "default").map((size) => `value: "${size}"`),
+  "Button playground",
   errors
 )
-assertIncludes(appSource, ['size="icon-sm"', 'size="icon-md"'], "Button overview icon sizes", errors)
 assertIncludes(buttonDocs, variants, "Button Markdown variants", errors)
 assertIncludes(buttonDocs, sizes, "Button Markdown sizes", errors)
 
@@ -62,9 +112,9 @@ const requiredStateContracts = [
   ["Button source", buttonSource, "aria-expanded"],
   ["Button source", buttonSource, "disabled:"],
   ["Button source", buttonSource, "aria-invalid"],
-  ["Button overview", appSource, "交互状态"],
-  ["Button overview", appSource, "<Spinner"],
-  ["Button overview", appSource, "禁用"],
+  ["Button playground", appSource, "disabledWhen"],
+  ["Button playground", appSource, "<Spinner"],
+  ["Button playground", appSource, "禁用"],
   ["Button Markdown", buttonDocs, "disabled"],
   ["Button Markdown", buttonDocs, "Spinner"],
   ["Button Markdown", buttonDocs, "aria-invalid"],
@@ -76,40 +126,30 @@ for (const [label, source, value] of requiredStateContracts) {
   }
 }
 
-// 组件总览小标题 ↔ 场景示例 tab 一一对应（DOC_SITE_DESIGN「组件总览」规则）。
-// 以 Button 为标杆校验：ButtonOverview 的 h3 小标题集合 == buttonScenarioFilters 的 tab 集合（带别名）。
 {
-  const ovStart = appSource.indexOf("function ButtonOverview(")
-  const ovEnd = appSource.indexOf("\nfunction ", ovStart + 1)
-  const ovSource = appSource.slice(ovStart, ovEnd)
-  // 取每个 h3 的中文标题（"En" : "中文" 形式）
-  const ovHeaders = [...ovSource.matchAll(/<h3[^>]*>\{lang === "en" \? "[^"]+" : "([^"]+)"\}<\/h3>/g)].map((m) => m[1])
+  const variantSource = extractConstArray(appSource, "PG_VARIANTS")
+  const variantBlocks = extractObjectBlocks(variantSource)
+  const seenTexts = new Map()
+  const requiredProps = ["value", "intent", "intentEn", "constraint", "constraintEn"]
 
-  const filterStart = appSource.indexOf("const buttonScenarioFilters")
-  const arrStart = appSource.indexOf("= [", filterStart)
-  const filterEnd = appSource.indexOf("\n]", arrStart)
-  const filterSource = appSource.slice(arrStart, filterEnd)
-  const tabLabels = [...filterSource.matchAll(/label:\s*"([^"]+)"/g)].map((m) => m[1])
+  for (const block of variantBlocks) {
+    const value = extractStringProp(block, "value")
+    if (!value) continue
 
-  // 别名：总览用「交互状态」，tab 用「状态」，视为同一概念
-  const norm = (s) => (s === "交互状态" ? "状态" : s)
-  const ovSet = new Set(ovHeaders.map(norm))
-  const tabSet = new Set(tabLabels.map(norm))
-  for (const t of tabSet) if (!ovSet.has(t)) errors.push(`Button 总览缺少与场景 tab「${t}」对应的小标题块`)
-  for (const h of ovSet) if (!tabSet.has(h)) errors.push(`Button 总览小标题「${h}」在场景示例里没有对应 tab`)
-}
-
-// 「用法」列场景名同组同格式：Button「类型」tab(group: "category") 的中文 title 须全部以「操作」结尾。
-{
-  const exStart = appSource.indexOf("const buttonScenarioExamples")
-  const exEnd = appSource.indexOf("\n] as const", exStart)
-  const exSource = appSource.slice(exStart, exEnd)
-  // 拆成各场景对象，取 group=category 的 title
-  for (const block of exSource.split(/\n  \{/)) {
-    if (!/group:\s*"category"/.test(block)) continue
-    const m = block.match(/title:\s*"([^"]+)"/)
-    if (m && !m[1].endsWith("操作")) {
-      errors.push(`Button「类型」tab 场景名「${m[1]}」格式不统一（同组应以「操作」结尾）`)
+    for (const prop of requiredProps) {
+      const text = extractStringProp(block, prop).trim()
+      if (!text) {
+        errors.push(`Button PG_VARIANTS.${value} is missing ${prop}`)
+      }
+      if ((prop === "intent" || prop === "constraint") && text.length < 20) {
+        errors.push(`Button PG_VARIANTS.${value}.${prop} is too vague for AI selection`)
+      }
+      const key = `${prop}:${text}`
+      if (text && seenTexts.has(key)) {
+        errors.push(`Button PG_VARIANTS.${value}.${prop} duplicates ${seenTexts.get(key)}`)
+      } else if (text) {
+        seenTexts.set(key, `${value}.${prop}`)
+      }
     }
   }
 }

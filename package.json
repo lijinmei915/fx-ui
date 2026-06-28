@@ -25,6 +25,7 @@
     "@fontsource-variable/geist": "^5.2.9",
     "@fontsource-variable/inter": "^5.2.8",
     "@fontsource/noto-sans-sc": "^5.2.9",
+    "@fontsource/noto-serif-sc": "^5.2.9",
     "@lijinmei-810/dev-inspector": "^0.2.0",
     "@tabler/icons-react": "^3.44.0",
     "class-variance-authority": "^0.7.1",

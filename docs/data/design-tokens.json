@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/design-tokens",
-  "updatedAt": "2026-06-18",
+  "updatedAt": "2026-06-28",
   "truthSource": "theme/fx-theme.css",
   "humanDoc": "docs/TOKENS.md",
   "note": "主项目采用 shadcn 友好的三层结构：primitive -> semantic -> componentUsage。报告 skill 的 Seed -> Map -> Alias -> Component 四层结构可作为独立 HTML 输出参考，但不替代本项目的 shadcn semantic slots。",
@@ -1484,6 +1484,12 @@
       "usage": "卡片和内容容器背景"
     },
     {
+      "name": "--card-foreground",
+      "value": "var(--fx-neutrals-20)",
+      "category": "surface-text",
+      "usage": "卡片文字"
+    },
+    {
       "name": "--surface",
       "value": "var(--fx-neutrals-01)",
       "category": "surface-text",
@@ -1494,12 +1500,6 @@
       "value": "var(--fx-neutrals-02)",
       "category": "surface-text",
       "usage": "控件禁用底（outline 按钮禁用态），比 surface 略灰"
-    },
-    {
-      "name": "--card-foreground",
-      "value": "var(--fx-neutrals-20)",
-      "category": "surface-text",
-      "usage": "卡片文字"
     },
     {
       "name": "--popover",
@@ -1580,6 +1580,12 @@
       "usage": ""
     },
     {
+      "name": "--muted-foreground",
+      "value": "var(--fx-neutrals-11)",
+      "category": "surface-text",
+      "usage": "辅助说明、弱信息"
+    },
+    {
       "name": "--fill-subtle",
       "value": "color-mix(in oklch, var(--foreground) 5%, transparent)",
       "category": "shadcn-semantic",
@@ -1590,12 +1596,6 @@
       "value": "color-mix(in oklch, var(--foreground) 8%, transparent)",
       "category": "shadcn-semantic",
       "usage": "上述填充控件的 hover 加深 / 无底色图标按钮 hover"
-    },
-    {
-      "name": "--muted-foreground",
-      "value": "var(--fx-neutrals-11)",
-      "category": "surface-text",
-      "usage": "辅助说明、弱信息"
     },
     {
       "name": "--accent",
@@ -1680,6 +1680,12 @@
       "value": "var(--fx-blue-05)",
       "category": "shadcn-semantic",
       "usage": "链接禁用态（淡化蓝）"
+    },
+    {
+      "name": "--border-faint",
+      "value": "var(--fx-neutrals-03)",
+      "category": "shadcn-semantic",
+      "usage": ""
     },
     {
       "name": "--border-subtle",

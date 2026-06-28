@@ -1285,6 +1285,123 @@
       ]
     },
     {
+      "name": "PageLead",
+      "source": "src/components/fx/page-lead.tsx",
+      "docStatus": "complete",
+      "role": "文档页面包屑、标题、说明、页面动作",
+      "doc": "docs/components/fx-page-lead.md",
+      "category": "fx",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "root"
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--muted-foreground",
+        "--border"
+      ],
+      "usageRules": [
+        "使用 PageLead 前必须以 src/components/fx/page-lead.tsx 为真实 API。",
+        "PageLead 用于文档站、官网或内容页顶部介绍区；业务后台页面标题区优先使用 PageHeader。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "PageActions",
+      "source": "src/components/fx/page-actions.tsx",
+      "docStatus": "complete",
+      "role": "文档页右上角页面级动作、更多菜单、页间导航",
+      "doc": "docs/components/fx-page-actions.md",
+      "category": "fx",
+      "nativeStates": [
+        "disabled",
+        "menu-open"
+      ],
+      "semanticDom": [
+        "root",
+        "copy-action",
+        "more-menu",
+        "page-navigation"
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--muted-foreground",
+        "--border",
+        "--secondary"
+      ],
+      "usageRules": [
+        "使用 PageActions 前必须以 src/components/fx/page-actions.tsx 为真实 API。",
+        "PageActions 只放文档站页面级工具，不承载组件示例内部操作或业务操作。",
+        "PageActions 主按钮放最高频动作；下拉只放同页次级动作；页间导航独立在右侧。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "SectionLead",
+      "source": "src/components/fx/section-lead.tsx",
+      "docStatus": "complete",
+      "role": "内容页章节标题和说明",
+      "doc": "docs/components/fx-section-lead.md",
+      "category": "fx",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "root"
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--muted-foreground"
+      ],
+      "usageRules": [
+        "使用 SectionLead 前必须以 src/components/fx/section-lead.tsx 为真实 API。",
+        "SectionLead 用于内容页章节标题和一句说明；标题与说明固定 8px，说明文字固定 14px。",
+        "不要在页面里临时手写不同的标题说明间距。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
+      "name": "ComponentPlayground",
+      "source": "src/components/fx/component-playground.tsx",
+      "docStatus": "complete",
+      "role": "文档页组件调试台，用于实时调属性、看预览、读使用意图并复制生成代码",
+      "doc": "docs/components/fx-component-playground.md",
+      "category": "fx",
+      "nativeStates": [
+        "preview-tab",
+        "code-tab",
+        "copied",
+        "scenario-selected"
+      ],
+      "semanticDom": [
+        "root",
+        "interactive-props",
+        "intent",
+        "recommended-code",
+        "preview",
+        "code"
+      ],
+      "tokenRefs": [
+        "--card",
+        "--muted",
+        "--foreground",
+        "--muted-foreground",
+        "--border",
+        "--primary"
+      ],
+      "usageRules": [
+        "使用 ComponentPlayground 前必须以 src/components/fx/component-playground.tsx 为真实 API。",
+        "ComponentPlayground 只用于文档站组件示例调试，不替代业务表单或真实配置面板。",
+        "每个调试项必须来自组件源码真实 prop，不发明不存在的 prop。",
+        "renderOne 与 genCode 必须保持同一组值，避免预览和复制代码不一致。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
       "name": "Layout",
       "source": "src/components/fx/layout.tsx",
       "docStatus": "complete",

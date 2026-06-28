@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-26
+last_verified: 2026-06-29
 teaches: "公司设计 token 的基础架构、真实值和全局视觉使用规则"
 use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadcn 组件样式或判断视觉是否符合公司规范时"
 ---
@@ -129,7 +129,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 ## 排版（字号 / 字重 / 字体 · 企业 web 规范）
 
-来源：企业 Figma **web 字体规范**（fx-ui 是 web 库，以 web 规范为准；移动端字号另有一套，见 DEC-004）。业务页面/组件用 `text-fx-*` 字号；文档站自身展示标题另走 Tailwind `text-*` 大号，不在此列。
+来源：企业 Figma **web 字体规范**（fx-ui 是 web 库，以 web 规范为准；移动端字号另有一套，见 DEC-004）。业务页面/组件优先用 `text-fx-*` 字号；`fx` 是公司命名空间，避免和 Tailwind 默认 `text-sm/text-base/...` 混淆。主题面板的“文字比例”会同时映射 `text-fx-*` 与常用 Tailwind `text-*`，保证旧页面和文档页也能跟随缩放。
 
 **字号 + 行高**（默认正文 = 13）：
 
@@ -144,7 +144,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 **字重**：`font-normal`(400) 常规·正文 / `font-medium`(500) 中等·标签·按钮·菜单 / `font-semibold`(**600**) 次强调·小标题/卡片标题（500 偏轻、700 偏重时的中间档）/ `font-bold`(**700**) 加粗·页/区块标题·强调（见 DEC-028）。
 
-**字族**：`--font-sans` = `"Inter Variable", "PingFang SC", "苹方", "Microsoft YaHei", "微软雅黑", "Helvetica Neue", "Noto Sans SC", Arial, sans-serif`。西文/数字用 **Inter**（自托管 OFL）；中文**优先系统苹方/雅黑**（观感更精致），缺系统中文字时回退自托管 **Noto Sans SC（思源黑体）** 兜底（见 DEC-027 修订 DEC-008）。`src/main.tsx` 引入 `@fontsource-variable/inter` + `@fontsource/noto-sans-sc`（400/500/700，按 unicode-range 懒加载，仅兜底命中时下载）。
+**字族**：默认 `--font-sans` = `"Inter Variable", -apple-system, BlinkMacSystemFont, "PingFang SC", "苹方", "Microsoft YaHei", "微软雅黑", "Noto Sans SC", Arial, sans-serif`。西文/数字用 **Inter**（自托管 OFL）；中文优先后台常用系统黑体（苹方/雅黑），缺系统中文字时回退自托管 **Noto Sans SC（思源黑体）**。主题定制提供 4 类中文体验：系统黑体、书面宋体（**Noto Serif SC**）、等宽兜底、现代黑体（HarmonyOS Sans SC / MiSans / PingFang SC，按系统可用字体回退）；英文模式只使用英文/拉丁字体栈，不混入中文字体名。`src/main.tsx` 引入 `@fontsource-variable/inter` + `@fontsource/noto-sans-sc`，宋体主题按需加载 `@fontsource/noto-serif-sc`（400/500/700）。
 
 > 完整企业字号阶（11/14/16/20/22/28 + 中英双套语义变量名 Large Title/Title1/Body1…）见 Figma 字体规范；fx-ui web 当前只落地上面四档，按需再补。
 

@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { mountDevInspector } from "@lijinmei-810/dev-inspector";
 import "@lijinmei-810/dev-inspector/style.css";
-// 自托管开源字体（OFL，无版权困扰，跨平台一致）：Inter 管西文/数字，Noto Sans SC(=思源黑体简体) 管中文
+// 自托管开源字体（OFL，无版权困扰，跨平台一致）：Inter 管西文/数字，Noto Sans SC 管默认中文；Serif SC 在主题切换到宋体时按需加载
 import "@fontsource-variable/inter/wght.css";
 import "@fontsource/noto-sans-sc/400.css";
 import "@fontsource/noto-sans-sc/500.css";

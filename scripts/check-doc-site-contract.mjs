@@ -86,6 +86,25 @@ for (const [index, dataset] of (governanceIndex.datasets ?? []).entries()) {
 const docSiteManifest = await readJson("docs/data/doc-site.manifest.json")
 const appSource = await readText(docSiteManifest.truthSource)
 
+if (appSource.includes("docsSpacing.sectionHeader")) {
+  errors.push("doc-site section headings must use SectionLead instead of docsSpacing.sectionHeader")
+}
+
+if (!appSource.includes("from \"@/components/fx/section-lead\"") || !appSource.includes("<SectionLead")) {
+  errors.push("doc-site must use the fx SectionLead component for content section headings")
+}
+
+const standardDocPageSource = appSource.match(/function StandardDocPage\([\s\S]*?\nfunction AvatarPage/)?.[0] ?? ""
+if (!standardDocPageSource.includes("<FxPageLead")) {
+  errors.push("StandardDocPage must use the fx PageLead component")
+}
+if (!standardDocPageSource.includes("<SectionLead")) {
+  errors.push("StandardDocPage overview and content headings must use SectionLead")
+}
+if (standardDocPageSource.includes("<h1 className=\"text-3xl") || standardDocPageSource.includes("<h2 className=\"text-xl")) {
+  errors.push("StandardDocPage must not hand-roll page or section headings")
+}
+
 if (docSiteManifest.governance?.method !== "text-spec + machine-manifest + executable-check") {
   errors.push("doc-site governance method must be text-spec + machine-manifest + executable-check")
 }

@@ -30,13 +30,6 @@ test("客户列表页模板", async ({ page }) => {
   })
 })
 
-test("Button 组件总览", async ({ page }) => {
-  await page.goto("/#button")
-  const overview = page.locator("#overview")
-  await expect(overview).toBeVisible()
-  await expect(overview).toHaveScreenshot("button-overview.png")
-})
-
 test("Button 交互调试台", async ({ page }) => {
   await page.goto("/#button")
   const pg = page.locator("#playground")

@@ -38,6 +38,7 @@
         "主题",
         "维护",
         "现状",
+        "网站规范",
         "function GettingStartedPage",
         "installCommandsCode",
         "documentation-ssot",
@@ -104,7 +105,7 @@
     {
       "id": "page-actions",
       "label": "顶部操作区",
-      "source": "src/App.tsx",
+      "source": "src/components/fx/page-actions.tsx",
       "intent": "页面操作保持在标题右侧，复制、更多和上一篇/下一篇放在同一组，不把操作按钮散到内容流里。",
       "requiredSourceIncludes": [
         "function PageActionsShell",
@@ -125,7 +126,8 @@
         "if (anchors.length === 0) return null",
         "className=\"hidden 2xl:block\"",
         "className=\"border-l border-border pl-6\"",
-        "className={\n                    isActive\n                      ? \"relative flex items-center font-medium text-foreground\""
+        "isActive ?",
+        "\"relative flex items-center font-medium text-foreground\""
       ]
     },
     {

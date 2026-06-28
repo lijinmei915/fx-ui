@@ -11,8 +11,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 const src = fs.readFileSync(path.join(root, "src/App.tsx"), "utf8")
 const errors = []
 
-// 抓 const ...propRows = [ ... ]（数组以行首 ] 结束）
-const blocks = [...src.matchAll(/const\s+(\w*[Pp]ropRows)\s*=\s*\[([\s\S]*?)\n\]/g)]
+// 抓 const ...propRows = [ ... ];，允许格式化后数组结尾变成 `}]` / `}];`。
+const blocks = [...src.matchAll(/const\s+(\w*[Pp]ropRows)\s*(?::[^=]+)?=\s*\[([\s\S]*?)\]\s*;/g)]
 let checked = 0
 for (const [, name, body] of blocks) {
   const props = (body.match(/\bprop:/g) || []).length

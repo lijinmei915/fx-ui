@@ -6177,31 +6177,39 @@ function ScenarioTable({ rows, filters, lang, layout = "table", elevated = false
 }
 
 type PgVariant = "default" | "secondary" | "outline" | "ghost" | "plain" | "destructive";
+type PgTone = "default" | "primary" | "info" | "danger";
 type PgSize = "xs" | "sm" | "md" | "lg";
 type PgIcon = "none" | "start" | "end" | "only";
-const PG_VARIANTS: {value: PgVariant;label: string;intent: string;intentEn: string;constraint: string;constraintEn: string;}[] = [
-{ value: "default", label: "solid", intent: "承载页面或区块内最主要的推进动作，视觉权重最高。", intentEn: "Use for the single most important forward action in a page or region.", constraint: "同一操作区只放一个 default，危险操作必须改用 destructive。", constraintEn: "Keep one default button per action area; destructive actions must use destructive." },
-{ value: "secondary", label: "secondary", intent: "承载与主操作并列但优先级更低的辅助动作。", intentEn: "Use for supporting actions that sit beside the primary action.", constraint: "不要和 outline 在同一组里表达同一级别，避免层级重复。", constraintEn: "Avoid using secondary and outline for the same hierarchy in one group." },
-{ value: "outline", label: "outline", intent: "承载需要边界感但不需要填充强调的轻量操作。", intentEn: "Use for lightweight actions that need a visible boundary without strong fill.", constraint: "适合工具栏和次级动作，不用于页面唯一主行动点。", constraintEn: "Good for toolbars and secondary actions, not the page's primary action." },
-{ value: "ghost", label: "ghost", intent: "承载卡片、工具栏中的最低强调操作，默认不占视觉面积。", intentEn: "Use for the quietest actions inside cards or toolbars.", constraint: "hover 才出现底色，不用于提交、保存等强推进动作。", constraintEn: "Background appears on hover only; do not use for submit/save actions." },
-{ value: "plain", label: "plain", intent: "承载表格操作列或行内文字操作，无底色、无边框。", intentEn: "Use for table action columns or inline text actions with no fill or border.", constraint: "需要颜色差异时用 tone，不在调用处手写颜色类覆盖。", constraintEn: "Use tone for color semantics; do not override colors ad hoc at call sites." },
-{ value: "destructive", label: "danger", intent: "承载删除、移除权限等危险或不可逆操作。", intentEn: "Use for dangerous or irreversible actions such as delete or remove access.", constraint: "通常配合二次确认，不要用 default 或红色自定义类替代。", constraintEn: "Usually pair with confirmation; do not replace with default or custom red classes." }];
+const PG_VARIANTS: {value: PgVariant;label: string;labelEn: string;intent: string;intentEn: string;constraint: string;constraintEn: string;}[] = [
+{ value: "default", label: "实心", labelEn: "Solid", intent: "承载页面或区块内最主要的推进动作，视觉权重最高。", intentEn: "Use for the single most important forward action in a page or region.", constraint: "同一操作区只放一个 default，危险操作必须改用 destructive。", constraintEn: "Keep one default button per action area; destructive actions must use destructive." },
+{ value: "secondary", label: "次级", labelEn: "Secondary", intent: "承载与主操作并列但优先级更低的辅助动作。", intentEn: "Use for supporting actions that sit beside the primary action.", constraint: "不要和 outline 在同一组里表达同一级别，避免层级重复。", constraintEn: "Avoid using secondary and outline for the same hierarchy in one group." },
+{ value: "outline", label: "描边", labelEn: "Outline", intent: "承载需要边界感但不需要填充强调的轻量操作。", intentEn: "Use for lightweight actions that need a visible boundary without strong fill.", constraint: "适合工具栏和次级动作，不用于页面唯一主行动点。", constraintEn: "Good for toolbars and secondary actions, not the page's primary action." },
+{ value: "ghost", label: "幽灵", labelEn: "Ghost", intent: "承载卡片、工具栏中的最低强调操作，默认不占视觉面积。", intentEn: "Use for the quietest actions inside cards or toolbars.", constraint: "hover 才出现底色，不用于提交、保存等强推进动作。", constraintEn: "Background appears on hover only; do not use for submit/save actions." },
+{ value: "plain", label: "纯文字", labelEn: "Plain", intent: "承载表格操作列或行内文字操作，无底色、无边框。", intentEn: "Use for table action columns or inline text actions with no fill or border.", constraint: "需要颜色差异时用 tone，不在调用处手写颜色类覆盖。", constraintEn: "Use tone for color semantics; do not override colors ad hoc at call sites." },
+{ value: "destructive", label: "危险", labelEn: "Danger", intent: "承载删除、移除权限等危险或不可逆操作。", intentEn: "Use for dangerous or irreversible actions such as delete or remove access.", constraint: "通常配合二次确认，不要用 default 或红色自定义类替代。", constraintEn: "Usually pair with confirmation; do not replace with default or custom red classes." }];
+
+const PG_TONES: {value: PgTone;label: string;labelEn: string;title: string;titleEn: string;}[] = [
+{ value: "default", label: "默认", labelEn: "Default", title: "中性文字操作", titleEn: "Neutral text action" },
+{ value: "primary", label: "主色", labelEn: "Primary", title: "品牌主色文字操作", titleEn: "Brand-primary text action" },
+{ value: "info", label: "信息", labelEn: "Info", title: "蓝色信息 / 详情类文字操作，不等同链接", titleEn: "Blue info/detail text action, not a link" },
+{ value: "danger", label: "危险", labelEn: "Danger", title: "删除等危险文字操作", titleEn: "Dangerous text action such as delete" }];
 
 const PG_SIZES: {value: PgSize;label: string;}[] = [
 { value: "xs", label: "超小24" }, { value: "sm", label: "小28" }, { value: "md", label: "中32" }, { value: "lg", label: "大36" }];
 
 const PG_ICONS: {value: PgIcon;label: string;}[] = [
-{ value: "none", label: "none" }, { value: "start", label: "left" }, { value: "end", label: "right" }, { value: "only", label: "only" }];
+{ value: "none", label: "无" }, { value: "start", label: "左侧" }, { value: "end", label: "右侧" }, { value: "only", label: "仅图标" }];
 
 const PG_ICON_SIZE: Record<PgSize, "icon-xs" | "icon-sm" | "icon-md" | "icon-lg"> = { xs: "icon-xs", sm: "icon-sm", md: "icon-md", lg: "icon-lg" };
-type PgState = {variant: PgVariant | "all";size: PgSize | "all";icon: PgIcon | "all";text: string;textEn: string;disabled: boolean | "all";loading: boolean | "all";};
+type PgState = {variant: PgVariant | "all";tone: PgTone | "all";size: PgSize | "all";icon: PgIcon | "all";text: string;textEn: string;disabled: boolean | "all";loading: boolean | "all";};
 type PgScenario = {id: string;zh: string;en: string;intent: string;intentEn: string;s: PgState;};
 // 单个具体组合 → 一个 Button（icon-only 走 icon-* 尺寸）
-function pgButton(variant: PgVariant, size: PgSize, icon: PgIcon, disabled: boolean, loading: boolean, label: string, key?: string) {
+function pgButton(variant: PgVariant, tone: PgTone, size: PgSize, icon: PgIcon, disabled: boolean, loading: boolean, label: string, key?: string) {
+  const toneProp = variant === "plain" ? tone : "default";
   if (icon === "only")
-  return <Button key={key} variant={variant} size={PG_ICON_SIZE[size]} disabled={disabled || loading} aria-label={label || "按钮"}>{loading ? <Spinner /> : <PackageIcon />}</Button>;
+  return <Button key={key} variant={variant} tone={toneProp} size={PG_ICON_SIZE[size]} disabled={disabled || loading} aria-label={label || "按钮"}>{loading ? <Spinner /> : <PackageIcon />}</Button>;
   return (
-    <Button key={key} variant={variant} size={size} disabled={disabled || loading}>
+    <Button key={key} variant={variant} tone={toneProp} size={size} disabled={disabled || loading}>
       {loading ? <Spinner data-icon="inline-start" /> : icon === "start" ? <SearchIcon data-icon="inline-start" /> : null}
       {label}
       {!loading && icon === "end" ? <ChevronDownIcon data-icon="inline-end" /> : null}
@@ -6209,20 +6217,21 @@ function pgButton(variant: PgVariant, size: PgSize, icon: PgIcon, disabled: bool
 
 }
 const PG_SCENARIOS: PgScenario[] = [
-{ id: "primary", zh: "主操作", en: "Primary", intent: "页面或区域的主要行动点，一个操作区域建议只出现一个。", intentEn: "The primary action of a page or region; keep only one per area.", s: { variant: "default", size: "md", icon: "none", text: "保存", textEn: "Save", disabled: false, loading: false } },
-{ id: "secondary", zh: "次操作", en: "Secondary", intent: "与主操作并列的次要操作，不抢焦点。", intentEn: "A secondary action beside the primary one, without stealing focus.", s: { variant: "secondary", size: "md", icon: "none", text: "取消", textEn: "Cancel", disabled: false, loading: false } },
-{ id: "danger", zh: "危险操作", en: "Danger", intent: "删除等不可逆操作，用 destructive 变体提示风险。", intentEn: "Irreversible actions like delete; use the destructive variant to signal risk.", s: { variant: "destructive", size: "md", icon: "none", text: "删除项目", textEn: "Delete project", disabled: false, loading: false } },
-{ id: "outline", zh: "描边操作", en: "Outline", intent: "中性次级操作，描边弱化存在感。", intentEn: "A neutral secondary action; the outline keeps it low-key.", s: { variant: "outline", size: "md", icon: "none", text: "导出", textEn: "Export", disabled: false, loading: false } },
-{ id: "ghost", zh: "幽灵操作", en: "Ghost", intent: "最弱的操作，常用于工具栏 / 紧凑区域。", intentEn: "The lightest action, often used in toolbars or compact areas.", s: { variant: "ghost", size: "md", icon: "none", text: "查看详情", textEn: "View details", disabled: false, loading: false } },
-{ id: "icon-text", zh: "带有图标", en: "With icon", intent: "图标 + 文案，用 data-icon 控制图标在前 / 后。", intentEn: "Icon + text; use data-icon to place the icon before or after.", s: { variant: "default", size: "md", icon: "start", text: "搜索", textEn: "Search", disabled: false, loading: false } },
-{ id: "icon-only", zh: "纯图标", en: "Icon only", intent: "纯图标按钮必须配 aria-label，保证可访问性。", intentEn: "Icon-only buttons must carry an aria-label for accessibility.", s: { variant: "default", size: "md", icon: "only", text: "打开组件包", textEn: "Open package", disabled: false, loading: false } },
-{ id: "plain-text", zh: "纯文字", en: "Plain text", intent: "表格操作列、行内弱化操作，无边框无底色，hover 只变文字色。", intentEn: "Inline or table-row actions with no border or fill; hover changes text color only.", s: { variant: "plain", size: "md", icon: "none", text: "详情", textEn: "Details", disabled: false, loading: false } },
-{ id: "loading", zh: "加载状态", en: "Loading", intent: "提交中、保存中等需要阻止重复点击的场景。", intentEn: "Pending submit or save actions that should prevent repeated clicks.", s: { variant: "default", size: "md", icon: "none", text: "提交中", textEn: "Submitting", disabled: true, loading: true } }];
+{ id: "primary", zh: "主操作", en: "Primary", intent: "页面或区域的主要行动点，一个操作区域建议只出现一个。", intentEn: "The primary action of a page or region; keep only one per area.", s: { variant: "default", tone: "default", size: "md", icon: "none", text: "保存", textEn: "Save", disabled: false, loading: false } },
+{ id: "secondary", zh: "次操作", en: "Secondary", intent: "与主操作并列的次要操作，不抢焦点。", intentEn: "A secondary action beside the primary one, without stealing focus.", s: { variant: "secondary", tone: "default", size: "md", icon: "none", text: "取消", textEn: "Cancel", disabled: false, loading: false } },
+{ id: "danger", zh: "危险操作", en: "Danger", intent: "删除等不可逆操作，用 destructive 变体提示风险。", intentEn: "Irreversible actions like delete; use the destructive variant to signal risk.", s: { variant: "destructive", tone: "default", size: "md", icon: "none", text: "删除项目", textEn: "Delete project", disabled: false, loading: false } },
+{ id: "outline", zh: "描边操作", en: "Outline", intent: "中性次级操作，描边弱化存在感。", intentEn: "A neutral secondary action; the outline keeps it low-key.", s: { variant: "outline", tone: "default", size: "md", icon: "none", text: "导出", textEn: "Export", disabled: false, loading: false } },
+{ id: "ghost", zh: "幽灵操作", en: "Ghost", intent: "最弱的操作，常用于工具栏 / 紧凑区域。", intentEn: "The lightest action, often used in toolbars or compact areas.", s: { variant: "ghost", tone: "default", size: "md", icon: "none", text: "查看详情", textEn: "View details", disabled: false, loading: false } },
+{ id: "icon-text", zh: "带有图标", en: "With icon", intent: "图标 + 文案，用 data-icon 控制图标在前 / 后。", intentEn: "Icon + text; use data-icon to place the icon before or after.", s: { variant: "default", tone: "default", size: "md", icon: "start", text: "搜索", textEn: "Search", disabled: false, loading: false } },
+{ id: "icon-only", zh: "纯图标", en: "Icon only", intent: "纯图标按钮必须配 aria-label，保证可访问性。", intentEn: "Icon-only buttons must carry an aria-label for accessibility.", s: { variant: "default", tone: "default", size: "md", icon: "only", text: "打开组件包", textEn: "Open package", disabled: false, loading: false } },
+{ id: "plain-text", zh: "纯文字", en: "Plain text", intent: "表格操作列、行内弱化操作，无边框无底色，hover 只变文字色。", intentEn: "Inline or table-row actions with no border or fill; hover changes text color only.", s: { variant: "plain", tone: "info", size: "md", icon: "none", text: "详情", textEn: "Details", disabled: false, loading: false } },
+{ id: "loading", zh: "加载状态", en: "Loading", intent: "提交中、保存中等需要阻止重复点击的场景。", intentEn: "Pending submit or save actions that should prevent repeated clicks.", s: { variant: "default", tone: "default", size: "md", icon: "none", text: "提交中", textEn: "Submitting", disabled: true, loading: true } }];
 
 
-function genButtonCode(variant: PgVariant, size: PgSize, icon: PgIcon, disabled: boolean, loading: boolean, label: string): string {
+function genButtonCode(variant: PgVariant, tone: PgTone, size: PgSize, icon: PgIcon, disabled: boolean, loading: boolean, label: string): string {
   const attrs: string[] = [];
   if (variant !== "default") attrs.push(`variant="${variant}"`);
+  if (variant === "plain" && tone !== "default") attrs.push(`tone="${tone}"`);
   if (icon === "only") attrs.push(`size="${PG_ICON_SIZE[size]}"`);else
   if (size !== "sm") attrs.push(`size="${size}"`);
   if (disabled || loading) attrs.push("disabled");
@@ -6241,19 +6250,21 @@ const buttonPlaygroundConfig = {
   props: [
   { key: "text", zh: "内容", en: "Text", propName: "children", type: "text" as const, bilingual: true, disabledWhen: (v: Record<string, string>) => v.icon === "only" },
   { key: "variant", zh: "变体", en: "Variant", propName: "variant", type: "segment" as const, options: PG_VARIANTS, hasAll: true },
+  { key: "tone", zh: "语义色", en: "Tone", propName: "tone", type: "segment" as const, options: PG_TONES, disabledWhen: (v: Record<string, string>) => v.variant !== "plain" },
   { key: "size", zh: "尺寸", en: "Size", propName: "size", type: "segment" as const, options: PG_SIZES, hasAll: true },
   { key: "icon", zh: "图标位置", en: "Icon", propName: "iconLayout", type: "segment" as const, options: PG_ICONS, hasAll: true },
   { key: "loading", zh: "加载", en: "Loading", propName: "loading", type: "segment" as const, options: [{ value: "true", label: "是" }, { value: "false", label: "否" }] },
   { key: "disabled", zh: "禁用", en: "Disabled", propName: "disabled", type: "segment" as const, options: [{ value: "true", label: "是" }, { value: "false", label: "否" }], hasAll: true, disabledWhen: (v: Record<string, string>) => v.loading === "true" }],
 
-  initial: { variant: "default", size: "md", icon: "none", disabled: "false", loading: "false", text: PG_SCENARIOS[0].s.text, textEn: PG_SCENARIOS[0].s.textEn },
+  initial: { variant: "default", tone: "default", size: "md", icon: "none", disabled: "false", loading: "false", text: PG_SCENARIOS[0].s.text, textEn: PG_SCENARIOS[0].s.textEn },
   guidanceKey: "variant",
   onValueChange: (next: Record<string, string>, key: string, value: string) => {
     if (key === "loading" && value === "true") return { ...next, disabled: "true" };
+    if (key === "variant" && value !== "plain") return { ...next, tone: "default" };
     return next;
   },
-  renderOne: (c: Record<string, string>, lang: Lang) => pgButton(c.variant as PgVariant, c.size as PgSize, c.icon as PgIcon, c.disabled === "true", c.loading === "true", (lang === "en" ? c.textEn : c.text) || (lang === "en" ? "Button" : "按钮")),
-  genCode: (c: Record<string, string>, lang: Lang) => genButtonCode(c.variant as PgVariant, c.size as PgSize, c.icon as PgIcon, c.disabled === "true", c.loading === "true", (lang === "en" ? c.textEn : c.text) || (lang === "en" ? "Button" : "按钮"))
+  renderOne: (c: Record<string, string>, lang: Lang) => pgButton(c.variant as PgVariant, c.tone as PgTone, c.size as PgSize, c.icon as PgIcon, c.disabled === "true", c.loading === "true", (lang === "en" ? c.textEn : c.text) || (lang === "en" ? "Button" : "按钮")),
+  genCode: (c: Record<string, string>, lang: Lang) => genButtonCode(c.variant as PgVariant, c.tone as PgTone, c.size as PgSize, c.icon as PgIcon, c.disabled === "true", c.loading === "true", (lang === "en" ? c.textEn : c.text) || (lang === "en" ? "Button" : "按钮"))
 };
 
 function ButtonPlayground({ lang }: {lang: Lang;}) {

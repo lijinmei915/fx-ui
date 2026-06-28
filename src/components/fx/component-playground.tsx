@@ -135,7 +135,7 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
   return (
     <div className="overflow-hidden rounded-xl border border-border bg-card shadow-l1">
       {config.scenarios ? (
-        <div className="flex flex-col border-b border-border-subtle bg-muted xl:flex-row">
+        <div className="flex flex-col border-b border-border-subtle bg-card xl:flex-row">
           <div className="flex-1 border-b border-border-subtle p-5 xl:border-r xl:border-b-0">
             <PlaygroundEyebrow dot="bg-info" zh={lang === "en" ? "Scenarios" : "场景预设"} en="SCENARIOS" />
             <PgSegmented
@@ -176,7 +176,7 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
           </div>
         </div>
       ) : (
-        <div className="border-b border-border-subtle bg-muted p-4">
+        <div className="border-b border-border-subtle bg-card p-4">
           <div className="grid gap-5 xl:grid-cols-2">
             <div className="flex flex-col gap-3">
               <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Interactive props" : "实时属性"}</PlaygroundSectionTitle>
@@ -231,7 +231,7 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
           </div>
         </div>
       )}
-      <div className="flex h-12 items-center justify-between bg-muted px-4">
+      <div className="flex h-12 items-center justify-between bg-background px-4">
         <div className="flex h-full items-center gap-1">
           {([["preview", <EyeIcon className="size-4" />, "Preview"], ["code", <Code2Icon className="size-4" />, "Code"]] as const).map(([t, icon, label]) => (
             <button

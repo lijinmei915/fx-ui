@@ -655,6 +655,44 @@
   stroke-width: 1.75;
 }
 
+/* 运行时主题预览层：由主题配置面板写入 data-theme-* 和 CSS 变量。
+   默认 token 仍以 :root 为真相源；这里负责让临时配置即时可见。 */
+[data-theme-border="none"] :where(.border, .border-t, .border-r, .border-b, .border-l) {
+  border-width: 0 !important;
+}
+[data-theme-border="thin"] :where(.border) {
+  border-width: 1px;
+}
+[data-theme-border="medium"] :where(.border) {
+  border-width: 2px;
+}
+[data-theme-border="thick"] :where(.border) {
+  border-width: 3px;
+}
+[data-theme-border="thin"] :where(.border-t) { border-top-width: 1px; }
+[data-theme-border="thin"] :where(.border-r) { border-right-width: 1px; }
+[data-theme-border="thin"] :where(.border-b) { border-bottom-width: 1px; }
+[data-theme-border="thin"] :where(.border-l) { border-left-width: 1px; }
+[data-theme-border="medium"] :where(.border-t) { border-top-width: 2px; }
+[data-theme-border="medium"] :where(.border-r) { border-right-width: 2px; }
+[data-theme-border="medium"] :where(.border-b) { border-bottom-width: 2px; }
+[data-theme-border="medium"] :where(.border-l) { border-left-width: 2px; }
+[data-theme-border="thick"] :where(.border-t) { border-top-width: 3px; }
+[data-theme-border="thick"] :where(.border-r) { border-right-width: 3px; }
+[data-theme-border="thick"] :where(.border-b) { border-bottom-width: 3px; }
+[data-theme-border="thick"] :where(.border-l) { border-left-width: 3px; }
+
+[data-theme-motion] :where([class*="transition"], [class*="duration-"]) {
+  transition-duration: var(--fx-theme-duration, 200ms);
+}
+[data-theme-motion="none"] :where(*, *::before, *::after) {
+  animation-duration: 0ms !important;
+  transition-duration: 0ms !important;
+}
+[data-theme-motion="playful"] :where([class*="transition"], [class*="duration-"]) {
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 /* 细滚动条工具类：细(6px)、圆头、半透明中性灰、hover 才显现、轨道透明。
    主流侧栏滚动条做法（Notion/Linear/VS Code）。滑块色走 token，不写死灰。
    套用：给可滚动容器加 className="scrollbar-thin"。 */

@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-06-27
+last_verified: 2026-06-28
 teaches: "fx-ui 重要的技术/协作决策记录：选了什么、放弃了什么、为什么"
 use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论"
 ---
@@ -333,6 +333,22 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **放弃**：① 让所有 Card 默认带阴影——B 端业务卡通常是平的，默认浮起不合规范；② 在调用处用 `className="shadow-l1"` 覆盖——违反红线 7（要变体不要覆盖），故收成组件 variant 走治理。
 - **原因**：阴影表达 elevation，是组件该提供的正交开关；默认无、按场景 opt-in，既保持 B 端平卡习惯，又让文档站/营销页能要质感。
 - **相关文件**：`src/components/ui/card.tsx`、`docs/components/card.md`、`src/App.tsx`（StandardDocPage 总览卡用 elevated）
+
+### DEC-030: 字体主题做 4 档中英成对配置，字体必须可商用且优先本地托管
+
+- **日期**：2026-06-27
+- **状态**：已决定方向，待落地
+- **背景**：参考 `component-library-showcase` 的字体主题能力：`sans / serif / mono / geometric` 四档，默认 `sans`。英文字体分别是 Inter、Playfair Display、JetBrains Mono、Space Grotesk；默认主题 `fontFamily: "sans"`。
+- **决定**：后续 fx-ui 也做 **4 个字体主题配置**，并且每一档都要有**英文 + 中文一一对应**的字体栈。字体选择必须满足：① 可商用；② 可本地托管或通过 npm/fontsource 等依赖落地；③ Windows / macOS / iOS / Android 都有明确 fallback；④ 中文不裸回退到不可控系统宋体。
+- **初始候选配对**：
+  - `sans` 默认企业 UI：英文 `Inter` + 中文 `Noto Sans SC` / 系统 `PingFang SC, Microsoft YaHei` fallback。
+  - `serif` 雅致展示：英文 `Playfair Display` + 中文 `Noto Serif SC`。
+  - `mono` 极客代码：英文 `JetBrains Mono` + 中文 `Noto Sans Mono CJK SC` 或保守回退 `Noto Sans SC`（中文 mono 字体体积大，落地前单独评估）。
+  - `geometric` 现代几何：英文 `Space Grotesk` + 中文候选 `Source Han Sans SC` / `Noto Sans SC`（优先选择与几何英文字形气质接近、屏显稳定的黑体）。
+- **中文可商用候选池（至少 3 套）**：`Noto Sans SC`、`Noto Serif SC`、`Source Han Sans SC`（思源黑体），均按开源字体许可证路径评估；后续如引入霞鹜文楷等展示字体，必须先确认 license、字重覆盖和文件体积。
+- **落地约束**：不得直接依赖线上 Google Fonts CDN；生产优先使用本地字体包 / 自托管字体文件，保留 license 说明。移动端只加载必要字重，避免中文字体体积拖慢首屏。字体主题应通过 token/class 切换，不在组件调用处写死 `font-family`。
+- **放弃**：① 只配置英文字体、中文交给浏览器随机 fallback；② 直接全量加载所有中文字体全字重；③ 为某个页面临时写死字体。
+- **相关文件（落地时）**：`theme/fx-theme.css`、`docs/TOKENS.md`、`docs/data/design-tokens.json`、`src/App.tsx`（主题切换 UI）
 
 ## 相关文件
 

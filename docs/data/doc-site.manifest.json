@@ -96,7 +96,7 @@
       "requiredSourceIncludes": [
         "leadText: \"max-w-5xl text-lg text-muted-foreground\"",
         "componentLead: \"max-w-5xl break-words text-lg\"",
-        "xl:grid-cols-[minmax(0,1080px)_220px]",
+        "2xl:grid-cols-[minmax(0,1080px)_220px]",
         "className=\"w-full min-w-0 break-words\"",
         "style={{ maxWidth: \"calc(100vw - 3rem)\" }}"
       ]
@@ -123,7 +123,7 @@
       "requiredSourceIncludes": [
         "function RightRail",
         "if (anchors.length === 0) return null",
-        "className=\"hidden xl:block\"",
+        "className=\"hidden 2xl:block\"",
         "className=\"border-l border-border pl-6\"",
         "className={\n                    isActive\n                      ? \"relative flex items-center font-medium text-foreground\""
       ]

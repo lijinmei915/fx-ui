@@ -16,12 +16,15 @@ import {
   RefreshIcon,
   MoonIcon,
   SunIcon,
+  SlidersIcon,
   MoreVerticalIcon,
   InboxIcon,
   HelpIcon,
   BellIcon,
   BellFilledIcon,
+  BoltIcon,
   BoldIcon,
+  BorderStyleIcon,
   BuildingIcon,
   BoxIcon,
   BriefcaseIcon,
@@ -64,12 +67,18 @@ import {
   ItalicIcon,
   LogOutIcon,
   PackageIcon,
+  PaletteIcon,
+  RadiusIcon,
   SearchIcon,
   SettingsIcon,
+  ShadowIcon,
   SparklesIcon,
   StarIcon,
+  TextSizeIcon,
+  TypographyIcon,
   UnderlineIcon,
   UserIcon,
+  XIcon,
 } from "@/lib/icons"
 
 import { Badge } from "@/components/ui/badge"
@@ -256,17 +265,209 @@ import tokensMarkdown from "../docs/TOKENS.md?raw"
 
 type Lang = "zh" | "en"
 type ButtonScenarioFilter = "category" | "size" | "state" | "icon"
+type ThemeMode = "light" | "dark"
+type ThemeColor = "indigo" | "violet" | "emerald" | "rose" | "amber" | "sky" | "slate" | "custom"
+type ThemeFont = "sans" | "serif" | "mono" | "geometric"
+type ThemeTextScale = "compact" | "standard" | "spacious"
+type ThemeRadius = "none" | "sm" | "md" | "lg" | "full"
+type ThemeBorderWidth = "none" | "thin" | "medium" | "thick"
+type ThemeShadowLevel = "none" | "soft" | "ambient" | "retro"
+type ThemeAnimationStyle = "none" | "fast" | "smooth" | "playful"
+
+type ThemeConfig = {
+  mode: ThemeMode
+  primaryColor: ThemeColor
+  customColorHex: string
+  customColorIndex: number
+  customColors: string[]
+  fontFamily: ThemeFont
+  textScale: ThemeTextScale
+  borderRadius: ThemeRadius
+  borderWidth: ThemeBorderWidth
+  shadowLevel: ThemeShadowLevel
+  animationStyle: ThemeAnimationStyle
+}
+
+const defaultThemeConfig: ThemeConfig = {
+  mode: "light",
+  primaryColor: "amber",
+  customColorHex: "#3b82f6",
+  customColorIndex: 0,
+  customColors: ["#3b82f6"],
+  fontFamily: "sans",
+  textScale: "standard",
+  borderRadius: "md",
+  borderWidth: "thin",
+  shadowLevel: "soft",
+  animationStyle: "smooth",
+}
+
+const themeColorOptions: { id: ThemeColor; label: string; value: string }[] = [
+  { id: "indigo", label: "Indigo", value: "#4f46e5" },
+  { id: "violet", label: "Violet", value: "#7c3aed" },
+  { id: "emerald", label: "Emerald", value: "#059669" },
+  { id: "rose", label: "Rose", value: "#e11d48" },
+  { id: "amber", label: "Amber", value: "#FF8000" },
+  { id: "sky", label: "Sky", value: "#0284c7" },
+  { id: "slate", label: "Slate", value: "#1f2937" },
+]
+
+const themeColorValues: Record<ThemeColor, string> = {
+  indigo: "#4f46e5",
+  violet: "#7c3aed",
+  emerald: "#059669",
+  rose: "#e11d48",
+  amber: "#FF8000",
+  sky: "#0284c7",
+  slate: "#1f2937",
+  custom: defaultThemeConfig.customColorHex,
+}
+
+const themeRadiusValues: Record<ThemeRadius, string> = {
+  none: "0rem",
+  sm: "0.375rem",
+  md: "0.625rem",
+  lg: "0.875rem",
+  full: "1.5rem",
+}
+
+const themeChineseFontValue = "\"Inter Variable\", \"Noto Sans SC\", \"PingFang SC\", \"苹方\", \"Microsoft YaHei\", \"微软雅黑\", Arial, sans-serif"
+
+const themeEnglishFontValues: Record<ThemeFont, string> = {
+  sans: "\"Inter Variable\", \"Helvetica Neue\", Arial, sans-serif",
+  serif: "Georgia, \"Times New Roman\", serif",
+  mono: "\"SFMono-Regular\", Consolas, \"Liberation Mono\", monospace",
+  geometric: "\"Geist Variable\", \"Inter Variable\", \"Helvetica Neue\", Arial, sans-serif",
+}
+
+const themeTextScaleValues: Record<ThemeTextScale, Record<string, string>> = {
+  compact: {
+    "--text-fx-11": "10px",
+    "--text-fx-11--line-height": "14px",
+    "--text-fx-12": "11px",
+    "--text-fx-12--line-height": "16px",
+    "--text-fx-13": "12px",
+    "--text-fx-13--line-height": "17px",
+    "--text-fx-15": "14px",
+    "--text-fx-15--line-height": "20px",
+    "--text-fx-18": "16px",
+    "--text-fx-18--line-height": "24px",
+  },
+  standard: {
+    "--text-fx-11": "11px",
+    "--text-fx-11--line-height": "16px",
+    "--text-fx-12": "12px",
+    "--text-fx-12--line-height": "18px",
+    "--text-fx-13": "13px",
+    "--text-fx-13--line-height": "18px",
+    "--text-fx-15": "15px",
+    "--text-fx-15--line-height": "22px",
+    "--text-fx-18": "18px",
+    "--text-fx-18--line-height": "28px",
+  },
+  spacious: {
+    "--text-fx-11": "12px",
+    "--text-fx-11--line-height": "18px",
+    "--text-fx-12": "13px",
+    "--text-fx-12--line-height": "20px",
+    "--text-fx-13": "15px",
+    "--text-fx-13--line-height": "22px",
+    "--text-fx-15": "17px",
+    "--text-fx-15--line-height": "25px",
+    "--text-fx-18": "20px",
+    "--text-fx-18--line-height": "30px",
+  },
+}
+
+const themeShadowValues: Record<ThemeShadowLevel, Record<string, string>> = {
+  none: {
+    "--fx-shadow-color": "transparent",
+    "--fx-shadow-l1": "none",
+    "--fx-shadow-l2": "none",
+    "--fx-shadow-l3": "none",
+    "--fx-shadow-l1-up": "none",
+  },
+  soft: {
+    "--fx-shadow-color": "oklch(from var(--fx-neutrals-20) l c h / 0.15)",
+    "--fx-shadow-l1": "0px 2px 6px 0px var(--fx-shadow-color)",
+    "--fx-shadow-l2": "0px 4px 12px 0px var(--fx-shadow-color)",
+    "--fx-shadow-l3": "0px 6px 24px 0px var(--fx-shadow-color)",
+    "--fx-shadow-l1-up": "0px -2px 6px 0px var(--fx-shadow-color)",
+  },
+  ambient: {
+    "--fx-shadow-color": "oklch(from var(--fx-neutrals-20) l c h / 0.22)",
+    "--fx-shadow-l1": "0px 6px 18px -8px var(--fx-shadow-color)",
+    "--fx-shadow-l2": "0px 14px 36px -14px var(--fx-shadow-color)",
+    "--fx-shadow-l3": "0px 24px 64px -20px var(--fx-shadow-color)",
+    "--fx-shadow-l1-up": "0px -8px 22px -12px var(--fx-shadow-color)",
+  },
+  retro: {
+    "--fx-shadow-color": "var(--foreground)",
+    "--fx-shadow-l1": "3px 3px 0px 0px var(--fx-shadow-color)",
+    "--fx-shadow-l2": "5px 5px 0px 0px var(--fx-shadow-color)",
+    "--fx-shadow-l3": "8px 8px 0px 0px var(--fx-shadow-color)",
+    "--fx-shadow-l1-up": "3px -3px 0px 0px var(--fx-shadow-color)",
+  },
+}
+
+const themeAnimationDurations: Record<ThemeAnimationStyle, string> = {
+  none: "0ms",
+  fast: "100ms",
+  smooth: "200ms",
+  playful: "320ms",
+}
+
+const themeFontOptions: { id: ThemeFont; label: string; desc: string }[] = [
+  { id: "sans", label: "Sans 默认", desc: "Inter + Noto Sans SC" },
+  { id: "serif", label: "Serif 雅致", desc: "Playfair + Noto Serif SC" },
+  { id: "mono", label: "Mono 极客", desc: "JetBrains Mono + CJK Mono" },
+  { id: "geometric", label: "Geom 现代", desc: "Space Grotesk + Noto Sans SC" },
+]
+
+const themeTextScaleOptions: { id: ThemeTextScale; label: string; desc: string }[] = [
+  { id: "compact", label: "紧凑", desc: "14px 基准" },
+  { id: "standard", label: "标准", desc: "16px 基准" },
+  { id: "spacious", label: "宽松", desc: "18px 基准" },
+]
+
+const themeRadiusOptions: { id: ThemeRadius; label: string }[] = [
+  { id: "none", label: "None" },
+  { id: "sm", label: "SM" },
+  { id: "md", label: "MD" },
+  { id: "lg", label: "LG" },
+  { id: "full", label: "Full" },
+]
+
+const themeBorderWidthOptions: { id: ThemeBorderWidth; label: string; desc: string }[] = [
+  { id: "none", label: "无边框", desc: "0px" },
+  { id: "thin", label: "细", desc: "1px" },
+  { id: "medium", label: "中等", desc: "2px" },
+  { id: "thick", label: "粗", desc: "3px" },
+]
+
+const themeShadowOptions: { id: ThemeShadowLevel; label: string; desc: string }[] = [
+  { id: "none", label: "无阴影", desc: "平面" },
+  { id: "soft", label: "轻微", desc: "精致" },
+  { id: "ambient", label: "弥散", desc: "立体" },
+  { id: "retro", label: "复古", desc: "硬核" },
+]
+
+const themeAnimationOptions: { id: ThemeAnimationStyle; label: string; desc: string }[] = [
+  { id: "none", label: "无动效", desc: "极速" },
+  { id: "fast", label: "快速", desc: "利落" },
+  { id: "smooth", label: "平滑", desc: "经典" },
+  { id: "playful", label: "弹性", desc: "灵动" },
+]
 
 const uiText = {
   zh: {
     languageZh: "中文",
     languageEn: "英文",
-    search: "搜索组件、Blocks、Tokens...",
+    search: "搜索文档",
     copyPage: "复制当前页",
     moreActions: "更多页面操作",
-    viewMarkdown: "以 Markdown 查看",
-    viewPage: "查看页面",
-    copyMarkdown: "复制 Markdown",
+    viewMarkdown: "Markdown",
+    viewPage: "页面",
     markdownLead: "这是当前页面对应的 Markdown 真相源，后续可以直接给前端工程师、v0 或其他 AI 作为上下文消费。",
     toc: "本页目录",
   },
@@ -276,9 +477,8 @@ const uiText = {
     search: "Search components, Blocks, Tokens...",
     copyPage: "Copy page",
     moreActions: "More page actions",
-    viewMarkdown: "View as Markdown",
-    viewPage: "View page",
-    copyMarkdown: "Copy Markdown",
+    viewMarkdown: "Markdown",
+    viewPage: "Page",
     markdownLead: "This is the Markdown source for the current page. It can be used as context by frontend engineers, v0, or other AI tools.",
     toc: "On this page",
   },
@@ -286,6 +486,75 @@ const uiText = {
 
 function getLabel(item: { label: string; labelEn?: string }, lang: Lang) {
   return lang === "en" && item.labelEn ? item.labelEn : item.label
+}
+
+function isHexColor(value: string) {
+  return /^#[0-9a-fA-F]{6}$/.test(value)
+}
+
+function normalizeThemeConfig(value: string | null): ThemeConfig {
+  if (!value) return defaultThemeConfig
+
+  try {
+    const parsed = JSON.parse(value) as Partial<ThemeConfig>
+    const customColors = Array.isArray(parsed.customColors)
+      ? parsed.customColors.filter(isHexColor)
+      : []
+    const legacyCustomColor = isHexColor(parsed.customColorHex ?? "") ? parsed.customColorHex! : defaultThemeConfig.customColorHex
+
+    return {
+      ...defaultThemeConfig,
+      ...parsed,
+      customColorHex: customColors[0] ?? legacyCustomColor,
+      customColorIndex: Math.min(Math.max(parsed.customColorIndex ?? 0, 0), Math.max(customColors.length - 1, 0)),
+      customColors: customColors.length > 0 ? customColors : [legacyCustomColor],
+    }
+  } catch {
+    return defaultThemeConfig
+  }
+}
+
+function updateThemeConfig<K extends keyof ThemeConfig>(
+  config: ThemeConfig,
+  key: K,
+  value: ThemeConfig[K],
+) {
+  return { ...config, [key]: value }
+}
+
+function getThemeFontValue(fontFamily: ThemeFont, lang: Lang) {
+  return lang === "zh" ? themeChineseFontValue : themeEnglishFontValues[fontFamily]
+}
+
+function getThemeRuntimeStyle(config: ThemeConfig, lang: Lang): React.CSSProperties {
+  const customColor = config.customColors[config.customColorIndex] ?? config.customColorHex
+  const brand = config.primaryColor === "custom" && isHexColor(customColor)
+    ? customColor
+    : themeColorValues[config.primaryColor]
+
+  return {
+    "--fx-brand": brand,
+    "--fx-brand-01": `oklch(from ${brand} 0.97 0.03 h)`,
+    "--fx-brand-02": `oklch(from ${brand} 0.94 0.05 h)`,
+    "--fx-brand-03": `oklch(from ${brand} 0.9 0.07 h)`,
+    "--fx-brand-05": `oklch(from ${brand} 0.76 0.12 h)`,
+    "--fx-brand-08": `oklch(from ${brand} 0.64 c h)`,
+    "--fx-brand-09": brand,
+    "--fx-brand-10": `oklch(from ${brand} 0.48 c h)`,
+    "--primary": brand,
+    "--primary-hover": `oklch(from ${brand} 0.64 c h)`,
+    "--primary-active": `oklch(from ${brand} 0.48 c h)`,
+    "--primary-disabled": `oklch(from ${brand} 0.76 0.12 h)`,
+    "--primary-light": `oklch(from ${brand} 0.97 0.03 h)`,
+    "--primary-light-hover": `oklch(from ${brand} 0.94 0.05 h)`,
+    "--primary-light-active": `oklch(from ${brand} 0.9 0.07 h)`,
+    "--ring": `oklch(from ${brand} l c h / 0.4)`,
+    "--radius": themeRadiusValues[config.borderRadius],
+    "--font-sans": getThemeFontValue(config.fontFamily, lang),
+    "--fx-theme-duration": themeAnimationDurations[config.animationStyle],
+    ...themeTextScaleValues[config.textScale],
+    ...themeShadowValues[config.shadowLevel],
+  } as React.CSSProperties
 }
 
 // Keep documentation page rhythm aligned with docs/TOKENS.md spacing tokens.
@@ -501,7 +770,9 @@ const governanceFreshness = {
 
 const topNav = [
   { label: "组件", labelEn: "Components", href: "#components", page: "components" },
-  { label: "设计令牌", labelEn: "Tokens", href: "#tokens", page: "tokens" },
+  { label: "基础", labelEn: "Foundations", href: "#tokens", page: "tokens" },
+  { label: "模式", labelEn: "Patterns", href: "#template-customer-list", page: "template-customer-list" },
+  { label: "主题", labelEn: "Theme", href: "#theme", page: "theme" },
 ]
 
 const docsNav = [
@@ -3497,21 +3768,404 @@ function resolvePageSlug(hash: string): string {
   return base ?? raw ?? "components"
 }
 
+function ThemeCustomizerPanel({
+  open,
+  onOpenChange,
+  config,
+  onConfigChange,
+  lang,
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  config: ThemeConfig
+  onConfigChange: React.Dispatch<React.SetStateAction<ThemeConfig>>
+  lang: Lang
+}) {
+  const colorInputRef = useRef<HTMLInputElement>(null)
+  const lastColorPickRef = useRef<string | null>(null)
+  const pendingColorPickRef = useRef<string | null>(null)
+  const [pendingColorPreview, setPendingColorPreview] = useState<string | null>(null)
+
+  const setConfigValue = <K extends keyof ThemeConfig>(key: K, value: ThemeConfig[K]) => {
+    onConfigChange((current) => updateThemeConfig(current, key, value))
+  }
+
+  const addCustomColor = (value: string) => {
+    if (!isHexColor(value)) return
+
+    onConfigChange((current) => {
+      const customColors = [...current.customColors, value]
+      return {
+        ...current,
+        primaryColor: "custom",
+        customColorHex: value,
+        customColorIndex: customColors.length - 1,
+        customColors,
+      }
+    })
+  }
+
+  const selectCustomColor = (value: string, index: number) => {
+    onConfigChange((current) => ({
+      ...current,
+      primaryColor: "custom",
+      customColorHex: value,
+      customColorIndex: index,
+    }))
+  }
+
+  const removeCustomColor = (index: number) => {
+    onConfigChange((current) => {
+      const customColors = current.customColors.filter((_, colorIndex) => colorIndex !== index)
+      const wasSelected = current.primaryColor === "custom" && current.customColorIndex === index
+      const nextIndex = Math.min(current.customColorIndex > index ? current.customColorIndex - 1 : current.customColorIndex, Math.max(customColors.length - 1, 0))
+      const nextCustom = customColors[nextIndex] ?? defaultThemeConfig.customColorHex
+      return {
+        ...current,
+        primaryColor: wasSelected && customColors.length === 0 ? "amber" : current.primaryColor,
+        customColorHex: nextCustom,
+        customColorIndex: nextIndex,
+        customColors,
+      }
+    })
+  }
+
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent
+        side="right"
+        className="w-80 gap-0 sm:max-w-80"
+        overlayClassName="pointer-events-none bg-transparent backdrop-blur-none supports-backdrop-filter:backdrop-blur-none"
+      >
+        <SheetHeader className="p-6 pb-0">
+          <div className="flex items-center gap-2">
+            <SettingsIcon className="size-5 text-muted-foreground" />
+            <SheetTitle className="text-fx-18 font-semibold">{lang === "en" ? "Theme Customizer" : "主题定制"}</SheetTitle>
+          </div>
+        </SheetHeader>
+
+        <div className="flex min-h-0 flex-1 flex-col gap-8 overflow-y-auto p-6 pb-12">
+          <section className="flex flex-col gap-3">
+            <ThemePanelHeading icon={<SunIcon />} title={lang === "en" ? "Appearance" : "外观模式 (Appearance)"} />
+            <div className="flex gap-1 rounded-lg bg-muted p-1">
+              <button
+                type="button"
+                aria-pressed={config.mode === "light"}
+                onClick={() => setConfigValue("mode", "light")}
+                className={cn(
+                  "flex flex-1 items-center justify-center gap-2 rounded-md px-2 py-1.5 text-fx-13 font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                  config.mode === "light" ? "bg-card text-foreground shadow-l1" : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                <SunIcon className="size-4" />
+                Light
+              </button>
+              <button
+                type="button"
+                aria-pressed={config.mode === "dark"}
+                onClick={() => setConfigValue("mode", "dark")}
+                className={cn(
+                  "flex flex-1 items-center justify-center gap-2 rounded-md px-2 py-1.5 text-fx-13 font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                  config.mode === "dark" ? "bg-card text-foreground shadow-l1" : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                <MoonIcon className="size-4" />
+                Dark
+              </button>
+            </div>
+          </section>
+
+          <section className="flex flex-col gap-3">
+            <ThemePanelHeading icon={<PaletteIcon />} title={lang === "en" ? "Brand Color" : "主色调 (Brand Color)"} />
+            <div className="flex flex-wrap items-center gap-2">
+              {themeColorOptions.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  aria-label={item.label}
+                  aria-pressed={config.primaryColor === item.id}
+                  onClick={() => setConfigValue("primaryColor", item.id)}
+                  className={cn(
+                    "flex size-8 items-center justify-center rounded-full border border-border-subtle outline-none transition-all hover:scale-105 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                    config.primaryColor === item.id && "scale-110 ring-2 ring-foreground ring-offset-2 ring-offset-background",
+                  )}
+                  style={{ backgroundColor: item.value }}
+                >
+                  {config.primaryColor === item.id ? <span className="size-2 rounded-full bg-primary-foreground" /> : null}
+                </button>
+              ))}
+              <Separator orientation="vertical" className="mx-1 h-8" />
+              {config.customColors.map((color, index) => {
+                const selected = config.primaryColor === "custom" && config.customColorIndex === index
+
+                return (
+                  <div key={`${color}-${index}`} className="group relative size-8 shrink-0">
+                    <button
+                      type="button"
+                      aria-label={lang === "en" ? `Use custom color ${color}` : `使用自定义颜色 ${color}`}
+                      aria-pressed={selected}
+                      onClick={() => selectCustomColor(color, index)}
+                      className={cn(
+                        "flex size-8 items-center justify-center rounded-full border border-border-subtle outline-none transition-all hover:scale-105 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                        selected && "scale-110 ring-2 ring-foreground ring-offset-2 ring-offset-background",
+                      )}
+                      style={{ backgroundColor: color }}
+                    >
+                      {selected ? <span className="size-2 rounded-full bg-primary-foreground" /> : null}
+                    </button>
+                    <button
+                      type="button"
+                      aria-label={lang === "en" ? `Remove custom color ${color}` : `删除自定义颜色 ${color}`}
+                      onClick={(event) => {
+                        event.stopPropagation()
+                        removeCustomColor(index)
+                      }}
+                      className="absolute -right-1 -top-1 hidden size-4 items-center justify-center rounded-full bg-foreground text-background shadow-l1 outline-none transition-colors hover:bg-destructive hover:text-destructive-foreground focus-visible:flex group-hover:flex"
+                    >
+                      <XIcon className="size-3" />
+                    </button>
+                  </div>
+                )
+              })}
+              <label
+                className={cn(
+                  "relative flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full border outline-none transition-colors hover:border-border-strong hover:text-foreground focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50",
+                  pendingColorPreview ? "border-border-subtle" : "border-dashed border-border bg-surface text-muted-foreground",
+                )}
+                style={pendingColorPreview ? { backgroundColor: pendingColorPreview } : undefined}
+              >
+                {pendingColorPreview ? <span className="size-2 rounded-full bg-primary-foreground" /> : <PlusIcon className="size-4" />}
+                <input
+                  ref={colorInputRef}
+                  type="color"
+                  defaultValue={isHexColor(config.customColorHex) ? config.customColorHex : defaultThemeConfig.customColorHex}
+                  onClick={() => {
+                    lastColorPickRef.current = null
+                    pendingColorPickRef.current = null
+                    setPendingColorPreview(colorInputRef.current?.value ?? config.customColorHex)
+                  }}
+                  onChange={(event) => {
+                    pendingColorPickRef.current = event.target.value
+                    setPendingColorPreview(event.target.value)
+                  }}
+                  onBlur={(event) => {
+                    const nextColor = pendingColorPickRef.current ?? event.target.value
+                    setPendingColorPreview(null)
+                    if (lastColorPickRef.current === nextColor) return
+                    lastColorPickRef.current = nextColor
+                    pendingColorPickRef.current = null
+                    addCustomColor(nextColor)
+                    if (colorInputRef.current) {
+                      colorInputRef.current.value = nextColor
+                    }
+                  }}
+                  className="absolute inset-0 size-8 cursor-pointer rounded-full opacity-0"
+                  aria-label={lang === "en" ? "Add custom color" : "添加自定义颜色"}
+                />
+              </label>
+            </div>
+          </section>
+
+          <section className="flex flex-col gap-3">
+            <ThemePanelHeading icon={<TypographyIcon />} title={lang === "en" ? "Typography" : "字体主题 (Typography)"} />
+            <div className="grid grid-cols-2 gap-2">
+              {themeFontOptions.map((item) => (
+                <ThemeChoiceButton
+                  key={item.id}
+                  selected={config.fontFamily === item.id}
+                  label={item.label}
+                  desc={lang === "en" ? "Abc 123" : "字体预览"}
+                  optionId={item.id}
+                  style={{ fontFamily: getThemeFontValue(item.id, lang) }}
+                  onClick={() => setConfigValue("fontFamily", item.id)}
+                />
+              ))}
+            </div>
+          </section>
+
+          <ThemeChoiceSection
+            icon={<TextSizeIcon />}
+            title={lang === "en" ? "Text Scale" : "文字比例 (Text Scale)"}
+            options={themeTextScaleOptions}
+            value={config.textScale}
+            columns={3}
+            onChange={(value) => setConfigValue("textScale", value)}
+          />
+
+          <ThemeChoiceSection
+            icon={<BoltIcon />}
+            title={lang === "en" ? "Animation Style" : "动效风格 (Animation Style)"}
+            options={themeAnimationOptions}
+            value={config.animationStyle}
+            columns={4}
+            onChange={(value) => setConfigValue("animationStyle", value)}
+          />
+
+          <section className="flex flex-col gap-3">
+            <ThemePanelHeading icon={<RadiusIcon />} title={lang === "en" ? "Border Radius" : "圆角大小 (Border Radius)"} />
+            <div className="grid grid-cols-5 gap-2">
+              {themeRadiusOptions.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  aria-pressed={config.borderRadius === item.id}
+                  onClick={() => setConfigValue("borderRadius", item.id)}
+                  className={cn(
+                    "flex h-8 items-center justify-center rounded-lg border px-1 text-fx-12 font-semibold outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                    config.borderRadius === item.id ? "border-foreground bg-muted text-foreground" : "border-border bg-surface text-muted-foreground hover:border-border-strong hover:text-foreground",
+                  )}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <ThemeChoiceSection
+            icon={<BorderStyleIcon />}
+            title={lang === "en" ? "Border Width" : "边框粗细 (Border Width)"}
+            options={themeBorderWidthOptions}
+            value={config.borderWidth}
+            columns={4}
+            onChange={(value) => setConfigValue("borderWidth", value)}
+          />
+
+          <ThemeChoiceSection
+            icon={<ShadowIcon />}
+            title={lang === "en" ? "Shadow Level" : "阴影强度 (Shadow Level)"}
+            options={themeShadowOptions}
+            value={config.shadowLevel}
+            columns={4}
+            onChange={(value) => setConfigValue("shadowLevel", value)}
+          />
+        </div>
+      </SheetContent>
+    </Sheet>
+  )
+}
+
+function ThemePanelHeading({ icon, title }: { icon: React.ReactNode; title: string }) {
+  return (
+    <h3 className="flex items-center gap-2 text-fx-13 font-semibold text-foreground">
+      <span className="flex size-4 items-center justify-center text-muted-foreground [&_svg]:size-4">{icon}</span>
+      {title}
+    </h3>
+  )
+}
+
+function ThemeChoiceButton({
+  selected,
+  label,
+  desc,
+  optionId,
+  style,
+  onClick,
+}: {
+  selected: boolean
+  label: string
+  desc: string
+  optionId?: string
+  style?: React.CSSProperties
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={selected}
+      data-theme-option={optionId}
+      onClick={onClick}
+      style={style}
+      className={cn(
+        "flex min-h-12 flex-col justify-center rounded-lg border px-2.5 py-2 text-left outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+        selected ? "border-foreground bg-muted text-foreground" : "border-border bg-surface text-muted-foreground hover:border-border-strong hover:text-foreground",
+      )}
+    >
+      <span className="text-fx-12 font-semibold">{label}</span>
+      <span className="mt-0.5 text-[10px] text-muted-foreground">{desc}</span>
+    </button>
+  )
+}
+
+function ThemeChoiceSection<T extends string>({
+  icon,
+  title,
+  options,
+  value,
+  onChange,
+  columns = 2,
+}: {
+  icon: React.ReactNode
+  title: string
+  options: { id: T; label: string; desc: string }[]
+  value: T
+  onChange: (value: T) => void
+  columns?: 2 | 3 | 4
+}) {
+  return (
+    <section className="flex flex-col gap-3">
+      <ThemePanelHeading icon={icon} title={title} />
+      <div
+        className={cn(
+          "grid gap-2",
+          columns === 2 && "grid-cols-2",
+          columns === 3 && "grid-cols-3",
+          columns === 4 && "grid-cols-4",
+        )}
+      >
+        {options.map((item) => (
+          <ThemeChoiceButton
+            key={item.id}
+            selected={value === item.id}
+            label={item.label}
+            desc={item.desc}
+            optionId={item.id}
+            onClick={() => onChange(item.id)}
+          />
+        ))}
+      </div>
+    </section>
+  )
+}
+
 function App() {
   const [page, setPage] = useState(() => getPageFromHash(window.location.hash))
   const [activeHash, setActiveHash] = useState(() => window.location.hash || "#components")
   const [activeAnchor, setActiveAnchor] = useState("#overview")
   const [viewMode, setViewMode] = useState<ViewMode>("page")
   const [searchOpen, setSearchOpen] = useState(false)
+  const [themeOpen, setThemeOpen] = useState(false)
   const [lang, setLang] = useState<Lang>(() => {
     const saved = window.localStorage.getItem("fx-ui-lang")
     return saved === "en" ? "en" : "zh"
   })
   const [dark, setDark] = useState<boolean>(() => window.localStorage.getItem("fx-ui-theme") === "dark")
+  const [themeConfig, setThemeConfig] = useState<ThemeConfig>(() => {
+    const saved = normalizeThemeConfig(window.localStorage.getItem("fx-ui-theme-config"))
+    const savedMode = window.localStorage.getItem("fx-ui-theme") === "dark" ? "dark" : "light"
+    return { ...saved, mode: savedMode }
+  })
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark)
     window.localStorage.setItem("fx-ui-theme", dark ? "dark" : "light")
   }, [dark])
+  useEffect(() => {
+    setDark(themeConfig.mode === "dark")
+    window.localStorage.setItem("fx-ui-theme-config", JSON.stringify(themeConfig))
+  }, [themeConfig])
+  useEffect(() => {
+    const root = document.documentElement
+    const runtimeStyle = getThemeRuntimeStyle(themeConfig, lang) as Record<string, string>
+
+    Object.entries(runtimeStyle).forEach(([key, value]) => {
+      root.style.setProperty(key, value)
+    })
+
+    return () => {
+      Object.keys(runtimeStyle).forEach((key) => {
+        root.style.removeProperty(key)
+      })
+    }
+  }, [themeConfig, lang])
   const mainRef = useRef<HTMLElement>(null)
 
   // 全站可搜索项：所有导航页面（顶部入口 + 左侧分组），模糊搜索 + Enter 跳 hash
@@ -3696,23 +4350,33 @@ function App() {
   )
 
   return (
-    <div className="h-dvh overflow-hidden bg-background text-foreground">
-      <header className="relative z-40 h-14 shrink-0 border-b border-border bg-card">
-        <div className="flex h-14 items-center gap-8 px-6">
-          <div className="flex items-center gap-2.5">
-            <div className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <BoxIcon className="size-4" />
+    <div
+      className="h-dvh overflow-hidden bg-background text-foreground"
+      data-theme-border={themeConfig.borderWidth}
+      data-theme-motion={themeConfig.animationStyle}
+      style={getThemeRuntimeStyle(themeConfig, lang)}
+    >
+      <header className="relative z-40 h-16 shrink-0 border-b border-border-subtle bg-card">
+        <div className="grid h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 px-4 md:px-6 xl:gap-8 xl:px-8">
+          <div className="flex min-w-0 shrink-0 items-center gap-2">
+            <div className="flex size-8 items-center justify-center rounded-sm bg-primary text-primary-foreground">
+              <span className="size-4 bg-primary-foreground" aria-hidden="true" />
             </div>
-            <div className="text-xl font-bold tracking-tight text-foreground">fx-ui</div>
-            <Tag variant="outline">v1.2.0</Tag>
+            <div className="hidden text-[18px] font-bold leading-[22px] text-foreground sm:block">
+              FX<span className="text-primary">.UI</span>
+            </div>
+            <Tag variant="outline" className="ml-1 hidden opacity-70 2xl:inline-flex">
+              v1.2.0
+            </Tag>
           </div>
 
-          <nav className="hidden h-14 items-center gap-7 text-base font-semibold md:flex">
+          <nav className="hidden h-16 items-center justify-center gap-8 text-sm font-semibold lg:flex xl:gap-10">
             {topNav.map((item) => {
               const isActive =
                 page === item.page ||
                 (item.page === "components" && isComponentArea) ||
-                (item.page === "governance-map" && isGovernancePage)
+                (item.page === "governance-map" && isGovernancePage) ||
+                (item.page === "theme" && page === "theme")
 
               return (
                 <a
@@ -3720,44 +4384,83 @@ function App() {
                   href={item.href}
                   className={
                     isActive
-                      ? "flex h-14 items-center border-b-2 border-primary text-primary"
-                      : "flex h-14 items-center border-b-2 border-transparent text-muted-foreground hover:text-foreground"
+                      ? "flex h-16 items-center border-b-2 border-primary text-primary"
+                      : "flex h-16 items-center border-b-2 border-transparent text-muted-foreground transition-colors hover:text-foreground"
                   }
                 >
                   {getLabel(item, lang)}
                 </a>
               )
             })}
+            <a
+              href="#layout"
+              className={
+                page === "layout" || page === "grid" || page === "top-bar"
+                  ? "flex h-16 items-center gap-2 border-b-2 border-[var(--fx-purple-09)] text-[var(--fx-purple-09)]"
+                  : "flex h-16 items-center gap-2 border-b-2 border-transparent text-[var(--fx-purple-09)] transition-colors hover:text-[var(--fx-purple-08)]"
+              }
+            >
+              <span className="flex size-4 items-center justify-center text-[var(--fx-purple-09)]">
+                <SparklesIcon />
+              </span>
+              {lang === "en" ? "Blocks" : "区块拼装"}
+            </a>
           </nav>
 
-          <button
-            type="button"
-            onClick={() => setSearchOpen(true)}
-            className="ml-auto hidden w-80 items-center gap-2 rounded-lg border border-input bg-background px-3 text-left outline-none transition-colors hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 lg:flex"
-          >
-            <SearchIcon className="size-4 text-muted-foreground" />
-            <span className="h-9 min-w-0 flex-1 content-center text-sm text-muted-foreground">{uiText[lang].search}</span>
-            <kbd className="rounded border border-border-subtle bg-muted px-1.5 py-0.5 text-fx-12 text-muted-foreground">⌘K</kbd>
-          </button>
+          <div className="flex min-w-0 items-center justify-end gap-3 overflow-hidden">
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="hidden h-7 w-48 max-w-full shrink items-center gap-1.5 rounded-md border border-border bg-muted/40 px-2 text-left outline-none transition-colors hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 lg:flex xl:w-64 2xl:w-[22rem]"
+            >
+              <SearchIcon className="size-3.5 text-muted-foreground" />
+              <span className="h-7 min-w-0 flex-1 content-center truncate text-fx-12 font-normal text-muted-foreground">{uiText[lang].search}</span>
+              <kbd className="inline-flex h-5 items-center gap-1 rounded border border-border-subtle bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">⌘ K</kbd>
+            </button>
 
-          <Button
-            variant="outline"
-            size="sm"
-            className="ml-auto hidden w-[calc(2ch+12px)] px-1.5 md:inline-flex lg:ml-0"
-            onClick={() => setLang(lang === "zh" ? "en" : "zh")}
-          >
-            {lang === "zh" ? "中" : "EN"}
-          </Button>
+            <Button
+              variant="outline"
+              size="icon-sm"
+              aria-label={uiText[lang].search}
+              className="md:ml-auto lg:hidden"
+              onClick={() => setSearchOpen(true)}
+            >
+              <SearchIcon />
+            </Button>
 
-          <Button
-            variant="outline"
-            size="icon-sm"
-            aria-label={dark ? (lang === "en" ? "Light mode" : "浅色模式") : (lang === "en" ? "Dark mode" : "暗色模式")}
-            className="hidden md:inline-flex"
-            onClick={() => setDark((d) => !d)}
-          >
-            {dark ? <SunIcon /> : <MoonIcon />}
-          </Button>
+            <Button
+              variant="plain"
+              size="icon-sm"
+              aria-label={lang === "zh" ? "Switch to English" : "切换到中文"}
+              className="hidden md:inline-flex"
+              onClick={() => setLang(lang === "zh" ? "en" : "zh")}
+            >
+              <span className="text-fx-12 font-normal leading-none">{lang === "zh" ? "EN" : "中"}</span>
+            </Button>
+
+            <Button
+              variant="plain"
+              size="icon-sm"
+              aria-label={dark ? (lang === "en" ? "Light mode" : "浅色模式") : (lang === "en" ? "Dark mode" : "暗色模式")}
+              className="hidden md:inline-flex"
+              onClick={() => setThemeConfig((config) => ({
+                ...config,
+                mode: config.mode === "dark" ? "light" : "dark",
+              }))}
+            >
+              {dark ? <SunIcon /> : <MoonIcon />}
+            </Button>
+
+            <Button
+              variant="plain"
+              size="icon-sm"
+              aria-label={lang === "en" ? "Display settings" : "显示设置"}
+              className="hidden md:inline-flex"
+              onClick={() => setThemeOpen(true)}
+            >
+              <SlidersIcon />
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -3769,9 +4472,17 @@ function App() {
         emptyText={lang === "en" ? "No results" : "无匹配结果"}
       />
 
-      <div className="grid h-[calc(100dvh-3.5rem)] min-h-0 overflow-hidden lg:grid-cols-[280px_minmax(0,1fr)]">
-        <aside className="hidden min-h-0 border-r border-border bg-card lg:block">
-          <div className="h-full overflow-y-auto px-8 py-10">
+      <ThemeCustomizerPanel
+        open={themeOpen}
+        onOpenChange={setThemeOpen}
+        config={themeConfig}
+        onConfigChange={setThemeConfig}
+        lang={lang}
+      />
+
+      <div className="grid h-[calc(100dvh-4rem)] min-h-0 overflow-hidden bg-background lg:grid-cols-[256px_minmax(0,1fr)]">
+        <aside className="hidden min-h-0 border-r border-border-subtle bg-card lg:block">
+          <div className="h-full overflow-y-auto px-6 py-8">
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
@@ -3780,11 +4491,11 @@ function App() {
               <SearchIcon className="size-4 text-muted-foreground" />
               <span className="h-9 flex-1 content-center text-sm text-muted-foreground">{uiText[lang].search}</span>
             </button>
-            <nav className="flex flex-col gap-10">
+            <nav className="flex flex-col gap-8">
               {docsNav.map((section) => (
-                <div key={section.title} className="flex flex-col gap-1">
-                  <div className="mb-1 text-xs font-bold tracking-widest text-muted-foreground uppercase">{lang === "en" && section.titleEn ? section.titleEn : section.title}</div>
-                  <div className="flex flex-col gap-1.5">
+                <section key={section.title} className="flex flex-col gap-3">
+                  <div className="text-xs font-bold tracking-widest text-muted-foreground uppercase">{lang === "en" && section.titleEn ? section.titleEn : section.title}</div>
+                  <div className="flex flex-col gap-1">
                     {section.items.map((item) => {
                       const isActive =
                         item.href === activeHash ||
@@ -3796,19 +4507,19 @@ function App() {
                           href={item.href}
                           className={
                             isActive
-                              ? "flex h-8 items-center justify-between gap-2 rounded-lg bg-primary/10 px-3 text-sm font-semibold text-primary"
-                              : "flex h-8 items-center justify-between gap-2 rounded-lg px-3 text-sm text-foreground/80 hover:bg-muted hover:text-foreground"
+                              ? "flex h-9 items-center justify-between gap-3 rounded-md bg-primary/10 px-3 text-sm font-semibold text-primary"
+                              : "flex h-9 items-center justify-between gap-3 rounded-md px-3 text-sm text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
                           }
                         >
-                          <span>{getLabel(item, lang)}</span>
+                          <span className="truncate">{getLabel(item, lang)}</span>
                           {item.labelEn && getLabel(item, lang) !== item.labelEn ? (
-                            <span className={isActive ? "text-xs font-normal text-primary/70" : "text-xs text-muted-foreground/70"}>{item.labelEn}</span>
+                            <span className={isActive ? "shrink-0 text-xs font-normal text-primary/70" : "shrink-0 text-xs text-muted-foreground/70"}>{item.labelEn}</span>
                           ) : null}
                         </a>
                       )
                     })}
                   </div>
-                </div>
+                </section>
               ))}
             </nav>
           </div>
@@ -3818,8 +4529,8 @@ function App() {
           <div
             className={
               pageEntry?.fullBleed
-                ? "mx-auto grid w-full max-w-screen-2xl grid-cols-1 gap-10 px-6 py-10"
-                : "mx-auto grid w-full max-w-screen-2xl grid-cols-1 gap-10 px-6 py-14 xl:grid-cols-[minmax(0,1080px)_220px] xl:justify-center xl:gap-20 xl:px-10"
+                ? "mx-auto grid w-full max-w-screen-2xl grid-cols-1 gap-10 px-6 py-8 xl:px-8"
+                : "mx-auto grid w-full max-w-screen-2xl grid-cols-1 gap-10 px-6 py-10 2xl:grid-cols-[minmax(0,1080px)_220px] 2xl:justify-center 2xl:gap-16 2xl:px-8"
             }
           >
             <article
@@ -3872,41 +4583,34 @@ function PageActions({
     copyText(doc.markdown)
   }
 
-  const copyMarkdown = () => {
-    copyText(doc.markdown)
-  }
-
   return (
     <PageActionsShell navActions={navActions}>
-      <Button variant="secondary" size="sm" onClick={copyCurrentPage}>
-        <CopyIcon data-icon="inline-start" />
-        {uiText[lang].copyPage}
-      </Button>
-
       <DropdownMenu>
-        <DropdownMenuTrigger
-          render={
-            <Button
-              variant="secondary"
-              size="icon-sm"
-              aria-label={uiText[lang].moreActions}
-            />
-          }
-        >
-          <ChevronDownIcon />
-        </DropdownMenuTrigger>
+        <ButtonGroup>
+          <Button variant="secondary" size="sm" onClick={copyCurrentPage}>
+            <CopyIcon data-icon="inline-start" />
+            {uiText[lang].copyPage}
+          </Button>
+          <DropdownMenuTrigger
+            render={
+              <Button
+                variant="secondary"
+                size="icon-sm"
+                aria-label={uiText[lang].moreActions}
+              />
+            }
+          >
+            <ChevronDownIcon />
+          </DropdownMenuTrigger>
+        </ButtonGroup>
         <DropdownMenuContent align="end" className="w-56">
           <div className="px-1.5 py-1 text-xs font-medium text-muted-foreground">
             {doc.path}
           </div>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => onViewModeChange(viewMode === "markdown" ? "page" : "markdown")}>
-            <FileCodeIcon />
+            {viewMode === "markdown" ? <FileTextIcon /> : <FileCodeIcon />}
             {viewMode === "markdown" ? uiText[lang].viewPage : uiText[lang].viewMarkdown}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={copyMarkdown}>
-            <CopyIcon />
-            {uiText[lang].copyMarkdown}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -5633,9 +6337,9 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
     <div className={docsSpacing.pageStack}>
       <section id="button" className="flex flex-col gap-2">
         <PageLead
-          crumb={lang === "en" ? "Components / Button" : "组件 / Button 按钮"}
+          crumb="Components / Buttons"
           title={lang === "en" ? "Button" : "Button 按钮"}
-          lead={lang === "en" ? "A button starts an immediate action." : "按钮用于开始一个即时操作。"}
+          lead={lang === "en" ? "Trigger immediate actions with multiple sizes, states, and visual variants." : "用于触发即时操作。支持多种尺寸、状态和视觉变体。"}
           actions={actions}
         />
       </section>
@@ -5813,19 +6517,32 @@ function ButtonPage({ actions, lang }: { actions: React.ReactNode; lang: Lang })
 // 内部间距：面包屑→标题 mb-2，标题↔说明成组 gap-2；分隔线 mt-2（与组内间距一致）mb-10。
 // 不放第二行说明、不在头部组里加其它横线。
 function PageLead({ crumb, title, lead, actions }: { crumb: string; title: string; lead: React.ReactNode; actions: React.ReactNode }) {
+  const [primaryTitle, secondaryTitle] = title.split(/ (.+)/)
+  const crumbParts = crumb.split(" / ")
+
   return (
     <>
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+      <div>
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="mb-2 text-fx-13 text-muted-foreground">{crumb}</p>
-            <h1 className="text-3xl font-bold leading-tight tracking-tight">{title}</h1>
+            <nav className="mb-3 flex gap-2 text-fx-12 font-normal text-muted-foreground">
+              {crumbParts.map((part, index) => (
+                <Fragment key={`${part}-${index}`}>
+                  {index > 0 ? <span>/</span> : null}
+                  <span className={index === crumbParts.length - 1 ? "font-medium text-foreground" : undefined}>{part}</span>
+                </Fragment>
+              ))}
+            </nav>
+            <h1 className="flex items-center gap-3 text-3xl font-bold leading-tight tracking-tight text-foreground">
+              {primaryTitle}
+              {secondaryTitle ? <span className="text-xl font-normal text-muted-foreground">{secondaryTitle}</span> : null}
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">{lead}</p>
           </div>
           {actions}
         </div>
-        <p className="text-base text-muted-foreground">{lead}</p>
       </div>
-      <Separator className="mt-2 mb-10" />
+      <Separator className="mt-8 mb-10" />
     </>
   )
 }
@@ -12926,7 +13643,7 @@ function RightRail({
   if (anchors.length === 0) return null
 
   return (
-    <aside className="hidden xl:block">
+    <aside className="hidden 2xl:block">
       <div className="sticky top-8">
         <nav className="border-l border-border pl-6">
           <div className="mb-4 text-sm font-medium text-foreground">{uiText[lang].toc}</div>

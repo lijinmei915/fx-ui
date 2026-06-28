@@ -6106,7 +6106,7 @@ function PlaygroundPropLabel({ zh, prop }: { zh: string; prop: string }) {
   )
 }
 
-type PgVariant = "default" | "secondary" | "outline" | "ghost" | "destructive"
+type PgVariant = "default" | "secondary" | "outline" | "ghost" | "plain" | "destructive"
 type PgSize = "sm" | "md" | "lg"
 type PgIcon = "none" | "start" | "end" | "only"
 const PG_VARIANTS: { value: PgVariant; label: string }[] = [
@@ -6114,6 +6114,7 @@ const PG_VARIANTS: { value: PgVariant; label: string }[] = [
   { value: "secondary", label: "secondary" },
   { value: "outline", label: "outline" },
   { value: "ghost", label: "ghost" },
+  { value: "plain", label: "plain" },
   { value: "destructive", label: "danger" },
 ]
 const PG_SIZES: { value: PgSize; label: string }[] = [
@@ -6145,6 +6146,7 @@ const PG_SCENARIOS: PgScenario[] = [
   { id: "ghost", zh: "幽灵操作", en: "Ghost", intent: "最弱的操作，常用于工具栏 / 紧凑区域。", intentEn: "The lightest action, often used in toolbars or compact areas.", s: { variant: "ghost", size: "md", icon: "none", text: "查看详情", textEn: "View details", disabled: false } },
   { id: "icon-text", zh: "带有图标", en: "With icon", intent: "图标 + 文案，用 data-icon 控制图标在前 / 后。", intentEn: "Icon + text; use data-icon to place the icon before or after.", s: { variant: "default", size: "md", icon: "start", text: "搜索", textEn: "Search", disabled: false } },
   { id: "icon-only", zh: "纯图标", en: "Icon only", intent: "纯图标按钮必须配 aria-label，保证可访问性。", intentEn: "Icon-only buttons must carry an aria-label for accessibility.", s: { variant: "default", size: "md", icon: "only", text: "打开组件包", textEn: "Open package", disabled: false } },
+  { id: "plain-text", zh: "纯文字", en: "Plain text", intent: "表格操作列、行内弱化操作，无边框无底色，hover 只变文字色。", intentEn: "Inline or table-row actions with no border or fill; hover changes text color only.", s: { variant: "plain", size: "md", icon: "none", text: "详情", textEn: "Details", disabled: false } },
 ]
 
 function genButtonCode(variant: PgVariant, size: PgSize, icon: PgIcon, disabled: boolean, label: string): string {

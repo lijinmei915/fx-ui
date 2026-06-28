@@ -1,16 +1,13 @@
 import { Fragment, type ReactNode } from "react"
 
-import { Separator } from "@/components/ui/separator"
-
 type PageLeadProps = {
   crumb: string
   title: string
   lead: ReactNode
   actions: ReactNode
-  separator?: boolean
 }
 
-function PageLead({ crumb, title, lead, actions, separator = false }: PageLeadProps) {
+function PageLead({ crumb, title, lead, actions }: PageLeadProps) {
   const crumbParts = crumb.split(" / ")
 
   return (
@@ -32,7 +29,6 @@ function PageLead({ crumb, title, lead, actions, separator = false }: PageLeadPr
           {actions}
         </div>
       </div>
-      {separator ? <Separator className="mt-8 mb-10" /> : null}
     </>
   )
 }

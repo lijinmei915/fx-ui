@@ -6450,40 +6450,8 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 }
 
-// 页面头部：面包屑 + 大标题 + 说明，紧凑成一组（标题与说明 gap-2，不被 section 的大间距撑开）
-// 统一页面头部组（规范见 docs/DOC_SITE_DESIGN.md「页面头部组」）
-// 固定内容 = 面包屑 + 大标题 + 一句说明 + 右侧操作；其后统一接一条分隔线。
-// 内部间距：面包屑→标题 mb-2，标题↔说明成组 gap-2；分隔线 mt-2（与组内间距一致）mb-10。
-// 不放第二行说明、不在头部组里加其它横线。
 function PageLead({ crumb, title, lead, actions }: {crumb: string;title: string;lead: React.ReactNode;actions: React.ReactNode;}) {
-  const [primaryTitle, secondaryTitle] = title.split(/ (.+)/);
-  const crumbParts = crumb.split(" / ");
-
-  return (
-    <>
-      <div>
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
-            <nav className="mb-3 flex gap-2 text-fx-12 font-normal text-muted-foreground">
-              {crumbParts.map((part, index) =>
-              <Fragment key={`${part}-${index}`}>
-                  {index > 0 ? <span>/</span> : null}
-                  <span className={index === crumbParts.length - 1 ? "font-medium text-foreground" : undefined}>{part}</span>
-                </Fragment>
-              )}
-            </nav>
-            <h1 className="flex items-center gap-3 text-3xl font-bold leading-tight tracking-tight text-foreground">
-              {primaryTitle}
-              {secondaryTitle ? <span className="text-xl font-normal text-muted-foreground">{secondaryTitle}</span> : null}
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">{lead}</p>
-          </div>
-          {actions}
-        </div>
-      </div>
-      <Separator className="mt-8 mb-10" />
-    </>);
-
+  return <FxPageLead crumb={crumb} title={title} lead={lead} actions={actions} />;
 }
 
 function TokensPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {

@@ -268,14 +268,13 @@ import tokensMarkdown from "../docs/TOKENS.md?raw";
 import siteDesignMarkdown from "../docs/DOC_SITE_DESIGN.md?raw";
 
 type Lang = "zh" | "en";
-type ButtonScenarioFilter = "category" | "size" | "state" | "icon";
 type ThemeMode = "light" | "dark";
 type ThemeColor = "indigo" | "violet" | "emerald" | "rose" | "amber" | "sky" | "slate" | "custom";
 type ThemeFont = "sans" | "serif" | "mono" | "geometric";
 type ThemeTextScale = "compact" | "standard" | "spacious";
 type ThemeRadius = "none" | "sm" | "md" | "lg" | "full";
 type ThemeBorderWidth = "none" | "thin" | "medium" | "thick";
-type ThemeShadowLevel = "none" | "soft" | "ambient" | "retro";
+type ThemeShadowLevel = "none" | "soft" | "ambient";
 type ThemeAnimationStyle = "none" | "fast" | "smooth" | "playful";
 
 type ThemeConfig = {
@@ -290,6 +289,10 @@ type ThemeConfig = {
   borderWidth: ThemeBorderWidth;
   shadowLevel: ThemeShadowLevel;
   animationStyle: ThemeAnimationStyle;
+};
+
+type StoredThemeConfig = Partial<Omit<ThemeConfig, "shadowLevel">> & {
+  shadowLevel?: ThemeShadowLevel | "retro" | string;
 };
 
 const defaultThemeConfig: ThemeConfig = {
@@ -409,13 +412,6 @@ const themeShadowValues: Record<ThemeShadowLevel, Record<string, string>> = {
     "--fx-shadow-l2": "0px 14px 36px -14px var(--fx-shadow-color)",
     "--fx-shadow-l3": "0px 24px 64px -20px var(--fx-shadow-color)",
     "--fx-shadow-l1-up": "0px -8px 22px -12px var(--fx-shadow-color)"
-  },
-  retro: {
-    "--fx-shadow-color": "var(--foreground)",
-    "--fx-shadow-l1": "3px 3px 0px 0px var(--fx-shadow-color)",
-    "--fx-shadow-l2": "5px 5px 0px 0px var(--fx-shadow-color)",
-    "--fx-shadow-l3": "8px 8px 0px 0px var(--fx-shadow-color)",
-    "--fx-shadow-l1-up": "3px -3px 0px 0px var(--fx-shadow-color)"
   }
 };
 
@@ -462,8 +458,7 @@ const themeBorderWidthOptions: {id: ThemeBorderWidth;label: string;desc: string;
 const themeShadowOptions: {id: ThemeShadowLevel;label: string;desc: string;}[] = [
 { id: "none", label: "无阴影", desc: "平面" },
 { id: "soft", label: "轻微", desc: "精致" },
-{ id: "ambient", label: "弥散", desc: "立体" },
-{ id: "retro", label: "复古", desc: "硬核" }];
+{ id: "ambient", label: "弥散", desc: "立体" }];
 
 
 const themeAnimationOptions: {id: ThemeAnimationStyle;label: string;desc: string;}[] = [
@@ -510,7 +505,7 @@ function normalizeThemeConfig(value: string | null): ThemeConfig {
   if (!value) return defaultThemeConfig;
 
   try {
-    const parsed = JSON.parse(value) as Partial<ThemeConfig>;
+    const parsed = JSON.parse(value) as StoredThemeConfig;
     const customColors = Array.isArray(parsed.customColors) ?
     parsed.customColors.filter(isHexColor) :
     [];
@@ -521,7 +516,8 @@ function normalizeThemeConfig(value: string | null): ThemeConfig {
       ...parsed,
       customColorHex: customColors[0] ?? legacyCustomColor,
       customColorIndex: Math.min(Math.max(parsed.customColorIndex ?? 0, 0), Math.max(customColors.length - 1, 0)),
-      customColors: customColors.length > 0 ? customColors : [legacyCustomColor]
+      customColors: customColors.length > 0 ? customColors : [legacyCustomColor],
+      shadowLevel: parsed.shadowLevel === "retro" ? "ambient" : (parsed.shadowLevel as ThemeShadowLevel | undefined) ?? defaultThemeConfig.shadowLevel
     };
   } catch {
     return defaultThemeConfig;
@@ -1058,290 +1054,15 @@ registry/fx-theme.json`;
 const themeImportCode = `import "../theme/fx-theme.css"`;
 
 const propRows = [
-{ prop: "variant", type: "'default' | 'outline' | 'secondary' | 'ghost' | 'destructive' | 'link'", defaultValue: "'default'", desc: "来自 shadcn Button 的样式变体", descEn: "Style variant from shadcn Button" },
-{ prop: "size", type: "'default' | 'xs' | 'sm' | 'lg' | 'icon' | 'icon-xs' | 'icon-sm' | 'icon-lg'", defaultValue: "'default'", desc: "来自 shadcn Button 的尺寸变体", descEn: "Size variant from shadcn Button" },
+{ prop: "variant", type: "'default' | 'outline' | 'secondary' | 'ghost' | 'destructive' | 'plain'", defaultValue: "'default'", desc: "来自 Button 源码的样式变体", descEn: "Style variant from the Button source" },
+{ prop: "tone", type: "'default' | 'primary' | 'info' | 'danger'", defaultValue: "'default'", desc: "仅 plain 使用的语义色调", descEn: "Semantic tone for the plain variant only" },
+{ prop: "size", type: "'xs' | 'sm' | 'md' | 'lg' | 'icon-xs' | 'icon-sm' | 'icon-md' | 'icon-lg'", defaultValue: "'sm'", desc: "来自 Button 源码的尺寸变体；不写 size 即 28px", descEn: "Size variant from the Button source; omitted size renders 28px" },
 { prop: "disabled", type: "boolean", defaultValue: "false", desc: "是否禁用", descEn: "Whether the button is disabled" },
 { prop: "aria-invalid", type: "boolean", defaultValue: "false", desc: "错误态样式，继承 shadcn 语义 token", descEn: "Invalid state styling based on semantic tokens" },
 { prop: "render", type: "ReactElement | (props, state) => ReactElement", defaultValue: "undefined", desc: "把按钮样式渲染到自定义元素上（如 <a>），相当于 Base UI 版本的 asChild", descEn: "Render the button styling onto a custom element (e.g. <a>); Base UI's equivalent of asChild" }];
 
 
 const buttonImportCode = `import { Button } from "@/components/ui/button"`;
-
-const buttonScenarioExamples = [
-{
-  id: "primary",
-  title: "主操作",
-  titleEn: "Primary action",
-  intent: "页面或区域的主要行动点，一个操作区域建议只出现一个。",
-  intentEn: "The main action in a page or region. Use one primary action per action area.",
-  rule: "用于保存、提交、新建等明确推进流程的操作。",
-  ruleEn: "Use for actions that advance the flow, such as save, submit, or create.",
-  variant: "default",
-  size: "default",
-  group: "category",
-  props: ["variant: default", "size: default"],
-  code: "<Button>保存</Button>"
-},
-{
-  id: "secondary",
-  title: "次操作",
-  titleEn: "Secondary action",
-  intent: "与主操作并列但优先级较低，不抢主行动点。",
-  intentEn: "An action shown alongside the primary action with lower priority.",
-  rule: "用于取消、返回、稍后处理等辅助操作。",
-  ruleEn: "Use for supporting actions such as cancel, back, or do later.",
-  variant: "secondary",
-  size: "default",
-  group: "category",
-  props: ["variant: secondary", "size: default"],
-  code: '<Button variant="secondary">取消</Button>'
-},
-{
-  id: "destructive",
-  title: "危险操作",
-  titleEn: "Destructive action",
-  intent: "删除、移除权限等不可逆操作，通常需要二次确认。",
-  intentEn: "Irreversible actions such as delete or remove permissions. Usually requires confirmation.",
-  rule: "必须使用 destructive，不要用主按钮表达危险操作。",
-  ruleEn: "Use destructive. Do not express dangerous actions with the primary button.",
-  variant: "destructive",
-  size: "default",
-  group: "category",
-  props: ["variant: destructive", "size: default"],
-  code: '<Button variant="destructive">删除项目</Button>'
-},
-{
-  id: "outline",
-  title: "描边操作",
-  titleEn: "Outline action",
-  intent: "与主操作并列、但比 secondary 更轻的辅助操作，常用于工具栏。",
-  intentEn: "Secondary actions lighter than the secondary variant, common in toolbars.",
-  rule: "保留边框但不强调底色，避免与 secondary 同时出现造成层级混乱。",
-  ruleEn: "Keep the border without a strong fill; avoid pairing with secondary in the same group to prevent unclear hierarchy.",
-  variant: "outline",
-  size: "default",
-  group: "category",
-  props: ["variant: outline", "size: default"],
-  code: '<Button variant="outline">导出</Button>'
-},
-{
-  id: "ghost",
-  title: "幽灵操作",
-  titleEn: "Ghost action",
-  intent: "工具栏、卡片内的弱化操作，不需要边框和底色来吸引注意。",
-  intentEn: "Low-emphasis actions in toolbars or cards that don't need a border or fill to draw attention.",
-  rule: "shadcn 里官方就叫 ghost；用于辅助操作，悬浮态才出现底色，不要用于页面主行动点。",
-  ruleEn: "shadcn officially calls this variant \"ghost\". Use for secondary actions; the fill only appears on hover. Avoid using it for primary page actions.",
-  variant: "ghost",
-  size: "default",
-  group: "category",
-  props: ["variant: ghost", "size: default"],
-  code: '<Button variant="ghost">查看详情</Button>'
-},
-{
-  id: "size-xs",
-  title: "超小尺寸",
-  titleEn: "Extra small size",
-  intent: "极紧凑的工具栏、表格内联操作。",
-  intentEn: "Very compact toolbars and inline table actions.",
-  rule: "只用于密度很高的局部操作，不用于页面主按钮。",
-  ruleEn: "Use only for dense local actions, not for primary page actions.",
-  variant: "default",
-  size: "xs",
-  group: "size",
-  props: ["variant: default", "size: xs"],
-  code: '<Button size="xs"><PlusIcon data-icon="inline-start" />新建</Button>'
-},
-{
-  id: "size-sm",
-  title: "默认尺寸",
-  titleEn: "Default size",
-  intent: "页面正文、表单页和常规操作区域；筛选栏、表格行也用它。",
-  intentEn: "Body content, forms, standard actions; also filter bars and table rows.",
-  rule: "不写 size 即此尺寸（28px 默认）；业务页面的首选尺寸。",
-  ruleEn: "Omitting size yields this (28px default); the preferred size for product pages.",
-  variant: "default",
-  size: "sm",
-  group: "size",
-  props: ["variant: default", "省略 size = 28px"],
-  code: '<Button><PlusIcon data-icon="inline-start" />新建</Button>'
-},
-{
-  id: "size-default",
-  title: "标准尺寸",
-  titleEn: "Standard size",
-  intent: "比默认大一档，用于宽松正文/表单等需要更大点击区的场景。",
-  intentEn: "One step larger than default, for relaxed forms and bigger hit areas.",
-  rule: "比默认(28)大一档(32)；需要显式写 size=\"md\"。",
-  ruleEn: "One tier above default (32 vs 28); set size=\"md\" explicitly.",
-  variant: "default",
-  size: "default",
-  group: "size",
-  props: ["variant: default", "size: default(32px)"],
-  code: '<Button size="md"><PlusIcon data-icon="inline-start" />新建</Button>'
-},
-{
-  id: "size-lg",
-  title: "大尺寸",
-  titleEn: "Large size",
-  intent: "需要更强触达的表单提交、营销页或空状态行动点。",
-  intentEn: "Higher-emphasis actions in forms, marketing pages, or empty states.",
-  rule: "大尺寸谨慎使用，不在密集列表里使用。",
-  ruleEn: "Use large size sparingly and avoid it in dense lists.",
-  variant: "default",
-  size: "lg",
-  group: "size",
-  props: ["variant: default", "size: lg"],
-  code: '<Button size="lg"><PlusIcon data-icon="inline-start" />新建</Button>'
-},
-{
-  id: "icon-start",
-  title: "左图标",
-  titleEn: "Leading icon",
-  intent: "用图标辅助识别动作含义。",
-  intentEn: "Use an icon to support action recognition.",
-  rule: "左图标使用 data-icon=\"inline-start\"，不手写尺寸。",
-  ruleEn: "Use data-icon=\"inline-start\" for leading icons and do not manually size them.",
-  variant: "default",
-  size: "default",
-  group: "icon",
-  props: ["variant: default", "data-icon: inline-start"],
-  code: '<Button><SearchIcon data-icon="inline-start" />搜索</Button>'
-},
-{
-  id: "icon-end",
-  title: "右图标",
-  titleEn: "Trailing icon",
-  intent: "用于带方向、展开或继续含义的按钮。",
-  intentEn: "Use for actions that imply direction, expansion, or continuation.",
-  rule: "右图标使用 data-icon=\"inline-end\"。",
-  ruleEn: "Use data-icon=\"inline-end\" for trailing icons.",
-  variant: "outline",
-  size: "default",
-  group: "icon",
-  props: ["variant: outline", "data-icon: inline-end"],
-  code: '<Button variant="outline">继续<ChevronDownIcon data-icon="inline-end" /></Button>'
-},
-{
-  id: "icon-only",
-  title: "图标按钮",
-  titleEn: "Icon button",
-  intent: "工具栏、表格行操作等空间紧凑的位置。",
-  intentEn: "Compact areas such as toolbars and table row actions.",
-  rule: "图标按钮必须有 aria-label，图标使用 data-icon，不手写尺寸。",
-  ruleEn: "Icon buttons need aria-label. Use data-icon on icons and do not manually size them.",
-  variant: "default",
-  size: "icon",
-  group: "icon",
-  props: ["variant: default", "size: icon", "aria-label", "data-icon"],
-  code: '<Button size="icon-md" aria-label="打开组件包"><PackageIcon data-icon="inline-start" /></Button>'
-},
-{
-  id: "icon-only-ghost",
-  title: "无底色图标按钮",
-  titleEn: "Borderless icon button",
-  intent: "工具栏、卡片角落等需要弱化视觉权重的图标操作。",
-  intentEn: "Toolbars and card corners where the icon action should stay visually quiet.",
-  rule: "使用 variant=\"ghost\"，悬浮态再出现底色；同样必须有 aria-label。",
-  ruleEn: "Use variant=\"ghost\" so the background only appears on hover; aria-label is still required.",
-  variant: "ghost",
-  size: "icon",
-  group: "icon",
-  props: ["variant: ghost", "size: icon", "aria-label", "data-icon"],
-  code: '<Button variant="ghost" size="icon-md" aria-label="打开组件包"><PackageIcon data-icon="inline-start" /></Button>'
-},
-{
-  id: "icon-only-outline",
-  title: "白底图标按钮",
-  titleEn: "Outlined icon button",
-  intent: "搜索框旁的新增、工具栏等需要描边白底、轻量但有边界的图标操作。",
-  intentEn: "Add-next-to-search or toolbar actions needing an outlined white icon button.",
-  rule: "用 variant=\"outline\"（描边白底）+ size=\"icon-sm\"（28px）；必须有 aria-label。",
-  ruleEn: "Use variant=\"outline\" (white, bordered) with size=\"icon-sm\" (28px); aria-label required.",
-  variant: "outline",
-  size: "icon-sm",
-  group: "icon",
-  props: ["variant: outline", "size: icon-sm", "aria-label", "data-icon"],
-  code: '<Button variant="outline" size="icon-sm" aria-label="新增"><PlusIcon data-icon="inline-start" /></Button>'
-},
-{
-  id: "plain-text-icon",
-  title: "无底色文字操作",
-  titleEn: "Plain text+icon actions",
-  intent: "表格操作列、行内弱化操作（图标+文字），无底色、hover 只变色。",
-  intentEn: "Table row / inline actions with icon+text, borderless, color-only hover.",
-  rule: "用 variant=\"plain\" + tone（中性 / 主色 / 蓝 / 危险）分色；图标用 data-icon。",
-  ruleEn: "Use variant=\"plain\" with tone (neutral / primary / blue / danger); icon via data-icon.",
-  variant: "plain",
-  size: "default",
-  group: "icon",
-  props: ["variant: plain", "tone", "data-icon"],
-  code: '<Button variant="plain"><PlusIcon data-icon="inline-start" />新建</Button>\n<Button variant="plain" tone="primary">…</Button>\n<Button variant="plain" tone="info">…</Button>\n<Button variant="plain" tone="danger">…</Button>'
-},
-{
-  id: "plain-icon-only",
-  title: "无底色纯图标",
-  titleEn: "Plain icon-only",
-  intent: "空间紧凑的表格行/工具栏纯图标操作，无底色、hover 只变色。",
-  intentEn: "Compact table row / toolbar icon-only actions, borderless, color-only hover.",
-  rule: "用 variant=\"plain\" + size=\"icon-*\"；纯图标必须补 aria-label + Tooltip。",
-  ruleEn: "Use variant=\"plain\" with size=\"icon-*\"; icon-only needs aria-label + Tooltip.",
-  variant: "plain",
-  size: "icon-sm",
-  group: "icon",
-  props: ["variant: plain", "size: icon-sm", "aria-label", "Tooltip"],
-  code: '<Button variant="plain" size="icon-sm" aria-label="查看"><EyeIcon /></Button>\n<Button variant="plain" tone="danger" size="icon-sm" aria-label="删除"><Trash2Icon /></Button>'
-},
-{
-  id: "disabled",
-  title: "禁用状态",
-  titleEn: "Disabled state",
-  intent: "权限不足、表单未完成或提交中，暂时不可触发。",
-  intentEn: "Temporarily unavailable actions, such as insufficient permissions, incomplete forms, or pending submit.",
-  rule: "使用 disabled 表达不可操作；各变体禁用态走语义 token（实心禁用色），不用透明度伪装。",
-  ruleEn: "Use disabled for unavailable actions. Each variant uses semantic disabled tokens, not opacity.",
-  variant: "default",
-  size: "default",
-  group: "state",
-  props: ["variant: default", "size: default", "disabled"],
-  code: '<Button disabled>主操作</Button>\n<Button variant="outline" disabled>描边</Button>\n<Button variant="destructive" disabled>危险</Button>'
-},
-{
-  id: "loading",
-  title: "加载状态",
-  titleEn: "Loading state",
-  intent: "提交中、保存中等需要阻止重复点击的场景。",
-  intentEn: "Pending submit or save actions that should prevent repeated clicks.",
-  rule: "Button 没有 loading prop，使用 disabled 和 Spinner 组合。",
-  ruleEn: "Button has no loading prop. Compose with disabled and Spinner.",
-  variant: "default",
-  size: "default",
-  group: "state",
-  props: ["disabled", "Spinner", "data-icon: inline-start"],
-  code: '<Button disabled><Spinner data-icon="inline-start" />提交中</Button>'
-},
-{
-  id: "plain",
-  title: "无底色操作",
-  titleEn: "Plain button",
-  intent: "表格操作列、行内弱化操作；无边框无底色，hover 只变色。",
-  intentEn: "Table row actions and quiet inline buttons; borderless, color-only hover.",
-  rule: "用 variant=\"plain\" + tone（中性 / 主色 / 蓝 info / 危险）；蓝色用于企业不想用品牌橙的文字按钮，非跳转链接；纯图标补 aria-label + Tooltip。",
-  ruleEn: "Use variant=\"plain\" with tone (neutral / primary / info-blue / danger). Blue is for text buttons when brand orange is undesired, not navigation.",
-  variant: "plain",
-  size: "default",
-  group: "category",
-  props: ["variant: plain", "tone: default | primary | info | danger"],
-  code: '<Button variant="plain" tone="info">详情</Button>'
-}] as
-const;
-
-// tab 顺序规范：类型 → 状态 → 图标 → 尺寸（各组件只保留自有维度；语义色归类型）
-const buttonScenarioFilters: {value: ButtonScenarioFilter;label: string;labelEn: string;}[] = [
-{ value: "category", label: "类型", labelEn: "Variant" },
-{ value: "state", label: "状态", labelEn: "State" },
-{ value: "icon", label: "图标", labelEn: "Icon" },
-{ value: "size", label: "尺寸", labelEn: "Size" }];
 
 
 const semanticDomRows = [
@@ -1364,8 +1085,6 @@ const buttonDoDontRows = [
 
 const buttonAnchors = [
 { label: "调试台", labelEn: "Playground", href: "#playground" },
-{ label: "组件总览", labelEn: "Overview", href: "#overview" },
-{ label: "场景示例", labelEn: "Scenario examples", href: "#preview" },
 { label: "使用方式", labelEn: "Usage", href: "#usage" },
 { label: "API", href: "#props" },
 { label: "语义 DOM", labelEn: "Semantic DOM", href: "#semantic-dom" },
@@ -3557,157 +3276,6 @@ function CopyCodeBlock({ code, label, lang }: {code: string;label: string;lang: 
           
           <CopyIcon data-icon="inline-start" />
         </Button>
-      </div>
-    </div>);
-
-}
-
-// 按场景示例的尺寸给出规格（字重统一 400）。默认尺寸 = 高32·字14·圆角8。
-function buttonSpecById(id: string, lang: Lang) {
-  const map: Record<string, {zh: string;en: string;}> = {
-    "size-xs": { zh: "高24 · 字号12 · 圆角6", en: "h24 · 12px · r6" },
-    "size-sm": { zh: "高28 · 字号13 · 圆角6", en: "h28 · 13px · r6" },
-    "size-default": { zh: "高32 · 字号14 · 圆角8", en: "h32 · 14px · r8" },
-    "size-lg": { zh: "高36 · 字号16 · 圆角8", en: "h36 · 16px · r8" },
-    "icon-only": { zh: "32×32 · 圆角8 · 图标16", en: "32×32 · r8 · icon16" },
-    "icon-only-ghost": { zh: "32×32 · 圆角8 · 图标16", en: "32×32 · r8 · icon16" }
-  };
-  const fallback = { zh: "高32 · 字号14 · 圆角8", en: "h32 · 14px · r8" };
-  const spec = map[id] ?? fallback;
-  return lang === "en" ? spec.en : spec.zh;
-}
-
-function ButtonScenarioPreview({ id, lang }: {id: string;lang: Lang;}) {
-  if (id === "secondary") return <Button variant="secondary">{lang === "en" ? "Cancel" : "取消"}</Button>;
-  if (id === "destructive") return <Button variant="destructive">{lang === "en" ? "Delete project" : "删除项目"}</Button>;
-  if (id === "outline") return <Button variant="outline">{lang === "en" ? "Export" : "导出"}</Button>;
-  if (id === "ghost") return <Button variant="ghost">{lang === "en" ? "View details" : "查看详情"}</Button>;
-  if (id === "size-xs") return <Button size="xs"><PlusIcon data-icon="inline-start" />{lang === "en" ? "New" : "新建"}</Button>;
-  if (id === "size-sm") return <Button><PlusIcon data-icon="inline-start" />{lang === "en" ? "New" : "新建"}</Button>;
-  if (id === "size-default") return <Button size="md"><PlusIcon data-icon="inline-start" />{lang === "en" ? "New" : "新建"}</Button>;
-  if (id === "size-lg") return <Button size="lg"><PlusIcon data-icon="inline-start" />{lang === "en" ? "New" : "新建"}</Button>;
-  if (id === "icon-start") {
-    return (
-      <Button>
-        <SearchIcon data-icon="inline-start" />
-        {lang === "en" ? "Search" : "搜索"}
-      </Button>);
-
-  }
-  if (id === "icon-end") {
-    return (
-      <Button variant="outline">
-        {lang === "en" ? "Continue" : "继续"}
-        <ChevronDownIcon data-icon="inline-end" />
-      </Button>);
-
-  }
-  if (id === "icon-only") {
-    return (
-      <Button size="icon-md" aria-label={lang === "en" ? "Open package" : "打开组件包"}>
-        <PackageIcon data-icon="inline-start" />
-      </Button>);
-
-  }
-  if (id === "icon-only-ghost") {
-    return (
-      <Button variant="ghost" size="icon-md" aria-label={lang === "en" ? "Open package" : "打开组件包"}>
-        <PackageIcon data-icon="inline-start" />
-      </Button>);
-
-  }
-  if (id === "icon-only-outline") {
-    return (
-      <Button variant="outline" size="icon-sm" aria-label={lang === "en" ? "Add" : "新增"}>
-        <PlusIcon data-icon="inline-start" />
-      </Button>);
-
-  }
-  if (id === "disabled")
-  return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <Button disabled>{lang === "en" ? "Primary" : "主操作"}</Button>
-        <Button variant="secondary" disabled>{lang === "en" ? "Secondary" : "次操作"}</Button>
-        <Button variant="outline" disabled>{lang === "en" ? "Outline" : "描边"}</Button>
-        <Button variant="destructive" disabled>{lang === "en" ? "Destructive" : "危险"}</Button>
-        <Button variant="ghost" disabled>{lang === "en" ? "Ghost" : "幽灵"}</Button>
-        <Button variant="plain" disabled>{lang === "en" ? "View" : "查看"}</Button>
-        <Button variant="plain" tone="primary" disabled>{lang === "en" ? "Edit" : "编辑"}</Button>
-        <Button variant="plain" tone="info" disabled>{lang === "en" ? "Detail" : "详情"}</Button>
-        <Button variant="plain" tone="danger" disabled>{lang === "en" ? "Delete" : "删除"}</Button>
-      </div>);
-
-  if (id === "loading") {
-    return (
-      <Button disabled>
-        <Spinner data-icon="inline-start" />
-        {lang === "en" ? "Submitting" : "提交中"}
-      </Button>);
-
-  }
-  if (id === "plain")
-  return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-        <Button variant="plain">{lang === "en" ? "View" : "查看"}</Button>
-        <Button variant="plain" tone="primary">{lang === "en" ? "Edit" : "编辑"}</Button>
-        <Button variant="plain" tone="info">{lang === "en" ? "Detail" : "详情"}</Button>
-        <Button variant="plain" tone="danger">{lang === "en" ? "Delete" : "删除"}</Button>
-      </div>);
-
-  if (id === "plain-text-icon")
-  return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-        <Button variant="plain"><PlusIcon data-icon="inline-start" />{lang === "en" ? "New" : "新建"}</Button>
-        <Button variant="plain" tone="primary"><PencilIcon data-icon="inline-start" />{lang === "en" ? "Edit" : "编辑"}</Button>
-        <Button variant="plain" tone="info"><EyeIcon data-icon="inline-start" />{lang === "en" ? "Detail" : "详情"}</Button>
-        <Button variant="plain" tone="danger"><Trash2Icon data-icon="inline-start" />{lang === "en" ? "Delete" : "删除"}</Button>
-      </div>);
-
-  if (id === "plain-icon-only")
-  return (
-    <div className="flex flex-wrap items-center gap-3">
-        <Button variant="plain" size="icon-sm" aria-label={lang === "en" ? "View" : "查看"}><EyeIcon /></Button>
-        <Button variant="plain" tone="info" size="icon-sm" aria-label={lang === "en" ? "Detail" : "详情"}><EyeIcon /></Button>
-        <Button variant="plain" tone="danger" size="icon-sm" aria-label={lang === "en" ? "Delete" : "删除"}><Trash2Icon /></Button>
-      </div>);
-
-  return <Button>{lang === "en" ? "Save" : "保存"}</Button>;
-}
-
-// 总览各块的预览完全从场景示例按 group 派生（与场景 tab 一一对应、增删自动联动）。
-// 小标题用字面 h3（与场景 tab label 一致），便于 check-shadcn-contract 校验对应关系。
-function ButtonOverviewGroup({ group, lang }: {group: string;lang: Lang;}) {
-  return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
-      {buttonScenarioExamples.
-      filter((example) => example.group === group).
-      map((example) =>
-      <ButtonScenarioPreview key={example.id} id={example.id} lang={lang} />
-      )}
-    </div>);
-
-}
-function ButtonOverview({ lang }: {lang: Lang;}) {
-  return (
-    <div className="grid gap-6 rounded-xl border border-border bg-card p-6 shadow-l1">
-      <div className="grid gap-3">
-        <h3 className="text-xs font-bold tracking-widest text-muted-foreground uppercase">{lang === "en" ? "Variants" : "类型"}</h3>
-        <ButtonOverviewGroup group="category" lang={lang} />
-      </div>
-      <div className="border-t border-dashed border-border" />
-      <div className="grid gap-3">
-        <h3 className="text-xs font-bold tracking-widest text-muted-foreground uppercase">{lang === "en" ? "Sizes" : "尺寸"}</h3>
-        <ButtonOverviewGroup group="size" lang={lang} />
-      </div>
-      <div className="border-t border-dashed border-border" />
-      <div className="grid gap-3">
-        <h3 className="text-xs font-bold tracking-widest text-muted-foreground uppercase">{lang === "en" ? "Interaction states" : "交互状态"}</h3>
-        <ButtonOverviewGroup group="state" lang={lang} />
-      </div>
-      <div className="border-t border-dashed border-border" />
-      <div className="grid gap-3">
-        <h3 className="text-xs font-bold tracking-widest text-muted-foreground uppercase">{lang === "en" ? "Icons" : "图标"}</h3>
-        <ButtonOverviewGroup group="icon" lang={lang} />
       </div>
     </div>);
 
@@ -6306,51 +5874,13 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         <ButtonPlayground lang={lang} />
       </section>
 
-      <section id="overview" className={docsSpacing.sectionStack}>
-        <div className="flex flex-col gap-1">
-          <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Overview" : "组件总览"}</h2>
-          <p className="text-base text-muted-foreground">
-            {lang === "en" ?
-            "A compact visual matrix for quickly scanning Button variants, sizes, states, and icon usage." :
-            "紧凑展示 Button 的类型、尺寸、状态和图标用法，用来快速查看组件长什么样。"}
-          </p>
-        </div>
-        <ButtonOverview lang={lang} />
-      </section>
-
-      <section id="preview" className={docsSpacing.sectionStack}>
-        <SectionLead title={
-        lang === "en" ? "Scenario examples" : "场景示例"} description={
-
-        lang === "en" ?
-        "Filter by variant, size, state, or icon usage — all examples come from the same structured data source." :
-        "按类型、尺寸、状态、图标分组查看用法；所有示例都来自同一份结构化数据源。"} />
-
-        
-        <ScenarioTable
-          lang={lang}
-          elevated
-          filters={buttonScenarioFilters}
-          rows={buttonScenarioExamples.map((example) => ({
-            key: example.id,
-            group: example.group,
-            title: lang === "en" ? example.titleEn : example.title,
-            preview: <ButtonScenarioPreview id={example.id} lang={lang} />,
-            spec: example.group === "size" ? buttonSpecById(example.id, lang) : undefined,
-            intent: lang === "en" ? example.intentEn : example.intent,
-            constraint: lang === "en" ? example.ruleEn : example.rule,
-            code: example.code
-          }))} />
-        
-      </section>
-
       <section id="usage" className={docsSpacing.sectionStack}>
         <SectionLead title={
         lang === "en" ? "Usage" : "使用方式"} description={
 
         lang === "en" ?
-        "Copy the import; JSX usage is in the recommended API column of Scenario examples above." :
-        "复制 import 即可；具体 JSX 写法见上方「场景示例」的推荐写法列。"} />
+        "Copy the import; JSX usage is in the recommended code panel in Playground above." :
+        "复制 import 即可；具体 JSX 写法见上方「调试台」右侧的推荐写法。"} />
 
         
         <div className="rounded-xl border border-border-container bg-card p-5 shadow-l1">
@@ -8129,7 +7659,7 @@ function IconPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             "紧凑展示图标的类型与尺寸，用来快速查看图标长什么样。"}
           </p>
         </div>
-        <div className="grid gap-6 rounded-lg border border-border bg-card p-6">
+        <div className="grid gap-6 rounded-lg border border-border-container bg-card p-6">
           <div className="grid gap-3">
             <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Monochrome line" : "单色线性"}</h3>
             <div className="flex flex-wrap items-center gap-6 text-foreground">
@@ -11623,7 +11153,7 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 function AvatarOverview({ lang }: {lang: Lang;}) {
   return (
-    <div className="grid gap-6 rounded-lg border border-border bg-card p-6">
+    <div className="grid gap-6 rounded-lg border border-border-container bg-card p-6">
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
         <div className="flex flex-wrap items-center gap-4">
@@ -11659,7 +11189,7 @@ function AvatarOverview({ lang }: {lang: Lang;}) {
 
 function SeparatorOverview({ lang }: {lang: Lang;}) {
   return (
-    <div className="grid gap-6 rounded-lg border border-border bg-card p-6">
+    <div className="grid gap-6 rounded-lg border border-border-container bg-card p-6">
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
         <div className="flex flex-wrap items-center gap-8">
@@ -11683,7 +11213,7 @@ function SeparatorOverview({ lang }: {lang: Lang;}) {
 
 function LinkOverview({ lang }: {lang: Lang;}) {
   return (
-    <div className="grid gap-6 rounded-lg border border-border bg-card p-6">
+    <div className="grid gap-6 rounded-lg border border-border-container bg-card p-6">
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
         <div className="flex flex-wrap items-center gap-5">
@@ -12059,7 +11589,7 @@ function BreadcrumbDocPage({ actions, lang }: {actions: React.ReactNode;lang: La
       lead="展示当前页面在层级结构中的位置，帮助用户理解所处位置并快速返回上级。"
       overview={null}
       overviewMatrix={
-      <div className="grid gap-6 rounded-lg border border-border bg-card p-6">
+      <div className="grid gap-6 rounded-lg border border-border-container bg-card p-6">
           <div className="grid gap-3">
             <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
             <div className="flex flex-col gap-3">
@@ -12435,7 +11965,7 @@ function SearchMenuDemo() {
 
 function DropdownMenuOverview({ lang }: {lang: Lang;}) {
   return (
-    <div className="grid gap-6 rounded-lg border border-border bg-card p-6">
+    <div className="grid gap-6 rounded-lg border border-border-container bg-card p-6">
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
         <div className="flex flex-wrap items-start gap-4">

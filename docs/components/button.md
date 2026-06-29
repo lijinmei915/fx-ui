@@ -29,7 +29,7 @@ Button 用于触发即时操作，适合提交、保存、创建、删除等用�
 
 源码来自 shadcn/ui，进入项目后保持 open-code。公司视觉通过 `theme/fx-theme.css` 的语义 token 注入，不通过重新封装或硬编码样式实现。
 
-AI 生成页面时应优先使用 Button 的 `variant`、`size` 和 `disabled` 状态表达语义，避免手写颜色、圆角和 loading prop。
+AI 生成页面时应优先使用 Button 的 `variant`、`size` 和 `disabled` 状态表达语义，避免手写颜色、圆角和自造加载属性。
 
 Button 文档也是后续组件精修的模板：先写“什么时候用”，再写“源码真实 API”，最后写“AI 不要怎么误用”。
 
@@ -82,232 +82,35 @@ import { Button } from "@/components/ui/button"
 <Button variant="outline">Button</Button>
 ```
 
-## 组件总览 {#overview}
+## 调试台规则 {#playground-rules}
 
-组件总览用于快速查看 Button 的视觉能力，不承载语义规则和复制代码。
-
-- 类型：Default、Secondary、Outline、Ghost、Destructive、Link
-- 尺寸：XS、SM、Default、Large，以及 Icon XS、Icon SM、Icon、Icon LG
-- 原生交互状态：hover、active、focus-visible、aria-expanded、disabled、aria-invalid
-- 业务组合状态：Loading = `disabled + Spinner`
-- 图标：左图标、右图标、图标按钮、无底色图标按钮
-- 组合：ButtonGroup 用于多个按钮作为一组出现
-- 尺寸、交互状态与图标统一使用 Default variant，便于只比较对应能力差异；Hover、Press、Keyboard Focus 等交互反馈可直接在任意类型按钮上体验
-- `aria-invalid` 属于校验状态，保留在 API 中，不混入常规交互状态总览
-
-## 场景示例 {#examples}
-
-场景示例用于解释什么时候使用哪一种 Button。网页以决策表展示，并支持按 `全部 / 类型 / 尺寸 / 状态 / 图标` 点选查看。每行都绑定场景、使用意图、推荐写法、约束和预览，让人、AI 和程序读同一份语义；类型、尺寸、原生状态和业务组合态保持明确区分。
+Button 网页不再单独维护「组件总览」和「场景示例」决策表；交互调试台已经同时展示预览、使用意图、约束和推荐写法，避免同一套规则在页面里重复两遍。
 
 AI 选择 Button 时按这个顺序判断：
 
 1. 先判断动作语义：主操作、次操作、危险操作、弱操作、跳转操作。
-2. 再判断空间密度：默认尺寸优先，高密度区域才用 `xs` 或 `sm`，空状态/营销位才考虑 `lg`。
+2. 再判断空间密度：默认 `sm`（28px）优先，高密度区域才用 `xs`，更宽松的表单或行动点才考虑 `md` / `lg`。
 3. 再判断是否需要图标：图标只辅助识别，不替代文字；纯图标按钮必须补 `aria-label`。
 4. 最后判断状态：原生状态用 HTML/ARIA 表达，业务组合态用现有组件组合，不发明新 prop。
 
-### 主操作
-
-- 使用意图：页面或区域的主要行动点，一个操作区域建议只出现一个。
-- 规则：用于保存、提交、新建等明确推进流程的操作。
-- 分组：`类型`
-- 关键属性：`variant: "default"`，`size: "default"`。
+原生交互态来自 Button 源码：`hover`、`active`、`focus-visible`、`disabled`、`aria-invalid`、`aria-expanded`。业务组合态不新增 Button API，例如加载态用 `disabled + Spinner`。
 
 ```tsx
 <Button>保存</Button>
-```
-
-### 次操作
-
-- 使用意图：与主操作并列但优先级较低，不抢主行动点。
-- 规则：用于取消、返回、稍后处理等辅助操作。
-- 分组：`类型`
-- 关键属性：`variant: "secondary"`，`size: "default"`。
-
-```tsx
 <Button variant="secondary">取消</Button>
-```
-
-### 危险操作
-
-- 使用意图：删除、移除权限等不可逆操作，通常需要二次确认。
-- 规则：必须使用 `destructive`，不要用主按钮表达危险操作。
-- 分组：`类型`
-- 关键属性：`variant: "destructive"`，`size: "default"`。
-
-```tsx
 <Button variant="destructive">删除项目</Button>
-```
-
-### 描边操作
-
-- 使用意图：与主操作并列、但比 secondary 更轻的辅助操作，常用于工具栏。
-- 规则：保留边框但不强调底色，避免与 secondary 在同一组里混用造成层级混乱。
-- 分组：`类型`
-- 关键属性：`variant: "outline"`，`size: "default"`。
-
-```tsx
-<Button variant="outline">导出</Button>
-```
-
-### Ghost 操作
-
-- 使用意图：工具栏、卡片内的弱化操作，不需要边框和底色来吸引注意。
-- 规则：shadcn 源码里的真实 variant 就叫 `ghost`；悬浮态才出现底色，不用于页面主行动点。
-- 分组：`类型`
-- 关键属性：`variant: "ghost"`，`size: "default"`。
-
-```tsx
-<Button variant="ghost">查看详情</Button>
-```
-
-### 无底色操作（plain）
-
-- 使用意图：表格操作列的纯图标增删改查等，无边框无底色，hover 只变色不变底。
-- 规则：variant 叫 `plain`（无边框无底色、无横向 padding、hover 只变色）；配合 `tone`（default 中性 / primary 主色 / info 蓝 / danger 危险）分色（蓝色 info 用于企业不想用品牌橙时的文字按钮，**不是跳转链接**）；纯图标必须补 `aria-label` + Tooltip。带底色的弱化按钮仍用 `ghost`（悬浮出底色）。跳转/链接用独立的 `Link` 组件，Button 不提供 link 变体。
-- 分组：`类型`
-- 关键属性：`variant: "plain"`，`tone: "danger"`。
-
-```tsx
-<Button variant="plain" tone="danger" size="icon-sm" aria-label="删除"><Trash2Icon /></Button>
-```
-
-### 超小尺寸
-
-- 使用意图：极紧凑的工具栏、表格内联操作。
-- 规则：只用于密度很高的局部操作，不用于页面主按钮。
-- 分组：`尺寸`
-- 关键属性：`variant: "outline"`，`size: "xs"`。
-
-```tsx
-<Button size="xs" variant="outline">更多</Button>
-```
-
-### 小尺寸
-
-- 使用意图：筛选栏、表格行、紧凑表单等高密度区域。
-- 规则：小尺寸用于空间受限场景，不用于页面主行动点。
-- 分组：`尺寸`
-- 关键属性：`variant: "outline"`，`size: "sm"`。
-
-```tsx
-<Button size="sm" variant="outline">筛选</Button>
-```
-
-### 默认尺寸
-
-- 使用意图：页面正文、表单页和常规操作区域。
-- 规则：默认尺寸是业务页面的首选尺寸。
-- 分组：`尺寸`
-- 关键属性：`variant: "default"`，`size: "default"`。
-
-```tsx
-<Button>提交</Button>
-```
-
-### 大尺寸
-
-- 使用意图：需要更强触达的表单提交、营销页或空状态行动点。
-- 规则：大尺寸谨慎使用，不在密集列表里使用。
-- 分组：`尺寸`
-- 关键属性：`variant: "default"`，`size: "lg"`。
-
-```tsx
-<Button size="lg">开始使用</Button>
-```
-
-### 左图标
-
-- 使用意图：用图标辅助识别动作含义。
-- 规则：左图标使用 `data-icon="inline-start"`，不手写尺寸。
-- 分组：`图标`
-- 关键属性：`variant: "default"`，`data-icon: "inline-start"`。
-
-```tsx
-<Button>
-  <SearchIcon data-icon="inline-start" />
-  搜索
+<Button variant="plain" tone="danger" size="icon-sm" aria-label="删除">
+  <Trash2Icon />
 </Button>
 ```
 
-### 右图标
-
-- 使用意图：用于带方向、展开或继续含义的按钮。
-- 规则：右图标使用 `data-icon="inline-end"`。
-- 分组：`图标`
-- 关键属性：`variant: "outline"`，`data-icon: "inline-end"`。
-
-```tsx
-<Button variant="outline">
-  继续
-  <ChevronDownIcon data-icon="inline-end" />
-</Button>
-```
-
-### 图标按钮
-
-- 使用意图：工具栏、表格行操作等空间紧凑的位置。
-- 规则：图标按钮必须有 `aria-label`，图标使用 `data-icon`，不手写尺寸。
-- 分组：`图标`
-- 关键属性：`variant: "default"`，`size: "icon"`，`aria-label`，`data-icon`。
-
-```tsx
-<Button size="icon" aria-label="打开组件包">
-  <PackageIcon data-icon="inline-start" />
-</Button>
-```
-
-### 无底色图标按钮
-
-- 使用意图：工具栏、卡片角落等需要弱化视觉权重的图标操作。
-- 规则：使用 `variant="ghost"`，悬浮态再出现底色；同样必须有 `aria-label`。
-- 分组：`图标`
-- 关键属性：`variant: "ghost"`，`size: "icon"`，`aria-label`，`data-icon`。
-
-```tsx
-<Button variant="ghost" size="icon" aria-label="打开组件包">
-  <PackageIcon data-icon="inline-start" />
-</Button>
-```
-
-### 禁用状态
-
-- 使用意图：权限不足、表单未完成或提交中，暂时不可触发。
-- 规则：使用 `disabled` 表达不可操作，不要只降低透明度伪装禁用。
-- 分组：`状态`
-- 关键属性：`variant: "default"`，`disabled: true`。
-
-```tsx
-<Button disabled>提交中</Button>
-```
-
-### 加载状态
-
-- 使用意图：提交中、保存中等需要阻止重复点击的场景。
-- 规则：Button 没有 `loading` prop，Loading = `disabled + Spinner`。
-- 分组：`状态`
-- 关键属性：`disabled`，`Spinner`，`data-icon: "inline-start"`。
+Button 没有内置 `loading` prop；Loading = `disabled + Spinner`。
 
 ```tsx
 <Button disabled>
   <Spinner data-icon="inline-start" />
   提交中
 </Button>
-```
-
-### 按钮组合
-
-- 使用意图：工具栏、分段操作等需要把多个按钮视觉上连成一体的场景。
-- 规则：用 ButtonGroup 包裹，不要靠手写负 margin 拼接按钮边框。
-- 分组：`组合`
-- 关键属性：`ButtonGroup`，`variant: "outline"`，`size: "default"`。
-
-```tsx
-<ButtonGroup>
-  <Button variant="outline">复制</Button>
-  <Button variant="outline">剪切</Button>
-  <Button variant="outline">粘贴</Button>
-</ButtonGroup>
 ```
 
 ## API {#api}
@@ -322,6 +125,8 @@ Button 支持 `@base-ui/react/button` 的原生 button props，并额外支持�
 | `aria-invalid` | 是否展示错误态 | `boolean` | `false` |
 | `render` | 把按钮样式渲染到自定义元素上，例如 `<a>`；这是 Base UI 版本的 asChild 能力 | `ReactElement \| (props, state) => ReactElement` | - |
 | `className` | 追加 class，主要用于布局，不用于硬覆盖颜色和字体 | `string` | - |
+
+组合按钮使用 `ButtonGroup` 承载，不在业务页面靠负 margin 手拼边框。
 
 ## Semantic DOM {#semantic-dom}
 
@@ -362,7 +167,7 @@ Button 支持 `@base-ui/react/button` 的原生 button props，并额外支持�
 - 图标按钮必须有 `aria-label`。
 - 图标放在按钮内时，图标使用 `data-icon`，不要直接写 `size-4`。
 - `className` 只用于布局、宽度或间距，不用于覆盖组件颜色。
-- 当前 Button 没有内置 `loading` prop；Loading = `disabled + Spinner`。
+- 当前 Button 没有内置加载属性；Loading = `disabled + Spinner`。
 
 ### 组合规则（4 个正交轴，自由组合，不造新组件）
 
@@ -412,13 +217,9 @@ Button 只有一个组件，靠 4 个**互相独立**的轴组合，任意搭配
 <Button variant="destructive">删除项目</Button>
 ```
 
-### 加载态用组合，不发明 loading prop
+### 加载态用组合，不新增加载属性
 
-不推荐：
-
-```tsx
-<Button loading>提交</Button>
-```
+不推荐：给 Button 自造加载属性。
 
 推荐：
 

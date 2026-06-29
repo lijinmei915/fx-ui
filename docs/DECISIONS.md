@@ -376,6 +376,15 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **影响**：`docs/MAP.md` 的组件新增路线加入“补 manifest 主题能力”；后续扩展 `scripts/check-components-manifest.mjs` 或主题契约检查时，优先读取 manifest 里的能力声明，组件外框靠 `data-slot` 定位，结构线/分隔线不默认跟随组件主题。
 - **相关文件**：`docs/MAP.md`、`docs/data/components.manifest.json`、`scripts/check-components-manifest.mjs`、`theme/fx-theme.css`
 
+### DEC-033: 主题里的阴影强度只保留 elevation 递进，不混入复古硬阴影
+
+- **日期**：2026-06-29
+- **状态**：已决定
+- **决定**：主题定制面板的「阴影强度」只保留 `none / soft / ambient` 三档：无阴影、轻微、弥散。删除 `retro` 复古硬阴影，不再补第四项凑数。
+- **原因**：主流设计系统把 shadow 作为 elevation / layer token 管理，表达层级高度和弥散程度；复古硬阴影是独立视觉风格，不是阴影强度。把它放在 Shadow Level 里会让主题能力不正交，也容易误导用户。
+- **兼容**：旧配置里若存过 `shadowLevel: "retro"`，运行时回落到 `ambient`。
+- **相关文件**：`src/App.tsx`、`docs/TOKENS.md`
+
 ## 相关文件
 
 | 文件 | 关系 |

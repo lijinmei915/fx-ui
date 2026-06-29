@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { CommandPalette, type CommandItem } from "@/components/ui/command";
 import { PageLead as FxPageLead } from "@/components/fx/page-lead";
@@ -532,11 +532,11 @@ const themeTextScaleOptions: {id: ThemeTextScale;label: string;desc: string;}[] 
 
 
 const themeRadiusOptions: {id: ThemeRadius;label: string;}[] = [
-{ id: "none", label: "None" },
-{ id: "sm", label: "SM" },
-{ id: "md", label: "MD" },
-{ id: "lg", label: "LG" },
-{ id: "full", label: "Full" }];
+{ id: "none", label: "无" },
+{ id: "sm", label: "小" },
+{ id: "md", label: "中" },
+{ id: "lg", label: "大" },
+{ id: "full", label: "全圆" }];
 
 
 const themeBorderWidthOptions: {id: ThemeBorderWidth;label: string;desc: string;}[] = [
@@ -3314,6 +3314,7 @@ const websiteStandardsDoc = {
 
 type DocPage = keyof typeof docsByPage;
 type ViewMode = "page" | "markdown";
+const PageTitleMetaContext = createContext<string | undefined>(undefined);
 
 function isDocPage(page: string): page is DocPage {
   return page === "button" || page === "icon" || page === "tokens";
@@ -3333,6 +3334,14 @@ function getNavItemFromHash(hash: string) {
 
 
   return navItems.find((item) => item.href === normalizedHash);
+}
+
+function getNavItemFromPage(page: string) {
+  const navItems = [
+  ...topNav,
+  ...docsNav.flatMap((section) => section.items)];
+
+  return navItems.find((item) => getPageFromHash(item.href) === page);
 }
 
 function getFooterNavIndex(page: string) {
@@ -3396,7 +3405,7 @@ function CopyCodeBlock({ code, label, lang }: {code: string;label: string;lang: 
 // 不再各写一套 if/三元链。新增页面只在这里加一行（+ docsNav 导航项）。
 type PageEntry = {
   anchors: {label: string;labelEn?: string;href: string;}[];
-  render: (actions: React.ReactNode, lang: Lang, page: string) => React.ReactNode;
+  render: (actions: React.ReactNode, lang: Lang, page: string, titleMeta?: string) => React.ReactNode;
   // 满宽页（如整页 app 外壳模板）：去掉右侧锚点栏、收窄留白，让内容用足主区宽度
   fullBleed?: boolean;
 };
@@ -3573,7 +3582,7 @@ function ThemeCustomizerPanel({
     <Sheet open={open} onOpenChange={onOpenChange} modal={false}>
       <SheetContent
         side="right"
-        className="w-80 gap-0 sm:max-w-80"
+        className="fx-theme-panel-static w-80 gap-0 sm:max-w-80"
         overlayClassName="pointer-events-none bg-transparent backdrop-blur-none supports-backdrop-filter:backdrop-blur-none">
         
         <SheetHeader className="p-[calc(var(--fx-panel-padding)*2)] pb-0">
@@ -3586,30 +3595,30 @@ function ThemeCustomizerPanel({
         <div className="flex min-h-0 flex-1 flex-col gap-[calc(var(--fx-panel-gap)*2)] overflow-y-auto p-[calc(var(--fx-panel-padding)*2)] pb-12">
           <section className="flex flex-col gap-(--fx-control-gap)">
             <ThemePanelHeading icon={<SunIcon />} title={lang === "en" ? "Appearance" : "外观模式"} />
-            <div className="flex gap-1 rounded-lg bg-muted p-1">
+            <div className="flex h-9 gap-1 rounded-lg bg-muted p-0.5">
               <button
                 type="button"
                 aria-pressed={config.mode === "light"}
                 onClick={() => setConfigValue("mode", "light")}
                 className={cn(
-                  "flex flex-1 items-center justify-center gap-(--fx-control-gap) rounded-md px-(--fx-control-px-xs) py-(--fx-control-px-xs) text-base font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                  "flex h-full flex-1 items-center justify-center gap-(--fx-control-gap) rounded-md px-(--fx-control-px-sm) text-base font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
                   config.mode === "light" ? "bg-card text-foreground shadow-l1" : "text-muted-foreground hover:text-foreground"
                 )}>
                 
                 <SunIcon className="size-4" />
-                Light
+                {lang === "en" ? "Light" : "浅色"}
               </button>
               <button
                 type="button"
                 aria-pressed={config.mode === "dark"}
                 onClick={() => setConfigValue("mode", "dark")}
                 className={cn(
-                  "flex flex-1 items-center justify-center gap-(--fx-control-gap) rounded-md px-(--fx-control-px-xs) py-(--fx-control-px-xs) text-base font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                  "flex h-full flex-1 items-center justify-center gap-(--fx-control-gap) rounded-md px-(--fx-control-px-sm) text-base font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
                   config.mode === "dark" ? "bg-card text-foreground shadow-l1" : "text-muted-foreground hover:text-foreground"
                 )}>
                 
                 <MoonIcon className="size-4" />
-                Dark
+                {lang === "en" ? "Dark" : "深色"}
               </button>
             </div>
           </section>
@@ -4009,6 +4018,7 @@ function App() {
   const docKey: DocPage | null = isDocPage(page) ? page : null;
   const currentDoc = docKey ? docsByPage[docKey] : null;
   const placeholderItem = getNavItemFromHash(activeHash);
+  const currentNavItem = getNavItemFromPage(page);
   const footerNav = getFooterNavPair(page);
   const navActions = <PageStepActions previous={footerNav.previous} next={footerNav.next} lang={lang} />;
 
@@ -4265,12 +4275,12 @@ function App() {
                         className={
                         isActive ?
                         "flex h-(--fx-control-md-height) items-center justify-between gap-(--fx-control-gap) rounded-md bg-primary/10 px-(--fx-control-px-md) text-[length:var(--fx-menu-text)] leading-(--fx-menu-text--line-height) font-semibold text-primary" :
-                        "flex h-(--fx-control-md-height) items-center justify-between gap-(--fx-control-gap) rounded-md px-(--fx-control-px-md) text-[length:var(--fx-menu-text)] leading-(--fx-menu-text--line-height) text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
+                        "flex h-(--fx-control-md-height) items-center justify-between gap-(--fx-control-gap) rounded-md px-(--fx-control-px-md) text-[length:var(--fx-menu-text)] leading-(--fx-menu-text--line-height) font-semibold text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
                         }>
                         
                           <span className="truncate">{getLabel(item, lang)}</span>
-                          {item.labelEn && getLabel(item, lang) !== item.labelEn ?
-                        <span className={isActive ? "shrink-0 text-[length:max(12px,var(--fx-text-xs))] font-normal text-primary/70" : "shrink-0 text-[length:max(12px,var(--fx-text-xs))] text-muted-foreground/70"}>{item.labelEn}</span> :
+                          {lang === "en" && item.labelEn && getLabel(item, lang) !== item.labelEn ?
+                        <span className={isActive ? "shrink-0 text-[length:max(12px,var(--fx-text-xs))] font-semibold text-primary/70" : "shrink-0 text-[length:max(12px,var(--fx-text-xs))] font-normal text-muted-foreground/70"}>{item.labelEn}</span> :
                         null}
                         </a>);
 
@@ -4297,7 +4307,9 @@ function App() {
               {viewMode === "markdown" && currentDoc ?
               <MarkdownPage doc={currentDoc} actions={pageActions} lang={lang} /> :
               pageEntry ?
-              pageEntry.render(pageActions, lang, page) :
+              <PageTitleMetaContext.Provider value={lang === "en" ? undefined : currentNavItem?.labelEn}>
+                {pageEntry.render(pageActions, lang, page, currentNavItem?.labelEn)}
+              </PageTitleMetaContext.Provider> :
 
               <PlaceholderPage
                 actions={pageActions}
@@ -4983,6 +4995,7 @@ function GettingStartedPage({
           <FxPageLead
             crumb={lang === "en" ? "Maintain / Website Standards" : "维护 / 网站规范"}
             title={lang === "en" ? "Website Standards" : "网站规范"}
+            titleMeta={lang === "en" ? undefined : "Website Standards"}
             lead={lang === "en" ? "Reusable page components for this docs website. Keep page chrome here, and keep business admin patterns in compositions." : "本站文档页的页面组件规范。文档站外壳放这里，业务后台模式仍放业务组合。"}
             actions={actions} />
         </section>
@@ -4995,6 +5008,7 @@ function GettingStartedPage({
                 <FxPageLead
                   crumb="维护 / 网站规范"
                   title="页面标题区"
+                  titleMeta="PageLead"
                   lead="这里展示页面标题区的真实组件形态。标题下只保留一句说明，不再额外加线。"
                   actions={<PageActionsShell navActions={<PageStepActions previous={null} next={null} lang={lang} />}><CopyPageAction lang={lang} /></PageActionsShell>} />
                 <Collapsible>
@@ -6163,8 +6177,15 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 }
 
-function PageLead({ crumb, title, lead, actions }: {crumb: string;title: string;lead: React.ReactNode;actions: React.ReactNode;}) {
-  return <FxPageLead crumb={crumb} title={title} lead={lead} actions={actions} />;
+function getDisplayTitle(title: string, titleMeta?: string) {
+  if (!titleMeta) return title;
+  return title === titleMeta ? title : title.replace(new RegExp(`^${titleMeta.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s+`), "");
+}
+
+function PageLead({ crumb, title, titleMeta, lead, actions }: {crumb: string;title: string;titleMeta?: string;lead: React.ReactNode;actions: React.ReactNode;}) {
+  const contextTitleMeta = useContext(PageTitleMetaContext);
+  const resolvedTitleMeta = titleMeta ?? contextTitleMeta;
+  return <FxPageLead crumb={crumb} title={getDisplayTitle(title, resolvedTitleMeta)} titleMeta={resolvedTitleMeta} lead={lead} actions={actions} />;
 }
 
 function TokensPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
@@ -11455,12 +11476,15 @@ function StandardDocPage({
 
 
 }: {slug: string;title: string;lead: string;playground?: React.ReactNode;overview: React.ReactNode;overviewMatrix?: React.ReactNode;scenarioExamples: {id: string;title: string;intent: string;rule: string;code: string;group?: string;spec?: string;}[];scenarioFilters?: {value: string;label: string;labelEn?: string;}[];scenarioLayout?: "table" | "stack";renderScenarioPreview: (id: string) => React.ReactNode;importCode: string;usageCode: string;propRows: {prop: string;type: string;defaultValue: string;desc: string;}[];semanticDomRows: {part: string;desc: string;}[];doDontRows: {do: string;dont: string;}[];actions: React.ReactNode;lang: Lang;}) {
+  const titleMeta = useContext(PageTitleMetaContext);
+
   return (
     <div className={docsSpacing.pageStack}>
       <section id={slug} className="flex flex-col gap-2">
         <FxPageLead
           crumb={lang === "en" ? `Components / ${title}` : `组件 / ${title}`}
-          title={title}
+          title={getDisplayTitle(title, lang === "en" ? undefined : titleMeta)}
+          titleMeta={lang === "en" ? undefined : titleMeta}
           lead={lead}
           actions={actions} />
         

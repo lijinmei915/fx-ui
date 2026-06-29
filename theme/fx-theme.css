@@ -692,29 +692,74 @@
   stroke-width: 1.75;
 }
 
+/* 主题定制面板是控制台本体，不作为被调主题的预览对象。
+   固定这把“尺子”，避免用户调字号/圆角/阴影时面板自己也跟着变形。 */
+.fx-theme-panel-static {
+  --radius: 0.625rem;
+  --font-sans: "Inter Variable", "PingFang SC", "苹方", "Microsoft YaHei", "微软雅黑", "Noto Sans SC", Arial, sans-serif;
+  --fx-text-xs: 12px;
+  --fx-text-xs--line-height: 18px;
+  --fx-text-sm: 14px;
+  --fx-text-sm--line-height: 20px;
+  --fx-text-base: 16px;
+  --fx-text-base--line-height: 24px;
+  --fx-text-lg: 18px;
+  --fx-text-lg--line-height: 28px;
+  --fx-text-xl: 20px;
+  --fx-text-xl--line-height: 30px;
+  --fx-text-2xl: 24px;
+  --fx-text-2xl--line-height: 32px;
+  --fx-text-3xl: 30px;
+  --fx-text-3xl--line-height: 38px;
+  --fx-text-4xl: 36px;
+  --fx-text-4xl--line-height: 44px;
+  --fx-control-xs-height: 24px;
+  --fx-control-sm-height: 28px;
+  --fx-control-md-height: 32px;
+  --fx-control-lg-height: 36px;
+  --fx-control-icon-xs: 24px;
+  --fx-control-icon-sm: 28px;
+  --fx-control-icon-md: 32px;
+  --fx-control-icon-lg: 36px;
+  --fx-control-px-xs: 0.5rem;
+  --fx-control-px-sm: 0.625rem;
+  --fx-control-px-md: 0.75rem;
+  --fx-control-px-lg: 1rem;
+  --fx-control-gap-tight: 0.25rem;
+  --fx-control-gap: 0.375rem;
+  --fx-panel-gap: 0.75rem;
+  --fx-panel-padding: 0.75rem;
+  --fx-theme-duration: 200ms;
+  --fx-shadow-color: oklch(from var(--fx-neutrals-20) l c h / 0.12);
+  --fx-shadow-l1: 0px 2px 6px 0px var(--fx-shadow-color);
+  --fx-shadow-l2: 0px 4px 12px 0px var(--fx-shadow-color);
+  --fx-shadow-l3: 0px 6px 24px 0px var(--fx-shadow-color);
+  --fx-shadow-l1-up: 0px -2px 6px 0px var(--fx-shadow-color);
+}
+
 /* 运行时主题预览层：由主题配置面板写入 data-theme-* 和 CSS 变量。
    “边框粗细”只作用于组件壳体，不扫全站结构线；页面骨架/分隔线保持自己的固定值。 */
-[data-theme-border="none"] :where([data-slot="card"], [data-slot="button"], [data-slot="input"], [data-slot="select-trigger"], [data-slot="textarea"], [data-slot="toggle"], [data-slot="toggle-group-item"], [data-slot="pagination-link"]) {
+[data-theme-border="none"] :where([data-slot="card"], [data-slot="button"], [data-slot="input"], [data-slot="select-trigger"], [data-slot="textarea"], [data-slot="toggle"], [data-slot="toggle-group-item"], [data-slot="pagination-link"]):not(.fx-theme-panel-static *) {
   border-width: 0 !important;
 }
-[data-theme-border="thin"] :where([data-slot="card"], [data-slot="button"], [data-slot="input"], [data-slot="select-trigger"], [data-slot="textarea"], [data-slot="toggle"], [data-slot="toggle-group-item"], [data-slot="pagination-link"]) {
+[data-theme-border="thin"] :where([data-slot="card"], [data-slot="button"], [data-slot="input"], [data-slot="select-trigger"], [data-slot="textarea"], [data-slot="toggle"], [data-slot="toggle-group-item"], [data-slot="pagination-link"]):not(.fx-theme-panel-static *) {
   border-width: 1px;
 }
-[data-theme-border="medium"] :where([data-slot="card"], [data-slot="button"], [data-slot="input"], [data-slot="select-trigger"], [data-slot="textarea"], [data-slot="toggle"], [data-slot="toggle-group-item"], [data-slot="pagination-link"]) {
+[data-theme-border="medium"] :where([data-slot="card"], [data-slot="button"], [data-slot="input"], [data-slot="select-trigger"], [data-slot="textarea"], [data-slot="toggle"], [data-slot="toggle-group-item"], [data-slot="pagination-link"]):not(.fx-theme-panel-static *) {
   border-width: 2px;
 }
-[data-theme-border="thick"] :where([data-slot="card"], [data-slot="button"], [data-slot="input"], [data-slot="select-trigger"], [data-slot="textarea"], [data-slot="toggle"], [data-slot="toggle-group-item"], [data-slot="pagination-link"]) {
+[data-theme-border="thick"] :where([data-slot="card"], [data-slot="button"], [data-slot="input"], [data-slot="select-trigger"], [data-slot="textarea"], [data-slot="toggle"], [data-slot="toggle-group-item"], [data-slot="pagination-link"]):not(.fx-theme-panel-static *) {
   border-width: 3px;
 }
 
-[data-theme-motion] :where([class*="transition"], [class*="duration-"]) {
+[data-theme-motion] :where([class*="transition"], [class*="duration-"]):not(.fx-theme-panel-static *) {
   transition-duration: var(--fx-theme-duration, 200ms);
 }
-[data-theme-motion="none"] :where(*, *::before, *::after) {
+[data-theme-motion="none"] :where(*, *::before, *::after):not(.fx-theme-panel-static *) {
   animation-duration: 0ms !important;
   transition-duration: 0ms !important;
 }
-[data-theme-motion="playful"] :where([class*="transition"], [class*="duration-"]) {
+[data-theme-motion="playful"] :where([class*="transition"], [class*="duration-"]):not(.fx-theme-panel-static *) {
   transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 

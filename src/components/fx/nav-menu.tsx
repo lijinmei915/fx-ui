@@ -225,9 +225,9 @@ function NavMenuItem({
       data-slot="nav-menu-item"
       data-active={active ? "" : undefined}
       className={cn(
-        "flex shrink-0 items-center gap-1 rounded-lg text-base outline-none transition-colors cursor-pointer",
+        "flex shrink-0 items-center gap-1 rounded-lg text-base font-medium outline-none transition-colors cursor-pointer",
         "text-foreground not-data-active:hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/50",
-        "data-active:bg-accent data-active:font-medium data-active:[&_svg]:text-primary",
+        "data-active:bg-accent data-active:[&_svg]:text-primary",
         // 收起：居中 36px 正方块（选中底色呈方形）；展开：占满整行、左对齐，嵌套缩进。
         collapsed ? "mx-auto size-9 justify-center" : cn("w-full p-2 text-left", indent === 2 ? "pl-[40px]" : indent && "pl-[26px]"),
         "[&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",

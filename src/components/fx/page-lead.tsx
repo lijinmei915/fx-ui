@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 type PageLeadProps = {
   crumb: string
   title: string
+  titleMeta?: string
   lead: ReactNode
   actions: ReactNode
 }
@@ -14,12 +15,14 @@ const pageLeadSlots = {
   content: "min-w-0",
   crumb: "mb-3 flex gap-2 text-sm font-normal text-muted-foreground",
   crumbCurrent: "font-medium text-foreground",
+  titleRow: "flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1",
   title: "text-3xl font-bold tracking-tight text-foreground",
+  titleMeta: "text-lg font-bold text-muted-foreground",
   lead: "mt-2 max-w-5xl text-base font-normal text-muted-foreground",
   actions: "shrink-0 md:pt-0",
 }
 
-function PageLead({ crumb, title, lead, actions }: PageLeadProps) {
+function PageLead({ crumb, title, titleMeta, lead, actions }: PageLeadProps) {
   const crumbParts = crumb.split(" / ")
 
   return (
@@ -33,7 +36,10 @@ function PageLead({ crumb, title, lead, actions }: PageLeadProps) {
             </Fragment>
           ))}
         </nav>
-        <h1 data-slot="page-lead-title" className={pageLeadSlots.title}>{title}</h1>
+        <div className={pageLeadSlots.titleRow}>
+          <h1 data-slot="page-lead-title" className={pageLeadSlots.title}>{title}</h1>
+          {titleMeta ? <span data-slot="page-lead-title-meta" className={pageLeadSlots.titleMeta}>{titleMeta}</span> : null}
+        </div>
         <p data-slot="page-lead-description" className={pageLeadSlots.lead}>{lead}</p>
       </div>
       <div data-slot="page-lead-actions" className={pageLeadSlots.actions}>{actions}</div>

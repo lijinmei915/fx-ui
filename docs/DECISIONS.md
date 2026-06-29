@@ -339,7 +339,7 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 ### DEC-030: 字体主题做 4 档中英成对配置，字体必须可商用且优先本地托管
 
 - **日期**：2026-06-27
-- **状态**：已决定方向，待落地
+- **状态**：已决定（基础落地；英文字体精确替换可后续迭代）
 - **背景**：参考 `component-library-showcase` 的字体主题能力：`sans / serif / mono / geometric` 四档，默认 `sans`。英文字体分别是 Inter、Playfair Display、JetBrains Mono、Space Grotesk；默认主题 `fontFamily: "sans"`。
 - **决定**：后续 fx-ui 也做 **4 个字体主题配置**，并且每一档都要有**英文 + 中文一一对应**的字体栈。字体选择必须满足：① 可商用；② 可本地托管或通过 npm/fontsource 等依赖落地；③ Windows / macOS / iOS / Android 都有明确 fallback；④ 中文不裸回退到不可控系统宋体。
 - **初始候选配对**：
@@ -350,7 +350,8 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **中文可商用候选池（至少 3 套）**：`Noto Sans SC`、`Noto Serif SC`、`Source Han Sans SC`（思源黑体），均按开源字体许可证路径评估；后续如引入霞鹜文楷等展示字体，必须先确认 license、字重覆盖和文件体积。
 - **落地约束**：不得直接依赖线上 Google Fonts CDN；生产优先使用本地字体包 / 自托管字体文件，保留 license 说明。移动端只加载必要字重，避免中文字体体积拖慢首屏。字体主题应通过 token/class 切换，不在组件调用处写死 `font-family`。
 - **放弃**：① 只配置英文字体、中文交给浏览器随机 fallback；② 直接全量加载所有中文字体全字重；③ 为某个页面临时写死字体。
-- **相关文件（落地时）**：`theme/fx-theme.css`、`docs/TOKENS.md`、`docs/data/design-tokens.json`、`src/App.tsx`（主题切换 UI）
+- **补充（2026-06-29）**：主题面板已先落地 4 档中英独立字体栈：中文 `sans/serif/mono/geometric` 不再共用同一套字体；`serif` 加载 `@fontsource/noto-serif-sc`，`geometric` 使用已安装的 `Geist Variable` + 系统现代黑体 fallback，`mono` 先走系统等宽 + 中文黑体兜底。文档解释字体时必须按“中文字体 / 西文数字”角色拆开，不能把整串 CSS fallback 误称为中文字体；主题面板只保留混排预览样张。Playfair / JetBrains Mono / Space Grotesk 暂未新增依赖，后续如需要更贴近参考站再单独评估包体和授权。
+- **相关文件（落地时）**：`src/App.tsx`、`src/main.tsx`、`theme/fx-theme.css`、`docs/TOKENS.md`、`docs/data/design-tokens.json`
 
 ### DEC-031: “边框粗细”在主题语境里默认指组件默认边框规格
 
@@ -364,6 +365,16 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
   2. “边框强度” = 外轮廓颜色深浅（如 `border-border-container` / `border-border` / `border-border-strong`）
   3. “结构线 / 分隔线” = 表格内线、区块分隔线，单独治理，不跟组件外框绑定
 - **相关文件**：`docs/TOKENS.md`、`theme/fx-theme.css`、`src/components/fx/component-playground.tsx`
+
+### DEC-032: 新增组件必须登记主题能力，检查从 manifest 派生
+
+- **日期**：2026-06-29
+- **状态**：已决定
+- **决定**：以后新增基础组件或 fx 组合组件，固定流程为：`npx shadcn add` 拉组件 → 读取源码 API 和 `data-slot` → 在 `docs/data/components.manifest.json` 登记组件事实与主题能力 → 补组件文档与文档页示例 → 运行 `npm run check`。主题能力（如 `borderWidth`、`radius`、`shadow`）以后以 manifest 为事实源，检查脚本从 manifest 派生，不在脚本里硬编码一串组件清单。
+- **放弃**：① 新组件加完只写页面示例，不登记主题能力；② 每新增一个规则就写一个独立检查脚本；③ 依赖人工记忆判断某个组件外框是否应该被主题影响。
+- **原因**：组件是否跟随主题属于长期结构事实，容易在恢复页面或批量重构时被悄悄覆盖。把主题能力收进 manifest，可以让新增组件接入流程稳定，同时避免检查无限膨胀。
+- **影响**：`docs/MAP.md` 的组件新增路线加入“补 manifest 主题能力”；后续扩展 `scripts/check-components-manifest.mjs` 或主题契约检查时，优先读取 manifest 里的能力声明，组件外框靠 `data-slot` 定位，结构线/分隔线不默认跟随组件主题。
+- **相关文件**：`docs/MAP.md`、`docs/data/components.manifest.json`、`scripts/check-components-manifest.mjs`、`theme/fx-theme.css`
 
 ## 相关文件
 

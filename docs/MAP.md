@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-06-26
+last_verified: 2026-06-29
 teaches: "fx-ui 仓库地图：任意产物住哪、怎么新增登记、谁来检查——按产物种类一站式分流"
 use_when: "要新增或查找任何产物（组件/block/token/图标/页面路由/视觉基线/规则/检查）前，先来这里定位，别靠猜"
 ---
@@ -15,8 +15,8 @@ use_when: "要新增或查找任何产物（组件/block/token/图标/页面路�
 
 | 产物种类 | 家（真相源） | 新增 / 登记步骤 | 谁 check |
 |----------|--------------|-----------------|----------|
-| 基础组件 | `src/components/ui/` | `npx shadcn add` 拉 → `docs/data/components.manifest.json` + `docs/components/<x>.md` + 导航/`pageRegistry` | `check:components` |
-| 组合组件（fx） | `src/components/fx/` | 由现成 ui 组件组合 → 同上 manifest + md + 导航 | `check:components` |
+| 基础组件 | `src/components/ui/` | `npx shadcn add` 拉 → 读 `src/components/ui/<x>.tsx` 源码 API / `data-slot` → 补 `docs/data/components.manifest.json`（含主题能力）→ `docs/components/<x>.md` → 文档页示例 + 导航/`pageRegistry` → `npm run check` | `check:components` |
+| 组合组件（fx） | `src/components/fx/` | 由现成 ui 组件组合 → 读源码 API / `data-slot` → 补 manifest（含主题能力）→ md → 文档页示例 + 导航/`pageRegistry` → `npm run check` | `check:components` |
 | Block（区块；文件夹历史名 recipes/） | `src/components/recipes/` | 复用既有区块只换数据 → 在 `docs/ARCHITECTURE.md`「页面 Block 层」登记 | （暂无脚本，人工核） |
 | 页面 / 路由 | `pageRegistry`（`src/App.tsx`，唯一真相源，见 DEC-023） | **先按 `docs/PAGES.md` 装配流程拼**；再加 registry 一行（满宽页加 `fullBleed`）+ `docsNav` 导航项 | `check:doc-site` |
 | 列表页（脚手架） | 生成到 `src/pages/<slug>-list.tsx` | 跑 `npm run gen:list-page -- --name 订单 --slug order` 生成骨架 → 按打印的 3 行接进 App.tsx → 只填 columns/数据。**不要手写**：`src/pages/` 里像列表页却无 `@generated fx-ui:list-page` 标记的会被 `check-list-page-source` 拦 | `check:all`（含来源检查）+ `test:visual` |

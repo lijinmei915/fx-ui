@@ -152,7 +152,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 **字重**：`font-normal`(400) 常规·正文 / `font-medium`(500) 中等·标签·按钮·菜单 / `font-semibold`(**600**) 次强调·小标题/卡片标题（500 偏轻、700 偏重时的中间档）/ `font-bold`(**700**) 加粗·页/区块标题·强调（见 DEC-028）。
 
-**字族**：默认 `--font-sans` = `"Inter Variable", -apple-system, BlinkMacSystemFont, "PingFang SC", "苹方", "Microsoft YaHei", "微软雅黑", "Noto Sans SC", Arial, sans-serif`。西文/数字用 **Inter**（自托管 OFL）；中文优先后台常用系统黑体（苹方/雅黑），缺系统中文字时回退自托管 **Noto Sans SC（思源黑体）**。主题定制提供 4 类中文体验：系统黑体、书面宋体（**Noto Serif SC**）、等宽兜底、现代黑体（HarmonyOS Sans SC / MiSans / PingFang SC，按系统可用字体回退）；英文模式只使用英文/拉丁字体栈，不混入中文字体名。`src/main.tsx` 引入 `@fontsource-variable/inter` + `@fontsource/noto-sans-sc`，宋体主题按需加载 `@fontsource/noto-serif-sc`（400/500/700）。
+**字族**：默认 `--font-sans` = `"Inter Variable", -apple-system, BlinkMacSystemFont, "PingFang SC", "苹方", "Microsoft YaHei", "微软雅黑", "Noto Sans SC", Arial, sans-serif`。字体栈按字符 fallback：西文/数字优先命中 **Inter**（自托管 OFL），中文会跳过不含中文字形的西文字体，命中系统中文黑体（苹方/雅黑）或兜底 **Noto Sans SC（思源黑体）**。文档说明字体时按角色拆开写：**中文字体**只写中文会命中的字体，**西文数字**只写拉丁/数字字体；不要把整串 CSS fallback 误写成“中文字体”。主题定制面板按用户语言展示 4 类体验：**系统默认**、**书面雅致**、**代码极客**、**现代几何**；卡片下方只用当前语言的混排样张预览字体效果（中文为 `中文 Aa 123`，英文为 `Abc 123`），不再把具体字体名当说明文案。实际命中仍由平台字体可用性决定。`src/main.tsx` 引入 `@fontsource-variable/inter`、`@fontsource-variable/geist`、`@fontsource/noto-sans-sc`、`@fontsource/noto-serif-sc`。
 
 > 完整企业字号阶（11/14/16/20/22/28 + 中英双套语义变量名 Large Title/Title1/Body1…）见 Figma 字体规范；fx-ui web 当前只落地上面四档，按需再补。
 

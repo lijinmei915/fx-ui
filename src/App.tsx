@@ -335,13 +335,18 @@ const themeRadiusValues: Record<ThemeRadius, string> = {
   full: "1.5rem"
 };
 
-const themeChineseFontValue = "\"Inter Variable\", \"Noto Sans SC\", \"PingFang SC\", \"苹方\", \"Microsoft YaHei\", \"微软雅黑\", Arial, sans-serif";
-
 const themeEnglishFontValues: Record<ThemeFont, string> = {
   sans: "\"Inter Variable\", \"Helvetica Neue\", Arial, sans-serif",
   serif: "Georgia, \"Times New Roman\", serif",
   mono: "\"SFMono-Regular\", Consolas, \"Liberation Mono\", monospace",
   geometric: "\"Geist Variable\", \"Inter Variable\", \"Helvetica Neue\", Arial, sans-serif"
+};
+
+const themeChineseFontValues: Record<ThemeFont, string> = {
+  sans: "\"Inter Variable\", \"PingFang SC\", \"苹方\", \"Microsoft YaHei\", \"微软雅黑\", \"Noto Sans SC\", Arial, sans-serif",
+  serif: "\"Noto Serif SC\", \"Songti SC\", STSong, SimSun, serif",
+  mono: "\"SFMono-Regular\", \"Cascadia Mono\", Consolas, \"Noto Sans SC\", monospace",
+  geometric: "\"Geist Variable\", \"HarmonyOS Sans SC\", \"MiSans\", \"PingFang SC\", \"Microsoft YaHei\", \"Noto Sans SC\", sans-serif"
 };
 
 const themeTextScaleValues: Record<ThemeTextScale, Record<string, string>> = {
@@ -421,11 +426,16 @@ const themeAnimationDurations: Record<ThemeAnimationStyle, string> = {
   playful: "320ms"
 };
 
-const themeFontOptions: {id: ThemeFont;label: string;desc: string;}[] = [
-{ id: "sans", label: "Sans 默认", desc: "Inter + Noto Sans SC" },
-{ id: "serif", label: "Serif 雅致", desc: "Playfair + Noto Serif SC" },
-{ id: "mono", label: "Mono 极客", desc: "JetBrains Mono + CJK Mono" },
-{ id: "geometric", label: "Geom 现代", desc: "Space Grotesk + Noto Sans SC" }];
+const themeFontOptions: {id: ThemeFont;label: string;}[] = [
+{ id: "sans", label: "系统默认" },
+{ id: "serif", label: "书面雅致" },
+{ id: "mono", label: "代码极客" },
+{ id: "geometric", label: "现代几何" }];
+
+const themeFontPreviewText: Record<Lang, string> = {
+  zh: "中文 Aa 123",
+  en: "Abc 123"
+};
 
 
 const themeTextScaleOptions: {id: ThemeTextScale;label: string;desc: string;}[] = [
@@ -527,7 +537,7 @@ value: ThemeConfig[K])
 }
 
 function getThemeFontValue(fontFamily: ThemeFont, lang: Lang) {
-  return lang === "zh" ? themeChineseFontValue : themeEnglishFontValues[fontFamily];
+  return lang === "zh" ? themeChineseFontValues[fontFamily] : themeEnglishFontValues[fontFamily];
 }
 
 function getThemeRuntimeStyle(config: ThemeConfig, lang: Lang): React.CSSProperties {
@@ -3992,7 +4002,7 @@ function ThemeCustomizerPanel({
                 key={item.id}
                 selected={config.fontFamily === item.id}
                 label={item.label}
-                desc={lang === "en" ? "Abc 123" : "字体预览"}
+                desc={themeFontPreviewText[lang]}
                 optionId={item.id}
                 style={{ fontFamily: getThemeFontValue(item.id, lang) }}
                 onClick={() => setConfigValue("fontFamily", item.id)} />
@@ -4085,7 +4095,7 @@ function ThemeChoiceButton({
 
 
 
-}: {selected: boolean;label: string;desc: string;optionId?: string;style?: React.CSSProperties;onClick: () => void;}) {
+}: {selected: boolean;label: string;desc: React.ReactNode;optionId?: string;style?: React.CSSProperties;onClick: () => void;}) {
   return (
     <button
       type="button"

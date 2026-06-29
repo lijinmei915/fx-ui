@@ -60,7 +60,7 @@ import { PageActions } from "@/components/fx/page-actions"
 
 - 使用意图：文档站页面右上角的页面级工具。
 - 放什么：复制当前页、复制链接、查看模式切换、上一篇 / 下一篇导航。
-- 分层：主按钮放最高频动作；下拉只放同页次级动作；页间导航独立在右侧。
+- 分层：复制、更多与页间导航都用 `secondary` 承载页面级次级动作；页间导航独立在右侧，用 `toolbar-icon` 保持 28px 热区。
 - 不放什么：组件示例内部操作、表格行操作、业务审批动作或危险操作。
 
 ```tsx
@@ -120,7 +120,7 @@ import { PageActions } from "@/components/fx/page-actions"
 ## AI Rules {#ai-rules}
 
 - PageActions 只放页面级工具，不承载业务操作。
-- 主按钮放最高频动作；下拉只放同页次级动作；页间导航独立在右侧。
+- 复制、更多与页间导航统一用 `secondary`；页间导航用 `toolbar-icon`，不要在调用处覆盖成自定义底色。
 - 公司组合组件只组合现有 shadcn/ui 能力，不新增隐藏 API。
 - 使用 PageActions 前必须以 src/components/fx/page-actions.tsx 为真实 API。
 - 不要复制组件内部 JSX 到页面里再改样式。

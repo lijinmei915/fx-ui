@@ -8,18 +8,18 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground enabled:hover:bg-primary-hover enabled:active:bg-primary-active disabled:bg-primary-disabled disabled:text-primary-foreground",
+        default: "bg-primary text-primary-foreground not-data-disabled:hover:bg-primary-hover not-data-disabled:active:bg-primary-active disabled:bg-primary-disabled disabled:text-primary-foreground",
         outline:
-          "border-border bg-surface enabled:hover:bg-muted enabled:hover:text-foreground enabled:active:bg-muted-hover aria-expanded:bg-muted aria-expanded:text-foreground disabled:border-border-subtle disabled:bg-surface-disabled disabled:text-foreground-disabled dark:border-input dark:bg-input/30 dark:enabled:hover:bg-input/50",
+          "border-border bg-surface not-data-disabled:hover:bg-muted not-data-disabled:hover:text-foreground not-data-disabled:active:bg-muted-hover aria-expanded:bg-muted aria-expanded:text-foreground disabled:border-border-subtle disabled:bg-surface-disabled disabled:text-foreground-disabled dark:border-input dark:bg-input/30 dark:not-data-disabled:hover:bg-input/50",
         secondary:
-          "bg-secondary text-secondary-foreground enabled:hover:bg-secondary-hover enabled:active:bg-secondary-active aria-expanded:bg-secondary aria-expanded:text-secondary-foreground disabled:text-foreground-disabled",
+          "bg-secondary text-secondary-foreground not-data-disabled:hover:bg-secondary-hover not-data-disabled:active:bg-secondary-active aria-expanded:bg-secondary aria-expanded:text-secondary-foreground disabled:text-foreground-disabled",
         ghost:
-          "enabled:hover:bg-muted enabled:hover:text-foreground enabled:active:bg-muted-hover aria-expanded:bg-muted aria-expanded:text-foreground disabled:text-foreground-disabled dark:enabled:hover:bg-muted/50",
+          "not-data-disabled:hover:bg-muted not-data-disabled:hover:text-foreground not-data-disabled:active:bg-muted-hover aria-expanded:bg-muted aria-expanded:text-foreground disabled:text-foreground-disabled dark:not-data-disabled:hover:bg-muted/50",
         destructive:
-          "bg-destructive-light text-destructive enabled:hover:bg-destructive-light-hover enabled:active:bg-destructive-light-active focus-visible:border-destructive/40 focus-visible:ring-destructive/20 disabled:bg-destructive-light disabled:text-destructive-disabled dark:bg-destructive/20 dark:enabled:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
+          "bg-destructive-light text-destructive not-data-disabled:hover:bg-destructive-light-hover not-data-disabled:active:bg-destructive-light-active focus-visible:border-destructive/40 focus-visible:ring-destructive/20 disabled:bg-destructive-light disabled:text-destructive-disabled dark:bg-destructive/20 dark:not-data-disabled:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
         // 无底色按钮（文字/图标/图标+文字）：无边框无底色，hover 只变色不变底。跳转/链接用独立 Link 组件，Button 不提供 link 变体。
         // 行内文字操作：上下左右内边距全为 0、高度贴文字；纯图标(size=icon-*)保留方形热区。默认中性 hover 变主题色，配合 tone 分色。
-        plain: "text-foreground enabled:hover:text-primary enabled:active:text-primary-active disabled:text-foreground-disabled not-data-[size^=icon]:h-auto not-data-[size^=icon]:px-0 not-data-[size^=icon]:has-data-[icon=inline-end]:pr-0 not-data-[size^=icon]:has-data-[icon=inline-start]:pl-0",
+        plain: "text-foreground not-data-disabled:hover:text-primary not-data-disabled:active:text-primary-active disabled:text-foreground-disabled not-data-[size^=icon]:h-auto not-data-[size^=icon]:px-0 not-data-[size^=icon]:has-data-[icon=inline-end]:pr-0 not-data-[size^=icon]:has-data-[icon=inline-start]:pl-0",
       },
       // 仅作用于无底色 plain：按语义分色（默认中性 / 主色 / 蓝 info / 危险），见 compoundVariants
       // info(蓝)用于"企业不想用品牌橙、改用蓝做文字按钮"，是纯色操作按钮，不是跳转链接
@@ -49,9 +49,9 @@ const buttonVariants = cva(
     },
     compoundVariants: [
       // plain（无底色、hover 只变色）：色随 tone，hover 加深
-      { variant: "plain", tone: "primary", className: "text-primary enabled:hover:text-primary-hover enabled:active:text-primary-active disabled:text-primary-disabled" },
-      { variant: "plain", tone: "info", className: "text-info enabled:hover:text-info-hover enabled:active:text-info-active disabled:text-info-disabled" },
-      { variant: "plain", tone: "danger", className: "text-destructive enabled:hover:text-destructive-hover enabled:active:text-destructive-active disabled:text-destructive-disabled" },
+      { variant: "plain", tone: "primary", className: "text-primary not-data-disabled:hover:text-primary-hover not-data-disabled:active:text-primary-active disabled:text-primary-disabled" },
+      { variant: "plain", tone: "info", className: "text-info not-data-disabled:hover:text-info-hover not-data-disabled:active:text-info-active disabled:text-info-disabled" },
+      { variant: "plain", tone: "danger", className: "text-destructive not-data-disabled:hover:text-destructive-hover not-data-disabled:active:text-destructive-active disabled:text-destructive-disabled" },
     ],
     defaultVariants: {
       variant: "default",

@@ -112,7 +112,8 @@
         "className=\"flex flex-wrap items-center gap-2\"",
         "function CopyPageAction",
         "function PageStepActions",
-        "size=\"icon-sm\""
+        "size=\"toolbar\"",
+        "size=\"toolbar-icon\""
       ]
     },
     {
@@ -124,6 +125,8 @@
         "<SectionLead title=\"PageActions\" description=\"页面级动作只放在标题右侧：复制、更多、上一页、下一页。\" />",
         "<PageActions",
         "doc={websiteStandardsDoc}",
+        "demo",
+        "navActions={<PageStepActions demo",
         "viewMode=\"page\"",
         "onViewModeChange={() => {}}"
       ]
@@ -224,7 +227,7 @@
       "label": "网站规范页 SectionLead 示例",
       "source": "src/App.tsx",
       "intent": "SectionLead 示例必须直接复用真实 SectionLead 组件，不再包额外说明卡结构。",
-      "scopeStart": "<SectionLead title=\"SectionLead\" description=\"用于每个内容区的小标题和一句说明，标题与说明固定 8px 间距。\" />",
+      "scopeStart": "<SectionLead title=\"SectionLead\" description=\"用于每个内容区的小标题和一句说明，标题与说明固定 4px 间距。\" />",
       "scopeEnd": "</div>",
       "requiredSourceIncludes": [
         "<SectionLead title=\"小标题\" description=\"说明文字固定 14px；组件内容紧跟在说明下面，不再额外包一层说明卡。\" />"
@@ -240,6 +243,8 @@
       "requiredSourceIncludes": [
         "<PageActions",
         "doc={websiteStandardsDoc}",
+        "demo",
+        "navActions={<PageStepActions demo",
         "viewMode=\"page\"",
         "onViewModeChange={() => {}}"
       ],

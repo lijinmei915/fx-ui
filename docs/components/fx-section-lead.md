@@ -48,7 +48,7 @@ import { SectionLead } from "@/components/fx/section-lead"
 ## 取值逻辑 {#value-rules}
 
 - `title`：章节标题，通常对应右侧目录中的页内锚点名称。
-- `description`：一句说明，可省略；标题和说明之间固定 8px。
+- `description`：一句说明，可省略；标题和说明之间固定 4px。
 - 说明文字固定使用 14px，用于内容页的二级说明，不承载正文段落。
 
 ## API {#api}

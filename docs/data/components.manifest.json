@@ -1366,7 +1366,7 @@
       ],
       "usageRules": [
         "使用 SectionLead 前必须以 src/components/fx/section-lead.tsx 为真实 API。",
-        "SectionLead 用于内容页章节标题和一句说明；标题与说明固定 8px，说明文字固定 14px。",
+        "SectionLead 用于内容页章节标题和一句说明；标题与说明固定 4px，说明文字固定 14px。",
         "不要在页面里临时手写不同的标题说明间距。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ]

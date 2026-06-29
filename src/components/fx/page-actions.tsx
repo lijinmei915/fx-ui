@@ -90,7 +90,7 @@ function CopyPageAction({
   return (
     <DropdownMenu>
       <ButtonGroup>
-        <Button variant="secondary" size="sm" onClick={onCopyPage}>
+        <Button variant="secondary" size="toolbar" onClick={onCopyPage}>
           <CopyIcon data-icon="inline-start" />
           {copyLabel}
         </Button>
@@ -98,7 +98,7 @@ function CopyPageAction({
           render={
             <Button
               variant="secondary"
-              size="icon-sm"
+              size="toolbar-icon"
               aria-label={moreLabel}
             />
           }
@@ -131,7 +131,7 @@ function PageStepActions({
     <div className="flex items-center gap-2">
       <Button
         variant="secondary"
-        size="icon-sm"
+        size="toolbar-icon"
         disabled={!previousHref}
         render={previousHref ? <a href={previousHref} aria-label={previousLabel} /> : undefined}
       >
@@ -139,7 +139,7 @@ function PageStepActions({
       </Button>
       <Button
         variant="secondary"
-        size="icon-sm"
+        size="toolbar-icon"
         disabled={!nextHref}
         render={nextHref ? <a href={nextHref} aria-label={nextLabel} /> : undefined}
       >

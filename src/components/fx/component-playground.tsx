@@ -33,16 +33,16 @@ export type ComponentPlaygroundConfig = {
 
 function PlaygroundEyebrow({ dot, zh, en }: { dot: string; zh: string; en: string }) {
   return (
-    <div className="mb-(--fx-panel-gap) flex items-center gap-(--fx-control-gap-tight) text-[max(12px,var(--fx-text-xs))] font-semibold tracking-wider text-muted-foreground uppercase">
+    <div className="mb-(--fx-panel-gap) flex items-center gap-(--fx-control-gap-tight) text-[max(12px,var(--fx-text-xs))] font-semibold tracking-wider text-[var(--fx-neutrals-10)] uppercase">
       <span className={`size-1.5 rounded-full ${dot}`} />
-      {zh} <span className="font-normal text-foreground-disabled">({en})</span>
+      {zh} <span className="font-normal text-[var(--fx-neutrals-10)]">({en})</span>
     </div>
   )
 }
 
 function PlaygroundSectionTitle({ dot, children }: { dot: string; children: ReactNode }) {
   return (
-    <div className="flex items-center gap-(--fx-control-gap-tight) text-[max(12px,var(--fx-text-xs))] font-semibold text-muted-foreground">
+    <div className="flex items-center gap-(--fx-control-gap-tight) text-[max(12px,var(--fx-text-xs))] font-semibold text-[var(--fx-neutrals-10)]">
       <span className={`size-1.5 rounded-full ${dot}`} />
       {children}
     </div>
@@ -145,11 +145,11 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
             {activeSc ? (
               <div className="mt-(--fx-panel-gap) space-y-(--fx-control-gap) rounded-xl border border-border-subtle bg-card p-(--fx-panel-padding) shadow-l1">
                 <div>
-                  <div className="mb-1 text-[max(12px,var(--fx-text-xs))] font-semibold tracking-wider text-muted-foreground uppercase">{lang === "en" ? "Intent" : "使用意图"}</div>
+                  <div className="mb-1 text-[max(12px,var(--fx-text-xs))] font-semibold tracking-wider text-[var(--fx-neutrals-10)] uppercase">{lang === "en" ? "Intent" : "使用意图"}</div>
                   <p className="text-base leading-relaxed text-foreground-secondary">{lang === "en" ? activeSc.intentEn : activeSc.intent}</p>
                 </div>
                 <div>
-                  <div className="mb-1 text-[max(12px,var(--fx-text-xs))] font-semibold tracking-wider text-muted-foreground uppercase">{lang === "en" ? "Recommended Code" : "推荐写法"}</div>
+                  <div className="mb-1 text-[max(12px,var(--fx-text-xs))] font-semibold tracking-wider text-[var(--fx-neutrals-10)] uppercase">{lang === "en" ? "Recommended Code" : "推荐写法"}</div>
                   <code className="block rounded border border-border-subtle bg-muted px-(--fx-control-px-sm) py-(--fx-control-px-xs) font-mono text-sm break-words whitespace-pre-wrap text-foreground-secondary">{code}</code>
                 </div>
               </div>

@@ -426,8 +426,8 @@ const themeTextScaleValues: Record<ThemeTextScale, Record<string, string>> = {
     "--fx-control-gap": "0.375rem",
     "--fx-panel-gap": "0.75rem",
     "--fx-panel-padding": "0.75rem",
-    "--fx-menu-text": "16px",
-    "--fx-menu-text--line-height": "24px",
+    "--fx-menu-text": "14px",
+    "--fx-menu-text--line-height": "20px",
     "--fx-sidebar-item-height": "32px",
     "--fx-sidebar-item-height-sm": "28px",
     "--fx-topbar-height": "56px",
@@ -4251,7 +4251,7 @@ function App() {
             <nav className="flex flex-col gap-[calc(var(--fx-panel-gap)*2)]">
               {docsNav.map((section) =>
               <section key={section.title} className="flex flex-col gap-(--fx-control-gap)">
-                  <div className="text-xs font-bold tracking-widest text-muted-foreground uppercase">{lang === "en" && section.titleEn ? section.titleEn : section.title}</div>
+                  <div className="text-xs font-semibold tracking-widest text-[var(--fx-neutrals-10)] uppercase">{lang === "en" && section.titleEn ? section.titleEn : section.title}</div>
                   <div className="flex flex-col gap-1">
                     {section.items.map((item) => {
                     const isActive =
@@ -4325,6 +4325,7 @@ function App() {
 
 function PageActions({
   doc,
+  demo = false,
   lang,
   navActions,
   viewMode,
@@ -4335,8 +4336,9 @@ function PageActions({
 
 
 
-}: {doc: (typeof docsByPage)[DocPage];lang: Lang;navActions: React.ReactNode;viewMode: ViewMode;onViewModeChange: (mode: ViewMode) => void;}) {
+}: {doc: (typeof docsByPage)[DocPage];demo?: boolean;lang: Lang;navActions: React.ReactNode;viewMode: ViewMode;onViewModeChange: (mode: ViewMode) => void;}) {
   const copyCurrentPage = () => {
+    if (demo) return;
     copyText(doc.markdown);
   };
 
@@ -4365,7 +4367,10 @@ function PageActions({
             {doc.path}
           </div>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => onViewModeChange(viewMode === "markdown" ? "page" : "markdown")}>
+          <DropdownMenuItem onClick={() => {
+            if (demo) return;
+            onViewModeChange(viewMode === "markdown" ? "page" : "markdown");
+          }}>
             {viewMode === "markdown" ? <FileTextIcon /> : <FileCodeIcon />}
             {viewMode === "markdown" ? uiText[lang].viewPage : uiText[lang].viewMarkdown}
           </DropdownMenuItem>
@@ -4391,6 +4396,7 @@ function PageActionsShell({
 }
 
 function PageStepActions({
+  demo = false,
   lang,
   next,
   previous
@@ -4398,12 +4404,17 @@ function PageStepActions({
 
 
 
-}: {lang: Lang;next: (typeof footerNavItems)[number] | null;previous: (typeof footerNavItems)[number] | null;}) {
+}: {demo?: boolean;lang: Lang;next: (typeof footerNavItems)[number] | null;previous: (typeof footerNavItems)[number] | null;}) {
+  const preventDemoNavigation = (event: React.MouseEvent) => {
+    if (demo) event.preventDefault();
+  };
+
   return (
     <div className="flex items-center gap-2" aria-label={lang === "en" ? "Page navigation" : "页面导航"}>
       <Button
         variant="secondary"
         size="toolbar-icon"
+        onClick={preventDemoNavigation}
         disabled={!previous}
         render={previous ? <a href={previous.href} aria-label={lang === "en" ? `Previous: ${getLabel(previous, lang)}` : `上一篇：${getLabel(previous, lang)}`} /> : undefined}>
         
@@ -4412,6 +4423,7 @@ function PageStepActions({
       <Button
         variant="secondary"
         size="toolbar-icon"
+        onClick={preventDemoNavigation}
         disabled={!next}
         render={next ? <a href={next.href} aria-label={lang === "en" ? `Next: ${getLabel(next, lang)}` : `下一篇：${getLabel(next, lang)}`} /> : undefined}>
         
@@ -5018,7 +5030,7 @@ function GettingStartedPage({
             </div>
 
             <div className="flex flex-col gap-3">
-              <SectionLead title="SectionLead" description="用于每个内容区的小标题和一句说明，标题与说明固定 8px 间距。" />
+              <SectionLead title="SectionLead" description="用于每个内容区的小标题和一句说明，标题与说明固定 4px 间距。" />
               <div className="rounded-lg border border-border-container bg-card p-5">
                 <SectionLead title="小标题" description="说明文字固定 14px；组件内容紧跟在说明下面，不再额外包一层说明卡。" />
               </div>
@@ -5029,8 +5041,9 @@ function GettingStartedPage({
               <div className="flex rounded-lg border border-border-container bg-card p-5">
                 <PageActions
                   doc={websiteStandardsDoc}
+                  demo
                   lang={lang}
-                  navActions={<PageStepActions previous={{ label: "文档规范", labelEn: "Documentation", href: "#documentation", group: "维护", groupEn: "Maintain" }} next={{ label: "检查命令", labelEn: "Checks", href: "#checks", group: "维护", groupEn: "Maintain" }} lang={lang} />}
+                  navActions={<PageStepActions demo previous={{ label: "文档规范", labelEn: "Documentation", href: "#documentation", group: "维护", groupEn: "Maintain" }} next={{ label: "检查命令", labelEn: "Checks", href: "#checks", group: "维护", groupEn: "Maintain" }} lang={lang} />}
                   viewMode="page"
                   onViewModeChange={() => {}}
                 />

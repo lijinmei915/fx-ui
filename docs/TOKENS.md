@@ -16,6 +16,28 @@ fx-ui 的组件源码来自 shadcn/ui，公司的视觉统一不靠重写组件�
 
 ## 基础架构
 
+### 0. 分层治理
+
+fx-ui 采用主流设计系统分层：**Tailwind 是表达层，FX token 是视觉真相源；企业视觉数值统一映射进 Tailwind 类体系消费**。
+
+- Tailwind 负责“怎么摆、怎么调用”：布局、栅格、间距、断点、对齐、显隐、响应式，以及统一的 class API。
+- FX token 负责“值是多少”：颜色、字号、圆角、阴影、边框粗细、动效时长。
+- 组件层负责把两者接起来：把 FX 数值挂到 Tailwind 语义类上，用统一类名消费，而不是平行维护两套视觉刻度。
+
+治理口径：
+
+| 维度 | 默认口径 | 说明 |
+|------|----------|------|
+| `spacing / layout / breakpoint` | **Tailwind 原生** | 保持与 shadcn / Tailwind 工程习惯一致，如 `gap-*`、`px-*`、`grid`、`lg:*` |
+| `color` | **FX token → Tailwind 语义类** | 必须走 `--fx-*` / 语义槽 / `bg-primary` 这类映射，不写死十六进制，不长期依赖 Tailwind 默认色 |
+| `typography` | **FX token → Tailwind 字号类** | 业务/组件正文优先 `text-fx-*`；13/15px 这类企业字号直接映射成类，不靠 Tailwind 默认字号再乘百分比硬凑 |
+| `radius` | **FX token → Tailwind 圆角类** | 组件圆角走 `--radius` 派生档，不另立一套默认刻度 |
+| `shadow` | **FX token → Tailwind 阴影类** | 统一 `shadow-l1/l2/l3`，不用 Tailwind 默认 `shadow-sm/md/lg` |
+| `border-width` | **FX token / 主题能力** | 组件默认描边规格跟随主题，不在调用处临时另选一套 |
+| `motion` | **FX token / 约定档位** | 动效时长跟随主题或规范档位，不在单页随意发明时长 |
+
+一句话收口：**Tailwind 管形式，FX 管数值；FX 的值映射进 Tailwind 里用。**
+
 ### 1. Primitive Token
 
 公司原始视觉值，只在 token 真相源里出现。
@@ -137,7 +159,21 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 ## 排版（字号 / 字重 / 字体 · 企业 web 规范）
 
-来源：企业 Figma **web 字体规范**（fx-ui 是 web 库，以 web 规范为准；移动端字号另有一套，见 DEC-004）。业务页面/组件优先用 `text-fx-*` 字号；`fx` 是公司命名空间，避免和 Tailwind 默认 `text-sm/text-base/...` 混淆。主题面板的“文字比例”会同时映射 `text-fx-*` 与常用 Tailwind `text-*`，保证旧页面和文档页也能跟随缩放。
+来源：企业 Figma **web 字体规范**（fx-ui 是 web 库，以 web 规范为准；移动端字号另有一套，见 DEC-004）。这里的 `text-fx-*` 不是脱离 Tailwind 的第二套写法，而是**把企业字号 token 映射进 Tailwind 类体系后的调用口径**。Tailwind 默认 `text-sm/text-base/...` 继续保留兼容，但不作为企业字号正式推荐。
+
+**推荐命名方向（对 AI / 开发更友好）**：长期主推荐口径应逐步收敛到**语义类名**，让人和 AI 都按用途选字级，而不是按 px 猜。
+
+| 推荐语义类 | 当前兼容映射 | 字号/行高 | 场景 |
+|------|------|------|------|
+| `text-page-title` | `text-fx-18` | 18 / 28 | 页面/详情标题 |
+| `text-section-title` | `text-fx-15` | 15 / 22 | 模块/卡片/组件标题 |
+| `text-body` | `text-fx-13` | 13 / 18 | 默认正文、菜单、列表、表单 |
+| `text-caption` | `text-fx-12` | 12 / 18 | 提示信息、说明文字 |
+
+**当前阶段口径**：
+- 新治理规则先以**语义命名为长期目标**。
+- 现有实现仍保留 `text-fx-*`，作为稳定兼容层，避免一次性大迁移。
+- 真正落实现实时，可让语义类映射到同一组底层 token；主题面板继续只改 token，不改组件调用代码。
 
 **字号 + 行高**（默认正文 = 13）：
 
@@ -149,6 +185,8 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `text-fx-12` | 12 / 18 | regular | 提示信息、说明文字 |
 
 **行高随字号 token 自带**（上表"字号/行高"列即定义），用 `text-fx-*` 自动带上对应行高；`text-base` 走 Tailwind 默认 1.5。正文/说明**不要手写 `leading-7`/`leading-8`** 把行距抬到 2.0+——那样换行太散，不符合主流正文行高（约 1.5）。
+
+> 治理建议：`text-fx-*` 更像“数值档位名”，适合过渡与底层映射；`text-body / text-caption / text-section-title / text-page-title` 更适合作为面向 AI、开发和文档的长期主推荐写法。
 
 **字重**：`font-normal`(400) 常规·正文 / `font-medium`(500) 中等·标签·按钮·菜单 / `font-semibold`(**600**) 次强调·小标题/卡片标题（500 偏轻、700 偏重时的中间档）/ `font-bold`(**700**) 加粗·页/区块标题·强调（见 DEC-028）。
 
@@ -176,7 +214,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 ## 阴影
 
-阴影表达元素「离页面多高」（elevation），主题里的「阴影强度」只提供 **无 / 轻微 / 弥散** 三档递进；不把复古硬阴影放进 shadow level，复古属于独立视觉风格，不属于主流 elevation 强度。阴影只在浮层/下拉/可交互表面谨慎使用，不作装饰。来源：Figma「图层样式」。**禁用 Tailwind 内置 `shadow-sm/md/lg`**——未映射公司 token，会漂。
+阴影表达元素「离页面多高」（elevation），主题里的「阴影强度」提供 **无 / 低 / 中 / 高** 四档递进；不把复古硬阴影放进 shadow level，复古属于独立视觉风格，不属于主流 elevation 强度。阴影只在浮层/下拉/可交互表面谨慎使用，不作装饰。来源：Figma「图层样式」。**禁用 Tailwind 内置 `shadow-sm/md/lg`**——未映射公司 token，会漂。
 
 | Token | 值 | 场景 |
 |------|-----|------|
@@ -186,7 +224,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `shadow-l1-up` | `0 -2px 6px` | 向上弹出的浮层（底部工具栏菜单） |
 
 **计算方式**：每档 = `0 {y}px {blur}px var(--fx-shadow-color)`，spread 恒为 0。
-- **颜色总开关** `--fx-shadow-color = oklch(from var(--fx-neutrals-20) l c h / .15)`：从最深中性灰（带品牌色相微染）派生 + 15% 透明，**跟随色板**而非写死纯黑；四档共用，调深浅/色板一处生效。
+- **颜色总开关** `--fx-shadow-color = oklch(from var(--fx-neutrals-20) l c h / .12)`：从最深中性灰（带品牌色相微染）派生 + 12% 透明，**跟随色板**而非写死纯黑；四档共用，调深浅/色板一处生效。
 - **y 偏移**：每升一层 +2px（2/4/6），光从上方来、越高落得越远。
 - **blur**：约每层翻倍（6/12/24），越高越柔越散。
 - 靠几何（y + blur）拉开层级，**不靠加深颜色**，浮层保持淡而中性；`shadow-l1-up` 是 L1 的 y 取负的方向变体。

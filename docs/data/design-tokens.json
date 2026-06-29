@@ -1417,7 +1417,7 @@
     },
     {
       "name": "--fx-shadow-color",
-      "value": "oklch(from var(--fx-neutrals-20) l c h / 0.15)",
+      "value": "oklch(from var(--fx-neutrals-20) l c h / 0.12)",
       "category": "palette",
       "usage": ""
     },

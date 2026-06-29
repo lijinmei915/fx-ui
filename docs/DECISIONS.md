@@ -380,10 +380,29 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 
 - **日期**：2026-06-29
 - **状态**：已决定
-- **决定**：主题定制面板的「阴影强度」只保留 `none / soft / ambient` 三档：无阴影、轻微、弥散。删除 `retro` 复古硬阴影，不再补第四项凑数。
+- **决定**：主题定制面板的「阴影强度」只保留主流 elevation 递进，不混入复古硬阴影。当前收口为 `none / low / medium / high` 四档：无、低、中、高。
 - **原因**：主流设计系统把 shadow 作为 elevation / layer token 管理，表达层级高度和弥散程度；复古硬阴影是独立视觉风格，不是阴影强度。把它放在 Shadow Level 里会让主题能力不正交，也容易误导用户。
-- **兼容**：旧配置里若存过 `shadowLevel: "retro"`，运行时回落到 `ambient`。
+- **兼容**：旧配置里若存过 `shadowLevel: "retro"`，运行时回落到 `high`。
 - **相关文件**：`src/App.tsx`、`docs/TOKENS.md`
+
+### DEC-034: Tailwind 作为表达层，FX token 作为视觉真相源
+
+- **日期**：2026-06-29
+- **状态**：已决定
+- **决定**：fx-ui 采用主流设计系统分层：**Tailwind 负责表达“怎么调用/怎么排版”，FX token 负责定义“具体值是什么”；企业视觉数值统一映射进 Tailwind 类体系消费**。不再把 Tailwind 默认视觉刻度与 FX 视觉刻度当成两套并列体系。
+- **分层口径**：
+  1. **布局/结构层**：继续优先用 Tailwind 原生工具类，如 `flex` / `grid` / `gap-*` / `px-*` / `col-span-*` / 响应式断点。
+  2. **视觉语义层**：颜色、字号、圆角、阴影、边框粗细、动效时长，优先收口到 FX token，再映射到 Tailwind 类或语义槽消费。
+  3. **组件层**：组件默认样式只引用语义 token 或已治理过的工具类，不在调用处混入另一套默认视觉刻度。
+- **放弃**：① 同一语义长期同时允许 `text-sm` 与 `text-fx-13`、`shadow-md` 与 `shadow-l1` 这类双轨并存；② 为了“灵活”在组件调用处临时选 Tailwind 默认视觉值；③ 再造一层“FX 双写法”与 Tailwind 平行存在。
+- **原因**：主流体系（Tailwind theme variables / shadcn semantic tokens）都是“token 作为真相源，utility 作为调用 API”。如果默认视觉刻度双轨并存，后续换肤、缩放、统一治理都会漂；而布局类保留 Tailwind 原生，则能继续保持工程效率和 open-code 的可读性。
+- **补充说明**：像 `13px`、`15px` 这类企业字号，不走“在 Tailwind 默认字号基础上再乘百分比”的长期方案，而是直接定义 token，再映射成 Tailwind 类。短期兼容可继续用 `text-fx-13`、`text-fx-15`；长期更推荐收敛到 `text-body`、`text-section-title` 这类不歧义的项目语义类。百分比推导可临时试验，但不作为治理基线。
+- **影响**：
+  1. `spacing`、栅格、断点继续沿用 Tailwind 原生体系。
+  2. `color / typography / radius / shadow / border-width / motion` 统一按 FX 口径治理。
+  3. 旧页面若仍使用 Tailwind 默认视觉类（如 `text-xl`、`shadow-md`），只作为过渡兼容，不视为新的推荐写法；新增代码优先走 FX 对应 token / 项目语义类。
+  4. 主题面板这类“全局主题能力”必须只改 FX token，不以局部类覆盖代替。
+- **相关文件**：`docs/TOKENS.md`、`docs/LAYOUTS.md`、`theme/fx-theme.css`、`src/App.tsx`
 
 ## 相关文件
 

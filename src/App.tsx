@@ -274,7 +274,7 @@ type ThemeFont = "sans" | "serif" | "mono" | "geometric";
 type ThemeTextScale = "compact" | "standard" | "spacious";
 type ThemeRadius = "none" | "sm" | "md" | "lg" | "full";
 type ThemeBorderWidth = "none" | "thin" | "medium" | "thick";
-type ThemeShadowLevel = "none" | "soft" | "ambient";
+type ThemeShadowLevel = "none" | "low" | "medium" | "high";
 type ThemeAnimationStyle = "none" | "fast" | "smooth" | "playful";
 
 type ThemeConfig = {
@@ -305,7 +305,7 @@ const defaultThemeConfig: ThemeConfig = {
   textScale: "standard",
   borderRadius: "md",
   borderWidth: "thin",
-  shadowLevel: "soft",
+  shadowLevel: "low",
   animationStyle: "smooth"
 };
 
@@ -363,7 +363,15 @@ const themeTextScaleValues: Record<ThemeTextScale, Record<string, string>> = {
     "--text-fx-15": "14px",
     "--text-fx-15--line-height": "20px",
     "--text-fx-18": "16px",
-    "--text-fx-18--line-height": "24px"
+    "--text-fx-18--line-height": "24px",
+    "--text-caption": "11px",
+    "--text-caption--line-height": "16px",
+    "--text-body": "12px",
+    "--text-body--line-height": "17px",
+    "--text-section-title": "14px",
+    "--text-section-title--line-height": "20px",
+    "--text-page-title": "16px",
+    "--text-page-title--line-height": "24px"
   },
   standard: {
     "--text-fx-11": "11px",
@@ -375,7 +383,15 @@ const themeTextScaleValues: Record<ThemeTextScale, Record<string, string>> = {
     "--text-fx-15": "15px",
     "--text-fx-15--line-height": "22px",
     "--text-fx-18": "18px",
-    "--text-fx-18--line-height": "28px"
+    "--text-fx-18--line-height": "28px",
+    "--text-caption": "12px",
+    "--text-caption--line-height": "18px",
+    "--text-body": "13px",
+    "--text-body--line-height": "18px",
+    "--text-section-title": "15px",
+    "--text-section-title--line-height": "22px",
+    "--text-page-title": "18px",
+    "--text-page-title--line-height": "28px"
   },
   spacious: {
     "--text-fx-11": "12px",
@@ -387,7 +403,15 @@ const themeTextScaleValues: Record<ThemeTextScale, Record<string, string>> = {
     "--text-fx-15": "17px",
     "--text-fx-15--line-height": "25px",
     "--text-fx-18": "20px",
-    "--text-fx-18--line-height": "30px"
+    "--text-fx-18--line-height": "30px",
+    "--text-caption": "13px",
+    "--text-caption--line-height": "20px",
+    "--text-body": "15px",
+    "--text-body--line-height": "22px",
+    "--text-section-title": "17px",
+    "--text-section-title--line-height": "25px",
+    "--text-page-title": "20px",
+    "--text-page-title--line-height": "30px"
   }
 };
 
@@ -399,14 +423,21 @@ const themeShadowValues: Record<ThemeShadowLevel, Record<string, string>> = {
     "--fx-shadow-l3": "none",
     "--fx-shadow-l1-up": "none"
   },
-  soft: {
-    "--fx-shadow-color": "oklch(from var(--fx-neutrals-20) l c h / 0.15)",
+  low: {
+    "--fx-shadow-color": "oklch(from var(--fx-neutrals-20) l c h / 0.12)",
     "--fx-shadow-l1": "0px 2px 6px 0px var(--fx-shadow-color)",
     "--fx-shadow-l2": "0px 4px 12px 0px var(--fx-shadow-color)",
     "--fx-shadow-l3": "0px 6px 24px 0px var(--fx-shadow-color)",
     "--fx-shadow-l1-up": "0px -2px 6px 0px var(--fx-shadow-color)"
   },
-  ambient: {
+  medium: {
+    "--fx-shadow-color": "oklch(from var(--fx-neutrals-20) l c h / 0.18)",
+    "--fx-shadow-l1": "0px 4px 10px -2px var(--fx-shadow-color)",
+    "--fx-shadow-l2": "0px 8px 20px -6px var(--fx-shadow-color)",
+    "--fx-shadow-l3": "0px 14px 36px -10px var(--fx-shadow-color)",
+    "--fx-shadow-l1-up": "0px -4px 12px -4px var(--fx-shadow-color)"
+  },
+  high: {
     "--fx-shadow-color": "oklch(from var(--fx-neutrals-20) l c h / 0.22)",
     "--fx-shadow-l1": "0px 6px 18px -8px var(--fx-shadow-color)",
     "--fx-shadow-l2": "0px 14px 36px -14px var(--fx-shadow-color)",
@@ -456,9 +487,10 @@ const themeBorderWidthOptions: {id: ThemeBorderWidth;label: string;desc: string;
 
 
 const themeShadowOptions: {id: ThemeShadowLevel;label: string;desc: string;}[] = [
-{ id: "none", label: "无阴影", desc: "平面" },
-{ id: "soft", label: "轻微", desc: "精致" },
-{ id: "ambient", label: "弥散", desc: "立体" }];
+{ id: "none", label: "无", desc: "平面" },
+{ id: "low", label: "低", desc: "贴面" },
+{ id: "medium", label: "中", desc: "浮起" },
+{ id: "high", label: "高", desc: "悬浮" }];
 
 
 const themeAnimationOptions: {id: ThemeAnimationStyle;label: string;desc: string;}[] = [
@@ -520,7 +552,7 @@ function normalizeThemeConfig(value: string | null): ThemeConfig {
       customColorHex: selectedCustomColor,
       customColorIndex,
       customColors: normalizedCustomColors,
-      shadowLevel: parsed.shadowLevel === "retro" ? "ambient" : (parsed.shadowLevel as ThemeShadowLevel | undefined) ?? defaultThemeConfig.shadowLevel
+      shadowLevel: parsed.shadowLevel === "retro" ? "high" : (parsed.shadowLevel as ThemeShadowLevel | undefined) ?? defaultThemeConfig.shadowLevel
     };
   } catch {
     return defaultThemeConfig;
@@ -1987,7 +2019,7 @@ const avatarScenarioExamples = [
   group: "size",
   spec: "24px",
   intent: "列表项、评论区的用户头像。",
-  rule: "高密度区域用，配 text-fx-12 缩写。",
+  rule: "高密度区域用，配 text-caption 缩写。",
   code: `<Avatar size="sm"><AvatarFallback>张</AvatarFallback></Avatar>`
 },
 {
@@ -2686,7 +2718,7 @@ const linkScenarioExamples = [
   group: "size",
   spec: "12px",
   intent: "辅助说明、表格内的紧凑链接。",
-  rule: "高密度区域用，配 text-fx-12。",
+  rule: "高密度区域用，配 text-caption。",
   code: `<Link size="sm" href="/x">小链接</Link>`
 },
 {
@@ -3131,10 +3163,10 @@ const seedColors = [
 
 // 企业 web 字号（Figma web 字体规范）：字号 + 行高，默认正文 13
 const typeSizeTokens = [
-{ name: "text-fx-18", value: "18px / 28px", cls: "text-fx-18", usage: "详情页标题（配 bold）", usageEn: "Detail page title (with bold)" },
-{ name: "text-fx-15", value: "15px / 22px", cls: "text-fx-15", usage: "模块/卡片/组件标题（regular 或 bold 区分）", usageEn: "Module / card / component title" },
-{ name: "text-fx-13", value: "13px / 18px", cls: "text-fx-13", usage: "默认正文 — 菜单、列表、表单、大面积文案", usageEn: "Default body — menus, lists, forms" },
-{ name: "text-fx-12", value: "12px / 18px", cls: "text-fx-12", usage: "提示信息、说明文字", usageEn: "Hints, helper text" }];
+{ name: "text-page-title", value: "18px / 28px", cls: "text-page-title", usage: "详情页标题（配 bold）", usageEn: "Detail page title (with bold)" },
+{ name: "text-section-title", value: "15px / 22px", cls: "text-section-title", usage: "模块/卡片/组件标题（regular 或 bold 区分）", usageEn: "Module / card / component title" },
+{ name: "text-body", value: "13px / 18px", cls: "text-body", usage: "默认正文 — 菜单、列表、表单、大面积文案", usageEn: "Default body — menus, lists, forms" },
+{ name: "text-caption", value: "12px / 18px", cls: "text-caption", usage: "提示信息、说明文字", usageEn: "Hints, helper text" }];
 
 
 // 字重（企业规范：Regular 400 / Medium 500 / Bold 700）
@@ -3487,20 +3519,20 @@ function ThemeCustomizerPanel({
         <SheetHeader className="p-6 pb-0">
           <div className="flex items-center gap-2">
             <SettingsIcon className="size-5 text-muted-foreground" />
-            <SheetTitle className="text-fx-18 font-semibold">{lang === "en" ? "Theme Customizer" : "主题定制"}</SheetTitle>
+            <SheetTitle className="text-page-title font-semibold">{lang === "en" ? "Theme Customizer" : "主题定制"}</SheetTitle>
           </div>
         </SheetHeader>
 
         <div className="flex min-h-0 flex-1 flex-col gap-8 overflow-y-auto p-6 pb-12">
           <section className="flex flex-col gap-3">
-            <ThemePanelHeading icon={<SunIcon />} title={lang === "en" ? "Appearance" : "外观模式 (Appearance)"} />
+            <ThemePanelHeading icon={<SunIcon />} title={lang === "en" ? "Appearance" : "外观模式"} />
             <div className="flex gap-1 rounded-lg bg-muted p-1">
               <button
                 type="button"
                 aria-pressed={config.mode === "light"}
                 onClick={() => setConfigValue("mode", "light")}
                 className={cn(
-                  "flex flex-1 items-center justify-center gap-2 rounded-md px-2 py-1.5 text-fx-13 font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                  "flex flex-1 items-center justify-center gap-2 rounded-md px-2 py-1.5 text-body font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
                   config.mode === "light" ? "bg-card text-foreground shadow-l1" : "text-muted-foreground hover:text-foreground"
                 )}>
                 
@@ -3512,7 +3544,7 @@ function ThemeCustomizerPanel({
                 aria-pressed={config.mode === "dark"}
                 onClick={() => setConfigValue("mode", "dark")}
                 className={cn(
-                  "flex flex-1 items-center justify-center gap-2 rounded-md px-2 py-1.5 text-fx-13 font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                  "flex flex-1 items-center justify-center gap-2 rounded-md px-2 py-1.5 text-body font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
                   config.mode === "dark" ? "bg-card text-foreground shadow-l1" : "text-muted-foreground hover:text-foreground"
                 )}>
                 
@@ -3523,7 +3555,7 @@ function ThemeCustomizerPanel({
           </section>
 
           <section className="flex flex-col gap-3">
-            <ThemePanelHeading icon={<PaletteIcon />} title={lang === "en" ? "Brand Color" : "主色调 (Brand Color)"} />
+            <ThemePanelHeading icon={<PaletteIcon />} title={lang === "en" ? "Brand Color" : "主色调"} />
             <div className="flex flex-wrap items-center gap-2">
               {themeColorOptions.map((item) =>
               <button
@@ -3622,7 +3654,7 @@ function ThemeCustomizerPanel({
           </section>
 
           <section className="flex flex-col gap-3">
-            <ThemePanelHeading icon={<TypographyIcon />} title={lang === "en" ? "Typography" : "字体主题 (Typography)"} />
+            <ThemePanelHeading icon={<TypographyIcon />} title={lang === "en" ? "Typography" : "字体主题"} />
             <div className="grid grid-cols-2 gap-2">
               {themeFontOptions.map((item) =>
               <ThemeChoiceButton
@@ -3640,7 +3672,7 @@ function ThemeCustomizerPanel({
 
           <ThemeChoiceSection
             icon={<TextSizeIcon />}
-            title={lang === "en" ? "Text Scale" : "文字比例 (Text Scale)"}
+            title={lang === "en" ? "Text Scale" : "文字比例"}
             options={themeTextScaleOptions}
             value={config.textScale}
             columns={3}
@@ -3649,7 +3681,7 @@ function ThemeCustomizerPanel({
 
           <ThemeChoiceSection
             icon={<BoltIcon />}
-            title={lang === "en" ? "Animation Style" : "动效风格 (Animation Style)"}
+            title={lang === "en" ? "Animation Style" : "动效风格"}
             options={themeAnimationOptions}
             value={config.animationStyle}
             columns={4}
@@ -3657,7 +3689,7 @@ function ThemeCustomizerPanel({
           
 
           <section className="flex flex-col gap-3">
-            <ThemePanelHeading icon={<RadiusIcon />} title={lang === "en" ? "Border Radius" : "圆角大小 (Border Radius)"} />
+            <ThemePanelHeading icon={<RadiusIcon />} title={lang === "en" ? "Border Radius" : "圆角大小"} />
             <div className="grid grid-cols-5 gap-2">
               {themeRadiusOptions.map((item) =>
               <button
@@ -3666,7 +3698,7 @@ function ThemeCustomizerPanel({
                 aria-pressed={config.borderRadius === item.id}
                 onClick={() => setConfigValue("borderRadius", item.id)}
                 className={cn(
-                  "flex h-8 items-center justify-center rounded-lg border px-1 text-fx-12 font-semibold outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                  "flex h-8 items-center justify-center rounded-lg border px-1 text-caption font-semibold outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
                   config.borderRadius === item.id ? "border-foreground bg-muted text-foreground" : "border-border bg-surface text-muted-foreground hover:border-border-strong hover:text-foreground"
                 )}>
                 
@@ -3678,7 +3710,7 @@ function ThemeCustomizerPanel({
 
           <ThemeChoiceSection
             icon={<BorderStyleIcon />}
-            title={lang === "en" ? "Border Width" : "边框粗细 (Border Width)"}
+            title={lang === "en" ? "Border Width" : "边框粗细"}
             options={themeBorderWidthOptions}
             value={config.borderWidth}
             columns={4}
@@ -3687,7 +3719,7 @@ function ThemeCustomizerPanel({
 
           <ThemeChoiceSection
             icon={<ShadowIcon />}
-            title={lang === "en" ? "Shadow Level" : "阴影强度 (Shadow Level)"}
+            title={lang === "en" ? "Shadow Level" : "阴影强度"}
             options={themeShadowOptions}
             value={config.shadowLevel}
             columns={4}
@@ -3701,7 +3733,7 @@ function ThemeCustomizerPanel({
 
 function ThemePanelHeading({ icon, title }: {icon: React.ReactNode;title: string;}) {
   return (
-    <h3 className="flex items-center gap-2 text-fx-13 font-semibold text-foreground">
+    <h3 className="flex items-center gap-2 text-body font-semibold text-foreground">
       <span className="flex size-4 items-center justify-center text-muted-foreground [&_svg]:size-4">{icon}</span>
       {title}
     </h3>);
@@ -3735,7 +3767,7 @@ function ThemeChoiceButton({
         selected ? "border-foreground bg-muted text-foreground" : "border-border bg-surface text-muted-foreground hover:border-border-strong hover:text-foreground"
       )}>
       
-      <span className="text-fx-12 font-semibold">{label}</span>
+      <span className="text-caption font-semibold">{label}</span>
       <span className="mt-0.5 text-[10px] text-muted-foreground">{desc}</span>
     </button>);
 
@@ -4079,7 +4111,7 @@ function App() {
               className="hidden h-7 w-48 max-w-full shrink items-center gap-1.5 rounded-md border border-border bg-muted/40 px-2 text-left outline-none transition-colors hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 lg:flex xl:w-64 2xl:w-[22rem]">
               
               <SearchIcon className="size-3.5 text-muted-foreground" />
-              <span className="h-7 min-w-0 flex-1 content-center truncate text-fx-12 font-normal text-muted-foreground">{uiText[lang].search}</span>
+              <span className="h-7 min-w-0 flex-1 content-center truncate text-caption font-normal text-muted-foreground">{uiText[lang].search}</span>
               <kbd className="inline-flex h-5 items-center gap-1 rounded border border-border-subtle bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">⌘ K</kbd>
             </button>
 
@@ -4100,7 +4132,7 @@ function App() {
               className="hidden md:inline-flex"
               onClick={() => setLang(lang === "zh" ? "en" : "zh")}>
               
-              <span className="text-fx-12 font-normal leading-none">{lang === "zh" ? "EN" : "中"}</span>
+              <span className="text-caption font-normal leading-none">{lang === "zh" ? "EN" : "中"}</span>
             </Button>
 
             <Button
@@ -4899,7 +4931,7 @@ function GettingStartedPage({
                     <ChevronDownIcon data-icon="inline-end" />
                   </CollapsibleTrigger>
                   <CollapsibleContent className="pt-3">
-                    <div className="grid gap-3 text-fx-13 text-muted-foreground md:grid-cols-2">
+                    <div className="grid gap-3 text-body text-muted-foreground md:grid-cols-2">
                       <div className="rounded-lg bg-muted p-4">
                         <p className="mb-2 font-medium text-foreground">取值逻辑</p>
                         <div className="flex flex-col gap-1.5">
@@ -5759,22 +5791,24 @@ function ScenarioTable({ rows, filters, lang, layout = "table", elevated = false
           <div key={r.key} className={`overflow-hidden border border-border bg-card ${cardShell}`}>
               <div className="flex items-center justify-between gap-3 border-b border-border-subtle px-4 py-2.5">
                 <span className="font-medium">{r.title}</span>
-                {r.spec ? <span className="text-fx-12 text-muted-foreground">{r.spec}</span> : null}
+                {r.spec ? <span className="text-caption text-muted-foreground">{r.spec}</span> : null}
               </div>
               <div className="overflow-x-auto p-5">{r.preview}</div>
-              <div className="grid gap-x-8 gap-y-3 border-t border-border-subtle p-4 md:grid-cols-[1fr_1fr_minmax(0,1.2fr)]">
-                <div className="flex flex-col gap-1">
-                  <div className="text-fx-12 font-medium text-muted-foreground">{lang === "en" ? "Intent" : "使用意图"}</div>
-                  <div className="leading-6 text-muted-foreground">{r.intent}</div>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <div className="text-fx-12 font-medium text-muted-foreground">{lang === "en" ? "Constraint" : "约束"}</div>
-                  <div className="leading-6 text-muted-foreground">{r.constraint}</div>
+              <div className="grid grid-cols-[minmax(0,1fr)_minmax(320px,1.2fr)] gap-4 border-t border-border-subtle p-4">
+                <div className="grid gap-3">
+                  <div className="flex flex-col gap-1">
+                    <div className="text-caption font-medium text-muted-foreground">{lang === "en" ? "Intent" : "使用意图"}</div>
+                    <div className="leading-6 text-muted-foreground">{r.intent}</div>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <div className="text-caption font-medium text-muted-foreground">{lang === "en" ? "Constraint" : "约束"}</div>
+                    <div className="leading-6 text-muted-foreground">{r.constraint}</div>
+                  </div>
                 </div>
                 <div className="flex min-w-0 flex-col gap-1">
-                  <div className="text-fx-12 font-medium text-muted-foreground">{lang === "en" ? "Recommended API" : "推荐写法"}</div>
+                  <div className="text-caption font-medium text-muted-foreground">{lang === "en" ? "Recommended API" : "推荐写法"}</div>
                   <div className="rounded-lg bg-muted">
-                    <pre className="px-3 py-2 text-fx-12 break-words whitespace-pre-wrap"><code>{r.code}</code></pre>
+                    <pre className="px-3 py-2 text-caption break-words whitespace-pre-wrap"><code>{r.code}</code></pre>
                   </div>
                 </div>
               </div>
@@ -5805,12 +5839,12 @@ function ScenarioTable({ rows, filters, lang, layout = "table", elevated = false
 
                 <TableCell className="h-auto py-3 pl-4 align-top"><span className="font-medium">{r.title}</span></TableCell>
                 <TableCell className="h-auto py-3 align-top"><div className="max-w-[400px]">{r.preview}</div></TableCell>
-                {hasSpec ? <TableCell className="h-auto py-3 align-top text-foreground"><div className="w-max text-fx-12">{r.spec ?? "—"}</div></TableCell> : null}
+                {hasSpec ? <TableCell className="h-auto py-3 align-top text-foreground"><div className="w-max text-caption">{r.spec ?? "—"}</div></TableCell> : null}
                 <TableCell className="h-auto py-3 align-top whitespace-normal text-muted-foreground"><div className="max-w-[240px] break-words leading-6">{r.intent}</div></TableCell>
                 <TableCell className="h-auto py-3 align-top whitespace-normal text-muted-foreground"><div className="max-w-[260px] break-words leading-6">{r.constraint}</div></TableCell>
                 <TableCell className="h-auto py-3 pr-4 align-top">
                   <div className="max-w-[360px] rounded-lg bg-muted">
-                    <pre className="px-3 py-2 text-fx-12 whitespace-pre-wrap break-words"><code>{r.code}</code></pre>
+                    <pre className="px-3 py-2 text-caption whitespace-pre-wrap break-words"><code>{r.code}</code></pre>
                   </div>
                 </TableCell>
               </TableRow>
@@ -6017,7 +6051,7 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         "这些例子记录工程师和 AI 生成代码最容易犯的错误。"} />
 
         
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-2 gap-4">
           <Card elevated>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base text-foreground">
@@ -6653,7 +6687,7 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           <p className="mt-2 text-base text-muted-foreground">{lang === "en" ? "24 columns, column gap = 16px (gap-4). Span by /24 with col-span-[n]." : "24 列基准，列间距 = 16px（gap-4）。分栏用 col-span-[n]（按 24 计），可 1/24 自由组合。"}</p>
         </div>
         <div>
-          <p className="mb-2 text-fx-13 font-medium">{lang === "en" ? "24 columns (16px gap)" : "24 列栅格（列间距 16px）"}</p>
+          <p className="mb-2 text-body font-medium">{lang === "en" ? "24 columns (16px gap)" : "24 列栅格（列间距 16px）"}</p>
           <div className="rounded-lg border border-border-container bg-card p-5">
             <div className="grid grid-cols-[repeat(24,minmax(0,1fr))] gap-1">
               {Array.from({ length: 24 }).map((_, i) =>
@@ -6665,12 +6699,12 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
         {/* 等分栅格 */}
         <div>
-          <p className="mb-2 text-fx-13 font-medium">{lang === "en" ? "Equal columns" : "等分栅格"}</p>
+          <p className="mb-2 text-body font-medium">{lang === "en" ? "Equal columns" : "等分栅格"}</p>
           <div className="flex flex-col gap-2 rounded-lg border border-border bg-card p-5">
             {[1, 2, 3, 4, 6].map((n) =>
             <div key={n} className="grid gap-4" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
                 {Array.from({ length: n }).map((_, i) =>
-              <div key={i} className="flex h-9 items-center justify-center rounded bg-muted text-fx-12 text-muted-foreground">{`1/${n}`}</div>
+              <div key={i} className="flex h-9 items-center justify-center rounded bg-muted text-caption text-muted-foreground">{`1/${n}`}</div>
               )}
               </div>
             )}
@@ -6679,12 +6713,12 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
         {/* 混合布局 */}
         <div>
-          <p className="mb-2 text-fx-13 font-medium">{lang === "en" ? "Mixed (by /24)" : "混合布局（按 24 分）"}</p>
+          <p className="mb-2 text-body font-medium">{lang === "en" ? "Mixed (by /24)" : "混合布局（按 24 分）"}</p>
           <div className="flex flex-col gap-2 rounded-lg border border-border bg-card p-5">
             {[[6, 18], [8, 16], [6, 12, 6], [18, 6]].map((row, ri) =>
             <div key={ri} className="grid grid-cols-[repeat(24,minmax(0,1fr))] gap-4">
                 {row.map((span, ci) =>
-              <div key={ci} className="flex h-9 items-center justify-center rounded bg-muted text-fx-12 text-muted-foreground" style={{ gridColumn: `span ${span} / span ${span}` }}>{span}/24</div>
+              <div key={ci} className="flex h-9 items-center justify-center rounded bg-muted text-caption text-muted-foreground" style={{ gridColumn: `span ${span} / span ${span}` }}>{span}/24</div>
               )}
               </div>
             )}
@@ -6693,7 +6727,7 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
         {/* 对齐方式 */}
         <div>
-          <p className="mb-2 text-fx-13 font-medium">{lang === "en" ? "Alignment" : "对齐方式"}</p>
+          <p className="mb-2 text-body font-medium">{lang === "en" ? "Alignment" : "对齐方式"}</p>
           <div className="flex flex-col gap-2 rounded-lg border border-border bg-card p-5">
             {([
             { just: "justify-start", zh: "整体左对齐", en: "Left" },
@@ -6702,7 +6736,7 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             { just: "justify-between", zh: "左右齐飞（两端）", en: "Justify" }] as
             const).map((a) =>
             <div key={a.just} className="flex items-center gap-3 rounded bg-muted/40 p-2">
-                <span className="w-28 shrink-0 text-fx-12 text-muted-foreground">{lang === "en" ? a.en : a.zh}</span>
+                <span className="w-28 shrink-0 text-caption text-muted-foreground">{lang === "en" ? a.en : a.zh}</span>
                 <div className={`flex flex-1 ${a.just} gap-2`}>
                   {[0, 1, 2].map((i) => <div key={i} className="h-7 w-60 rounded bg-muted" />)}
                 </div>
@@ -6712,9 +6746,9 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         </div>
 
         {/* 偏移 / 容器 / 嵌套 / 进阶 */}
-        <div className="rounded-lg border border-border bg-card p-5 text-fx-13 text-muted-foreground">
-          <p><span className="font-medium text-foreground">{lang === "en" ? "Offset" : "偏移"}</span>：{lang === "en" ? "leave columns before content with " : "内容前留空用 "}<code className="rounded bg-muted px-1 text-fx-12">col-start-[n]</code></p>
-          <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Container" : "容器/版心"}</span>：{lang === "en" ? "max-width + page padding — " : "内容最大宽度 + 页面外边距 — "}<code className="rounded bg-muted px-1 text-fx-12">max-w-7xl</code> + <code className="rounded bg-muted px-1 text-fx-12">px-4 lg:px-8</code></p>
+        <div className="rounded-lg border border-border bg-card p-5 text-body text-muted-foreground">
+          <p><span className="font-medium text-foreground">{lang === "en" ? "Offset" : "偏移"}</span>：{lang === "en" ? "leave columns before content with " : "内容前留空用 "}<code className="rounded bg-muted px-1 text-caption">col-start-[n]</code></p>
+          <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Container" : "容器/版心"}</span>：{lang === "en" ? "max-width + page padding — " : "内容最大宽度 + 页面外边距 — "}<code className="rounded bg-muted px-1 text-caption">max-w-7xl</code> + <code className="rounded bg-muted px-1 text-caption">px-4 lg:px-8</code></p>
           <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Nesting" : "嵌套"}</span>：{lang === "en" ? "a grid can nest another grid; child re-splits by /24." : "栅格内可再嵌栅格，子栅格按 1/24 重新划分。"}</p>
           <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Advanced (Semi/Ant)" : "进阶（对齐 Semi/Ant）"}</span>：{lang === "en" ? "gutter accepts [horizontal, vertical] and responsive {sm,md,lg…}; recommended gutter = 16+8n. Reorder via order; offset/push/pull for fine positioning." : "列间距 gutter 支持 [水平, 垂直] 与响应式对象 {sm,md,lg…}；推荐取值 16+8n。需要改顺序用 order；offset/push/pull 做精细位移。"}</p>
         </div>
@@ -6741,22 +6775,22 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             <TableBody>
               {[["sm", "640px", "大手机/小平板"], ["md", "768px", "平板"], ["lg", "1024px", "笔记本（后台默认）"], ["xl", "1280px", "桌面"], ["2xl", "1536px", "大屏"]].map(([p, w, d]) =>
               <TableRow key={p}>
-                  <TableCell className="pl-4"><code className="rounded bg-muted px-1.5 py-0.5 text-fx-12">{p}:</code></TableCell>
-                  <TableCell className="text-fx-13 text-muted-foreground">{w}</TableCell>
-                  <TableCell className="pr-4 text-fx-13 text-muted-foreground">{lang === "en" ? "" : d}</TableCell>
+                  <TableCell className="pl-4"><code className="rounded bg-muted px-1.5 py-0.5 text-caption">{p}:</code></TableCell>
+                  <TableCell className="text-body text-muted-foreground">{w}</TableCell>
+                  <TableCell className="pr-4 text-body text-muted-foreground">{lang === "en" ? "" : d}</TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
         </div>
         <div className="rounded-lg border border-border-container bg-card p-5">
-          <p className="mb-3 text-fx-13 text-muted-foreground">
+          <p className="mb-3 text-body text-muted-foreground">
             {lang === "en" ?
-            <>Example: <code className="rounded bg-muted px-1 text-fx-12">grid-cols-1 lg:grid-cols-3</code> — 1 column below 1024px, 3 columns at ≥1024px.</> :
-            <>例子：<code className="rounded bg-muted px-1 text-fx-12">grid-cols-1 lg:grid-cols-3</code> —— 窗口 &lt; 1024px 时一列，≥ 1024px 自动变三列。拖动窗口可看到它"断"。</>}
+            <>Example: <code className="rounded bg-muted px-1 text-caption">grid-cols-1 lg:grid-cols-3</code> — 1 column below 1024px, 3 columns at ≥1024px.</> :
+            <>例子：<code className="rounded bg-muted px-1 text-caption">grid-cols-1 lg:grid-cols-3</code> —— 窗口 &lt; 1024px 时一列，≥ 1024px 自动变三列。拖动窗口可看到它"断"。</>}
           </p>
           <div className="grid grid-cols-1 gap-2 lg:grid-cols-3">
-            {[0, 1, 2].map((i) => <div key={i} className="flex h-12 items-center justify-center rounded bg-muted text-fx-12 text-muted-foreground">{i + 1}</div>)}
+            {[0, 1, 2].map((i) => <div key={i} className="flex h-12 items-center justify-center rounded bg-muted text-caption text-muted-foreground">{i + 1}</div>)}
           </div>
         </div>
       </section>
@@ -7075,16 +7109,16 @@ function LayoutPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           {containers.map((c) =>
           <div key={c.n} className="rounded-lg border border-border bg-card p-4">
               <div className="mb-3 flex items-baseline gap-2">
-                <span className="text-fx-15 font-semibold">{lang === "en" ? `Style ${c.en}` : `样式${c.n}`}</span>
-                <span className="text-fx-12 text-muted-foreground">{lang === "en" ? c.descEn : c.desc}</span>
+                <span className="text-section-title font-semibold">{lang === "en" ? `Style ${c.en}` : `样式${c.n}`}</span>
+                <span className="text-caption text-muted-foreground">{lang === "en" ? c.descEn : c.desc}</span>
               </div>
               {c.wire}
             </div>
           )}
         </div>
         {/* 容器默认尺寸 */}
-        <div className="rounded-lg border border-border bg-card p-5 text-fx-13 leading-7 text-muted-foreground">
-          <p className="mb-1 text-fx-13 font-medium text-foreground">{lang === "en" ? "Default container sizes" : "容器默认尺寸"}</p>
+        <div className="rounded-lg border border-border bg-card p-5 text-body leading-7 text-muted-foreground">
+          <p className="mb-1 text-body font-medium text-foreground">{lang === "en" ? "Default container sizes" : "容器默认尺寸"}</p>
           <p>{lang === "en" ? "Frame (header/sider/content/footer) uses flex; the 24-col grid only governs content inside." : "框架（头/侧/内容/底）用 flex 拼；24 列栅格只管内容区内部的分栏。"}</p>
           <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Header" : "顶栏"}</span> 56px · <span className="font-medium text-foreground">{lang === "en" ? "Sider" : "侧栏"}</span> {lang === "en" ? "240 / collapsed 64" : "展开 240 / 收起 64"} · <span className="font-medium text-foreground">{lang === "en" ? "Footer" : "底栏"}</span> 48px · <span className="font-medium text-foreground">{lang === "en" ? "Content padding" : "内容内边距"}</span> {lang === "en" ? "16 (mobile) / 24 (desktop)" : "移动 16 / 桌面 24"}</p>
           <p className="mt-1">{lang === "en" ? "Sider auto-collapses to the 64px icon rail below lg (1024px)." : "视口 < lg(1024px) 时侧栏自动收起为 64px 图标栏（或转抽屉）。"}</p>
@@ -7219,11 +7253,11 @@ function TokensRadiusPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
               "核心档由唯一基准值按固定 ±2px 步进派生（shadcn 标准做法）；大容器档用 Tailwind 默认值。"}
             </p>
           </div>
-          <div className="rounded-lg border border-border bg-card p-5 text-fx-13 text-muted-foreground">
-            <p><span className="font-medium text-foreground">{lang === "en" ? "Base" : "基准"}</span>：<code className="rounded bg-muted px-1 text-fx-12">--radius = 0.625rem（10px）</code>{lang === "en" ? "，equals rounded-lg." : "，即 rounded-lg。"}</p>
-            <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Core ±2px step" : "核心档 ±2px 步进"}</span>：sm = <code className="rounded bg-muted px-1 text-fx-12">base − 4px</code>，md = <code className="rounded bg-muted px-1 text-fx-12">base − 2px</code>，lg = <code className="rounded bg-muted px-1 text-fx-12">base</code>，xl = <code className="rounded bg-muted px-1 text-fx-12">base + 4px</code>{lang === "en" ? "。Changing the base shifts the whole scale together." : "。改基准值整套等量平移，差值恒定可预测。"}</p>
+          <div className="rounded-lg border border-border bg-card p-5 text-body text-muted-foreground">
+            <p><span className="font-medium text-foreground">{lang === "en" ? "Base" : "基准"}</span>：<code className="rounded bg-muted px-1 text-caption">--radius = 0.625rem（10px）</code>{lang === "en" ? "，equals rounded-lg." : "，即 rounded-lg。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Core ±2px step" : "核心档 ±2px 步进"}</span>：sm = <code className="rounded bg-muted px-1 text-caption">base − 4px</code>，md = <code className="rounded bg-muted px-1 text-caption">base − 2px</code>，lg = <code className="rounded bg-muted px-1 text-caption">base</code>，xl = <code className="rounded bg-muted px-1 text-caption">base + 4px</code>{lang === "en" ? "。Changing the base shifts the whole scale together." : "。改基准值整套等量平移，差值恒定可预测。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Large steps" : "大容器档"}</span>：2xl = 16px，3xl = 24px，4xl = 32px{lang === "en" ? " (Tailwind defaults)." : "（Tailwind 默认固定值）。"}</p>
-            <p className="mt-1"><span className="font-medium text-foreground">full</span>：<code className="rounded bg-muted px-1 text-fx-12">9999px</code>{lang === "en" ? "，a pill/circle, not derived from the base." : "，胶囊/圆形，不参与基准派生。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">full</span>：<code className="rounded bg-muted px-1 text-caption">9999px</code>{lang === "en" ? "，a pill/circle, not derived from the base." : "，胶囊/圆形，不参与基准派生。"}</p>
             <p className="mt-3 border-t border-border pt-3 font-medium text-foreground">{lang === "en" ? "Why derive instead of hard-coded values?" : "为什么用 calc 派生，不直接写固定值？"}</p>
             <p className="mt-1">{lang === "en" ?
               "① Single knob — change --radius and the whole scale shifts together, so a rounder/squarer brand is one edit. ② Constant step — fixed ±2px keeps neighboring steps evenly spaced, no drift like someone writing 7 and someone 9. ③ Theme-able. Hard-coded values read more directly but lose the master knob, so the doc shows the computed px too." :
@@ -7299,9 +7333,9 @@ function TokensSpacingPage({ actions, lang }: {actions: React.ReactNode;lang: La
               "每个间距 = 4px 基准单位 × 档位数字，构成 4 点网格。"}
             </p>
           </div>
-          <div className="rounded-lg border border-border bg-card p-5 text-fx-13 text-muted-foreground">
-            <p><span className="font-medium text-foreground">{lang === "en" ? "Base unit" : "基准单位"}</span>：<code className="rounded bg-muted px-1 text-fx-12">--spacing = 0.25rem（4px）</code>{lang === "en" ? " (Tailwind default)." : "（Tailwind 默认）。"}</p>
-            <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Formula" : "公式"}</span>：<code className="rounded bg-muted px-1 text-fx-12">gap-n = calc(var(--spacing) * n)</code>{lang === "en" ? "，e.g. gap-4 = 4×4 = 16px, gap-6 = 4×6 = 24px." : "，如 gap-4 = 4×4 = 16px、gap-6 = 4×6 = 24px。"}</p>
+          <div className="rounded-lg border border-border bg-card p-5 text-body text-muted-foreground">
+            <p><span className="font-medium text-foreground">{lang === "en" ? "Base unit" : "基准单位"}</span>：<code className="rounded bg-muted px-1 text-caption">--spacing = 0.25rem（4px）</code>{lang === "en" ? " (Tailwind default)." : "（Tailwind 默认）。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Formula" : "公式"}</span>：<code className="rounded bg-muted px-1 text-caption">gap-n = calc(var(--spacing) * n)</code>{lang === "en" ? "，e.g. gap-4 = 4×4 = 16px, gap-6 = 4×6 = 24px." : "，如 gap-4 = 4×4 = 16px、gap-6 = 4×6 = 24px。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "4-point grid" : "4 点网格"}</span>：{lang === "en" ? "all spacing snaps to multiples of 4px, so rhythm stays even and predictable across pages." : "所有间距都落在 4px 的倍数上，页面节奏统一、可预测，不出现 5/7/13 这种随手值。"}</p>
             <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Rule" : "用法"}</span>：{lang === "en" ? "use Tailwind spacing utilities (gap/p/m/space) — never hand-write arbitrary px. Same knob as padding/margin/gap." : "一律用 Tailwind 间距工具类（gap / p / m / space），不手写任意 px；padding、margin、gap 共用这一套刻度。"}</p>
           </div>
@@ -7373,8 +7407,8 @@ function TokensShadowPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
               "每档 = 0 {y}px {blur}px var(--fx-shadow-color)，spread 恒为 0。随层级升高只增大 y 偏移和 blur，颜色不变。"}
             </p>
           </div>
-          <div className="rounded-lg border border-border bg-card p-5 text-fx-13 text-muted-foreground">
-            <p><span className="font-medium text-foreground">{lang === "en" ? "Color knob" : "颜色总开关"}</span>：<code className="rounded bg-muted px-1 text-fx-12">--fx-shadow-color = oklch(from --fx-neutrals-20 l c h / .15)</code>{lang === "en" ? "，derived from the darkest neutral (brand-tinted) at 15% alpha — follows the palette, not hard-coded black; one place to adjust." : "，从最深中性灰（带品牌色相）派生 + 15% 透明，跟随色板而非写死纯黑；四档共用、一处调深浅。"}</p>
+          <div className="rounded-lg border border-border bg-card p-5 text-body text-muted-foreground">
+            <p><span className="font-medium text-foreground">{lang === "en" ? "Color knob" : "颜色总开关"}</span>：<code className="rounded bg-muted px-1 text-caption">--fx-shadow-color = oklch(from --fx-neutrals-20 l c h / .12)</code>{lang === "en" ? "，derived from the darkest neutral (brand-tinted) at 12% alpha — follows the palette, not hard-coded black; one place to adjust." : "，从最深中性灰（带品牌色相）派生 + 12% 透明，跟随色板而非写死纯黑；四档共用、一处调深浅。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Y-offset" : "y 偏移"}</span>：{lang === "en" ? "drop distance, +2px per level — 2 / 4 / 6 (light from top, higher floats drop further)." : "投影下移距离，每升一层 +2px——2 / 4 / 6（光从上方来，越高落得越远）。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">Blur</span>：{lang === "en" ? "softness, roughly doubles per level — 6 / 12 / 24 (higher = softer, more diffuse)." : "模糊半径，约每层翻倍——6 / 12 / 24（越高越柔、越散）。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">Spread</span>：0{lang === "en" ? " — never expand, keeps shadows clean." : "——不外扩，避免脏重。"}</p>
@@ -7470,7 +7504,7 @@ function TokensMotionPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
               </TableBody>
             </Table>
           </div>
-          <div className="rounded-lg border border-border bg-card p-5 text-fx-13 text-muted-foreground">
+          <div className="rounded-lg border border-border bg-card p-5 text-body text-muted-foreground">
             <p><span className="font-medium text-foreground">{lang === "en" ? "Short" : "短促"}</span>：{lang === "en" ? "100–200ms; UI motion is feedback, not spectacle." : "100–200ms 区间；界面动效是反馈，不是表演。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "State driven" : "状态驱动"}</span>：{lang === "en" ? "enter/exit triggered by data-open / data-closed / data-state, not manual timers." : "进入/退出由 data-open / data-closed / data-state 触发，不手动计时。"}</p>
             <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Rule" : "用法"}</span>：{lang === "en" ? "compose fade / zoom / slide via tw-animate-css utilities; don't invent one-off keyframes per page." : "用 tw-animate-css 工具类组合 fade / zoom / slide，不为单页临时写关键帧动画。"}</p>
@@ -7503,12 +7537,12 @@ function TokensLayerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
           </div>
           {/* 堆叠示例：档位越高越压在上面 */}
           <div className="rounded-lg border border-border bg-card p-5">
-            <p className="mb-3 text-fx-12 text-muted-foreground">{lang === "en" ? "Higher value stacks on top (closer to you)." : "数字越大，越压在上面（越靠近你）。"}</p>
+            <p className="mb-3 text-caption text-muted-foreground">{lang === "en" ? "Higher value stacks on top (closer to you)." : "数字越大，越压在上面（越靠近你）。"}</p>
             <div className="relative h-32">
               {layerTokens.map((row, i) =>
               <div
                 key={row.name}
-                className="absolute flex h-12 w-48 items-center rounded-lg border border-border bg-card px-3 text-fx-12 font-medium shadow-l1"
+                className="absolute flex h-12 w-48 items-center rounded-lg border border-border bg-card px-3 text-caption font-medium shadow-l1"
                 style={{ top: `${i * 18}px`, left: `${i * 48}px`, zIndex: 10 + i * 10 }}>
                 
                   {row.name}
@@ -7546,7 +7580,7 @@ function TokensLayerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
               {lang === "en" ? "Why a few fixed tiers instead of arbitrary numbers." : "为什么用几个固定档位，而不是随手写数字。"}
             </p>
           </div>
-          <div className="rounded-lg border border-border bg-card p-5 text-fx-13 leading-relaxed text-muted-foreground">
+          <div className="rounded-lg border border-border bg-card p-5 text-body leading-relaxed text-muted-foreground">
             <p><span className="font-medium text-foreground">{lang === "en" ? "From low to high" : "从低到高"}</span>：{lang === "en" ? "page content → local controls → fixed/stuck headers → overlays. The bigger the number, the closer to you (on top)." : "页面内容 → 局部控件 → 固定/吸顶的头部 → 弹层。数字越大，离你越近、压在越上面。"}</p>
             <p className="mt-2"><span className="font-medium text-foreground">{lang === "en" ? "Overlays all use the top tier" : "弹层都用最高一档"}</span>：{lang === "en" ? "dialogs, dropdowns, popovers, sheets and tooltips all sit at the top tier; which one shows on top depends on who opens later, not on a bigger number." : "对话框、下拉、气泡、抽屉、提示框都用最高一档（z-50）；谁后打开谁在上，不靠更大的数字。"}</p>
             <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Rule" : "怎么用"}</span>：{lang === "en" ? "stick to these few tiers; if something gets covered, fit it into an existing tier — don't invent a bigger number." : "只用这几档；万一被挡住，把它归到现有的某一档，别去编一个更大的数字（不然以后谁都往上加，越堆越乱）。"}</p>
@@ -9290,7 +9324,7 @@ function TableBusinessDemo() {
   return (
     <div className="overflow-x-auto rounded-xl bg-card ring-1 ring-border-subtle">
       {selected.size > 0 &&
-      <div className="flex items-center gap-3 border-b border-border-subtle bg-muted px-3 py-2 text-fx-13">
+      <div className="flex items-center gap-3 border-b border-border-subtle bg-muted px-3 py-2 text-body">
           <span className="text-muted-foreground">已选 <span className="font-medium text-foreground">{selected.size}</span> 项</span>
           <Button size="sm" variant="outline">批量导出</Button>
           <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())}>取消选择</Button>
@@ -9476,7 +9510,7 @@ function TableEmptyDemo() {
             <TableCell colSpan={4}>
               <div className="flex flex-col items-center justify-center gap-1 py-12 text-muted-foreground">
                 <DatabaseIcon className="size-7 opacity-40" />
-                <span className="text-fx-13">暂无数据</span>
+                <span className="text-body">暂无数据</span>
               </div>
             </TableCell>
           </TableRow>
@@ -9554,12 +9588,12 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           <TabsContent value="basic" className="flex flex-col gap-6 pt-4">
             <div className="flex flex-col gap-2">
               <h3 className="text-base font-medium">基础表格</h3>
-              <p className="text-fx-13 text-muted-foreground">作为表格最常见的形态展示数据。</p>
+              <p className="text-body text-muted-foreground">作为表格最常见的形态展示数据。</p>
               <TableBasicDemo />
             </div>
             <div className="flex flex-col gap-2">
               <h3 className="text-base font-medium">带表尾汇总</h3>
-              <p className="text-fx-13 text-muted-foreground">用 TableFooter 展示一组明细的合计。</p>
+              <p className="text-body text-muted-foreground">用 TableFooter 展示一组明细的合计。</p>
               <div className="overflow-x-auto rounded-xl bg-card ring-1 ring-border-subtle">
                 <Table>
                   <TableHeader>
@@ -9594,7 +9628,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           </TabsContent>
 
           <TabsContent value="density" className="flex flex-col gap-6 pt-4">
-            <p className="text-fx-13 text-muted-foreground">为满足不同用户需求，表头保持 32px 高度不变，表体定义了三种行高尺寸：紧凑(28px)、舒适(36px)、宽松(42px)。</p>
+            <p className="text-body text-muted-foreground">为满足不同用户需求，表头保持 32px 高度不变，表体定义了三种行高尺寸：紧凑(28px)、舒适(36px)、宽松(42px)。</p>
             <div className="flex flex-col gap-2">
               <h3 className="text-base font-medium">紧凑(28px)</h3>
               <TableDensityDemo density="compact" />
@@ -9612,7 +9646,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           <TabsContent value="interactive" className="flex flex-col gap-6 pt-4">
             <div className="flex flex-col gap-2">
               <h3 className="text-base font-medium">业务列表（可选中 · 可排序 · 分页）</h3>
-              <p className="text-fx-13 text-muted-foreground">勾选行出现批量操作条；点「金额」表头切换升/降序；底部主流页码分页。</p>
+              <p className="text-body text-muted-foreground">勾选行出现批量操作条；点「金额」表头切换升/降序；底部主流页码分页。</p>
               <TableBusinessDemo />
             </div>
           </TabsContent>
@@ -9620,17 +9654,17 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           <TabsContent value="advanced" className="flex flex-col gap-6 pt-4">
             <div className="flex flex-col gap-2">
               <h3 className="text-base font-medium">吸顶表头 + 固定列 + 列操作菜单（排序/冻结/筛选可用）</h3>
-              <p className="text-fx-13 text-muted-foreground">点「金额/修改时间」表头排序；hover「客户名称/负责人」表头出 ⋮「冻结到此列」（固定该列及左侧所有列，Excel 冻结窗格模型）；hover「客户级别」表头出 ⋮ 按级别筛选。横向滚动看冻结效果。</p>
+              <p className="text-body text-muted-foreground">点「金额/修改时间」表头排序；hover「客户名称/负责人」表头出 ⋮「冻结到此列」（固定该列及左侧所有列，Excel 冻结窗格模型）；hover「客户级别」表头出 ⋮ 按级别筛选。横向滚动看冻结效果。</p>
               <TableAdvancedDemo />
             </div>
             <div className="flex flex-col gap-2">
               <h3 className="text-base font-medium">加载态</h3>
-              <p className="text-fx-13 text-muted-foreground">数据加载中用骨架行占位，保持表格结构不跳动。</p>
+              <p className="text-body text-muted-foreground">数据加载中用骨架行占位，保持表格结构不跳动。</p>
               <TableLoadingDemo />
             </div>
             <div className="flex flex-col gap-2">
               <h3 className="text-base font-medium">空状态</h3>
-              <p className="text-fx-13 text-muted-foreground">无数据时居中提示「暂无数据」。</p>
+              <p className="text-body text-muted-foreground">无数据时居中提示「暂无数据」。</p>
               <TableEmptyDemo />
             </div>
           </TabsContent>
@@ -11944,7 +11978,7 @@ function MItem({ icon, label, selected, checked, arrow, danger, disabled, onClic
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "flex min-h-8 w-full items-center gap-1.5 rounded-md px-1.5 text-left text-fx-13 outline-none select-none [&>svg]:size-4 [&>svg]:shrink-0",
+        "flex min-h-8 w-full items-center gap-1.5 rounded-md px-1.5 text-left text-body outline-none select-none [&>svg]:size-4 [&>svg]:shrink-0",
         disabled ?
         "cursor-not-allowed text-foreground-disabled" :
         danger ?
@@ -12003,7 +12037,7 @@ function SearchMenuDemo() {
   return (
     <StaticMenu>
       <div className="p-1">
-        <div className="flex h-7 items-center gap-1.5 rounded-lg border border-input px-2 text-fx-13">
+        <div className="flex h-7 items-center gap-1.5 rounded-lg border border-input px-2 text-body">
           <SearchIcon className="size-3.5 text-muted-foreground" />
           <input
             value={q}
@@ -12016,7 +12050,7 @@ function SearchMenuDemo() {
       {list.length ?
       list.map((n) => <MItem key={n} label={n} />) :
 
-      <div className="px-1.5 py-6 text-center text-fx-13 text-muted-foreground">无匹配结果</div>
+      <div className="px-1.5 py-6 text-center text-body text-muted-foreground">无匹配结果</div>
       }
     </StaticMenu>);
 
@@ -12063,7 +12097,7 @@ function DropdownMenuOverview({ lang }: {lang: Lang;}) {
           {/* 有搜索 */}
           <StaticMenu>
             <div className="p-1">
-              <div className="flex h-7 items-center gap-1.5 rounded-lg border border-input px-2 text-fx-13 text-foreground-disabled">
+              <div className="flex h-7 items-center gap-1.5 rounded-lg border border-input px-2 text-body text-foreground-disabled">
                 <SearchIcon className="size-3.5" /> 搜索
               </div>
             </div>
@@ -13553,7 +13587,7 @@ const customerColumns: Column<TplCustomer>[] = [
 { key: "progress", header: "跟进进度", headClassName: "w-40", sortable: true, sortValue: (c) => c.progress, menuActions: tplColMenu, cell: (c) =>
   <span className="flex items-center gap-2">
       <Progress value={c.progress} tone={c.progressTone} className="w-[60px]" trackClassName="h-1" />
-      <span className="w-9 shrink-0 text-fx-12 tabular-nums text-muted-foreground">{c.progress}%</span>
+      <span className="w-9 shrink-0 text-caption tabular-nums text-muted-foreground">{c.progress}%</span>
     </span>
 },
 { key: "phone", header: "电话", menuActions: tplColMenu, cell: (c) => <span className="inline-flex items-center gap-1.5 tabular-nums"><span>{c.flag}</span>{c.phone}</span> },
@@ -13646,7 +13680,7 @@ function CustomerListTemplate({ actions, lang }: {actions: React.ReactNode;lang:
 
               {/* 分页：底栏整体内缩 12（分割线与内容不顶卡片边，对齐左侧 gutter）*/}
               <div className="mx-3 flex shrink-0 items-center justify-between border-t border-border-subtle py-2.5">
-                <span className="text-fx-12 text-muted-foreground">已选 {selected.size} 项</span>
+                <span className="text-caption text-muted-foreground">已选 {selected.size} 项</span>
                 <Pagination page={1} total={193} pageSize={20} onPageChange={() => {}} />
               </div>
       </CrmAppShell>

@@ -40,7 +40,7 @@ function Badge({
       data-slot="badge"
       className={cn(
         // 角标数字按主流惯例比正文更小（10px），是字号 token 体系外的刻意单点破例：
-        // 通知数字塞进 16px 小角标，最小的 text-fx-12 也偏挤，故此处例外。
+        // 通知数字塞进 16px 小角标，最小的 text-sm 也偏挤，故此处例外。
         "pointer-events-none z-10 inline-flex items-center justify-center rounded-full text-[10px] leading-none font-medium tabular-nums ring-2 ring-background select-none",
         dot ? "size-2" : "h-4 min-w-4 px-1",
         toneClass,

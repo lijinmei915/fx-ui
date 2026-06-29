@@ -96,10 +96,12 @@ assertIncludes(
   "Button playground",
   errors
 )
-// 文字尺寸档必须在调试台里可切换；图标尺寸属于 API 表和 Markdown 契约，不强制塞进调试台。
+// 常规文字尺寸档必须在调试台里可切换；工具栏 / 图标专用尺寸属于 API 表和 Markdown 契约，不强制塞进调试台。
 assertIncludes(
   appSource,
-  sizes.filter((size) => !size.startsWith("icon") && size !== "default").map((size) => `value: "${size}"`),
+  sizes
+    .filter((size) => !size.startsWith("icon") && !size.startsWith("toolbar") && size !== "default")
+    .map((size) => `value: "${size}"`),
   "Button playground",
   errors
 )

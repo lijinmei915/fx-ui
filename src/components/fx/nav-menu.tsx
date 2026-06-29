@@ -8,7 +8,7 @@ import { ChevronDownIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon,
 
 // 导航菜单（单面板侧边栏，1:1 参照 Figma「AI交互探索」侧边栏，token 全用 fx-theme）。
 // 结构（自上而下）：头部(标题 + 视图名 + 展开) → 搜索行(搜索框 + 新增) → 菜单树(滚动) → 底部(设置 + 收起)。
-// 尺寸：展开 200px、收起 48px；圆角 8(rounded-lg)、内边距 12(p-3)、块间距 8(gap-2)；菜单项 p-2 rounded-lg、图标 16、文字 13(text-fx-13)。
+// 尺寸：展开 200px、收起 48px；圆角 8(rounded-lg)、内边距 12(p-3)、块间距 8(gap-2)；菜单项 p-2 rounded-lg、图标 16、文字 13(text-base)。
 // 状态：默认 / 悬停(bg-muted) / 选中(bg-accent 浅品牌底 + 中粗)。嵌套子项左缩进 26px。收起态居中、仅图标、用气泡补全文案。
 
 type DivProps = { children?: ReactNode; className?: string }
@@ -56,7 +56,7 @@ function NavRailItem({
       data-slot="nav-rail-item"
       data-active={!boxed && active ? "" : undefined}
       className={cn(
-        "flex flex-col items-center justify-center gap-1 text-[11px] leading-[14px] text-foreground outline-none transition-colors cursor-pointer",
+        "flex flex-col items-center justify-center gap-1 text-xs leading-4 text-foreground outline-none transition-colors cursor-pointer",
         "focus-visible:ring-2 focus-visible:ring-ring/50",
         "[&_svg:not([class*='size-'])]:size-[18px] [&_svg]:shrink-0",
         boxed
@@ -121,11 +121,11 @@ function NavMenu({ children, className, collapsed, collapseMode = "rail" }: DivP
 function NavMenuHeader({ title, viewName, collapsed, className }: { title: string; viewName?: string; collapsed?: boolean; className?: string }) {
   return (
     <div data-slot="nav-menu-header" className={cn("flex shrink-0 items-center gap-1", collapsed ? "justify-center" : "", className)}>
-      <span className={cn("truncate text-fx-15 font-medium text-foreground", !collapsed && "flex-1")}>{title}</span>
+      <span className={cn("truncate text-lg font-medium text-foreground", !collapsed && "flex-1")}>{title}</span>
       {!collapsed && viewName && (
         <button
           type="button"
-          className="flex items-center gap-0.5 text-fx-13 text-foreground outline-none cursor-pointer focus-visible:underline"
+          className="flex items-center gap-0.5 text-base text-foreground outline-none cursor-pointer focus-visible:underline"
         >
           <span className="max-w-[76px] truncate">{viewName}</span>
           <ChevronDownIcon className="size-3" />
@@ -152,7 +152,7 @@ function NavMenuSearch({
   return (
     <div data-slot="nav-menu-search" className={cn("flex shrink-0 items-center gap-2", className)}>
       <div className="relative flex-1">
-        <Input placeholder={placeholder} className="h-7 pr-7 text-fx-13" />
+        <Input placeholder={placeholder} className="h-7 pr-7 text-base" />
         <SearchIcon className="pointer-events-none absolute top-1/2 right-2 size-3.5 -translate-y-1/2 text-muted-foreground" />
       </div>
       {onAdd && (
@@ -184,7 +184,7 @@ function NavMenuGroupLabel({ children, className, collapsed }: DivProps & { coll
     )
   }
   return (
-    <div data-slot="nav-menu-group-label" className={cn("px-2 pt-3 pb-1 text-fx-13 text-muted-foreground select-none", className)}>
+    <div data-slot="nav-menu-group-label" className={cn("px-2 pt-3 pb-1 text-base text-muted-foreground select-none", className)}>
       {children}
     </div>
   )
@@ -225,7 +225,7 @@ function NavMenuItem({
       data-slot="nav-menu-item"
       data-active={active ? "" : undefined}
       className={cn(
-        "flex shrink-0 items-center gap-1 rounded-lg text-fx-13 outline-none transition-colors cursor-pointer",
+        "flex shrink-0 items-center gap-1 rounded-lg text-base outline-none transition-colors cursor-pointer",
         "text-foreground not-data-active:hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/50",
         "data-active:bg-accent data-active:font-medium data-active:[&_svg]:text-primary",
         // 收起：居中 36px 正方块（选中底色呈方形）；展开：占满整行、左对齐，嵌套缩进。

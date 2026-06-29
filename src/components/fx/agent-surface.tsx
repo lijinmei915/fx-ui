@@ -104,7 +104,7 @@ function AgentSurface({
         <div data-slot="agent-surface-header" className="flex flex-col gap-1">
           {surface.title ? <h3 className="text-base font-semibold text-foreground">{surface.title}</h3> : null}
           {surface.description ? (
-            <p className="text-fx-13 leading-6 text-muted-foreground">{surface.description}</p>
+            <p className="text-base leading-6 text-muted-foreground">{surface.description}</p>
           ) : null}
         </div>
       ) : null}
@@ -122,7 +122,7 @@ function AgentSurface({
         </div>
       ) : (
         <Card data-slot="agent-surface-empty">
-          <CardContent className="text-fx-13 text-muted-foreground">{emptyText}</CardContent>
+          <CardContent className="text-base text-muted-foreground">{emptyText}</CardContent>
         </Card>
       )}
     </section>
@@ -142,7 +142,7 @@ function AgentSurfaceBlockView({
     return (
       <p
         data-slot="agent-surface-text"
-        className={block.tone === "muted" ? "text-fx-13 leading-7 text-muted-foreground" : "text-fx-13 leading-7 text-foreground"}
+        className={block.tone === "muted" ? "text-base leading-7 text-muted-foreground" : "text-base leading-7 text-foreground"}
       >
         {block.text}
       </p>
@@ -164,7 +164,7 @@ function AgentSurfaceBlockView({
                 {primaryInitial}
               </div>
               <div className="min-w-0 flex-1">
-                <div className="text-[11px] text-muted-foreground">{primary.label}</div>
+                <div className="text-xs text-muted-foreground">{primary.label}</div>
                 <div className="truncate text-[16px] font-semibold text-foreground">{primary.value}</div>
               </div>
             </div>
@@ -275,7 +275,7 @@ function AgentSurfaceBlockView({
 
   return (
     <Card data-slot="agent-surface-unsupported">
-      <CardContent className="flex items-start gap-3 text-fx-13 text-muted-foreground">
+      <CardContent className="flex items-start gap-3 text-base text-muted-foreground">
         <AlertCircleIcon className="mt-0.5 shrink-0" />
         <div>
           <div className="font-medium text-foreground">不支持的 Agent UI 块</div>
@@ -359,7 +359,7 @@ function AgentCardEyebrow({
   return (
     <div className="flex items-center gap-1.5">
       <span className={`size-1.5 shrink-0 rounded-full ${dotClassName}`} aria-hidden />
-      <span className={`text-[11px] font-medium tracking-[0.06em] ${labelClassName}`}>{label}</span>
+      <span className={`text-xs font-medium tracking-[0.06em] ${labelClassName}`}>{label}</span>
     </div>
   )
 }

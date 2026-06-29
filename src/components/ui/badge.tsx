@@ -39,10 +39,8 @@ function Badge({
     <span
       data-slot="badge"
       className={cn(
-        // 角标数字按主流惯例比正文更小（10px），是字号 token 体系外的刻意单点破例：
-        // 通知数字塞进 16px 小角标，最小的 text-fx-12 也偏挤，故此处例外。
-        "pointer-events-none z-10 inline-flex items-center justify-center rounded-full text-[10px] leading-none font-medium tabular-nums ring-2 ring-background select-none",
-        dot ? "size-2" : "h-4 min-w-4 px-1",
+        "pointer-events-none z-10 inline-flex items-center justify-center rounded-full text-xs leading-none font-medium tabular-nums ring-2 ring-background select-none",
+        dot ? "size-2" : "h-[calc(var(--fx-control-xs-height)-8px)] min-w-[calc(var(--fx-control-xs-height)-8px)] px-1",
         toneClass,
         // 中心锚定载体右上角顶点（参考 MUI/Ant）：任意宽度角标位置一致、向外对称展开，不越宽越内盖
         children ? "absolute top-0 right-0 translate-x-1/2 -translate-y-1/2" : "",

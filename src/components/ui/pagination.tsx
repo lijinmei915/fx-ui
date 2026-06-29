@@ -60,14 +60,14 @@ function Pagination({
       {...props}
     >
       {showTotal && (
-        <span className="mr-2 text-fx-12 text-muted-foreground">共 {total} 条</span>
+        <span className="mr-2 text-sm text-muted-foreground">共 {total} 条</span>
       )}
       <Button variant="outline" size="icon-sm" disabled={page <= 1} onClick={() => go(page - 1)} aria-label="上一页">
         <ChevronLeftIcon />
       </Button>
       {items.map((it, i) =>
         it === "ellipsis" ? (
-          <span key={`ellipsis-${i}`} data-slot="pagination-ellipsis" className="flex size-7 items-center justify-center text-muted-foreground" aria-hidden>
+          <span key={`ellipsis-${i}`} data-slot="pagination-ellipsis" className="flex size-(--fx-control-icon-sm) items-center justify-center text-muted-foreground" aria-hidden>
             <MoreHorizontalIcon className="size-4" />
           </span>
         ) : (

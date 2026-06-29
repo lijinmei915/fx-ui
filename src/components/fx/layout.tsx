@@ -63,7 +63,7 @@ function LayoutFooter({ children, className }: DivProps) {
   return (
     <footer
       data-slot="layout-footer"
-      className={cn("flex h-12 shrink-0 items-center justify-center border-t border-border bg-card px-4 text-fx-12 text-muted-foreground lg:px-6", className)}
+      className={cn("flex h-12 shrink-0 items-center justify-center border-t border-border bg-card px-4 text-sm text-muted-foreground lg:px-6", className)}
     >
       {children}
     </footer>

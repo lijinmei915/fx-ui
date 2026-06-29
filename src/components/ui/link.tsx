@@ -21,7 +21,7 @@ const linkVariants = cva(
         always: "not-data-disabled:underline",
       },
       size: {
-        sm: "text-fx-12",
+        sm: "text-sm",
         default: "text-sm",
         lg: "text-base",
       },

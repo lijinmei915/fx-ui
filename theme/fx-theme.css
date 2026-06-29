@@ -601,19 +601,48 @@
   --font-sans: var(--font-sans);
   --font-heading: var(--font-sans);
 
-  /* 企业 web 字体规范（Figma）：字号 + 行高成对。默认正文 13。
-     长期主推荐语义类：text-{caption/body/section-title/page-title}；
-     text-fx-{12/13/15/18} 暂保留为兼容别名，避免一次性迁移全部组件。
-     层级：18 详情页标题 / 15 模块·卡片标题 / 13 默认正文 / 12 提示说明 / 11 分组小标题等辅助。 */
-  --text-fx-11: 11px;  --text-fx-11--line-height: 16px;
-  --text-fx-12: 12px;  --text-fx-12--line-height: 18px;
-  --text-fx-13: 13px;  --text-fx-13--line-height: 18px;
-  --text-fx-15: 15px;  --text-fx-15--line-height: 22px;
-  --text-fx-18: 18px;  --text-fx-18--line-height: 28px;
-  --text-caption: var(--text-fx-12); --text-caption--line-height: var(--text-fx-12--line-height);
-  --text-body: var(--text-fx-13); --text-body--line-height: var(--text-fx-13--line-height);
-  --text-section-title: var(--text-fx-15); --text-section-title--line-height: var(--text-fx-15--line-height);
-  --text-page-title: var(--text-fx-18); --text-page-title--line-height: var(--text-fx-18--line-height);
+  /* 企业 web 字体规范收口到 Tailwind 字号类。
+     Tailwind 的 text-* 始终映射到一层 fx 运行时变量，主题面板改的是 --fx-text-*，
+     避免被编译成固定像素后无法实时响应。 */
+  --fx-text-xs: 12px;  --fx-text-xs--line-height: 18px;
+  --fx-text-sm: 12px;  --fx-text-sm--line-height: 18px;
+  --fx-text-base: 13px;  --fx-text-base--line-height: 18px;
+  --fx-text-lg: 15px;  --fx-text-lg--line-height: 22px;
+  --fx-text-xl: 18px;  --fx-text-xl--line-height: 28px;
+  --fx-text-2xl: 24px; --fx-text-2xl--line-height: 32px;
+  --fx-text-3xl: 30px; --fx-text-3xl--line-height: 36px;
+  --fx-text-4xl: 36px; --fx-text-4xl--line-height: 40px;
+
+  --text-xs: var(--fx-text-xs); --text-xs--line-height: var(--fx-text-xs--line-height);
+  --text-sm: var(--fx-text-sm); --text-sm--line-height: var(--fx-text-sm--line-height);
+  --text-base: var(--fx-text-base); --text-base--line-height: var(--fx-text-base--line-height);
+  --text-lg: var(--fx-text-lg); --text-lg--line-height: var(--fx-text-lg--line-height);
+  --text-xl: var(--fx-text-xl); --text-xl--line-height: var(--fx-text-xl--line-height);
+  --text-2xl: var(--fx-text-2xl); --text-2xl--line-height: var(--fx-text-2xl--line-height);
+  --text-3xl: var(--fx-text-3xl); --text-3xl--line-height: var(--fx-text-3xl--line-height);
+  --text-4xl: var(--fx-text-4xl); --text-4xl--line-height: var(--fx-text-4xl--line-height);
+
+  /* 界面密度：高频控件高度 / 内边距 / 间距统一从这里读。 */
+  --fx-control-xs-height: 24px;
+  --fx-control-sm-height: 28px;
+  --fx-control-md-height: 32px;
+  --fx-control-lg-height: 36px;
+  --fx-control-icon-xs: 24px;
+  --fx-control-icon-sm: 28px;
+  --fx-control-icon-md: 32px;
+  --fx-control-icon-lg: 36px;
+  --fx-control-px-xs: 0.5rem;
+  --fx-control-px-sm: 0.625rem;
+  --fx-control-px-md: 0.75rem;
+  --fx-control-px-lg: 1rem;
+  --fx-control-gap-tight: 0.25rem;
+  --fx-control-gap: 0.375rem;
+  --fx-panel-gap: 0.75rem;
+  --fx-panel-padding: 0.75rem;
+  --fx-sidebar-item-height: 32px;
+  --fx-sidebar-item-height-sm: 28px;
+  --fx-topbar-height: 48px;
+  --fx-topbar-search-height: 32px;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);

@@ -24,7 +24,7 @@ function TopBar({ className, children, ...props }: React.ComponentProps<"header"
     <header
       data-slot="top-bar"
       className={cn(
-        "flex h-12 w-full items-center gap-3 px-3 text-fx-13 text-foreground",
+        "flex h-(--fx-topbar-height) w-full items-center gap-(--fx-control-gap) px-(--fx-control-px-md) text-base text-foreground",
         className
       )}
       {...props}
@@ -133,14 +133,14 @@ function TopBarSearch({
         // 默认固定 240px 并靠右（与工具区成组，对齐主流全局顶栏；设计稿 290px，这里更紧凑）；宽度可由 className 覆盖
         // 半透明填充：待命 fill-subtle、hover 加深到 fill-hover、聚焦变实白；叠在任意宿主底色上都有反差（顶栏透明也不糊）
         // 300ms ease-out 缓冲，避免生硬（飞书式，不用硬阴影）
-        "ml-auto flex h-8 w-60 max-w-full items-center rounded-lg bg-fill-subtle transition-colors duration-300 ease-out [&:hover:not(:focus-within)]:bg-fill-hover focus-within:bg-card",
+        "ml-auto flex h-(--fx-topbar-search-height) w-60 max-w-full items-center rounded-lg bg-fill-subtle transition-colors duration-300 ease-out [&:hover:not(:focus-within)]:bg-fill-hover focus-within:bg-card",
         className
       )}
     >
       {scopes && scopes.length > 0 && (
         <>
           <DropdownMenu>
-            <DropdownMenuTrigger className="inline-flex shrink-0 items-center gap-1 rounded-l-lg px-3 text-muted-foreground outline-none hover:text-foreground [&_svg]:size-3">
+            <DropdownMenuTrigger className="inline-flex shrink-0 items-center gap-1 rounded-l-lg px-(--fx-control-px-md) text-muted-foreground outline-none hover:text-foreground [&_svg]:size-3">
               {scopes.find((s) => s.key === scope)?.label ?? scopes[0].label}
               <ChevronDownIcon />
             </DropdownMenuTrigger>
@@ -159,9 +159,9 @@ function TopBarSearch({
         value={value}
         onChange={(e) => onValueChange(e.target.value)}
         placeholder={placeholder}
-        className="h-8 flex-1 rounded-none border-0 bg-transparent px-3 shadow-none focus-visible:ring-0"
+        className="h-(--fx-topbar-search-height) flex-1 rounded-none border-0 bg-transparent px-(--fx-control-px-md) shadow-none focus-visible:ring-0"
       />
-      <SearchIcon className="mr-3 size-4 shrink-0 text-muted-foreground" />
+      <SearchIcon className="mr-(--fx-control-px-md) size-4 shrink-0 text-muted-foreground" />
     </div>
   )
 }
@@ -169,7 +169,7 @@ function TopBarSearch({
 // 右侧工具区容器
 function TopBarActions({ className, children }: { className?: string; children: React.ReactNode }) {
   return (
-    <div data-slot="top-bar-actions" className={cn("flex shrink-0 items-center gap-2.5", className)}>
+    <div data-slot="top-bar-actions" className={cn("flex shrink-0 items-center gap-(--fx-control-gap)", className)}>
       {children}
     </div>
   )
@@ -200,7 +200,7 @@ function TopBarIconButton({
       className="rounded-lg transition-colors duration-200 ease-out [&_svg]:size-[18px] enabled:hover:bg-fill-hover enabled:hover:text-foreground enabled:active:bg-fill-subtle"
     >
       {dot || count != null ? (
-        <Badge dot={dot} count={count} className={count != null ? "h-3.5 min-w-3.5 px-1 text-[9px]" : undefined}>
+        <Badge dot={dot} count={count} className={count != null ? "h-4 min-w-4 px-1 text-xs" : undefined}>
           {icon}
         </Badge>
       ) : (

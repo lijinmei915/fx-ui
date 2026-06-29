@@ -65,8 +65,8 @@ PageLead 的字号、字重、颜色和间距由组件内部固定，不在页�
 | --- | --- |
 | 面包屑 | `text-sm`，400，`text-muted-foreground` |
 | 当前页面包屑 | 500，`text-foreground` |
-| 标题 | `32px / 40px`，700，`text-foreground` |
-| 说明 | `text-sm / 24px`，400，`text-muted-foreground`，最大宽度 `max-w-5xl` |
+| 标题 | `text-3xl`，700，`text-foreground`，随界面字号基准联动 |
+| 说明 | `text-base`，400，`text-muted-foreground`，最大宽度 `max-w-5xl`，随界面字号基准联动 |
 | 面包屑到标题 | `mb-3` |
 | 标题到说明 | `mt-2` |
 | 标题组与动作 | 桌面端顶对齐，动作区不压缩标题组 |

@@ -23,7 +23,7 @@ function ListPageHeader({
 }) {
   return (
     <div className="flex shrink-0 items-center justify-between gap-3 px-4 pt-3 pb-1">
-      <div className="flex shrink-0 items-center gap-2 whitespace-nowrap text-fx-15">
+      <div className="flex shrink-0 items-center gap-2 whitespace-nowrap text-lg">
         <span className="font-medium text-foreground">{title}</span>
         {views && views.length > 0 && (
           <>

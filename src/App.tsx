@@ -354,64 +354,124 @@ const themeChineseFontValues: Record<ThemeFont, string> = {
 
 const themeTextScaleValues: Record<ThemeTextScale, Record<string, string>> = {
   compact: {
-    "--text-fx-11": "10px",
-    "--text-fx-11--line-height": "14px",
-    "--text-fx-12": "11px",
-    "--text-fx-12--line-height": "16px",
-    "--text-fx-13": "12px",
-    "--text-fx-13--line-height": "17px",
-    "--text-fx-15": "14px",
-    "--text-fx-15--line-height": "20px",
-    "--text-fx-18": "16px",
-    "--text-fx-18--line-height": "24px",
-    "--text-caption": "11px",
-    "--text-caption--line-height": "16px",
-    "--text-body": "12px",
-    "--text-body--line-height": "17px",
-    "--text-section-title": "14px",
-    "--text-section-title--line-height": "20px",
-    "--text-page-title": "16px",
-    "--text-page-title--line-height": "24px"
+    "--fx-text-xs": "12px",
+    "--fx-text-xs--line-height": "18px",
+    "--fx-text-sm": "12px",
+    "--fx-text-sm--line-height": "18px",
+    "--fx-text-base": "14px",
+    "--fx-text-base--line-height": "20px",
+    "--fx-text-lg": "16px",
+    "--fx-text-lg--line-height": "24px",
+    "--fx-text-xl": "18px",
+    "--fx-text-xl--line-height": "28px",
+    "--fx-text-2xl": "20px",
+    "--fx-text-2xl--line-height": "28px",
+    "--fx-text-3xl": "24px",
+    "--fx-text-3xl--line-height": "32px",
+    "--fx-text-4xl": "30px",
+    "--fx-text-4xl--line-height": "36px",
+    "--fx-control-xs-height": "22px",
+    "--fx-control-sm-height": "26px",
+    "--fx-control-md-height": "30px",
+    "--fx-control-lg-height": "34px",
+    "--fx-control-icon-xs": "22px",
+    "--fx-control-icon-sm": "26px",
+    "--fx-control-icon-md": "30px",
+    "--fx-control-icon-lg": "34px",
+    "--fx-control-px-xs": "0.4375rem",
+    "--fx-control-px-sm": "0.5625rem",
+    "--fx-control-px-md": "0.6875rem",
+    "--fx-control-px-lg": "0.875rem",
+    "--fx-control-gap-tight": "0.1875rem",
+    "--fx-control-gap": "0.3125rem",
+    "--fx-panel-gap": "0.625rem",
+    "--fx-panel-padding": "0.625rem",
+    "--fx-menu-text": "14px",
+    "--fx-menu-text--line-height": "20px",
+    "--fx-sidebar-item-height": "28px",
+    "--fx-sidebar-item-height-sm": "24px",
+    "--fx-topbar-height": "48px",
+    "--fx-topbar-search-height": "30px"
   },
   standard: {
-    "--text-fx-11": "11px",
-    "--text-fx-11--line-height": "16px",
-    "--text-fx-12": "12px",
-    "--text-fx-12--line-height": "18px",
-    "--text-fx-13": "13px",
-    "--text-fx-13--line-height": "18px",
-    "--text-fx-15": "15px",
-    "--text-fx-15--line-height": "22px",
-    "--text-fx-18": "18px",
-    "--text-fx-18--line-height": "28px",
-    "--text-caption": "12px",
-    "--text-caption--line-height": "18px",
-    "--text-body": "13px",
-    "--text-body--line-height": "18px",
-    "--text-section-title": "15px",
-    "--text-section-title--line-height": "22px",
-    "--text-page-title": "18px",
-    "--text-page-title--line-height": "28px"
+    "--fx-text-xs": "12px",
+    "--fx-text-xs--line-height": "18px",
+    "--fx-text-sm": "14px",
+    "--fx-text-sm--line-height": "20px",
+    "--fx-text-base": "16px",
+    "--fx-text-base--line-height": "24px",
+    "--fx-text-lg": "18px",
+    "--fx-text-lg--line-height": "28px",
+    "--fx-text-xl": "20px",
+    "--fx-text-xl--line-height": "30px",
+    "--fx-text-2xl": "24px",
+    "--fx-text-2xl--line-height": "32px",
+    "--fx-text-3xl": "30px",
+    "--fx-text-3xl--line-height": "38px",
+    "--fx-text-4xl": "36px",
+    "--fx-text-4xl--line-height": "44px",
+    "--fx-control-xs-height": "24px",
+    "--fx-control-sm-height": "28px",
+    "--fx-control-md-height": "32px",
+    "--fx-control-lg-height": "36px",
+    "--fx-control-icon-xs": "24px",
+    "--fx-control-icon-sm": "28px",
+    "--fx-control-icon-md": "32px",
+    "--fx-control-icon-lg": "36px",
+    "--fx-control-px-xs": "0.5rem",
+    "--fx-control-px-sm": "0.625rem",
+    "--fx-control-px-md": "0.75rem",
+    "--fx-control-px-lg": "1rem",
+    "--fx-control-gap-tight": "0.25rem",
+    "--fx-control-gap": "0.375rem",
+    "--fx-panel-gap": "0.75rem",
+    "--fx-panel-padding": "0.75rem",
+    "--fx-menu-text": "16px",
+    "--fx-menu-text--line-height": "24px",
+    "--fx-sidebar-item-height": "32px",
+    "--fx-sidebar-item-height-sm": "28px",
+    "--fx-topbar-height": "56px",
+    "--fx-topbar-search-height": "32px"
   },
   spacious: {
-    "--text-fx-11": "12px",
-    "--text-fx-11--line-height": "18px",
-    "--text-fx-12": "13px",
-    "--text-fx-12--line-height": "20px",
-    "--text-fx-13": "15px",
-    "--text-fx-13--line-height": "22px",
-    "--text-fx-15": "17px",
-    "--text-fx-15--line-height": "25px",
-    "--text-fx-18": "20px",
-    "--text-fx-18--line-height": "30px",
-    "--text-caption": "13px",
-    "--text-caption--line-height": "20px",
-    "--text-body": "15px",
-    "--text-body--line-height": "22px",
-    "--text-section-title": "17px",
-    "--text-section-title--line-height": "25px",
-    "--text-page-title": "20px",
-    "--text-page-title--line-height": "30px"
+    "--fx-text-xs": "14px",
+    "--fx-text-xs--line-height": "20px",
+    "--fx-text-sm": "16px",
+    "--fx-text-sm--line-height": "24px",
+    "--fx-text-base": "18px",
+    "--fx-text-base--line-height": "28px",
+    "--fx-text-lg": "20px",
+    "--fx-text-lg--line-height": "30px",
+    "--fx-text-xl": "22px",
+    "--fx-text-xl--line-height": "32px",
+    "--fx-text-2xl": "28px",
+    "--fx-text-2xl--line-height": "36px",
+    "--fx-text-3xl": "36px",
+    "--fx-text-3xl--line-height": "44px",
+    "--fx-text-4xl": "44px",
+    "--fx-text-4xl--line-height": "52px",
+    "--fx-control-xs-height": "26px",
+    "--fx-control-sm-height": "30px",
+    "--fx-control-md-height": "36px",
+    "--fx-control-lg-height": "40px",
+    "--fx-control-icon-xs": "26px",
+    "--fx-control-icon-sm": "30px",
+    "--fx-control-icon-md": "36px",
+    "--fx-control-icon-lg": "40px",
+    "--fx-control-px-xs": "0.625rem",
+    "--fx-control-px-sm": "0.75rem",
+    "--fx-control-px-md": "0.875rem",
+    "--fx-control-px-lg": "1.125rem",
+    "--fx-control-gap-tight": "0.3125rem",
+    "--fx-control-gap": "0.5rem",
+    "--fx-panel-gap": "0.875rem",
+    "--fx-panel-padding": "0.875rem",
+    "--fx-menu-text": "16px",
+    "--fx-menu-text--line-height": "24px",
+    "--fx-sidebar-item-height": "36px",
+    "--fx-sidebar-item-height-sm": "32px",
+    "--fx-topbar-height": "64px",
+    "--fx-topbar-search-height": "36px"
   }
 };
 
@@ -466,9 +526,9 @@ const themeFontPreviewText: Record<Lang, string> = {
 
 
 const themeTextScaleOptions: {id: ThemeTextScale;label: string;desc: string;}[] = [
-{ id: "compact", label: "紧凑", desc: "14px 基准" },
-{ id: "standard", label: "标准", desc: "16px 基准" },
-{ id: "spacious", label: "宽松", desc: "18px 基准" }];
+{ id: "compact", label: "紧凑", desc: "12px 基准" },
+{ id: "standard", label: "标准", desc: "14px 基准" },
+{ id: "spacious", label: "宽松", desc: "16px 基准" }];
 
 
 const themeRadiusOptions: {id: ThemeRadius;label: string;}[] = [
@@ -2019,7 +2079,7 @@ const avatarScenarioExamples = [
   group: "size",
   spec: "24px",
   intent: "列表项、评论区的用户头像。",
-  rule: "高密度区域用，配 text-caption 缩写。",
+  rule: "高密度区域用，配 text-sm 缩写。",
   code: `<Avatar size="sm"><AvatarFallback>张</AvatarFallback></Avatar>`
 },
 {
@@ -2718,7 +2778,7 @@ const linkScenarioExamples = [
   group: "size",
   spec: "12px",
   intent: "辅助说明、表格内的紧凑链接。",
-  rule: "高密度区域用，配 text-caption。",
+  rule: "高密度区域用，配 text-sm。",
   code: `<Link size="sm" href="/x">小链接</Link>`
 },
 {
@@ -3163,10 +3223,10 @@ const seedColors = [
 
 // 企业 web 字号（Figma web 字体规范）：字号 + 行高，默认正文 13
 const typeSizeTokens = [
-{ name: "text-page-title", value: "18px / 28px", cls: "text-page-title", usage: "详情页标题（配 bold）", usageEn: "Detail page title (with bold)" },
-{ name: "text-section-title", value: "15px / 22px", cls: "text-section-title", usage: "模块/卡片/组件标题（regular 或 bold 区分）", usageEn: "Module / card / component title" },
-{ name: "text-body", value: "13px / 18px", cls: "text-body", usage: "默认正文 — 菜单、列表、表单、大面积文案", usageEn: "Default body — menus, lists, forms" },
-{ name: "text-caption", value: "12px / 18px", cls: "text-caption", usage: "提示信息、说明文字", usageEn: "Hints, helper text" }];
+{ name: "text-xl", value: "18px / 28px", cls: "text-xl", usage: "详情页标题（配 bold）", usageEn: "Detail page title (with bold)" },
+{ name: "text-lg", value: "15px / 22px", cls: "text-lg", usage: "模块/卡片/组件标题（regular 或 bold 区分）", usageEn: "Module / card / component title" },
+{ name: "text-base", value: "13px / 18px", cls: "text-base", usage: "默认正文 — 菜单、列表、表单、大面积文案", usageEn: "Default body — menus, lists, forms" },
+{ name: "text-sm", value: "12px / 18px", cls: "text-sm", usage: "提示信息、说明文字", usageEn: "Hints, helper text" }];
 
 
 // 字重（企业规范：Regular 400 / Medium 500 / Bold 700）
@@ -3510,21 +3570,21 @@ function ThemeCustomizerPanel({
   };
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={onOpenChange} modal={false}>
       <SheetContent
         side="right"
         className="w-80 gap-0 sm:max-w-80"
         overlayClassName="pointer-events-none bg-transparent backdrop-blur-none supports-backdrop-filter:backdrop-blur-none">
         
-        <SheetHeader className="p-6 pb-0">
-          <div className="flex items-center gap-2">
+        <SheetHeader className="p-[calc(var(--fx-panel-padding)*2)] pb-0">
+          <div className="flex items-center gap-(--fx-control-gap)">
             <SettingsIcon className="size-5 text-muted-foreground" />
-            <SheetTitle className="text-page-title font-semibold">{lang === "en" ? "Theme Customizer" : "主题定制"}</SheetTitle>
+            <SheetTitle className="text-xl font-semibold">{lang === "en" ? "Theme Customizer" : "主题定制"}</SheetTitle>
           </div>
         </SheetHeader>
 
-        <div className="flex min-h-0 flex-1 flex-col gap-8 overflow-y-auto p-6 pb-12">
-          <section className="flex flex-col gap-3">
+        <div className="flex min-h-0 flex-1 flex-col gap-[calc(var(--fx-panel-gap)*2)] overflow-y-auto p-[calc(var(--fx-panel-padding)*2)] pb-12">
+          <section className="flex flex-col gap-(--fx-control-gap)">
             <ThemePanelHeading icon={<SunIcon />} title={lang === "en" ? "Appearance" : "外观模式"} />
             <div className="flex gap-1 rounded-lg bg-muted p-1">
               <button
@@ -3532,7 +3592,7 @@ function ThemeCustomizerPanel({
                 aria-pressed={config.mode === "light"}
                 onClick={() => setConfigValue("mode", "light")}
                 className={cn(
-                  "flex flex-1 items-center justify-center gap-2 rounded-md px-2 py-1.5 text-body font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                  "flex flex-1 items-center justify-center gap-(--fx-control-gap) rounded-md px-(--fx-control-px-xs) py-(--fx-control-px-xs) text-base font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
                   config.mode === "light" ? "bg-card text-foreground shadow-l1" : "text-muted-foreground hover:text-foreground"
                 )}>
                 
@@ -3544,7 +3604,7 @@ function ThemeCustomizerPanel({
                 aria-pressed={config.mode === "dark"}
                 onClick={() => setConfigValue("mode", "dark")}
                 className={cn(
-                  "flex flex-1 items-center justify-center gap-2 rounded-md px-2 py-1.5 text-body font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                  "flex flex-1 items-center justify-center gap-(--fx-control-gap) rounded-md px-(--fx-control-px-xs) py-(--fx-control-px-xs) text-base font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
                   config.mode === "dark" ? "bg-card text-foreground shadow-l1" : "text-muted-foreground hover:text-foreground"
                 )}>
                 
@@ -3554,9 +3614,9 @@ function ThemeCustomizerPanel({
             </div>
           </section>
 
-          <section className="flex flex-col gap-3">
+          <section className="flex flex-col gap-(--fx-control-gap)">
             <ThemePanelHeading icon={<PaletteIcon />} title={lang === "en" ? "Brand Color" : "主色调"} />
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-(--fx-control-gap)">
               {themeColorOptions.map((item) =>
               <button
                 key={item.id}
@@ -3565,7 +3625,7 @@ function ThemeCustomizerPanel({
                 aria-pressed={config.primaryColor === item.id}
                 onClick={() => setConfigValue("primaryColor", item.id)}
                 className={cn(
-                  "flex size-8 items-center justify-center rounded-full border border-border-subtle outline-none transition-all hover:scale-105 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                  "flex size-(--fx-control-icon-sm) items-center justify-center rounded-full border border-border-subtle outline-none transition-all hover:scale-105 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
                   config.primaryColor === item.id && "scale-110 ring-2 ring-foreground ring-offset-2 ring-offset-background"
                 )}
                 style={{ backgroundColor: item.value }}>
@@ -3573,7 +3633,7 @@ function ThemeCustomizerPanel({
                   {config.primaryColor === item.id ? <span className="size-2 rounded-full bg-primary-foreground" /> : null}
                 </button>
               )}
-              <Separator orientation="vertical" className="mx-1 h-8" />
+              <Separator orientation="vertical" className="mx-1 h-(--fx-control-icon-sm)" />
               {config.customColors.map((color, index) => {
                 const selected =
                 !isPickingCustomColor &&
@@ -3581,14 +3641,14 @@ function ThemeCustomizerPanel({
                 config.customColorIndex === index;
 
                 return (
-                  <div key={`${color}-${index}`} className="group relative size-8 shrink-0">
+                  <div key={`${color}-${index}`} className="group relative size-(--fx-control-icon-sm) shrink-0">
                     <button
                       type="button"
                       aria-label={lang === "en" ? `Use custom color ${color}` : `使用自定义颜色 ${color}`}
                       aria-pressed={selected}
                       onClick={() => selectCustomColor(color, index)}
                       className={cn(
-                        "flex size-8 items-center justify-center rounded-full border border-border-subtle outline-none transition-all hover:scale-105 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                        "flex size-(--fx-control-icon-sm) items-center justify-center rounded-full border border-border-subtle outline-none transition-all hover:scale-105 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
                         selected && "scale-110 ring-2 ring-foreground ring-offset-2 ring-offset-background"
                       )}
                       style={{ backgroundColor: color }}>
@@ -3611,7 +3671,7 @@ function ThemeCustomizerPanel({
               })}
               <label
                 className={cn(
-                  "relative flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full border border-border/55 bg-muted/18 text-muted-foreground/60 outline-none transition-[border-color,background-color,color,box-shadow,transform,opacity] duration-220 ease-out hover:border-border-strong hover:bg-muted/28 hover:text-foreground/80 focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50",
+                  "relative flex size-(--fx-control-icon-sm) shrink-0 cursor-pointer items-center justify-center rounded-full border border-border/55 bg-muted/18 text-muted-foreground/60 outline-none transition-[border-color,background-color,color,box-shadow,transform,opacity] duration-220 ease-out hover:border-border-strong hover:bg-muted/28 hover:text-foreground/80 focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50",
                   isPickingCustomColor && "border-border-strong bg-muted/28 text-foreground/80"
                 )}>
                 
@@ -3646,16 +3706,16 @@ function ThemeCustomizerPanel({
                       commitCustomColor(nextColor);
                     }
                   }}
-                  className="absolute inset-0 size-8 cursor-pointer rounded-full opacity-0"
+                  className="absolute inset-0 size-(--fx-control-icon-sm) cursor-pointer rounded-full opacity-0"
                   aria-label={lang === "en" ? "Add custom color" : "添加自定义颜色"} />
                 
               </label>
             </div>
           </section>
 
-          <section className="flex flex-col gap-3">
+          <section className="flex flex-col gap-(--fx-control-gap)">
             <ThemePanelHeading icon={<TypographyIcon />} title={lang === "en" ? "Typography" : "字体主题"} />
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-(--fx-control-gap)">
               {themeFontOptions.map((item) =>
               <ThemeChoiceButton
                 key={item.id}
@@ -3698,7 +3758,7 @@ function ThemeCustomizerPanel({
                 aria-pressed={config.borderRadius === item.id}
                 onClick={() => setConfigValue("borderRadius", item.id)}
                 className={cn(
-                  "flex h-8 items-center justify-center rounded-lg border px-1 text-caption font-semibold outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                  "flex h-(--fx-control-sm-height) items-center justify-center rounded-lg border px-(--fx-control-px-xs) text-sm font-semibold outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
                   config.borderRadius === item.id ? "border-foreground bg-muted text-foreground" : "border-border bg-surface text-muted-foreground hover:border-border-strong hover:text-foreground"
                 )}>
                 
@@ -3733,7 +3793,7 @@ function ThemeCustomizerPanel({
 
 function ThemePanelHeading({ icon, title }: {icon: React.ReactNode;title: string;}) {
   return (
-    <h3 className="flex items-center gap-2 text-body font-semibold text-foreground">
+    <h3 className="flex items-center gap-(--fx-control-gap) text-base font-semibold text-foreground">
       <span className="flex size-4 items-center justify-center text-muted-foreground [&_svg]:size-4">{icon}</span>
       {title}
     </h3>);
@@ -3763,12 +3823,12 @@ function ThemeChoiceButton({
       onClick={onClick}
       style={style}
       className={cn(
-        "flex min-h-12 flex-col justify-center rounded-lg border px-2.5 py-2 text-left outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+        "flex min-h-[calc(var(--fx-control-lg-height)+8px)] flex-col justify-center rounded-lg border px-(--fx-control-px-sm) py-(--fx-control-px-xs) text-left outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
         selected ? "border-foreground bg-muted text-foreground" : "border-border bg-surface text-muted-foreground hover:border-border-strong hover:text-foreground"
       )}>
       
-      <span className="text-caption font-semibold">{label}</span>
-      <span className="mt-0.5 text-[10px] text-muted-foreground">{desc}</span>
+      <span className="text-sm font-semibold">{label}</span>
+      <span className="mt-0.5 text-xs text-muted-foreground">{desc}</span>
     </button>);
 
 }
@@ -3789,11 +3849,11 @@ function ThemeChoiceSection<T extends string>({
 
 }: {icon: React.ReactNode;title: string;options: {id: T;label: string;desc: string;}[];value: T;onChange: (value: T) => void;columns?: 2 | 3 | 4;}) {
   return (
-    <section className="flex flex-col gap-3">
+    <section className="flex flex-col gap-(--fx-control-gap)">
       <ThemePanelHeading icon={icon} title={title} />
       <div
         className={cn(
-          "grid gap-2",
+          "grid gap-(--fx-control-gap)",
           columns === 2 && "grid-cols-2",
           columns === 3 && "grid-cols-3",
           columns === 4 && "grid-cols-4"
@@ -4053,9 +4113,9 @@ function App() {
       data-theme-motion={themeConfig.animationStyle}
       style={getThemeRuntimeStyle(themeConfig, lang)}>
       
-      <header className="relative z-40 h-16 shrink-0 border-b border-border-subtle bg-card">
-        <div className="grid h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 px-4 md:px-6 xl:gap-8 xl:px-8">
-          <div className="flex min-w-0 shrink-0 items-center gap-2">
+      <header className="relative z-40 h-(--fx-topbar-height) shrink-0 border-b border-border-subtle bg-card">
+        <div className="grid h-(--fx-topbar-height) grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-(--fx-panel-gap) px-(--fx-panel-padding) md:px-[calc(var(--fx-panel-padding)+0.5rem)] xl:gap-[calc(var(--fx-panel-gap)*2)] xl:px-[calc(var(--fx-panel-padding)+1rem)]">
+          <div className="flex min-w-0 shrink-0 items-center gap-(--fx-control-gap)">
             <div className="flex size-8 items-center justify-center rounded-sm bg-primary text-primary-foreground">
               <span className="size-4 bg-primary-foreground" aria-hidden="true" />
             </div>
@@ -4067,7 +4127,7 @@ function App() {
             </Tag>
           </div>
 
-          <nav className="hidden h-16 items-center justify-center gap-8 text-sm font-semibold lg:flex xl:gap-10">
+          <nav className="hidden h-(--fx-topbar-height) items-center justify-center gap-[calc(var(--fx-panel-gap)*3)] text-[length:var(--fx-menu-text)] leading-(--fx-menu-text--line-height) font-semibold lg:flex xl:gap-[calc(var(--fx-panel-gap)*4)]">
             {topNav.map((item) => {
               const isActive =
               page === item.page ||
@@ -4081,8 +4141,8 @@ function App() {
                   href={item.href}
                   className={
                   isActive ?
-                  "flex h-16 items-center border-b-2 border-primary text-primary" :
-                  "flex h-16 items-center border-b-2 border-transparent text-muted-foreground transition-colors hover:text-foreground"
+                  "flex h-(--fx-topbar-height) items-center border-b-2 border-primary text-primary" :
+                  "flex h-(--fx-topbar-height) items-center border-b-2 border-transparent text-muted-foreground transition-colors hover:text-foreground"
                   }>
                   
                   {getLabel(item, lang)}
@@ -4093,8 +4153,8 @@ function App() {
               href="#layout"
               className={
               page === "layout" || page === "grid" || page === "top-bar" ?
-              "flex h-16 items-center gap-2 border-b-2 border-[var(--fx-purple-09)] text-[var(--fx-purple-09)]" :
-              "flex h-16 items-center gap-2 border-b-2 border-transparent text-[var(--fx-purple-09)] transition-colors hover:text-[var(--fx-purple-08)]"
+              "flex h-(--fx-topbar-height) items-center gap-(--fx-control-gap) border-b-2 border-[var(--fx-purple-09)] text-[var(--fx-purple-09)]" :
+              "flex h-(--fx-topbar-height) items-center gap-(--fx-control-gap) border-b-2 border-transparent text-[var(--fx-purple-09)] transition-colors hover:text-[var(--fx-purple-08)]"
               }>
               
               <span className="flex size-4 items-center justify-center text-[var(--fx-purple-09)]">
@@ -4104,15 +4164,15 @@ function App() {
             </a>
           </nav>
 
-          <div className="flex min-w-0 items-center justify-end gap-3 overflow-hidden">
+          <div className="flex min-w-0 items-center justify-end gap-(--fx-control-gap) overflow-hidden">
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className="hidden h-7 w-48 max-w-full shrink items-center gap-1.5 rounded-md border border-border bg-muted/40 px-2 text-left outline-none transition-colors hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 lg:flex xl:w-64 2xl:w-[22rem]">
+              className="hidden h-(--fx-control-sm-height) w-48 max-w-full shrink items-center gap-(--fx-control-gap-tight) rounded-md border border-border bg-muted/40 px-(--fx-control-px-xs) text-left outline-none transition-colors hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 lg:flex xl:w-64 2xl:w-[22rem]">
               
               <SearchIcon className="size-3.5 text-muted-foreground" />
-              <span className="h-7 min-w-0 flex-1 content-center truncate text-caption font-normal text-muted-foreground">{uiText[lang].search}</span>
-              <kbd className="inline-flex h-5 items-center gap-1 rounded border border-border-subtle bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">⌘ K</kbd>
+              <span className="h-(--fx-control-sm-height) min-w-0 flex-1 content-center truncate text-sm font-normal text-muted-foreground">{uiText[lang].search}</span>
+              <kbd className="inline-flex h-5 items-center gap-(--fx-control-gap-tight) rounded-sm border border-border-subtle bg-muted px-1.5 font-mono text-xs font-medium text-muted-foreground">⌘ K</kbd>
             </button>
 
             <Button
@@ -4127,17 +4187,17 @@ function App() {
 
             <Button
               variant="plain"
-              size="icon-sm"
+              size="toolbar-icon"
               aria-label={lang === "zh" ? "Switch to English" : "切换到中文"}
               className="hidden md:inline-flex"
               onClick={() => setLang(lang === "zh" ? "en" : "zh")}>
               
-              <span className="text-caption font-normal leading-none">{lang === "zh" ? "EN" : "中"}</span>
+              <span className="text-sm font-normal leading-none">{lang === "zh" ? "EN" : "中"}</span>
             </Button>
 
             <Button
               variant="plain"
-              size="icon-sm"
+              size="toolbar-icon"
               aria-label={dark ? lang === "en" ? "Light mode" : "浅色模式" : lang === "en" ? "Dark mode" : "暗色模式"}
               className="hidden md:inline-flex"
               onClick={() => setThemeConfig((config) => ({
@@ -4150,7 +4210,7 @@ function App() {
 
             <Button
               variant="plain"
-              size="icon-sm"
+              size="toolbar-icon"
               aria-label={lang === "en" ? "Display settings" : "显示设置"}
               className="hidden md:inline-flex"
               onClick={() => setThemeOpen(true)}>
@@ -4177,20 +4237,20 @@ function App() {
         lang={lang} />
       
 
-      <div className="grid h-[calc(100dvh-4rem)] min-h-0 overflow-hidden bg-background lg:grid-cols-[256px_minmax(0,1fr)]">
+      <div className="grid h-[calc(100dvh-var(--fx-topbar-height))] min-h-0 overflow-hidden bg-background lg:grid-cols-[240px_minmax(0,1fr)]">
         <aside className="hidden min-h-0 border-r border-border-subtle bg-card lg:block">
-          <div className="h-full overflow-y-auto px-6 py-8">
+          <div className="h-full overflow-y-auto px-[calc(var(--fx-panel-padding)*2)] py-[calc(var(--fx-panel-padding)*2)]">
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className="mb-6 flex w-full items-center gap-2 rounded-lg border border-input bg-card px-3 text-left outline-none hover:bg-muted lg:hidden">
+              className="mb-6 flex w-full items-center gap-(--fx-control-gap) rounded-lg border border-input bg-card px-(--fx-control-px-md) text-left outline-none hover:bg-muted lg:hidden">
               
               <SearchIcon className="size-4 text-muted-foreground" />
-              <span className="h-9 flex-1 content-center text-sm text-muted-foreground">{uiText[lang].search}</span>
+              <span className="h-(--fx-control-md-height) flex-1 content-center text-sm text-muted-foreground">{uiText[lang].search}</span>
             </button>
-            <nav className="flex flex-col gap-8">
+            <nav className="flex flex-col gap-[calc(var(--fx-panel-gap)*2)]">
               {docsNav.map((section) =>
-              <section key={section.title} className="flex flex-col gap-3">
+              <section key={section.title} className="flex flex-col gap-(--fx-control-gap)">
                   <div className="text-xs font-bold tracking-widest text-muted-foreground uppercase">{lang === "en" && section.titleEn ? section.titleEn : section.title}</div>
                   <div className="flex flex-col gap-1">
                     {section.items.map((item) => {
@@ -4204,13 +4264,13 @@ function App() {
                         href={item.href}
                         className={
                         isActive ?
-                        "flex h-9 items-center justify-between gap-3 rounded-md bg-primary/10 px-3 text-sm font-semibold text-primary" :
-                        "flex h-9 items-center justify-between gap-3 rounded-md px-3 text-sm text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
+                        "flex h-(--fx-control-md-height) items-center justify-between gap-(--fx-control-gap) rounded-md bg-primary/10 px-(--fx-control-px-md) text-[length:var(--fx-menu-text)] leading-(--fx-menu-text--line-height) font-semibold text-primary" :
+                        "flex h-(--fx-control-md-height) items-center justify-between gap-(--fx-control-gap) rounded-md px-(--fx-control-px-md) text-[length:var(--fx-menu-text)] leading-(--fx-menu-text--line-height) text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
                         }>
                         
                           <span className="truncate">{getLabel(item, lang)}</span>
                           {item.labelEn && getLabel(item, lang) !== item.labelEn ?
-                        <span className={isActive ? "shrink-0 text-xs font-normal text-primary/70" : "shrink-0 text-xs text-muted-foreground/70"}>{item.labelEn}</span> :
+                        <span className={isActive ? "shrink-0 text-[length:max(12px,var(--fx-text-xs))] font-normal text-primary/70" : "shrink-0 text-[length:max(12px,var(--fx-text-xs))] text-muted-foreground/70"}>{item.labelEn}</span> :
                         null}
                         </a>);
 
@@ -4284,7 +4344,7 @@ function PageActions({
     <PageActionsShell navActions={navActions}>
       <DropdownMenu>
         <ButtonGroup>
-          <Button variant="secondary" size="sm" onClick={copyCurrentPage}>
+          <Button variant="secondary" size="toolbar" onClick={copyCurrentPage}>
             <CopyIcon data-icon="inline-start" />
             {uiText[lang].copyPage}
           </Button>
@@ -4292,7 +4352,7 @@ function PageActions({
             render={
             <Button
               variant="secondary"
-              size="icon-sm"
+              size="toolbar-icon"
               aria-label={uiText[lang].moreActions} />
 
             }>
@@ -4343,7 +4403,7 @@ function PageStepActions({
     <div className="flex items-center gap-2" aria-label={lang === "en" ? "Page navigation" : "页面导航"}>
       <Button
         variant="secondary"
-        size="icon-sm"
+        size="toolbar-icon"
         disabled={!previous}
         render={previous ? <a href={previous.href} aria-label={lang === "en" ? `Previous: ${getLabel(previous, lang)}` : `上一篇：${getLabel(previous, lang)}`} /> : undefined}>
         
@@ -4351,7 +4411,7 @@ function PageStepActions({
       </Button>
       <Button
         variant="secondary"
-        size="icon-sm"
+        size="toolbar-icon"
         disabled={!next}
         render={next ? <a href={next.href} aria-label={lang === "en" ? `Next: ${getLabel(next, lang)}` : `下一篇：${getLabel(next, lang)}`} /> : undefined}>
         
@@ -4368,7 +4428,7 @@ function CopyPageAction({ lang }: {lang: Lang;}) {
   };
 
   return (
-    <Button variant="secondary" size="sm" onClick={copyCurrentPage}>
+    <Button variant="secondary" size="toolbar" onClick={copyCurrentPage}>
       <CopyIcon data-icon="inline-start" />
       {uiText[lang].copyPage}
     </Button>);
@@ -4931,7 +4991,7 @@ function GettingStartedPage({
                     <ChevronDownIcon data-icon="inline-end" />
                   </CollapsibleTrigger>
                   <CollapsibleContent className="pt-3">
-                    <div className="grid gap-3 text-body text-muted-foreground md:grid-cols-2">
+                    <div className="grid gap-3 text-base text-muted-foreground md:grid-cols-2">
                       <div className="rounded-lg bg-muted p-4">
                         <p className="mb-2 font-medium text-foreground">取值逻辑</p>
                         <div className="flex flex-col gap-1.5">
@@ -5791,24 +5851,24 @@ function ScenarioTable({ rows, filters, lang, layout = "table", elevated = false
           <div key={r.key} className={`overflow-hidden border border-border bg-card ${cardShell}`}>
               <div className="flex items-center justify-between gap-3 border-b border-border-subtle px-4 py-2.5">
                 <span className="font-medium">{r.title}</span>
-                {r.spec ? <span className="text-caption text-muted-foreground">{r.spec}</span> : null}
+                {r.spec ? <span className="text-sm text-muted-foreground">{r.spec}</span> : null}
               </div>
               <div className="overflow-x-auto p-5">{r.preview}</div>
               <div className="grid grid-cols-[minmax(0,1fr)_minmax(320px,1.2fr)] gap-4 border-t border-border-subtle p-4">
                 <div className="grid gap-3">
                   <div className="flex flex-col gap-1">
-                    <div className="text-caption font-medium text-muted-foreground">{lang === "en" ? "Intent" : "使用意图"}</div>
+                    <div className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Intent" : "使用意图"}</div>
                     <div className="leading-6 text-muted-foreground">{r.intent}</div>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <div className="text-caption font-medium text-muted-foreground">{lang === "en" ? "Constraint" : "约束"}</div>
+                    <div className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Constraint" : "约束"}</div>
                     <div className="leading-6 text-muted-foreground">{r.constraint}</div>
                   </div>
                 </div>
                 <div className="flex min-w-0 flex-col gap-1">
-                  <div className="text-caption font-medium text-muted-foreground">{lang === "en" ? "Recommended API" : "推荐写法"}</div>
+                  <div className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Recommended API" : "推荐写法"}</div>
                   <div className="rounded-lg bg-muted">
-                    <pre className="px-3 py-2 text-caption break-words whitespace-pre-wrap"><code>{r.code}</code></pre>
+                    <pre className="px-3 py-2 text-sm break-words whitespace-pre-wrap"><code>{r.code}</code></pre>
                   </div>
                 </div>
               </div>
@@ -5839,12 +5899,12 @@ function ScenarioTable({ rows, filters, lang, layout = "table", elevated = false
 
                 <TableCell className="h-auto py-3 pl-4 align-top"><span className="font-medium">{r.title}</span></TableCell>
                 <TableCell className="h-auto py-3 align-top"><div className="max-w-[400px]">{r.preview}</div></TableCell>
-                {hasSpec ? <TableCell className="h-auto py-3 align-top text-foreground"><div className="w-max text-caption">{r.spec ?? "—"}</div></TableCell> : null}
+                {hasSpec ? <TableCell className="h-auto py-3 align-top text-foreground"><div className="w-max text-sm">{r.spec ?? "—"}</div></TableCell> : null}
                 <TableCell className="h-auto py-3 align-top whitespace-normal text-muted-foreground"><div className="max-w-[240px] break-words leading-6">{r.intent}</div></TableCell>
                 <TableCell className="h-auto py-3 align-top whitespace-normal text-muted-foreground"><div className="max-w-[260px] break-words leading-6">{r.constraint}</div></TableCell>
                 <TableCell className="h-auto py-3 pr-4 align-top">
                   <div className="max-w-[360px] rounded-lg bg-muted">
-                    <pre className="px-3 py-2 text-caption whitespace-pre-wrap break-words"><code>{r.code}</code></pre>
+                    <pre className="px-3 py-2 text-sm whitespace-pre-wrap break-words"><code>{r.code}</code></pre>
                   </div>
                 </TableCell>
               </TableRow>
@@ -6242,7 +6302,7 @@ function SeedPreview({ lang: _lang }: {lang: Lang;}) {
               
               <div className={`pointer-events-none absolute inset-0 flex flex-col justify-between p-1.5 ${base}`}>
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[9px] font-bold leading-tight whitespace-nowrap overflow-hidden">Brand {step}</span>
+                  <span className="text-xs font-bold leading-tight whitespace-nowrap overflow-hidden">Brand {step}</span>
                   {step === "09" &&
                   <span className="self-start rounded bg-black/25 px-1 py-px text-[7px] font-semibold text-white leading-tight whitespace-nowrap">Brand</span>
                   }
@@ -6266,7 +6326,7 @@ function SeedPreview({ lang: _lang }: {lang: Lang;}) {
 
         })}
       </div>
-      {copied && <p className="text-[11px] text-muted-foreground text-center">已复制 {copied}</p>}
+      {copied && <p className="text-xs text-muted-foreground text-center">已复制 {copied}</p>}
     </div>);
 
 }
@@ -6396,7 +6456,7 @@ function ColorPaletteWithTabs({ lang }: {lang: Lang;}) {
       {/* 色板 */}
       <div className={["overflow-hidden rounded-xl border border-border transition-colors", darkBg ? "bg-zinc-900" : "bg-card"].join(" ")}>
         {/* 用途分组行 */}
-        <div className={["flex items-center text-[9px]", darkBg ? "text-white/50" : "text-foreground/55"].join(" ")}>
+        <div className={["flex items-center text-xs", darkBg ? "text-white/50" : "text-foreground/55"].join(" ")}>
           <div className={["w-24 shrink-0 self-stretch border-r", darkBg ? "border-white/10" : "border-border"].join(" ")} />
           {([
           { label: lang === "en" ? "Backgrounds" : "背景", cols: 2 },
@@ -6418,7 +6478,7 @@ function ColorPaletteWithTabs({ lang }: {lang: Lang;}) {
           )}
         </div>
         {/* 阶编号行 */}
-        <div className={["flex items-center border-b text-[10px]", darkBg ? "border-white/10" : "border-border"].join(" ")}>
+        <div className={["flex items-center border-b text-xs", darkBg ? "border-white/10" : "border-border"].join(" ")}>
           <div className={["w-24 shrink-0 self-stretch border-r", darkBg ? "border-white/10" : "border-border"].join(" ")} />
           {PALETTE_STEPS.map((s) =>
           <div key={s} className={[
@@ -6443,11 +6503,11 @@ function ColorPaletteWithTabs({ lang }: {lang: Lang;}) {
                 {lang === "en" ? seed.name : seed.nameZh}
               </span>
               {seed.prefix === customPrefix ?
-              <span className="mt-0.5 text-[9px] font-medium text-primary">
+              <span className="mt-0.5 text-xs font-medium text-primary">
                   {lang === "en" ? "custom" : "自定义"}
                 </span> :
               seed.tagZh ?
-              <span className={`mt-0.5 text-[9px] ${darkBg ? "text-white/45" : "text-muted-foreground"}`}>
+              <span className={`mt-0.5 text-xs ${darkBg ? "text-white/45" : "text-muted-foreground"}`}>
                   {lang === "en" ? seed.tag : seed.tagZh}
                 </span> :
               null}
@@ -6480,7 +6540,7 @@ function ColorPaletteWithTabs({ lang }: {lang: Lang;}) {
         </p>
         <div className={["overflow-hidden rounded-xl border border-border transition-colors", darkBg ? "bg-zinc-900" : "bg-card"].join(" ")}>
           {/* 阶编号行 */}
-          <div className={["flex items-center border-b text-[10px]", darkBg ? "border-white/10" : "border-border"].join(" ")}>
+          <div className={["flex items-center border-b text-xs", darkBg ? "border-white/10" : "border-border"].join(" ")}>
             <div className={["w-24 shrink-0 self-stretch border-r", darkBg ? "border-white/10" : "border-border"].join(" ")} />
             {NEUTRAL_STEPS.map((s) =>
             <div key={s} className={["flex-1 flex items-center justify-center py-1.5", darkBg ? "text-white/35" : "text-muted-foreground"].join(" ")}>
@@ -6579,7 +6639,7 @@ function getTokenExample(name: string): React.ReactNode {
     case "border-subtle":return <span className="inline-flex h-5 w-12 items-center justify-center"><span className="w-full border-t" style={{ borderColor: "var(--fx-neutrals-04)" }} /></span>;
     case "border":return <span className="inline-flex h-5 w-12 items-center justify-center"><span className="w-full border-t" style={{ borderColor: "var(--fx-neutrals-05)" }} /></span>;
     case "border-strong":return <span className="inline-flex h-5 w-12 items-center justify-center"><span className="w-full border-t-2" style={{ borderColor: "var(--fx-neutrals-08)" }} /></span>;
-    case "input":return <span className="inline-flex h-5 w-16 rounded border px-1.5 text-[10px] items-center text-muted-foreground" style={{ borderColor: "var(--fx-neutrals-07)" }}>输入框</span>;
+    case "input":return <span className="inline-flex h-5 w-16 items-center rounded border px-1.5 text-xs text-muted-foreground" style={{ borderColor: "var(--fx-neutrals-07)" }}>输入框</span>;
     default:return <span className="text-muted-foreground/30">—</span>;
   }
 }
@@ -6687,11 +6747,11 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           <p className="mt-2 text-base text-muted-foreground">{lang === "en" ? "24 columns, column gap = 16px (gap-4). Span by /24 with col-span-[n]." : "24 列基准，列间距 = 16px（gap-4）。分栏用 col-span-[n]（按 24 计），可 1/24 自由组合。"}</p>
         </div>
         <div>
-          <p className="mb-2 text-body font-medium">{lang === "en" ? "24 columns (16px gap)" : "24 列栅格（列间距 16px）"}</p>
+          <p className="mb-2 text-base font-medium">{lang === "en" ? "24 columns (16px gap)" : "24 列栅格（列间距 16px）"}</p>
           <div className="rounded-lg border border-border-container bg-card p-5">
             <div className="grid grid-cols-[repeat(24,minmax(0,1fr))] gap-1">
               {Array.from({ length: 24 }).map((_, i) =>
-              <div key={i} className="flex h-9 items-center justify-center rounded bg-muted text-[9px] text-muted-foreground">{i + 1}</div>
+              <div key={i} className="flex h-9 items-center justify-center rounded bg-muted text-xs text-muted-foreground">{i + 1}</div>
               )}
             </div>
           </div>
@@ -6699,12 +6759,12 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
         {/* 等分栅格 */}
         <div>
-          <p className="mb-2 text-body font-medium">{lang === "en" ? "Equal columns" : "等分栅格"}</p>
+          <p className="mb-2 text-base font-medium">{lang === "en" ? "Equal columns" : "等分栅格"}</p>
           <div className="flex flex-col gap-2 rounded-lg border border-border bg-card p-5">
             {[1, 2, 3, 4, 6].map((n) =>
             <div key={n} className="grid gap-4" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
                 {Array.from({ length: n }).map((_, i) =>
-              <div key={i} className="flex h-9 items-center justify-center rounded bg-muted text-caption text-muted-foreground">{`1/${n}`}</div>
+              <div key={i} className="flex h-9 items-center justify-center rounded bg-muted text-sm text-muted-foreground">{`1/${n}`}</div>
               )}
               </div>
             )}
@@ -6713,12 +6773,12 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
         {/* 混合布局 */}
         <div>
-          <p className="mb-2 text-body font-medium">{lang === "en" ? "Mixed (by /24)" : "混合布局（按 24 分）"}</p>
+          <p className="mb-2 text-base font-medium">{lang === "en" ? "Mixed (by /24)" : "混合布局（按 24 分）"}</p>
           <div className="flex flex-col gap-2 rounded-lg border border-border bg-card p-5">
             {[[6, 18], [8, 16], [6, 12, 6], [18, 6]].map((row, ri) =>
             <div key={ri} className="grid grid-cols-[repeat(24,minmax(0,1fr))] gap-4">
                 {row.map((span, ci) =>
-              <div key={ci} className="flex h-9 items-center justify-center rounded bg-muted text-caption text-muted-foreground" style={{ gridColumn: `span ${span} / span ${span}` }}>{span}/24</div>
+              <div key={ci} className="flex h-9 items-center justify-center rounded bg-muted text-sm text-muted-foreground" style={{ gridColumn: `span ${span} / span ${span}` }}>{span}/24</div>
               )}
               </div>
             )}
@@ -6727,7 +6787,7 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
         {/* 对齐方式 */}
         <div>
-          <p className="mb-2 text-body font-medium">{lang === "en" ? "Alignment" : "对齐方式"}</p>
+          <p className="mb-2 text-base font-medium">{lang === "en" ? "Alignment" : "对齐方式"}</p>
           <div className="flex flex-col gap-2 rounded-lg border border-border bg-card p-5">
             {([
             { just: "justify-start", zh: "整体左对齐", en: "Left" },
@@ -6736,7 +6796,7 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             { just: "justify-between", zh: "左右齐飞（两端）", en: "Justify" }] as
             const).map((a) =>
             <div key={a.just} className="flex items-center gap-3 rounded bg-muted/40 p-2">
-                <span className="w-28 shrink-0 text-caption text-muted-foreground">{lang === "en" ? a.en : a.zh}</span>
+                <span className="w-28 shrink-0 text-sm text-muted-foreground">{lang === "en" ? a.en : a.zh}</span>
                 <div className={`flex flex-1 ${a.just} gap-2`}>
                   {[0, 1, 2].map((i) => <div key={i} className="h-7 w-60 rounded bg-muted" />)}
                 </div>
@@ -6746,9 +6806,9 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         </div>
 
         {/* 偏移 / 容器 / 嵌套 / 进阶 */}
-        <div className="rounded-lg border border-border bg-card p-5 text-body text-muted-foreground">
-          <p><span className="font-medium text-foreground">{lang === "en" ? "Offset" : "偏移"}</span>：{lang === "en" ? "leave columns before content with " : "内容前留空用 "}<code className="rounded bg-muted px-1 text-caption">col-start-[n]</code></p>
-          <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Container" : "容器/版心"}</span>：{lang === "en" ? "max-width + page padding — " : "内容最大宽度 + 页面外边距 — "}<code className="rounded bg-muted px-1 text-caption">max-w-7xl</code> + <code className="rounded bg-muted px-1 text-caption">px-4 lg:px-8</code></p>
+        <div className="rounded-lg border border-border bg-card p-5 text-base text-muted-foreground">
+          <p><span className="font-medium text-foreground">{lang === "en" ? "Offset" : "偏移"}</span>：{lang === "en" ? "leave columns before content with " : "内容前留空用 "}<code className="rounded bg-muted px-1 text-sm">col-start-[n]</code></p>
+          <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Container" : "容器/版心"}</span>：{lang === "en" ? "max-width + page padding — " : "内容最大宽度 + 页面外边距 — "}<code className="rounded bg-muted px-1 text-sm">max-w-7xl</code> + <code className="rounded bg-muted px-1 text-sm">px-4 lg:px-8</code></p>
           <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Nesting" : "嵌套"}</span>：{lang === "en" ? "a grid can nest another grid; child re-splits by /24." : "栅格内可再嵌栅格，子栅格按 1/24 重新划分。"}</p>
           <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Advanced (Semi/Ant)" : "进阶（对齐 Semi/Ant）"}</span>：{lang === "en" ? "gutter accepts [horizontal, vertical] and responsive {sm,md,lg…}; recommended gutter = 16+8n. Reorder via order; offset/push/pull for fine positioning." : "列间距 gutter 支持 [水平, 垂直] 与响应式对象 {sm,md,lg…}；推荐取值 16+8n。需要改顺序用 order；offset/push/pull 做精细位移。"}</p>
         </div>
@@ -6775,22 +6835,22 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             <TableBody>
               {[["sm", "640px", "大手机/小平板"], ["md", "768px", "平板"], ["lg", "1024px", "笔记本（后台默认）"], ["xl", "1280px", "桌面"], ["2xl", "1536px", "大屏"]].map(([p, w, d]) =>
               <TableRow key={p}>
-                  <TableCell className="pl-4"><code className="rounded bg-muted px-1.5 py-0.5 text-caption">{p}:</code></TableCell>
-                  <TableCell className="text-body text-muted-foreground">{w}</TableCell>
-                  <TableCell className="pr-4 text-body text-muted-foreground">{lang === "en" ? "" : d}</TableCell>
+                  <TableCell className="pl-4"><code className="rounded bg-muted px-1.5 py-0.5 text-sm">{p}:</code></TableCell>
+                  <TableCell className="text-base text-muted-foreground">{w}</TableCell>
+                  <TableCell className="pr-4 text-base text-muted-foreground">{lang === "en" ? "" : d}</TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
         </div>
         <div className="rounded-lg border border-border-container bg-card p-5">
-          <p className="mb-3 text-body text-muted-foreground">
+          <p className="mb-3 text-base text-muted-foreground">
             {lang === "en" ?
-            <>Example: <code className="rounded bg-muted px-1 text-caption">grid-cols-1 lg:grid-cols-3</code> — 1 column below 1024px, 3 columns at ≥1024px.</> :
-            <>例子：<code className="rounded bg-muted px-1 text-caption">grid-cols-1 lg:grid-cols-3</code> —— 窗口 &lt; 1024px 时一列，≥ 1024px 自动变三列。拖动窗口可看到它"断"。</>}
+            <>Example: <code className="rounded bg-muted px-1 text-sm">grid-cols-1 lg:grid-cols-3</code> — 1 column below 1024px, 3 columns at ≥1024px.</> :
+            <>例子：<code className="rounded bg-muted px-1 text-sm">grid-cols-1 lg:grid-cols-3</code> —— 窗口 &lt; 1024px 时一列，≥ 1024px 自动变三列。拖动窗口可看到它"断"。</>}
           </p>
           <div className="grid grid-cols-1 gap-2 lg:grid-cols-3">
-            {[0, 1, 2].map((i) => <div key={i} className="flex h-12 items-center justify-center rounded bg-muted text-caption text-muted-foreground">{i + 1}</div>)}
+            {[0, 1, 2].map((i) => <div key={i} className="flex h-12 items-center justify-center rounded bg-muted text-sm text-muted-foreground">{i + 1}</div>)}
           </div>
         </div>
       </section>
@@ -7076,7 +7136,7 @@ function LayoutPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   const t = (zh: string, en: string) => lang === "en" ? en : zh;
   const hd = t("头部", "Header"),mn = t("主体", "Main"),ft = t("底部", "Footer"),nv = t("导航", "Menu"),lf = t("左", "Left"),rt = t("右", "Right");
   const B = ({ label, className = "" }: {label: string;className?: string;}) =>
-  <div className={`flex items-center justify-center rounded bg-muted text-[10px] text-muted-foreground ${className}`}>{label}</div>;
+  <div className={`flex items-center justify-center rounded bg-muted text-xs text-muted-foreground ${className}`}>{label}</div>;
 
   const containers = [
   { n: "一", en: "1", desc: "最常见基础页", descEn: "Most common",
@@ -7109,16 +7169,16 @@ function LayoutPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           {containers.map((c) =>
           <div key={c.n} className="rounded-lg border border-border bg-card p-4">
               <div className="mb-3 flex items-baseline gap-2">
-                <span className="text-section-title font-semibold">{lang === "en" ? `Style ${c.en}` : `样式${c.n}`}</span>
-                <span className="text-caption text-muted-foreground">{lang === "en" ? c.descEn : c.desc}</span>
+                <span className="text-lg font-semibold">{lang === "en" ? `Style ${c.en}` : `样式${c.n}`}</span>
+                <span className="text-sm text-muted-foreground">{lang === "en" ? c.descEn : c.desc}</span>
               </div>
               {c.wire}
             </div>
           )}
         </div>
         {/* 容器默认尺寸 */}
-        <div className="rounded-lg border border-border bg-card p-5 text-body leading-7 text-muted-foreground">
-          <p className="mb-1 text-body font-medium text-foreground">{lang === "en" ? "Default container sizes" : "容器默认尺寸"}</p>
+        <div className="rounded-lg border border-border bg-card p-5 text-base leading-7 text-muted-foreground">
+          <p className="mb-1 text-base font-medium text-foreground">{lang === "en" ? "Default container sizes" : "容器默认尺寸"}</p>
           <p>{lang === "en" ? "Frame (header/sider/content/footer) uses flex; the 24-col grid only governs content inside." : "框架（头/侧/内容/底）用 flex 拼；24 列栅格只管内容区内部的分栏。"}</p>
           <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Header" : "顶栏"}</span> 56px · <span className="font-medium text-foreground">{lang === "en" ? "Sider" : "侧栏"}</span> {lang === "en" ? "240 / collapsed 64" : "展开 240 / 收起 64"} · <span className="font-medium text-foreground">{lang === "en" ? "Footer" : "底栏"}</span> 48px · <span className="font-medium text-foreground">{lang === "en" ? "Content padding" : "内容内边距"}</span> {lang === "en" ? "16 (mobile) / 24 (desktop)" : "移动 16 / 桌面 24"}</p>
           <p className="mt-1">{lang === "en" ? "Sider auto-collapses to the 64px icon rail below lg (1024px)." : "视口 < lg(1024px) 时侧栏自动收起为 64px 图标栏（或转抽屉）。"}</p>
@@ -7253,11 +7313,11 @@ function TokensRadiusPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
               "核心档由唯一基准值按固定 ±2px 步进派生（shadcn 标准做法）；大容器档用 Tailwind 默认值。"}
             </p>
           </div>
-          <div className="rounded-lg border border-border bg-card p-5 text-body text-muted-foreground">
-            <p><span className="font-medium text-foreground">{lang === "en" ? "Base" : "基准"}</span>：<code className="rounded bg-muted px-1 text-caption">--radius = 0.625rem（10px）</code>{lang === "en" ? "，equals rounded-lg." : "，即 rounded-lg。"}</p>
-            <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Core ±2px step" : "核心档 ±2px 步进"}</span>：sm = <code className="rounded bg-muted px-1 text-caption">base − 4px</code>，md = <code className="rounded bg-muted px-1 text-caption">base − 2px</code>，lg = <code className="rounded bg-muted px-1 text-caption">base</code>，xl = <code className="rounded bg-muted px-1 text-caption">base + 4px</code>{lang === "en" ? "。Changing the base shifts the whole scale together." : "。改基准值整套等量平移，差值恒定可预测。"}</p>
+          <div className="rounded-lg border border-border bg-card p-5 text-base text-muted-foreground">
+            <p><span className="font-medium text-foreground">{lang === "en" ? "Base" : "基准"}</span>：<code className="rounded bg-muted px-1 text-sm">--radius = 0.625rem（10px）</code>{lang === "en" ? "，equals rounded-lg." : "，即 rounded-lg。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Core ±2px step" : "核心档 ±2px 步进"}</span>：sm = <code className="rounded bg-muted px-1 text-sm">base − 4px</code>，md = <code className="rounded bg-muted px-1 text-sm">base − 2px</code>，lg = <code className="rounded bg-muted px-1 text-sm">base</code>，xl = <code className="rounded bg-muted px-1 text-sm">base + 4px</code>{lang === "en" ? "。Changing the base shifts the whole scale together." : "。改基准值整套等量平移，差值恒定可预测。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Large steps" : "大容器档"}</span>：2xl = 16px，3xl = 24px，4xl = 32px{lang === "en" ? " (Tailwind defaults)." : "（Tailwind 默认固定值）。"}</p>
-            <p className="mt-1"><span className="font-medium text-foreground">full</span>：<code className="rounded bg-muted px-1 text-caption">9999px</code>{lang === "en" ? "，a pill/circle, not derived from the base." : "，胶囊/圆形，不参与基准派生。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">full</span>：<code className="rounded bg-muted px-1 text-sm">9999px</code>{lang === "en" ? "，a pill/circle, not derived from the base." : "，胶囊/圆形，不参与基准派生。"}</p>
             <p className="mt-3 border-t border-border pt-3 font-medium text-foreground">{lang === "en" ? "Why derive instead of hard-coded values?" : "为什么用 calc 派生，不直接写固定值？"}</p>
             <p className="mt-1">{lang === "en" ?
               "① Single knob — change --radius and the whole scale shifts together, so a rounder/squarer brand is one edit. ② Constant step — fixed ±2px keeps neighboring steps evenly spaced, no drift like someone writing 7 and someone 9. ③ Theme-able. Hard-coded values read more directly but lose the master knob, so the doc shows the computed px too." :
@@ -7333,9 +7393,9 @@ function TokensSpacingPage({ actions, lang }: {actions: React.ReactNode;lang: La
               "每个间距 = 4px 基准单位 × 档位数字，构成 4 点网格。"}
             </p>
           </div>
-          <div className="rounded-lg border border-border bg-card p-5 text-body text-muted-foreground">
-            <p><span className="font-medium text-foreground">{lang === "en" ? "Base unit" : "基准单位"}</span>：<code className="rounded bg-muted px-1 text-caption">--spacing = 0.25rem（4px）</code>{lang === "en" ? " (Tailwind default)." : "（Tailwind 默认）。"}</p>
-            <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Formula" : "公式"}</span>：<code className="rounded bg-muted px-1 text-caption">gap-n = calc(var(--spacing) * n)</code>{lang === "en" ? "，e.g. gap-4 = 4×4 = 16px, gap-6 = 4×6 = 24px." : "，如 gap-4 = 4×4 = 16px、gap-6 = 4×6 = 24px。"}</p>
+          <div className="rounded-lg border border-border bg-card p-5 text-base text-muted-foreground">
+            <p><span className="font-medium text-foreground">{lang === "en" ? "Base unit" : "基准单位"}</span>：<code className="rounded bg-muted px-1 text-sm">--spacing = 0.25rem（4px）</code>{lang === "en" ? " (Tailwind default)." : "（Tailwind 默认）。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Formula" : "公式"}</span>：<code className="rounded bg-muted px-1 text-sm">gap-n = calc(var(--spacing) * n)</code>{lang === "en" ? "，e.g. gap-4 = 4×4 = 16px, gap-6 = 4×6 = 24px." : "，如 gap-4 = 4×4 = 16px、gap-6 = 4×6 = 24px。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "4-point grid" : "4 点网格"}</span>：{lang === "en" ? "all spacing snaps to multiples of 4px, so rhythm stays even and predictable across pages." : "所有间距都落在 4px 的倍数上，页面节奏统一、可预测，不出现 5/7/13 这种随手值。"}</p>
             <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Rule" : "用法"}</span>：{lang === "en" ? "use Tailwind spacing utilities (gap/p/m/space) — never hand-write arbitrary px. Same knob as padding/margin/gap." : "一律用 Tailwind 间距工具类（gap / p / m / space），不手写任意 px；padding、margin、gap 共用这一套刻度。"}</p>
           </div>
@@ -7407,8 +7467,8 @@ function TokensShadowPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
               "每档 = 0 {y}px {blur}px var(--fx-shadow-color)，spread 恒为 0。随层级升高只增大 y 偏移和 blur，颜色不变。"}
             </p>
           </div>
-          <div className="rounded-lg border border-border bg-card p-5 text-body text-muted-foreground">
-            <p><span className="font-medium text-foreground">{lang === "en" ? "Color knob" : "颜色总开关"}</span>：<code className="rounded bg-muted px-1 text-caption">--fx-shadow-color = oklch(from --fx-neutrals-20 l c h / .12)</code>{lang === "en" ? "，derived from the darkest neutral (brand-tinted) at 12% alpha — follows the palette, not hard-coded black; one place to adjust." : "，从最深中性灰（带品牌色相）派生 + 12% 透明，跟随色板而非写死纯黑；四档共用、一处调深浅。"}</p>
+          <div className="rounded-lg border border-border bg-card p-5 text-base text-muted-foreground">
+            <p><span className="font-medium text-foreground">{lang === "en" ? "Color knob" : "颜色总开关"}</span>：<code className="rounded bg-muted px-1 text-sm">--fx-shadow-color = oklch(from --fx-neutrals-20 l c h / .12)</code>{lang === "en" ? "，derived from the darkest neutral (brand-tinted) at 12% alpha — follows the palette, not hard-coded black; one place to adjust." : "，从最深中性灰（带品牌色相）派生 + 12% 透明，跟随色板而非写死纯黑；四档共用、一处调深浅。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Y-offset" : "y 偏移"}</span>：{lang === "en" ? "drop distance, +2px per level — 2 / 4 / 6 (light from top, higher floats drop further)." : "投影下移距离，每升一层 +2px——2 / 4 / 6（光从上方来，越高落得越远）。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">Blur</span>：{lang === "en" ? "softness, roughly doubles per level — 6 / 12 / 24 (higher = softer, more diffuse)." : "模糊半径，约每层翻倍——6 / 12 / 24（越高越柔、越散）。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">Spread</span>：0{lang === "en" ? " — never expand, keeps shadows clean." : "——不外扩，避免脏重。"}</p>
@@ -7504,7 +7564,7 @@ function TokensMotionPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
               </TableBody>
             </Table>
           </div>
-          <div className="rounded-lg border border-border bg-card p-5 text-body text-muted-foreground">
+          <div className="rounded-lg border border-border bg-card p-5 text-base text-muted-foreground">
             <p><span className="font-medium text-foreground">{lang === "en" ? "Short" : "短促"}</span>：{lang === "en" ? "100–200ms; UI motion is feedback, not spectacle." : "100–200ms 区间；界面动效是反馈，不是表演。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "State driven" : "状态驱动"}</span>：{lang === "en" ? "enter/exit triggered by data-open / data-closed / data-state, not manual timers." : "进入/退出由 data-open / data-closed / data-state 触发，不手动计时。"}</p>
             <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Rule" : "用法"}</span>：{lang === "en" ? "compose fade / zoom / slide via tw-animate-css utilities; don't invent one-off keyframes per page." : "用 tw-animate-css 工具类组合 fade / zoom / slide，不为单页临时写关键帧动画。"}</p>
@@ -7537,12 +7597,12 @@ function TokensLayerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
           </div>
           {/* 堆叠示例：档位越高越压在上面 */}
           <div className="rounded-lg border border-border bg-card p-5">
-            <p className="mb-3 text-caption text-muted-foreground">{lang === "en" ? "Higher value stacks on top (closer to you)." : "数字越大，越压在上面（越靠近你）。"}</p>
+            <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "Higher value stacks on top (closer to you)." : "数字越大，越压在上面（越靠近你）。"}</p>
             <div className="relative h-32">
               {layerTokens.map((row, i) =>
               <div
                 key={row.name}
-                className="absolute flex h-12 w-48 items-center rounded-lg border border-border bg-card px-3 text-caption font-medium shadow-l1"
+                className="absolute flex h-12 w-48 items-center rounded-lg border border-border bg-card px-3 text-sm font-medium shadow-l1"
                 style={{ top: `${i * 18}px`, left: `${i * 48}px`, zIndex: 10 + i * 10 }}>
                 
                   {row.name}
@@ -7580,7 +7640,7 @@ function TokensLayerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
               {lang === "en" ? "Why a few fixed tiers instead of arbitrary numbers." : "为什么用几个固定档位，而不是随手写数字。"}
             </p>
           </div>
-          <div className="rounded-lg border border-border bg-card p-5 text-body leading-relaxed text-muted-foreground">
+          <div className="rounded-lg border border-border bg-card p-5 text-base leading-relaxed text-muted-foreground">
             <p><span className="font-medium text-foreground">{lang === "en" ? "From low to high" : "从低到高"}</span>：{lang === "en" ? "page content → local controls → fixed/stuck headers → overlays. The bigger the number, the closer to you (on top)." : "页面内容 → 局部控件 → 固定/吸顶的头部 → 弹层。数字越大，离你越近、压在越上面。"}</p>
             <p className="mt-2"><span className="font-medium text-foreground">{lang === "en" ? "Overlays all use the top tier" : "弹层都用最高一档"}</span>：{lang === "en" ? "dialogs, dropdowns, popovers, sheets and tooltips all sit at the top tier; which one shows on top depends on who opens later, not on a bigger number." : "对话框、下拉、气泡、抽屉、提示框都用最高一档（z-50）；谁后打开谁在上，不靠更大的数字。"}</p>
             <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Rule" : "怎么用"}</span>：{lang === "en" ? "stick to these few tiers; if something gets covered, fit it into an existing tier — don't invent a bigger number." : "只用这几档；万一被挡住，把它归到现有的某一档，别去编一个更大的数字（不然以后谁都往上加，越堆越乱）。"}</p>
@@ -9324,7 +9384,7 @@ function TableBusinessDemo() {
   return (
     <div className="overflow-x-auto rounded-xl bg-card ring-1 ring-border-subtle">
       {selected.size > 0 &&
-      <div className="flex items-center gap-3 border-b border-border-subtle bg-muted px-3 py-2 text-body">
+      <div className="flex items-center gap-3 border-b border-border-subtle bg-muted px-3 py-2 text-base">
           <span className="text-muted-foreground">已选 <span className="font-medium text-foreground">{selected.size}</span> 项</span>
           <Button size="sm" variant="outline">批量导出</Button>
           <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())}>取消选择</Button>
@@ -9510,7 +9570,7 @@ function TableEmptyDemo() {
             <TableCell colSpan={4}>
               <div className="flex flex-col items-center justify-center gap-1 py-12 text-muted-foreground">
                 <DatabaseIcon className="size-7 opacity-40" />
-                <span className="text-body">暂无数据</span>
+                <span className="text-base">暂无数据</span>
               </div>
             </TableCell>
           </TableRow>
@@ -9588,12 +9648,12 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           <TabsContent value="basic" className="flex flex-col gap-6 pt-4">
             <div className="flex flex-col gap-2">
               <h3 className="text-base font-medium">基础表格</h3>
-              <p className="text-body text-muted-foreground">作为表格最常见的形态展示数据。</p>
+              <p className="text-base text-muted-foreground">作为表格最常见的形态展示数据。</p>
               <TableBasicDemo />
             </div>
             <div className="flex flex-col gap-2">
               <h3 className="text-base font-medium">带表尾汇总</h3>
-              <p className="text-body text-muted-foreground">用 TableFooter 展示一组明细的合计。</p>
+              <p className="text-base text-muted-foreground">用 TableFooter 展示一组明细的合计。</p>
               <div className="overflow-x-auto rounded-xl bg-card ring-1 ring-border-subtle">
                 <Table>
                   <TableHeader>
@@ -9628,7 +9688,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           </TabsContent>
 
           <TabsContent value="density" className="flex flex-col gap-6 pt-4">
-            <p className="text-body text-muted-foreground">为满足不同用户需求，表头保持 32px 高度不变，表体定义了三种行高尺寸：紧凑(28px)、舒适(36px)、宽松(42px)。</p>
+            <p className="text-base text-muted-foreground">为满足不同用户需求，表头保持 32px 高度不变，表体定义了三种行高尺寸：紧凑(28px)、舒适(36px)、宽松(42px)。</p>
             <div className="flex flex-col gap-2">
               <h3 className="text-base font-medium">紧凑(28px)</h3>
               <TableDensityDemo density="compact" />
@@ -9646,7 +9706,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           <TabsContent value="interactive" className="flex flex-col gap-6 pt-4">
             <div className="flex flex-col gap-2">
               <h3 className="text-base font-medium">业务列表（可选中 · 可排序 · 分页）</h3>
-              <p className="text-body text-muted-foreground">勾选行出现批量操作条；点「金额」表头切换升/降序；底部主流页码分页。</p>
+              <p className="text-base text-muted-foreground">勾选行出现批量操作条；点「金额」表头切换升/降序；底部主流页码分页。</p>
               <TableBusinessDemo />
             </div>
           </TabsContent>
@@ -9654,17 +9714,17 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           <TabsContent value="advanced" className="flex flex-col gap-6 pt-4">
             <div className="flex flex-col gap-2">
               <h3 className="text-base font-medium">吸顶表头 + 固定列 + 列操作菜单（排序/冻结/筛选可用）</h3>
-              <p className="text-body text-muted-foreground">点「金额/修改时间」表头排序；hover「客户名称/负责人」表头出 ⋮「冻结到此列」（固定该列及左侧所有列，Excel 冻结窗格模型）；hover「客户级别」表头出 ⋮ 按级别筛选。横向滚动看冻结效果。</p>
+              <p className="text-base text-muted-foreground">点「金额/修改时间」表头排序；hover「客户名称/负责人」表头出 ⋮「冻结到此列」（固定该列及左侧所有列，Excel 冻结窗格模型）；hover「客户级别」表头出 ⋮ 按级别筛选。横向滚动看冻结效果。</p>
               <TableAdvancedDemo />
             </div>
             <div className="flex flex-col gap-2">
               <h3 className="text-base font-medium">加载态</h3>
-              <p className="text-body text-muted-foreground">数据加载中用骨架行占位，保持表格结构不跳动。</p>
+              <p className="text-base text-muted-foreground">数据加载中用骨架行占位，保持表格结构不跳动。</p>
               <TableLoadingDemo />
             </div>
             <div className="flex flex-col gap-2">
               <h3 className="text-base font-medium">空状态</h3>
-              <p className="text-body text-muted-foreground">无数据时居中提示「暂无数据」。</p>
+              <p className="text-base text-muted-foreground">无数据时居中提示「暂无数据」。</p>
               <TableEmptyDemo />
             </div>
           </TabsContent>
@@ -11978,7 +12038,7 @@ function MItem({ icon, label, selected, checked, arrow, danger, disabled, onClic
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "flex min-h-8 w-full items-center gap-1.5 rounded-md px-1.5 text-left text-body outline-none select-none [&>svg]:size-4 [&>svg]:shrink-0",
+        "flex min-h-8 w-full items-center gap-1.5 rounded-md px-1.5 text-left text-base outline-none select-none [&>svg]:size-4 [&>svg]:shrink-0",
         disabled ?
         "cursor-not-allowed text-foreground-disabled" :
         danger ?
@@ -11995,7 +12055,7 @@ function MItem({ icon, label, selected, checked, arrow, danger, disabled, onClic
 
 }
 function MGroup({ children }: {children: React.ReactNode;}) {
-  return <div className="px-1.5 pt-3 pb-0.5 text-fx-11 text-[var(--fx-neutrals-10)] select-none first:pt-1.5">{children}</div>;
+  return <div className="px-1.5 pt-3 pb-0.5 text-xs text-[var(--fx-neutrals-10)] select-none first:pt-1.5">{children}</div>;
 }
 function MLine({ full }: {full?: boolean;}) {
   return <div className={cn("my-1 h-px bg-border-faint", full ? "-mx-1" : "mx-1.5")} />;
@@ -12037,7 +12097,7 @@ function SearchMenuDemo() {
   return (
     <StaticMenu>
       <div className="p-1">
-        <div className="flex h-7 items-center gap-1.5 rounded-lg border border-input px-2 text-body">
+        <div className="flex h-7 items-center gap-1.5 rounded-lg border border-input px-2 text-base">
           <SearchIcon className="size-3.5 text-muted-foreground" />
           <input
             value={q}
@@ -12050,7 +12110,7 @@ function SearchMenuDemo() {
       {list.length ?
       list.map((n) => <MItem key={n} label={n} />) :
 
-      <div className="px-1.5 py-6 text-center text-body text-muted-foreground">无匹配结果</div>
+      <div className="px-1.5 py-6 text-center text-base text-muted-foreground">无匹配结果</div>
       }
     </StaticMenu>);
 
@@ -12097,7 +12157,7 @@ function DropdownMenuOverview({ lang }: {lang: Lang;}) {
           {/* 有搜索 */}
           <StaticMenu>
             <div className="p-1">
-              <div className="flex h-7 items-center gap-1.5 rounded-lg border border-input px-2 text-body text-foreground-disabled">
+              <div className="flex h-7 items-center gap-1.5 rounded-lg border border-input px-2 text-base text-foreground-disabled">
                 <SearchIcon className="size-3.5" /> 搜索
               </div>
             </div>
@@ -13587,7 +13647,7 @@ const customerColumns: Column<TplCustomer>[] = [
 { key: "progress", header: "跟进进度", headClassName: "w-40", sortable: true, sortValue: (c) => c.progress, menuActions: tplColMenu, cell: (c) =>
   <span className="flex items-center gap-2">
       <Progress value={c.progress} tone={c.progressTone} className="w-[60px]" trackClassName="h-1" />
-      <span className="w-9 shrink-0 text-caption tabular-nums text-muted-foreground">{c.progress}%</span>
+      <span className="w-9 shrink-0 text-sm tabular-nums text-muted-foreground">{c.progress}%</span>
     </span>
 },
 { key: "phone", header: "电话", menuActions: tplColMenu, cell: (c) => <span className="inline-flex items-center gap-1.5 tabular-nums"><span>{c.flag}</span>{c.phone}</span> },
@@ -13680,7 +13740,7 @@ function CustomerListTemplate({ actions, lang }: {actions: React.ReactNode;lang:
 
               {/* 分页：底栏整体内缩 12（分割线与内容不顶卡片边，对齐左侧 gutter）*/}
               <div className="mx-3 flex shrink-0 items-center justify-between border-t border-border-subtle py-2.5">
-                <span className="text-caption text-muted-foreground">已选 {selected.size} 项</span>
+                <span className="text-sm text-muted-foreground">已选 {selected.size} 项</span>
                 <Pagination page={1} total={193} pageSize={20} onPageChange={() => {}} />
               </div>
       </CrmAppShell>

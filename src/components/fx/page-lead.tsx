@@ -14,8 +14,8 @@ const pageLeadSlots = {
   content: "min-w-0",
   crumb: "mb-3 flex gap-2 text-sm font-normal text-muted-foreground",
   crumbCurrent: "font-medium text-foreground",
-  title: "text-[32px] font-bold leading-10 tracking-tight text-foreground",
-  lead: "mt-2 max-w-5xl text-sm font-normal leading-6 text-muted-foreground",
+  title: "text-3xl font-bold tracking-tight text-foreground",
+  lead: "mt-2 max-w-5xl text-base font-normal text-muted-foreground",
   actions: "shrink-0 md:pt-0",
 }
 

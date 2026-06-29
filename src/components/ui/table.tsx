@@ -20,6 +20,7 @@ function Table({
   return (
     <div
       data-slot="table-container"
+      data-density={density}
       // 默认无边框（贴公司列表页）；bordered 时套圆角描边卡片
       className={cn(
         "relative w-full overflow-x-auto",
@@ -31,7 +32,7 @@ function Table({
       <table
         data-slot="table"
         data-density={density}
-        className={cn("group/table w-full caption-bottom text-fx-13", className)}
+        className={cn("group/table w-full caption-bottom text-base", className)}
         {...props}
       />
     </div>
@@ -142,8 +143,8 @@ function TableHead({
     <th
       data-slot="table-head"
       data-sorted={sorted || undefined}
-      className={cn(
-        "group/th h-9 min-w-[112px] px-2 align-middle font-semibold whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-0",
+        className={cn(
+        "group/th h-(--fx-control-md-height) min-w-[112px] px-(--fx-control-px-xs) align-middle font-semibold whitespace-nowrap text-foreground group-data-[density=compact]:h-(--fx-control-sm-height) group-data-[density=comfortable]:h-(--fx-control-lg-height) [&:has([role=checkbox])]:pr-0",
         alignClass(align),
         pinnedClass(pinned),
         frozenClass(frozenLeft, frozenEdge),
@@ -152,12 +153,12 @@ function TableHead({
       style={{ ...frozenStyle(frozenLeft), ...style }}
       {...props}
     >
-      <div className={cn("inline-flex items-center gap-1", align === "right" && "flex-row-reverse")}>
+      <div className={cn("inline-flex items-center gap-(--fx-control-gap-tight)", align === "right" && "flex-row-reverse")}>
         {sortable ? (
           <button
             type="button"
             onClick={onSort}
-            className="inline-flex items-center gap-1 font-medium outline-none select-none hover:text-foreground data-[sorted]:text-foreground [&_svg]:size-3.5 [&_svg]:shrink-0"
+            className="inline-flex items-center gap-(--fx-control-gap-tight) font-medium outline-none select-none hover:text-foreground data-[sorted]:text-foreground [&_svg]:size-3.5 [&_svg]:shrink-0"
           >
             {children}
             {sorted === "asc" ? (
@@ -174,7 +175,7 @@ function TableHead({
         {menuActions && menuActions.length > 0 && (
           <DropdownMenu>
             <DropdownMenuTrigger
-              className="ml-0.5 inline-flex size-5 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:bg-muted hover:text-foreground focus-visible:opacity-100 group-hover/th:opacity-100 data-popup-open:opacity-100 data-popup-open:bg-muted [&_svg]:size-3.5"
+              className="ml-0.5 inline-flex size-(--fx-control-xs-height) items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:bg-muted hover:text-foreground focus-visible:opacity-100 group-hover/th:opacity-100 data-popup-open:opacity-100 data-popup-open:bg-muted [&_svg]:size-3.5"
               aria-label="列操作"
             >
               <MoreVerticalIcon />
@@ -208,7 +209,7 @@ function TableCell({
       data-slot="table-cell"
       className={cn(
         // 表体三档行高（对齐公司）：紧凑28 / 舒适36(默认) / 宽松42；统一 align-middle 垂直居中
-        "px-2 py-0 align-middle whitespace-nowrap h-9 group-data-[density=compact]/table:h-7 group-data-[density=comfortable]/table:h-[42px] [&:has([role=checkbox])]:pr-0",
+        "h-(--fx-control-md-height) px-(--fx-control-px-xs) py-0 align-middle whitespace-nowrap group-data-[density=compact]:h-(--fx-control-sm-height) group-data-[density=comfortable]:h-(--fx-control-lg-height) [&:has([role=checkbox])]:pr-0",
         alignClass(align),
         pinnedClass(pinned),
         frozenClass(frozenLeft, frozenEdge),
@@ -227,7 +228,7 @@ function TableCaption({
   return (
     <caption
       data-slot="table-caption"
-      className={cn("mt-4 text-fx-13 text-muted-foreground", className)}
+      className={cn("mt-4 text-base text-muted-foreground", className)}
       {...props}
     />
   )

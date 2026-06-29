@@ -44,7 +44,7 @@
         "documentation-ssot",
         "checks-commands",
         "docsNav.map",
-        "bg-primary/10 px-3 text-sm font-semibold text-primary"
+        "bg-primary/10 px-(--fx-control-px-md) text-[length:var(--fx-menu-text)]"
       ],
       "requiredCapabilities": [
         "group-title",

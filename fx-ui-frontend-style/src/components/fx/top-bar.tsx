@@ -24,7 +24,7 @@ function TopBar({ className, children, ...props }: React.ComponentProps<"header"
     <header
       data-slot="top-bar"
       className={cn(
-        "flex h-12 w-full items-center gap-3 px-3 text-fx-13 text-foreground",
+        "flex h-12 w-full items-center gap-3 px-3 text-base text-foreground",
         className
       )}
       {...props}

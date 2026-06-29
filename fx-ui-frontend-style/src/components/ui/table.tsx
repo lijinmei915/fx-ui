@@ -31,7 +31,7 @@ function Table({
       <table
         data-slot="table"
         data-density={density}
-        className={cn("group/table w-full caption-bottom text-fx-13", className)}
+        className={cn("group/table w-full caption-bottom text-base", className)}
         {...props}
       />
     </div>
@@ -227,7 +227,7 @@ function TableCaption({
   return (
     <caption
       data-slot="table-caption"
-      className={cn("mt-4 text-fx-13 text-muted-foreground", className)}
+      className={cn("mt-4 text-base text-muted-foreground", className)}
       {...props}
     />
   )

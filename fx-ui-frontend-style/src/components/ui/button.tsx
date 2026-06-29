@@ -33,8 +33,8 @@ const buttonVariants = cva(
       // 「哪个是默认」由 defaultVariants 单独声明（= sm 28px，对齐公司 Figma 默认）。
       // 图标-文字大小关系：文字档不写 svg 尺寸，统一走 base 的 size-[1.15em]（图标=字号×1.15，各档自动成比例）。
       size: {
-        xs: "h-6 gap-1 px-2 text-fx-12 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5",
-        sm: "h-7 gap-1 px-2.5 text-fx-13 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
+        xs: "h-6 gap-1 px-2 text-sm in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5",
+        sm: "h-7 gap-1 px-2.5 text-base in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
         md: "h-8 px-3 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5",
         lg: "h-9 gap-2 px-4 text-base has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
         // 纯图标档：图标占满方形热区的比例由各档手控（脱离字号），不走 1.15em

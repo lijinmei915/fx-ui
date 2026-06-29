@@ -71,7 +71,7 @@ function CommandPalette({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent showCloseButton={false} className="top-[20%] max-w-xl translate-y-0 gap-0 overflow-hidden p-0">
         <DialogTitle className="sr-only">命令面板</DialogTitle>
-        <div className="flex items-center gap-2 border-b border-border-subtle px-3">
+        <div className="flex items-center gap-(--fx-control-gap) border-b border-border-subtle px-(--fx-control-px-md)">
           <SearchIcon className="size-4 shrink-0 text-muted-foreground" />
           <input
             autoFocus
@@ -79,12 +79,12 @@ function CommandPalette({
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onKeyDown}
             placeholder={placeholder}
-            className="h-11 w-full bg-transparent text-sm outline-none placeholder:text-foreground-disabled"
+            className="h-[calc(var(--fx-control-lg-height)+8px)] w-full bg-transparent text-sm outline-none placeholder:text-foreground-disabled"
           />
         </div>
         <div ref={listRef} className="scrollbar-thin max-h-80 overflow-y-auto overscroll-contain p-1">
           {filtered.length === 0 ? (
-            <div className="py-8 text-center text-fx-13 text-muted-foreground">{emptyText}</div>
+            <div className="py-8 text-center text-base text-muted-foreground">{emptyText}</div>
           ) : (
             filtered.map((it, i) => (
               <button
@@ -94,15 +94,15 @@ function CommandPalette({
                 onMouseMove={() => setActive(i)}
                 onClick={() => select(it)}
                 className={cn(
-                  "flex min-h-9 w-full items-center justify-between gap-2 rounded-md px-2.5 text-left text-fx-13 outline-none",
+                  "flex min-h-(--fx-control-md-height) w-full items-center justify-between gap-(--fx-control-gap) rounded-md px-(--fx-control-px-sm) text-left text-base outline-none",
                   i === active ? "bg-muted text-foreground" : "text-foreground"
                 )}
               >
-                <span className="flex min-w-0 items-baseline gap-2">
+                <span className="flex min-w-0 items-baseline gap-(--fx-control-gap)">
                   <span className="truncate">{it.label}</span>
-                  {it.meta && <span className="shrink-0 text-fx-12 text-muted-foreground">{it.meta}</span>}
+                  {it.meta && <span className="shrink-0 text-sm text-muted-foreground">{it.meta}</span>}
                 </span>
-                {it.group && <span className="shrink-0 text-fx-12 text-muted-foreground">{it.group}</span>}
+                {it.group && <span className="shrink-0 text-sm text-muted-foreground">{it.group}</span>}
               </button>
             ))
           )}

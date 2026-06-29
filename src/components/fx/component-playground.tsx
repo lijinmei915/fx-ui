@@ -33,7 +33,7 @@ export type ComponentPlaygroundConfig = {
 
 function PlaygroundEyebrow({ dot, zh, en }: { dot: string; zh: string; en: string }) {
   return (
-    <div className="mb-4 flex items-center gap-2 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+    <div className="mb-(--fx-panel-gap) flex items-center gap-(--fx-control-gap-tight) text-[max(12px,var(--fx-text-xs))] font-semibold tracking-wider text-muted-foreground uppercase">
       <span className={`size-1.5 rounded-full ${dot}`} />
       {zh} <span className="font-normal text-foreground-disabled">({en})</span>
     </div>
@@ -42,18 +42,17 @@ function PlaygroundEyebrow({ dot, zh, en }: { dot: string; zh: string; en: strin
 
 function PlaygroundSectionTitle({ dot, children }: { dot: string; children: ReactNode }) {
   return (
-    <div className="flex items-center gap-2 text-[11px] font-semibold text-muted-foreground">
+    <div className="flex items-center gap-(--fx-control-gap-tight) text-[max(12px,var(--fx-text-xs))] font-semibold text-muted-foreground">
       <span className={`size-1.5 rounded-full ${dot}`} />
       {children}
     </div>
   )
 }
 
-function PlaygroundPropLabel({ zh, prop }: { zh: string; prop: string }) {
+function PlaygroundPropLabel({ zh }: { zh: string }) {
   return (
-    <label className="flex items-center gap-1.5 text-xs font-semibold text-foreground-secondary">
+    <label className="flex items-center gap-(--fx-control-gap-tight) text-sm font-semibold text-foreground-secondary">
       {zh}
-      <code className="rounded border border-border-subtle bg-muted px-1 py-0.5 font-mono text-[10px] font-normal text-muted-foreground">{prop}</code>
     </label>
   )
 }
@@ -65,7 +64,7 @@ function PgSeg({ active, disabled, isAll, label, title, onClick }: { active: boo
       title={title}
       disabled={disabled}
       onClick={onClick}
-      className={`rounded-xs px-2.5 py-1 text-[11px] font-medium transition-all ${
+      className={`min-h-(--fx-control-xs-height) rounded-xs px-(--fx-control-px-xs) py-1 text-sm font-medium transition-all ${
         disabled
           ? "cursor-not-allowed text-foreground-disabled"
           :
@@ -136,7 +135,7 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
     <div data-slot="card" className="overflow-hidden rounded-xl border border-border-container bg-card shadow-l1">
       {config.scenarios ? (
         <div className="flex flex-col border-b border-border-subtle bg-card xl:flex-row">
-          <div className="flex-1 border-b border-border-subtle p-5 xl:border-r xl:border-b-0">
+          <div className="flex-1 border-b border-border-subtle p-(--fx-panel-padding) xl:border-r xl:border-b-0">
             <PlaygroundEyebrow dot="bg-info" zh={lang === "en" ? "Scenarios" : "场景预设"} en="SCENARIOS" />
             <PgSegmented
               value={activeSc?.id ?? ""}
@@ -144,29 +143,29 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
               options={config.scenarios.map((sc) => ({ value: sc.id, label: lang === "en" ? sc.en : sc.zh }))}
             />
             {activeSc ? (
-              <div className="mt-4 space-y-3 rounded-xl border border-border-subtle bg-card p-4 shadow-l1">
+              <div className="mt-(--fx-panel-gap) space-y-(--fx-control-gap) rounded-xl border border-border-subtle bg-card p-(--fx-panel-padding) shadow-l1">
                 <div>
-                  <div className="mb-1 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">{lang === "en" ? "Intent" : "使用意图"}</div>
-                  <p className="text-sm leading-relaxed text-foreground-secondary">{lang === "en" ? activeSc.intentEn : activeSc.intent}</p>
+                  <div className="mb-1 text-[max(12px,var(--fx-text-xs))] font-semibold tracking-wider text-muted-foreground uppercase">{lang === "en" ? "Intent" : "使用意图"}</div>
+                  <p className="text-base leading-relaxed text-foreground-secondary">{lang === "en" ? activeSc.intentEn : activeSc.intent}</p>
                 </div>
                 <div>
-                  <div className="mb-1 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">{lang === "en" ? "Recommended Code" : "推荐写法"}</div>
-                  <code className="block rounded border border-border-subtle bg-muted px-2 py-1.5 font-mono text-fx-12 break-words whitespace-pre-wrap text-foreground-secondary">{code}</code>
+                  <div className="mb-1 text-[max(12px,var(--fx-text-xs))] font-semibold tracking-wider text-muted-foreground uppercase">{lang === "en" ? "Recommended Code" : "推荐写法"}</div>
+                  <code className="block rounded border border-border-subtle bg-muted px-(--fx-control-px-sm) py-(--fx-control-px-xs) font-mono text-sm break-words whitespace-pre-wrap text-foreground-secondary">{code}</code>
                 </div>
               </div>
             ) : null}
           </div>
-          <div className="flex flex-1 flex-col gap-5 p-5">
+          <div className="flex flex-1 flex-col gap-(--fx-panel-gap) p-(--fx-panel-padding)">
             <PlaygroundEyebrow dot="bg-primary" zh={lang === "en" ? "Interactive props" : "实时属性"} en="INTERACTIVE PROPS" />
             {config.props.map((p) => (
-              <div key={p.key} className="flex flex-col gap-1.5">
-                <PlaygroundPropLabel zh={lang === "en" ? p.en : p.zh} prop={p.propName} />
+              <div key={p.key} className="flex flex-col gap-(--fx-control-gap-tight)">
+                <PlaygroundPropLabel zh={lang === "en" ? p.en : p.zh} />
                 {p.type === "text" ? (
                   <Input
                     value={(p.bilingual && lang === "en" ? v[`${p.key}En`] : v[p.key]) ?? ""}
                     disabled={p.disabledWhen?.(v) ?? false}
                     onChange={(e) => set(p.bilingual && lang === "en" ? `${p.key}En` : p.key, e.target.value)}
-                    className="h-8 w-full max-w-72"
+                    className="w-full max-w-72"
                   />
                 ) : (
                   <PgSegmented value={v[p.key]} disabled={p.disabledWhen?.(v) ?? false} onChange={(val) => set(p.key, val)} options={p.options.map((o) => ({ value: o.value, label: lang === "en" ? (o.labelEn ?? o.label) : o.label, title: lang === "en" ? (o.titleEn ?? o.title) : o.title }))} allLabel={p.hasAll ? allLabel : undefined} />
@@ -176,19 +175,19 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
           </div>
         </div>
       ) : (
-        <div className="border-b border-border-subtle bg-card p-4">
-          <div className="grid gap-5 xl:grid-cols-2">
-            <div className="flex flex-col gap-3">
+        <div className="border-b border-border-subtle bg-card p-(--fx-panel-padding)">
+          <div className="grid gap-(--fx-panel-gap) xl:grid-cols-2">
+            <div className="flex flex-col gap-(--fx-panel-gap)">
               <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Interactive props" : "实时属性"}</PlaygroundSectionTitle>
               {config.props.map((p) => (
-                <div key={p.key} className="flex flex-col gap-1.5">
-                  <PlaygroundPropLabel zh={lang === "en" ? p.en : p.zh} prop={p.propName} />
+                <div key={p.key} className="flex flex-col gap-(--fx-control-gap-tight)">
+                  <PlaygroundPropLabel zh={lang === "en" ? p.en : p.zh} />
                   {p.type === "text" ? (
                     <Input
                       value={(p.bilingual && lang === "en" ? v[`${p.key}En`] : v[p.key]) ?? ""}
                       disabled={p.disabledWhen?.(v) ?? false}
                       onChange={(e) => set(p.bilingual && lang === "en" ? `${p.key}En` : p.key, e.target.value)}
-                      className="h-8 w-full"
+                      className="w-full"
                     />
                   ) : (
                     <PgSegmented
@@ -202,13 +201,13 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
                 </div>
                 ))}
             </div>
-            <div className="border-l border-border-subtle pl-5">
-              <div className="space-y-4">
+            <div className="border-l border-border-subtle pl-(--fx-panel-padding)">
+              <div className="space-y-(--fx-panel-gap)">
                 <div>
                   <div className="mb-1">
                     <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Intent" : "使用意图"}</PlaygroundSectionTitle>
                   </div>
-                  <p className="text-sm leading-relaxed text-foreground-secondary">
+                  <p className="text-base leading-relaxed text-foreground-secondary">
                     {intentText}
                   </p>
                 </div>
@@ -217,28 +216,28 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
                     <div className="mb-1">
                       <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Constraint" : "约束"}</PlaygroundSectionTitle>
                     </div>
-                    <p className="text-sm leading-relaxed text-foreground-secondary">{constraintText}</p>
+                    <p className="text-base leading-relaxed text-foreground-secondary">{constraintText}</p>
                   </div>
                 ) : null}
                 <div>
                   <div className="mb-1">
                     <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Recommended code" : "推荐写法"}</PlaygroundSectionTitle>
                   </div>
-                  <code className="block rounded border border-border-subtle bg-muted px-3 py-2 font-mono text-fx-13 leading-relaxed break-words whitespace-pre-wrap text-foreground-secondary">{code}</code>
+                  <code className="block rounded border border-border-subtle bg-muted px-(--fx-control-px-md) py-(--fx-control-px-xs) font-mono text-sm leading-relaxed break-words whitespace-pre-wrap text-foreground-secondary">{code}</code>
                 </div>
               </div>
             </div>
           </div>
         </div>
       )}
-      <div className="flex h-12 items-center justify-between bg-background px-4">
+      <div className="flex h-[calc(var(--fx-control-lg-height)+12px)] items-center justify-between bg-background px-(--fx-panel-padding)">
         <div className="flex h-full items-center gap-1">
           {([["preview", <EyeIcon className="size-4" />, "Preview"], ["code", <Code2Icon className="size-4" />, "Code"]] as const).map(([t, icon, label]) => (
             <button
               key={t}
               type="button"
               onClick={() => setTab(t)}
-              className={`flex h-full items-center gap-1.5 border-b-2 px-2 text-sm font-medium transition-colors ${
+              className={`flex h-full items-center gap-(--fx-control-gap-tight) border-b-2 px-(--fx-control-px-xs) text-sm font-medium transition-colors ${
                 tab === t ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -252,12 +251,12 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
         </Button>
       </div>
       {tab === "preview" ? (
-        <div className="flex min-h-[300px] items-center justify-center bg-card p-12">
-          <div className={isMatrix ? "flex flex-wrap items-center justify-center gap-4" : ""}>{items}</div>
+        <div className="flex min-h-[300px] items-center justify-center bg-card p-[calc(var(--fx-panel-padding)*2)]">
+          <div className={isMatrix ? "flex flex-wrap items-center justify-center gap-(--fx-panel-gap)" : ""}>{items}</div>
         </div>
       ) : (
-        <div className="min-h-[300px] overflow-x-auto bg-foreground p-6">
-          <pre className="font-mono text-fx-13 leading-relaxed text-background/85"><code>{code}</code></pre>
+        <div className="min-h-[300px] overflow-x-auto bg-foreground p-[calc(var(--fx-panel-padding)*2)]">
+          <pre className="font-mono text-sm leading-relaxed text-background/85"><code>{code}</code></pre>
         </div>
       )}
     </div>

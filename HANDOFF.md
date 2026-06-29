@@ -99,7 +99,7 @@ Button 交互调试台（`#playground`，Button 页顶部）：
 - **图标用色定死**：单色默认 `text-foreground`、次要 muted、禁用 disabled；彩色走语义色；反白 `bg-primary`+`text-primary-foreground`；禁用 `opacity-50`+`cursor-not-allowed`（与 Button 同口径，不另造禁用 token）
 - **场景筛选统一**：去掉「全部」tab、默认选第一组；按钮=类型/尺寸/状态/图标，按钮组=类型/尺寸，图标=类型/尺寸；尺寸分组逐档一行（写规格+用途+约束）
 - **正误示例全站统一**：按钮/图标从「逐条代码卡片」改为两列「推荐 Do / 避免 Don't」+ 补一句说明，与其余 ~27 个组件（StandardDocPage + 13 内联页）口径一致
-- **模块说明字号固定**：`docsSpacing.sectionDesc`（`text-base`），全站把零散 `text-fx-13` 模块说明 bump 上来；规范 PageLead `lead` 写法（一句话用途、不堆术语/代码/DEC 引用）
+- **模块说明字号固定**：`docsSpacing.sectionDesc`（`text-base`），全站把零散 `text-base` 模块说明 bump 上来；规范 PageLead `lead` 写法（一句话用途、不堆术语/代码/DEC 引用）
 - **按钮禁用态**：`button.tsx` 去 `disabled:pointer-events-none`→`disabled:cursor-not-allowed`，各 variant hover/active 加 `enabled:` 前缀（禁用悬停不变色、显示禁止光标），base 加 `cursor-pointer`
 - **新增门禁**：`scripts/check-component-docs.mjs`（每张 `*PropRows` 非空且 prop 都带 type）、`scripts/check-imports.mjs`（图标走 `@/lib/icons`、无旧图标库残留），均接入 `check-all.sh`
 - 规范沉淀进 `docs/DOC_SITE_DESIGN.md`（页面头部组/模块说明/组件文档页结构/筛选 tab/尺寸逐档）

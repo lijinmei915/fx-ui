@@ -85,9 +85,9 @@ function AvatarFallback({
       style={toneStyle}
       className={cn(
         // 字号≈头像 0.4 倍，保证 2 个中文字不挤：xs9 / sm11 / default12 / lg15 / xl18
-        "flex size-full items-center justify-center rounded-[inherit] text-fx-12",
+        "flex size-full items-center justify-center rounded-[inherit] text-sm",
         colorful ? "" : "bg-muted text-muted-foreground",
-        "group-data-[size=xs]/avatar:text-[9px] group-data-[size=sm]/avatar:text-[11px] group-data-[size=lg]/avatar:text-fx-15 group-data-[size=xl]/avatar:text-fx-18",
+        "group-data-[size=xs]/avatar:text-[9px] group-data-[size=sm]/avatar:text-[11px] group-data-[size=lg]/avatar:text-lg group-data-[size=xl]/avatar:text-xl",
         className
       )}
       {...props}
@@ -161,7 +161,7 @@ function AvatarGroupCount({
     <div
       data-slot="avatar-group-count"
       className={cn(
-        "relative flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-fx-13 text-muted-foreground ring-2 ring-background group-has-data-[size=xs]/avatar-group:size-5 group-has-data-[size=sm]/avatar-group:size-6 group-has-data-[size=lg]/avatar-group:size-10 group-has-data-[size=xl]/avatar-group:size-12 [&>svg]:size-4 group-has-data-[size=lg]/avatar-group:[&>svg]:size-5 group-has-data-[size=sm]/avatar-group:[&>svg]:size-3",
+        "relative flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-base text-muted-foreground ring-2 ring-background group-has-data-[size=xs]/avatar-group:size-5 group-has-data-[size=sm]/avatar-group:size-6 group-has-data-[size=lg]/avatar-group:size-10 group-has-data-[size=xl]/avatar-group:size-12 [&>svg]:size-4 group-has-data-[size=lg]/avatar-group:[&>svg]:size-5 group-has-data-[size=sm]/avatar-group:[&>svg]:size-3",
         className
       )}
       {...props}

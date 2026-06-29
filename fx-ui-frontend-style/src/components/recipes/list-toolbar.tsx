@@ -49,7 +49,7 @@ function ListToolbar({
           {scopes && scopes.length > 0 && (
             <>
               <DropdownMenu>
-                <DropdownMenuTrigger className="inline-flex shrink-0 items-center gap-1 rounded-l-lg px-2.5 text-fx-13 text-muted-foreground outline-none hover:text-foreground [&_svg]:size-3">
+                <DropdownMenuTrigger className="inline-flex shrink-0 items-center gap-1 rounded-l-lg px-2.5 text-base text-muted-foreground outline-none hover:text-foreground [&_svg]:size-3">
                   {scopes.find((s) => s.key === scope)?.label ?? scopes[0].label}
                   <ChevronDownIcon />
                 </DropdownMenuTrigger>
@@ -62,7 +62,7 @@ function ListToolbar({
               <span className="h-4 w-px bg-border" />
             </>
           )}
-          <input value={search ?? ""} onChange={(e) => onSearchChange(e.target.value)} placeholder={searchPlaceholder} className="min-w-0 flex-1 bg-transparent px-2.5 text-fx-13 outline-none placeholder:text-foreground-disabled" />
+          <input value={search ?? ""} onChange={(e) => onSearchChange(e.target.value)} placeholder={searchPlaceholder} className="min-w-0 flex-1 bg-transparent px-2.5 text-base outline-none placeholder:text-foreground-disabled" />
           <SearchIcon className="mr-2.5 size-4 shrink-0 text-muted-foreground" />
         </div>
         )}

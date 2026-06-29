@@ -84,7 +84,7 @@ function CommandPalette({
         </div>
         <div ref={listRef} className="scrollbar-thin max-h-80 overflow-y-auto overscroll-contain p-1">
           {filtered.length === 0 ? (
-            <div className="py-8 text-center text-fx-13 text-muted-foreground">{emptyText}</div>
+            <div className="py-8 text-center text-base text-muted-foreground">{emptyText}</div>
           ) : (
             filtered.map((it, i) => (
               <button
@@ -94,15 +94,15 @@ function CommandPalette({
                 onMouseMove={() => setActive(i)}
                 onClick={() => select(it)}
                 className={cn(
-                  "flex min-h-9 w-full items-center justify-between gap-2 rounded-md px-2.5 text-left text-fx-13 outline-none",
+                  "flex min-h-9 w-full items-center justify-between gap-2 rounded-md px-2.5 text-left text-base outline-none",
                   i === active ? "bg-muted text-foreground" : "text-foreground"
                 )}
               >
                 <span className="flex min-w-0 items-baseline gap-2">
                   <span className="truncate">{it.label}</span>
-                  {it.meta && <span className="shrink-0 text-fx-12 text-muted-foreground">{it.meta}</span>}
+                  {it.meta && <span className="shrink-0 text-sm text-muted-foreground">{it.meta}</span>}
                 </span>
-                {it.group && <span className="shrink-0 text-fx-12 text-muted-foreground">{it.group}</span>}
+                {it.group && <span className="shrink-0 text-sm text-muted-foreground">{it.group}</span>}
               </button>
             ))
           )}

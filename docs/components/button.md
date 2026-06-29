@@ -66,9 +66,21 @@ Figma 关键规格（默认/中尺寸）：
 | 横向内边距 | **10px**（外间距/Button） | sm 档 px-2.5（10px） | ✅ |
 | 圆角 | **6px**（中）/ 8px（大 h≥32） | `--radius-md` | 待核 |
 | 图标-文字间距 | **4px**（内间距/Button） | 4px（gap-1） | ✅ |
-| 字号 | **13px** Regular | 13/14（按 size） | 大体一致 |
+| 字号 | **13px** Regular | 按 Tailwind 字号档随尺寸递进 | ✅ |
 
 注：上表差异是**待体检对齐项**（尚未改动，先记录留痕）；调整时连同 size 阶梯（小24 / 中28 / 大32+）一并评估，不要只改默认。
+
+当前 Button 的普通尺寸采用「高度 + Tailwind 字号档」一一对应，避免小按钮文字反而大于中按钮：
+
+| size | 高度变量 | 字号类 | 标准 14 基准下 |
+| --- | --- | --- | --- |
+| `xs` | `--fx-control-xs-height` | `text-xs` | 12px |
+| `sm`（默认） | `--fx-control-sm-height` | `text-sm` | 14px |
+| `md` | `--fx-control-md-height` | `text-base` | 16px |
+| `lg` | `--fx-control-lg-height` | `text-lg` | 18px |
+| `toolbar` | `--fx-control-sm-height` | `text-sm` | 14px |
+
+图标文字按钮的图标默认按 `1.15em` 跟随字号；纯图标按钮使用 `icon-*` 档单独控制热区和图标尺寸。
 
 ## 使用方式 {#usage}
 
@@ -120,7 +132,7 @@ Button 支持 `@base-ui/react/button` 的原生 button props，并额外支持�
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | `variant` | 按钮样式变体 | `'default' \| 'outline' \| 'secondary' \| 'ghost' \| 'destructive' \| 'plain'` | `'default'` |
-| `size` | 按钮尺寸（默认值见 defaultVariants） | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'icon-xs' \| 'icon-sm' \| 'icon-md' \| 'icon-lg'` | `'sm'`（28px） |
+| `size` | 按钮尺寸（默认值见 defaultVariants） | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'toolbar' \| 'toolbar-icon' \| 'icon-xs' \| 'icon-sm' \| 'icon-md' \| 'icon-lg'` | `'sm'`（28px） |
 | `disabled` | 是否禁用 | `boolean` | `false` |
 | `aria-invalid` | 是否展示错误态 | `boolean` | `false` |
 | `render` | 把按钮样式渲染到自定义元素上，例如 `<a>`；这是 Base UI 版本的 asChild 能力 | `ReactElement \| (props, state) => ReactElement` | - |
@@ -176,12 +188,13 @@ Button 只有一个组件，靠 4 个**互相独立**的轴组合，任意搭配
 | 轴 | prop | 取值 | 管什么 |
 | --- | --- | --- | --- |
 | 类型 | `variant` | default / secondary / outline / ghost / destructive / plain | 语义层级与底色 |
-| 尺寸 | `size` | xs(24) / sm(28,默认) / md(32) / lg(36) / icon-* | 高度、内边距、字号、图标-文字 gap |
+| 尺寸 | `size` | xs(24) / sm(28,默认) / md(32) / lg(36) / toolbar(28+14px) / icon-* | 高度、内边距、字号、图标-文字 gap |
 | 分色 | `tone` | default / primary / info / danger | **仅 `plain` 生效**，给无底色按钮分色（info=蓝） |
 | 状态 | 原生 | `disabled`（+ Spinner = loading） | 交互态 |
 
 - 选择顺序：先按语义选 `variant` → 按密度/场景选 `size` → 若是 `plain` 再选 `tone` → 状态按需加。
 - 任意 `variant` 都能配任意 `size` 与状态（正交），例如 `<Button variant="plain" size="sm" tone="danger">`、`<Button variant="outline" size="lg" disabled>`。
+- `toolbar` / `toolbar-icon` 只用于页面顶栏、工具栏和页面动作区：保持 28px 热区，但文字固定走 14px，避免普通 `sm` 的 16px 字号挤进高密度工具区。
 - `tone` 只对 `plain` 有意义；实心/描边/ghost 的颜色由 `variant` 决定，不要叠 `tone`。
 - 纯图标（任意 variant + `size="icon-*"`）必须补 `aria-label` + Tooltip。
 

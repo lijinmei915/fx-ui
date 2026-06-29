@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-06-18
+last_verified: 2026-06-30
 teaches: "fx-ui 高价值结构改动的记录：改了什么、为什么改、影响到哪里"
 use_when: "需要回溯某次跨层改动的原因和影响范围时"
 ---
@@ -27,8 +27,8 @@ use_when: "需要回溯某次跨层改动的原因和影响范围时"
 
 ## 2026-06-18 — 自托管开源字体（Inter + Noto Sans SC）
 
-- **改动**：字体从纯系统栈改为自托管开源 webfont（`@fontsource` 引入 Inter 管西文、Noto Sans SC 管中文，见 DEC-008）；附带把 `text-fx-*` 用 `extendTailwindMerge` 登记为 font-size，修掉它被当文字颜色覆盖的 bug（小尺寸主色按钮黑字）
-- **影响**：中英文跨平台渲染一致、无版权困扰；`cn()` 不再误吞文字颜色
+- **改动**：字体从纯系统栈改为自托管开源 webfont（`@fontsource` 引入 Inter 管西文、Noto Sans SC 管中文，见 DEC-008）
+- **影响**：中英文跨平台渲染一致、无版权困扰
 - **相关文件**：`src/main.tsx`、`src/lib/utils.ts`、`theme/fx-theme.css`、`docs/{TOKENS,DECISIONS}.md`
 
 ## 2026-06-16~18 — Token 层全面精修 + 交互态收敛 + 治理门禁

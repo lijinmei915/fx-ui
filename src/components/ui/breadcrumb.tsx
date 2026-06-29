@@ -18,9 +18,9 @@ function Breadcrumb({ className, ...props }: React.ComponentProps<"nav">) {
 
 // 尺寸档（对齐企业 web 规范）：lg=15 / default=13 / sm=12，字号驱动整条面包屑。
 const breadcrumbSizes = {
-  lg: "text-fx-15",
-  default: "text-fx-13",
-  sm: "text-fx-12",
+  lg: "text-lg",
+  default: "text-base",
+  sm: "text-sm",
 } as const
 
 function BreadcrumbList({

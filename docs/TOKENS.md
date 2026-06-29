@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-29
+last_verified: 2026-06-30
 teaches: "公司设计 token 的基础架构、真实值和全局视觉使用规则"
 use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadcn 组件样式或判断视觉是否符合公司规范时"
 ---
@@ -30,7 +30,7 @@ fx-ui 采用主流设计系统分层：**Tailwind 是表达层，FX token 是视
 |------|----------|------|
 | `spacing / layout / breakpoint` | **Tailwind 原生** | 保持与 shadcn / Tailwind 工程习惯一致，如 `gap-*`、`px-*`、`grid`、`lg:*` |
 | `color` | **FX token → Tailwind 语义类** | 必须走 `--fx-*` / 语义槽 / `bg-primary` 这类映射，不写死十六进制，不长期依赖 Tailwind 默认色 |
-| `typography` | **FX token → Tailwind 字号类** | 业务/组件正文优先 `text-fx-*`；13/15px 这类企业字号直接映射成类，不靠 Tailwind 默认字号再乘百分比硬凑 |
+| `typography` | **FX token → Tailwind 字号类** | 对外主推荐 `text-sm/base/lg/xl`；底层仍由企业字号 token 驱动，不靠 Tailwind 默认字号再乘百分比硬凑 |
 | `radius` | **FX token → Tailwind 圆角类** | 组件圆角走 `--radius` 派生档，不另立一套默认刻度 |
 | `shadow` | **FX token → Tailwind 阴影类** | 统一 `shadow-l1/l2/l3`，不用 Tailwind 默认 `shadow-sm/md/lg` |
 | `border-width` | **FX token / 主题能力** | 组件默认描边规格跟随主题，不在调用处临时另选一套 |
@@ -159,34 +159,33 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 ## 排版（字号 / 字重 / 字体 · 企业 web 规范）
 
-来源：企业 Figma **web 字体规范**（fx-ui 是 web 库，以 web 规范为准；移动端字号另有一套，见 DEC-004）。这里的 `text-fx-*` 不是脱离 Tailwind 的第二套写法，而是**把企业字号 token 映射进 Tailwind 类体系后的调用口径**。Tailwind 默认 `text-sm/text-base/...` 继续保留兼容，但不作为企业字号正式推荐。
+来源：企业 Figma **web 字体规范**（fx-ui 是 web 库，以 web 规范为准；移动端字号另有一套，见 DEC-004）。当前统一口径为**直接使用 Tailwind 常见字号类**，让开发和 AI 都按主流写法调用；这些类背后的真实数值，仍然由 fx-ui 的企业字号 token 控制。
 
-**推荐命名方向（对 AI / 开发更友好）**：长期主推荐口径应逐步收敛到**语义类名**，让人和 AI 都按用途选字级，而不是按 px 猜。
-
-| 推荐语义类 | 当前兼容映射 | 字号/行高 | 场景 |
+| 主推荐类 | 当前映射 | 字号/行高 | 场景 |
 |------|------|------|------|
-| `text-page-title` | `text-fx-18` | 18 / 28 | 页面/详情标题 |
-| `text-section-title` | `text-fx-15` | 15 / 22 | 模块/卡片/组件标题 |
-| `text-body` | `text-fx-13` | 13 / 18 | 默认正文、菜单、列表、表单 |
-| `text-caption` | `text-fx-12` | 12 / 18 | 提示信息、说明文字 |
+| `text-xl` | `18 / 28` | 页面/详情标题 | 大标题、页头标题 |
+| `text-lg` | `15 / 22` | 模块/卡片/组件标题 | 区块标题、卡片标题 |
+| `text-base` | `13 / 18` | 默认正文、菜单、列表、表单 | 主体文案 |
+| `text-sm` | `12 / 18` | 提示信息、说明文字 | 辅助文案 |
 
-**当前阶段口径**：
-- 新治理规则先以**语义命名为长期目标**。
-- 现有实现仍保留 `text-fx-*`，作为稳定兼容层，避免一次性大迁移。
-- 真正落实现实时，可让语义类映射到同一组底层 token；主题面板继续只改 token，不改组件调用代码。
+**实现方式**：
+- 新代码统一使用 `text-xs / text-sm / text-base / text-lg / text-xl`。
+- `theme/fx-theme.css` 覆盖 Tailwind 的 `--text-*` 变量，把企业字号和值注入到这套类里。
+- 主题面板继续只改底层 token，不改组件调用代码。
+- Web 字号底线是 **12px**：任何正文、标签、角标、头像缩写、示意图文字都不得低于 12px；需要弱化时用颜色、字重、透明层级或空间关系，不用更小字号。
 
 **字号 + 行高**（默认正文 = 13）：
 
 | 工具类 | 字号/行高 | 字重 | 层级/场景 |
 |------|-----|------|------|
-| `text-fx-18` | 18 / 28 | bold | 详情页标题 |
-| `text-fx-15` | 15 / 22 | regular·bold | 模块/卡片/组件标题 |
-| `text-fx-13` | 13 / 18 | regular·bold | **默认正文** — 菜单、列表、表单、大面积文案 |
-| `text-fx-12` | 12 / 18 | regular | 提示信息、说明文字 |
+| `text-xl` | 18 / 28 | bold | 详情页标题 |
+| `text-lg` | 15 / 22 | regular·bold | 模块/卡片/组件标题 |
+| `text-base` | 13 / 18 | regular·bold | **默认正文** — 菜单、列表、表单、大面积文案 |
+| `text-sm` / `text-xs` | 12 / 18 | regular | 提示信息、说明文字、最小辅助信息 |
 
-**行高随字号 token 自带**（上表"字号/行高"列即定义），用 `text-fx-*` 自动带上对应行高；`text-base` 走 Tailwind 默认 1.5。正文/说明**不要手写 `leading-7`/`leading-8`** 把行距抬到 2.0+——那样换行太散，不符合主流正文行高（约 1.5）。
+**行高随主题字号映射一并调整**（上表"字号/行高"列即定义）。正文/说明**不要手写 `leading-7`/`leading-8`** 把行距抬到 2.0+——那样换行太散，不符合主流正文行高（约 1.5）。
 
-> 治理建议：`text-fx-*` 更像“数值档位名”，适合过渡与底层映射；`text-body / text-caption / text-section-title / text-page-title` 更适合作为面向 AI、开发和文档的长期主推荐写法。
+> 治理建议：新代码只写 `text-xs / text-sm / text-base / text-lg / text-xl`，不要再引入第二套 FX 字号类。
 
 **字重**：`font-normal`(400) 常规·正文 / `font-medium`(500) 中等·标签·按钮·菜单 / `font-semibold`(**600**) 次强调·小标题/卡片标题（500 偏轻、700 偏重时的中间档）/ `font-bold`(**700**) 加粗·页/区块标题·强调（见 DEC-028）。
 

@@ -60,7 +60,7 @@ function Pagination({
       {...props}
     >
       {showTotal && (
-        <span className="mr-2 text-fx-12 text-muted-foreground">共 {total} 条</span>
+        <span className="mr-2 text-sm text-muted-foreground">共 {total} 条</span>
       )}
       <Button variant="outline" size="icon-sm" disabled={page <= 1} onClick={() => go(page - 1)} aria-label="上一页">
         <ChevronLeftIcon />

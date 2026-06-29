@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-06-29
+last_verified: 2026-06-30
 teaches: "fx-ui 重要的技术/协作决策记录：选了什么、放弃了什么、为什么"
 use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论"
 ---
@@ -104,14 +104,14 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **影响**：新增 `src/lib/icons.ts` 把项目用的图标名映射到 Phosphor 等价图标（业务/组件 JSX 不用改，只把 import 从 `lucide-react` 改到 `@/lib/icons`）；`StarOff` 无 Phosphor 等价，暂用 `Star`；后续新增图标直接从 `@phosphor-icons/react` 取名加进 shim
 - **相关文件**：`src/lib/icons.ts`、`package.json`、`docs/TOKENS.md`（图标小节）、`src/App.tsx`（Icon 页）
 
-### DEC-008: 自托管开源字体（Inter + Noto Sans SC），并把 text-fx-* 登记进 tailwind-merge
+### DEC-008: 自托管开源字体（Inter + Noto Sans SC）
 
 - **日期**：2026-06-18
 - **状态**：已决定
 - **决定**：字体从"纯系统字体栈"改为**自托管开源 webfont**：西文/数字用 **Inter**，中文用 **Noto Sans SC（= 思源黑体简体）**，均 OFL 授权、无版权困扰，做到跨平台一致。经 `@fontsource-variable/inter` + `@fontsource/noto-sans-sc`（400/500/700）引入，按 unicode-range 懒加载
 - **放弃**：系统字体栈（Mac 苹方 / Windows 雅黑，跨系统不一致）；放弃 shadcn 的 Inter/Geist 单字体（不含中文，中文照样回退系统）
 - **原因**：系统栈换台电脑中文字形就变；Inter 只解决西文，中文必须配 Noto Sans SC 才能全平台一致
-- **附带踩坑（tailwind-merge）**：自定义字号工具类 `text-fx-12/13/15/18` 必须在 `src/lib/utils.ts` 用 `extendTailwindMerge` 登记进 `font-size` 组；否则 tailwind-merge 把 `text-fx-13` 当成**文字颜色**，和 `text-primary-foreground` 冲突、把颜色覆盖掉（症状：主色按钮小尺寸出现意外黑字）。这是工具层的坑，记在这里防再踩，不属于字体/排版规范
+- **补充说明**：这一轮已经放弃 `text-fx-*` 独立字号类，统一走 Tailwind `text-*`，因此不再需要在 `tailwind-merge` 里单独登记 FX 字号。
 - **相关文件**：`theme/fx-theme.css`（`--font-sans`）、`src/main.tsx`（@fontsource 引入）、`src/lib/utils.ts`（cn/twMerge）、`docs/TOKENS.md`（排版·字族）
 
 ### DEC-009: 图标库从 Phosphor 换成 Tabler Icons
@@ -283,7 +283,7 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
   - 复用现成：`PageHeader`(fx)、`Pagination`(ui)。
 - **必须可改动（核心要求）**：列定义(`columns`)、工具栏配置、头部、行操作都做成**参数化 + 受控**，页面侧只换数据/列/配置，**不写死**。换个列表页 = 换 columns/数据，不复制结构。
 - **放置**：先落 `src/components/recipes/`（轻，只登记 ARCHITECTURE）跑通；稳定后升级到 `src/components/fx/`（对应架构候选 `EntityTable`/`SearchToolbar`，届时补 manifest+文档+check）。
-- **页头处理（已落地 2026-06-26）**：现成 fx `PageHeader` 是「内容页大标题」（`text-xl` + `pb-4`），不适配列表页「紧凑标题栏」（h-12 + `text-fx-15` + 视图下拉），硬套要覆盖（踩红线 7）。故**单独沉淀 `ListPageHeader` block**（`src/components/recipes/list-page-header.tsx`），三轴变体由 props/slot 决定：① `views?` 不传只剩标题、传了出「客户 ｜ 全部客户 ⌄」视图下拉；② `actions` 插槽 0..N 动态；③ 操作按钮样式（描边/主色）由页面定。**变体轴是用户明确给出的（非猜测），故 N=1 即抽**（用户决定，跳过"等第二页"默认）。`PageHeader` 留作内容页用，不强行复用。
+- **页头处理（已落地 2026-06-26）**：现成 fx `PageHeader` 是「内容页大标题」（`text-xl` + `pb-4`），不适配列表页「紧凑标题栏」（h-12 + `text-lg` + 视图下拉），硬套要覆盖（踩红线 7）。故**单独沉淀 `ListPageHeader` block**（`src/components/recipes/list-page-header.tsx`），三轴变体由 props/slot 决定：① `views?` 不传只剩标题、传了出「客户 ｜ 全部客户 ⌄」视图下拉；② `actions` 插槽 0..N 动态；③ 操作按钮样式（描边/主色）由页面定。**变体轴是用户明确给出的（非猜测），故 N=1 即抽**（用户决定，跳过"等第二页"默认）。`PageHeader` 留作内容页用，不强行复用。
 - **相关文件**：`src/App.tsx`（`CustomerListTemplate` 内容部分待抽）、`src/components/fx/page-header.tsx`、（新）`src/components/recipes/data-table.tsx`、`list-toolbar.tsx`
 
 ### DEC-025: 「生成 + 内置设置面板」处理用户自调，不做可视化搭建器（暂搁置）
@@ -324,7 +324,7 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **决定**：① 字重阶从 400/500/700 三档补为 **400/500/600/700** 四档——`font-semibold`(600) 作"次强调/小标题/卡片标题"档（500 偏轻、700 偏重之间的中间档，且文档站早已在用，此为扶正）。② 文档站**展示型标题**降一档对齐参考站 component-library-showcase：页标题 `text-4xl(36)→text-3xl(30)`、区块标题 `text-2xl(24)→text-xl(20)`，均保留 `font-bold tracking-tight`。
 - **放弃**：① 只用 700 不要 600（小标题没有合适中间字重）；② 维持 36/24 大标题（比参考站冲一档、不够克制）。
 - **原因**：参考站观感更稳，归因为标题字号小一档 + 小标题用 semibold。字色阶（slate-900/700/500/400 ↔ 我们 foreground/-secondary/muted-foreground/disabled）方向本就一致，无需动。
-- **范围边界**：只动**文档站自身展示标题**（Tailwind `text-*` 大号）；**不动业务/组件的 `text-fx-*` 企业字号阶**（那套以 Figma web 规范为准，见 DEC-004）。`font-semibold` 是 Tailwind 原生类，无需加 token CSS。
+- **范围边界**：只动文档站自身展示标题；业务/组件也统一走 Tailwind `text-*`，字号值仍由 `theme/fx-theme.css` 注入。`font-semibold` 是 Tailwind 原生类，无需加 token CSS。
 - **相关文件**：`src/App.tsx`（标题 class）、`docs/TOKENS.md`（排版·字重）
 
 ### DEC-029: Card 加 `elevated` 浮起变体（默认平卡）
@@ -389,18 +389,18 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 
 - **日期**：2026-06-29
 - **状态**：已决定
-- **决定**：fx-ui 采用主流设计系统分层：**Tailwind 负责表达“怎么调用/怎么排版”，FX token 负责定义“具体值是什么”；企业视觉数值统一映射进 Tailwind 类体系消费**。不再把 Tailwind 默认视觉刻度与 FX 视觉刻度当成两套并列体系。
+- **决定**：fx-ui 采用主流设计系统分层：**Tailwind 负责表达“怎么调用/怎么排版”，FX token 负责定义“具体值是什么”；企业视觉数值统一映射进 Tailwind 类体系消费**。排版统一收口到 `text-xs / text-sm / text-base / text-lg / text-xl`。
 - **分层口径**：
   1. **布局/结构层**：继续优先用 Tailwind 原生工具类，如 `flex` / `grid` / `gap-*` / `px-*` / `col-span-*` / 响应式断点。
   2. **视觉语义层**：颜色、字号、圆角、阴影、边框粗细、动效时长，优先收口到 FX token，再映射到 Tailwind 类或语义槽消费。
   3. **组件层**：组件默认样式只引用语义 token 或已治理过的工具类，不在调用处混入另一套默认视觉刻度。
-- **放弃**：① 同一语义长期同时允许 `text-sm` 与 `text-fx-13`、`shadow-md` 与 `shadow-l1` 这类双轨并存；② 为了“灵活”在组件调用处临时选 Tailwind 默认视觉值；③ 再造一层“FX 双写法”与 Tailwind 平行存在。
+- **放弃**：① 同一语义长期同时允许第二套 FX 字号类与 Tailwind `text-*` 双轨并存；② 为了“灵活”在组件调用处临时选 Tailwind 默认视觉值；③ 再造一层“FX 双写法”与 Tailwind 平行存在。
 - **原因**：主流体系（Tailwind theme variables / shadcn semantic tokens）都是“token 作为真相源，utility 作为调用 API”。如果默认视觉刻度双轨并存，后续换肤、缩放、统一治理都会漂；而布局类保留 Tailwind 原生，则能继续保持工程效率和 open-code 的可读性。
-- **补充说明**：像 `13px`、`15px` 这类企业字号，不走“在 Tailwind 默认字号基础上再乘百分比”的长期方案，而是直接定义 token，再映射成 Tailwind 类。短期兼容可继续用 `text-fx-13`、`text-fx-15`；长期更推荐收敛到 `text-body`、`text-section-title` 这类不歧义的项目语义类。百分比推导可临时试验，但不作为治理基线。
+- **补充说明**：像 `13px`、`15px` 这类企业字号，不走“在 Tailwind 默认字号基础上再乘百分比”的长期方案，而是直接定义 token，再映射成 Tailwind 类。现在不再保留 `text-fx-*` 旧口径；长期只保留 `text-xs / text-sm / text-base / text-lg / text-xl`。百分比推导可临时试验，但不作为治理基线。
 - **影响**：
   1. `spacing`、栅格、断点继续沿用 Tailwind 原生体系。
-  2. `color / typography / radius / shadow / border-width / motion` 统一按 FX 口径治理。
-  3. 旧页面若仍使用 Tailwind 默认视觉类（如 `text-xl`、`shadow-md`），只作为过渡兼容，不视为新的推荐写法；新增代码优先走 FX 对应 token / 项目语义类。
+  2. `color / typography / radius / shadow / border-width / motion` 统一按 FX token 治理。
+  3. 排版调用层统一写 Tailwind `text-*`，具体值由 token 注入。
   4. 主题面板这类“全局主题能力”必须只改 FX token，不以局部类覆盖代替。
 - **相关文件**：`docs/TOKENS.md`、`docs/LAYOUTS.md`、`theme/fx-theme.css`、`src/App.tsx`
 

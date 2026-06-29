@@ -3400,9 +3400,8 @@ function ThemeCustomizerPanel({
   const pendingColorPickRef = useRef<string | null>(null);
   const pickerInitialColorRef = useRef<string | null>(null);
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
-  const [pendingColorPreview, setPendingColorPreview] = useState<string | null>(null);
   const activeCustomColor = getActiveCustomColor(config);
-  const isPickingCustomColor = isColorPickerOpen || pendingColorPreview !== null;
+  const isPickingCustomColor = isColorPickerOpen;
 
   const setConfigValue = <K extends keyof ThemeConfig,>(key: K, value: ThemeConfig[K]) => {
     onConfigChange((current) => updateThemeConfig(current, key, value));
@@ -3471,7 +3470,6 @@ function ThemeCustomizerPanel({
 
     pendingColorPickRef.current = value;
     lastColorPickRef.current = value;
-    setPendingColorPreview(value);
     onConfigChange((current) => ({
       ...current,
       primaryColor: "custom",
@@ -3581,25 +3579,19 @@ function ThemeCustomizerPanel({
               })}
               <label
                 className={cn(
-                  "relative flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full border outline-none transition-[border-color,background-color,color,box-shadow,transform] duration-200 ease-out hover:border-border-strong hover:text-foreground focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50",
-                  pendingColorPreview ? "border-border-subtle" : "border-dashed border-border/70 bg-surface text-muted-foreground/70"
-                )}
-                style={pendingColorPreview ? { backgroundColor: pendingColorPreview } : undefined}>
+                  "relative flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full border border-border/55 bg-muted/18 text-muted-foreground/60 outline-none transition-[border-color,background-color,color,box-shadow,transform,opacity] duration-220 ease-out hover:border-border-strong hover:bg-muted/28 hover:text-foreground/80 focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50",
+                  isPickingCustomColor && "border-border-strong bg-muted/28 text-foreground/80"
+                )}>
                 
                 <span
                   className={cn(
                     "absolute inset-0 rounded-full transition-[box-shadow,transform,opacity] duration-200 ease-out",
-                    isPickingCustomColor && "scale-110 ring-2 ring-foreground ring-offset-2 ring-offset-background"
+                    isPickingCustomColor && "opacity-0"
                   )} />
                 <PlusIcon
                   className={cn(
                     "relative z-10 size-3.5 transition-[opacity,transform,color] duration-200 ease-out",
-                    pendingColorPreview ? "scale-90 opacity-0" : "scale-95 opacity-100"
-                  )} />
-                <span
-                  className={cn(
-                    "absolute z-10 size-2 rounded-full bg-primary-foreground transition-[opacity,transform] duration-200 ease-out",
-                    pendingColorPreview ? "scale-100 opacity-100" : "scale-90 opacity-0"
+                    isPickingCustomColor ? "scale-100 opacity-100" : "scale-95 opacity-100"
                   )} />
                 <input
                   ref={colorInputRef}
@@ -3610,14 +3602,12 @@ function ThemeCustomizerPanel({
                     lastColorPickRef.current = null;
                     pendingColorPickRef.current = null;
                     pickerInitialColorRef.current = activeCustomColor;
-                    setPendingColorPreview(null);
                   }}
                   onInput={(event) => handleCustomColorInput(event.currentTarget.value)}
                   onChange={(event) => handleCustomColorInput(event.currentTarget.value)}
                   onBlur={() => {
                     const nextColor = pendingColorPickRef.current;
                     setIsColorPickerOpen(false);
-                    setPendingColorPreview(null);
                     pendingColorPickRef.current = null;
                     pickerInitialColorRef.current = null;
                     if (nextColor && isHexColor(nextColor)) {

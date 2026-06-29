@@ -380,6 +380,7 @@
 
   /* 边框三档（走中性轴）：弱 04 / 默认 05 / 强 08；input 07 为可交互元素边框 */
   --border-faint: var(--fx-neutrals-03);
+  --border-container: color-mix(in oklch, var(--fx-neutrals-04), white 45%);
   --border-subtle: var(--fx-neutrals-04);
   --border: var(--fx-neutrals-05);
   --border-strong: var(--fx-neutrals-08);
@@ -476,6 +477,7 @@
 
   /* 边框/输入：白色 alpha，叠在任意暗面上自适应 */
   --border-faint: oklch(1 0 0 / 0.06);
+  --border-container: oklch(1 0 0 / 0.07);
   --border-subtle: oklch(1 0 0 / 0.10);
   --border: oklch(1 0 0 / 0.14);
   --border-strong: oklch(1 0 0 / 0.26);
@@ -533,6 +535,7 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border-faint: var(--border-faint);
+  --color-border-container: var(--border-container);
   --color-border-subtle: var(--border-subtle);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
@@ -656,31 +659,19 @@
 }
 
 /* 运行时主题预览层：由主题配置面板写入 data-theme-* 和 CSS 变量。
-   默认 token 仍以 :root 为真相源；这里负责让临时配置即时可见。 */
-[data-theme-border="none"] :where(.border, .border-t, .border-r, .border-b, .border-l) {
+   “边框粗细”只作用于组件壳体，不扫全站结构线；页面骨架/分隔线保持自己的固定值。 */
+[data-theme-border="none"] :where([data-slot="card"], [data-slot="button"], [data-slot="input"], [data-slot="select-trigger"], [data-slot="textarea"], [data-slot="toggle"], [data-slot="toggle-group-item"], [data-slot="pagination-link"]) {
   border-width: 0 !important;
 }
-[data-theme-border="thin"] :where(.border) {
+[data-theme-border="thin"] :where([data-slot="card"], [data-slot="button"], [data-slot="input"], [data-slot="select-trigger"], [data-slot="textarea"], [data-slot="toggle"], [data-slot="toggle-group-item"], [data-slot="pagination-link"]) {
   border-width: 1px;
 }
-[data-theme-border="medium"] :where(.border) {
+[data-theme-border="medium"] :where([data-slot="card"], [data-slot="button"], [data-slot="input"], [data-slot="select-trigger"], [data-slot="textarea"], [data-slot="toggle"], [data-slot="toggle-group-item"], [data-slot="pagination-link"]) {
   border-width: 2px;
 }
-[data-theme-border="thick"] :where(.border) {
+[data-theme-border="thick"] :where([data-slot="card"], [data-slot="button"], [data-slot="input"], [data-slot="select-trigger"], [data-slot="textarea"], [data-slot="toggle"], [data-slot="toggle-group-item"], [data-slot="pagination-link"]) {
   border-width: 3px;
 }
-[data-theme-border="thin"] :where(.border-t) { border-top-width: 1px; }
-[data-theme-border="thin"] :where(.border-r) { border-right-width: 1px; }
-[data-theme-border="thin"] :where(.border-b) { border-bottom-width: 1px; }
-[data-theme-border="thin"] :where(.border-l) { border-left-width: 1px; }
-[data-theme-border="medium"] :where(.border-t) { border-top-width: 2px; }
-[data-theme-border="medium"] :where(.border-r) { border-right-width: 2px; }
-[data-theme-border="medium"] :where(.border-b) { border-bottom-width: 2px; }
-[data-theme-border="medium"] :where(.border-l) { border-left-width: 2px; }
-[data-theme-border="thick"] :where(.border-t) { border-top-width: 3px; }
-[data-theme-border="thick"] :where(.border-r) { border-right-width: 3px; }
-[data-theme-border="thick"] :where(.border-b) { border-bottom-width: 3px; }
-[data-theme-border="thick"] :where(.border-l) { border-left-width: 3px; }
 
 [data-theme-motion] :where([class*="transition"], [class*="duration-"]) {
   transition-duration: var(--fx-theme-duration, 200ms);

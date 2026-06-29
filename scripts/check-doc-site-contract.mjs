@@ -167,6 +167,64 @@ for (const contract of docSiteManifest.layoutContracts ?? []) {
   }
 }
 
+const demoContractIds = new Set()
+for (const contract of docSiteManifest.demoContracts ?? []) {
+  if (!contract.id) {
+    errors.push("doc-site demo contract is missing id")
+  } else if (demoContractIds.has(contract.id)) {
+    errors.push(`doc-site demo contract id is duplicated: ${contract.id}`)
+  } else {
+    demoContractIds.add(contract.id)
+  }
+
+  for (const key of ["label", "source", "intent", "scopeStart", "scopeEnd"]) {
+    if (typeof contract[key] !== "string" || contract[key].trim().length === 0) {
+      errors.push(`doc-site demo contract "${contract.id ?? "(unknown)"}" is missing ${key}`)
+    }
+  }
+
+  if (contract.source && !(await fileExists(contract.source))) {
+    errors.push(`doc-site demo contract "${contract.id}" references missing source: ${contract.source}`)
+    continue
+  }
+
+  const source = contract.source === docSiteManifest.truthSource
+    ? appSource
+    : contract.source
+      ? await readText(contract.source)
+      : ""
+
+  const startIndex = source.indexOf(contract.scopeStart ?? "")
+  if (startIndex === -1) {
+    errors.push(`doc-site demo contract "${contract.id}" is missing scopeStart snippet`)
+    continue
+  }
+
+  const endIndex = source.indexOf(contract.scopeEnd ?? "", startIndex)
+  if (endIndex === -1) {
+    errors.push(`doc-site demo contract "${contract.id}" is missing scopeEnd snippet`)
+    continue
+  }
+
+  const scopedSource = source.slice(startIndex, endIndex + contract.scopeEnd.length)
+
+  if (!Array.isArray(contract.requiredSourceIncludes) || contract.requiredSourceIncludes.length === 0) {
+    errors.push(`doc-site demo contract "${contract.id}" must declare requiredSourceIncludes`)
+  }
+
+  for (const snippet of contract.requiredSourceIncludes ?? []) {
+    if (!scopedSource.includes(snippet)) {
+      errors.push(`doc-site demo contract "${contract.id}" is missing scoped source snippet: ${snippet}`)
+    }
+  }
+
+  for (const snippet of contract.forbiddenSourceIncludes ?? []) {
+    if (scopedSource.includes(snippet)) {
+      errors.push(`doc-site demo contract "${contract.id}" contains forbidden scoped source snippet: ${snippet}`)
+    }
+  }
+}
+
 if (!Array.isArray(docSiteManifest.layoutContracts) || docSiteManifest.layoutContracts.length < 4) {
   errors.push("doc-site manifest must include layout contracts for reading width, page actions, right rail, and components index")
 }

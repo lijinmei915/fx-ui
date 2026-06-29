@@ -1688,6 +1688,12 @@
       "usage": ""
     },
     {
+      "name": "--border-container",
+      "value": "color-mix(in oklch, var(--fx-neutrals-04), white 45%)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
       "name": "--border-subtle",
       "value": "var(--fx-neutrals-04)",
       "category": "shadcn-semantic",

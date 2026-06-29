@@ -54,6 +54,7 @@ import {
   CheckCircleIcon,
   CheckIcon,
   CheckCircleFilledIcon,
+  AlertTriangleIcon,
   HomeFilledIcon,
   DatabaseFilledIcon,
   UserFilledIcon,
@@ -264,6 +265,7 @@ import { toast } from "sonner";
 import buttonMarkdown from "../docs/components/button.md?raw";
 import iconMarkdown from "../docs/components/icon.md?raw";
 import tokensMarkdown from "../docs/TOKENS.md?raw";
+import siteDesignMarkdown from "../docs/DOC_SITE_DESIGN.md?raw";
 
 type Lang = "zh" | "en";
 type ButtonScenarioFilter = "category" | "size" | "state" | "icon";
@@ -3465,6 +3467,12 @@ const docsByPage = {
   }
 };
 
+const websiteStandardsDoc = {
+  title: "Website Standards",
+  path: "docs/DOC_SITE_DESIGN.md",
+  markdown: siteDesignMarkdown
+} as const;
+
 type DocPage = keyof typeof docsByPage;
 type ViewMode = "page" | "markdown";
 
@@ -5242,7 +5250,7 @@ function GettingStartedPage({
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-3">
               <SectionLead title="PageLead" description="用于文档页顶部，固定承载面包屑、标题、说明和右侧页面动作。" />
-              <div className="flex flex-col gap-5 rounded-lg border border-border bg-card p-5">
+              <div className="flex flex-col gap-5 rounded-lg border border-border-container bg-card p-5">
                 <FxPageLead
                   crumb="维护 / 网站规范"
                   title="页面标题区"
@@ -5282,17 +5290,21 @@ function GettingStartedPage({
 
             <div className="flex flex-col gap-3">
               <SectionLead title="SectionLead" description="用于每个内容区的小标题和一句说明，标题与说明固定 8px 间距。" />
-              <div className="rounded-lg border border-border bg-card p-5">
+              <div className="rounded-lg border border-border-container bg-card p-5">
                 <SectionLead title="小标题" description="说明文字固定 14px；组件内容紧跟在说明下面，不再额外包一层说明卡。" />
               </div>
             </div>
 
             <div className="flex flex-col gap-3">
               <SectionLead title="PageActions" description="页面级动作只放在标题右侧：复制、更多、上一页、下一页。" />
-              <div className="flex rounded-lg border border-border bg-card p-5">
-                <PageActionsShell navActions={<PageStepActions previous={{ label: "文档规范", labelEn: "Documentation", href: "#documentation", group: "维护", groupEn: "Maintain" }} next={{ label: "检查命令", labelEn: "Checks", href: "#checks", group: "维护", groupEn: "Maintain" }} lang={lang} />}>
-                  <CopyPageAction lang={lang} />
-                </PageActionsShell>
+              <div className="flex rounded-lg border border-border-container bg-card p-5">
+                <PageActions
+                  doc={websiteStandardsDoc}
+                  lang={lang}
+                  navActions={<PageStepActions previous={{ label: "文档规范", labelEn: "Documentation", href: "#documentation", group: "维护", groupEn: "Maintain" }} next={{ label: "检查命令", labelEn: "Checks", href: "#checks", group: "维护", groupEn: "Maintain" }} lang={lang} />}
+                  viewMode="page"
+                  onViewModeChange={() => {}}
+                />
               </div>
             </div>
           </div>
@@ -5302,7 +5314,7 @@ function GettingStartedPage({
           <SectionLead
             title={lang === "en" ? "Spacing Rhythm" : "间距节奏"}
             description={lang === "en" ? "Abstract page spacing with simple blocks so the rule is visible without depending on a specific component." : "用矩形块抽象页面边距、头部到小标题、小标题之间的节奏。"} />
-          <div className="rounded-lg border border-border bg-card p-5">
+          <div className="rounded-lg border border-border-container bg-card p-5">
             <div className="grid gap-4 text-sm text-muted-foreground md:grid-cols-3">
               <div className="flex flex-col gap-2">
                 <div className="h-16 rounded-md bg-muted" />
@@ -6331,14 +6343,14 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         "复制 import 即可；具体 JSX 写法见上方「场景示例」的推荐写法列。"} />
 
         
-        <div className="rounded-xl border border-border bg-card p-5 shadow-l1">
+        <div className="rounded-xl border border-border-container bg-card p-5 shadow-l1">
           <CopyCodeBlock code={buttonImportCode} label="Import" lang={lang} />
         </div>
       </section>
 
       <section id="props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "API Props" : "API 属性"}</h2>
-        <div className="max-w-full overflow-x-auto rounded-xl border border-border bg-card shadow-l1">
+        <div className="max-w-full overflow-x-auto rounded-xl border border-border-container bg-card shadow-l1">
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -6375,7 +6387,7 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         "Button 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。"} />
 
         
-        <div className="max-w-full overflow-x-auto rounded-xl border border-border bg-card shadow-l1">
+        <div className="max-w-full overflow-x-auto rounded-xl border border-border-container bg-card shadow-l1">
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -6409,7 +6421,10 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         <div className="grid gap-4 md:grid-cols-2">
           <Card elevated>
             <CardHeader>
-              <CardTitle className="text-base text-foreground">{lang === "en" ? "Do" : "推荐 Do"}</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-base text-foreground">
+                <CheckCircleIcon className="size-[18px] text-success" />
+                <span>{lang === "en" ? "Do" : "推荐 Do"}</span>
+              </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {buttonDoDontRows.map((row) =>
@@ -6422,7 +6437,10 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           </Card>
           <Card elevated>
             <CardHeader>
-              <CardTitle className="text-base text-foreground">{lang === "en" ? "Don’t" : "避免 Don't"}</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-base text-foreground">
+                <AlertTriangleIcon className="size-[18px] text-destructive" />
+                <span>{lang === "en" ? "Don’t" : "避免 Don't"}</span>
+              </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
               {buttonDoDontRows.map((row) =>
@@ -6981,7 +6999,7 @@ function TokensColorsPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
               <h3 className="text-base font-semibold">{lang === "en" ? group.labelEn : group.label}</h3>
               <p className="text-sm text-muted-foreground">{lang === "en" ? group.descEn : group.desc}</p>
             </div>
-            <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+            <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
               <Table className="min-w-[860px]">
                 <TableHeader>
                   <TableRow>
@@ -7037,7 +7055,7 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         </div>
         <div>
           <p className="mb-2 text-fx-13 font-medium">{lang === "en" ? "24 columns (16px gap)" : "24 列栅格（列间距 16px）"}</p>
-          <div className="rounded-lg border border-border bg-card p-5">
+          <div className="rounded-lg border border-border-container bg-card p-5">
             <div className="grid grid-cols-[repeat(24,minmax(0,1fr))] gap-1">
               {Array.from({ length: 24 }).map((_, i) =>
               <div key={i} className="flex h-9 items-center justify-center rounded bg-muted text-[9px] text-muted-foreground">{i + 1}</div>
@@ -7114,7 +7132,7 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             "Tailwind 是移动优先：不带前缀的样式对所有宽度生效；加前缀（如 lg:）表示\"屏幕宽度 ≥ 该值时才生效\"。"}
           </p>
         </div>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[520px]">
             <TableHeader><TableRow>
               <TableHead className="pl-4">{lang === "en" ? "Prefix" : "前缀"}</TableHead>
@@ -7132,7 +7150,7 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             </TableBody>
           </Table>
         </div>
-        <div className="rounded-lg border border-border bg-card p-5">
+        <div className="rounded-lg border border-border-container bg-card p-5">
           <p className="mb-3 text-fx-13 text-muted-foreground">
             {lang === "en" ?
             <>Example: <code className="rounded bg-muted px-1 text-fx-12">grid-cols-1 lg:grid-cols-3</code> — 1 column below 1024px, 3 columns at ≥1024px.</> :
@@ -7340,7 +7358,7 @@ function NavMenuPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
 
       <section id="nav-menu-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "API Props" : "API 属性"}</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -7369,7 +7387,7 @@ function NavMenuPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
         lang === "en" ? "Semantic DOM" : "语义 DOM"} description={
         lang === "en" ? "Semantic parts AI and engineers should target." : "AI 和工程师应该理解的语义部位。"} />
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -8331,7 +8349,7 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-hidden rounded-lg border border-border-container bg-card">
           <Table className="min-w-[960px]">
             <TableHeader>
               <TableRow>
@@ -8393,7 +8411,7 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="rounded-lg border border-border bg-card p-5">
+        <div className="rounded-lg border border-border-container bg-card p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={inputImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={inputUsageCode} label="调用" lang={lang} />
@@ -8403,7 +8421,7 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
       <section id="input-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -8438,7 +8456,7 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -8598,7 +8616,7 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-hidden rounded-lg border border-border-container bg-card">
           <Table className="min-w-[1040px]">
             <TableHeader>
               <TableRow>
@@ -8641,7 +8659,7 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="rounded-lg border border-border bg-card p-5">
+        <div className="rounded-lg border border-border-container bg-card p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={selectImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={selectUsageCode} label="调用" lang={lang} />
@@ -8651,7 +8669,7 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
       <section id="select-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -8686,7 +8704,7 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -8825,7 +8843,7 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-hidden rounded-lg border border-border-container bg-card">
           <Table className="min-w-[1040px]">
             <TableHeader>
               <TableRow>
@@ -8868,7 +8886,7 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <div className="rounded-lg border border-border bg-card p-5">
+        <div className="rounded-lg border border-border-container bg-card p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={checkboxImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={checkboxUsageCode} label="调用" lang={lang} />
@@ -8878,7 +8896,7 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
       <section id="checkbox-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -8913,7 +8931,7 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -9046,7 +9064,7 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-hidden rounded-lg border border-border-container bg-card">
           <Table className="min-w-[1040px]">
             <TableHeader>
               <TableRow>
@@ -9089,7 +9107,7 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="rounded-lg border border-border bg-card p-5">
+        <div className="rounded-lg border border-border-container bg-card p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={switchImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={switchUsageCode} label="调用" lang={lang} />
@@ -9099,7 +9117,7 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
       <section id="switch-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -9134,7 +9152,7 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -9892,7 +9910,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot</code> 标记各部位，外层容器自带横向滚动。
           </p>
         </div>
-        <div className="overflow-hidden rounded-xl border border-border bg-card">
+        <div className="overflow-hidden rounded-xl border border-border-container bg-card">
           <Table>
             <TableCaption>最近的订单记录</TableCaption>
             <TableHeader>
@@ -10025,7 +10043,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="rounded-lg border border-border bg-card p-5">
+        <div className="rounded-lg border border-border-container bg-card p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={tableImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={tableUsageCode} label="调用" lang={lang} />
@@ -10035,7 +10053,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
       <section id="table-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -10070,7 +10088,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -10548,7 +10566,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
 
         
         <TooltipProvider>
-          <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
+          <div className="max-w-full overflow-hidden rounded-lg border border-border-container bg-card">
             <Table className="min-w-[1000px]">
               <TableHeader>
                 <TableRow>
@@ -10592,7 +10610,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
 
 
         
-        <div className="rounded-lg border border-border bg-card p-5">
+        <div className="rounded-lg border border-border-container bg-card p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={tooltipImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={tooltipUsageCode} label="调用" lang={lang} />
@@ -10602,7 +10620,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
 
       <section id="tooltip-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -10637,7 +10655,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -10782,7 +10800,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
+          <div className="max-w-full overflow-hidden rounded-lg border border-border-container bg-card">
           <Table className="min-w-[1000px]">
             <TableHeader>
               <TableRow>
@@ -10825,7 +10843,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="rounded-lg border border-border bg-card p-5">
+        <div className="rounded-lg border border-border-container bg-card p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={dialogImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={dialogUsageCode} label="调用" lang={lang} />
@@ -10835,7 +10853,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
       <section id="dialog-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -10870,7 +10888,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11009,7 +11027,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
 
 
         
-        <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
+          <div className="max-w-full overflow-hidden rounded-lg border border-border-container bg-card">
           <Table className="min-w-[1000px]">
             <TableHeader>
               <TableRow>
@@ -11052,7 +11070,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
 
 
         
-        <div className="rounded-lg border border-border bg-card p-5">
+        <div className="rounded-lg border border-border-container bg-card p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={alertDialogImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={alertDialogUsageCode} label="调用" lang={lang} />
@@ -11062,7 +11080,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
 
       <section id="alert-dialog-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11097,7 +11115,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>

@@ -116,6 +116,19 @@
       ]
     },
     {
+      "id": "website-standards-page-actions-demo",
+      "label": "网站规范页动作示例复用真实组件",
+      "source": "src/App.tsx",
+      "intent": "网站规范页里的 PageActions 示例必须直接复用真实 PageActions 组件，避免手拼壳子后和真实能力漂移。",
+      "requiredSourceIncludes": [
+        "<SectionLead title=\"PageActions\" description=\"页面级动作只放在标题右侧：复制、更多、上一页、下一页。\" />",
+        "<PageActions",
+        "doc={websiteStandardsDoc}",
+        "viewMode=\"page\"",
+        "onViewModeChange={() => {}}"
+      ]
+    },
+    {
       "id": "right-rail-toc",
       "label": "右侧目录",
       "source": "src/App.tsx",
@@ -187,6 +200,52 @@
       "intent": "标题行右侧有控件（如浅色/深色切换）时，说明文字独占整行放在标题行下方，不塞进左侧子容器被控件挤窄、换行后右侧留白。",
       "requiredSourceIncludes": [
         "标题行 + 深浅 tab（说明独占整行，见下方）"
+      ]
+    }
+  ],
+  "demoContracts": [
+    {
+      "id": "website-standards-page-lead",
+      "label": "网站规范页 PageLead 示例",
+      "source": "src/App.tsx",
+      "intent": "PageLead 示例必须直接复用真实 FxPageLead 组件，并展示固定的 crumb、title、lead、actions 结构。",
+      "scopeStart": "<SectionLead title=\"PageLead\" description=\"用于文档页顶部，固定承载面包屑、标题、说明和右侧页面动作。\" />",
+      "scopeEnd": "</Collapsible>",
+      "requiredSourceIncludes": [
+        "<FxPageLead",
+        "crumb=\"维护 / 网站规范\"",
+        "title=\"页面标题区\"",
+        "lead=\"这里展示页面标题区的真实组件形态。标题下只保留一句说明，不再额外加线。\"",
+        "actions={<PageActionsShell navActions={<PageStepActions previous={null} next={null} lang={lang} />}><CopyPageAction lang={lang} /></PageActionsShell>}"
+      ]
+    },
+    {
+      "id": "website-standards-section-lead",
+      "label": "网站规范页 SectionLead 示例",
+      "source": "src/App.tsx",
+      "intent": "SectionLead 示例必须直接复用真实 SectionLead 组件，不再包额外说明卡结构。",
+      "scopeStart": "<SectionLead title=\"SectionLead\" description=\"用于每个内容区的小标题和一句说明，标题与说明固定 8px 间距。\" />",
+      "scopeEnd": "</div>",
+      "requiredSourceIncludes": [
+        "<SectionLead title=\"小标题\" description=\"说明文字固定 14px；组件内容紧跟在说明下面，不再额外包一层说明卡。\" />"
+      ]
+    },
+    {
+      "id": "website-standards-page-actions",
+      "label": "网站规范页 PageActions 示例",
+      "source": "src/App.tsx",
+      "intent": "规范页示例必须直接复用真实组件能力，不允许在示例区块里手拼一个缩水版。",
+      "scopeStart": "<SectionLead title=\"PageActions\" description=\"页面级动作只放在标题右侧：复制、更多、上一页、下一页。\" />",
+      "scopeEnd": "</section>",
+      "requiredSourceIncludes": [
+        "<PageActions",
+        "doc={websiteStandardsDoc}",
+        "viewMode=\"page\"",
+        "onViewModeChange={() => {}}"
+      ],
+      "forbiddenSourceIncludes": [
+        "<PageActionsShell",
+        "<CopyPageAction"
       ]
     }
   ],

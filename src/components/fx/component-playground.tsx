@@ -133,7 +133,7 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-card shadow-l1">
+    <div data-slot="card" className="overflow-hidden rounded-xl border border-border-container bg-card shadow-l1">
       {config.scenarios ? (
         <div className="flex flex-col border-b border-border-subtle bg-card xl:flex-row">
           <div className="flex-1 border-b border-border-subtle p-5 xl:border-r xl:border-b-0">

@@ -97,15 +97,23 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 ## 背景 / 边框
 
+> 术语约定：在 fx-ui 里，默认说“边框粗细”时，指的是**组件默认边框规格**，也就是组件外轮廓通常是 `1px` 还是 `2px`。颜色深浅单独叫“边框强度”，表格内线/区块分隔单独叫“分隔线 / 结构线”，不要混说。
+
 | 用途 | 值 | 变量/用法 |
 |------|-----|-----------|
 | 全局背景 | `--fx-neutrals-02` | `bg-background` |
 | 卡片背景 | `--fx-neutrals-01` | `bg-card` |
 | 弱背景 | `--fx-neutrals-03` | `bg-muted` |
+| 容器外框 | 浅色：`--fx-neutrals-04` 向白混 45%<br>暗色：`oklch(1 0 0 / 0.07)` | `border-border-container` |
 | 弱边框 / 分割线 | `--fx-neutrals-04` | `border-border-subtle` |
 | 默认边框 | `--fx-neutrals-05` | `border-border` |
 | 强边框 / hover | `--fx-neutrals-08` | `border-border-strong` |
 | 输入框边框 | `--fx-neutrals-07` | `border-input` |
+
+- 组件默认边框规格：当前主题默认按 **`1px`** 理解，这是主流 Web UI 的常规基线。
+- 容器外框：优先讨论“要不要外框”和“外框颜色深浅”，不默认通过加粗来表达。
+- 分隔线 / 结构线：单独治理，不纳入“组件边框粗细”的口径。
+- 强调边框：只有选中、焦点、错误或其他高强调场景，才考虑 `2px` 或更强语义色。
 
 ## 圆角
 

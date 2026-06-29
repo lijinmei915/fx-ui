@@ -510,13 +510,16 @@ function normalizeThemeConfig(value: string | null): ThemeConfig {
     parsed.customColors.filter(isHexColor) :
     [];
     const legacyCustomColor = isHexColor(parsed.customColorHex ?? "") ? parsed.customColorHex! : defaultThemeConfig.customColorHex;
+    const normalizedCustomColors = customColors.length > 0 ? customColors : [legacyCustomColor];
+    const customColorIndex = Math.min(Math.max(parsed.customColorIndex ?? 0, 0), Math.max(normalizedCustomColors.length - 1, 0));
+    const selectedCustomColor = normalizedCustomColors[customColorIndex] ?? legacyCustomColor;
 
     return {
       ...defaultThemeConfig,
       ...parsed,
-      customColorHex: customColors[0] ?? legacyCustomColor,
-      customColorIndex: Math.min(Math.max(parsed.customColorIndex ?? 0, 0), Math.max(customColors.length - 1, 0)),
-      customColors: customColors.length > 0 ? customColors : [legacyCustomColor],
+      customColorHex: selectedCustomColor,
+      customColorIndex,
+      customColors: normalizedCustomColors,
       shadowLevel: parsed.shadowLevel === "retro" ? "ambient" : (parsed.shadowLevel as ThemeShadowLevel | undefined) ?? defaultThemeConfig.shadowLevel
     };
   } catch {
@@ -536,15 +539,23 @@ function getThemeFontValue(fontFamily: ThemeFont, lang: Lang) {
   return lang === "zh" ? themeChineseFontValues[fontFamily] : themeEnglishFontValues[fontFamily];
 }
 
+function getActiveCustomColor(config: ThemeConfig) {
+  return config.customColors[config.customColorIndex] ?? config.customColorHex;
+}
+
 function getThemeRuntimeStyle(config: ThemeConfig, lang: Lang): React.CSSProperties {
-  const customColor = config.customColors[config.customColorIndex] ?? config.customColorHex;
-  const brand = config.primaryColor === "custom" && isHexColor(customColor) ?
+  const customColor = getActiveCustomColor(config);
+  const isCustomBrand = config.primaryColor === "custom" && isHexColor(customColor);
+  const brand = isCustomBrand ?
   customColor :
   themeColorValues[config.primaryColor];
+  const brandVivid = isCustomBrand ?
+  brand :
+  `oklch(from ${brand} clamp(0.58, l, 0.72) max(c, 0.12) h)`;
 
   return {
     "--fx-brand": brand,
-    "--fx-brand-vivid": `oklch(from ${brand} clamp(0.58, l, 0.72) max(c, 0.12) h)`,
+    "--fx-brand-vivid": brandVivid,
     "--fx-brand-01": `oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)`,
     "--fx-brand-02": `oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)`,
     "--fx-brand-03": `oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)`,
@@ -554,12 +565,19 @@ function getThemeRuntimeStyle(config: ThemeConfig, lang: Lang): React.CSSPropert
     "--fx-brand-09": "var(--fx-brand-vivid)",
     "--fx-brand-10": `oklch(from var(--fx-brand-vivid) calc(l * 0.92) calc(c * 0.95) h)`,
     "--primary": "var(--fx-brand-09)",
+    "--color-primary": "var(--fx-brand-09)",
     "--primary-hover": "var(--fx-primary-hover)",
+    "--color-primary-hover": "var(--fx-primary-hover)",
     "--primary-active": "var(--fx-primary-active)",
+    "--color-primary-active": "var(--fx-primary-active)",
     "--primary-disabled": "var(--fx-primary-disabled)",
+    "--color-primary-disabled": "var(--fx-primary-disabled)",
     "--primary-light": `oklch(from ${brand} 0.97 0.03 h)`,
+    "--color-primary-light": `oklch(from ${brand} 0.97 0.03 h)`,
     "--primary-light-hover": `oklch(from ${brand} 0.94 0.05 h)`,
+    "--color-primary-light-hover": `oklch(from ${brand} 0.94 0.05 h)`,
     "--primary-light-active": `oklch(from ${brand} 0.9 0.07 h)`,
+    "--color-primary-light-active": `oklch(from ${brand} 0.9 0.07 h)`,
     "--ring": `oklch(from ${brand} l c h / 0.4)`,
     "--radius": themeRadiusValues[config.borderRadius],
     "--font-sans": getThemeFontValue(config.fontFamily, lang),
@@ -3380,16 +3398,30 @@ function ThemeCustomizerPanel({
   const colorInputRef = useRef<HTMLInputElement>(null);
   const lastColorPickRef = useRef<string | null>(null);
   const pendingColorPickRef = useRef<string | null>(null);
+  const pickerInitialColorRef = useRef<string | null>(null);
+  const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
   const [pendingColorPreview, setPendingColorPreview] = useState<string | null>(null);
+  const activeCustomColor = getActiveCustomColor(config);
 
   const setConfigValue = <K extends keyof ThemeConfig,>(key: K, value: ThemeConfig[K]) => {
     onConfigChange((current) => updateThemeConfig(current, key, value));
   };
 
-  const addCustomColor = (value: string) => {
+  const commitCustomColor = (value: string) => {
     if (!isHexColor(value)) return;
 
     onConfigChange((current) => {
+      const existingIndex = current.customColors.findIndex((color) => color.toLowerCase() === value.toLowerCase());
+
+      if (existingIndex >= 0) {
+        return {
+          ...current,
+          primaryColor: "custom",
+          customColorHex: current.customColors[existingIndex] ?? value,
+          customColorIndex: existingIndex
+        };
+      }
+
       const customColors = [...current.customColors, value];
       return {
         ...current,
@@ -3424,6 +3456,26 @@ function ThemeCustomizerPanel({
         customColors
       };
     });
+  };
+
+  const handleCustomColorInput = (value: string) => {
+    if (!isHexColor(value)) return;
+
+    const isInitialEcho =
+      isColorPickerOpen &&
+      pendingColorPickRef.current === null &&
+      value.toLowerCase() === (pickerInitialColorRef.current ?? "").toLowerCase();
+
+    if (isInitialEcho || lastColorPickRef.current === value) return;
+
+    pendingColorPickRef.current = value;
+    lastColorPickRef.current = value;
+    setPendingColorPreview(value);
+    onConfigChange((current) => ({
+      ...current,
+      primaryColor: "custom",
+      customColorHex: value
+    }));
   };
 
   return (
@@ -3534,25 +3586,24 @@ function ThemeCustomizerPanel({
                 <input
                   ref={colorInputRef}
                   type="color"
-                  defaultValue={isHexColor(config.customColorHex) ? config.customColorHex : defaultThemeConfig.customColorHex}
+                  value={isHexColor(activeCustomColor) ? activeCustomColor : defaultThemeConfig.customColorHex}
                   onClick={() => {
+                    setIsColorPickerOpen(true);
                     lastColorPickRef.current = null;
                     pendingColorPickRef.current = null;
-                    setPendingColorPreview(colorInputRef.current?.value ?? config.customColorHex);
-                  }}
-                  onChange={(event) => {
-                    pendingColorPickRef.current = event.target.value;
-                    setPendingColorPreview(event.target.value);
-                  }}
-                  onBlur={(event) => {
-                    const nextColor = pendingColorPickRef.current ?? event.target.value;
+                    pickerInitialColorRef.current = activeCustomColor;
                     setPendingColorPreview(null);
-                    if (lastColorPickRef.current === nextColor) return;
-                    lastColorPickRef.current = nextColor;
+                  }}
+                  onInput={(event) => handleCustomColorInput(event.currentTarget.value)}
+                  onChange={(event) => handleCustomColorInput(event.currentTarget.value)}
+                  onBlur={() => {
+                    const nextColor = pendingColorPickRef.current;
+                    setIsColorPickerOpen(false);
+                    setPendingColorPreview(null);
                     pendingColorPickRef.current = null;
-                    addCustomColor(nextColor);
-                    if (colorInputRef.current) {
-                      colorInputRef.current.value = nextColor;
+                    pickerInitialColorRef.current = null;
+                    if (nextColor && isHexColor(nextColor)) {
+                      commitCustomColor(nextColor);
                     }
                   }}
                   className="absolute inset-0 size-8 cursor-pointer rounded-full opacity-0"

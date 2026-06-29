@@ -549,9 +549,7 @@ function getThemeRuntimeStyle(config: ThemeConfig, lang: Lang): React.CSSPropert
   const brand = isCustomBrand ?
   customColor :
   themeColorValues[config.primaryColor];
-  const brandVivid = isCustomBrand ?
-  brand :
-  `oklch(from ${brand} clamp(0.58, l, 0.72) max(c, 0.12) h)`;
+  const brandVivid = brand;
 
   return {
     "--fx-brand": brand,

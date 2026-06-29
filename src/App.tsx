@@ -540,7 +540,9 @@ function getThemeFontValue(fontFamily: ThemeFont, lang: Lang) {
 }
 
 function getActiveCustomColor(config: ThemeConfig) {
-  return config.customColors[config.customColorIndex] ?? config.customColorHex;
+  return isHexColor(config.customColorHex) ?
+  config.customColorHex :
+  config.customColors[config.customColorIndex] ?? defaultThemeConfig.customColorHex;
 }
 
 function getThemeRuntimeStyle(config: ThemeConfig, lang: Lang): React.CSSProperties {
@@ -3400,6 +3402,7 @@ function ThemeCustomizerPanel({
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
   const [pendingColorPreview, setPendingColorPreview] = useState<string | null>(null);
   const activeCustomColor = getActiveCustomColor(config);
+  const isPickingCustomColor = isColorPickerOpen || pendingColorPreview !== null;
 
   const setConfigValue = <K extends keyof ThemeConfig,>(key: K, value: ThemeConfig[K]) => {
     onConfigChange((current) => updateThemeConfig(current, key, value));
@@ -3542,7 +3545,10 @@ function ThemeCustomizerPanel({
               )}
               <Separator orientation="vertical" className="mx-1 h-8" />
               {config.customColors.map((color, index) => {
-                const selected = config.primaryColor === "custom" && config.customColorIndex === index;
+                const selected =
+                !isPickingCustomColor &&
+                config.primaryColor === "custom" &&
+                config.customColorIndex === index;
 
                 return (
                   <div key={`${color}-${index}`} className="group relative size-8 shrink-0">
@@ -3575,12 +3581,26 @@ function ThemeCustomizerPanel({
               })}
               <label
                 className={cn(
-                  "relative flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full border outline-none transition-colors hover:border-border-strong hover:text-foreground focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50",
-                  pendingColorPreview ? "border-border-subtle" : "border-dashed border-border bg-surface text-muted-foreground"
+                  "relative flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full border outline-none transition-[border-color,background-color,color,box-shadow,transform] duration-200 ease-out hover:border-border-strong hover:text-foreground focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50",
+                  pendingColorPreview ? "border-border-subtle" : "border-dashed border-border/70 bg-surface text-muted-foreground/70"
                 )}
                 style={pendingColorPreview ? { backgroundColor: pendingColorPreview } : undefined}>
                 
-                {pendingColorPreview ? <span className="size-2 rounded-full bg-primary-foreground" /> : <PlusIcon className="size-4" />}
+                <span
+                  className={cn(
+                    "absolute inset-0 rounded-full transition-[box-shadow,transform,opacity] duration-200 ease-out",
+                    isPickingCustomColor && "scale-110 ring-2 ring-foreground ring-offset-2 ring-offset-background"
+                  )} />
+                <PlusIcon
+                  className={cn(
+                    "relative z-10 size-3.5 transition-[opacity,transform,color] duration-200 ease-out",
+                    pendingColorPreview ? "scale-90 opacity-0" : "scale-95 opacity-100"
+                  )} />
+                <span
+                  className={cn(
+                    "absolute z-10 size-2 rounded-full bg-primary-foreground transition-[opacity,transform] duration-200 ease-out",
+                    pendingColorPreview ? "scale-100 opacity-100" : "scale-90 opacity-0"
+                  )} />
                 <input
                   ref={colorInputRef}
                   type="color"

@@ -1295,16 +1295,22 @@
         "root"
       ],
       "semanticDom": [
-        "root"
+        "page-lead",
+        "page-lead-content",
+        "page-lead-crumb",
+        "page-lead-title",
+        "page-lead-description",
+        "page-lead-actions"
       ],
       "tokenRefs": [
         "--foreground",
-        "--muted-foreground",
-        "--border"
+        "--muted-foreground"
       ],
       "usageRules": [
         "使用 PageLead 前必须以 src/components/fx/page-lead.tsx 为真实 API。",
         "PageLead 用于文档站、官网或内容页顶部介绍区；业务后台页面标题区优先使用 PageHeader。",
+        "PageLead 的视觉取值固定：面包屑 14px、标题 32/40、说明 14/24、动作区顶对齐。",
+        "PageLead 的 crumb 必须等于左侧导航分组 / 当前页名称，最后一段自动视为当前页。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ]
@@ -1329,7 +1335,6 @@
       "tokenRefs": [
         "--foreground",
         "--muted-foreground",
-        "--border",
         "--secondary"
       ],
       "usageRules": [

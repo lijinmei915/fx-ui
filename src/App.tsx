@@ -536,17 +536,19 @@ function getThemeRuntimeStyle(config: ThemeConfig, lang: Lang): React.CSSPropert
 
   return {
     "--fx-brand": brand,
-    "--fx-brand-01": `oklch(from ${brand} 0.97 0.03 h)`,
-    "--fx-brand-02": `oklch(from ${brand} 0.94 0.05 h)`,
-    "--fx-brand-03": `oklch(from ${brand} 0.9 0.07 h)`,
-    "--fx-brand-05": `oklch(from ${brand} 0.76 0.12 h)`,
-    "--fx-brand-08": `oklch(from ${brand} 0.64 c h)`,
-    "--fx-brand-09": brand,
-    "--fx-brand-10": `oklch(from ${brand} 0.48 c h)`,
-    "--primary": brand,
-    "--primary-hover": `oklch(from ${brand} 0.64 c h)`,
-    "--primary-active": `oklch(from ${brand} 0.48 c h)`,
-    "--primary-disabled": `oklch(from ${brand} 0.76 0.12 h)`,
+    "--fx-brand-vivid": `oklch(from ${brand} clamp(0.58, l, 0.72) max(c, 0.12) h)`,
+    "--fx-brand-01": `oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)`,
+    "--fx-brand-02": `oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)`,
+    "--fx-brand-03": `oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)`,
+    "--fx-brand-04": `oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)`,
+    "--fx-brand-05": `oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)`,
+    "--fx-brand-08": `oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)`,
+    "--fx-brand-09": "var(--fx-brand-vivid)",
+    "--fx-brand-10": `oklch(from var(--fx-brand-vivid) calc(l * 0.92) calc(c * 0.95) h)`,
+    "--primary": "var(--fx-brand-09)",
+    "--primary-hover": "var(--fx-primary-hover)",
+    "--primary-active": "var(--fx-primary-active)",
+    "--primary-disabled": "var(--fx-primary-disabled)",
     "--primary-light": `oklch(from ${brand} 0.97 0.03 h)`,
     "--primary-light-hover": `oklch(from ${brand} 0.94 0.05 h)`,
     "--primary-light-active": `oklch(from ${brand} 0.9 0.07 h)`,
@@ -4327,6 +4329,12 @@ function App() {
         return;
       }
 
+      if (anchors[0]?.href === activeHash) {
+        main.scrollTo({ top: 0, behavior: "smooth" });
+        setActiveAnchor(activeHash);
+        return;
+      }
+
       scrollTargetIntoMain(target);
       setActiveAnchor(isPageAnchor ? activeHash : anchors[0]?.href ?? activeHash);
     });
@@ -4340,6 +4348,10 @@ function App() {
     window.history.pushState(null, "", href);
     setActiveHash(href);
     setActiveAnchor(href);
+    if (anchors[0]?.href === href) {
+      main.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
     scrollTargetIntoMain(target);
   };
 
@@ -4636,7 +4648,6 @@ function PageActionsShell({
   return (
     <div className="flex flex-wrap items-center gap-2">
       {children}
-      <div className="mx-1 h-5 w-px bg-border" />
       {navActions}
     </div>);
 
@@ -5228,18 +5239,44 @@ function GettingStartedPage({
         </section>
 
         <section id="website-standards-components" className={docsSpacing.sectionStack}>
-          <SectionLead
-            title={lang === "en" ? "Page Components" : "页面组件"}
-            description={lang === "en" ? "Each standard is shown as a title, a short note, and one concrete component example." : "每个规范项只放小标题、说明和一个组件示例。"} />
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-3">
               <SectionLead title="PageLead" description="用于文档页顶部，固定承载面包屑、标题、说明和右侧页面动作。" />
-              <div className="rounded-lg border border-border bg-card p-5">
+              <div className="flex flex-col gap-5 rounded-lg border border-border bg-card p-5">
                 <FxPageLead
                   crumb="维护 / 网站规范"
                   title="页面标题区"
                   lead="这里展示页面标题区的真实组件形态。标题下只保留一句说明，不再额外加线。"
                   actions={<PageActionsShell navActions={<PageStepActions previous={null} next={null} lang={lang} />}><CopyPageAction lang={lang} /></PageActionsShell>} />
+                <Collapsible>
+                  <CollapsibleTrigger render={<Button variant="secondary" size="sm" className="w-fit" />}>
+                    查看取值逻辑
+                    <ChevronDownIcon data-icon="inline-end" />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="pt-3">
+                    <div className="grid gap-3 text-fx-13 text-muted-foreground md:grid-cols-2">
+                      <div className="rounded-lg bg-muted p-4">
+                        <p className="mb-2 font-medium text-foreground">取值逻辑</p>
+                        <div className="flex flex-col gap-1.5">
+                          <p>面包屑 14px / 400，当前页 500 + 主文字色</p>
+                          <p>标题 32px / 40px，700，主文字色</p>
+                          <p>说明 14px / 24px，400，弱文字色</p>
+                          <p>标题组与右侧动作顶对齐，不在下方加线</p>
+                        </div>
+                      </div>
+                      <div className="rounded-lg bg-muted p-4">
+                        <p className="mb-2 font-medium text-foreground">内容规则</p>
+                        <div className="flex flex-col gap-1.5">
+                          <p>crumb = 导航分组 / 当前页名称，和左侧导航保持一致</p>
+                          <p>crumb 用 “ / ” 分隔，最后一段自动识别为当前页</p>
+                          <p>title 只写页面唯一主标题，不拆中英文样式</p>
+                          <p>lead 只写一句页面用途，不塞代码和决策引用</p>
+                          <p>actions 只放复制、更多、上一页、下一页</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
               </div>
             </div>
 
@@ -5301,18 +5338,13 @@ function GettingStartedPage({
     return (
       <div className={docsSpacing.pageStack}>
         <section id="governance-map" className="flex flex-col gap-3">
-          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-            <div>
-              <p className="mb-3 text-sm text-muted-foreground">Maintain / Status</p>
-              <h1 className="text-3xl font-bold leading-tight tracking-tight">{lang === "en" ? "Status" : "现状看板"}</h1>
-            </div>
-            {actions}
-          </div>
-          <p className={docsSpacing.leadText}>
-            {lang === "en" ?
+          <PageLead
+            crumb="Maintain / Status"
+            title={lang === "en" ? "Status" : "现状看板"}
+            lead={lang === "en" ?
             "A developer-facing snapshot of fx-ui governance: what is already protected, what is still being structured, and which checks are the current gate." :
             "给开发者看的仓库现状快照：哪些规则已经被检查保护，哪些还在结构化，当前交付门禁是什么。"}
-          </p>
+            actions={actions} />
           <GovernanceQuickLinks currentPage={page} lang={lang} />
         </section>
 
@@ -5517,19 +5549,14 @@ function GettingStartedPage({
   if (page === "install") {
     return (
       <div className={docsSpacing.pageStack}>
-        <section id="install" className="flex flex-col gap-3">
-          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-            <div>
-              <p className="mb-3 text-sm text-muted-foreground">Getting Started / Installation</p>
-              <h1 className="text-3xl font-bold leading-tight tracking-tight">{lang === "en" ? "Installation" : "安装"}</h1>
-            </div>
-            {actions}
-          </div>
-          <p className={docsSpacing.leadText}>
-            {lang === "en" ?
+        <section id="install" className="flex flex-col gap-2">
+          <PageLead
+            crumb="Getting Started / Installation"
+            title={lang === "en" ? "Installation" : "安装"}
+            lead={lang === "en" ?
             "Start from a shadcn project, add the fx-ui component set, then import the company theme tokens." :
             "从 shadcn 项目起步，安装 fx-ui 所需基础组件，再接入公司主题 token。"}
-          </p>
+            actions={actions} />
         </section>
 
         <section id="install-prerequisites" className={docsSpacing.sectionStack}>
@@ -5596,19 +5623,14 @@ function GettingStartedPage({
   if (page === "theme") {
     return (
       <div className={docsSpacing.pageStack}>
-        <section id="theme" className="flex flex-col gap-3">
-          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-            <div>
-              <p className="mb-3 text-sm text-muted-foreground">Getting Started / Theme Setup</p>
-              <h1 className="text-3xl font-bold leading-tight tracking-tight">{lang === "en" ? "Theme" : "主题"}</h1>
-            </div>
-            {actions}
-          </div>
-          <p className={docsSpacing.leadText}>
-            {lang === "en" ?
+        <section id="theme" className="flex flex-col gap-2">
+          <PageLead
+            crumb="Getting Started / Theme Setup"
+            title={lang === "en" ? "Theme" : "主题"}
+            lead={lang === "en" ?
             "fx-ui does not restyle every component by hand. Company visuals are injected through shadcn semantic tokens." :
             "fx-ui 不逐个重写组件样式。公司视觉通过 shadcn 语义 token 注入。"}
-          </p>
+            actions={actions} />
         </section>
 
         <section id="theme-source" className={docsSpacing.sectionStack}>
@@ -5673,18 +5695,13 @@ function GettingStartedPage({
     return (
       <div className={docsSpacing.pageStack}>
         <section id="ai-rules" className="flex flex-col gap-3">
-          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-            <div>
-              <p className="mb-3 text-sm text-muted-foreground">Getting Started / AI Integration</p>
-              <h1 className="text-3xl font-bold leading-tight tracking-tight">{lang === "en" ? "AI Rules" : "AI 规则"}</h1>
-            </div>
-            {actions}
-          </div>
-          <p className={docsSpacing.leadText}>
-            {lang === "en" ?
+          <PageLead
+            crumb="Getting Started / AI Integration"
+            title={lang === "en" ? "AI Rules" : "AI 规则"}
+            lead={lang === "en" ?
             "These rules keep AI-generated pages aligned with shadcn open-code, company tokens, and executable checks." :
             "这些规则用来保证 AI 生成页面时对齐 shadcn open-code、公司 token 和可执行检查。"}
-          </p>
+            actions={actions} />
           <GovernanceQuickLinks currentPage={page} lang={lang} />
         </section>
 
@@ -5733,19 +5750,14 @@ function GettingStartedPage({
   if (page === "documentation") {
     return (
       <div className={docsSpacing.pageStack}>
-        <section id="documentation" className="flex flex-col gap-3">
-          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-            <div>
-              <p className="mb-3 text-sm text-muted-foreground">Governance / Documentation</p>
-              <h1 className="text-3xl font-bold leading-tight tracking-tight">{lang === "en" ? "Documentation" : "文档规范"}</h1>
-            </div>
-            {actions}
-          </div>
-          <p className={docsSpacing.leadText}>
-            {lang === "en" ?
+        <section id="documentation" className="flex flex-col gap-2">
+          <PageLead
+            crumb="Governance / Documentation"
+            title={lang === "en" ? "Documentation" : "文档规范"}
+            lead={lang === "en" ?
             "This page explains where information belongs, how to avoid orphan documents, and when text rules need machine checks." :
             "这页解决一件事：一条信息该写去哪，怎么避免孤岛文档，以及哪些文字规则必须升级成机器检查。"}
-          </p>
+            actions={actions} />
           <GovernanceQuickLinks currentPage={page} lang={lang} />
         </section>
 
@@ -5828,19 +5840,14 @@ function GettingStartedPage({
   if (page === "checks") {
     return (
       <div className={docsSpacing.pageStack}>
-        <section id="checks" className="flex flex-col gap-3">
-          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-            <div>
-              <p className="mb-3 text-sm text-muted-foreground">Governance / Checks</p>
-              <h1 className="text-3xl font-bold leading-tight tracking-tight">{lang === "en" ? "Checks" : "检查命令"}</h1>
-            </div>
-            {actions}
-          </div>
-          <p className={docsSpacing.leadText}>
-            {lang === "en" ?
+        <section id="checks" className="flex flex-col gap-2">
+          <PageLead
+            crumb="Governance / Checks"
+            title={lang === "en" ? "Checks" : "检查命令"}
+            lead={lang === "en" ?
             "Use these commands to verify component contracts, token sync, documentation structure, and production build health." :
             "这里列出一次改动完成前该跑什么检查：组件契约、token 同步、文档站骨架、组件 manifest 和生产构建。"}
-          </p>
+            actions={actions} />
           <GovernanceQuickLinks currentPage={page} lang={lang} />
         </section>
 
@@ -5914,19 +5921,14 @@ function GettingStartedPage({
 
   return (
     <div className={docsSpacing.pageStack}>
-      <section id="intro" className="flex flex-col gap-3">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="mb-3 text-sm text-muted-foreground">Getting Started / Overview</p>
-            <h1 className="text-3xl font-bold leading-tight tracking-tight">{lang === "en" ? "Overview" : "概览"}</h1>
-          </div>
-          {actions}
-        </div>
-        <p className={docsSpacing.leadText}>
-          {lang === "en" ?
+      <section id="intro" className="flex flex-col gap-2">
+        <PageLead
+          crumb="Getting Started / Overview"
+          title={lang === "en" ? "Overview" : "概览"}
+          lead={lang === "en" ?
           "fx-ui is not a hand-written component library. It is a shadcn open-code system with company tokens, documentation contracts, and AI-readable rules." :
           "fx-ui 不是手写组件库，而是一套基于 shadcn open-code、公司 token、文档契约和 AI 可读规则的前端生产体系。"}
-        </p>
+          actions={actions} />
       </section>
 
       <section id="intro-positioning" className={docsSpacing.sectionStack}>
@@ -5994,19 +5996,14 @@ function ComponentsIndexPage({ actions, lang }: {actions: React.ReactNode;lang: 
 
   return (
     <div className={docsSpacing.pageStack}>
-      <section id="components" className="flex flex-col gap-3">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="mb-3 text-sm text-muted-foreground">Components / Index</p>
-            <h1 className="text-3xl font-bold leading-tight tracking-tight">{lang === "en" ? "Components" : "组件"}</h1>
-          </div>
-          {actions}
-        </div>
-        <p className={docsSpacing.leadText}>
-          {lang === "en" ?
+      <section id="components" className="flex flex-col gap-2">
+        <PageLead
+          crumb="Components / Index"
+          title={lang === "en" ? "Components" : "组件"}
+          lead={lang === "en" ?
           "Find every component currently available in fx-ui. Base controls come from shadcn open-code; company compositions are listed separately." :
           "这里可以找到 fx-ui 当前可用的组件。基础控件来自 shadcn open-code，公司组合组件单独列出。"}
-        </p>
+          actions={actions} />
       </section>
 
       <section id="components-ui" className={docsSpacing.sectionStack}>
@@ -6276,22 +6273,14 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
     <div className={docsSpacing.pageStack}>
       <section id="button" className="flex flex-col gap-2">
         <PageLead
-          crumb="Components / Buttons"
-          title={lang === "en" ? "Button" : "Button 按钮"}
-          lead={lang === "en" ? "Trigger immediate actions with multiple sizes, states, and visual variants." : "用于触发即时操作。支持多种尺寸、状态和视觉变体。"}
+          crumb={lang === "en" ? "Components / Button" : "组件 / 按钮"}
+          title={lang === "en" ? "Button" : "按钮"}
+          lead={lang === "en" ? "Trigger immediate actions such as submit, save, create, or delete." : "用于触发提交、保存、新建、删除等即时操作。"}
           actions={actions} />
         
       </section>
 
       <section id="playground" className={docsSpacing.sectionStack}>
-        <div className="flex flex-col gap-1">
-          <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Playground" : "调试台"}</h2>
-          <p className="text-base text-muted-foreground">
-            {lang === "en" ?
-            "Pick a scenario or tweak props live, then copy the generated code." :
-            "选场景或实时调属性，预览随之变化，写法可一键复制。"}
-          </p>
-        </div>
         <ButtonPlayground lang={lang} />
       </section>
 
@@ -6456,8 +6445,8 @@ function PageLead({ crumb, title, lead, actions }: {crumb: string;title: string;
 
 function TokensPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
-    <>
-      <section id="tokens" className="flex flex-col gap-6">
+    <div className={docsSpacing.pageStack}>
+      <section id="tokens" className="flex flex-col gap-2">
         <PageLead
           crumb={lang === "en" ? "Design Tokens / Overview" : "设计 Tokens / Overview"}
           title={lang === "en" ? "Design Tokens" : "Tokens 设计令牌"}
@@ -6510,7 +6499,7 @@ function TokensPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           )}
         </div>
       </section>
-    </>);
+    </div>);
 
 }
 
@@ -6946,8 +6935,8 @@ function getTokenExample(name: string): React.ReactNode {
 
 function TokensColorsPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
-    <>
-      <section id="tokens-colors" className="flex flex-col gap-6">
+    <div className={docsSpacing.pageStack}>
+      <section id="tokens-colors" className="flex flex-col gap-2">
         <PageLead
           crumb={lang === "en" ? "Design Tokens / Colors" : "设计 Tokens / 颜色"}
           title={lang === "en" ? "Colors" : "颜色"}
@@ -7028,14 +7017,14 @@ function TokensColorsPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
           </div>
         )}
       </section>
-    </>);
+    </div>);
 
 }
 
 function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
-    <>
-      <section id="grid-system" className="flex flex-col gap-6">
+    <div className={docsSpacing.pageStack}>
+      <section id="grid-system" className="flex flex-col gap-2">
         <PageLead
           crumb={lang === "en" ? "Foundations / Grid" : "基础 / 栅格"}
           title={lang === "en" ? "Grid" : "栅格"}
@@ -7154,7 +7143,7 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           </div>
         </div>
       </section>
-    </>);
+    </div>);
 
 }
 
@@ -7453,8 +7442,8 @@ function LayoutPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
     wire: <div className="flex h-36 gap-1"><B label={nv} className="w-1/5" /><div className="flex flex-1 flex-col gap-1"><B label={hd} className="h-6" /><B label={mn} className="flex-1" /><B label={ft} className="h-6" /></div></div> }];
 
   return (
-    <>
-      <section id="layout-containers" className="flex flex-col gap-5">
+    <div className={docsSpacing.pageStack}>
+      <section id="layout-containers" className="flex flex-col gap-2">
         <PageLead
           crumb={lang === "en" ? "Foundations / Layout" : "基础 / 布局"}
           title={lang === "en" ? "Layout" : "布局"}
@@ -7484,14 +7473,14 @@ function LayoutPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           <p className="mt-1">{lang === "en" ? "Sider auto-collapses to the 64px icon rail below lg (1024px)." : "视口 < lg(1024px) 时侧栏自动收起为 64px 图标栏（或转抽屉）。"}</p>
         </div>
       </section>
-    </>);
+    </div>);
 
 }
 
 function TokensTypographyPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
-    <>
-      <section id="tokens-typography" className="flex flex-col gap-6">
+    <div className={docsSpacing.pageStack}>
+      <section id="tokens-typography" className="flex flex-col gap-2">
         <PageLead
           crumb={lang === "en" ? "Design Tokens / Typography" : "设计 Tokens / 排版"}
           title={lang === "en" ? "Typography" : "排版"}
@@ -7549,14 +7538,14 @@ function TokensTypographyPage({ actions, lang }: {actions: React.ReactNode;lang:
   "Helvetica Neue", "PingFang SC", "Microsoft Yahei", "微软雅黑", Arial, sans-serif;`}</code></pre>
         </div>
       </section>
-    </>);
+    </div>);
 
 }
 
 function TokensRadiusPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
-    <>
-      <section id="tokens-radius" className="flex flex-col gap-6">
+    <div className={docsSpacing.pageStack}>
+      <section id="tokens-radius" className="flex flex-col gap-2">
         <PageLead
           crumb={lang === "en" ? "Design Tokens / Radius" : "设计 Tokens / 圆角"}
           title={lang === "en" ? "Radius" : "圆角"}
@@ -7629,14 +7618,14 @@ function TokensRadiusPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
           </div>
         </div>
       </section>
-    </>);
+    </div>);
 
 }
 
 function TokensSpacingPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
-    <>
-      <section id="tokens-spacing" className="flex flex-col gap-6">
+    <div className={docsSpacing.pageStack}>
+      <section id="tokens-spacing" className="flex flex-col gap-2">
         <PageLead
           crumb={lang === "en" ? "Design Tokens / Spacing" : "设计 Tokens / 间距"}
           title={lang === "en" ? "Spacing" : "间距"}
@@ -7701,14 +7690,14 @@ function TokensSpacingPage({ actions, lang }: {actions: React.ReactNode;lang: La
           </div>
         </div>
       </section>
-    </>);
+    </div>);
 
 }
 
 function TokensShadowPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
-    <>
-      <section id="tokens-shadow" className="flex flex-col gap-6">
+    <div className={docsSpacing.pageStack}>
+      <section id="tokens-shadow" className="flex flex-col gap-2">
         <PageLead
           crumb={lang === "en" ? "Design Tokens / Shadow" : "设计 Tokens / 阴影"}
           title={lang === "en" ? "Shadow" : "阴影"}
@@ -7777,7 +7766,7 @@ function TokensShadowPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
           </div>
         </div>
       </section>
-    </>);
+    </div>);
 
 }
 
@@ -7786,8 +7775,8 @@ function TokensMotionPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
   const durationRows = motionTokens.filter((r) => r.name.startsWith("duration-"));
   const primitiveRows = motionTokens.filter((r) => !r.name.startsWith("duration-"));
   return (
-    <>
-      <section id="tokens-motion" className="flex flex-col gap-6">
+    <div className={docsSpacing.pageStack}>
+      <section id="tokens-motion" className="flex flex-col gap-2">
         <PageLead
           crumb={lang === "en" ? "Design Tokens / Motion" : "设计 Tokens / 动效"}
           title={lang === "en" ? "Motion" : "动效"}
@@ -7871,14 +7860,14 @@ function TokensMotionPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
           </div>
         </div>
       </section>
-    </>);
+    </div>);
 
 }
 
 function TokensLayerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
-    <>
-      <section id="tokens-layer" className="flex flex-col gap-6">
+    <div className={docsSpacing.pageStack}>
+      <section id="tokens-layer" className="flex flex-col gap-2">
         <PageLead
           crumb={lang === "en" ? "Design Tokens / Layer" : "设计 Tokens / 层级"}
           title={lang === "en" ? "Layer" : "层级"}
@@ -7947,7 +7936,7 @@ function TokensLayerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
           </div>
         </div>
       </section>
-    </>);
+    </div>);
 
 }
 
@@ -8311,15 +8300,7 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
     <div className={docsSpacing.pageStack}>
       <section id="input" className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold leading-tight tracking-tight">Input 输入框</h1>
-          </div>
-          {actions}
-        </div>
-        <p className={docsSpacing.componentLead}>
-          单行文本录入控件，用于表单字段、搜索框、内联编辑等场景。
-        </p>
+        <PageLead crumb="Components / Input" title="Input 输入框" lead="单行文本录入控件，用于表单字段、搜索框、内联编辑等场景。" actions={actions} />
       </section>
 
       <section id="input-overview" className={docsSpacing.sectionStack}>
@@ -8582,15 +8563,7 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
     <div className={docsSpacing.pageStack}>
       <section id="select" className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold leading-tight tracking-tight">Select 选择器</h1>
-          </div>
-          {actions}
-        </div>
-        <p className={docsSpacing.componentLead}>
-          从一组互斥选项中选择一个值，用于表单字段、筛选条件等场景。
-        </p>
+        <PageLead crumb="Components / Select" title="Select 选择器" lead="从一组互斥选项中选择一个值，用于表单字段、筛选条件等场景。" actions={actions} />
       </section>
 
       <section id="select-overview" className={docsSpacing.sectionStack}>
@@ -8824,15 +8797,7 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
   return (
     <div className={docsSpacing.pageStack}>
       <section id="checkbox" className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold leading-tight tracking-tight">Checkbox 复选框</h1>
-          </div>
-          {actions}
-        </div>
-        <p className={docsSpacing.componentLead}>
-          表达单个布尔选项的勾选，常用于条款确认、设置项、列表批量选择。
-        </p>
+        <PageLead crumb="Components / Checkbox" title="Checkbox 复选框" lead="表达单个布尔选项的勾选，常用于条款确认、设置项、列表批量选择。" actions={actions} />
       </section>
 
       <section id="checkbox-overview" className={docsSpacing.sectionStack}>
@@ -9053,15 +9018,7 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
     <div className={docsSpacing.pageStack}>
       <section id="switch" className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold leading-tight tracking-tight">Switch 开关</h1>
-          </div>
-          {actions}
-        </div>
-        <p className={docsSpacing.componentLead}>
-          表达立即生效的二元设置项，切换后无需额外提交，常用于偏好设置、功能开关。
-        </p>
+        <PageLead crumb="Components / Switch" title="Switch 开关" lead="表达立即生效的二元设置项，切换后无需额外提交，常用于偏好设置、功能开关。" actions={actions} />
       </section>
 
       <section id="switch-overview" className={docsSpacing.sectionStack}>
@@ -9261,15 +9218,7 @@ function TextareaPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
   return (
     <div className={docsSpacing.pageStack}>
       <section id="textarea" className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold leading-tight tracking-tight">Textarea 多行输入</h1>
-          </div>
-          {actions}
-        </div>
-        <p className={docsSpacing.componentLead}>
-          录入较长文本，如备注、描述、反馈内容，高度随内容自适应。
-        </p>
+        <PageLead crumb="Components / Textarea" title="Textarea 多行输入" lead="录入较长文本，如备注、描述、反馈内容，高度随内容自适应。" actions={actions} />
       </section>
 
       <section id="textarea-overview" className={docsSpacing.sectionStack}>
@@ -10188,15 +10137,7 @@ function CardPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
     <div className={docsSpacing.pageStack}>
       <section id="card" className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold leading-tight tracking-tight">Card 卡片</h1>
-          </div>
-          {actions}
-        </div>
-        <p className={docsSpacing.componentLead}>
-          通用内容容器，用 Header / Content / Footer 等子组件搭出统一的卡片骨架。
-        </p>
+        <PageLead crumb="Components / Card" title="Card 卡片" lead="通用内容容器，用 Header / Content / Footer 等子组件搭出统一的卡片骨架。" actions={actions} />
       </section>
 
       <section id="card-overview" className={docsSpacing.sectionStack}>
@@ -10568,15 +10509,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
   return (
     <div className={docsSpacing.pageStack}>
       <section id="tooltip" className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold leading-tight tracking-tight">Tooltip 提示</h1>
-          </div>
-          {actions}
-        </div>
-        <p className={docsSpacing.componentLead}>
-          鼠标悬浮或聚焦时弹出的简短说明，用于补充说明、可访问性兜底，不承载关键信息。
-        </p>
+        <PageLead crumb="Components / Tooltip" title="Tooltip 提示" lead="鼠标悬浮或聚焦时弹出的简短说明，用于补充说明、可访问性兜底，不承载关键信息。" actions={actions} />
       </section>
 
       <section id="tooltip-overview" className={docsSpacing.sectionStack}>
@@ -10810,15 +10743,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
     <div className={docsSpacing.pageStack}>
       <section id="dialog" className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold leading-tight tracking-tight">Dialog 对话框</h1>
-          </div>
-          {actions}
-        </div>
-        <p className={docsSpacing.componentLead}>
-          以模态浮层承载需要用户聚焦完成的单一任务，如表单录入、操作确认。
-        </p>
+        <PageLead crumb="Components / Dialog" title="Dialog 对话框" lead="以模态浮层承载需要用户聚焦完成的单一任务，如表单录入、操作确认。" actions={actions} />
       </section>
 
       <section id="dialog-overview" className={docsSpacing.sectionStack}>
@@ -11048,15 +10973,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
   return (
     <div className={docsSpacing.pageStack}>
       <section id="alert-dialog" className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold leading-tight tracking-tight">Alert Dialog 警告对话框</h1>
-          </div>
-          {actions}
-        </div>
-        <p className={docsSpacing.componentLead}>
-          强制用户对不可逆或有重大影响的操作做出明确选择，不可通过点击遮罩或 Esc 关闭。
-        </p>
+        <PageLead crumb="Components / Alert Dialog" title="Alert Dialog 警告对话框" lead="强制用户对不可逆或有重大影响的操作做出明确选择，不可通过点击遮罩或 Esc 关闭。" actions={actions} />
       </section>
 
       <section id="alert-dialog-overview" className={docsSpacing.sectionStack}>
@@ -11286,15 +11203,7 @@ function SheetPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
     <div className={docsSpacing.pageStack}>
       <section id="sheet" className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold leading-tight tracking-tight">Sheet 抽屉</h1>
-          </div>
-          {actions}
-        </div>
-        <p className={docsSpacing.componentLead}>
-          从屏幕边缘滑出的浮层面板，用于在不离开当前上下文的情况下查看详情或执行操作。
-        </p>
+        <PageLead crumb="Components / Sheet" title="Sheet 抽屉" lead="从屏幕边缘滑出的浮层面板，用于在不离开当前上下文的情况下查看详情或执行操作。" actions={actions} />
       </section>
 
       <section id="sheet-overview" className={docsSpacing.sectionStack}>
@@ -11509,15 +11418,7 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
   return (
     <div className={docsSpacing.pageStack}>
       <section id="skeleton" className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold leading-tight tracking-tight">Skeleton 骨架屏</h1>
-          </div>
-          {actions}
-        </div>
-        <p className={docsSpacing.componentLead}>
-          内容加载完成前展示的占位块，用呼吸动画提示"正在加载"，并提前还原真实内容的大致结构。
-        </p>
+        <PageLead crumb="Components / Skeleton" title="Skeleton 骨架屏" lead="内容加载完成前展示的占位块，用呼吸动画提示正在加载，并提前还原真实内容的大致结构。" actions={actions} />
       </section>
 
       <section id="skeleton-overview" className={docsSpacing.sectionStack}>
@@ -13168,18 +13069,13 @@ function AgentSurfacePage({ actions, lang }: {actions: React.ReactNode;lang: Lan
   return (
     <div className={docsSpacing.pageStack}>
       <section id="agent-surface" className="flex flex-col gap-3">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="mb-3 text-sm text-muted-foreground">Compositions / AgentSurface</p>
-            <h1 className="text-3xl font-bold leading-tight tracking-tight">AgentSurface</h1>
-          </div>
-          {actions}
-        </div>
-        <p className={docsSpacing.leadText}>
-          {lang === "en" ?
+        <PageLead
+          crumb="Compositions / AgentSurface"
+          title="AgentSurface"
+          lead={lang === "en" ?
           "A controlled generative UI surface: Agent returns JSON intent, fx-ui renders trusted React components, and user actions become events." :
           "受控生成式 UI 渲染面：Agent 返回 JSON 意图，fx-ui 渲染可信 React 组件，用户操作变成事件。"}
-        </p>
+          actions={actions} />
       </section>
 
       <section id="agent-surface-overview" className={docsSpacing.sectionStack}>
@@ -13695,17 +13591,13 @@ function ChartPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
     <div className={docsSpacing.pageStack}>
       <section id="chart" className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold leading-tight tracking-tight">Chart 图表</h1>
-          </div>
-          {actions}
-        </div>
-        <p className="text-base text-muted-foreground">
-          {lang === "en" ?
+        <PageLead
+          crumb="Components / Chart"
+          title="Chart 图表"
+          lead={lang === "en" ?
           "Built on Recharts via shadcn chart. Colors inherit from --chart-1~10 tokens." :
           "基于 shadcn chart（Recharts 封装）。颜色继承 --chart-1~10 token，跟随主题自动切换。"}
-        </p>
+          actions={actions} />
       </section>
 
       <Separator className="my-2" />

@@ -69,7 +69,6 @@ function PageActionsShell({
   return (
     <div className="flex flex-wrap items-center gap-2">
       {children}
-      <div className="mx-1 h-5 w-px bg-border" />
       {navActions}
     </div>
   )

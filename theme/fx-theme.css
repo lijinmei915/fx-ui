@@ -290,7 +290,7 @@
   /* 实心交互态：hover 浅一阶（08）、active 深一阶（10），随换肤变化 */
   --fx-primary-hover:    var(--fx-brand-08);
   --fx-primary-active:   var(--fx-brand-10);
-  --fx-primary-disabled: var(--fx-brand-05);
+  --fx-primary-disabled: var(--fx-brand-04);
 
   /* 浅色变体（Tag / Badge / Alert / Ghost 按钮背景） */
   --fx-primary-light:        var(--fx-brand-01);
@@ -325,10 +325,10 @@
   --background: var(--fx-neutrals-02);
   /* 文字/图标四级层级（文字与图标共用同一套，全部取自中性轴）
      约 100/73/49/25 的均匀梯度（对齐 Ant 88/65/45/25）：
-     ① 主 20 / ② 次 15 / ③ 弱信息·caption 11 / ④ 占位+禁用 07 */
+     ① 主 20 / ② 次 15 / ③ 弱信息·caption 11 / ④ 占位+禁用 06 */
   --foreground: var(--fx-neutrals-20);
   --foreground-secondary: var(--fx-neutrals-15);
-  --foreground-disabled: var(--fx-neutrals-07);
+  --foreground-disabled: var(--fx-neutrals-06);
 
   --card: #FFFFFF;
   --card-foreground: var(--fx-neutrals-20);
@@ -366,7 +366,7 @@
   --destructive: var(--fx-red-09);
   --destructive-hover: var(--fx-red-08);
   --destructive-active: var(--fx-red-10);
-  --destructive-disabled: var(--fx-red-05);
+  --destructive-disabled: var(--fx-red-04);
   --destructive-foreground: #FFFFFF;
   --destructive-light: var(--fx-danger-light);
   --destructive-light-hover: var(--fx-danger-light-hover);
@@ -376,7 +376,7 @@
   --link: var(--fx-blue-09);
   --link-hover: var(--fx-blue-08);
   --link-active: var(--fx-blue-10);
-  --link-disabled: var(--fx-blue-05);
+  --link-disabled: var(--fx-blue-04);
 
   /* 边框三档（走中性轴）：弱 04 / 默认 05 / 强 08；input 07 为可交互元素边框 */
   --border-faint: var(--fx-neutrals-03);
@@ -401,7 +401,7 @@
   --info: var(--fx-blue-09);
   --info-hover: var(--fx-blue-08);
   --info-active: var(--fx-blue-10);
-  --info-disabled: var(--fx-blue-05);
+  --info-disabled: var(--fx-blue-04);
   --info-foreground: var(--fx-neutrals-01);
 
   /* 企业真实字族（Figma 字体规范）：西文 Helvetica 优先，中文思源黑体 CN，全系统字体不下载 */

@@ -35,9 +35,9 @@ import { PageLead } from "@/components/fx/page-lead"
 
 ```tsx
 <PageLead
-  crumb="Components / Buttons"
-  title="Button 按钮"
-  lead="用于触发即时操作。支持多种尺寸、状态和视觉变体。"
+  crumb="组件 / 按钮"
+  title="按钮"
+  lead="用于触发提交、保存、新建、删除等即时操作。"
   actions={<Button variant="secondary">复制当前页</Button>}
 />
 ```
@@ -52,11 +52,25 @@ import { PageLead } from "@/components/fx/page-lead"
 
 ## 取值逻辑 {#value-rules}
 
-- `crumb`：写页面所属层级，用 ` / ` 分隔；最后一段是当前页，显示为正文色。中文界面使用中文层级，例如 `组件 / Avatar 头像`、`设计 Tokens / 圆角`。
-- `title`：写当前页唯一主标题，不自动拆分中英文；组件页可用 `Avatar 头像`，token 页用 `圆角`、`颜色` 这类中文主标题。
-- `lead`：写一句页面说明，说明这个页面或组件解决什么问题，不重复标题。
+- `crumb`：写页面所属层级，格式为 `导航分组 / 当前页名称`，必须和左侧导航分组和当前页 label 保持一致；用 ` / ` 分隔，最后一段是当前页，显示为正文色。中文界面只显示中文层级，例如 `组件 / 按钮`、`设计 Tokens / 圆角`；英文界面再显示英文名称。
+- `title`：写当前页唯一主标题。中文界面只显示中文标题，英文界面只显示英文标题，不在同一行中英混排。
+- `lead`：默认只写一句页面说明，说明这个页面或组件解决什么问题，不重复标题；只有首句仍不足以界定边界、且补充信息会直接影响理解或选型时，才加第二句。像“支持多种尺寸/状态/视觉变体”这类从正文天然可见的泛化句，不写。
 - `actions`：只放页面级动作，例如复制当前页、更多菜单、上一篇 / 下一篇；不要放组件示例自己的操作。
-- `separator`：默认不显示。只有页面需要明确分组时才显式开启。
+
+## 视觉取值 {#visual-values}
+
+PageLead 的字号、字重、颜色和间距由组件内部固定，不在页面里重写：
+
+| 部位 | 取值 |
+| --- | --- |
+| 面包屑 | `text-sm`，400，`text-muted-foreground` |
+| 当前页面包屑 | 500，`text-foreground` |
+| 标题 | `32px / 40px`，700，`text-foreground` |
+| 说明 | `text-sm / 24px`，400，`text-muted-foreground`，最大宽度 `max-w-5xl` |
+| 面包屑到标题 | `mb-3` |
+| 标题到说明 | `mt-2` |
+| 标题组与动作 | 桌面端顶对齐，动作区不压缩标题组 |
+| 分隔线 | 不由 PageLead 渲染，页面头部下方不加线 |
 
 ## 场景示例 {#examples}
 
@@ -67,9 +81,9 @@ import { PageLead } from "@/components/fx/page-lead"
 
 ```tsx
 <PageLead
-  crumb="Components / Buttons"
-  title="Button 按钮"
-  lead="用于触发即时操作。支持多种尺寸、状态和视觉变体。"
+  crumb="组件 / 按钮"
+  title="按钮"
+  lead="用于触发提交、保存、新建、删除等即时操作。"
   actions={<Button variant="secondary">复制当前页</Button>}
 />
 ```
@@ -90,13 +104,17 @@ import { PageLead } from "@/components/fx/page-lead"
 | `title: string` | 主标题，按传入文本完整显示 |
 | `lead: ReactNode` | 页面说明 |
 | `actions: ReactNode` | 右侧页面级操作 |
-| `separator?: boolean` | 是否显示标题区后的分隔线，默认 `false` |
 
 ## Semantic DOM {#semantic-dom}
 
 | 部位 | 说明 |
 | --- | --- |
-| `root` | 组件根节点；源码没有更细 data-slot 时按根节点理解 |
+| `page-lead` | 根节点，左右布局容器 |
+| `page-lead-content` | 面包屑、标题、说明 |
+| `page-lead-crumb` | 面包屑路径 |
+| `page-lead-title` | 页面唯一主标题 |
+| `page-lead-description` | 一句页面说明 |
+| `page-lead-actions` | 右侧页面级动作 |
 
 ## 状态标记 {#states}
 
@@ -110,7 +128,6 @@ import { PageLead } from "@/components/fx/page-lead"
 | --- | --- |
 | `--foreground` | 主要文字 |
 | `--muted-foreground` | 面包屑和说明 |
-| `--border` | 可选分隔线 |
 
 完整 token 规则见 `docs/TOKENS.md`。
 
@@ -138,9 +155,9 @@ import { PageLead } from "@/components/fx/page-lead"
 
 ```tsx
 <PageLead
-  crumb="Components / Buttons"
-  title="Button 按钮"
-  lead="用于触发即时操作。支持多种尺寸、状态和视觉变体。"
+  crumb="组件 / 按钮"
+  title="按钮"
+  lead="用于触发提交、保存、新建、删除等即时操作。"
   actions={<Button variant="secondary">复制当前页</Button>}
 />
 ```

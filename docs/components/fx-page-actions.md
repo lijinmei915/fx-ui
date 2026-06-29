@@ -113,7 +113,6 @@ import { PageActions } from "@/components/fx/page-actions"
 | --- | --- |
 | `--foreground` | 主要文字 |
 | `--muted-foreground` | 菜单辅助文字 |
-| `--border` | 分隔线 |
 | `--secondary` | 次级按钮背景 |
 
 完整 token 规则见 `docs/TOKENS.md`。

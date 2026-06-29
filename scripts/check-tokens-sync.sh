@@ -149,11 +149,12 @@ const ladder = manifest.interactionLadder
 if (ladder) {
   const steps = ladder.solid
   for (const c of ladder.colors ?? []) {
+    const colorSteps = c.steps ?? {}
     const checks = [
-      ["default", c.default, steps.default],
-      ["hover", c.hover, steps.hover],
-      ["active", c.active, steps.active],
-      ["disabled", c.disabled, steps.disabled],
+      ["default", c.default, colorSteps.default ?? steps.default],
+      ["hover", c.hover, colorSteps.hover ?? steps.hover],
+      ["active", c.active, colorSteps.active ?? steps.active],
+      ["disabled", c.disabled, colorSteps.disabled ?? steps.disabled],
     ]
     for (const [state, tokenName, step] of checks) {
       if (!tokenName) continue

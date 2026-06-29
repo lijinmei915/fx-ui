@@ -112,8 +112,7 @@
         "className=\"flex flex-wrap items-center gap-2\"",
         "function CopyPageAction",
         "function PageStepActions",
-        "size=\"icon-sm\"",
-        "className=\"mx-1 h-5 w-px bg-border\""
+        "size=\"icon-sm\""
       ]
     },
     {

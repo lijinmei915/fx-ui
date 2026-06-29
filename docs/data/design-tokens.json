@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/design-tokens",
-  "updatedAt": "2026-06-28",
+  "updatedAt": "2026-06-29",
   "truthSource": "theme/fx-theme.css",
   "humanDoc": "docs/TOKENS.md",
   "note": "主项目采用 shadcn 友好的三层结构：primitive -> semantic -> componentUsage。报告 skill 的 Seed -> Map -> Alias -> Component 四层结构可作为独立 HTML 输出参考，但不替代本项目的 shadcn semantic slots。",
@@ -1309,7 +1309,7 @@
     },
     {
       "name": "--fx-primary-disabled",
-      "value": "var(--fx-brand-05)",
+      "value": "var(--fx-brand-04)",
       "category": "interaction.primary",
       "usage": "Orange 05 - disabled（与 hover 同色，组件层加 opacity）"
     },
@@ -1473,7 +1473,7 @@
     },
     {
       "name": "--foreground-disabled",
-      "value": "var(--fx-neutrals-07)",
+      "value": "var(--fx-neutrals-06)",
       "category": "shadcn-semantic",
       "usage": ""
     },
@@ -1629,7 +1629,7 @@
     },
     {
       "name": "--destructive-disabled",
-      "value": "var(--fx-red-05)",
+      "value": "var(--fx-red-04)",
       "category": "shadcn-semantic",
       "usage": ""
     },
@@ -1677,7 +1677,7 @@
     },
     {
       "name": "--link-disabled",
-      "value": "var(--fx-blue-05)",
+      "value": "var(--fx-blue-04)",
       "category": "shadcn-semantic",
       "usage": "链接禁用态（淡化蓝）"
     },
@@ -1797,7 +1797,7 @@
     },
     {
       "name": "--info-disabled",
-      "value": "var(--fx-blue-05)",
+      "value": "var(--fx-blue-04)",
       "category": "shadcn-semantic",
       "usage": ""
     },
@@ -2188,7 +2188,7 @@
   ],
   "interactionLadder": {
     "mode": "light",
-    "note": "仅浅色模式。以 09 为默认的可交互色统一取阶；深色模式以后另定。文字规范见 docs/TOKENS.md 交互色状态阶梯，决策见 DEC-005。",
+    "note": "仅浅色模式。以 09 为默认的可交互色统一取阶；主按钮 default 的禁用态特例用 04，其余功能色禁用仍按 05；深色模式以后另定。文字规范见 docs/TOKENS.md 交互色状态阶梯，决策见 DEC-005。",
     "solid": {
       "default": "09",
       "hover": "08",
@@ -2207,7 +2207,10 @@
         "default": "--primary",
         "hover": "--fx-primary-hover",
         "active": "--fx-primary-active",
-        "disabled": "--fx-primary-disabled"
+        "disabled": "--fx-primary-disabled",
+        "steps": {
+          "disabled": "04"
+        }
       },
       {
         "name": "success",
@@ -2231,7 +2234,10 @@
         "default": "--destructive",
         "hover": "--destructive-hover",
         "active": "--destructive-active",
-        "disabled": "--destructive-disabled"
+        "disabled": "--destructive-disabled",
+        "steps": {
+          "disabled": "04"
+        }
       },
       {
         "name": "info",
@@ -2239,7 +2245,10 @@
         "default": "--info",
         "hover": "--info-hover",
         "active": "--info-active",
-        "disabled": "--info-disabled"
+        "disabled": "--info-disabled",
+        "steps": {
+          "disabled": "04"
+        }
       },
       {
         "name": "link",

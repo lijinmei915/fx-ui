@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-06-28
+last_verified: 2026-06-29
 teaches: "fx-ui 重要的技术/协作决策记录：选了什么、放弃了什么、为什么"
 use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论"
 ---
@@ -76,12 +76,13 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 
 - **日期**：2026-06-16
 - **状态**：已决定
-- **决定**：任何可交互色的 hover/active/disabled 一律从 12 阶色板取阶。**统一交互阶梯（仅浅色模式）**：以 09 为默认的色（主色实心、状态实心、链接文字、品牌强调文字）一律 默认09 / hover08（浅一阶）/ active10（深一阶）/ 禁用05——链接也照此、不单独加深；浅色/软色组（以 01 为默认的 tag/alert 背景）取 01/02/03；中性面填充（secondary）走灰 02/03/04；无填充控件（ghost / outline）再降一档 hover02/active03。深色模式以后另定，明暗方向会反。
+- **决定**：任何可交互色的 hover/active/disabled 一律从 12 阶色板取阶。**统一交互阶梯（仅浅色模式）**：以 09 为默认的色（主色实心、状态实心、链接文字、品牌强调文字）一律 默认09 / hover08（浅一阶）/ active10（深一阶）；其中**主色实心按钮禁用态特例改为 04**，比原 05 更浅，保留一点主按钮语义但不再像可点击；其余品牌/功能色文字禁用仍按 05 控制。浅色/软色组（以 01 为默认的 tag/alert 背景）取 01/02/03；中性面填充（secondary）走灰 02/03/04；无填充控件（ghost / outline）再降一档 hover02/active03。深色模式以后另定，明暗方向会反。
 - **放弃**：组件里用 `color-mix(...)` 现算、`/透明度`（`bg-primary/80`、`bg-destructive/10`）表达交互态——三套手法并存、各处不一致
 - **原因**：色板是唯一真相源，绕过它就会漂移；统一取阶后换肤、对比度、深浅层次都可预测，组件只引用 token 不再写死算式
 - **影响**：新增 `--fx-{success/info/warning/danger}-light-hover/-active`、`--secondary/muted-hover/-active`、`--destructive-light*` 等 token；button/badge 已改为引用 token
 - **补充（2026-06-18）**：**浅色态收敛已完成**——全部组件浅色交互态/填充改用实心 token（footer/hover 走 `bg-muted`、危险态走 `bg-destructive-light`、禁用输入走 `bg-muted`、选中卡片走 `bg-accent`、细边框走 `border-border-subtle`），不再用 `/透明度`/`color-mix`。`focus-visible`/`aria-invalid` 焦点环按无障碍惯例保留透明度；`dark:` 暗色态待 DEC 另定。新增门禁 `scripts/check-interaction-tokens.mjs`（接 check-all）防回弹
 - **相关文件**：`theme/fx-theme.css`、`docs/TOKENS.md`（交互色状态阶梯）、`src/components/ui/*`、`scripts/check-interaction-tokens.mjs`
+- **补充（2026-06-29）**：主按钮 default 的禁用底从 `brand-05` 调整为 `brand-04`。原因是 `05 + 白字` 在当前橙色色板里仍显得可点击，`04` 更接近主流禁用观感，同时保留微弱品牌语义。
 
 ### DEC-006: 只保留一套中性灰（Neutrals 20 阶），删除独立灰色色系
 
@@ -150,7 +151,8 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **决定**：Button 禁用态去掉整块 `disabled:opacity-50`，改用**语义禁用色 token**，各 variant 分别定：default→`bg-primary-disabled`、outline→`bg-surface-disabled`(新增 neutrals-02)+`border-border-subtle`+`text-foreground-disabled`、secondary/ghost→`text-foreground-disabled`、destructive→`bg-destructive-light`+`text-destructive-disabled`（保留淡红）、link/plain→`text-link-disabled`(新增)/`text-foreground-disabled`。保留 `disabled:cursor-not-allowed`
 - **放弃**：DEC-011 的 `opacity-50` 整体降透明——用户判断"用透明度不够规范"，且项目本就有 `*-disabled` 语义 token
 - **原因**：透明度是整块压暗、非语义；项目 token 体系有专门的禁用色阶（primary/destructive/info-disabled 等），实心禁用色更可控、可换肤、带语义色（危险禁用仍是淡红、链接仍是淡蓝）
-- **影响**：新增 `--surface-disabled`(neutrals-02)、`--link-disabled`(blue-05) token（css + design-tokens.json）；`button.tsx` 各 variant 禁用类；分页器等用 Button 的禁用态随之更新
+- **补充（2026-06-29）**：default 主按钮的禁用底进一步从 `primary-disabled = brand-05` 调浅到 `brand-04`；同时将 `info/link/destructive` 文字型禁用色从 `05` 调浅到 `04`，中性禁用文字从 `neutrals-07` 提到 `neutrals-06`，保留可读性但不再像可点击态。
+- **影响**：新增 `--surface-disabled`(neutrals-02)、`--link-disabled`(blue-05，后于 2026-06-29 调整为 blue-04) token（css + design-tokens.json）；`button.tsx` 各 variant 禁用类；分页器等用 Button 的禁用态随之更新
 - **相关文件**：`src/components/ui/button.tsx`、`theme/fx-theme.css`、`docs/data/design-tokens.json`
 
 ### DEC-012: 场景表筛选 tab 顺序统一规范

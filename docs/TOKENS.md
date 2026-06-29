@@ -88,10 +88,10 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | ① 主 | 标题、正文、表单标签、默认图标 | `--fx-neutrals-20` | `text-foreground` |
 | ② 次 | 次要正文、说明 | `--fx-neutrals-15` | `text-foreground-secondary` |
 | ③ 弱信息/caption | 描述、辅助说明、次要图标 | `--fx-neutrals-11` | `text-muted-foreground` |
-| ④ 占位 + 禁用 | 表单 placeholder、禁用文字与图标（≈25%，对齐 Ant/Apple） | `--fx-neutrals-07` | `text-foreground-disabled` |
+| ④ 占位 + 禁用 | 表单 placeholder、禁用文字与图标 | `--fx-neutrals-06` | `text-foreground-disabled` |
 | 反白 | 主色/品牌背景上的文字图标 | `--fx-neutrals-01` | `text-primary-foreground` |
 
-> **placeholder 与禁用同档**（④）：主流表单 placeholder 都很浅（Ant 25% / Material ~38%），不要用 ③ 的弱信息色（太深）。表单 placeholder 一律 `placeholder:text-foreground-disabled`。
+> **placeholder 与禁用同档**（④）：当前项目将中性禁用/placeholder 从 `neutrals-07` 上调到 `neutrals-06`，避免文字按钮禁用后过虚；表单 placeholder 一律 `placeholder:text-foreground-disabled`。
 
 > 图标不再单列一套色，直接复用这四级（默认图标 = ①，次要/禁用图标取 ③/④）。`text-icon` / `text-icon-muted` 作为 ①/③ 的别名保留，供 shadcn 组件兼容。
 
@@ -276,7 +276,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | 03 | 5% | 次级背景 muted / secondary 默认底、ghost·outline 悬浮底 |
 | 04 | 9% | secondary·muted hover |
 | 05 | 14% | secondary·muted active、分割线（`--border`） |
-| 07 | 25% | 占位+禁用文字/图标（`--foreground-disabled`） |
+| 06 | 19% | 占位+禁用文字/图标（`--foreground-disabled`） |
 | 11 | 49% | 弱信息/caption（`--muted-foreground`）、icon-muted |
 | 15 | 73% | 次要文字（`--foreground-secondary`） |
 | 20 | neutral-dark | 主文字（`--foreground`）、icon |
@@ -319,7 +319,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 |------|----|
 | 主图标 | `text-foreground`（neutrals-20） |
 | 次图标 | `text-muted-foreground`（neutrals-11） |
-| 禁用图标 | `text-foreground-disabled`（neutrals-07） |
+| 禁用图标 | `text-foreground-disabled`（neutrals-06） |
 | 反白图标（深底/品牌底） | `text-primary-foreground`（neutrals-01） |
 
 **2. 彩色线性图标 — 语义/品牌色**：`text-primary` / `text-success` / `text-warning` / `text-destructive` / `text-info`，分类场景可用 chart 色系（09 阶）。
@@ -357,7 +357,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | 默认 Default | 09 | 种子色本身 |
 | 悬浮 Hover | 08 | 比默认浅一阶（柔和悬浮） |
 | 激活 Active / 按下 Click | 10 | 比默认深一阶（按下加深） |
-| 禁用 Disabled | 05 | 大幅变浅（组件层不再叠 opacity） |
+| 禁用 Disabled | 04 | 大幅变浅（保留一点品牌语义，但避免看起来仍可点击；组件层不再叠 opacity） |
 
 ### 浅色组（Tag / Badge / Alert / Ghost 按钮背景）
 
@@ -380,12 +380,12 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 | 颜色 | 色板来源 | 实心/浅色 |
 |------|----------|-----------|
-| 主色 primary | `--fx-brand-*`（随换肤变） | 实心组 默认09/hover08/active10/禁用05 + 浅色组 01/02/03 |
+| 主色 primary | `--fx-brand-*`（随换肤变） | 实心组 默认09/hover08/active10/禁用04 + 浅色组 01/02/03 |
 | 功能色 success/info/warning/destructive | 各自 `--fx-green/blue/amber/red-*` | 浅色组 01/02/03，文字用 09 |
 | 中性面 secondary/muted | `--fx-gray-*`（灰色板，对齐 Radix 交互区 03/04/05） | 默认 03 / hover 04 / active 05 |
 
 落地 token：
-- 主色：`--fx-primary` = `--fx-brand-09`、`-hover` = `08`、`-active` = `10`、`-disabled` = `05`；`--fx-primary-light*` = `--fx-brand-01/02/03`
+- 主色：`--fx-primary` = `--fx-brand-09`、`-hover` = `08`、`-active` = `10`、`-disabled` = `04`；`--fx-primary-light*` = `--fx-brand-01/02/03`
 - 功能色：`--fx-{success/info/warning/danger}-light(/-hover/-active)` = 对应色板 01/02/03
 - 中性面：`--secondary(/-hover/-active)` = `--fx-gray-03/04/05`；`--muted(/-hover/-active)` = `--fx-gray-02/03/04`
 - 焦点环：`--ring` = 种子色 09 叠 40% 透明

@@ -875,6 +875,10 @@ type WebsiteStandardsManifest = {
     componentName: string;
     usageBullets: string[];
   };
+  cardSurfaceRules: {
+    title: string;
+    desc: string;
+  }[];
   playgroundRules: {
     title: string;
     desc: string;
@@ -982,23 +986,33 @@ const governanceFreshness = {
   systemRelations: systemRelations.updatedAt
 };
 
-const topNav = [
+type SiteNavItem = {
+  label: string;
+  labelEn?: string;
+  href: string;
+  page: string;
+  items?: SiteNavItem[];
+};
+
+const gettingStartedNavItems: SiteNavItem[] = [
+{ label: "开始使用", labelEn: "Getting Started", href: "#intro", page: "intro" }];
+
+const governanceQuickLinks: SiteNavItem[] = [
+{ label: "现状", labelEn: "Status", href: "#governance-map", page: "governance-map" },
+{ label: "AI 规则", labelEn: "AI Rules", href: "#ai-rules", page: "ai-rules" },
+{ label: "文档规范", labelEn: "Documentation", href: "#documentation", page: "documentation" },
+{ label: "网站规范", labelEn: "Website Standards", href: "#website-standards", page: "website-standards" },
+{ label: "检查命令", labelEn: "Checks", href: "#checks", page: "checks" }];
+
+const topNav: SiteNavItem[] = [
+{ label: "开始使用", labelEn: "Getting Started", href: "#intro", page: "intro" },
 { label: "组件", labelEn: "Components", href: "#components", page: "components" },
-{ label: "设计令牌", labelEn: "Foundations", href: "#tokens", page: "tokens" },
-{ label: "模式", labelEn: "Patterns", href: "#template-customer-list", page: "template-customer-list" },
-{ label: "主题", labelEn: "Theme", href: "#theme", page: "theme" }];
+{ label: "基础", labelEn: "Foundations", href: "#tokens", page: "tokens" },
+{ label: "页面", labelEn: "Pages", href: "#template-customer-list", page: "template-customer-list" },
+{ label: "维护", labelEn: "Maintain", href: "#governance-map", page: "governance-map" }];
 
 
 const docsNav = [
-{
-  title: "开始使用",
-  titleEn: "Getting Started",
-  items: [
-  { label: "概览", labelEn: "Overview", href: "#intro" },
-  { label: "安装", labelEn: "Installation", href: "#install" },
-  { label: "主题", labelEn: "Theme", href: "#theme" }]
-
-},
 {
   title: "设计令牌",
   titleEn: "Design Tokens",
@@ -1107,14 +1121,10 @@ const docsNav = [
 
 },
 {
-  title: "页面模板",
-  titleEn: "Page Templates",
+  title: "页面",
+  titleEn: "Pages",
   items: [
-  { label: "列表页", labelEn: "ListPage", href: "#list-page" },
-  { label: "详情页", labelEn: "DetailPage", href: "#detail-page" },
-  { label: "编辑表单", labelEn: "EditForm", href: "#edit-form" },
-  { label: "设置页", labelEn: "SettingsPage", href: "#settings-page" },
-  { label: "列表页模板", labelEn: "ListPage Template", href: "#dashboard" }]
+  { label: "列表页", labelEn: "List Page", href: "#template-customer-list" }]
 
 },
 {
@@ -1122,7 +1132,10 @@ const docsNav = [
   titleEn: "Maintain",
   items: [
   { label: "现状", labelEn: "Status", href: "#governance-map" },
-  { label: "网站规范", labelEn: "Website Standards", href: "#website-standards" }]
+  { label: "AI 规则", labelEn: "AI Rules", href: "#ai-rules" },
+  { label: "文档规范", labelEn: "Documentation", href: "#documentation" },
+  { label: "网站规范", labelEn: "Website Standards", href: "#website-standards" },
+  { label: "检查命令", labelEn: "Checks", href: "#checks" }]
 
 }];
 
@@ -1132,8 +1145,12 @@ type GettingStartedPage = "intro" | "install" | "theme" | "governance-map" | "ai
 const gettingStartedAnchors: Record<GettingStartedPage, {label: string;labelEn: string;href: string;}[]> = {
   intro: [
   { label: "定位", labelEn: "Positioning", href: "#intro-positioning" },
-  { label: "三层体系", labelEn: "Three Layers", href: "#intro-layers" },
-  { label: "适合谁用", labelEn: "Audience", href: "#intro-audience" }],
+  { label: "安装和引入", labelEn: "Install", href: "#intro-install" },
+  { label: "主题接入", labelEn: "Theme Setup", href: "#theme-source" },
+  { label: "语义槽", labelEn: "Semantic Slots", href: "#theme-slots" },
+  { label: "修改流程", labelEn: "Change Flow", href: "#theme-flow" },
+  { label: "内部维护", labelEn: "Maintenance", href: "#intro-layers" },
+  { label: "团队协同", labelEn: "Workflow", href: "#intro-audience" }],
 
   install: [
   { label: "接入前提", labelEn: "Prerequisites", href: "#install-prerequisites" },
@@ -1187,28 +1204,21 @@ const agentSurfaceNavLabel = {
   en: "Generative UI"
 } as const;
 
-const governanceQuickLinks = [
-{ label: "现状", labelEn: "Status", href: "#governance-map", page: "governance-map" },
-{ label: "AI 规则", labelEn: "AI Rules", href: "#ai-rules", page: "ai-rules" },
-{ label: "文档规范", labelEn: "Documentation", href: "#documentation", page: "documentation" },
-{ label: "网站规范", labelEn: "Website Standards", href: "#website-standards", page: "website-standards" },
-{ label: "检查命令", labelEn: "Checks", href: "#checks", page: "checks" }];
-
-
 const componentIndexSections = docsNav.filter((section) =>
 ["通用", "数据录入", "数据展示", "导航", "反馈", "业务组合组件", "Agent 界面"].includes(section.title)
 );
+const tokenNavSections = docsNav.filter((section) => section.title === "设计令牌");
+const layoutNavSections = docsNav.filter((section) => section.title === "布局系统");
+const foundationNavSections = [...tokenNavSections, ...layoutNavSections];
+const pageNavSections = docsNav.filter((section) => section.title === "页面");
+const governanceNavSections = docsNav.filter((section) => section.title === "维护");
 
 const footerNavItems = [
-...docsNav.
-filter((section) => section.title === "开始使用").
-flatMap((section) =>
-section.items.map((item) => ({
+...gettingStartedNavItems.map((item) => ({
   ...item,
-  group: section.title,
-  groupEn: section.titleEn
-}))
-),
+  group: "开始使用",
+  groupEn: "Getting Started"
+})),
 {
   label: "组件",
   labelEn: "Components",
@@ -1223,7 +1233,7 @@ section.items.map((item) => ({
   groupEn: section.titleEn
 }))
 ),
-...docsNav.filter((section) => ["设计 Tokens", "页面模板"].includes(section.title)).
+...[...foundationNavSections, ...pageNavSections].
 flatMap((section) =>
 section.items.map((item) => ({
   ...item,
@@ -1729,7 +1739,7 @@ const tablePropRows = [
 
 
 const tableSemanticDomRows = [
-{ part: "data-slot=\"table-container\"", desc: "表格最外层滚动容器，承载横向滚动，以及 bordered / maxHeight 等容器能力。" },
+{ part: "data-slot=\"table-container\"", desc: "表格最外层滚动容器，承载横向滚动，以及 bordered / maxHeight 等容器能力；横向滚动后带 data-scrolled-x=true，用于固定列阴影。" },
 { part: "data-slot=\"table\"", desc: "真正的 <table> 根节点，承载密度 data-density 和表格内容。" },
 { part: "data-slot=\"table-header\"", desc: "表头分组容器；sticky 时吸顶，靠底边线与表体区分。" },
 { part: "data-slot=\"table-row\"", desc: "数据行节点，承载 hover、选中态背景" },
@@ -3430,9 +3440,10 @@ function getPageFromHash(hash: string) {
 }
 
 function getNavItemFromHash(hash: string) {
-  const normalizedHash = hash || "#components";
+  const normalizedHash = hash || "#intro";
   const navItems = [
   ...topNav,
+  ...topNav.flatMap((item) => item.items ?? []),
   ...docsNav.flatMap((section) => section.items)];
 
 
@@ -3442,6 +3453,7 @@ function getNavItemFromHash(hash: string) {
 function getNavItemFromPage(page: string) {
   const navItems = [
   ...topNav,
+  ...topNav.flatMap((item) => item.items ?? []),
   ...docsNav.flatMap((section) => section.items)];
 
   return navItems.find((item) => getPageFromHash(item.href) === page);
@@ -3449,7 +3461,7 @@ function getNavItemFromPage(page: string) {
 
 function getFooterNavIndex(page: string) {
   const currentIndex = footerNavItems.findIndex((item) => getPageFromHash(item.href) === page);
-  return currentIndex >= 0 ? currentIndex : footerNavItems.findIndex((item) => item.href === "#components");
+  return currentIndex >= 0 ? currentIndex : footerNavItems.findIndex((item) => item.href === "#intro");
 }
 
 function getFooterNavPair(page: string) {
@@ -3579,7 +3591,7 @@ const pageRegistry: Record<string, PageEntry> = {
 };
 // 折叠 #slug-anchor → slug：优先精确命中，否则取最长前缀匹配（保证 tokens-colors 不被 tokens 抢）
 function resolvePageSlug(hash: string): string {
-  if (hash === "" || hash === "#") return "components";
+  if (hash === "" || hash === "#") return "intro";
   const raw = hash.replace("#", "");
   if (pageRegistry[raw]) return raw;
   const base = Object.keys(pageRegistry).
@@ -3990,7 +4002,7 @@ function ThemeChoiceSection<T extends string>({
 
 function App() {
   const [page, setPage] = useState(() => getPageFromHash(window.location.hash));
-  const [activeHash, setActiveHash] = useState(() => window.location.hash || "#components");
+  const [activeHash, setActiveHash] = useState(() => window.location.hash || "#intro");
   const [activeAnchor, setActiveAnchor] = useState("#overview");
   const [viewMode, setViewMode] = useState<ViewMode>("page");
   const [searchOpen, setSearchOpen] = useState(false);
@@ -4041,14 +4053,14 @@ function App() {
       onSelect: () => {window.location.hash = it.href;}
     }))
     );
-    const fromTop = topNav.map((it) => ({
-      id: it.href,
-      label: lang === "en" ? it.labelEn ?? it.label : it.label,
-      meta: lang === "en" ? undefined : it.labelEn && it.labelEn !== it.label ? it.labelEn : undefined,
+    const fromTop = topNav.flatMap((it) => [it, ...(it.items ?? [])].map((item) => ({
+      id: item.href,
+      label: lang === "en" ? item.labelEn ?? item.label : item.label,
+      meta: lang === "en" ? undefined : item.labelEn && item.labelEn !== item.label ? item.labelEn : undefined,
       group: lang === "en" ? "Navigation" : "导航",
-      keywords: `${it.label} ${it.labelEn ?? ""} ${it.href}`,
-      onSelect: () => {window.location.hash = it.href;}
-    }));
+      keywords: `${item.label} ${item.labelEn ?? ""} ${item.href}`,
+      onSelect: () => {window.location.hash = item.href;}
+    })));
     return [...fromTop, ...fromNav];
   }, [lang]);
 
@@ -4084,7 +4096,7 @@ function App() {
 
   useEffect(() => {
     const onHashChange = () => {
-      const nextHash = window.location.hash || "#components";
+      const nextHash = window.location.hash || "#intro";
 
       setActiveHash(nextHash);
       setPage(getPageFromHash(nextHash));
@@ -4111,12 +4123,24 @@ function App() {
 
   // 分组判定（用于顶栏高亮、footer 等），不是逐页重复，保留
   const isComponentsIndexPage = page === "components";
+  const isGettingStartedPage = page === "intro" || page === "install" || page === "theme";
   const isGovernancePage = page === "governance-map" || page === "ai-rules" || page === "documentation" || page === "website-standards" || page === "checks";
+  const isTokenArea = page === "tokens" || tokenNavSections.some((section) =>
+  section.items.some((item) => getPageFromHash(item.href) === page)
+  );
+  const isLayoutArea = layoutNavSections.some((section) =>
+  section.items.some((item) => getPageFromHash(item.href) === page)
+  );
+  const isFoundationArea = isTokenArea || isLayoutArea;
+  const isPageArea = pageNavSections.some((section) =>
+  section.items.some((item) => getPageFromHash(item.href) === page)
+  );
   const isComponentArea =
   isComponentsIndexPage ||
   componentIndexSections.some((section) =>
   section.items.some((item) => getPageFromHash(item.href) === page)
   );
+  const sidebarSections = isFoundationArea ? foundationNavSections : isComponentArea ? componentIndexSections : isPageArea ? pageNavSections : isGovernancePage ? governanceNavSections : docsNav;
   // 当前页条目 = 唯一真相源 pageRegistry 查表
   const pageEntry = pageRegistry[page];
   const anchors = pageEntry?.anchors ?? [];
@@ -4251,39 +4275,51 @@ function App() {
 
           <nav className="hidden h-(--fx-topbar-height) items-center justify-center gap-[calc(var(--fx-panel-gap)*3)] text-[length:var(--fx-menu-text)] leading-(--fx-menu-text--line-height) font-semibold lg:flex xl:gap-[calc(var(--fx-panel-gap)*4)]">
             {topNav.map((item) => {
+              const childItems = "items" in item ? item.items : undefined;
               const isActive =
               page === item.page ||
+              childItems?.some((child) => child.page === page) ||
+              item.page === "intro" && isGettingStartedPage ||
+              item.page === "tokens" && isFoundationArea ||
               item.page === "components" && isComponentArea ||
+              item.page === "template-customer-list" && isPageArea ||
               item.page === "governance-map" && isGovernancePage ||
               item.page === "theme" && page === "theme";
+              const topNavClass = isActive ?
+              "flex h-(--fx-topbar-height) items-center border-b-2 border-primary text-primary" :
+              "flex h-(--fx-topbar-height) items-center border-b-2 border-transparent text-muted-foreground transition-colors hover:text-foreground";
+
+              if (childItems) {
+                return (
+                  <DropdownMenu key={item.label}>
+                    <DropdownMenuTrigger
+                      render={
+                      <button type="button" className={`${topNavClass} gap-(--fx-control-gap-tight)`} />
+                      }>
+                      
+                      {getLabel(item, lang)}
+                      <ChevronDownIcon className="size-3.5" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="w-40">
+                      {childItems.map((child) => (
+                        <DropdownMenuItem key={child.href} render={<a href={child.href} />}>
+                          {getLabel(child, lang)}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>);
+              }
 
               return (
                 <a
                   key={item.label}
                   href={item.href}
-                  className={
-                  isActive ?
-                  "flex h-(--fx-topbar-height) items-center border-b-2 border-primary text-primary" :
-                  "flex h-(--fx-topbar-height) items-center border-b-2 border-transparent text-muted-foreground transition-colors hover:text-foreground"
-                  }>
+                  className={topNavClass}>
                   
                   {getLabel(item, lang)}
                 </a>);
 
             })}
-            <a
-              href="#layout"
-              className={
-              page === "layout" || page === "grid" || page === "top-bar" ?
-              "flex h-(--fx-topbar-height) items-center gap-(--fx-control-gap) border-b-2 border-[var(--fx-purple-09)] text-[var(--fx-purple-09)]" :
-              "flex h-(--fx-topbar-height) items-center gap-(--fx-control-gap) border-b-2 border-transparent text-[var(--fx-purple-09)] transition-colors hover:text-[var(--fx-purple-08)]"
-              }>
-              
-              <span className="flex size-4 items-center justify-center text-[var(--fx-purple-09)]">
-                <SparklesIcon />
-              </span>
-              {lang === "en" ? "Blocks" : "区块拼装"}
-            </a>
           </nav>
 
           <div className="flex min-w-0 items-center justify-end gap-(--fx-control-gap) overflow-hidden">
@@ -4359,8 +4395,8 @@ function App() {
         lang={lang} />
       
 
-      <div className="grid h-[calc(100dvh-var(--fx-topbar-height))] min-h-0 overflow-hidden bg-background lg:grid-cols-[240px_minmax(0,1fr)]">
-        <aside className="hidden min-h-0 border-r border-border-subtle bg-card lg:block">
+      <div className={isGettingStartedPage ? "grid h-[calc(100dvh-var(--fx-topbar-height))] min-h-0 grid-cols-1 overflow-hidden bg-background" : "grid h-[calc(100dvh-var(--fx-topbar-height))] min-h-0 overflow-hidden bg-background lg:grid-cols-[240px_minmax(0,1fr)]"}>
+        <aside className={isGettingStartedPage ? "hidden" : "hidden min-h-0 border-r border-border-subtle bg-card lg:block"}>
           <div className={docsSidebarSpacing.shell}>
             <button
               type="button"
@@ -4371,7 +4407,7 @@ function App() {
               <span className="h-(--fx-control-md-height) flex-1 content-center text-sm text-muted-foreground">{uiText[lang].search}</span>
             </button>
             <nav className={docsSidebarSpacing.nav}>
-              {docsNav.map((section) =>
+              {sidebarSections.map((section) =>
               <section key={section.title} className={docsSidebarSpacing.group}>
                   <div className={docsSidebarSpacing.groupLabel}>{lang === "en" && section.titleEn ? section.titleEn : section.title}</div>
                   <div className={docsSidebarSpacing.itemList}>
@@ -5026,12 +5062,12 @@ function FxUiSystemDiagram({ scope }: {scope: "site" | "project";}) {
             <LayerRow label="最终产物" note="项目能力最终不是 dist，而是能支撑真实业务页面。">
               <LayerCard title="真实业务项目页面" desc="后台列表、详情、编辑、设置、报表等完整页面" emphasis />
             </LayerRow>
-            <LayerRow label="页面模式" note="把常见业务结构沉淀为可复用模式。">
-              <LayerCard title="页面 Blocks / layouts" desc="常见页面骨架和组合模式" />
+            <LayerRow label="页面" note="把常见业务结构沉淀为可复用页面。">
+              <LayerCard title="页面 Blocks / layouts" desc="常见页面骨架和组合方式" />
               <LayerCard title="src/components/fx" desc="公司组合组件，承接高频业务结构" />
               <LayerCard title="docs/LAYOUTS.md" desc="业务后台页面布局规范" />
             </LayerRow>
-            <LayerRow label="基础能力" note="组件、token、规则数据共同支撑页面模式。">
+            <LayerRow label="基础能力" note="组件、token、规则数据共同支撑页面。">
               <LayerCard title="src/components/ui" desc="shadcn open-code 基础组件" />
               <LayerCard title="theme/fx-theme.css" desc="公司视觉 token 真相源" />
               <LayerCard title="docs + docs/data" desc="给人和 AI 共同消费的规范与事实" />
@@ -5123,9 +5159,9 @@ function GettingStartedPage({
                     <ChevronDownIcon data-icon="inline-end" />
                   </CollapsibleTrigger>
                   <CollapsibleContent className="absolute top-full right-0 z-20 mt-2 w-[min(44rem,calc(100vw-3rem))]">
-                    <div className="rounded-2xl border border-border-container bg-card p-4">
+                    <div className="rounded-2xl border border-border bg-card p-4">
                       <div className="grid gap-3 md:grid-cols-2">
-                        <div className="rounded-xl border border-border-container bg-background p-4">
+                        <div className="rounded-xl border border-border-subtle bg-background p-4">
                           <div className="mb-3 flex items-center justify-between gap-3">
                             <p className="text-sm font-semibold text-foreground">取值逻辑</p>
                             <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">视觉基线</span>
@@ -5139,7 +5175,7 @@ function GettingStartedPage({
                             )}
                           </div>
                         </div>
-                        <div className="rounded-xl border border-border-container bg-background p-4">
+                        <div className="rounded-xl border border-border-subtle bg-background p-4">
                           <div className="mb-3 flex items-center justify-between gap-3">
                             <p className="text-sm font-semibold text-foreground">内容规则</p>
                             <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">文案边界</span>
@@ -5158,7 +5194,7 @@ function GettingStartedPage({
                   </CollapsibleContent>
                 </Collapsible>
               </div>
-              <div className="flex flex-col gap-5 rounded-lg border border-border-container bg-card p-5">
+              <div className="flex flex-col gap-5 rounded-lg border border-border bg-card p-5">
                 <FxPageLead
                   crumb="维护 / 网站规范"
                   title="页面标题区"
@@ -5180,7 +5216,7 @@ function GettingStartedPage({
                     <ChevronDownIcon data-icon="inline-end" />
                   </CollapsibleTrigger>
                   <CollapsibleContent className="absolute top-full right-0 z-20 mt-2 w-[min(26rem,calc(100vw-3rem))]">
-                    <div className="rounded-2xl border border-border-container bg-card p-4 shadow-l1">
+                    <div className="rounded-2xl border border-border bg-card p-4 shadow-l1">
                       <div className="flex flex-col gap-3 text-sm text-muted-foreground">
                         {websiteStandardsManifest.playgroundRules.map((item) => (
                           <div key={item.title} className="flex flex-col gap-1">
@@ -5200,7 +5236,7 @@ function GettingStartedPage({
 
             <div className="flex flex-col gap-3">
               <SectionLead title="SectionLead" description="用于内容区小标题；标题和说明固定 4px 间距。" />
-              <div className="rounded-lg border border-border-container bg-card p-5">
+              <div className="rounded-lg border border-border bg-card p-5">
                 <div className="flex flex-col gap-4">
                   <SectionLead title="小标题" description="说明固定 14px，内容紧跟说明下方。" />
                   <div className="space-y-1 text-sm text-muted-foreground">
@@ -5214,7 +5250,7 @@ function GettingStartedPage({
 
             <div className="flex flex-col gap-3">
               <SectionLead title="PageActions" description="页面级动作只放在标题右侧：复制、更多、上一页、下一页。" />
-              <div className="flex rounded-lg border border-border-container bg-card p-5">
+              <div className="flex rounded-lg border border-border bg-card p-5">
                 <PageActions
                   doc={websiteStandardsDoc}
                   demo
@@ -5232,7 +5268,7 @@ function GettingStartedPage({
           <SectionLead
             title={lang === "en" ? "Spacing Rhythm" : "间距节奏"}
             description={lang === "en" ? "Abstract page spacing with simple blocks so the rule is visible without depending on a specific component." : "用矩形块抽象页面边距、头部到小标题、小标题之间的节奏。"} />
-          <div className="rounded-lg border border-border-container bg-card p-5">
+          <div className="rounded-lg border border-border bg-card p-5">
             <div className="grid gap-4 text-sm text-muted-foreground md:grid-cols-3">
               <div className="flex flex-col gap-2">
                 <div className="h-16 rounded-md bg-muted" />
@@ -5259,11 +5295,22 @@ function GettingStartedPage({
           <SectionLead
             title={lang === "en" ? "Boundaries" : "使用边界"}
             description={lang === "en" ? "Website standards govern this documentation site. Business pages should use existing business compositions first." : "网站规范只治理文档站页面；业务页面优先使用已有业务组合组件。"} />
-          <Card>
-            <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
-              {websiteStandardsManifest.linkageRules.map((rule) =>
-              <div key={rule} className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{rule}</span></div>
-              )}
+          <Card className="border-border">
+            <CardContent className="flex flex-col gap-5 p-5 text-sm text-muted-foreground">
+              <div className="flex flex-col gap-3">
+                <p className="font-semibold text-foreground">{lang === "en" ? "Card Surface" : "卡片表面"}</p>
+                {websiteStandardsManifest.cardSurfaceRules.map((rule) =>
+                <div key={rule.title} className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span><span className="font-medium text-foreground">{rule.title}</span>：{rule.desc}</span></div>
+                )}
+              </div>
+              <div className="border-t border-dashed border-border pt-5">
+                <div className="flex flex-col gap-3">
+                  <p className="font-semibold text-foreground">{lang === "en" ? "Linkage" : "联动规则"}</p>
+                  {websiteStandardsManifest.linkageRules.map((rule) =>
+                  <div key={rule} className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{rule}</span></div>
+                  )}
+                </div>
+              </div>
             </CardContent>
           </Card>
         </section>
@@ -5306,7 +5353,7 @@ function GettingStartedPage({
             )}
           </div>
           <GraphCockpit lang={lang} />
-          <Card>
+          <Card elevated>
             <CardHeader>
               <CardTitle className="text-base">{governanceStatus.maintenanceModel.title}</CardTitle>
               <CardDescription>{governanceStatus.maintenanceModel.desc}</CardDescription>
@@ -5439,7 +5486,7 @@ function GettingStartedPage({
           "这是现状看板背后的规则模型，平时不用先看它。"} />
 
           
-          <Card>
+          <Card elevated>
             <CardContent className="grid gap-4 p-5 md:grid-cols-4">
               {governanceStatus.loop.map((item, index) =>
               <div key={item.file} className="relative rounded-xl border border-border bg-background p-4">
@@ -5526,7 +5573,7 @@ function GettingStartedPage({
 
         <section id="install-prerequisites" className={docsSpacing.sectionStack}>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Prerequisites" : "接入前提"}</h2>
-          <Card>
+          <Card elevated>
             <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
               {governancePagesManifest.install.prerequisites.map((item) =>
               <div key={item} className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{item}</span></div>
@@ -5561,7 +5608,7 @@ function GettingStartedPage({
 
         <section id="install-structure" className={docsSpacing.sectionStack}>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Structure" : "目录约定"}</h2>
-          <Card>
+          <Card elevated>
             <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
               {governancePagesManifest.install.structure.map((item) =>
               <p key={item}>{item}</p>
@@ -5572,7 +5619,7 @@ function GettingStartedPage({
 
         <section id="install-verify" className={docsSpacing.sectionStack}>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Verify" : "启动检查"}</h2>
-          <Card>
+          <Card elevated>
             <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
               {governancePagesManifest.install.verify.map((item) =>
               <div key={item} className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{item}</span></div>
@@ -5599,7 +5646,7 @@ function GettingStartedPage({
 
         <section id="theme-source" className={docsSpacing.sectionStack}>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Token Source" : "token 真相源"}</h2>
-          <Card>
+          <Card elevated>
             <CardContent className="grid gap-4 p-5 md:grid-cols-2">
               <div>
                 <Tag variant="secondary">SSOT</Tag>
@@ -5848,30 +5895,205 @@ function GettingStartedPage({
 
   return (
     <div className={docsSpacing.pageStack}>
-      <section id="intro" className="flex flex-col gap-2">
+      <section id="intro" className="flex flex-col gap-8">
         <PageLead
           crumb={lang === "en" ? "Getting Started / Overview" : "开始使用 / 概览"}
-          title={lang === "en" ? "Overview" : "概览"}
+          title={lang === "en" ? "FX.UI Getting Started" : "FX.UI 开始使用"}
           lead={lang === "en" ?
-          "fx-ui is not a hand-written component library. It is a shadcn open-code system with company tokens, documentation contracts, and AI-readable rules." :
-          "fx-ui 不是手写组件库，而是一套基于 shadcn open-code、公司 token、文档契约和 AI 可读规则的前端生产体系。"}
+          "fx-ui is a shadcn open-code design system powered by company tokens, reusable business compositions, documentation contracts, and AI-readable rules." :
+          "欢迎使用 FX.UI。这是一套基于 shadcn open-code、公司 token、业务组合组件、文档契约和 AI 可读规则的前端生产体系。"}
           actions={actions} />
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <Card elevated>
+            <CardHeader>
+              <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary-light text-primary">
+                <PackageIcon className="size-5" />
+              </div>
+              <CardTitle className="text-base">{lang === "en" ? "Open-code components" : "组件开箱可改"}</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm leading-6 text-muted-foreground">
+              {lang === "en" ?
+              "Base controls live in src/components/ui as shadcn source code. We use existing components first, not hand-written lookalikes." :
+              "基础组件进入 src/components/ui，源码可见可改。优先使用现成 shadcn 组件，不手写一个“看起来像”的控件。"}
+            </CardContent>
+          </Card>
+          <Card elevated>
+            <CardHeader>
+              <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary-light text-primary">
+                <PaletteIcon className="size-5" />
+              </div>
+              <CardTitle className="text-base">{lang === "en" ? "Token-driven theme" : "公司视觉靠 token 注入"}</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm leading-6 text-muted-foreground">
+              {lang === "en" ?
+              "theme/fx-theme.css is the visual truth source. Components consume semantic slots instead of hard-coded colors." :
+              "theme/fx-theme.css 是视觉真相源。组件吃语义 token，不在调用处硬编码颜色、圆角、边框或阴影。"}
+            </CardContent>
+          </Card>
+          <Card elevated>
+            <CardHeader>
+              <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary-light text-primary">
+                <BoltIcon className="size-5" />
+              </div>
+              <CardTitle className="text-base">{lang === "en" ? "Governed delivery" : "规则和检查兜底"}</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm leading-6 text-muted-foreground">
+              {lang === "en" ?
+              "Docs, manifests, and checks move together, so UI changes are reviewable and AI agents have a stable contract." :
+              "文档、manifest 和检查联动，保证组件能力、token、页面路由和 AI 规则不会各自漂移。"}
+            </CardContent>
+          </Card>
+        </div>
       </section>
 
       <section id="intro-positioning" className={docsSpacing.sectionStack}>
-        <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Positioning" : "定位"}</h2>
+        <SectionLead
+          title={lang === "en" ? "Positioning" : "定位"}
+          description={lang === "en" ? "fx-ui is not a theme skin or a black-box ProTable. It is a governed open-code system for real product pages." : "fx-ui 不是一套皮肤，也不是黑盒 ProTable，而是服务真实业务页面的 open-code 生产体系。"} />
         <div className="grid gap-4 md:grid-cols-3">
           {governancePagesManifest.overview.positioning.map((item) =>
-          <Card key={item.title}>
+          <Card key={item.title} elevated>
               <CardHeader><CardTitle className="text-base">{item.title}</CardTitle></CardHeader>
-              <CardContent className="text-sm text-muted-foreground">{item.desc}</CardContent>
+              <CardContent className="text-sm leading-6 text-muted-foreground">{item.desc}</CardContent>
             </Card>
           )}
         </div>
       </section>
 
+      <section id="intro-install" className={docsSpacing.sectionStack}>
+        <SectionLead
+          title={lang === "en" ? "How to Install and Use" : "如何安装和引入"}
+          description={lang === "en" ? "Start from shadcn, add only the components you need, then import the fx-ui theme tokens." : "从 shadcn 项目起步，按需拉取组件，再引入 fx-ui 公司主题 token。"} />
+
+        <Card elevated>
+          <CardHeader>
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <CardTitle className="text-base">{lang === "en" ? "Method 1: shadcn CLI" : "方法一：使用 shadcn CLI（推荐）"}</CardTitle>
+                <CardDescription>
+                  {lang === "en" ? "Initialize shadcn, add components, and keep components open-code in your repository." : "初始化 shadcn，按需添加组件，并保持组件源码进入项目。"}
+                </CardDescription>
+              </div>
+              <Tag color="amber">Recommended</Tag>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <CopyCodeBlock
+              code={`# 1. 初始化 shadcn 配置
+npx shadcn@latest init
+
+# 2. 按需添加 fx-ui 当前使用的基础组件
+${installCommandsCode}`}
+              label="install commands"
+              lang={lang} />
+          </CardContent>
+        </Card>
+
+        <Card elevated>
+          <CardHeader>
+            <CardTitle className="text-base">{lang === "en" ? "Method 2: Copy & Paste" : "方法二：手动 Copy & Paste"}</CardTitle>
+            <CardDescription>
+              {lang === "en" ? "Use this when you are moving selected pieces into an existing project." : "如果不想走 CLI，也可以把所需源码和 token 手动搬进现有项目。"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-3 text-sm leading-6 text-muted-foreground">
+            <p><span className="font-medium text-foreground">1. 依赖安装：</span><code className="rounded bg-muted px-1.5 py-0.5 text-xs">npm install @base-ui/react class-variance-authority clsx tailwind-merge</code></p>
+            <p><span className="font-medium text-foreground">2. 复制组件：</span>从 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">src/components/ui</code> 和 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">src/components/fx</code> 复制需要的组件源码。</p>
+            <p><span className="font-medium text-foreground">3. 接入主题：</span>复制 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">theme/fx-theme.css</code>，并在入口文件引入。</p>
+            <p><span className="font-medium text-foreground">4. 保留契约：</span>不要在业务调用处覆盖组件视觉；需要新外观时在组件层沉淀 variant。</p>
+          </CardContent>
+        </Card>
+      </section>
+
+      <section id="theme-source" className={docsSpacing.sectionStack}>
+        <SectionLead
+          title={lang === "en" ? "Theme Setup" : "主题接入"}
+          description={lang === "en" ? "fx-ui does not restyle every component by hand. Company visuals are injected through shadcn semantic tokens." : "fx-ui 不逐个重写组件样式。公司视觉通过 shadcn 语义 token 注入。"} />
+        <Card elevated>
+          <CardContent className="grid gap-4 p-5 md:grid-cols-2">
+            <div>
+              <Tag variant="secondary">SSOT</Tag>
+              <h3 className="mt-3 font-medium">theme/fx-theme.css</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {lang === "en" ? "Changing this file changes the whole system." : "改这里等于全局换肤，必须先说明影响范围。"}
+              </p>
+            </div>
+            <CopyCodeBlock code={themeImportCode} label="src/main.tsx" lang={lang} />
+          </CardContent>
+        </Card>
+      </section>
+
+      <section id="theme-slots" className={docsSpacing.sectionStack}>
+        <SectionLead
+          title={lang === "en" ? "Semantic Slots" : "shadcn 语义槽"}
+          description={lang === "en" ? "Components consume semantic token names, so product code does not need page-level visual overrides." : "组件消费语义 token，业务调用处不需要再覆盖颜色、边框、圆角和阴影。"} />
+        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <Table className="min-w-[720px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">Layer</TableHead>
+                <TableHead>{lang === "en" ? "Example" : "例子"}</TableHead>
+                <TableHead className="pr-4">{lang === "en" ? "Purpose" : "用途"}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {governancePagesManifest.theme.semanticSlots.map((item) =>
+              <TableRow key={item.layer}>
+                  <TableCell className="pl-4 font-medium">{item.layer}</TableCell>
+                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{item.example}</code></TableCell>
+                  <TableCell className="pr-4 text-muted-foreground">{item.purpose}</TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </section>
+
+      <section id="theme-flow" className={docsSpacing.sectionStack}>
+        <SectionLead
+          title={lang === "en" ? "Change Flow" : "修改流程"}
+          description={lang === "en" ? "Token changes start from the visual truth source, then flow into docs, manifests, and component mappings." : "token 改动从视觉真相源开始，再同步文档、manifest 和组件映射。"} />
+        <Card elevated>
+          <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
+            {governancePagesManifest.theme.changeFlow.map((item, index) =>
+            <p key={item}>{index + 1}. {item}</p>
+            )}
+          </CardContent>
+        </Card>
+      </section>
+
       <section id="intro-layers" className={docsSpacing.sectionStack}>
-        <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Three Layers" : "三层体系"}</h2>
+        <SectionLead
+          title={lang === "en" ? "Internal Maintenance Guide" : "内部维护指南"}
+          description={lang === "en" ? "When you change fx-ui itself, follow the source-routing and verification chain instead of editing only the visible page." : "如果你是在维护 fx-ui 本身，先看真相源和联动链，不只改眼前页面。"} />
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <Card elevated>
+            <CardHeader>
+              <CardTitle className="text-base">{lang === "en" ? "Add or change components" : "如何新增或修改组件？"}</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3 text-sm leading-6 text-muted-foreground">
+              <p>1. 先查 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">docs/MAP.md</code>，确认产物归属和检查方式。</p>
+              <p>2. 基础组件先用 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">npx shadcn@latest add</code> 拉取，不从零手写。</p>
+              <p>3. 同步源码、组件文档、manifest、文档页示例和导航入口。</p>
+              <p>4. 收尾运行 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">npm run check</code>；视觉改动补跑 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">npm run test:visual</code>。</p>
+            </CardContent>
+          </Card>
+          <Card elevated>
+            <CardHeader>
+              <CardTitle className="text-base">{lang === "en" ? "Change theme tokens" : "如何更新主题 token？"}</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3 text-sm leading-6 text-muted-foreground">
+              <p>1. 视觉真相源只在 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">theme/fx-theme.css</code>。</p>
+              <p>2. 改 token 后同步 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">docs/TOKENS.md</code> 和 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">docs/data/design-tokens.json</code>。</p>
+              <p>3. 运行 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">npm run build:tokens</code> 重建 token manifest。</p>
+              <p>4. 最后才改组件映射，避免组件和 token 真相源漂移。</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <h3 className="text-lg font-bold tracking-tight">{lang === "en" ? "Three Layers" : "三层体系"}</h3>
         <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
           <Table className="min-w-[760px]">
             <TableHeader>
@@ -5895,12 +6117,35 @@ function GettingStartedPage({
       </section>
 
         <section id="intro-audience" className={docsSpacing.sectionStack}>
-          <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Audience" : "适合谁用"}</h2>
-          <Card>
-            <CardContent className="grid gap-3 p-5 text-sm text-muted-foreground md:grid-cols-3">
-            {governancePagesManifest.overview.audience.map((item) =>
-            <p key={item}>{item}</p>
-            )}
+          <SectionLead
+            title={lang === "en" ? "Team Workflow and Deployment" : "团队协同和项目部署"}
+            description={lang === "en" ? "A small checklist for keeping the project reviewable and deployable." : "维护时保持可审查、可回滚、可部署的一组最小规则。"} />
+          <Card elevated>
+            <CardContent className="flex flex-col gap-5 p-5 text-sm leading-6 text-muted-foreground">
+              <div>
+                <h3 className="font-semibold text-foreground">1. 分支与代码审查</h3>
+                <p className="mt-2">功能变更走独立分支；涉及组件 API、token、页面结构的改动，需要说明影响范围和验证结果。</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-foreground">2. 代码风格与契约</h3>
+                <p className="mt-2">使用 TypeScript、Tailwind token 和现有组件 API；不要绕开组件在页面里临时覆盖视觉。</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-foreground">3. 变更记录</h3>
+                <p className="mt-2">结构性变化记录到 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">docs/CHANGELOG.md</code>；长期决策记录到 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">docs/DECISIONS.md</code>。</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-foreground">4. 项目部署</h3>
+                <p className="mt-2">在项目根目录运行构建命令，生成的 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">dist</code> 可托管到 Vercel、Netlify 或内部 Nginx。</p>
+                <div className="mt-3">
+                  <CopyCodeBlock code="npm run build" label="build" lang={lang} />
+                </div>
+              </div>
+              <div className="grid gap-3 border-t border-border-subtle pt-5 md:grid-cols-3">
+                {governancePagesManifest.overview.audience.map((item) =>
+                <p key={item} className="rounded-lg bg-muted p-3">{item}</p>
+                )}
+              </div>
             </CardContent>
           </Card>
         </section>
@@ -9475,15 +9720,17 @@ function TablePreviewWithPagination({
   page = 1,
   total = tableBizRows.length,
   pageSize = TABLE_PAGE_SIZE,
+  status = "default",
   onPageChange
 }: {
   children: React.ReactNode
   page?: number
   total?: number
   pageSize?: number
+  status?: "default" | "loading" | "empty"
   onPageChange?: (page: number) => void
 }) {
-  const showPagination = total > 0;
+  const showPagination = status === "loading" || total > 0;
 
   return (
     <div className="overflow-hidden">
@@ -9498,21 +9745,21 @@ function TablePreviewWithPagination({
     </div>);
 }
 
-// 客户级别 Tag：有色级别用 color 软色描边，一般客户(none)用中性 secondary（对齐公司 Figma）
-function LevelTag({ level, color }: {level: string;color: "amber" | "green" | "none";}) {
-  return color === "none" ? <Tag variant="secondary">{level}</Tag> : <Tag color={color}>{level}</Tag>;
+// 客户级别 Tag：统一走 color 这条分类标签轴，中性客户也用灰色软标签，避免和 secondary 状态标签混用。
+function LevelTag({ level, color }: {level: string;color: "amber" | "green" | "gray";}) {
+  return <Tag color={color}>{level}</Tag>;
 }
 
 // 业务表演示数据（对齐公司 Figma：链接首列 / 头像 / 级别 Tag / 金额右对齐 / 操作）
 const tableBizRows = [
 { id: 1, name: "三川德众血浆采集有限公司", owner: "陈昊", avatar: "/avatars/01.jpg", level: "VIP客户", levelColor: "amber" as const, tags: [{ label: "高意向", color: "purple" as const }, { label: "华东区", color: "blue" as const }], dept: "销售部", product: "罗技 G604 LIGHTSPEED 无线游戏鼠…", amount: 1530.17, date: "2023-12-17" },
 { id: 2, name: "邱特云顶生态环境技术有限公司", owner: "林夕", avatar: "/avatars/02.jpg", level: "重要客户", levelColor: "green" as const, tags: [{ label: "待续约", color: "green" as const }], dept: "市场部", product: "Razer DeathAdder V2 无线游戏鼠标…", amount: 1634.25, date: "2023-12-18" },
-{ id: 3, name: "洛阳金升玄经贸有限公司", owner: "周婷", avatar: "/avatars/03.jpg", level: "一般客户", levelColor: "none" as const, tags: [{ label: "待跟进", color: "amber" as const }], dept: "研发部", product: "Corsair Dark Core RGB SE 无线游戏…", amount: 1745.09, date: "2023-12-19" },
-{ id: 4, name: "绵阳中诚祥财鑫管理有限公司", owner: "吴桐", avatar: "/avatars/04.jpg", level: "一般客户", levelColor: "none" as const, tags: [{ label: "新客", color: "cyan" as const }], dept: "人事部", product: "华硕 ROG Gladius II 烈焰战刃竞技版…", amount: 1862.47, date: "2023-12-20" },
+{ id: 3, name: "洛阳金升玄经贸有限公司", owner: "周婷", avatar: "/avatars/03.jpg", level: "一般客户", levelColor: "gray" as const, tags: [{ label: "待跟进", color: "amber" as const }], dept: "研发部", product: "Corsair Dark Core RGB SE 无线游戏…", amount: 1745.09, date: "2023-12-19" },
+{ id: 4, name: "绵阳中诚祥财鑫管理有限公司", owner: "吴桐", avatar: "/avatars/04.jpg", level: "一般客户", levelColor: "gray" as const, tags: [{ label: "新客", color: "cyan" as const }], dept: "人事部", product: "华硕 ROG Gladius II 烈焰战刃竞技版…", amount: 1862.47, date: "2023-12-20" },
 { id: 5, name: "鹤庆华聚顺科技有限公司", owner: "陈昊", avatar: "/avatars/01.jpg", level: "VIP客户", levelColor: "amber" as const, tags: [{ label: "高意向", color: "purple" as const }, { label: "大客户", color: "red" as const }], dept: "财务部", product: "HyperX Pulsefire Haste 无线轻量竞技…", amount: 1960.68, date: "2023-12-21" },
 { id: 6, name: "平顶山泽大壵贸科技公司", owner: "林夕", avatar: "/avatars/02.jpg", level: "重要客户", levelColor: "green" as const, tags: [{ label: "待续约", color: "green" as const }], dept: "客服部", product: "SteelSeries Rival 3 无线雷神游戏…", amount: 2101.58, date: "2023-12-22" },
 { id: 7, name: "新乡市佳谷投资有限公司", owner: "周婷", avatar: "/avatars/03.jpg", level: "VIP客户", levelColor: "amber" as const, tags: [{ label: "高意向", color: "purple" as const }], dept: "IT部", product: "Cooler Master MM821 无线竞技游戏…", amount: 2224.13, date: "2023-12-23" },
-{ id: 8, name: "信阳瑞丰文化传播有限公司", owner: "吴桐", avatar: "/avatars/04.jpg", level: "一般客户", levelColor: "none" as const, tags: [{ label: "待跟进", color: "amber" as const }], dept: "法务部", product: "Logitech G Pro X Superlight 无线游…", amount: 2345.99, date: "2023-12-24" }];
+{ id: 8, name: "信阳瑞丰文化传播有限公司", owner: "吴桐", avatar: "/avatars/04.jpg", level: "一般客户", levelColor: "gray" as const, tags: [{ label: "待跟进", color: "amber" as const }], dept: "法务部", product: "Logitech G Pro X Superlight 无线游…", amount: 2345.99, date: "2023-12-24" }];
 
 const TABLE_PAGE_SIZE = 5;
 
@@ -9590,9 +9837,10 @@ function TableBusinessDemo({
   const [levelFilter, setLevelFilter] = useState<string[]>([]);
   const [draftLevelFilter, setDraftLevelFilter] = useState<string[]>([]);
   const [levelFilterQuery, setLevelFilterQuery] = useState("");
+  const [frozenCount, setFrozenCount] = useState(0);
 
   const filterEnabled = filter === "on";
-  const fixedEnabled = fixed === "on";
+  const freezeCapabilityEnabled = fixed === "on";
   const sortedFor = (key: "amount" | "date") => sort?.key === key ? sort.dir : false;
   const toggleSort = (key: "amount" | "date") =>
   setSort((s) => s?.key !== key ? { key, dir: "asc" } : s.dir === "asc" ? { key, dir: "desc" } : null);
@@ -9663,10 +9911,11 @@ function TableBusinessDemo({
   const allIds = sorted.map((r) => r.id);
   const allChecked = pageIds.every((id) => selected.has(id));
   const someChecked = pageIds.some((id) => selected.has(id));
-  const frozenLeftOf = (i: number) => fixedEnabled && i < 2 ? FROZEN_W.slice(0, i).reduce((a, b) => a + b, 0) : undefined;
+  const isFrozen = (i: number) => i < frozenCount;
+  const frozenLeftOf = (i: number) => isFrozen(i) ? FROZEN_W.slice(0, i).reduce((a, b) => a + b, 0) : undefined;
   const freezeMenu = (i: number) => [
-  { label: `冻结到第 ${i + 1} 列`, icon: <LockIcon /> },
-  { label: "取消冻结" }];
+  ...(frozenCount !== i + 1 ? [{ label: `冻结到第 ${i + 1} 列`, icon: <LockIcon />, onClick: () => setFrozenCount(i + 1) }] : []),
+  ...(frozenCount > 0 ? [{ label: "取消冻结", onClick: () => setFrozenCount(0) }] : [])];
 
   const toggleAll = () =>
   setSelected((s) => {
@@ -9683,8 +9932,8 @@ function TableBusinessDemo({
   });
   const isMultipleSelection = selection === "multiple" || selection === "multiple-menu";
   const showSelection = isMultipleSelection || selection === "single";
-  const frozenStyle = (width: number) => fixedEnabled ? { width, minWidth: width, maxWidth: width } : undefined;
-  const actionStyle = fixedEnabled ? { width: 128, minWidth: 128, maxWidth: 128 } : undefined;
+  const frozenStyle = (width: number) => freezeCapabilityEnabled ? { width, minWidth: width, maxWidth: width } : undefined;
+  const actionStyle = { width: 128, minWidth: 128, maxWidth: 128 };
 
   return (
     <div className="overflow-hidden">
@@ -9695,10 +9944,13 @@ function TableBusinessDemo({
           <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())}>取消选择</Button>
         </div>
       }
-      <div className="overflow-x-auto">
-        <RadioGroup value={selectedOne == null ? "" : String(selectedOne)} onValueChange={(value) => setSelectedOne(Number(value))} className="block">
-          <Table density={density} className="min-w-[920px]" maxHeight={fixedEnabled ? 288 : undefined}>
-            <TableHeader sticky={fixedEnabled}>
+      <RadioGroup value={selectedOne == null ? "" : String(selectedOne)} onValueChange={(value) => setSelectedOne(Number(value))} className="block">
+          <Table
+            density={density}
+            className="min-w-[920px]"
+            maxHeight={freezeCapabilityEnabled ? 288 : undefined}
+          >
+            <TableHeader sticky={freezeCapabilityEnabled}>
               <TableRow className="hover:bg-transparent">
                 {showSelection ? (
                   <TableHead data-selection-cell>
@@ -9709,15 +9961,15 @@ function TableBusinessDemo({
                     ) : null}
                   </TableHead>
                 ) : null}
-                <TableHead style={frozenStyle(FROZEN_W[0])} frozenLeft={frozenLeftOf(0)} menuActions={fixedEnabled ? freezeMenu(0) : undefined}>客户名称</TableHead>
-                <TableHead style={frozenStyle(FROZEN_W[1])} frozenLeft={frozenLeftOf(1)} frozenEdge={fixedEnabled} menuActions={fixedEnabled ? freezeMenu(1) : undefined}>负责人</TableHead>
+                <TableHead style={frozenStyle(FROZEN_W[0])} frozenLeft={frozenLeftOf(0)} frozenEdge={frozenCount > 0 && frozenCount - 1 === 0} menuActions={freezeCapabilityEnabled ? freezeMenu(0) : undefined}>客户名称</TableHead>
+                <TableHead style={frozenStyle(FROZEN_W[1])} frozenLeft={frozenLeftOf(1)} frozenEdge={frozenCount > 0 && frozenCount - 1 === 1} menuActions={freezeCapabilityEnabled ? freezeMenu(1) : undefined}>负责人</TableHead>
                 <TableHead filterContent={filterEnabled ? levelFilterPanel : undefined} filtered={filterEnabled && levelFilter.length > 0}>客户级别{filterEnabled && levelFilter.length > 0 ? `（${levelFilter.length}）` : ""}</TableHead>
                 <TableHead>标签</TableHead>
                 <TableHead>负责人部门</TableHead>
                 <TableHead>产品名称</TableHead>
                 <TableHead align="right" sortable sorted={sortedFor("amount")} onSort={() => toggleSort("amount")}>金额(元)</TableHead>
                 <TableHead sortable sorted={sortedFor("date")} onSort={() => toggleSort("date")}>最后修改时间</TableHead>
-                <TableHead pinned={fixedEnabled ? "right" : undefined} style={actionStyle}>操作</TableHead>
+                <TableHead pinned="right" style={actionStyle}>操作</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -9732,8 +9984,8 @@ function TableBusinessDemo({
                       )}
                     </TableCell>
                   ) : null}
-                <TableCell frozenLeft={frozenLeftOf(0)} frozenEdge={fixedEnabled}><a href="#table" className="text-link hover:text-link-hover active:text-link-active hover:underline">{row.name}</a></TableCell>
-                <TableCell frozenLeft={frozenLeftOf(1)} frozenEdge={fixedEnabled}>
+                <TableCell frozenLeft={frozenLeftOf(0)} frozenEdge={frozenCount > 0 && frozenCount - 1 === 0}><a href="#table" className="text-link hover:text-link-hover active:text-link-active hover:underline">{row.name}</a></TableCell>
+                <TableCell frozenLeft={frozenLeftOf(1)} frozenEdge={frozenCount > 0 && frozenCount - 1 === 1}>
                   <span className="inline-flex items-center gap-1.5">
                     <Avatar className="size-5"><AvatarImage src={row.avatar} alt={row.owner} /><AvatarFallback colorful>{avatarInitials(row.owner)}</AvatarFallback></Avatar>
                     {row.owner}
@@ -9749,7 +10001,7 @@ function TableBusinessDemo({
                 <TableCell className="max-w-[200px] truncate">{row.product}</TableCell>
                 <TableCell align="right" className="tabular-nums">{row.amount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}</TableCell>
                 <TableCell>{row.date}</TableCell>
-                <TableCell pinned={fixedEnabled ? "right" : undefined} style={actionStyle}>
+                <TableCell pinned="right" style={actionStyle}>
                   <TooltipProvider delay={100}>
                     <span className="inline-flex items-center gap-1">
                       <IconAction icon={<EyeIcon />} label="查看" />
@@ -9763,7 +10015,6 @@ function TableBusinessDemo({
             </TableBody>
           </Table>
         </RadioGroup>
-      </div>
       <div className="border-t border-border-subtle">
         <Pagination page={page} total={sorted.length} pageSize={TABLE_PAGE_SIZE} showTotal={false} onPageChange={setPage} className="px-2 py-3" />
       </div>
@@ -9776,7 +10027,7 @@ const FROZEN_W = [240, 140]; // 客户名称 / 负责人 列宽
 
 function TableLoadingDemo() {
   return (
-    <TablePreviewWithPagination pageSize={5}>
+    <TablePreviewWithPagination pageSize={5} status="loading">
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
@@ -9803,7 +10054,7 @@ function TableLoadingDemo() {
 
 function TableEmptyDemo() {
   return (
-    <TablePreviewWithPagination total={0} pageSize={5}>
+    <TablePreviewWithPagination total={0} pageSize={5} status="empty">
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
@@ -9925,7 +10176,7 @@ type TableFilter = "off" | "on";
 type TableFixed = "off" | "on";
 function genTableCode(variant: TableVariant, density: TableDensity, summary: TableSummary, status: TableStatus, selection: TableSelection, filter: TableFilter, fixed: TableFixed): string {
   if (status === "loading") {
-    return `<Table density="${density}">\n  <TableHeader>\n    <TableRow>\n      <TableHead>客户名称</TableHead>\n      <TableHead>负责人</TableHead>\n      <TableHead>客户级别</TableHead>\n      <TableHead align="right">金额(元)</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    {Array.from({ length: 5 }).map((_, i) => (\n      <TableRow key={i} className="hover:bg-transparent">\n        <TableCell><Skeleton className="h-4 w-44" /></TableCell>\n        <TableCell><Skeleton className="h-4 w-16" /></TableCell>\n        <TableCell><Skeleton className="h-5 w-14 rounded-full" /></TableCell>\n        <TableCell align="right"><Skeleton className="ml-auto h-4 w-16" /></TableCell>\n      </TableRow>\n    ))}\n  </TableBody>\n</Table>`;
+    return `<Table density="${density}">\n  <TableHeader>\n    <TableRow>\n      <TableHead>客户名称</TableHead>\n      <TableHead>负责人</TableHead>\n      <TableHead>客户级别</TableHead>\n      <TableHead align="right">金额(元)</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    {Array.from({ length: 5 }).map((_, i) => (\n      <TableRow key={i} className="hover:bg-transparent">\n        <TableCell><Skeleton className="h-4 w-44" /></TableCell>\n        <TableCell><Skeleton className="h-4 w-16" /></TableCell>\n        <TableCell><Skeleton className="h-5 w-14 rounded-full" /></TableCell>\n        <TableCell align="right"><Skeleton className="ml-auto h-4 w-16" /></TableCell>\n      </TableRow>\n    ))}\n  </TableBody>\n</Table>\n<Pagination page={1} total={48} pageSize={5} showTotal={false} onPageChange={() => {}} />`;
   }
   if (status === "empty") {
     return `<Table density="${density}">\n  <TableHeader>\n    <TableRow>\n      <TableHead>客户名称</TableHead>\n      <TableHead>负责人</TableHead>\n      <TableHead>客户级别</TableHead>\n      <TableHead align="right">金额(元)</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow className="hover:bg-transparent">\n      <TableCell colSpan={4}>\n        <EmptyState title="暂无数据" />\n      </TableCell>\n    </TableRow>\n  </TableBody>\n</Table>`;
@@ -9941,7 +10192,7 @@ function genTableCode(variant: TableVariant, density: TableDensity, summary: Tab
     const customerHead = fixed === "on" ? `<TableHead frozenLeft={0} frozenEdge menuActions={freezeMenu(0)}>客户名称</TableHead>` : `<TableHead>客户名称</TableHead>`;
     const ownerHead = fixed === "on" ? `<TableHead frozenLeft={240} frozenEdge menuActions={freezeMenu(1)}>负责人</TableHead>` : `<TableHead>负责人</TableHead>`;
     const levelHead = filter === "on" ? `<TableHead filterContent={levelFilterPanel} filtered={levelFilter.length > 0}>客户级别</TableHead>` : `<TableHead>客户级别</TableHead>`;
-    return `<Table density="${density}"${fixedTableAttrs}>\n  <TableHeader${stickyHeader}>\n    <TableRow>\n      ${selectionHead}${customerHead}\n      ${ownerHead}\n      ${levelHead}\n      <TableHead align="right" sortable sorted={sortedFor("amount")} onSort={() => toggleSort("amount")}>金额(元)</TableHead>\n      <TableHead sortable sorted={sortedFor("date")} onSort={() => toggleSort("date")}>最后修改时间</TableHead>\n      <TableHead align="right"${fixed === "on" ? ` pinned="right"` : ""}>操作</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    {pageRows.map((customer) => (\n      <TableRow key={customer.id}${rowState}>\n        ${selectionCell}<TableCell><a href={customer.href}>{customer.name}</a></TableCell>\n        <TableCell>{customer.owner}</TableCell>\n        <TableCell>{customer.level}</TableCell>\n        <TableCell align="right">{customer.amount}</TableCell>\n        <TableCell>{customer.date}</TableCell>\n        <TableCell align="right">...</TableCell>\n      </TableRow>\n    ))}\n  </TableBody>\n</Table>\n<Pagination page={page} total={total} pageSize={pageSize} onPageChange={setPage} />`;
+    return `<Table density="${density}"${fixedTableAttrs}>\n  <TableHeader${stickyHeader}>\n    <TableRow>\n      ${selectionHead}${customerHead}\n      ${ownerHead}\n      ${levelHead}\n      <TableHead align="right" sortable sorted={sortedFor("amount")} onSort={() => toggleSort("amount")}>金额(元)</TableHead>\n      <TableHead sortable sorted={sortedFor("date")} onSort={() => toggleSort("date")}>最后修改时间</TableHead>\n      <TableHead pinned="right">操作</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    {pageRows.map((customer) => (\n      <TableRow key={customer.id}${rowState}>\n        ${selectionCell}<TableCell><a href={customer.href}>{customer.name}</a></TableCell>\n        <TableCell>{customer.owner}</TableCell>\n        <TableCell>{customer.level}</TableCell>\n        <TableCell align="right">{customer.amount}</TableCell>\n        <TableCell>{customer.date}</TableCell>\n        <TableCell pinned="right">...</TableCell>\n      </TableRow>\n    ))}\n  </TableBody>\n</Table>\n<Pagination page={page} total={total} pageSize={pageSize} onPageChange={setPage} />`;
   }
   if (summary === "on") {
     const multipleSelectionHead = selection === "multiple-menu" ? "<TableHead><TableSelectionHeader /></TableHead>\\n      " : "<TableHead><Checkbox aria-label=\"全选\" /></TableHead>\\n      ";
@@ -10119,7 +10370,7 @@ const tablePlaygroundConfig = {
           constraintEn: "Best for enum, status, or owner columns; amount/date usually use sorting or range filters.",
         },
       ],
-      disabledWhen: (v: Record<string, string>) => v.variant !== "business",
+      hiddenWhen: (v: Record<string, string>) => v.variant !== "business",
     },
     {
       key: "fixed",
@@ -10132,22 +10383,22 @@ const tablePlaygroundConfig = {
           value: "off",
           label: "无",
           labelEn: "Off",
-          intent: "普通横向滚动，不固定关键列。",
-          intentEn: "Plain horizontal scrolling without frozen columns.",
-          constraint: "列不多时不要强行固定，避免制造视觉分隔。",
-          constraintEn: "Do not freeze columns when the table is not wide enough to need it.",
+          intent: "不提供冻结列能力，按普通业务表展示。",
+          intentEn: "No frozen-column capability; show the table as a standard business list.",
+          constraint: "字段不多或无需局部冻结时，保持普通滚动即可。",
+          constraintEn: "Keep standard scrolling when the table is not wide enough to need frozen controls.",
         },
         {
           value: "on",
-          label: "固定首列/操作",
-          labelEn: "First/action",
-          intent: "固定客户名称、负责人和右侧操作列，适合字段较多的业务列表。",
-          intentEn: "Freeze customer, owner, and the action column for field-heavy business lists.",
-          constraint: "固定列是布局增强，可以和排序、筛选、选择同时存在。",
-          constraintEn: "Frozen columns are a layout enhancement and can coexist with sorting, filtering, and selection.",
+          label: "开启冻结能力",
+          labelEn: "Enable freeze",
+          intent: "开启表头 hover 冻结能力，由用户自行冻结首列或前两列。",
+          intentEn: "Expose hover-based freeze actions so users can choose the first column or first two columns.",
+          constraint: "冻结列是布局增强，可以和排序、筛选、选择同时存在，但不应默认替用户冻好。",
+          constraintEn: "Frozen columns are a layout enhancement and can coexist with sorting, filtering, and selection, but should not be pre-frozen by default.",
         },
       ],
-      disabledWhen: (v: Record<string, string>) => v.variant !== "business",
+      hiddenWhen: (v: Record<string, string>) => v.variant !== "business",
     },
     {
       key: "status",
@@ -14121,7 +14372,7 @@ function CustomerListTemplate({ actions, lang }: {actions: React.ReactNode;lang:
     <div className={docsSpacing.pageStack}>
       <section id="template-customer-list" className="flex flex-col gap-2">
         <PageLead
-          crumb={lang === "en" ? "Templates / List page" : "页面 / 列表页"}
+          crumb={lang === "en" ? "Pages / List page" : "页面 / 列表页"}
           title={lang === "en" ? "List page" : "列表页"}
           lead={lang === "en" ?
           "A full CRM list page assembled entirely from existing components — top bar, nav, page header, toolbar, table and pagination." :

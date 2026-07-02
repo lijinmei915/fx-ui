@@ -56,6 +56,20 @@
       "文案写法：一句话，说清这一节看什么。"
     ]
   },
+  "cardSurfaceRules": [
+    {
+      "title": "外层卡片",
+      "desc": "文档站承载独立信息块、示例预览或说明区域的卡片，统一使用 `border-border` + `bg-card`。"
+    },
+    {
+      "title": "内部区域",
+      "desc": "卡片内部的分隔线、控件壳和辅助区域使用 `border-border-subtle`；不要再用另一套外框 token 造成两种卡片边框。"
+    },
+    {
+      "title": "阴影",
+      "desc": "纯展示页不默认加阴影；只有需要浮层感或调试台容器时，才使用组件已有 elevated / shadow 规则。"
+    }
+  ],
   "playgroundRules": [
     {
       "title": "先分场景，再分属性",

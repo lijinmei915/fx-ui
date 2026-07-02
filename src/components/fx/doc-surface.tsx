@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils"
 import { Card } from "@/components/ui/card"
 
 function DocSurfaceCard({ className, elevated = false, ...props }: ComponentProps<typeof Card>) {
-  return <Card className={cn("border-border-container", className)} elevated={elevated} {...props} />
+  return <Card className={cn("border-border", className)} elevated={elevated} {...props} />
 }
 
 function DocSurfaceTableCard({

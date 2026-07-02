@@ -1352,7 +1352,7 @@
           "label": "source classes",
           "path": "src/components/fx/page-lead.tsx",
           "includes": [
-            "lead: \"mt-2 max-w-5xl text-base font-normal text-muted-foreground\"",
+            "lead: \"text-base font-normal text-muted-foreground md:col-span-2\"",
             "titleMeta: \"text-lg font-bold text-muted-foreground\""
           ]
         },
@@ -1360,7 +1360,7 @@
           "label": "component doc",
           "path": "docs/components/fx-page-lead.md",
           "includes": [
-            "| 说明 | `text-base`，400，`text-muted-foreground`，最大宽度 `max-w-5xl`，随界面字号基准联动；14 基准下为 16px |"
+            "| 说明 | `text-base`，400，`text-muted-foreground`，桌面端跨标题区整行，不设置窄版最大宽度；14 基准下为 16px |"
           ]
         },
         {

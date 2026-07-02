@@ -25,19 +25,20 @@ const tagVariants = cva(
         outline:
           "border-border text-foreground [a]:hover:bg-muted-hover [a]:hover:text-muted-foreground",
       },
-      // 分类打标预设色（软色：浅底 + 彩字 + 描边），全取自 13 色板阶
+      // 分类打标预设色（软色：浅底 + 深一档彩字 + 描边），全取自 13 色板阶
       color: {
         none: "",
-        red: "border-[var(--fx-red-03)] bg-[var(--fx-red-01)] text-[var(--fx-red-07)]",
-        amber: "border-[var(--fx-amber-03)] bg-[var(--fx-amber-01)] text-[var(--fx-amber-07)]",
-        yellow: "border-[var(--fx-yellow-03)] bg-[var(--fx-yellow-01)] text-[var(--fx-yellow-07)]",
-        lime: "border-[var(--fx-lime-03)] bg-[var(--fx-lime-01)] text-[var(--fx-lime-07)]",
-        green: "border-[var(--fx-green-03)] bg-[var(--fx-green-01)] text-[var(--fx-green-07)]",
-        teal: "border-[var(--fx-teal-03)] bg-[var(--fx-teal-01)] text-[var(--fx-teal-07)]",
-        cyan: "border-[var(--fx-cyan-03)] bg-[var(--fx-cyan-01)] text-[var(--fx-cyan-07)]",
-        blue: "border-[var(--fx-blue-03)] bg-[var(--fx-blue-01)] text-[var(--fx-blue-07)]",
-        purple: "border-[var(--fx-purple-03)] bg-[var(--fx-purple-01)] text-[var(--fx-purple-07)]",
-        pink: "border-[var(--fx-pink-03)] bg-[var(--fx-pink-01)] text-[var(--fx-pink-07)]",
+        gray: "border-[var(--fx-neutrals-04)] bg-[var(--fx-neutrals-03)] text-foreground-secondary",
+        red: "border-[var(--fx-red-03)] bg-[var(--fx-red-01)] text-[var(--fx-red-08)]",
+        amber: "border-[var(--fx-amber-03)] bg-[var(--fx-amber-01)] text-[var(--fx-amber-08)]",
+        yellow: "border-[var(--fx-yellow-03)] bg-[var(--fx-yellow-01)] text-[var(--fx-yellow-08)]",
+        lime: "border-[var(--fx-lime-03)] bg-[var(--fx-lime-01)] text-[var(--fx-lime-08)]",
+        green: "border-[var(--fx-green-03)] bg-[var(--fx-green-01)] text-[var(--fx-green-08)]",
+        teal: "border-[var(--fx-teal-03)] bg-[var(--fx-teal-01)] text-[var(--fx-teal-08)]",
+        cyan: "border-[var(--fx-cyan-03)] bg-[var(--fx-cyan-01)] text-[var(--fx-cyan-08)]",
+        blue: "border-[var(--fx-blue-03)] bg-[var(--fx-blue-01)] text-[var(--fx-blue-08)]",
+        purple: "border-[var(--fx-purple-03)] bg-[var(--fx-purple-01)] text-[var(--fx-purple-08)]",
+        pink: "border-[var(--fx-pink-03)] bg-[var(--fx-pink-01)] text-[var(--fx-pink-08)]",
       },
     },
     defaultVariants: {

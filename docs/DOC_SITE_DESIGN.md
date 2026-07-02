@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-30
+last_verified: 2026-07-03
 teaches: "fx-ui 文档站自身的页面结构、样式边界和改样式流程"
 use_when: "要改 fx-ui 文档网站的顶部导航、侧边栏、内容区、目录、示例区、代码块或文档页展示样式时"
 depends_on: [theme/fx-theme.css, docs/TOKENS.md, docs/LAYOUTS.md, src/App.tsx]
@@ -262,6 +262,7 @@ Primitive -> Semantic -> Component Usage
 - 卡片用于承载独立信息块、示例预览或说明区域。
 - 不要卡片套卡片形成过重层级。
 - 卡片边框使用 `border-border`，背景使用 `bg-card`。
+- 卡片内部的分隔线、控件壳和辅助区域使用 `border-border-subtle`；不要把 `border-border-container` 当作另一套卡片外框，否则文档站会出现两种边框强度。
 - 纯展示页不滥用阴影。
 - **卡片内分节用虚线**：卡片**内部**把内容分成几小节时，用虚线分隔 `border-t border-dashed border-border`；**页面级/卡片之间**才用实线 `Separator`。两者区分，避免卡片里实线显得割裂。（Separator 组件自身的演示页除外）
 

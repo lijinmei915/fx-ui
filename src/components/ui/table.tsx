@@ -18,17 +18,26 @@ function Table({
   // （overscroll-contain 阻断 macOS 橡皮筋回弹，scrolling:auto 关惯性，滚动跟手不抖）
   maxHeight?: number | string
 }) {
+  const [scrolledX, setScrolledX] = React.useState(false)
+  const containerStyle: React.CSSProperties | undefined =
+    maxHeight != null ? { maxHeight: typeof maxHeight === "number" ? `${maxHeight}px` : maxHeight } : undefined
+  const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
+    setScrolledX(event.currentTarget.scrollLeft > 0)
+  }
+
   return (
     <div
       data-slot="table-container"
       data-density={density}
+      data-scrolled-x={scrolledX ? "true" : undefined}
       // 默认无边框（贴公司列表页）；bordered 时套圆角描边卡片
       className={cn(
-        "relative w-full overflow-x-auto",
+        "group/table-container relative w-full overflow-x-auto",
         maxHeight != null && "scrollbar-thin overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:auto]",
         bordered && "overflow-hidden rounded-xl border border-border-subtle bg-card"
       )}
-      style={maxHeight != null ? { maxHeight: typeof maxHeight === "number" ? `${maxHeight}px` : maxHeight } : undefined}
+      onScroll={handleScroll}
+      style={containerStyle}
     >
       <table
         data-slot="table"
@@ -108,9 +117,9 @@ const selectionHeadInnerClass =
 // 固定列：横向滚动时贴边不动。用柔和阴影表达层级，避免硬线和列边框叠出多根竖线。
 const pinnedClass = (pinned?: "left" | "right") =>
   pinned === "right"
-    ? "sticky right-0 z-[2] bg-card shadow-[-10px_0_18px_-10px_var(--fx-shadow-color)]"
+    ? "sticky right-0 z-[2] bg-card"
     : pinned === "left"
-      ? "sticky left-0 z-[2] bg-card shadow-[10px_0_18px_-10px_var(--fx-shadow-color)]"
+      ? "sticky left-0 z-[2] bg-card"
       : ""
 
 // 冻结到此列（Excel 冻结窗格模型）：传 frozenLeft 数值 = 该列贴左的累加偏移；frozenEdge 标记冻结区最后一列（加右缘阴影分隔）。
@@ -119,8 +128,19 @@ function frozenStyle(frozenLeft?: number): React.CSSProperties | undefined {
 }
 function frozenClass(frozenLeft?: number, frozenEdge?: boolean) {
   if (frozenLeft == null) return ""
-  return cn("sticky z-[2] bg-card", frozenEdge && "shadow-[10px_0_18px_-10px_var(--fx-shadow-color)]")
+  return cn(
+    "sticky z-[2] bg-card",
+    frozenEdge &&
+      "after:pointer-events-none after:absolute after:top-0 after:right-0 after:bottom-0 after:w-7 after:translate-x-full group-data-[scrolled-x=true]/table-container:after:shadow-[inset_10px_0_8px_-8px_var(--fx-shadow-color)]"
+  )
 }
+
+const pinnedEdgeClass = (pinned?: "left" | "right") =>
+  pinned === "right"
+    ? "before:pointer-events-none before:absolute before:top-0 before:bottom-0 before:left-0 before:w-7 before:-translate-x-full group-data-[scrolled-x=true]/table-container:before:shadow-[inset_-10px_0_8px_-8px_var(--fx-shadow-color)]"
+    : pinned === "left"
+      ? "after:pointer-events-none after:absolute after:top-0 after:right-0 after:bottom-0 after:w-7 after:translate-x-full group-data-[scrolled-x=true]/table-container:after:shadow-[inset_10px_0_8px_-8px_var(--fx-shadow-color)]"
+      : ""
 
 function TableHead({
   className,
@@ -162,6 +182,7 @@ function TableHead({
         alignClass(align),
         pinnedClass(pinned),
         frozenClass(frozenLeft, frozenEdge),
+        pinnedEdgeClass(pinned),
         className
       )}
       style={{ ...frozenStyle(frozenLeft), ...style }}
@@ -242,6 +263,7 @@ function TableCell({
         alignClass(align),
         pinnedClass(pinned),
         frozenClass(frozenLeft, frozenEdge),
+        pinnedEdgeClass(pinned),
         className
       )}
       style={{ ...frozenStyle(frozenLeft), ...style }}

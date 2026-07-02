@@ -11,7 +11,7 @@
       "label": "顶部导航",
       "source": "src/App.tsx",
       "requiredSourceIncludes": [
-        "const topNav = [",
+        "const topNav: SiteNavItem[] = [",
         "fx-ui",
         "v1.2.0",
         "#components",
@@ -33,9 +33,13 @@
       "source": "src/App.tsx",
       "requiredSourceIncludes": [
         "const docsNav = [",
-        "概览",
-        "安装",
+        "基础",
+        "开始使用",
         "主题",
+        "foundationNavSections",
+        "pageNavSections",
+        "布局系统",
+        "页面",
         "维护",
         "现状",
         "网站规范",
@@ -43,7 +47,7 @@
         "installCommandsCode",
         "documentation-ssot",
         "checks-commands",
-        "docsNav.map",
+        "sidebarSections.map",
         "bg-primary/10 px-(--fx-control-px-md) text-[length:var(--fx-menu-text)]"
       ],
       "requiredCapabilities": [

@@ -47,7 +47,7 @@ import { Tag } from "@/components/ui/tag"
 - 语义 DOM：slot="tag"
 - 两条正交轴：`variant`（状态语义）/ `color`（分类打标多彩）
 - 变体：default / secondary / destructive / success / warning / outline
-- 打标色：red / amber / yellow / lime / green / teal / cyan / blue / purple / pink（软色 = 浅底 01 + 彩字 07 + 描边 03）
+- 打标色：gray / red / amber / yellow / lime / green / teal / cyan / blue / purple / pink（软色 = 浅底 01/中性 03 + 彩字 07/中性前景 + 描边 03/中性 07）
 - 导出项：Tag、tagVariants
 
 ## 场景示例 {#examples}
@@ -76,7 +76,7 @@ import { Tag } from "@/components/ui/tag"
 | Prop | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `variant` | `'default' \| 'secondary' \| 'destructive' \| 'success' \| 'warning' \| 'outline'` | `'default'` | 状态语义配色 |
-| `color` | `'none' \| 'red' \| 'amber' \| 'yellow' \| 'lime' \| 'green' \| 'teal' \| 'cyan' \| 'blue' \| 'purple' \| 'pink'` | `'none'` | 分类打标多彩软色；设置后覆盖 variant 配色 |
+| `color` | `'none' \| 'gray' \| 'red' \| 'amber' \| 'yellow' \| 'lime' \| 'green' \| 'teal' \| 'cyan' \| 'blue' \| 'purple' \| 'pink'` | `'none'` | 分类打标软色；设置后覆盖 variant 配色，`gray` 用于中性分类标签 |
 | `render` | `ReactElement` | — | 渲染到自定义元素（Base UI render） |
 
 ## Semantic DOM {#semantic-dom}
@@ -125,6 +125,6 @@ import { Tag } from "@/components/ui/tag"
 推荐：
 
 ```tsx
-<Tag variant="secondary">一般客户</Tag>
+<Tag color="gray">一般客户</Tag>
 <Tag color="purple">高意向</Tag>
 ```

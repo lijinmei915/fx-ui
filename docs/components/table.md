@@ -78,7 +78,7 @@ import { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableC
 
 | 部位 | 说明 |
 | --- | --- |
-| `data-slot="table-container"` | 源码中的语义定位，供样式选择器、测试和 AI 定位使用 |
+| `data-slot="table-container"` | 表格最外层滚动容器；横向滚动后带 `data-scrolled-x="true"`，用于固定列阴影 |
 | `data-slot="table"` | 源码中的语义定位，供样式选择器、测试和 AI 定位使用 |
 | `data-slot="table-header"` | 源码中的语义定位，供样式选择器、测试和 AI 定位使用 |
 | `data-slot="table-body"` | 源码中的语义定位，供样式选择器、测试和 AI 定位使用 |

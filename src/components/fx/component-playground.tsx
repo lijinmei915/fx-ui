@@ -18,8 +18,8 @@ export type ComponentPlaygroundOption = {
   constraintEn?: string
 }
 export type ComponentPlaygroundPropDef =
-  | { key: string; zh: string; en: string; propName: string; type: "segment"; options: ComponentPlaygroundOption[]; hasAll?: boolean; disabledWhen?: (v: ComponentPlaygroundValues) => boolean }
-  | { key: string; zh: string; en: string; propName: string; type: "text"; bilingual?: boolean; disabledWhen?: (v: ComponentPlaygroundValues) => boolean }
+  | { key: string; zh: string; en: string; propName: string; type: "segment"; options: ComponentPlaygroundOption[]; hasAll?: boolean; disabledWhen?: (v: ComponentPlaygroundValues) => boolean; hiddenWhen?: (v: ComponentPlaygroundValues) => boolean }
+  | { key: string; zh: string; en: string; propName: string; type: "text"; bilingual?: boolean; disabledWhen?: (v: ComponentPlaygroundValues) => boolean; hiddenWhen?: (v: ComponentPlaygroundValues) => boolean }
 export type ComponentPlaygroundScenario = { id: string; zh: string; en: string; intent: string; intentEn: string; values: ComponentPlaygroundValues }
 export type ComponentPlaygroundConfig = {
   scenarios?: ComponentPlaygroundScenario[]
@@ -117,6 +117,7 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
   const constraintText = guidanceOption
     ? lang === "en" ? (guidanceOption.constraintEn ?? guidanceOption.constraint) : guidanceOption.constraint
     : lang === "en" ? "Keep props aligned with the component source. Do not invent local-only variants." : "调试项必须和组件源码能力一致，不发明局部变体。"
+  const visibleProps = config.props.filter((p) => !(p.hiddenWhen?.(v) ?? false))
 
   let combos: ComponentPlaygroundValues[] = [v]
   for (const p of config.props) {
@@ -138,7 +139,7 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
   return (
     <div
       data-slot="card"
-      className="overflow-hidden rounded-xl border border-border-container bg-card shadow-l1 [--card-spacing:var(--fx-panel-padding)] [--playground-gap:var(--fx-panel-gap)]"
+      className="overflow-hidden rounded-xl border border-border bg-card shadow-l1 [--card-spacing:var(--fx-panel-padding)] [--playground-gap:var(--fx-panel-gap)]"
     >
       {config.scenarios ? (
         <div className="flex flex-col border-b border-border-subtle bg-card xl:flex-row">
@@ -164,7 +165,7 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
           </div>
           <div className="flex flex-1 flex-col gap-(--playground-gap) p-(--card-spacing)">
             <PlaygroundEyebrow dot="bg-primary" zh={lang === "en" ? "Interactive props" : "实时属性"} en="INTERACTIVE PROPS" />
-            {config.props.map((p) => (
+            {visibleProps.map((p) => (
               <div key={p.key} className="flex flex-col gap-(--fx-control-gap-tight)">
                 <PlaygroundPropLabel zh={lang === "en" ? p.en : p.zh} />
                 {p.type === "text" ? (
@@ -186,7 +187,7 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
           <div className="grid gap-(--playground-gap) xl:grid-cols-2">
             <div className="flex flex-col gap-(--playground-gap)">
               <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Interactive props" : "实时属性"}</PlaygroundSectionTitle>
-              {config.props.map((p) => (
+              {visibleProps.map((p) => (
                 <div key={p.key} className="flex flex-col gap-(--fx-control-gap-tight)">
                   <PlaygroundPropLabel zh={lang === "en" ? p.en : p.zh} />
                   {p.type === "text" ? (

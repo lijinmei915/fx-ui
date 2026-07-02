@@ -637,6 +637,9 @@
   --fx-control-px-lg: 1rem;
   --fx-control-gap-tight: 0.25rem;
   --fx-control-gap: 0.375rem;
+  --fx-table-row-height-compact: 28px;
+  --fx-table-row-height-default: 36px;
+  --fx-table-row-height-comfortable: 42px;
   --fx-panel-gap: 0.75rem;
   --fx-panel-padding: 0.75rem;
   --fx-sidebar-item-height: 32px;
@@ -727,6 +730,9 @@
   --fx-control-px-lg: 1rem;
   --fx-control-gap-tight: 0.25rem;
   --fx-control-gap: 0.375rem;
+  --fx-table-row-height-compact: 28px;
+  --fx-table-row-height-default: 36px;
+  --fx-table-row-height-comfortable: 42px;
   --fx-panel-gap: 0.75rem;
   --fx-panel-padding: 0.75rem;
   --fx-theme-duration: 200ms;

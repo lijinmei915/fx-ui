@@ -23,6 +23,7 @@ run_check() {
 }
 
 run_check "shadcn 组件契约检查"   node scripts/check-shadcn-contract.mjs
+run_check "治理页面数据重建"      node scripts/build-governance-pages.mjs
 run_check "token 漂移检查"        bash scripts/check-tokens-sync.sh
 run_check "浮层阴影 token 检查"    node scripts/check-shadow-tokens.mjs
 run_check "目录锚点关联检查"      node scripts/check-toc-anchors.mjs

@@ -149,7 +149,7 @@
       "id": "components-index",
       "label": "组件索引页",
       "source": "src/App.tsx",
-      "intent": "点击顶部组件入口时先进入组件单，组件单分基础组件、业务组合和 Agent UI，来源于同一份导航结构。",
+      "intent": "点击顶部组件入口时先进入组件单，组件单分基础组件、业务组合和 Agent 界面，来源于同一份导航结构。",
       "requiredSourceIncludes": [
         "const componentsIndexAnchors = [",
         "href: \"#components-ui\"",
@@ -157,7 +157,7 @@
         "href: \"#components-agent-ui\"",
         "function ComponentsIndexPage",
         "const componentIndexSections = docsNav.filter",
-        "[\"通用\", \"数据录入\", \"数据展示\", \"导航\", \"反馈\", \"业务组合组件\", \"Agent UI\"].includes(section.title)"
+        "[\"通用\", \"数据录入\", \"数据展示\", \"导航\", \"反馈\", \"业务组合组件\", \"Agent 界面\"].includes(section.title)"
       ]
     },
     {
@@ -213,8 +213,10 @@
       "source": "src/App.tsx",
       "intent": "PageLead 示例必须直接复用真实 FxPageLead 组件，并展示固定的 crumb、title、lead、actions 结构。",
       "scopeStart": "<SectionLead title=\"PageLead\" description=\"用于文档页顶部，固定承载面包屑、标题、说明和右侧页面动作。\" />",
-      "scopeEnd": "</Collapsible>",
+      "scopeEnd": "actions={<PageActionsShell navActions={<PageStepActions previous={null} next={null} lang={lang} />}><CopyPageAction lang={lang} /></PageActionsShell>} />",
       "requiredSourceIncludes": [
+        "<SectionLead title=\"PageLead\" description=\"用于文档页顶部，固定承载面包屑、标题、说明和右侧页面动作。\" />",
+        "查看规则",
         "<FxPageLead",
         "crumb=\"维护 / 网站规范\"",
         "title=\"页面标题区\"",
@@ -226,11 +228,12 @@
       "id": "website-standards-section-lead",
       "label": "网站规范页 SectionLead 示例",
       "source": "src/App.tsx",
-      "intent": "SectionLead 示例必须直接复用真实 SectionLead 组件，不再包额外说明卡结构。",
-      "scopeStart": "<SectionLead title=\"SectionLead\" description=\"用于每个内容区的小标题和一句说明，标题与说明固定 4px 间距。\" />",
+      "intent": "SectionLead 示例必须直接复用真实 SectionLead 组件，说明文案从 website-standards manifest 驱动，而不是在页面里手写。",
+      "scopeStart": "<SectionLead title=\"SectionLead\" description=\"用于内容区小标题；标题和说明固定 4px 间距。\" />",
       "scopeEnd": "</div>",
       "requiredSourceIncludes": [
-        "<SectionLead title=\"小标题\" description=\"说明文字固定 14px；组件内容紧跟在说明下面，不再额外包一层说明卡。\" />"
+        "<SectionLead title=\"小标题\" description=\"说明固定 14px，内容紧跟说明下方。\" />",
+        "websiteStandardsManifest.sectionLead.usageBullets.map"
       ]
     },
     {
@@ -288,6 +291,16 @@
     {
       "id": "governance-status",
       "path": "docs/data/governance-status.json",
+      "required": true
+    },
+    {
+      "id": "website-standards-manifest",
+      "path": "docs/data/website-standards.manifest.json",
+      "required": true
+    },
+    {
+      "id": "governance-pages-manifest",
+      "path": "docs/data/governance-pages.manifest.json",
       "required": true
     }
   ],

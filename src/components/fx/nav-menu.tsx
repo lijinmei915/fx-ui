@@ -107,7 +107,7 @@ function NavMenu({ children, className, collapsed, collapseMode = "rail" }: DivP
       data-slot="nav-menu"
       data-collapsed={collapsed ? "" : undefined}
       className={cn(
-        "flex h-full flex-col gap-2 rounded-lg bg-card transition-[width]",
+        "flex h-full flex-col gap-3 rounded-lg bg-card transition-[width]",
         collapsed ? "w-12 items-center px-0 py-3" : "w-[200px] p-3",
         className
       )}
@@ -167,7 +167,7 @@ function NavMenuSearch({
 // NavMenuList：菜单树滚动区。
 function NavMenuList({ children, className }: DivProps) {
   return (
-    <div data-slot="nav-menu-list" className={cn("scrollbar-thin flex w-full flex-1 flex-col gap-1 overflow-y-auto", className)}>
+    <div data-slot="nav-menu-list" className={cn("scrollbar-thin flex w-full flex-1 flex-col gap-2 overflow-y-auto", className)}>
       {children}
     </div>
   )
@@ -184,7 +184,7 @@ function NavMenuGroupLabel({ children, className, collapsed }: DivProps & { coll
     )
   }
   return (
-    <div data-slot="nav-menu-group-label" className={cn("px-2 pt-3 pb-1 text-base text-muted-foreground select-none", className)}>
+    <div data-slot="nav-menu-group-label" className={cn("mb-1 px-2 py-0 text-base leading-none text-muted-foreground select-none", className)}>
       {children}
     </div>
   )

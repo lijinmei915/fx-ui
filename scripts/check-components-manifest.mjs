@@ -46,6 +46,28 @@ function assertIncludes(source, values, label, errors) {
   }
 }
 
+async function validateRuleSync(component, errors) {
+  for (const rule of component.ruleSync ?? []) {
+    if (!rule.path || !Array.isArray(rule.includes) || rule.includes.length === 0) {
+      errors.push(`${component.name} ruleSync entry is incomplete: ${JSON.stringify(rule)}`)
+      continue
+    }
+
+    if (!(await fileExists(rule.path))) {
+      errors.push(`${component.name} ruleSync target is missing: ${rule.path}`)
+      continue
+    }
+
+    const targetSource = await readText(rule.path)
+    assertIncludes(
+      targetSource,
+      rule.includes,
+      `${component.name} ruleSync${rule.label ? ` (${rule.label})` : ""}`,
+      errors
+    )
+  }
+}
+
 const manifest = await readJson("docs/data/components.manifest.json")
 const designTokens = await readJson("docs/data/design-tokens.json")
 const errors = []
@@ -86,6 +108,10 @@ for (const component of manifest.fxComponents ?? []) {
       errors.push(`${component.name} tokenRef is not declared in docs/data/design-tokens.json: ${tokenRef}`)
     }
   }
+}
+
+for (const component of [...(manifest.uiComponents ?? []), ...(manifest.fxComponents ?? [])]) {
+  await validateRuleSync(component, errors)
 }
 
 for (const component of manifest.uiComponents ?? []) {

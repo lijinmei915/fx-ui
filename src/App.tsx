@@ -3,6 +3,8 @@ import { cn } from "@/lib/utils";
 import { CommandPalette, type CommandItem } from "@/components/ui/command";
 import { PageLead as FxPageLead } from "@/components/fx/page-lead";
 import { SectionLead } from "@/components/fx/section-lead";
+import { DocDoDont } from "@/components/fx/doc-do-dont";
+import { DocSurfaceCard, DocSurfaceTableCard } from "@/components/fx/doc-surface";
 import { ComponentPlayground } from "@/components/fx/component-playground";
 import {
   ArrowLeftIcon,
@@ -13,7 +15,6 @@ import {
   PencilIcon,
   Trash2Icon,
   LockIcon,
-  FilterIcon,
   ListIcon,
   LayoutColumnsIcon,
   RefreshIcon,
@@ -49,12 +50,11 @@ import {
   ReportMoneyIcon,
   TargetIcon,
   SitemapIcon,
+  CheckCircleIcon,
   ChevronDownIcon,
   ChevronRightIcon,
-  CheckCircleIcon,
   CheckIcon,
   CheckCircleFilledIcon,
-  AlertTriangleIcon,
   HomeFilledIcon,
   DatabaseFilledIcon,
   UserFilledIcon,
@@ -148,6 +148,7 @@ import {
   FieldLabel } from
 "@/components/ui/field";
 import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
@@ -163,8 +164,11 @@ import componentsManifestRaw from "../docs/data/components.manifest.json?raw";
 import designTokensManifestRaw from "../docs/data/design-tokens.json?raw";
 import docSiteManifestRaw from "../docs/data/doc-site.manifest.json?raw";
 import governanceStatusRaw from "../docs/data/governance-status.json?raw";
+import governanceTodoRaw from "../docs/data/governance-todo.json?raw";
 import projectGraphRaw from "../docs/data/project-graph.json?raw";
 import systemRelationsRaw from "../docs/data/system-relations.json?raw";
+import governancePagesManifestRaw from "../docs/data/governance-pages.manifest.json?raw";
+import websiteStandardsManifestRaw from "../docs/data/website-standards.manifest.json?raw";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -247,7 +251,6 @@ import { Spinner } from "@/components/ui/spinner";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -691,6 +694,15 @@ const docsSpacing = {
   componentLead: "max-w-5xl break-words text-lg"
 };
 
+const docsSidebarSpacing = {
+  shell: "h-full overflow-y-auto px-6 py-6",
+  searchTrigger: "mb-6",
+  nav: "flex flex-col gap-4",
+  group: "flex flex-col gap-1",
+  groupLabel: "text-xs font-semibold tracking-widest text-[var(--fx-neutrals-10)] uppercase",
+  itemList: "flex flex-col gap-2"
+};
+
 type ComponentsManifest = {
   updatedAt: string;
   uiComponents: {docStatus?: string;}[];
@@ -847,12 +859,92 @@ type GovernanceStatusManifest = {
   }[];
 };
 
+type WebsiteStandardsManifest = {
+  schemaVersion: number;
+  format: string;
+  updatedAt: string;
+  truthSource: string;
+  humanDoc: string;
+  note: string;
+  pageLead: {
+    componentName: string;
+    visualBaseline: { title: string; desc: string }[];
+    contentRules: { title: string; desc: string }[];
+  };
+  sectionLead: {
+    componentName: string;
+    usageBullets: string[];
+  };
+  playgroundRules: {
+    title: string;
+    desc: string;
+  }[];
+  spacingRhythm: { label: string }[];
+  linkageRules: string[];
+};
+
+type GovernancePagesManifest = {
+  schemaVersion: number;
+  format: string;
+  updatedAt: string;
+  truthSource: string;
+  humanDoc: string;
+  note: string;
+  documentation: {
+    ssotRoutes: { question: string; source: string; usage: string }[];
+    antiDriftLoop: { title: string; file: string; desc: string }[];
+    writeRules: string[];
+  };
+  checks: {
+    commands: { command: string; usage: string }[];
+    layers: { title: string; script: string; desc: string }[];
+    finishChecklist: string[];
+  };
+  overview: {
+    positioning: { title: string; desc: string }[];
+    layers: { layer: string; directory: string; responsibility: string }[];
+    audience: string[];
+  };
+  install: {
+    prerequisites: string[];
+    structure: string[];
+    verify: string[];
+  };
+  theme: {
+    semanticSlots: { layer: string; example: string; purpose: string }[];
+    changeFlow: string[];
+  };
+  aiRules: {
+    guardrails: { title: string; desc: string }[];
+    styleFlow: string[];
+  };
+};
+
+type GovernanceTodoManifest = {
+  schemaVersion: number;
+  format: string;
+  updatedAt: string;
+  truthSource: string;
+  humanDoc: string;
+  note: string;
+  items: {
+    id: string;
+    title: string;
+    priority: string;
+    status: string;
+    definitionOfDone: string;
+  }[];
+};
+
 const componentsManifest = JSON.parse(componentsManifestRaw) as ComponentsManifest;
 const designTokensManifest = JSON.parse(designTokensManifestRaw) as DesignTokensManifest;
 const docSiteManifest = JSON.parse(docSiteManifestRaw) as DocSiteManifest;
 const governanceStatus = JSON.parse(governanceStatusRaw) as GovernanceStatusManifest;
+const governanceTodo = JSON.parse(governanceTodoRaw) as GovernanceTodoManifest;
 const projectGraph = JSON.parse(projectGraphRaw) as ProjectGraph;
 const systemRelations = JSON.parse(systemRelationsRaw) as SystemRelationsManifest;
+const governancePagesManifest = JSON.parse(governancePagesManifestRaw) as GovernancePagesManifest;
+const websiteStandardsManifest = JSON.parse(websiteStandardsManifestRaw) as WebsiteStandardsManifest;
 
 const allManifestComponents = [
 ...componentsManifest.uiComponents,
@@ -892,7 +984,7 @@ const governanceFreshness = {
 
 const topNav = [
 { label: "组件", labelEn: "Components", href: "#components", page: "components" },
-{ label: "基础", labelEn: "Foundations", href: "#tokens", page: "tokens" },
+{ label: "设计令牌", labelEn: "Foundations", href: "#tokens", page: "tokens" },
 { label: "模式", labelEn: "Patterns", href: "#template-customer-list", page: "template-customer-list" },
 { label: "主题", labelEn: "Theme", href: "#theme", page: "theme" }];
 
@@ -908,7 +1000,7 @@ const docsNav = [
 
 },
 {
-  title: "设计 Tokens",
+  title: "设计令牌",
   titleEn: "Design Tokens",
   items: [
   { label: "概览", labelEn: "Overview", href: "#tokens" },
@@ -922,19 +1014,12 @@ const docsNav = [
 
 },
 {
-  title: "布局",
+  title: "布局系统",
   titleEn: "Layout",
   items: [
   { label: "栅格", labelEn: "Grid", href: "#grid" },
   { label: "布局", labelEn: "Layout", href: "#layout" },
   { label: "顶栏", labelEn: "TopBar", href: "#top-bar" }]
-
-},
-{
-  title: "页面模板",
-  titleEn: "Templates",
-  items: [
-  { label: "客户列表页", labelEn: "Customer list", href: "#template-customer-list" }]
 
 },
 {
@@ -956,6 +1041,7 @@ const docsNav = [
   { label: "输入框", labelEn: "Input", href: "#input" },
   { label: "选择器", labelEn: "Select", href: "#select" },
   { label: "复选框", labelEn: "Checkbox", href: "#checkbox" },
+  { label: "单选组", labelEn: "Radio Group", href: "#radio-group" },
   { label: "开关", labelEn: "Switch", href: "#switch" },
   { label: "多行输入", labelEn: "Textarea", href: "#textarea" },
   { label: "日历", labelEn: "Calendar", href: "#calendar" },
@@ -1004,7 +1090,7 @@ const docsNav = [
 },
 {
   title: "业务组合组件",
-  titleEn: "Compositions",
+  titleEn: "Business Compositions",
   items: [
   { label: "页面头部", labelEn: "PageHeader", href: "#page-header" },
   { label: "搜索工具栏", labelEn: "SearchToolbar", href: "#search-toolbar" },
@@ -1013,22 +1099,22 @@ const docsNav = [
   { label: "危险确认框", labelEn: "ConfirmDangerDialog", href: "#confirm-danger-dialog" }]
 
 },
-{
-  title: "Agent UI",
+  {
+  title: "Agent 界面",
   titleEn: "Agent UI",
   items: [
-  { label: "AgentSurface", labelEn: "AgentSurface", href: "#agent-surface" }]
+  { label: "生成式UI组件", labelEn: "Generative UI", href: "#agent-surface" }]
 
 },
 {
-  title: "页面 Blocks",
-  titleEn: "Page Blocks",
+  title: "页面模板",
+  titleEn: "Page Templates",
   items: [
   { label: "列表页", labelEn: "ListPage", href: "#list-page" },
   { label: "详情页", labelEn: "DetailPage", href: "#detail-page" },
   { label: "编辑表单", labelEn: "EditForm", href: "#edit-form" },
   { label: "设置页", labelEn: "SettingsPage", href: "#settings-page" },
-  { label: "仪表盘", labelEn: "Dashboard", href: "#dashboard" }]
+  { label: "列表页模板", labelEn: "ListPage Template", href: "#dashboard" }]
 
 },
 {
@@ -1036,10 +1122,7 @@ const docsNav = [
   titleEn: "Maintain",
   items: [
   { label: "现状", labelEn: "Status", href: "#governance-map" },
-  { label: "AI 规则", labelEn: "AI Rules", href: "#ai-rules" },
-  { label: "文档规范", labelEn: "Documentation", href: "#documentation" },
-  { label: "网站规范", labelEn: "Website Standards", href: "#website-standards" },
-  { label: "检查命令", labelEn: "Checks", href: "#checks" }]
+  { label: "网站规范", labelEn: "Website Standards", href: "#website-standards" }]
 
 }];
 
@@ -1097,7 +1180,12 @@ const gettingStartedAnchors: Record<GettingStartedPage, {label: string;labelEn: 
 const componentsIndexAnchors = [
 { label: "基础组件", labelEn: "UI Components", href: "#components-ui" },
 { label: "业务组合", labelEn: "Compositions", href: "#components-fx" },
-{ label: "Agent UI", labelEn: "Agent UI", href: "#components-agent-ui" }];
+  { label: "生成式UI组件", labelEn: "Generative UI", href: "#components-agent-ui" }];
+
+const agentSurfaceNavLabel = {
+  zh: "生成式UI组件",
+  en: "Generative UI"
+} as const;
 
 const governanceQuickLinks = [
 { label: "现状", labelEn: "Status", href: "#governance-map", page: "governance-map" },
@@ -1108,7 +1196,7 @@ const governanceQuickLinks = [
 
 
 const componentIndexSections = docsNav.filter((section) =>
-["通用", "数据录入", "数据展示", "导航", "反馈", "业务组合组件", "Agent UI"].includes(section.title)
+["通用", "数据录入", "数据展示", "导航", "反馈", "业务组合组件", "Agent 界面"].includes(section.title)
 );
 
 const footerNavItems = [
@@ -1135,8 +1223,7 @@ section.items.map((item) => ({
   groupEn: section.titleEn
 }))
 ),
-...docsNav.
-filter((section) => ["设计 Tokens", "页面 Blocks"].includes(section.title)).
+...docsNav.filter((section) => ["设计 Tokens", "页面模板"].includes(section.title)).
 flatMap((section) =>
 section.items.map((item) => ({
   ...item,
@@ -1473,6 +1560,27 @@ const checkboxPropRows = [
 { prop: "aria-invalid", type: "boolean", defaultValue: "false", desc: "标记当前选项未通过校验，触发错误态样式" },
 { prop: "id", type: "string", defaultValue: "—", desc: "与 Label 的 htmlFor 关联，建立可访问性映射" }];
 
+const radioGroupAnchors = [
+{ label: "组件总览", href: "#radio-group-overview" },
+{ label: "使用方式", href: "#radio-group-usage" },
+{ label: "API", href: "#radio-group-props" },
+{ label: "语义 DOM", href: "#radio-group-semantic-dom" },
+{ label: "正误示例", href: "#radio-group-do-dont" }];
+
+const radioGroupPropRows = [
+{ prop: "RadioGroup", type: "value? / defaultValue? / onValueChange?", defaultValue: "—", desc: "单选组容器，负责管理同组单选项的互斥选择。" },
+{ prop: "RadioGroupItem", type: "value / disabled / aria-invalid", defaultValue: "—", desc: "单个单选项，value 必须能唯一标识该选项。" }];
+
+const radioGroupSemanticDomRows = [
+{ part: "data-slot=\"radio-group\"", desc: "单选组根节点，承载分组布局和选择状态管理。" },
+{ part: "data-slot=\"radio-group-item\"", desc: "单个单选项根节点，承载 focus-visible、disabled、data-checked 等状态。" },
+{ part: "data-slot=\"radio-group-indicator\"", desc: "选中态指示圆点。" }];
+
+const radioGroupDoDontRows = [
+{ do: "表单单选或表格单选列使用 RadioGroup / RadioGroupItem。", dont: "在业务代码里手写 input[type=radio] 并覆盖样式。" },
+{ do: "每个 RadioGroupItem 提供唯一 value，并用 Label 或 aria-label 说明含义。", dont: "只展示一个无语义的圆点，让读屏器无法理解选项。" },
+{ do: "禁用态使用 disabled。", dont: "靠 opacity 伪装禁用但仍允许交互。" }];
+
 
 const checkboxSemanticDomRows = [
 { part: "data-slot=\"checkbox\"", desc: "复选框根节点，承载边框、圆角、选中态背景" },
@@ -1603,32 +1711,27 @@ const textareaDoDontRows = [
 
 
 const tableAnchors = [
-{ label: "组件总览", href: "#table-overview" },
-{ label: "场景示例", href: "#table-preview" },
+{ label: "调试台", href: "#table-playground" },
 { label: "使用方式", href: "#table-usage" },
 { label: "API", href: "#table-props" },
 { label: "语义 DOM", href: "#table-semantic-dom" },
 { label: "正误示例", href: "#table-do-dont" }];
 
 
-const tableDemoRows = [
-{ id: "INV-1001", customer: "张伟", status: "已支付", amount: "¥1,280" },
-{ id: "INV-1002", customer: "李娜", status: "处理中", amount: "¥860" },
-{ id: "INV-1003", customer: "王芳", status: "已支付", amount: "¥2,140" }];
-
-
 const tablePropRows = [
-{ prop: "Table", type: "density? / bordered? / maxHeight?: number | string", defaultValue: "density=\"default\" bordered=false", desc: "外层容器，自带横向滚动；density 行高(紧凑28/舒适36/宽松42)；表头固定 32px；maxHeight 配合 TableHeader sticky 启用稳定纵向滚动（自带 overscroll-contain 防回弹）；bordered 套圆角描边卡片" },
+{ prop: "Table", type: "density? / bordered? / maxHeight?: number | string", defaultValue: "density=\"default\" bordered=false", desc: "外层容器，自带横向滚动；默认表格字级 text-sm；density 用来切换行高（紧凑28 / 默认36 / 宽松42）；maxHeight 配合 TableHeader sticky 启用稳定纵向滚动（自带 overscroll-contain 防回弹）；bordered 套圆角描边卡片" },
 { prop: "TableHeader", type: "sticky?: boolean", defaultValue: "false", desc: "表头容器；sticky 时滚动吸顶（需外层固定高度 + overflow-auto）" },
 { prop: "TableBody / TableFooter", type: "组件", defaultValue: "—", desc: "表体 / 表尾分组容器，对应 tbody / tfoot" },
 { prop: "TableRow", type: "data-state?: \"selected\"", defaultValue: "—", desc: "表格行，自带 hover 态；data-state=selected 高亮选中行" },
-{ prop: "TableHead", type: "align? / pinned? / frozenLeft? / frozenEdge? / sortable? / menuActions?", defaultValue: "—", desc: "表头单元格：align 对齐、pinned 单列贴边、frozenLeft 冻结到此列(传累加 left 偏移)+frozenEdge 标记冻结区末列加阴影、sortable 排序、menuActions 列操作 ⋮ 菜单" },
+{ prop: "TableHead", type: "align? / pinned? / frozenLeft? / frozenEdge? / sortable? / filterContent? / filtered? / menuActions?", defaultValue: "—", desc: "表头单元格：align 对齐、pinned 单列贴边、frozenLeft 冻结到此列(传累加 left 偏移)+frozenEdge 标记冻结区末列加阴影、sortable 排序、filterContent 列筛选弹层、filtered 筛选高亮、menuActions 列操作 ⋮ 菜单；默认字重比正文略高，但不做夸张强调" },
 { prop: "TableCell", type: "align?: \"left\"|\"center\"|\"right\" / pinned?: \"left\"|\"right\"", defaultValue: "—", desc: "数据单元格：align 对齐（数字常用 right），pinned 横向滚动时贴边固定" },
 { prop: "TableCaption", type: "组件", defaultValue: "—", desc: "表格的整体说明文字，渲染在表格下方" }];
 
 
 const tableSemanticDomRows = [
-{ part: "data-slot=\"table\"", desc: "表格根节点的外层滚动容器" },
+{ part: "data-slot=\"table-container\"", desc: "表格最外层滚动容器，承载横向滚动，以及 bordered / maxHeight 等容器能力。" },
+{ part: "data-slot=\"table\"", desc: "真正的 <table> 根节点，承载密度 data-density 和表格内容。" },
+{ part: "data-slot=\"table-header\"", desc: "表头分组容器；sticky 时吸顶，靠底边线与表体区分。" },
 { part: "data-slot=\"table-row\"", desc: "数据行节点，承载 hover、选中态背景" },
 { part: "data-slot=\"table-head\" / \"table-cell\"", desc: "表头单元格 / 数据单元格，承载内边距和对齐方式" }];
 
@@ -3429,6 +3532,7 @@ const pageRegistry: Record<string, PageEntry> = {
   input: { anchors: inputAnchors, render: (a, l) => <InputPage actions={a} lang={l} /> },
   select: { anchors: selectAnchors, render: (a, l) => <SelectPage actions={a} lang={l} /> },
   checkbox: { anchors: checkboxAnchors, render: (a, l) => <CheckboxPage actions={a} lang={l} /> },
+  "radio-group": { anchors: radioGroupAnchors, render: (a, l) => <RadioGroupPage actions={a} lang={l} /> },
   switch: { anchors: switchAnchors, render: (a, l) => <SwitchPage actions={a} lang={l} /> },
   textarea: { anchors: textareaAnchors, render: (a, l) => <TextareaPage actions={a} lang={l} /> },
   table: { anchors: tableAnchors, render: (a, l) => <TablePage actions={a} lang={l} /> },
@@ -3459,6 +3563,7 @@ const pageRegistry: Record<string, PageEntry> = {
   "toggle-group": { anchors: toggleGroupAnchors, render: (a, l) => <ToggleGroupPage actions={a} lang={l} /> },
   "agent-surface": { anchors: agentSurfaceAnchors, render: (a, l) => <AgentSurfacePage actions={a} lang={l} /> },
   chart: { anchors: [], render: (a, l) => <ChartPage actions={a} lang={l} /> },
+  "list-page": { anchors: [], fullBleed: true, render: (a, l) => <CustomerListTemplate actions={a} lang={l} /> },
   "template-customer-list": { anchors: [], fullBleed: true, render: (a, l) => <CustomerListTemplate actions={a} lang={l} /> },
   ...Object.fromEntries(
     gettingStartedSlugs.map((slug) => [
@@ -4063,6 +4168,7 @@ function App() {
     if (!main || viewMode === "markdown") return;
 
     const id = activeHash.slice(1);
+    const isPageRootHash = activeHash === `#${page}`;
     const isPageAnchor = anchors.some((item) => item.href === activeHash);
     if (!id) return;
 
@@ -4073,6 +4179,12 @@ function App() {
           main.scrollTo({ top: 0, behavior: "smooth" });
           setActiveAnchor(anchors[0]?.href ?? "#components");
         }
+        return;
+      }
+
+      if (isPageRootHash) {
+        main.scrollTo({ top: 0, behavior: "smooth" });
+        setActiveAnchor(anchors[0]?.href ?? activeHash);
         return;
       }
 
@@ -4249,20 +4361,20 @@ function App() {
 
       <div className="grid h-[calc(100dvh-var(--fx-topbar-height))] min-h-0 overflow-hidden bg-background lg:grid-cols-[240px_minmax(0,1fr)]">
         <aside className="hidden min-h-0 border-r border-border-subtle bg-card lg:block">
-          <div className="h-full overflow-y-auto px-[calc(var(--fx-panel-padding)*2)] py-[calc(var(--fx-panel-padding)*2)]">
+          <div className={docsSidebarSpacing.shell}>
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className="mb-6 flex w-full items-center gap-(--fx-control-gap) rounded-lg border border-input bg-card px-(--fx-control-px-md) text-left outline-none hover:bg-muted lg:hidden">
+              className={`${docsSidebarSpacing.searchTrigger} flex w-full items-center gap-(--fx-control-gap) rounded-lg border border-input bg-card px-(--fx-control-px-md) text-left outline-none hover:bg-muted lg:hidden`}>
               
               <SearchIcon className="size-4 text-muted-foreground" />
               <span className="h-(--fx-control-md-height) flex-1 content-center text-sm text-muted-foreground">{uiText[lang].search}</span>
             </button>
-            <nav className="flex flex-col gap-[calc(var(--fx-panel-gap)*2)]">
+            <nav className={docsSidebarSpacing.nav}>
               {docsNav.map((section) =>
-              <section key={section.title} className="flex flex-col gap-(--fx-control-gap)">
-                  <div className="text-xs font-semibold tracking-widest text-[var(--fx-neutrals-10)] uppercase">{lang === "en" && section.titleEn ? section.titleEn : section.title}</div>
-                  <div className="flex flex-col gap-1">
+              <section key={section.title} className={docsSidebarSpacing.group}>
+                  <div className={docsSidebarSpacing.groupLabel}>{lang === "en" && section.titleEn ? section.titleEn : section.title}</div>
+                  <div className={docsSidebarSpacing.itemList}>
                     {section.items.map((item) => {
                     const isActive =
                     item.href === activeHash ||
@@ -5003,7 +5115,49 @@ function GettingStartedPage({
         <section id="website-standards-components" className={docsSpacing.sectionStack}>
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-3">
-              <SectionLead title="PageLead" description="用于文档页顶部，固定承载面包屑、标题、说明和右侧页面动作。" />
+              <div className="flex items-start justify-between gap-4">
+                <SectionLead title="PageLead" description="用于文档页顶部，固定承载面包屑、标题、说明和右侧页面动作。" />
+                <Collapsible className="relative shrink-0">
+                  <CollapsibleTrigger render={<Button variant="secondary" size="sm" className="w-fit shrink-0 [&[aria-expanded='true']_[data-icon='inline-end']]:rotate-180 [&_[data-icon='inline-end']]:transition-transform" />}>
+                    查看规则
+                    <ChevronDownIcon data-icon="inline-end" />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="absolute top-full right-0 z-20 mt-2 w-[min(44rem,calc(100vw-3rem))]">
+                    <div className="rounded-2xl border border-border-container bg-card p-4">
+                      <div className="grid gap-3 md:grid-cols-2">
+                        <div className="rounded-xl border border-border-container bg-background p-4">
+                          <div className="mb-3 flex items-center justify-between gap-3">
+                            <p className="text-sm font-semibold text-foreground">取值逻辑</p>
+                            <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">视觉基线</span>
+                          </div>
+                          <div className="flex flex-col gap-2.5 text-sm text-muted-foreground">
+                            {websiteStandardsManifest.pageLead.visualBaseline.map((item) =>
+                            <div key={item.title} className="flex flex-col gap-0.5">
+                                <p className="font-medium text-foreground">{item.title}</p>
+                                <p>{item.desc}</p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="rounded-xl border border-border-container bg-background p-4">
+                          <div className="mb-3 flex items-center justify-between gap-3">
+                            <p className="text-sm font-semibold text-foreground">内容规则</p>
+                            <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">文案边界</span>
+                          </div>
+                          <div className="flex flex-col gap-2.5 text-sm text-muted-foreground">
+                            {websiteStandardsManifest.pageLead.contentRules.map((item) =>
+                            <div key={item.title} className="flex flex-col gap-0.5">
+                                <p className="font-medium text-foreground">{item.title}</p>
+                                <p>{item.desc}</p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+              </div>
               <div className="flex flex-col gap-5 rounded-lg border border-border-container bg-card p-5">
                 <FxPageLead
                   crumb="维护 / 网站规范"
@@ -5011,42 +5165,50 @@ function GettingStartedPage({
                   titleMeta="PageLead"
                   lead="这里展示页面标题区的真实组件形态。标题下只保留一句说明，不再额外加线。"
                   actions={<PageActionsShell navActions={<PageStepActions previous={null} next={null} lang={lang} />}><CopyPageAction lang={lang} /></PageActionsShell>} />
-                <Collapsible>
-                  <CollapsibleTrigger render={<Button variant="secondary" size="sm" className="w-fit" />}>
-                    查看取值逻辑
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <div className="flex items-start justify-between gap-4">
+                <SectionLead
+                  title={lang === "en" ? "Component Playground" : "组件调试台"}
+                  description={lang === "en" ? "Website standards reuse the exact same playground structure as the Button page." : "网站规范这里直接复用 Button 页同一套调试台结构，后续组件也按这套来。"}
+                />
+                <Collapsible className="relative shrink-0">
+                  <CollapsibleTrigger render={<Button variant="secondary" size="sm" className="w-fit shrink-0 [&[aria-expanded='true']_[data-icon='inline-end']]:rotate-180 [&_[data-icon='inline-end']]:transition-transform" />}>
+                    查看规则
                     <ChevronDownIcon data-icon="inline-end" />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="pt-3">
-                    <div className="grid gap-3 text-base text-muted-foreground md:grid-cols-2">
-                      <div className="rounded-lg bg-muted p-4">
-                        <p className="mb-2 font-medium text-foreground">取值逻辑</p>
-                        <div className="flex flex-col gap-1.5">
-                          <p>面包屑 14px / 400，当前页 500 + 主文字色</p>
-                          <p>标题 32px / 40px，700，主文字色</p>
-                          <p>说明 14px / 24px，400，弱文字色</p>
-                          <p>标题组与右侧动作顶对齐，不在下方加线</p>
-                        </div>
-                      </div>
-                      <div className="rounded-lg bg-muted p-4">
-                        <p className="mb-2 font-medium text-foreground">内容规则</p>
-                        <div className="flex flex-col gap-1.5">
-                          <p>crumb = 导航分组 / 当前页名称，和左侧导航保持一致</p>
-                          <p>crumb 用 “ / ” 分隔，最后一段自动识别为当前页</p>
-                          <p>title 只写页面唯一主标题，不拆中英文样式</p>
-                          <p>lead 只写一句页面用途，不塞代码和决策引用</p>
-                          <p>actions 只放复制、更多、上一页、下一页</p>
-                        </div>
+                  <CollapsibleContent className="absolute top-full right-0 z-20 mt-2 w-[min(26rem,calc(100vw-3rem))]">
+                    <div className="rounded-2xl border border-border-container bg-card p-4 shadow-l1">
+                      <div className="flex flex-col gap-3 text-sm text-muted-foreground">
+                        {websiteStandardsManifest.playgroundRules.map((item) => (
+                          <div key={item.title} className="flex flex-col gap-1">
+                            <div className="font-medium text-foreground">{item.title}</div>
+                            <div>{item.desc}</div>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </CollapsibleContent>
                 </Collapsible>
               </div>
+              <div>
+                <ButtonPlayground lang={lang} />
+              </div>
             </div>
 
             <div className="flex flex-col gap-3">
-              <SectionLead title="SectionLead" description="用于每个内容区的小标题和一句说明，标题与说明固定 4px 间距。" />
+              <SectionLead title="SectionLead" description="用于内容区小标题；标题和说明固定 4px 间距。" />
               <div className="rounded-lg border border-border-container bg-card p-5">
-                <SectionLead title="小标题" description="说明文字固定 14px；组件内容紧跟在说明下面，不再额外包一层说明卡。" />
+                <div className="flex flex-col gap-4">
+                  <SectionLead title="小标题" description="说明固定 14px，内容紧跟说明下方。" />
+                  <div className="space-y-1 text-sm text-muted-foreground">
+                    {websiteStandardsManifest.sectionLead.usageBullets.map((item) =>
+                    <p key={item}>{item}</p>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -5075,19 +5237,19 @@ function GettingStartedPage({
               <div className="flex flex-col gap-2">
                 <div className="h-16 rounded-md bg-muted" />
                 <div className="h-3 rounded bg-primary/20" />
-                <span>页面内边距 24 / 32</span>
+                <span>{websiteStandardsManifest.spacingRhythm[0]?.label}</span>
               </div>
               <div className="flex flex-col gap-2">
                 <div className="h-8 rounded-md bg-muted" />
                 <div className="h-10 rounded-md border border-dashed border-primary bg-primary/5" />
                 <div className="h-8 rounded-md bg-muted" />
-                <span>标题组到首个小标题 40</span>
+                <span>{websiteStandardsManifest.spacingRhythm[1]?.label}</span>
               </div>
               <div className="flex flex-col gap-2">
                 <div className="h-8 rounded-md bg-muted" />
                 <div className="h-6 rounded-md border border-dashed border-border bg-background" />
                 <div className="h-8 rounded-md bg-muted" />
-                <span>小标题之间 40</span>
+                <span>{websiteStandardsManifest.spacingRhythm[2]?.label}</span>
               </div>
             </div>
           </div>
@@ -5097,6 +5259,13 @@ function GettingStartedPage({
           <SectionLead
             title={lang === "en" ? "Boundaries" : "使用边界"}
             description={lang === "en" ? "Website standards govern this documentation site. Business pages should use existing business compositions first." : "网站规范只治理文档站页面；业务页面优先使用已有业务组合组件。"} />
+          <Card>
+            <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
+              {websiteStandardsManifest.linkageRules.map((rule) =>
+              <div key={rule} className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{rule}</span></div>
+              )}
+            </CardContent>
+          </Card>
         </section>
       </div>);
 
@@ -5107,7 +5276,7 @@ function GettingStartedPage({
       <div className={docsSpacing.pageStack}>
         <section id="governance-map" className="flex flex-col gap-3">
           <PageLead
-            crumb="Maintain / Status"
+            crumb="维护 / 现状"
             title={lang === "en" ? "Status" : "现状看板"}
             lead={lang === "en" ?
             "A developer-facing snapshot of fx-ui governance: what is already protected, what is still being structured, and which checks are the current gate." :
@@ -5310,6 +5479,34 @@ function GettingStartedPage({
           </div>
         </section>
 
+        <section id="governance-map-todo" className={docsSpacing.sectionStack}>
+          <SectionLead title={
+          lang === "en" ? "Governance TODO" : "治理待办"} description={
+
+          lang === "en" ?
+          "The next automation and anti-drift steps tracked as machine data, so follow-up work does not live only in chat history." :
+          "后续自动化和防漂工作直接登记成机器事实，避免待办只存在聊天记录里。"} />
+
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {governanceTodo.items.map((item) =>
+            <Card key={item.id}>
+                <CardHeader>
+                  <div className="flex items-center justify-between gap-3">
+                    <CardTitle className="text-base">{item.title}</CardTitle>
+                    <div className="flex items-center gap-2">
+                      <Tag variant="secondary">{item.priority}</Tag>
+                      <StatusBadge status={item.status} />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="text-sm text-muted-foreground">
+                  <p>{item.definitionOfDone}</p>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </section>
+
       </div>);
 
   }
@@ -5319,7 +5516,7 @@ function GettingStartedPage({
       <div className={docsSpacing.pageStack}>
         <section id="install" className="flex flex-col gap-2">
           <PageLead
-            crumb="Getting Started / Installation"
+            crumb={lang === "en" ? "Getting Started / Installation" : "开始使用 / 安装"}
             title={lang === "en" ? "Installation" : "安装"}
             lead={lang === "en" ?
             "Start from a shadcn project, add the fx-ui component set, then import the company theme tokens." :
@@ -5331,9 +5528,9 @@ function GettingStartedPage({
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Prerequisites" : "接入前提"}</h2>
           <Card>
             <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
-              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>Vite + React + TypeScript。</span></div>
-              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>Tailwind CSS v4，并通过全局 CSS 承载 shadcn 语义变量。</span></div>
-              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>项目已初始化 shadcn；未初始化时先运行：</span></div>
+              {governancePagesManifest.install.prerequisites.map((item) =>
+              <div key={item} className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{item}</span></div>
+              )}
             </CardContent>
           </Card>
           <CopyCodeBlock code={initShadcnCode} label="shadcn" lang={lang} />
@@ -5366,10 +5563,9 @@ function GettingStartedPage({
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Structure" : "目录约定"}</h2>
           <Card>
             <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
-              <p><code>src/components/ui/</code>：shadcn 基础组件，CLI 拉取，open-code 可读可改。</p>
-              <p><code>src/components/fx/</code>：公司组合组件，由 shadcn 组件组合而成。</p>
-              <p><code>theme/fx-theme.css</code>：公司 token 真相源，改它等于全局换肤。</p>
-              <p><code>docs/components/</code>：组件文档资产，给工程师和 AI 共同消费。</p>
+              {governancePagesManifest.install.structure.map((item) =>
+              <p key={item}>{item}</p>
+              )}
             </CardContent>
           </Card>
         </section>
@@ -5378,9 +5574,9 @@ function GettingStartedPage({
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Verify" : "启动检查"}</h2>
           <Card>
             <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
-              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{lang === "en" ? "shadcn components are present in src/components/ui." : "shadcn 组件已经进入 src/components/ui。"}</span></div>
-              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{lang === "en" ? "theme/fx-theme.css is imported once at the app entry." : "theme/fx-theme.css 在应用入口只导入一次。"}</span></div>
-              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{lang === "en" ? "Run npm run check before saying the integration is complete." : "宣告接入完成前运行 npm run check。"}</span></div>
+              {governancePagesManifest.install.verify.map((item) =>
+              <div key={item} className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{item}</span></div>
+              )}
             </CardContent>
           </Card>
         </section>
@@ -5393,7 +5589,7 @@ function GettingStartedPage({
       <div className={docsSpacing.pageStack}>
         <section id="theme" className="flex flex-col gap-2">
           <PageLead
-            crumb="Getting Started / Theme Setup"
+            crumb={lang === "en" ? "Getting Started / Theme Setup" : "开始使用 / 主题"}
             title={lang === "en" ? "Theme" : "主题"}
             lead={lang === "en" ?
             "fx-ui does not restyle every component by hand. Company visuals are injected through shadcn semantic tokens." :
@@ -5429,15 +5625,11 @@ function GettingStartedPage({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {[
-                ["Primitive", "--fx-primary: #FF8000", "公司原始视觉值，只在 token 真相源维护。"],
-                ["Semantic", "--primary / --background / --ring", "shadcn/ui 和 Tailwind 真正消费的语义槽。"],
-                ["Component Usage", "Button default -> bg-primary", "组件如何消费 token 的规则。"]].
-                map(([layer, example, desc]) =>
-                <TableRow key={layer}>
-                    <TableCell className="pl-4 font-medium">{layer}</TableCell>
-                    <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{example}</code></TableCell>
-                    <TableCell className="pr-4 text-muted-foreground">{desc}</TableCell>
+                {governancePagesManifest.theme.semanticSlots.map((item) =>
+                <TableRow key={item.layer}>
+                    <TableCell className="pl-4 font-medium">{item.layer}</TableCell>
+                    <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{item.example}</code></TableCell>
+                    <TableCell className="pr-4 text-muted-foreground">{item.purpose}</TableCell>
                   </TableRow>
                 )}
               </TableBody>
@@ -5449,9 +5641,9 @@ function GettingStartedPage({
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Change Flow" : "修改流程"}</h2>
           <Card>
             <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
-              <p>1. {lang === "en" ? "Decide whether this is global theme or local component usage." : "先判断这是全局主题问题，还是局部组件用法问题。"}</p>
-              <p>2. {lang === "en" ? "Global tokens go to theme/fx-theme.css; component docs go to docs/components." : "全局 token 改 theme/fx-theme.css；组件规则改 docs/components。"}</p>
-              <p>3. {lang === "en" ? "Run npm run check to catch token and documentation drift." : "运行 npm run check，拦住 token 和文档漂移。"}</p>
+              {governancePagesManifest.theme.changeFlow.map((item, index) =>
+              <p key={item}>{index + 1}. {item}</p>
+              )}
             </CardContent>
           </Card>
         </section>
@@ -5464,27 +5656,21 @@ function GettingStartedPage({
       <div className={docsSpacing.pageStack}>
         <section id="ai-rules" className="flex flex-col gap-3">
           <PageLead
-            crumb="Getting Started / AI Integration"
+            crumb={lang === "en" ? "Maintain / AI Rules" : "维护 / AI 规则"}
             title={lang === "en" ? "AI Rules" : "AI 规则"}
             lead={lang === "en" ?
             "These rules keep AI-generated pages aligned with shadcn open-code, company tokens, and executable checks." :
             "这些规则用来保证 AI 生成页面时对齐 shadcn open-code、公司 token 和可执行检查。"}
             actions={actions} />
-          <GovernanceQuickLinks currentPage={page} lang={lang} />
         </section>
 
         <section id="ai-guardrails" className={docsSpacing.sectionStack}>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Guardrails" : "行为红线"}</h2>
           <div className="grid gap-4 md:grid-cols-2">
-            {[
-            ["不手写基础组件", "需要新组件时用 npx shadcn@latest add <component> 拉 open-code。"],
-            ["不乱改 token 真相源", "theme/fx-theme.css 是全局换肤入口，修改前说明影响范围。"],
-            ["不发明组件 API", "variant、size、state 必须来自 src/components/ui 源码。"],
-            ["不手改 dist", "所有样式任务都定位源码，dist 只作为构建产物。"]].
-            map(([title, desc]) =>
-            <Card key={title}>
-                <CardHeader><CardTitle className="text-base">{title}</CardTitle></CardHeader>
-                <CardContent className="text-sm text-muted-foreground">{desc}</CardContent>
+            {governancePagesManifest.aiRules.guardrails.map((item) =>
+            <Card key={item.title}>
+                <CardHeader><CardTitle className="text-base">{item.title}</CardTitle></CardHeader>
+                <CardContent className="text-sm text-muted-foreground">{item.desc}</CardContent>
               </Card>
             )}
           </div>
@@ -5494,10 +5680,9 @@ function GettingStartedPage({
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Style Flow" : "改样式流程"}</h2>
           <Card>
             <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
-              <p>1. 从页面选择器或浏览器检查工具定位源码，不手改 dist。</p>
-              <p>2. 判断应该固化到组件样式、token、组合组件，还是局部页面覆盖。</p>
-              <p>3. 修改组件文档或示例时，先读取对应 `src/components/ui/&lt;component&gt;.tsx`。</p>
-              <p>4. 完成后运行 `npm run check`，检查不通过不宣告完成。</p>
+              {governancePagesManifest.aiRules.styleFlow.map((item, index) =>
+              <p key={item}>{index + 1}. {item}</p>
+              )}
             </CardContent>
           </Card>
         </section>
@@ -5520,7 +5705,7 @@ function GettingStartedPage({
       <div className={docsSpacing.pageStack}>
         <section id="documentation" className="flex flex-col gap-2">
           <PageLead
-            crumb="Governance / Documentation"
+            crumb={lang === "en" ? "Governance / Documentation" : "维护 / 文档规范"}
             title={lang === "en" ? "Documentation" : "文档规范"}
             lead={lang === "en" ?
             "This page explains where information belongs, how to avoid orphan documents, and when text rules need machine checks." :
@@ -5533,8 +5718,8 @@ function GettingStartedPage({
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "SSOT Routes" : "SSOT 路由"}</h2>
           <p className="text-base text-muted-foreground">
             {lang === "en" ?
-            "One kind of information has one truth source. Other files should link to it instead of duplicating it." :
-            "同一类信息只维护一个真相源，其他地方引用它，不复制一份新的。"}
+            "One kind of information has one truth source, and every referenced surface must stay linked to it instead of drifting into separate copies." :
+            "同一类信息只维护一个真相源；所有引用到它的地方都必须和它联动，不能各自漂成副本。"}
           </p>
           <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
             <Table className="min-w-[760px]">
@@ -5546,17 +5731,11 @@ function GettingStartedPage({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {[
-                ["AI 怎么行动", "AGENTS.md", "AI 红线、组件改动核对、token 保护规则。"],
-                ["项目现在到哪", "PROJECT.md / HANDOFF.md", "当前优先级、交接状态、下一步。"],
-                ["组件事实", "docs/components/*.md + docs/data/components.manifest.json", "组件 API、示例、AI 可消费结构化事实。"],
-                ["token 取值", "docs/TOKENS.md + docs/data/design-tokens.json", "颜色、排版、圆角、间距等设计令牌。"],
-                ["文档站骨架", "docs/DOC_SITE_DESIGN.md + docs/data/doc-site.manifest.json", "顶部导航、左侧导航、内容区、右侧目录。"]].
-                map(([question, source, usage]) =>
-                <TableRow key={question}>
-                    <TableCell className="pl-4 font-medium">{question}</TableCell>
-                    <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{source}</code></TableCell>
-                    <TableCell className="pr-4 text-muted-foreground">{usage}</TableCell>
+                {governancePagesManifest.documentation.ssotRoutes.map((item) =>
+                <TableRow key={item.question}>
+                    <TableCell className="pl-4 font-medium">{item.question}</TableCell>
+                    <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{item.source}</code></TableCell>
+                    <TableCell className="pr-4 text-muted-foreground">{item.usage}</TableCell>
                   </TableRow>
                 )}
               </TableBody>
@@ -5568,15 +5747,11 @@ function GettingStartedPage({
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Anti-Drift Loop" : "防漂三件套"}</h2>
           <Card>
             <CardContent className="grid gap-4 p-5 md:grid-cols-3">
-              {[
-              ["文字规范", "docs/*.md", "解释为什么这么做、边界是什么。"],
-              ["机器事实表", "docs/data/*.json", "记录必须存在的结构事实，给脚本读取。"],
-              ["可执行检查", "scripts/check-*.mjs", "把规则接入 npm run check，防止页面和文档漂。"]].
-              map(([title, file, desc]) =>
-              <div key={title} className="rounded-lg border border-border bg-background p-4">
-                  <Tag variant="secondary">{title}</Tag>
-                  <p className="mt-3 font-medium"><code>{file}</code></p>
-                  <p className="mt-2 text-sm text-muted-foreground">{desc}</p>
+              {governancePagesManifest.documentation.antiDriftLoop.map((item) =>
+              <div key={item.title} className="rounded-lg border border-border bg-background p-4">
+                  <Tag variant="secondary">{item.title}</Tag>
+                  <p className="mt-3 font-medium"><code>{item.file}</code></p>
+                  <p className="mt-2 text-sm text-muted-foreground">{item.desc}</p>
                 </div>
               )}
             </CardContent>
@@ -5594,10 +5769,9 @@ function GettingStartedPage({
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Write Rules" : "写入规则"}</h2>
           <Card>
             <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
-              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>新建 <code>docs/*.md</code> 时，必须同时在 <code>docs/DOCUMENTATION.md</code> 的 SSOT 表登记。</span></div>
-              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>改组件文档或示例前，先读对应 <code>src/components/ui/&lt;component&gt;.tsx</code>，不要发明源码没有的 API。</span></div>
-              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>结构事实会被代码消费时，补 <code>docs/data/*.json</code>；会随源码漂移时，再补检查脚本。</span></div>
-              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>不要每次改动都同时更新 PROJECT / HANDOFF / CHANGELOG / DECISIONS，只更新真正被影响的真相源。</span></div>
+              {governancePagesManifest.documentation.writeRules.map((rule) =>
+              <div key={rule} className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{rule}</span></div>
+              )}
             </CardContent>
           </Card>
         </section>
@@ -5610,7 +5784,7 @@ function GettingStartedPage({
       <div className={docsSpacing.pageStack}>
         <section id="checks" className="flex flex-col gap-2">
           <PageLead
-            crumb="Governance / Checks"
+            crumb={lang === "en" ? "Governance / Checks" : "维护 / 检查命令"}
             title={lang === "en" ? "Checks" : "检查命令"}
             lead={lang === "en" ?
             "Use these commands to verify component contracts, token sync, documentation structure, and production build health." :
@@ -5630,16 +5804,10 @@ function GettingStartedPage({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {[
-                ["npm run check", "默认交付门禁：组件契约、token、文档站、组件 manifest、构建一起跑。"],
-                ["npm run check:components", "改了组件文档、组件示例或 docs/data/components.manifest.json 时单独跑。"],
-                ["npm run check:doc-site", "改了顶部导航、左侧导航、右侧目录、文档站页面骨架时单独跑。"],
-                ["npm run check:tokens", "改了 theme/fx-theme.css、docs/TOKENS.md 或 design-tokens.json 时单独跑。"],
-                ["npm run check:all", "交接前的宽检查：额外跑文档路由登记、密钥扫描和交接提醒。"]].
-                map(([command, usage]) =>
-                <TableRow key={command}>
-                    <TableCell className="pl-4"><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{command}</code></TableCell>
-                    <TableCell className="pr-4 text-muted-foreground">{usage}</TableCell>
+                {governancePagesManifest.checks.commands.map((item) =>
+                <TableRow key={item.command}>
+                    <TableCell className="pl-4"><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{item.command}</code></TableCell>
+                    <TableCell className="pr-4 text-muted-foreground">{item.usage}</TableCell>
                   </TableRow>
                 )}
               </TableBody>
@@ -5650,21 +5818,14 @@ function GettingStartedPage({
         <section id="checks-layers" className={docsSpacing.sectionStack}>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Check Layers" : "检查分层"}</h2>
           <div className="grid gap-4 md:grid-cols-2">
-            {[
-            ["shadcn 组件契约", "scripts/check-shadcn-contract.mjs", "守住 Button 这类高风险组件的真实 variant、size 和状态。"],
-            ["token 漂移", "scripts/check-tokens-sync.sh", "确认 token 文档、JSON 和主题文件没有互相飘。"],
-            ["文档站骨架", "scripts/check-doc-site-contract.mjs", "确认导航、页面骨架、右侧目录这些结构还存在。"],
-            ["组件 manifest", "scripts/check-components-manifest.mjs", "确认组件文档和机器事实表对得上。"],
-            ["生产构建", "npm run build", "TypeScript 和 Vite 构建必须通过。"],
-            ["交接宽检查", "scripts/check-all.sh", "补跑文档路由登记、密钥扫描和弱提醒。"]].
-            map(([title, script, desc]) =>
-            <Card key={title}>
+            {governancePagesManifest.checks.layers.map((item) =>
+            <Card key={item.title}>
                 <CardHeader>
-                  <CardTitle className="text-base">{title}</CardTitle>
+                  <CardTitle className="text-base">{item.title}</CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm text-muted-foreground">
-                  <p><code>{script}</code></p>
-                  <p className="mt-2">{desc}</p>
+                  <p><code>{item.script}</code></p>
+                  <p className="mt-2">{item.desc}</p>
                 </CardContent>
               </Card>
             )}
@@ -5675,11 +5836,9 @@ function GettingStartedPage({
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Finish Checklist" : "收尾清单"}</h2>
           <Card>
             <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
-              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>组件文档变了：读源码，核对 variant / size / 状态，再跑 <code>npm run check:components</code>。</span></div>
-              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>token 或主题变了：同步 token 文档和 JSON，再跑 <code>npm run check:tokens</code>。</span></div>
-              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>文档站导航或页面骨架变了：同步 doc-site manifest，再跑 <code>npm run check:doc-site</code>。</span></div>
-              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>新增文档：先登记 <code>docs/DOCUMENTATION.md</code>，交接前跑 <code>npm run check:all</code>。</span></div>
-              <div className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>宣告完成前默认跑 <code>npm run check</code>，检查不通过就继续修。</span></div>
+              {governancePagesManifest.checks.finishChecklist.map((item) =>
+              <div key={item} className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{item}</span></div>
+              )}
             </CardContent>
           </Card>
         </section>
@@ -5691,7 +5850,7 @@ function GettingStartedPage({
     <div className={docsSpacing.pageStack}>
       <section id="intro" className="flex flex-col gap-2">
         <PageLead
-          crumb="Getting Started / Overview"
+          crumb={lang === "en" ? "Getting Started / Overview" : "开始使用 / 概览"}
           title={lang === "en" ? "Overview" : "概览"}
           lead={lang === "en" ?
           "fx-ui is not a hand-written component library. It is a shadcn open-code system with company tokens, documentation contracts, and AI-readable rules." :
@@ -5702,14 +5861,10 @@ function GettingStartedPage({
       <section id="intro-positioning" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Positioning" : "定位"}</h2>
         <div className="grid gap-4 md:grid-cols-3">
-          {[
-          ["基础组件", "全部来自 shadcn/ui open-code，不做黑盒封装。"],
-          ["公司视觉", "通过 theme/fx-theme.css 注入 token，不逐个组件重写。"],
-          ["AI 治理", "规则进入 Markdown、JSON manifest 和检查脚本，防止漂移。"]].
-          map(([title, desc]) =>
-          <Card key={title}>
-              <CardHeader><CardTitle className="text-base">{title}</CardTitle></CardHeader>
-              <CardContent className="text-sm text-muted-foreground">{desc}</CardContent>
+          {governancePagesManifest.overview.positioning.map((item) =>
+          <Card key={item.title}>
+              <CardHeader><CardTitle className="text-base">{item.title}</CardTitle></CardHeader>
+              <CardContent className="text-sm text-muted-foreground">{item.desc}</CardContent>
             </Card>
           )}
         </div>
@@ -5727,15 +5882,11 @@ function GettingStartedPage({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {[
-              ["基础组件", "src/components/ui", "shadcn/ui open-code 基础控件。"],
-              ["公司组合组件", "src/components/fx", "沉淀 PageHeader、SearchToolbar、ConfirmDangerDialog 等业务组合。"],
-              ["页面 Blocks / 布局规范", "src/blocks + docs/LAYOUTS.md", "从真实页面抽取页面模式和布局规则。"]].
-              map(([layer, dir, desc]) =>
-              <TableRow key={layer}>
-                  <TableCell className="pl-4 font-medium">{layer}</TableCell>
-                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{dir}</code></TableCell>
-                  <TableCell className="pr-4 text-muted-foreground">{desc}</TableCell>
+              {governancePagesManifest.overview.layers.map((item) =>
+              <TableRow key={item.layer}>
+                  <TableCell className="pl-4 font-medium">{item.layer}</TableCell>
+                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{item.directory}</code></TableCell>
+                  <TableCell className="pr-4 text-muted-foreground">{item.responsibility}</TableCell>
                 </TableRow>
               )}
             </TableBody>
@@ -5743,30 +5894,30 @@ function GettingStartedPage({
         </div>
       </section>
 
-      <section id="intro-audience" className={docsSpacing.sectionStack}>
-        <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Audience" : "适合谁用"}</h2>
-        <Card>
-          <CardContent className="grid gap-3 p-5 text-sm text-muted-foreground md:grid-cols-3">
-            <p><span className="font-medium text-foreground">工程师：</span>查组件 API、复制真实用法、确认 token 规则。</p>
-            <p><span className="font-medium text-foreground">设计/产品：</span>查看组件语义、状态、场景和设计令牌。</p>
-            <p><span className="font-medium text-foreground">AI：</span>读取 Markdown + manifest + 检查脚本，生成不漂的页面。</p>
-          </CardContent>
-        </Card>
-      </section>
+        <section id="intro-audience" className={docsSpacing.sectionStack}>
+          <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Audience" : "适合谁用"}</h2>
+          <Card>
+            <CardContent className="grid gap-3 p-5 text-sm text-muted-foreground md:grid-cols-3">
+            {governancePagesManifest.overview.audience.map((item) =>
+            <p key={item}>{item}</p>
+            )}
+            </CardContent>
+          </Card>
+        </section>
     </div>);
 
 }
 
 function ComponentsIndexPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
-  const uiSections = componentIndexSections.filter((section) => !["业务组合组件", "Agent UI"].includes(section.title));
-  const fxSections = componentIndexSections.filter((section) => section.title === "业务组合组件");
-  const agentSections = componentIndexSections.filter((section) => section.title === "Agent UI");
+const uiSections = componentIndexSections.filter((section) => !["业务组合组件", "Agent 界面"].includes(section.title));
+const fxSections = componentIndexSections.filter((section) => section.title === "业务组合组件");
+const agentSections = componentIndexSections.filter((section) => section.title === "Agent 界面");
 
   return (
     <div className={docsSpacing.pageStack}>
       <section id="components" className="flex flex-col gap-2">
         <PageLead
-          crumb="Components / Index"
+          crumb={lang === "en" ? "Components / Index" : "组件 / 概览"}
           title={lang === "en" ? "Components" : "组件"}
           lead={lang === "en" ?
           "Find every component currently available in fx-ui. Base controls come from shadcn open-code; company compositions are listed separately." :
@@ -5823,7 +5974,7 @@ function ComponentsIndexPage({ actions, lang }: {actions: React.ReactNode;lang: 
       </section>
 
       <section id="components-agent-ui" className={docsSpacing.sectionStack}>
-        <SectionLead title={"Agent UI"} description={
+        <SectionLead title={"Agent 界面"} description={
 
 
         lang === "en" ?
@@ -6063,14 +6214,16 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         "复制 import 即可；具体 JSX 写法见上方「调试台」右侧的推荐写法。"} />
 
         
-        <div className="rounded-xl border border-border-container bg-card p-5 shadow-l1">
-          <CopyCodeBlock code={buttonImportCode} label="Import" lang={lang} />
-        </div>
+        <DocSurfaceCard elevated>
+          <CardContent className="px-5">
+            <CopyCodeBlock code={buttonImportCode} label="Import" lang={lang} />
+          </CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id="props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "API Props" : "API 属性"}</h2>
-        <div className="max-w-full overflow-x-auto rounded-xl border border-border-container bg-card shadow-l1">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -6095,7 +6248,7 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="semantic-dom" className={docsSpacing.sectionStack}>
@@ -6107,7 +6260,7 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         "Button 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。"} />
 
         
-        <div className="max-w-full overflow-x-auto rounded-xl border border-border-container bg-card shadow-l1">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -6126,7 +6279,7 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="do-dont" className={docsSpacing.sectionStack}>
@@ -6138,40 +6291,7 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         "这些例子记录工程师和 AI 生成代码最容易犯的错误。"} />
 
         
-        <div className="grid grid-cols-2 gap-4">
-          <Card elevated>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base text-foreground">
-                <CheckCircleIcon className="size-[18px] text-success" />
-                <span>{lang === "en" ? "Do" : "推荐 Do"}</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {buttonDoDontRows.map((row) =>
-              <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
-                  <span>{lang === "en" ? row.doEn : row.do}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          <Card elevated>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base text-foreground">
-                <AlertTriangleIcon className="size-[18px] text-destructive" />
-                <span>{lang === "en" ? "Don’t" : "避免 Don't"}</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {buttonDoDontRows.map((row) =>
-              <div key={`dont-${row.dont}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
-                  <span>{lang === "en" ? row.dontEn : row.dont}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <DocDoDont lang={lang} rows={buttonDoDontRows} elevated />
       </section>
     </div>);
 
@@ -6193,8 +6313,8 @@ function TokensPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
     <div className={docsSpacing.pageStack}>
       <section id="tokens" className="flex flex-col gap-2">
         <PageLead
-          crumb={lang === "en" ? "Design Tokens / Overview" : "设计 Tokens / Overview"}
-          title={lang === "en" ? "Design Tokens" : "Tokens 设计令牌"}
+          crumb={lang === "en" ? "Design Tokens / Overview" : "设计令牌 / 概览"}
+          title={lang === "en" ? "Design Tokens" : "设计令牌"}
           lead={lang === "en" ?
           "Tokens are the visual source of truth for fx-ui — consumed by both engineers (real values and usage) and AI (generation constraints and component rules)." :
           "Tokens 是 fx-ui 的公司视觉真相，给工程师（真实值和用法）和 AI（生成约束、组件级规则）同时消费。"}
@@ -6202,7 +6322,7 @@ function TokensPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         
       </section>
 
-      <section id="tokens-architecture" className="flex flex-col gap-5">
+      <section id="tokens-architecture" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-2">
           <Tag variant="secondary" className="w-fit">{lang === "en" ? "Token System" : "Token 系统"}</Tag>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Token architecture" : "基础架构"}</h2>
@@ -6223,9 +6343,7 @@ function TokensPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         </div>
       </section>
 
-      <Separator className="my-10" />
-
-      <section className="flex flex-col gap-5">
+      <section className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Browse by Category" : "按分类浏览"}</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {[
@@ -6683,14 +6801,14 @@ function TokensColorsPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
     <div className={docsSpacing.pageStack}>
       <section id="tokens-colors" className="flex flex-col gap-2">
         <PageLead
-          crumb={lang === "en" ? "Design Tokens / Colors" : "设计 Tokens / 颜色"}
+          crumb={lang === "en" ? "Design Tokens / Colors" : "设计令牌 / 颜色"}
           title={lang === "en" ? "Colors" : "颜色"}
           lead={lang === "en" ? "Brand seed, 12-step palettes, the neutral gray axis, and semantic colors — the single source of truth for all color." : "品牌种子色、12 阶色板、中性灰轴与语义色——全站颜色的唯一真相源。"}
           actions={actions} />
         
       </section>
 
-      <section id="tokens-colors-seeds" className="flex flex-col gap-5">
+      <section id="tokens-colors-seeds" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-2">
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Brand Color" : "主题色"}</h2>
           <p className="text-sm text-muted-foreground">
@@ -6702,16 +6820,11 @@ function TokensColorsPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
         <SeedPreview lang={lang} />
       </section>
 
-      <Separator className="my-10" />
-
-      <section id="tokens-colors-palette">
+      <section id="tokens-colors-palette" className={docsSpacing.sectionStack}>
         <ColorPaletteWithTabs lang={lang} />
       </section>
 
-
-      <Separator className="my-10" />
-
-      <section id="tokens-colors-semantic" className="flex flex-col gap-8">
+      <section id="tokens-colors-semantic" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-2">
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Semantic Colors" : "语义颜色"}</h2>
           <p className="text-base text-muted-foreground">
@@ -6775,7 +6888,9 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           title={lang === "en" ? "Grid" : "栅格"}
           lead={lang === "en" ? "24-column grid with 16px gutter — split content by /24, freely combined. Aligns with Semi / Ant grid conventions." : "24 列栅格、16px 列间距——内容按 /24 自由组合。对齐 Semi / Ant 栅格惯例。"}
           actions={actions} />
-        
+      </section>
+
+      <section className={docsSpacing.sectionStack}>
         <div>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Grid 栅格系统" : "栅格系统"}</h2>
           <p className="mt-2 text-base text-muted-foreground">{lang === "en" ? "24 columns, column gap = 16px (gap-4). Span by /24 with col-span-[n]." : "24 列基准，列间距 = 16px（gap-4）。分栏用 col-span-[n]（按 24 计），可 1/24 自由组合。"}</p>
@@ -6848,9 +6963,7 @@ function GridPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         </div>
       </section>
 
-      <Separator className="my-10" />
-
-      <section id="grid-breakpoints" className="flex flex-col gap-5">
+      <section id="grid-breakpoints" className={docsSpacing.sectionStack}>
         <div>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Breakpoints 响应式断点" : "响应式断点"}</h2>
           <p className="mt-2 text-base text-muted-foreground">
@@ -7004,33 +7117,47 @@ function NavMenuPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
     <NavMenu collapsed={bc}>
       <NavMenuSearch placeholder="搜索" collapsed={bc} />
       <NavMenuList>
-        <NavMenuGroupLabel collapsed={bc}>系统管理</NavMenuGroupLabel>
-        <NavMenuItem icon={<HomeIcon />} label="管理首页" collapsed={bc} active={selected === "b-home"} onClick={() => setSelected("b-home")} />
-        <NavMenuItem icon={<BuildingIcon />} label="企业设置" expandable expanded={backOpen["b-ent"]} collapsed={bc} onClick={() => backToggle("b-ent")} />
-        {!bc && backOpen["b-ent"] &&
-        <>
-            {["许可信息", "企业信息设置", "多组织设置", "员工功能设置", "工作时间", "假期", "手机号隐私设置", "个性化推荐设置", "域名管理", "强制通知设置"].map((l) =>
-          <NavMenuItem key={l} indent label={l} active={selected === l} onClick={() => setSelected(l)} />
-          )}
-            {/* 二级展开：企业安全设置 → 子项再缩进一级 */}
-            <NavMenuItem indent label="企业安全设置" expandable expanded={backOpen["b-ent-sec"]} onClick={() => backToggle("b-ent-sec")} />
-            {backOpen["b-ent-sec"] && ["分管小组", "账号安全设置", "通讯录安全设置", "设备绑定", "单点登录"].map((l) =>
-          <NavMenuItem key={l} indent={2} label={l} active={selected === l} onClick={() => setSelected(l)} />
-          )}
-          </>
-        }
-        <NavMenuItem icon={<SitemapIcon />} label="组织架构管理" arrow collapsed={bc} active={selected === "b-org"} onClick={() => setSelected("b-org")} />
-        <NavMenuItem icon={<UserIcon />} label="角色权限管理" arrow collapsed={bc} active={selected === "b-role"} onClick={() => setSelected("b-role")} />
-        <NavMenuGroupLabel collapsed={bc}>CRM平台管理</NavMenuGroupLabel>
-        <NavMenuItem icon={<BoxIcon />} label="对象管理" expandable expanded={backOpen["b-obj"]} collapsed={bc} onClick={() => backToggle("b-obj")} />
-        {!bc && backOpen["b-obj"] &&
-        <>
-            <NavMenuItem indent label="预设对象" active={selected === "b-obj-1"} onClick={() => setSelected("b-obj-1")} />
-            <NavMenuItem indent label="自定义对象" active={selected === "b-obj-2"} onClick={() => setSelected("b-obj-2")} />
-          </>
-        }
-        <NavMenuItem icon={<SitemapIcon />} label="流程管理" arrow collapsed={bc} active={selected === "b-flow"} onClick={() => setSelected("b-flow")} />
-        <NavMenuItem icon={<ReportMoneyIcon />} label="数据权限管理" arrow collapsed={bc} active={selected === "b-data"} onClick={() => setSelected("b-data")} />
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1">
+            <NavMenuGroupLabel collapsed={bc}>系统管理</NavMenuGroupLabel>
+            <div className="flex flex-col gap-2">
+              <NavMenuItem icon={<HomeIcon />} label="管理首页" collapsed={bc} active={selected === "b-home"} onClick={() => setSelected("b-home")} />
+              <NavMenuItem icon={<BuildingIcon />} label="企业设置" expandable expanded={backOpen["b-ent"]} collapsed={bc} onClick={() => backToggle("b-ent")} />
+              {!bc && backOpen["b-ent"] &&
+              <>
+                  {["许可信息", "企业信息设置", "多组织设置", "员工功能设置", "工作时间", "假期", "手机号隐私设置", "个性化推荐设置", "域名管理", "强制通知设置"].map((l) =>
+                <NavMenuItem key={l} indent label={l} active={selected === l} onClick={() => setSelected(l)} />
+                )}
+                  {/* 二级展开：企业安全设置 → 子项再缩进一级 */}
+                  <NavMenuItem indent label="企业安全设置" expandable expanded={backOpen["b-ent-sec"]} onClick={() => backToggle("b-ent-sec")} />
+                  {backOpen["b-ent-sec"] && ["分管小组", "账号安全设置", "通讯录安全设置", "设备绑定", "单点登录"].map((l) =>
+                <NavMenuItem key={l} indent={2} label={l} active={selected === l} onClick={() => setSelected(l)} />
+                )}
+                </>
+              }
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <NavMenuItem icon={<SitemapIcon />} label="组织架构管理" arrow collapsed={bc} active={selected === "b-org"} onClick={() => setSelected("b-org")} />
+            <NavMenuItem icon={<UserIcon />} label="角色权限管理" arrow collapsed={bc} active={selected === "b-role"} onClick={() => setSelected("b-role")} />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <NavMenuGroupLabel collapsed={bc}>CRM平台管理</NavMenuGroupLabel>
+            <div className="flex flex-col gap-2">
+              <NavMenuItem icon={<BoxIcon />} label="对象管理" expandable expanded={backOpen["b-obj"]} collapsed={bc} onClick={() => backToggle("b-obj")} />
+              {!bc && backOpen["b-obj"] &&
+              <>
+                  <NavMenuItem indent label="预设对象" active={selected === "b-obj-1"} onClick={() => setSelected("b-obj-1")} />
+                  <NavMenuItem indent label="自定义对象" active={selected === "b-obj-2"} onClick={() => setSelected("b-obj-2")} />
+                </>
+              }
+              <NavMenuItem icon={<SitemapIcon />} label="流程管理" arrow collapsed={bc} active={selected === "b-flow"} onClick={() => setSelected("b-flow")} />
+              <NavMenuItem icon={<ReportMoneyIcon />} label="数据权限管理" arrow collapsed={bc} active={selected === "b-data"} onClick={() => setSelected("b-data")} />
+            </div>
+          </div>
+        </div>
       </NavMenuList>
       <NavMenuFooter collapsed={bc} pinned={backPinned} onToggle={() => setBackPinned(false)} onPin={() => setBackPinned(true)} />
     </NavMenu>
@@ -7136,30 +7263,7 @@ function NavMenuPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
 
       <section id="nav-menu-do-dont" className={docsSpacing.sectionStack}>
         <SectionLead title={lang === "en" ? "Do / Don’t" : "正误示例"} />
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader><CardTitle className="text-base text-foreground">{lang === "en" ? "Do" : "推荐 Do"}</CardTitle></CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {navMenuDoDontRows.map((row) =>
-              <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
-                  <span>{lang === "en" ? row.doEn : row.do}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader><CardTitle className="text-base text-foreground">{lang === "en" ? "Don’t" : "避免 Don't"}</CardTitle></CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {navMenuDoDontRows.map((row) =>
-              <div key={`dont-${row.dont}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
-                  <span>{lang === "en" ? row.dontEn : row.dont}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <DocDoDont lang={lang} rows={navMenuDoDontRows} />
       </section>
     </div>);
 
@@ -7194,7 +7298,9 @@ function LayoutPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           title={lang === "en" ? "Layout" : "布局"}
           lead={lang === "en" ? "Page frame patterns (header / sider / content / footer) and their default sizes. The grid system lives on its own Grid page." : "页面骨架样式（头/侧/内容/底）与默认尺寸。栅格系统单独在「栅格」页。"}
           actions={actions} />
-        
+      </section>
+
+      <section className={docsSpacing.sectionStack}>
         <div>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Page containers 页面容器" : "页面布局容器（6 种样式）"}</h2>
           <p className="mt-2 text-base text-muted-foreground">{lang === "en" ? "From simple to complex. Style 6 (left primary nav) is the recommended trend." : "从简到繁；样式六（左侧一级导航）是新版趋势，新建后台优先。"}</p>
@@ -7227,49 +7333,50 @@ function TokensTypographyPage({ actions, lang }: {actions: React.ReactNode;lang:
     <div className={docsSpacing.pageStack}>
       <section id="tokens-typography" className="flex flex-col gap-2">
         <PageLead
-          crumb={lang === "en" ? "Design Tokens / Typography" : "设计 Tokens / 排版"}
+          crumb={lang === "en" ? "Design Tokens / Typography" : "设计令牌 / 排版"}
           title={lang === "en" ? "Typography" : "排版"}
           lead={lang === "en" ? "Typography is split into three parts: size (with heading levels), weight, and family." : "排版分三部分：字号（含标题层级）、字重、字体。"}
           actions={actions} />
-        
+      </section>
 
-        {([
-        { id: "tokens-typography-size", title: lang === "en" ? "Size 字号" : "字号", desc: lang === "en" ? "Text size by hierarchy (H1–H6 / body / small). Value = font-size / line-height." : "决定不同层级文本的大小（H1–H6 / 正文 / 小字）。值 = 字号 / 行高。", rows: typeSizeTokens },
-        { id: "tokens-typography-weight", title: lang === "en" ? "Weight 字重" : "字重", desc: lang === "en" ? "Text thickness." : "决定不同层级文本的粗细。", rows: typeWeightTokens },
-        { id: "tokens-typography-family", title: lang === "en" ? "Family 字体" : "字体", desc: lang === "en" ? "Global font family." : "全局字族。", rows: typeFamilyTokens }] as
-        const).map((group) =>
-        <div key={group.title} id={group.id} className="flex flex-col gap-3 scroll-mt-24">
-            <div>
-              <h2 className="text-xl font-bold tracking-tight">{group.title}</h2>
-              <p className="mt-1 text-sm text-muted-foreground">{group.desc}</p>
-            </div>
-            <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-              <Table className="min-w-[680px]">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="pl-4">Token</TableHead>
-                    <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
-                    <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
-                    <TableHead className="pr-4">{lang === "en" ? "Usage" : "用法"}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {group.rows.map((row) =>
-                <TableRow key={row.name}>
-                      <TableCell className="pl-4 font-medium">
-                        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
-                      </TableCell>
-                      <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.value}</code></TableCell>
-                      <TableCell><span className={`leading-none text-foreground ${row.cls}`}>示例文字 Aa</span></TableCell>
-                      <TableCell className="pr-4 text-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
-                    </TableRow>
-                )}
-                </TableBody>
-              </Table>
-            </div>
+      {([
+      { id: "tokens-typography-size", title: lang === "en" ? "Size 字号" : "字号", desc: lang === "en" ? "Text size by hierarchy (H1–H6 / body / small). Value = font-size / line-height." : "决定不同层级文本的大小（H1–H6 / 正文 / 小字）。值 = 字号 / 行高。", rows: typeSizeTokens },
+      { id: "tokens-typography-weight", title: lang === "en" ? "Weight 字重" : "字重", desc: lang === "en" ? "Text thickness." : "决定不同层级文本的粗细。", rows: typeWeightTokens },
+      { id: "tokens-typography-family", title: lang === "en" ? "Family 字体" : "字体", desc: lang === "en" ? "Global font family." : "全局字族。", rows: typeFamilyTokens }] as
+      const).map((group) =>
+      <section key={group.title} id={group.id} className={`${docsSpacing.sectionStack} scroll-mt-24`}>
+          <div>
+            <h2 className="text-xl font-bold tracking-tight">{group.title}</h2>
+            <p className="mt-1 text-sm text-muted-foreground">{group.desc}</p>
           </div>
-        )}
+          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+            <Table className="min-w-[680px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="pl-4">Token</TableHead>
+                  <TableHead>{lang === "en" ? "Value" : "值"}</TableHead>
+                  <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "Usage" : "用法"}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {group.rows.map((row) =>
+              <TableRow key={row.name}>
+                    <TableCell className="pl-4 font-medium">
+                      <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.name}</code>
+                    </TableCell>
+                    <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.value}</code></TableCell>
+                    <TableCell><span className={`leading-none text-foreground ${row.cls}`}>示例文字 Aa</span></TableCell>
+                    <TableCell className="pr-4 text-foreground">{lang === "en" ? row.usageEn : row.usage}</TableCell>
+                  </TableRow>
+              )}
+              </TableBody>
+            </Table>
+          </div>
+        </section>
+      )}
 
+      <section className={docsSpacing.sectionStack}>
         <div className="rounded-lg border border-border bg-muted/40 p-5 text-sm text-muted-foreground">
           <p className="font-medium text-foreground">{lang === "en" ? "Font family" : "字族说明"}</p>
           <p className="mt-1">
@@ -7292,13 +7399,13 @@ function TokensRadiusPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
     <div className={docsSpacing.pageStack}>
       <section id="tokens-radius" className="flex flex-col gap-2">
         <PageLead
-          crumb={lang === "en" ? "Design Tokens / Radius" : "设计 Tokens / 圆角"}
+          crumb={lang === "en" ? "Design Tokens / Radius" : "设计令牌 / 圆角"}
           title={lang === "en" ? "Radius" : "圆角"}
           lead={lang === "en" ? "Radius tokens keep shadcn controls, cards, and overlays visually consistent." : "圆角 token 用来统一 shadcn 控件、卡片和浮层容器的视觉性格。"}
           actions={actions} />
-        
-        {/* 圆角档位 */}
-        <div id="tokens-radius-scale" className="flex flex-col gap-3 scroll-mt-24">
+      </section>
+
+      <section id="tokens-radius-scale" className={`${docsSpacing.sectionStack} scroll-mt-24`}>
           <div>
             <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Radius scale 圆角档位" : "圆角档位"}</h2>
             <p className="mt-2 text-base text-muted-foreground">
@@ -7335,10 +7442,9 @@ function TokensRadiusPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
               </TableBody>
             </Table>
           </div>
-        </div>
+      </section>
 
-        {/* 计算方式 */}
-        <div id="tokens-radius-compute" className="flex flex-col gap-3 scroll-mt-24">
+      <section id="tokens-radius-compute" className={`${docsSpacing.sectionStack} scroll-mt-24`}>
           <div>
             <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "How it's computed 计算方式" : "计算方式"}</h2>
             <p className="mt-2 text-base text-muted-foreground">
@@ -7361,7 +7467,6 @@ function TokensRadiusPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
               "Pick one step by component type, then apply it to all size variants and check radius ÷ height. As long as every size stays within 0.15–0.35 it shares one radius (e.g. an 8px button at 28/32/36px → 0.29/0.25/0.22, all in band). A size that falls out steps to a neighboring step automatically — > 0.4 (too round) steps down, < 0.15 (too sharp) steps up — reusing the existing scale, never a new value." :
               "先按组件类型选一档，套到该组件所有尺寸上算「圆角 ÷ 高度」：只要每个尺寸都落在 0.15~0.35 就共用一档（如 8px 按钮在 28/32/36px → 0.29/0.25/0.22，全在带内）。掉出带的尺寸自动换到相邻档——> 0.4（太圆）下调、< 0.15（太尖）上调——复用现有阶梯，不造新值。判定靠比值算，不靠拍脑袋，也不用逐组件预先指定。"}</p>
           </div>
-        </div>
       </section>
     </div>);
 
@@ -7372,13 +7477,13 @@ function TokensSpacingPage({ actions, lang }: {actions: React.ReactNode;lang: La
     <div className={docsSpacing.pageStack}>
       <section id="tokens-spacing" className="flex flex-col gap-2">
         <PageLead
-          crumb={lang === "en" ? "Design Tokens / Spacing" : "设计 Tokens / 间距"}
+          crumb={lang === "en" ? "Design Tokens / Spacing" : "设计令牌 / 间距"}
           title={lang === "en" ? "Spacing" : "间距"}
           lead={lang === "en" ? "Spacing tokens keep page rhythm, component density, and documentation layout consistent. Prefer Tailwind spacing utilities instead of one-off pixel values." : "间距 token 用来统一页面节奏、组件密度和文档排版。优先使用 Tailwind 间距工具类，不临时手写像素值。"}
           actions={actions} />
-        
-        {/* 间距档位 */}
-        <div id="tokens-spacing-scale" className="flex flex-col gap-3 scroll-mt-24">
+      </section>
+
+      <section id="tokens-spacing-scale" className={`${docsSpacing.sectionStack} scroll-mt-24`}>
           <div>
             <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Spacing scale 间距档位" : "间距档位"}</h2>
             <p className="mt-2 text-base text-muted-foreground">
@@ -7415,10 +7520,9 @@ function TokensSpacingPage({ actions, lang }: {actions: React.ReactNode;lang: La
               </TableBody>
             </Table>
           </div>
-        </div>
+      </section>
 
-        {/* 计算方式 */}
-        <div id="tokens-spacing-compute" className="flex flex-col gap-3 scroll-mt-24">
+      <section id="tokens-spacing-compute" className={`${docsSpacing.sectionStack} scroll-mt-24`}>
           <div>
             <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "How it's computed 计算方式" : "计算方式"}</h2>
             <p className="mt-2 text-base text-muted-foreground">
@@ -7433,7 +7537,6 @@ function TokensSpacingPage({ actions, lang }: {actions: React.ReactNode;lang: La
             <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "4-point grid" : "4 点网格"}</span>：{lang === "en" ? "all spacing snaps to multiples of 4px, so rhythm stays even and predictable across pages." : "所有间距都落在 4px 的倍数上，页面节奏统一、可预测，不出现 5/7/13 这种随手值。"}</p>
             <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Rule" : "用法"}</span>：{lang === "en" ? "use Tailwind spacing utilities (gap/p/m/space) — never hand-write arbitrary px. Same knob as padding/margin/gap." : "一律用 Tailwind 间距工具类（gap / p / m / space），不手写任意 px；padding、margin、gap 共用这一套刻度。"}</p>
           </div>
-        </div>
       </section>
     </div>);
 
@@ -7444,13 +7547,13 @@ function TokensShadowPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
     <div className={docsSpacing.pageStack}>
       <section id="tokens-shadow" className="flex flex-col gap-2">
         <PageLead
-          crumb={lang === "en" ? "Design Tokens / Shadow" : "设计 Tokens / 阴影"}
+          crumb={lang === "en" ? "Design Tokens / Shadow" : "设计令牌 / 阴影"}
           title={lang === "en" ? "Shadow" : "阴影"}
           lead={lang === "en" ? "Shadow tokens come from Figma's Layer Style spec — four levels cover every overlay. Only use shadow-l1/l2/l3/l1-up; avoid Tailwind's built-in shadow-sm/md/lg (a separate set of values that won't follow our shadow variables)." : "阴影 token 来自 Figma「图层样式」，四档覆盖所有浮层场景。只用 shadow-l1/l2/l3/l1-up，别用 Tailwind 自带的 shadow-sm/md/lg（那是另一套数值，不跟随公司变量）。"}
           actions={actions} />
-        
-        {/* 阴影档位 */}
-        <div id="tokens-shadow-scale" className="flex flex-col gap-3 scroll-mt-24">
+      </section>
+
+      <section id="tokens-shadow-scale" className={`${docsSpacing.sectionStack} scroll-mt-24`}>
           <div>
             <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Elevation levels 阴影档位" : "阴影档位"}</h2>
             <p className="mt-2 text-base text-muted-foreground">
@@ -7489,10 +7592,9 @@ function TokensShadowPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
               </TableBody>
             </Table>
           </div>
-        </div>
+      </section>
 
-        {/* 计算方式 */}
-        <div id="tokens-shadow-compute" className="flex flex-col gap-3 scroll-mt-24">
+      <section id="tokens-shadow-compute" className={`${docsSpacing.sectionStack} scroll-mt-24`}>
           <div>
             <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "How it's computed 计算方式" : "计算方式"}</h2>
             <p className="mt-2 text-base text-muted-foreground">
@@ -7509,7 +7611,6 @@ function TokensShadowPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
             <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Direction variant" : "方向变体"}</span>：{lang === "en" ? "shadow-l1-up = L1 with negative y, for overlays that pop upward (bottom toolbar menus)." : "shadow-l1-up = L1 的 y 取负，用于从下往上弹的浮层（底部工具栏菜单）。"}</p>
             <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Why this way" : "为什么这样做"}</span>：{lang === "en" ? "layers are separated by geometry (y + blur), not by darkening color — so overlays stay light and neutral instead of muddy. Built-in Tailwind shadow-sm/md/lg are banned: they aren't mapped to company tokens and would drift." : "靠几何（y + blur）拉开层级，不靠加深颜色——浮层保持淡而中性，不发脏。只用 shadow-l1/l2/l3/l1-up，别用 Tailwind 自带的 shadow-sm/md/lg：那是另一套独立数值、不跟随公司阴影变量，混用会让全站阴影深浅对不上、以后也调不动。"}</p>
           </div>
-        </div>
       </section>
     </div>);
 
@@ -7523,14 +7624,13 @@ function TokensMotionPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
     <div className={docsSpacing.pageStack}>
       <section id="tokens-motion" className="flex flex-col gap-2">
         <PageLead
-          crumb={lang === "en" ? "Design Tokens / Motion" : "设计 Tokens / 动效"}
+          crumb={lang === "en" ? "Design Tokens / Motion" : "设计令牌 / 动效"}
           title={lang === "en" ? "Motion" : "动效"}
           lead={lang === "en" ? "Motion follows the shadcn components already in the project: tw-animate-css utilities, short durations, and data-state driven enter/exit transitions." : "动效沿用项目里 shadcn 组件已经在使用的模式：tw-animate-css 工具类、短时长、以及由 data-state 驱动的进入退出。"}
           actions={actions} />
-        
+      </section>
 
-        {/* 时长档位 */}
-        <div id="tokens-motion-duration" className="flex flex-col gap-3 scroll-mt-24">
+      <section id="tokens-motion-duration" className={`${docsSpacing.sectionStack} scroll-mt-24`}>
           <div>
             <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Duration scale 时长档位" : "时长档位"}</h2>
             <p className="mt-2 text-base text-muted-foreground">
@@ -7568,10 +7668,9 @@ function TokensMotionPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
               </TableBody>
             </Table>
           </div>
-        </div>
+      </section>
 
-        {/* 原语与规则 */}
-        <div id="tokens-motion-primitives" className="flex flex-col gap-3 scroll-mt-24">
+      <section id="tokens-motion-primitives" className={`${docsSpacing.sectionStack} scroll-mt-24`}>
           <div>
             <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Primitives & rules 原语与规则" : "原语与规则"}</h2>
             <p className="mt-2 text-base text-muted-foreground">
@@ -7603,7 +7702,6 @@ function TokensMotionPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
             <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "State driven" : "状态驱动"}</span>：{lang === "en" ? "enter/exit triggered by data-open / data-closed / data-state, not manual timers." : "进入/退出由 data-open / data-closed / data-state 触发，不手动计时。"}</p>
             <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Rule" : "用法"}</span>：{lang === "en" ? "compose fade / zoom / slide via tw-animate-css utilities; don't invent one-off keyframes per page." : "用 tw-animate-css 工具类组合 fade / zoom / slide，不为单页临时写关键帧动画。"}</p>
           </div>
-        </div>
       </section>
     </div>);
 
@@ -7614,13 +7712,13 @@ function TokensLayerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
     <div className={docsSpacing.pageStack}>
       <section id="tokens-layer" className="flex flex-col gap-2">
         <PageLead
-          crumb={lang === "en" ? "Design Tokens / Layer" : "设计 Tokens / 层级"}
+          crumb={lang === "en" ? "Design Tokens / Layer" : "设计令牌 / 层级"}
           title={lang === "en" ? "Layer" : "层级"}
           lead={lang === "en" ? "Layer rules document the z-index scale already used by shadcn overlays. Avoid inventing new z-index values unless a real collision appears." : "层级规则记录 shadcn 浮层已经在用的 z-index 习惯。除非真的出现遮挡冲突，不要临时发明新的 z-index。"}
           actions={actions} />
-        
-        {/* 层级档位 */}
-        <div id="tokens-layer-scale" className="flex flex-col gap-3 scroll-mt-24">
+      </section>
+
+      <section id="tokens-layer-scale" className={`${docsSpacing.sectionStack} scroll-mt-24`}>
           <div>
             <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Layer levels 层级档位" : "层级档位"}</h2>
             <p className="mt-2 text-base text-muted-foreground">
@@ -7664,10 +7762,9 @@ function TokensLayerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
               </TableBody>
             </Table>
           </div>
-        </div>
+      </section>
 
-        {/* 分层逻辑 */}
-        <div id="tokens-layer-logic" className="flex flex-col gap-3 scroll-mt-24">
+      <section id="tokens-layer-logic" className={`${docsSpacing.sectionStack} scroll-mt-24`}>
           <div>
             <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Layering logic 分层逻辑" : "分层逻辑"}</h2>
             <p className="mt-2 text-base text-muted-foreground">
@@ -7679,7 +7776,6 @@ function TokensLayerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
             <p className="mt-2"><span className="font-medium text-foreground">{lang === "en" ? "Overlays all use the top tier" : "弹层都用最高一档"}</span>：{lang === "en" ? "dialogs, dropdowns, popovers, sheets and tooltips all sit at the top tier; which one shows on top depends on who opens later, not on a bigger number." : "对话框、下拉、气泡、抽屉、提示框都用最高一档（z-50）；谁后打开谁在上，不靠更大的数字。"}</p>
             <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Rule" : "怎么用"}</span>：{lang === "en" ? "stick to these few tiers; if something gets covered, fit it into an existing tier — don't invent a bigger number." : "只用这几档；万一被挡住，把它归到现有的某一档，别去编一个更大的数字（不然以后谁都往上加，越堆越乱）。"}</p>
           </div>
-        </div>
       </section>
     </div>);
 
@@ -8005,34 +8101,7 @@ function IconPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         "工程师和 AI 生成代码最容易犯的图标错误。"} />
 
         
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">{lang === "en" ? "Do" : "推荐 Do"}</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {iconDoDontRows.map((row) =>
-              <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
-                  <span>{lang === "en" ? row.doEn : row.do}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">{lang === "en" ? "Don’t" : "避免 Don't"}</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {iconDoDontRows.map((row) =>
-              <div key={`dont-${row.dont}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
-                  <span>{lang === "en" ? row.dontEn : row.dont}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <DocDoDont lang={lang} rows={iconDoDontRows} />
       </section>
     </div>);
 
@@ -8045,7 +8114,7 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
     <div className={docsSpacing.pageStack}>
       <section id="input" className="flex flex-col gap-2">
-        <PageLead crumb="Components / Input" title="Input 输入框" lead="单行文本录入控件，用于表单字段、搜索框、内联编辑等场景。" actions={actions} />
+        <PageLead crumb={lang === "en" ? "Components / Input" : "组件 / 输入框"} title="Input 输入框" lead="单行文本录入控件，用于表单字段、搜索框、内联编辑等场景。" actions={actions} />
       </section>
 
       <section id="input-overview" className={docsSpacing.sectionStack}>
@@ -8308,7 +8377,7 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
     <div className={docsSpacing.pageStack}>
       <section id="select" className="flex flex-col gap-2">
-        <PageLead crumb="Components / Select" title="Select 选择器" lead="从一组互斥选项中选择一个值，用于表单字段、筛选条件等场景。" actions={actions} />
+        <PageLead crumb={lang === "en" ? "Components / Select" : "组件 / 选择器"} title="Select 选择器" lead="从一组互斥选项中选择一个值，用于表单字段、筛选条件等场景。" actions={actions} />
       </section>
 
       <section id="select-overview" className={docsSpacing.sectionStack}>
@@ -8542,7 +8611,7 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
   return (
     <div className={docsSpacing.pageStack}>
       <section id="checkbox" className="flex flex-col gap-2">
-        <PageLead crumb="Components / Checkbox" title="Checkbox 复选框" lead="表达单个布尔选项的勾选，常用于条款确认、设置项、列表批量选择。" actions={actions} />
+        <PageLead crumb={lang === "en" ? "Components / Checkbox" : "组件 / 复选框"} title="Checkbox 复选框" lead="表达单个布尔选项的勾选，常用于条款确认、设置项、列表批量选择。" actions={actions} />
       </section>
 
       <section id="checkbox-overview" className={docsSpacing.sectionStack}>
@@ -8718,6 +8787,105 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 }
 
+function RadioGroupPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
+  const [value, setValue] = useState("crm");
+  const radioGroupImportCode = `import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"\nimport { Label } from "@/components/ui/label"`;
+  const radioGroupUsageCode = `<RadioGroup value={value} onValueChange={setValue}>\n  <div className="flex items-center gap-2">\n    <RadioGroupItem id="crm" value="crm" />\n    <Label htmlFor="crm">CRM</Label>\n  </div>\n  <div className="flex items-center gap-2">\n    <RadioGroupItem id="bi" value="bi" />\n    <Label htmlFor="bi">BI</Label>\n  </div>\n</RadioGroup>`;
+
+  return (
+    <div className={docsSpacing.pageStack}>
+      <section id="radio-group" className="flex flex-col gap-2">
+        <PageLead crumb={lang === "en" ? "Components / Radio Group" : "组件 / 单选组"} title="RadioGroup 单选组" lead="表达一组选项中只能选择一个，适用于表单单选、设置项和表格单选列。" actions={actions} />
+      </section>
+
+      <section id="radio-group-overview" className={docsSpacing.sectionStack}>
+        <SectionLead title="组件总览" description="RadioGroup 负责互斥选择状态，RadioGroupItem 负责单个选项的交互和选中态。" />
+        <Card>
+          <CardContent className="p-5">
+            <RadioGroup value={value} onValueChange={setValue}>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem id="radio-crm" value="crm" />
+                <Label htmlFor="radio-crm">CRM</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem id="radio-bi" value="bi" />
+                <Label htmlFor="radio-bi">BI</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem id="radio-disabled" value="disabled" disabled />
+                <Label htmlFor="radio-disabled" className="text-muted-foreground">不可选择</Label>
+              </div>
+            </RadioGroup>
+          </CardContent>
+        </Card>
+      </section>
+
+      <section id="radio-group-usage" className={docsSpacing.sectionStack}>
+        <SectionLead title="使用方式" description="把 import 和完整组装写法复制到业务页面里使用。" />
+        <DocSurfaceCard>
+          <CardContent className="grid gap-4 p-5">
+            <CopyCodeBlock code={radioGroupImportCode} label="Import" lang={lang} />
+            <CopyCodeBlock code={radioGroupUsageCode} label="调用" lang={lang} />
+          </CardContent>
+        </DocSurfaceCard>
+      </section>
+
+      <section id="radio-group-props" className={docsSpacing.sectionStack}>
+        <SectionLead title="API 属性" />
+        <DocSurfaceTableCard>
+          <Table className="min-w-[640px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">属性</TableHead>
+                <TableHead>类型</TableHead>
+                <TableHead>默认值</TableHead>
+                <TableHead className="pr-4">描述</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {radioGroupPropRows.map((row) =>
+              <TableRow key={row.prop}>
+                  <TableCell className="pl-4 font-medium">{row.prop}</TableCell>
+                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.type}</code></TableCell>
+                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.defaultValue}</code></TableCell>
+                  <TableCell className="pr-4 text-muted-foreground">{row.desc}</TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </DocSurfaceTableCard>
+      </section>
+
+      <section id="radio-group-semantic-dom" className={docsSpacing.sectionStack}>
+        <SectionLead title="语义 DOM" description="RadioGroup 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。" />
+        <DocSurfaceTableCard>
+          <Table className="min-w-[560px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">部位</TableHead>
+                <TableHead className="pr-4">说明</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {radioGroupSemanticDomRows.map((row) =>
+              <TableRow key={row.part}>
+                  <TableCell className="pl-4 font-medium"><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.part}</code></TableCell>
+                  <TableCell className="pr-4 text-muted-foreground">{row.desc}</TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </DocSurfaceTableCard>
+      </section>
+
+      <section id="radio-group-do-dont" className={docsSpacing.sectionStack}>
+        <SectionLead title="正误示例" description="单选控件必须使用组件能力，不在业务处手写原生 radio 外观。" />
+        <DocDoDont rows={radioGroupDoDontRows} />
+      </section>
+    </div>);
+
+}
+
 function SwitchPreview({ id }: {id: string;}) {
   const [enabled, setEnabled] = useState(false);
 
@@ -8763,7 +8931,7 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
     <div className={docsSpacing.pageStack}>
       <section id="switch" className="flex flex-col gap-2">
-        <PageLead crumb="Components / Switch" title="Switch 开关" lead="表达立即生效的二元设置项，切换后无需额外提交，常用于偏好设置、功能开关。" actions={actions} />
+        <PageLead crumb={lang === "en" ? "Components / Switch" : "组件 / 开关"} title="Switch 开关" lead="表达立即生效的二元设置项，切换后无需额外提交，常用于偏好设置、功能开关。" actions={actions} />
       </section>
 
       <section id="switch-overview" className={docsSpacing.sectionStack}>
@@ -8963,7 +9131,7 @@ function TextareaPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
   return (
     <div className={docsSpacing.pageStack}>
       <section id="textarea" className="flex flex-col gap-2">
-        <PageLead crumb="Components / Textarea" title="Textarea 多行输入" lead="录入较长文本，如备注、描述、反馈内容，高度随内容自适应。" actions={actions} />
+        <PageLead crumb={lang === "en" ? "Components / Textarea" : "组件 / 多行输入"} title="Textarea 多行输入" lead="录入较长文本，如备注、描述、反馈内容，高度随内容自适应。" actions={actions} />
       </section>
 
       <section id="textarea-overview" className={docsSpacing.sectionStack}>
@@ -9275,7 +9443,7 @@ function TopBarPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
     <StandardDocPage
       slug="top-bar"
-      title="TopBar 顶栏"
+      title="顶栏"
       lead="全局应用顶栏：品牌、应用切换、全局搜索、工具图标与头像，48px 白底两端对齐。"
       overview={<TopBarPreview />}
       scenarioExamples={topBarScenarioExamples}
@@ -9302,71 +9470,32 @@ function IconAction({ icon, label, tone = "default" }: {icon: React.ReactNode;la
 
 }
 
-// 基础表格演示数据（对齐公司 Figma：链接首列 / 头像负责人 / 部门，最常见形态）
-const tableBasicRows = [
-{ id: 1, name: "三门峡嘉浩咨询有限公司", owner: "孙婉茹", avatar: "/avatars/01.jpg", dept: "销售部" },
-{ id: 2, name: "郑州泰达科技有限公司", owner: "李明", avatar: "/avatars/02.jpg", dept: "技术部" },
-{ id: 3, name: "洛阳翔宇贸易有限公司", owner: "王芳", avatar: "/avatars/03.jpg", dept: "采购部" }];
+function TablePreviewWithPagination({
+  children,
+  page = 1,
+  total = tableBizRows.length,
+  pageSize = TABLE_PAGE_SIZE,
+  onPageChange
+}: {
+  children: React.ReactNode
+  page?: number
+  total?: number
+  pageSize?: number
+  onPageChange?: (page: number) => void
+}) {
+  const showPagination = total > 0;
 
-function TableBasicDemo() {
   return (
-    <div className="overflow-x-auto rounded-xl bg-card ring-1 ring-border-subtle">
-      <Table>
-        <TableHeader>
-          <TableRow className="hover:bg-transparent">
-            <TableHead>客户名称</TableHead>
-            <TableHead>负责人</TableHead>
-            <TableHead>负责人部门</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {tableBasicRows.map((row) =>
-          <TableRow key={row.id}>
-              <TableCell><a href="#table" className="text-link hover:text-link-hover active:text-link-active hover:underline">{row.name}</a></TableCell>
-              <TableCell>
-                <span className="inline-flex items-center gap-1.5">
-                  <Avatar className="size-5"><AvatarImage src={row.avatar} alt={row.owner} /><AvatarFallback colorful>{avatarInitials(row.owner)}</AvatarFallback></Avatar>
-                  {row.owner}
-                </span>
-              </TableCell>
-              <TableCell>{row.dept}</TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+    <div className="overflow-hidden">
+      <div className="overflow-x-auto">
+        {children}
+      </div>
+      {showPagination ? (
+        <div className="border-t border-border-subtle">
+          <Pagination page={page} total={total} pageSize={pageSize} showTotal={false} onPageChange={onPageChange} className="px-2 py-3" />
+        </div>
+      ) : null}
     </div>);
-
-}
-
-// 行高密度表（紧凑/舒适/宽松三档，表头固定 32px）
-function TableDensityDemo({ density }: {density: "compact" | "default" | "comfortable";}) {
-  return (
-    <div className="overflow-x-auto rounded-xl bg-card ring-1 ring-border-subtle">
-      <Table density={density}>
-        <TableHeader>
-          <TableRow className="hover:bg-transparent">
-            <TableHead>客户名称</TableHead>
-            <TableHead>负责人</TableHead>
-            <TableHead>负责人部门</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {tableBasicRows.map((row) =>
-          <TableRow key={row.id}>
-              <TableCell><a href="#table" className="text-link hover:text-link-hover active:text-link-active hover:underline">{row.name}</a></TableCell>
-              <TableCell>
-                <span className="inline-flex items-center gap-1.5">
-                  <Avatar className="size-5"><AvatarImage src={row.avatar} alt={row.owner} /><AvatarFallback colorful>{avatarInitials(row.owner)}</AvatarFallback></Avatar>
-                  {row.owner}
-                </span>
-              </TableCell>
-              <TableCell>{row.dept}</TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>);
-
 }
 
 // 客户级别 Tag：有色级别用 color 软色描边，一般客户(none)用中性 secondary（对齐公司 Figma）
@@ -9387,19 +9516,157 @@ const tableBizRows = [
 
 const TABLE_PAGE_SIZE = 5;
 
+function TableSelectionHeader({
+  checked,
+  indeterminate,
+  selectedIds,
+  pageIds,
+  allIds,
+  onCheckedChange,
+  onSelectionChange,
+}: {
+  checked: boolean;
+  indeterminate: boolean;
+  selectedIds: Set<number>;
+  pageIds: number[];
+  allIds: number[];
+  onCheckedChange: () => void;
+  onSelectionChange: React.Dispatch<React.SetStateAction<Set<number>>>;
+}) {
+  const hasSelected = selectedIds.size > 0;
+  const hasPageRows = pageIds.length > 0;
 
-function TableBusinessDemo() {
+  const selectPage = () =>
+  onSelectionChange((s) => {
+    const next = new Set(s);
+    pageIds.forEach((id) => next.add(id));
+    return next;
+  });
+
+  const invertPage = () =>
+  onSelectionChange((s) => {
+    const next = new Set(s);
+    pageIds.forEach((id) => next.has(id) ? next.delete(id) : next.add(id));
+    return next;
+  });
+
+  return (
+    <div className="-mx-2 flex h-full w-8 items-center justify-center">
+      <Checkbox checked={checked} indeterminate={indeterminate} onCheckedChange={onCheckedChange} aria-label="全选" />
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          aria-label="批量选择菜单"
+          className="relative z-10 inline-flex size-3.5 shrink-0 items-center justify-center rounded text-muted-foreground outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:bg-muted focus-visible:text-foreground data-popup-open:bg-muted data-popup-open:text-foreground [&_svg]:size-3"
+        >
+          <ChevronDownIcon />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start">
+          <DropdownMenuItem disabled={!hasPageRows} onClick={selectPage}>选择当前页</DropdownMenuItem>
+          <DropdownMenuItem disabled={allIds.length === 0} onClick={() => onSelectionChange(new Set(allIds))}>选择全部数据</DropdownMenuItem>
+          <DropdownMenuItem disabled={!hasPageRows} onClick={invertPage}>反选当前页</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem disabled={!hasSelected} onClick={() => onSelectionChange(new Set())}>清空选择</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>);
+}
+
+
+function TableBusinessDemo({
+  density,
+  selection,
+  filter,
+  fixed,
+}: {
+  density: "compact" | "default" | "comfortable";
+  selection: "off" | "multiple" | "multiple-menu" | "single";
+  filter: "off" | "on";
+  fixed: "off" | "on";
+}) {
   const [selected, setSelected] = useState<Set<number>>(new Set());
-  const [sort, setSort] = useState<"asc" | "desc" | false>(false);
+  const [selectedOne, setSelectedOne] = useState<number | null>(null);
+  const [sort, setSort] = useState<{key: "amount" | "date";dir: "asc" | "desc";} | null>(null);
   const [page, setPage] = useState(1);
+  const [levelFilter, setLevelFilter] = useState<string[]>([]);
+  const [draftLevelFilter, setDraftLevelFilter] = useState<string[]>([]);
+  const [levelFilterQuery, setLevelFilterQuery] = useState("");
 
-  const sorted = sort ?
-  [...tableBizRows].sort((a, b) => sort === "asc" ? a.amount - b.amount : b.amount - a.amount) :
-  tableBizRows;
+  const filterEnabled = filter === "on";
+  const fixedEnabled = fixed === "on";
+  const sortedFor = (key: "amount" | "date") => sort?.key === key ? sort.dir : false;
+  const toggleSort = (key: "amount" | "date") =>
+  setSort((s) => s?.key !== key ? { key, dir: "asc" } : s.dir === "asc" ? { key, dir: "desc" } : null);
+
+  const levelFilterGroups = [
+  { label: "重点客户", options: ["VIP客户", "重要客户"] },
+  { label: "普通客户", options: ["一般客户"] }];
+  const levelFilterOptions = levelFilterGroups.flatMap((g) => g.options);
+  const visibleLevelFilterGroups = levelFilterGroups.
+  map((group) => ({ ...group, options: group.options.filter((option) => option.includes(levelFilterQuery.trim())) })).
+  filter((group) => group.options.length > 0);
+  const allDraftLevelsChecked = levelFilterOptions.every((option) => draftLevelFilter.includes(option));
+  const someDraftLevelsChecked = levelFilterOptions.some((option) => draftLevelFilter.includes(option));
+  const toggleDraftLevel = (level: string) =>
+  setDraftLevelFilter((current) => current.includes(level) ? current.filter((item) => item !== level) : [...current, level]);
+  const levelFilterPanel = (
+    <div className="flex flex-col">
+      <div className="border-b border-border-subtle p-2">
+        <div className="relative">
+          <SearchIcon className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+          <Input value={levelFilterQuery} onChange={(event) => setLevelFilterQuery(event.currentTarget.value)} placeholder="在筛选项中搜索" className="h-(--fx-control-sm-height) rounded-md pl-7" />
+        </div>
+      </div>
+      <div className="max-h-60 overflow-y-auto p-2">
+        <label className="flex h-8 items-center gap-2 rounded px-1.5 text-base hover:bg-muted">
+          <Checkbox checked={allDraftLevelsChecked} indeterminate={!allDraftLevelsChecked && someDraftLevelsChecked} onCheckedChange={() => setDraftLevelFilter(allDraftLevelsChecked ? [] : levelFilterOptions)} aria-label="全选客户级别" />
+          <span>全选</span>
+        </label>
+        {visibleLevelFilterGroups.map((group) =>
+        <div key={group.label} className="mt-1">
+            <div className="flex h-8 items-center gap-2 px-1.5 text-base font-medium">
+              <ChevronDownIcon className="size-3.5 text-muted-foreground" />
+              <span>{group.label}</span>
+            </div>
+            <div className="ml-7">
+              {group.options.map((option) =>
+            <label key={option} className="flex h-8 items-center gap-2 rounded px-1.5 text-base hover:bg-muted">
+                  <Checkbox checked={draftLevelFilter.includes(option)} onCheckedChange={() => toggleDraftLevel(option)} aria-label={`筛选 ${option}`} />
+                  <span>{option}</span>
+                </label>
+            )}
+            </div>
+          </div>
+        )}
+        {visibleLevelFilterGroups.length === 0 ? <div className="px-1.5 py-6 text-center text-base text-muted-foreground">无匹配筛选项</div> : null}
+      </div>
+      <div className="flex items-center justify-between border-t border-border-subtle p-2">
+        <Button variant="plain" disabled={draftLevelFilter.length === 0 && levelFilter.length === 0} onClick={() => {
+          setDraftLevelFilter([]);
+          setLevelFilter([]);
+        }}>重置</Button>
+        <Button size="sm" onClick={() => {
+          setLevelFilter(draftLevelFilter);
+          setPage(1);
+        }}>确定</Button>
+      </div>
+    </div>);
+
+  let sorted = filterEnabled && levelFilter.length > 0 ? tableBizRows.filter((r) => levelFilter.includes(r.level)) : [...tableBizRows];
+  if (sort) {
+    sorted = [...sorted].sort((a, b) => {
+      const v = sort.key === "amount" ? a.amount - b.amount : a.date.localeCompare(b.date);
+      return sort.dir === "asc" ? v : -v;
+    });
+  }
   const pageRows = sorted.slice((page - 1) * TABLE_PAGE_SIZE, page * TABLE_PAGE_SIZE);
   const pageIds = pageRows.map((r) => r.id);
+  const allIds = sorted.map((r) => r.id);
   const allChecked = pageIds.every((id) => selected.has(id));
   const someChecked = pageIds.some((id) => selected.has(id));
+  const frozenLeftOf = (i: number) => fixedEnabled && i < 2 ? FROZEN_W.slice(0, i).reduce((a, b) => a + b, 0) : undefined;
+  const freezeMenu = (i: number) => [
+  { label: `冻结到第 ${i + 1} 列`, icon: <LockIcon /> },
+  { label: "取消冻结" }];
 
   const toggleAll = () =>
   setSelected((s) => {
@@ -9414,136 +9681,75 @@ function TableBusinessDemo() {
     next.has(id) ? next.delete(id) : next.add(id);
     return next;
   });
+  const isMultipleSelection = selection === "multiple" || selection === "multiple-menu";
+  const showSelection = isMultipleSelection || selection === "single";
+  const frozenStyle = (width: number) => fixedEnabled ? { width, minWidth: width, maxWidth: width } : undefined;
+  const actionStyle = fixedEnabled ? { width: 128, minWidth: 128, maxWidth: 128 } : undefined;
 
   return (
-    <div className="overflow-x-auto rounded-xl bg-card ring-1 ring-border-subtle">
-      {selected.size > 0 &&
+    <div className="overflow-hidden">
+      {isMultipleSelection && selected.size > 0 &&
       <div className="flex items-center gap-3 border-b border-border-subtle bg-muted px-3 py-2 text-base">
           <span className="text-muted-foreground">已选 <span className="font-medium text-foreground">{selected.size}</span> 项</span>
           <Button size="sm" variant="outline">批量导出</Button>
           <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())}>取消选择</Button>
         </div>
       }
-      <Table>
-        <TableHeader>
-          <TableRow className="hover:bg-transparent">
-            <TableHead className="w-10 pl-3">
-              <Checkbox checked={allChecked} indeterminate={!allChecked && someChecked} onCheckedChange={toggleAll} aria-label="全选" />
-            </TableHead>
-            <TableHead>客户名称</TableHead>
-            <TableHead>负责人</TableHead>
-            <TableHead>客户级别</TableHead>
-            <TableHead>标签</TableHead>
-            <TableHead>负责人部门</TableHead>
-            <TableHead>产品名称</TableHead>
-            <TableHead align="right" sortable sorted={sort} onSort={() => setSort(sort === "desc" ? "asc" : sort === "asc" ? false : "desc")}>金额(元)</TableHead>
-            <TableHead>最后修改时间</TableHead>
-            <TableHead align="right" className="pr-3">操作</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {pageRows.map((row) =>
-          <TableRow key={row.id} data-state={selected.has(row.id) ? "selected" : undefined}>
-              <TableCell className="pl-3"><Checkbox checked={selected.has(row.id)} onCheckedChange={() => toggleOne(row.id)} aria-label={`选择 ${row.name}`} /></TableCell>
-              <TableCell><a href="#table" className="text-link hover:text-link-hover active:text-link-active hover:underline">{row.name}</a></TableCell>
-              <TableCell>
-                <span className="inline-flex items-center gap-1.5">
-                  <Avatar className="size-5"><AvatarImage src={row.avatar} alt={row.owner} /><AvatarFallback colorful>{avatarInitials(row.owner)}</AvatarFallback></Avatar>
-                  {row.owner}
-                </span>
-              </TableCell>
-              <TableCell><LevelTag level={row.level} color={row.levelColor} /></TableCell>
-              <TableCell>
-                <span className="inline-flex gap-1">
-                  {row.tags.map((t) => <Tag key={t.label} color={t.color}>{t.label}</Tag>)}
-                </span>
-              </TableCell>
-              <TableCell>{row.dept}</TableCell>
-              <TableCell className="max-w-[200px] truncate">{row.product}</TableCell>
-              <TableCell align="right" className="tabular-nums">{row.amount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}</TableCell>
-              <TableCell>{row.date}</TableCell>
-              <TableCell align="right" className="pr-3">
-                <TooltipProvider delay={100}>
-                  <span className="inline-flex items-center gap-1">
-                    <IconAction icon={<EyeIcon />} label="查看" />
-                    <IconAction icon={<PencilIcon />} label="编辑" />
-                    <IconAction icon={<Trash2Icon />} label="删除" tone="danger" />
-                  </span>
-                </TooltipProvider>
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-      <div className="border-t border-border-subtle">
-        <Pagination page={page} total={tableBizRows.length} pageSize={TABLE_PAGE_SIZE} onPageChange={setPage} className="px-2 py-3" />
-      </div>
-    </div>);
-
-}
-
-// 冻结到此列（Excel 模型）：前两列定宽，便于算累加 left 偏移
-const FROZEN_W = [240, 140]; // 客户名称 / 负责人 列宽
-function TableAdvancedDemo() {
-  const [sort, setSort] = useState<{key: "amount" | "date";dir: "asc" | "desc";} | null>(null);
-  const [frozenUpTo, setFrozenUpTo] = useState<number>(-1); // 冻结到第几列（含）：-1 无，0 客户名称，1 负责人
-  const [levelFilter, setLevelFilter] = useState<string | null>(null);
-
-  const sortedFor = (key: "amount" | "date") => sort?.key === key ? sort.dir : false;
-  const toggleSort = (key: "amount" | "date") =>
-  setSort((s) => s?.key !== key ? { key, dir: "asc" } : s.dir === "asc" ? { key, dir: "desc" } : null);
-
-  let rows = levelFilter ? tableBizRows.filter((r) => r.level === levelFilter) : [...tableBizRows];
-  if (sort) {
-    rows.sort((a, b) => {
-      const v = sort.key === "amount" ? a.amount - b.amount : a.date.localeCompare(b.date);
-      return sort.dir === "asc" ? v : -v;
-    });
-  }
-
-  // 第 i 列（0/1）若在冻结范围内，返回它的累加 left 偏移；否则 undefined
-  const frozenLeftOf = (i: number) => i <= frozenUpTo ? FROZEN_W.slice(0, i).reduce((a, b) => a + b, 0) : undefined;
-  const freezeMenu = (i: number) => [
-  { label: `冻结到此列`, icon: <LockIcon />, onClick: () => setFrozenUpTo(i) },
-  ...(frozenUpTo >= 0 ? [{ label: "取消冻结", onClick: () => setFrozenUpTo(-1) }] : [])];
-
-  const levelMenu = [
-  { label: "只看 VIP客户", icon: <FilterIcon />, onClick: () => setLevelFilter("VIP客户") },
-  { label: "只看 重要客户", icon: <FilterIcon />, onClick: () => setLevelFilter("重要客户") },
-  { label: "显示全部", onClick: () => setLevelFilter(null) }];
-
-
-  return (
-    <div className="overflow-hidden rounded-xl bg-card ring-1 ring-border-subtle">
-      <Table className="min-w-[920px]" maxHeight={288}>
-        <TableHeader sticky>
-            <TableRow className="hover:bg-transparent">
-              <TableHead style={{ width: FROZEN_W[0] }} frozenLeft={frozenLeftOf(0)} frozenEdge={frozenUpTo === 0} menuActions={freezeMenu(0)}>客户名称</TableHead>
-              <TableHead style={{ width: FROZEN_W[1] }} frozenLeft={frozenLeftOf(1)} frozenEdge={frozenUpTo === 1} menuActions={freezeMenu(1)}>负责人</TableHead>
-              <TableHead menuActions={levelMenu}>客户级别{levelFilter ? `（${levelFilter}）` : ""}</TableHead>
-              <TableHead>负责人部门</TableHead>
-              <TableHead>产品名称</TableHead>
-              <TableHead align="right" sortable sorted={sortedFor("amount")} onSort={() => toggleSort("amount")}>金额(元)</TableHead>
-              <TableHead sortable sorted={sortedFor("date")} onSort={() => toggleSort("date")}>最后修改时间</TableHead>
-              <TableHead align="right" pinned="right" className="pr-3">操作</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {rows.map((row) =>
-          <TableRow key={row.id}>
-                <TableCell frozenLeft={frozenLeftOf(0)} frozenEdge={frozenUpTo === 0}><a href="#table" className="text-link hover:text-link-hover active:text-link-active hover:underline">{row.name}</a></TableCell>
-                <TableCell frozenLeft={frozenLeftOf(1)} frozenEdge={frozenUpTo === 1}>
+      <div className="overflow-x-auto">
+        <RadioGroup value={selectedOne == null ? "" : String(selectedOne)} onValueChange={(value) => setSelectedOne(Number(value))} className="block">
+          <Table density={density} className="min-w-[920px]" maxHeight={fixedEnabled ? 288 : undefined}>
+            <TableHeader sticky={fixedEnabled}>
+              <TableRow className="hover:bg-transparent">
+                {showSelection ? (
+                  <TableHead data-selection-cell>
+                    {selection === "multiple-menu" ? (
+                      <TableSelectionHeader checked={allChecked} indeterminate={!allChecked && someChecked} selectedIds={selected} pageIds={pageIds} allIds={allIds} onCheckedChange={toggleAll} onSelectionChange={setSelected} />
+                    ) : isMultipleSelection ? (
+                      <Checkbox checked={allChecked} indeterminate={!allChecked && someChecked} onCheckedChange={toggleAll} aria-label="全选" />
+                    ) : null}
+                  </TableHead>
+                ) : null}
+                <TableHead style={frozenStyle(FROZEN_W[0])} frozenLeft={frozenLeftOf(0)} menuActions={fixedEnabled ? freezeMenu(0) : undefined}>客户名称</TableHead>
+                <TableHead style={frozenStyle(FROZEN_W[1])} frozenLeft={frozenLeftOf(1)} frozenEdge={fixedEnabled} menuActions={fixedEnabled ? freezeMenu(1) : undefined}>负责人</TableHead>
+                <TableHead filterContent={filterEnabled ? levelFilterPanel : undefined} filtered={filterEnabled && levelFilter.length > 0}>客户级别{filterEnabled && levelFilter.length > 0 ? `（${levelFilter.length}）` : ""}</TableHead>
+                <TableHead>标签</TableHead>
+                <TableHead>负责人部门</TableHead>
+                <TableHead>产品名称</TableHead>
+                <TableHead align="right" sortable sorted={sortedFor("amount")} onSort={() => toggleSort("amount")}>金额(元)</TableHead>
+                <TableHead sortable sorted={sortedFor("date")} onSort={() => toggleSort("date")}>最后修改时间</TableHead>
+                <TableHead pinned={fixedEnabled ? "right" : undefined} style={actionStyle}>操作</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {pageRows.map((row) =>
+              <TableRow key={row.id} data-state={(isMultipleSelection && selected.has(row.id)) || (selection === "single" && selectedOne === row.id) ? "selected" : undefined}>
+                  {showSelection ? (
+                    <TableCell data-selection-cell>
+                      {isMultipleSelection ? (
+                        <Checkbox checked={selected.has(row.id)} onCheckedChange={() => toggleOne(row.id)} aria-label={`选择 ${row.name}`} />
+                      ) : (
+                        <RadioGroupItem value={String(row.id)} aria-label={`选择 ${row.name}`} />
+                      )}
+                    </TableCell>
+                  ) : null}
+                <TableCell frozenLeft={frozenLeftOf(0)} frozenEdge={fixedEnabled}><a href="#table" className="text-link hover:text-link-hover active:text-link-active hover:underline">{row.name}</a></TableCell>
+                <TableCell frozenLeft={frozenLeftOf(1)} frozenEdge={fixedEnabled}>
                   <span className="inline-flex items-center gap-1.5">
                     <Avatar className="size-5"><AvatarImage src={row.avatar} alt={row.owner} /><AvatarFallback colorful>{avatarInitials(row.owner)}</AvatarFallback></Avatar>
                     {row.owner}
                   </span>
                 </TableCell>
                 <TableCell><LevelTag level={row.level} color={row.levelColor} /></TableCell>
+                <TableCell>
+                  <span className="inline-flex gap-1">
+                    {row.tags.map((t) => <Tag key={t.label} color={t.color}>{t.label}</Tag>)}
+                  </span>
+                </TableCell>
                 <TableCell>{row.dept}</TableCell>
                 <TableCell className="max-w-[200px] truncate">{row.product}</TableCell>
                 <TableCell align="right" className="tabular-nums">{row.amount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}</TableCell>
                 <TableCell>{row.date}</TableCell>
-                <TableCell align="right" pinned="right" className="pr-3">
+                <TableCell pinned={fixedEnabled ? "right" : undefined} style={actionStyle}>
                   <TooltipProvider delay={100}>
                     <span className="inline-flex items-center gap-1">
                       <IconAction icon={<EyeIcon />} label="查看" />
@@ -9553,16 +9759,24 @@ function TableAdvancedDemo() {
                   </TooltipProvider>
                 </TableCell>
               </TableRow>
-          )}
-          </TableBody>
-        </Table>
+              )}
+            </TableBody>
+          </Table>
+        </RadioGroup>
+      </div>
+      <div className="border-t border-border-subtle">
+        <Pagination page={page} total={sorted.length} pageSize={TABLE_PAGE_SIZE} showTotal={false} onPageChange={setPage} className="px-2 py-3" />
+      </div>
     </div>);
 
 }
 
+// 冻结到此列（Excel 模型）：前两列定宽，便于算累加 left 偏移
+const FROZEN_W = [240, 140]; // 客户名称 / 负责人 列宽
+
 function TableLoadingDemo() {
   return (
-    <div className="overflow-x-auto rounded-xl bg-card ring-1 ring-border-subtle">
+    <TablePreviewWithPagination pageSize={5}>
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
@@ -9583,13 +9797,13 @@ function TableLoadingDemo() {
           )}
         </TableBody>
       </Table>
-    </div>);
+    </TablePreviewWithPagination>);
 
 }
 
 function TableEmptyDemo() {
   return (
-    <div className="overflow-x-auto rounded-xl bg-card ring-1 ring-border-subtle">
+    <TablePreviewWithPagination total={0} pageSize={5}>
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
@@ -9610,159 +9824,413 @@ function TableEmptyDemo() {
           </TableRow>
         </TableBody>
       </Table>
-    </div>);
+    </TablePreviewWithPagination>);
 
 }
 
+function TableBasicDemo({
+  density,
+  summary,
+  selection,
+}: {
+  density: "compact" | "default" | "comfortable";
+  summary: "off" | "on";
+  selection: "off" | "multiple" | "multiple-menu" | "single";
+}) {
+  const rows = tableBizRows.slice(0, 3);
+  const total = rows.reduce((sum, row) => sum + row.amount, 0);
+  const [selected, setSelected] = useState<Set<number>>(new Set());
+  const [selectedOne, setSelectedOne] = useState<number | null>(null);
+  const isMultipleSelection = selection === "multiple" || selection === "multiple-menu";
+  const showSelection = isMultipleSelection || selection === "single";
+  const pageIds = rows.map((row) => row.id);
+  const allIds = rows.map((row) => row.id);
+  const allChecked = pageIds.every((id) => selected.has(id));
+  const someChecked = pageIds.some((id) => selected.has(id));
+
+  const toggleAll = () =>
+  setSelected((s) => {
+    const next = new Set(s);
+    if (allChecked) pageIds.forEach((id) => next.delete(id));else
+    pageIds.forEach((id) => next.add(id));
+    return next;
+  });
+  const toggleOne = (id: number) =>
+  setSelected((s) => {
+    const next = new Set(s);
+    next.has(id) ? next.delete(id) : next.add(id);
+    return next;
+  });
+
+  return (
+    <TablePreviewWithPagination pageSize={3}>
+      <RadioGroup value={selectedOne == null ? "" : String(selectedOne)} onValueChange={(value) => setSelectedOne(Number(value))} className="block">
+        <Table density={density}>
+          <TableHeader>
+            <TableRow className="hover:bg-transparent">
+              {showSelection ? (
+                <TableHead data-selection-cell>
+                  {selection === "multiple-menu" ? (
+                    <TableSelectionHeader checked={allChecked} indeterminate={!allChecked && someChecked} selectedIds={selected} pageIds={pageIds} allIds={allIds} onCheckedChange={toggleAll} onSelectionChange={setSelected} />
+                  ) : isMultipleSelection ? (
+                    <Checkbox checked={allChecked} indeterminate={!allChecked && someChecked} onCheckedChange={toggleAll} aria-label="全选" />
+                  ) : null}
+                </TableHead>
+              ) : null}
+              <TableHead>客户名称</TableHead>
+              <TableHead>负责人</TableHead>
+              <TableHead>客户级别</TableHead>
+              <TableHead align="right">金额(元)</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {rows.map((row) => (
+              <TableRow key={row.id} data-state={(isMultipleSelection && selected.has(row.id)) || (selection === "single" && selectedOne === row.id) ? "selected" : undefined}>
+                {showSelection ? (
+                  <TableCell data-selection-cell>
+                    {isMultipleSelection ? (
+                      <Checkbox checked={selected.has(row.id)} onCheckedChange={() => toggleOne(row.id)} aria-label={`选择 ${row.name}`} />
+                    ) : (
+                      <RadioGroupItem value={String(row.id)} aria-label={`选择 ${row.name}`} />
+                    )}
+                  </TableCell>
+                ) : null}
+                <TableCell><a href="#table" className="text-link hover:text-link-hover active:text-link-active hover:underline">{row.name}</a></TableCell>
+                <TableCell>{row.owner}</TableCell>
+                <TableCell><LevelTag level={row.level} color={row.levelColor} /></TableCell>
+                <TableCell align="right" className="tabular-nums">{row.amount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          {summary === "on" ? (
+            <TableFooter>
+            <TableRow>
+              {showSelection ? <TableCell data-selection-cell /> : null}
+              <TableCell colSpan={3}>合计</TableCell>
+              <TableCell align="right">{total.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}</TableCell>
+            </TableRow>
+          </TableFooter>
+          ) : null}
+        </Table>
+      </RadioGroup>
+    </TablePreviewWithPagination>);
+}
+
+type TableVariant = "basic" | "business";
+type TableDensity = "compact" | "default" | "comfortable";
+type TableSummary = "off" | "on";
+type TableStatus = "default" | "loading" | "empty";
+type TableSelection = "off" | "multiple" | "multiple-menu" | "single";
+type TableFilter = "off" | "on";
+type TableFixed = "off" | "on";
+function genTableCode(variant: TableVariant, density: TableDensity, summary: TableSummary, status: TableStatus, selection: TableSelection, filter: TableFilter, fixed: TableFixed): string {
+  if (status === "loading") {
+    return `<Table density="${density}">\n  <TableHeader>\n    <TableRow>\n      <TableHead>客户名称</TableHead>\n      <TableHead>负责人</TableHead>\n      <TableHead>客户级别</TableHead>\n      <TableHead align="right">金额(元)</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    {Array.from({ length: 5 }).map((_, i) => (\n      <TableRow key={i} className="hover:bg-transparent">\n        <TableCell><Skeleton className="h-4 w-44" /></TableCell>\n        <TableCell><Skeleton className="h-4 w-16" /></TableCell>\n        <TableCell><Skeleton className="h-5 w-14 rounded-full" /></TableCell>\n        <TableCell align="right"><Skeleton className="ml-auto h-4 w-16" /></TableCell>\n      </TableRow>\n    ))}\n  </TableBody>\n</Table>`;
+  }
+  if (status === "empty") {
+    return `<Table density="${density}">\n  <TableHeader>\n    <TableRow>\n      <TableHead>客户名称</TableHead>\n      <TableHead>负责人</TableHead>\n      <TableHead>客户级别</TableHead>\n      <TableHead align="right">金额(元)</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow className="hover:bg-transparent">\n      <TableCell colSpan={4}>\n        <EmptyState title="暂无数据" />\n      </TableCell>\n    </TableRow>\n  </TableBody>\n</Table>`;
+  }
+  if (variant === "business") {
+    const multipleSelectionHead = selection === "multiple-menu" ? "<TableHead><TableSelectionHeader /></TableHead>\\n      " : "<TableHead><Checkbox aria-label=\"全选\" /></TableHead>\\n      ";
+    const isMultipleSelection = selection === "multiple" || selection === "multiple-menu";
+    const selectionHead = isMultipleSelection ? multipleSelectionHead : selection === "single" ? "<TableHead />\\n      " : "";
+    const rowState = isMultipleSelection ? " data-state={selected.has(customer.id) ? \"selected\" : undefined}" : selection === "single" ? " data-state={selectedId === customer.id ? \"selected\" : undefined}" : "";
+    const selectionCell = isMultipleSelection ? "<TableCell><Checkbox disabled={customer.disabled} aria-label={`选择 ${customer.name}`} /></TableCell>\\n        " : selection === "single" ? "<TableCell><RadioGroupItem value={String(customer.id)} disabled={customer.disabled} aria-label={`选择 ${customer.name}`} /></TableCell>\\n        " : "";
+    const fixedTableAttrs = fixed === "on" ? ` maxHeight={288} className="min-w-[920px]"` : ` className="min-w-[920px]"`;
+    const stickyHeader = fixed === "on" ? " sticky" : "";
+    const customerHead = fixed === "on" ? `<TableHead frozenLeft={0} frozenEdge menuActions={freezeMenu(0)}>客户名称</TableHead>` : `<TableHead>客户名称</TableHead>`;
+    const ownerHead = fixed === "on" ? `<TableHead frozenLeft={240} frozenEdge menuActions={freezeMenu(1)}>负责人</TableHead>` : `<TableHead>负责人</TableHead>`;
+    const levelHead = filter === "on" ? `<TableHead filterContent={levelFilterPanel} filtered={levelFilter.length > 0}>客户级别</TableHead>` : `<TableHead>客户级别</TableHead>`;
+    return `<Table density="${density}"${fixedTableAttrs}>\n  <TableHeader${stickyHeader}>\n    <TableRow>\n      ${selectionHead}${customerHead}\n      ${ownerHead}\n      ${levelHead}\n      <TableHead align="right" sortable sorted={sortedFor("amount")} onSort={() => toggleSort("amount")}>金额(元)</TableHead>\n      <TableHead sortable sorted={sortedFor("date")} onSort={() => toggleSort("date")}>最后修改时间</TableHead>\n      <TableHead align="right"${fixed === "on" ? ` pinned="right"` : ""}>操作</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    {pageRows.map((customer) => (\n      <TableRow key={customer.id}${rowState}>\n        ${selectionCell}<TableCell><a href={customer.href}>{customer.name}</a></TableCell>\n        <TableCell>{customer.owner}</TableCell>\n        <TableCell>{customer.level}</TableCell>\n        <TableCell align="right">{customer.amount}</TableCell>\n        <TableCell>{customer.date}</TableCell>\n        <TableCell align="right">...</TableCell>\n      </TableRow>\n    ))}\n  </TableBody>\n</Table>\n<Pagination page={page} total={total} pageSize={pageSize} onPageChange={setPage} />`;
+  }
+  if (summary === "on") {
+    const multipleSelectionHead = selection === "multiple-menu" ? "<TableHead><TableSelectionHeader /></TableHead>\\n      " : "<TableHead><Checkbox aria-label=\"全选\" /></TableHead>\\n      ";
+    const isMultipleSelection = selection === "multiple" || selection === "multiple-menu";
+    const selectionHead = isMultipleSelection ? multipleSelectionHead : selection === "single" ? "<TableHead />\\n      " : "";
+    const rowState = isMultipleSelection ? " data-state={selected.has(customer.id) ? \"selected\" : undefined}" : selection === "single" ? " data-state={selectedId === customer.id ? \"selected\" : undefined}" : "";
+    const selectionCell = isMultipleSelection ? "<TableCell><Checkbox aria-label={`选择 ${customer.name}`} /></TableCell>\\n        " : selection === "single" ? "<TableCell><RadioGroupItem value={String(customer.id)} aria-label={`选择 ${customer.name}`} /></TableCell>\\n        " : "";
+    const footerSelectionCell = selection === "off" ? "" : "<TableCell />\\n      ";
+    return `<Table density="${density}">\n  <TableHeader>\n    <TableRow>\n      ${selectionHead}<TableHead>客户名称</TableHead>\n      <TableHead>负责人</TableHead>\n      <TableHead>客户级别</TableHead>\n      <TableHead align="right">金额(元)</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    {customers.map((customer) => (\n      <TableRow key={customer.id}${rowState}>\n        ${selectionCell}<TableCell><a href={customer.href}>{customer.name}</a></TableCell>\n        <TableCell>{customer.owner}</TableCell>\n        <TableCell>{customer.level}</TableCell>\n        <TableCell align="right">{customer.amount}</TableCell>\n      </TableRow>\n    ))}\n  </TableBody>\n  <TableFooter>\n    <TableRow>\n      ${footerSelectionCell}<TableCell colSpan={3}>合计</TableCell>\n      <TableCell align="right">{totalAmount}</TableCell>\n    </TableRow>\n  </TableFooter>\n</Table>`;
+  }
+  return `<Table density="${density}">\n  <TableHeader>\n    <TableRow>\n      <TableHead>客户名称</TableHead>\n      <TableHead>负责人</TableHead>\n      <TableHead>客户级别</TableHead>\n      <TableHead align="right">金额(元)</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    {customers.map((customer) => (\n      <TableRow key={customer.id}>\n        <TableCell><a href={customer.href}>{customer.name}</a></TableCell>\n        <TableCell>{customer.owner}</TableCell>\n        <TableCell>{customer.level}</TableCell>\n        <TableCell align="right">{customer.amount}</TableCell>\n      </TableRow>\n    ))}\n  </TableBody>\n</Table>`;
+}
+
+const tablePlaygroundConfig = {
+  previewItemsClassName: "w-full",
+  props: [
+    {
+      key: "variant",
+      zh: "变体",
+      en: "Variant",
+      propName: "variant",
+      type: "segment" as const,
+      options: [
+        {
+          value: "basic",
+          label: "基础",
+          labelEn: "Basic",
+          intent: "最常见的默认表格，用于稳定展示结构化数据。",
+          intentEn: "The default table form for stable, structured data display.",
+          constraint: "先用默认表格；只有出现真实业务需求时，再加分页、排序、冻结列等能力。",
+          constraintEn: "Start with the default table and only add paging, sorting, or frozen columns when the use case truly needs them.",
+        },
+        {
+          value: "business",
+          label: "业务列表",
+          labelEn: "Business list",
+          intent: "用于后台最常见的资源列表；排序、筛选、固定列、选择等能力可以叠加出现。",
+          intentEn: "Use for common resource lists. Sorting, filtering, frozen columns, and selection can be combined.",
+          constraint: "业务列表不是把交互切成多个变体；金额、日期等可比较列默认支持排序，分页默认跟随表格外层结构。",
+          constraintEn: "Business list does not split interactions into variants; comparable columns such as amount or date sort by default, and pagination belongs to the table shell.",
+        },
+      ],
+    },
+    {
+      key: "density",
+      zh: "行高",
+      en: "Row height",
+      propName: "density",
+      type: "segment" as const,
+      options: [
+        {
+          value: "compact",
+          label: "紧凑28",
+          labelEn: "Compact 28",
+          intent: "用于信息密度更高的列表，一屏能看到更多行。",
+          intentEn: "Use for dense lists where more rows should fit on one screen.",
+          constraint: "只用于可扫读的数据；如果单元格内容较长或有复杂控件，不要压到 28px。",
+          constraintEn: "Use only for scannable data; avoid 28px rows when cells contain long text or complex controls.",
+        },
+        {
+          value: "default",
+          label: "舒适36",
+          labelEn: "Default 36",
+          intent: "默认表格行高，兼顾信息密度和可读性。",
+          intentEn: "The default row height, balancing density and readability.",
+          constraint: "没有明确业务理由时保持默认 36px，避免每张表都重新定义节奏。",
+          constraintEn: "Keep 36px unless the use case clearly needs a denser or looser rhythm.",
+        },
+        {
+          value: "comfortable",
+          label: "宽松42",
+          labelEn: "Comfortable 42",
+          intent: "用于需要更强可读性、点击余量或内容更复杂的表格。",
+          intentEn: "Use for tables that need stronger readability, larger hit areas, or richer cell content.",
+          constraint: "宽松行高会降低一屏信息量，只在阅读优先或操作优先的表格里使用。",
+          constraintEn: "Comfortable rows reduce visible density, so reserve them for read-heavy or action-heavy tables.",
+        },
+      ],
+    },
+    {
+      key: "summary",
+      zh: "汇总",
+      en: "Summary",
+      propName: "summary",
+      type: "segment" as const,
+      options: [
+        {
+          value: "off",
+          label: "无",
+          labelEn: "Off",
+          intent: "基础表格默认不带汇总，专注展示明细行。",
+          intentEn: "The basic table omits summaries by default and focuses on row-level details.",
+          constraint: "如果没有合计、均值或小计等明确计算结果，不要为了占位加表尾。",
+          constraintEn: "Do not add a footer unless there is a real total, average, or subtotal to show.",
+        },
+        {
+          value: "on",
+          label: "表尾汇总",
+          labelEn: "Footer summary",
+          intent: "用于金额、数量等需要合计或小计的表格。",
+          intentEn: "Use for tables with totals or subtotals such as amount and quantity.",
+          constraint: "汇总属于另一个属性，不改变基础表格本身；只在数据口径稳定时展示。",
+          constraintEn: "Summary is a separate property, not a new base variant; show it only when the calculation is stable.",
+        },
+      ],
+    },
+    {
+      key: "selection",
+      zh: "选择",
+      en: "Selection",
+      propName: "selection",
+      type: "segment" as const,
+      options: [
+        {
+          value: "off",
+          label: "无",
+          labelEn: "Off",
+          intent: "默认不提供批量选择，表格只承担阅读和单行操作。",
+          intentEn: "By default, the table supports reading and row actions without batch selection.",
+          constraint: "没有批量动作时不要加复选框列，避免误导用户以为可以批处理。",
+          constraintEn: "Do not add a checkbox column unless batch actions actually exist.",
+        },
+        {
+          value: "multiple",
+          label: "多选",
+          labelEn: "Multiple",
+          intent: "用于批量导出、批量删除、批量分配等资源列表操作。",
+          intentEn: "Use for bulk export, delete, assignment, and similar resource-list actions.",
+          constraint: "选择态要有明确的选中反馈和批量操作区；只靠行高亮不够。",
+          constraintEn: "Selection needs clear selected feedback and a batch action area; row highlight alone is not enough.",
+        },
+        {
+          value: "multiple-menu",
+          label: "多选+菜单",
+          labelEn: "Multiple + menu",
+          intent: "用于需要选择当前页、选择全部、反选、清空等快捷项的批量选择表格。",
+          intentEn: "Use for multiple selection with shortcuts such as page, all, invert, or clear.",
+          constraint: "这是多选的增强能力，不是另一套选择模型；简单多选优先用“多选”。",
+          constraintEn: "This enhances multiple selection, not a separate selection model; prefer plain multiple selection for simple cases.",
+        },
+        {
+          value: "single",
+          label: "单选",
+          labelEn: "Single",
+          intent: "用于只能选择一条记录继续下一步的列表，例如选择主联系人、默认地址或归属对象。",
+          intentEn: "Use when the next step can accept exactly one row, such as choosing a primary contact, default address, or owner object.",
+          constraint: "单选列不提供表头全选；禁用行的 radio 和行内容要同步禁用反馈。",
+          constraintEn: "Single selection has no select-all header; disabled rows need disabled radio and matching row feedback.",
+        },
+      ],
+    },
+    {
+      key: "filter",
+      zh: "筛选",
+      en: "Filter",
+      propName: "filter",
+      type: "segment" as const,
+      options: [
+        {
+          value: "off",
+          label: "无",
+          labelEn: "Off",
+          intent: "不展示列筛选入口，适合字段少、条件简单的表格。",
+          intentEn: "Hide column filters for small tables or simple conditions.",
+          constraint: "筛选是列能力，不应被做成一个新的表格变体。",
+          constraintEn: "Filtering is a column capability, not a separate table variant.",
+        },
+        {
+          value: "on",
+          label: "列筛选",
+          labelEn: "Column filter",
+          intent: "在客户级别等枚举列提供搜索、多选、确认和重置。",
+          intentEn: "Adds search, multi-select, confirm, and reset to enum-like columns.",
+          constraint: "适合枚举、状态、负责人等可筛选列；金额/日期更多使用排序或范围筛选。",
+          constraintEn: "Best for enum, status, or owner columns; amount/date usually use sorting or range filters.",
+        },
+      ],
+      disabledWhen: (v: Record<string, string>) => v.variant !== "business",
+    },
+    {
+      key: "fixed",
+      zh: "固定列",
+      en: "Frozen columns",
+      propName: "fixed",
+      type: "segment" as const,
+      options: [
+        {
+          value: "off",
+          label: "无",
+          labelEn: "Off",
+          intent: "普通横向滚动，不固定关键列。",
+          intentEn: "Plain horizontal scrolling without frozen columns.",
+          constraint: "列不多时不要强行固定，避免制造视觉分隔。",
+          constraintEn: "Do not freeze columns when the table is not wide enough to need it.",
+        },
+        {
+          value: "on",
+          label: "固定首列/操作",
+          labelEn: "First/action",
+          intent: "固定客户名称、负责人和右侧操作列，适合字段较多的业务列表。",
+          intentEn: "Freeze customer, owner, and the action column for field-heavy business lists.",
+          constraint: "固定列是布局增强，可以和排序、筛选、选择同时存在。",
+          constraintEn: "Frozen columns are a layout enhancement and can coexist with sorting, filtering, and selection.",
+        },
+      ],
+      disabledWhen: (v: Record<string, string>) => v.variant !== "business",
+    },
+    {
+      key: "status",
+      zh: "状态",
+      en: "State",
+      propName: "status",
+      type: "segment" as const,
+      options: [
+        {
+          value: "default",
+          label: "正常",
+          labelEn: "Default",
+          intent: "默认数据态，展示真实表格行。",
+          intentEn: "The default data state, showing real table rows.",
+          constraint: "状态是业务组合，不是 Table 原生 prop；页面根据数据请求结果决定渲染哪种内容。",
+          constraintEn: "State is a business composition, not a native Table prop; render it from request/data state.",
+        },
+        {
+          value: "loading",
+          label: "加载",
+          labelEn: "Loading",
+          intent: "用于数据请求中，保持表头结构稳定，同时用骨架行提示正在加载。",
+          intentEn: "Use while data is loading, keeping headers stable and showing skeleton rows.",
+          constraint: "加载态不要放进高级变体；它是所有表格都可能出现的状态。",
+          constraintEn: "Loading is not an advanced variant; every table may need it.",
+        },
+        {
+          value: "empty",
+          label: "空",
+          labelEn: "Empty",
+          intent: "用于请求成功但没有数据，保留表头并在表体展示空状态。",
+          intentEn: "Use after a successful request returns no rows, keeping headers and showing an empty state in the body.",
+          constraint: "空状态要明确占满列数，避免只在某个单元格里挤一行文字。",
+          constraintEn: "Empty state should span the table columns instead of being squeezed into one cell.",
+        },
+      ],
+    },
+  ],
+  initial: { variant: "basic", density: "default", summary: "off", selection: "off", filter: "off", fixed: "off", status: "default" },
+  guidanceKey: "variant",
+  renderOne: (v: Record<string, string>) => {
+    const variant = (v.variant as TableVariant) || "basic";
+    const density = (v.density as TableDensity) || "default";
+    const summary = (v.summary as TableSummary) || "off";
+    const status = (v.status as TableStatus) || "default";
+    const selection = (v.selection as TableSelection) || "off";
+    const filter = (v.filter as TableFilter) || "off";
+    const fixed = (v.fixed as TableFixed) || "off";
+    if (status === "loading") {
+      return <TableLoadingDemo />;
+    }
+    if (status === "empty") {
+      return <TableEmptyDemo />;
+    }
+    if (variant === "business") {
+      return <TableBusinessDemo density={density} selection={selection} filter={filter} fixed={fixed} />;
+    }
+    return <TableBasicDemo density={density} summary={summary} selection={selection} />;
+  },
+  genCode: (v: Record<string, string>) => genTableCode((v.variant as TableVariant) || "basic", (v.density as TableDensity) || "default", (v.summary as TableSummary) || "off", (v.status as TableStatus) || "default", (v.selection as TableSelection) || "off", (v.filter as TableFilter) || "off", (v.fixed as TableFixed) || "off"),
+};
+
 function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   const tableImportCode = `import {\n  Table,\n  TableBody,\n  TableCaption,\n  TableCell,\n  TableHead,\n  TableHeader,\n  TableRow,\n} from "@/components/ui/table"`;
-  const tableUsageCode = `<Table>\n  <TableCaption>最近的订单记录</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead>订单号</TableHead>\n      <TableHead>客户</TableHead>\n      <TableHead>状态</TableHead>\n      <TableHead className="text-right">金额</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    {orders.map((order) => (\n      <TableRow key={order.id}>\n        <TableCell>{order.id}</TableCell>\n        <TableCell>{order.customer}</TableCell>\n        <TableCell><Tag variant="outline">{order.status}</Tag></TableCell>\n        <TableCell className="text-right">{order.amount}</TableCell>\n      </TableRow>\n    ))}\n  </TableBody>\n</Table>`;
+  const tableUsageCode = `<Table>\n  <TableCaption>最近的客户记录</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead>客户名称</TableHead>\n      <TableHead>负责人</TableHead>\n      <TableHead>客户级别</TableHead>\n      <TableHead align="right">金额(元)</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    {customers.map((customer) => (\n      <TableRow key={customer.id}>\n        <TableCell><a href={customer.href}>{customer.name}</a></TableCell>\n        <TableCell>{customer.owner}</TableCell>\n        <TableCell><Tag variant="outline">{customer.level}</Tag></TableCell>\n        <TableCell align="right">{customer.amount}</TableCell>\n      </TableRow>\n    ))}\n  </TableBody>\n</Table>`;
 
   return (
     <div className={docsSpacing.pageStack}>
       <section id="table" className="flex flex-col gap-2">
         <PageLead
-          crumb={lang === "en" ? "Components / Table" : "组件 / Table 表格"}
+          crumb={lang === "en" ? "Components / Table" : "组件 / 表格"}
           title="Table 表格"
           lead="展示结构化的多行数据，常用于订单列表、用户管理、数据看板等场景。"
           actions={actions} />
         
       </section>
 
-      <section id="table-overview" className={docsSpacing.sectionStack}>
-        <div className="flex flex-col gap-1">
-          <h2 className="text-xl font-bold tracking-tight">组件总览</h2>
-          <p className="text-base text-muted-foreground">
-            Table 由 Header / Body / Row / Head / Cell 等语义子组件组合而成，
-            统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot</code> 标记各部位，外层容器自带横向滚动。
-          </p>
-        </div>
-        <div className="overflow-hidden rounded-xl border border-border-container bg-card">
-          <Table>
-            <TableCaption>最近的订单记录</TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead>订单号</TableHead>
-                <TableHead>客户</TableHead>
-                <TableHead>状态</TableHead>
-                <TableHead className="text-right">金额</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {tableDemoRows.map((row) =>
-              <TableRow key={row.id}>
-                  <TableCell className="font-medium">{row.id}</TableCell>
-                  <TableCell>{row.customer}</TableCell>
-                  <TableCell>
-                    <Tag variant={row.status === "已支付" ? "success" : "outline"}>{row.status}</Tag>
-                  </TableCell>
-                  <TableCell className="text-right">{row.amount}</TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-
-      <section id="table-preview" className={docsSpacing.sectionStack}>
-        <SectionLead title={"场景示例"} description={"按能力分组：基础展示 / 交互能力 / 高级布局。表格体积大，场景以整表演示，不挤进场景表。"} />
-
-
-
-
-        
-        <Tabs defaultValue="basic">
-          <TabsList className="flex h-auto flex-wrap justify-start">
-            <TabsTrigger value="basic">基础</TabsTrigger>
-            <TabsTrigger value="density">行高</TabsTrigger>
-            <TabsTrigger value="interactive">交互</TabsTrigger>
-            <TabsTrigger value="advanced">高级</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="basic" className="flex flex-col gap-6 pt-4">
-            <div className="flex flex-col gap-2">
-              <h3 className="text-base font-medium">基础表格</h3>
-              <p className="text-base text-muted-foreground">作为表格最常见的形态展示数据。</p>
-              <TableBasicDemo />
-            </div>
-            <div className="flex flex-col gap-2">
-              <h3 className="text-base font-medium">带表尾汇总</h3>
-              <p className="text-base text-muted-foreground">用 TableFooter 展示一组明细的合计。</p>
-              <div className="overflow-x-auto rounded-xl bg-card ring-1 ring-border-subtle">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="hover:bg-transparent">
-                      <TableHead>订单号</TableHead>
-                      <TableHead>客户</TableHead>
-                      <TableHead>状态</TableHead>
-                      <TableHead align="right">金额</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {tableDemoRows.map((row) =>
-                    <TableRow key={row.id}>
-                        <TableCell className="font-medium">{row.id}</TableCell>
-                        <TableCell>{row.customer}</TableCell>
-                        <TableCell>
-                          <Tag variant={row.status === "已支付" ? "success" : "outline"}>{row.status}</Tag>
-                        </TableCell>
-                        <TableCell align="right" className="tabular-nums">{row.amount}</TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                  <TableFooter>
-                    <TableRow>
-                      <TableCell colSpan={3}>合计</TableCell>
-                      <TableCell align="right">¥4,280</TableCell>
-                    </TableRow>
-                  </TableFooter>
-                </Table>
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="density" className="flex flex-col gap-6 pt-4">
-            <p className="text-base text-muted-foreground">为满足不同用户需求，表头保持 32px 高度不变，表体定义了三种行高尺寸：紧凑(28px)、舒适(36px)、宽松(42px)。</p>
-            <div className="flex flex-col gap-2">
-              <h3 className="text-base font-medium">紧凑(28px)</h3>
-              <TableDensityDemo density="compact" />
-            </div>
-            <div className="flex flex-col gap-2">
-              <h3 className="text-base font-medium">舒适(36px)</h3>
-              <TableDensityDemo density="default" />
-            </div>
-            <div className="flex flex-col gap-2">
-              <h3 className="text-base font-medium">宽松(42px)</h3>
-              <TableDensityDemo density="comfortable" />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="interactive" className="flex flex-col gap-6 pt-4">
-            <div className="flex flex-col gap-2">
-              <h3 className="text-base font-medium">业务列表（可选中 · 可排序 · 分页）</h3>
-              <p className="text-base text-muted-foreground">勾选行出现批量操作条；点「金额」表头切换升/降序；底部主流页码分页。</p>
-              <TableBusinessDemo />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="advanced" className="flex flex-col gap-6 pt-4">
-            <div className="flex flex-col gap-2">
-              <h3 className="text-base font-medium">吸顶表头 + 固定列 + 列操作菜单（排序/冻结/筛选可用）</h3>
-              <p className="text-base text-muted-foreground">点「金额/修改时间」表头排序；hover「客户名称/负责人」表头出 ⋮「冻结到此列」（固定该列及左侧所有列，Excel 冻结窗格模型）；hover「客户级别」表头出 ⋮ 按级别筛选。横向滚动看冻结效果。</p>
-              <TableAdvancedDemo />
-            </div>
-            <div className="flex flex-col gap-2">
-              <h3 className="text-base font-medium">加载态</h3>
-              <p className="text-base text-muted-foreground">数据加载中用骨架行占位，保持表格结构不跳动。</p>
-              <TableLoadingDemo />
-            </div>
-            <div className="flex flex-col gap-2">
-              <h3 className="text-base font-medium">空状态</h3>
-              <p className="text-base text-muted-foreground">无数据时居中提示「暂无数据」。</p>
-              <TableEmptyDemo />
-            </div>
-          </TabsContent>
-        </Tabs>
+      <section id="table-playground" className={docsSpacing.sectionStack}>
+        <SectionLead
+          title={lang === "en" ? "Playground" : "调试台"}
+          description={lang === "en" ? "Variants describe structure only; sorting, filtering, frozen columns, selection, summary, and state are composable capabilities. Comparable columns sort by default, and tables include pagination." : "变体只描述结构；排序、筛选、固定列、选择、汇总、状态都是可叠加能力。金额、数量、日期等可比较列默认支持排序，表格默认带分页。"}
+        />
+        <ComponentPlayground config={tablePlaygroundConfig} lang={lang} />
       </section>
 
       <section id="table-usage" className={docsSpacing.sectionStack}>
@@ -9770,17 +10238,17 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="rounded-lg border border-border-container bg-card p-5">
-          <div className="grid gap-4">
+        <DocSurfaceCard>
+          <CardContent className="grid gap-4 p-5">
             <CopyCodeBlock code={tableImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={tableUsageCode} label="调用" lang={lang} />
-          </div>
-        </div>
+          </CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id="table-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -9805,7 +10273,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="table-semantic-dom" className={docsSpacing.sectionStack}>
@@ -9815,7 +10283,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -9834,7 +10302,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="table-do-dont" className={docsSpacing.sectionStack}>
@@ -9842,34 +10310,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">推荐 Do</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {tableDoDontRows.map((row) =>
-              <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
-                  <span>{row.do}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">避免 Don't</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {tableDoDontRows.map((row) =>
-              <div key={`dont-${row.dont}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
-                  <span>{row.dont}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <DocDoDont rows={tableDoDontRows} />
       </section>
     </div>);
 
@@ -9882,7 +10323,7 @@ function CardPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
     <div className={docsSpacing.pageStack}>
       <section id="card" className="flex flex-col gap-2">
-        <PageLead crumb="Components / Card" title="Card 卡片" lead="通用内容容器，用 Header / Content / Footer 等子组件搭出统一的卡片骨架。" actions={actions} />
+        <PageLead crumb={lang === "en" ? "Components / Card" : "组件 / 卡片"} title="Card 卡片" lead="通用内容容器，用 Header / Content / Footer 等子组件搭出统一的卡片骨架。" actions={actions} />
       </section>
 
       <section id="card-overview" className={docsSpacing.sectionStack}>
@@ -10254,7 +10695,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
   return (
     <div className={docsSpacing.pageStack}>
       <section id="tooltip" className="flex flex-col gap-2">
-        <PageLead crumb="Components / Tooltip" title="Tooltip 提示" lead="鼠标悬浮或聚焦时弹出的简短说明，用于补充说明、可访问性兜底，不承载关键信息。" actions={actions} />
+        <PageLead crumb={lang === "en" ? "Components / Tooltip" : "组件 / 提示"} title="Tooltip 提示" lead="鼠标悬浮或聚焦时弹出的简短说明，用于补充说明、可访问性兜底，不承载关键信息。" actions={actions} />
       </section>
 
       <section id="tooltip-overview" className={docsSpacing.sectionStack}>
@@ -10488,7 +10929,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
     <div className={docsSpacing.pageStack}>
       <section id="dialog" className="flex flex-col gap-2">
-        <PageLead crumb="Components / Dialog" title="Dialog 对话框" lead="以模态浮层承载需要用户聚焦完成的单一任务，如表单录入、操作确认。" actions={actions} />
+        <PageLead crumb={lang === "en" ? "Components / Dialog" : "组件 / 对话框"} title="Dialog 对话框" lead="以模态浮层承载需要用户聚焦完成的单一任务，如表单录入、操作确认。" actions={actions} />
       </section>
 
       <section id="dialog-overview" className={docsSpacing.sectionStack}>
@@ -10718,7 +11159,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
   return (
     <div className={docsSpacing.pageStack}>
       <section id="alert-dialog" className="flex flex-col gap-2">
-        <PageLead crumb="Components / Alert Dialog" title="Alert Dialog 警告对话框" lead="强制用户对不可逆或有重大影响的操作做出明确选择，不可通过点击遮罩或 Esc 关闭。" actions={actions} />
+        <PageLead crumb={lang === "en" ? "Components / Alert Dialog" : "组件 / 警告对话框"} title="Alert Dialog 警告对话框" lead="强制用户对不可逆或有重大影响的操作做出明确选择，不可通过点击遮罩或 Esc 关闭。" actions={actions} />
       </section>
 
       <section id="alert-dialog-overview" className={docsSpacing.sectionStack}>
@@ -10948,7 +11389,7 @@ function SheetPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
     <div className={docsSpacing.pageStack}>
       <section id="sheet" className="flex flex-col gap-2">
-        <PageLead crumb="Components / Sheet" title="Sheet 抽屉" lead="从屏幕边缘滑出的浮层面板，用于在不离开当前上下文的情况下查看详情或执行操作。" actions={actions} />
+        <PageLead crumb={lang === "en" ? "Components / Sheet" : "组件 / 抽屉"} title="Sheet 抽屉" lead="从屏幕边缘滑出的浮层面板，用于在不离开当前上下文的情况下查看详情或执行操作。" actions={actions} />
       </section>
 
       <section id="sheet-overview" className={docsSpacing.sectionStack}>
@@ -11163,7 +11604,7 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
   return (
     <div className={docsSpacing.pageStack}>
       <section id="skeleton" className="flex flex-col gap-2">
-        <PageLead crumb="Components / Skeleton" title="Skeleton 骨架屏" lead="内容加载完成前展示的占位块，用呼吸动画提示正在加载，并提前还原真实内容的大致结构。" actions={actions} />
+        <PageLead crumb={lang === "en" ? "Components / Skeleton" : "组件 / 骨架屏"} title="Skeleton 骨架屏" lead="内容加载完成前展示的占位块，用呼吸动画提示正在加载，并提前还原真实内容的大致结构。" actions={actions} />
       </section>
 
       <section id="skeleton-overview" className={docsSpacing.sectionStack}>
@@ -11508,9 +11949,9 @@ function StandardDocPage({
         {overviewMatrix ?
         overviewMatrix :
 
-        <Card elevated>
+        <DocSurfaceCard elevated>
             <CardContent className="flex items-center gap-3 p-5">{overview}</CardContent>
-          </Card>
+          </DocSurfaceCard>
         }
       </section>
 
@@ -11541,17 +11982,17 @@ function StandardDocPage({
 
         usageCode ? "把 import 和完整组装写法复制到业务页面里使用。" : "复制 import 即可；具体 JSX 写法见上方「场景示例」的推荐写法列。"} />
         
-        <div className="rounded-lg border border-border bg-card p-5">
-          <div className="grid gap-4">
+        <DocSurfaceCard>
+          <CardContent className="grid gap-4 p-5">
             <CopyCodeBlock code={importCode} label="Import" lang={lang} />
             {usageCode ? <CopyCodeBlock code={usageCode} label="调用" lang={lang} /> : null}
-          </div>
-        </div>
+          </CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id={`${slug}-props`} className={docsSpacing.sectionStack}>
         <SectionLead title="API 属性" />
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11576,7 +12017,7 @@ function StandardDocPage({
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id={`${slug}-semantic-dom`} className={docsSpacing.sectionStack}>
@@ -11586,7 +12027,7 @@ function StandardDocPage({
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11605,7 +12046,7 @@ function StandardDocPage({
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id={`${slug}-do-dont`} className={docsSpacing.sectionStack}>
@@ -11613,34 +12054,7 @@ function StandardDocPage({
 
 
         
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">推荐 Do</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {doDontRows.map((row) =>
-              <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
-                  <span>{row.do}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">避免 Don't</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {doDontRows.map((row) =>
-              <div key={`dont-${row.dont}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
-                  <span>{row.dont}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <DocDoDont rows={doDontRows} />
       </section>
     </div>);
 
@@ -12818,8 +13232,8 @@ function AgentSurfacePage({ actions, lang }: {actions: React.ReactNode;lang: Lan
     <div className={docsSpacing.pageStack}>
       <section id="agent-surface" className="flex flex-col gap-3">
         <PageLead
-          crumb="Compositions / AgentSurface"
-          title="AgentSurface"
+          crumb={lang === "en" ? `Business Compositions / ${agentSurfaceNavLabel.en}` : `业务组合组件 / ${agentSurfaceNavLabel.zh}`}
+          title={lang === "en" ? "AgentSurface" : agentSurfaceNavLabel.zh}
           lead={lang === "en" ?
           "A controlled generative UI surface: Agent returns JSON intent, fx-ui renders trusted React components, and user actions become events." :
           "受控生成式 UI 渲染面：Agent 返回 JSON 意图，fx-ui 渲染可信 React 组件，用户操作变成事件。"}
@@ -12942,7 +13356,7 @@ function AgentSurfacePage({ actions, lang }: {actions: React.ReactNode;lang: Lan
 
         lang === "en" ?
         "Agent UI can borrow the lightness of consumer AI cards, but it remains a subsystem of fx-ui." :
-        "Agent UI 可以借鉴 C 端 AI 卡片的轻盈感，但它仍然是 fx-ui 的视觉子系统。"} />
+        "Agent UI 可以借用消费级 AI 卡片的轻盈感，但它仍然是 fx-ui 的子系统。"} />
 
         
         <Card className="border-primary/30 bg-primary/5">
@@ -13340,7 +13754,7 @@ function ChartPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
     <div className={docsSpacing.pageStack}>
       <section id="chart" className="flex flex-col gap-2">
         <PageLead
-          crumb="Components / Chart"
+          crumb={lang === "en" ? "Components / Chart" : "组件 / 图表"}
           title="Chart 图表"
           lead={lang === "en" ?
           "Built on Recharts via shadcn chart. Colors inherit from --chart-1~10 tokens." :
@@ -13645,7 +14059,7 @@ function ChartPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 }
 
-// ============ 页面模板：CRM 客户列表页（全部用现有组件拼装，1:1 参照公司 Figma 18906-9135） ============
+// ============ 页面模板：CRM 列表页（全部用现有组件拼装，1:1 参照公司 Figma 18906-9135） ============
 type TplCustomer = {
   id: number;name: string;level: string;levelColor: "amber" | "red" | "blue";
   progress: number;progressTone: "success" | "warning" | "default";
@@ -13707,8 +14121,8 @@ function CustomerListTemplate({ actions, lang }: {actions: React.ReactNode;lang:
     <div className={docsSpacing.pageStack}>
       <section id="template-customer-list" className="flex flex-col gap-2">
         <PageLead
-          crumb={lang === "en" ? "Templates / Customer list" : "页面模板 / 客户列表页"}
-          title={lang === "en" ? "Customer list page" : "客户列表页"}
+          crumb={lang === "en" ? "Templates / List page" : "页面 / 列表页"}
+          title={lang === "en" ? "List page" : "列表页"}
           lead={lang === "en" ?
           "A full CRM list page assembled entirely from existing components — top bar, nav, page header, toolbar, table and pagination." :
           "完全用现有组件拼出的 CRM 列表页：顶栏 + 导航 + 页头 + 工具栏 + 表格 + 分页，演示组件如何组装成真实页面。"}

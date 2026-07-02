@@ -26,6 +26,8 @@ export type ComponentPlaygroundConfig = {
   props: ComponentPlaygroundPropDef[]
   initial: ComponentPlaygroundValues
   guidanceKey?: string
+  previewClassName?: string
+  previewItemsClassName?: string
   onValueChange?: (next: ComponentPlaygroundValues, key: string, value: string) => ComponentPlaygroundValues
   renderOne: (v: ComponentPlaygroundValues, lang: ComponentPlaygroundLang) => ReactNode
   genCode: (v: ComponentPlaygroundValues, lang: ComponentPlaygroundLang) => string
@@ -33,7 +35,7 @@ export type ComponentPlaygroundConfig = {
 
 function PlaygroundEyebrow({ dot, zh, en }: { dot: string; zh: string; en: string }) {
   return (
-    <div className="mb-(--fx-panel-gap) flex items-center gap-(--fx-control-gap-tight) text-[max(12px,var(--fx-text-xs))] font-semibold tracking-wider text-[var(--fx-neutrals-10)] uppercase">
+    <div className="mb-(--playground-gap) flex items-center gap-(--fx-control-gap-tight) text-[max(12px,var(--fx-text-xs))] font-semibold tracking-wider text-[var(--fx-neutrals-10)] uppercase">
       <span className={`size-1.5 rounded-full ${dot}`} />
       {zh} <span className="font-normal text-[var(--fx-neutrals-10)]">({en})</span>
     </div>
@@ -98,14 +100,16 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
   const [v, setV] = useState<ComponentPlaygroundValues>(config.initial)
   const [tab, setTab] = useState("preview")
   const [copied, setCopied] = useState(false)
+  const [activeGuidanceKey, setActiveGuidanceKey] = useState(config.guidanceKey ?? config.props.find((p) => p.type === "segment")?.key)
   const allLabel = lang === "en" ? "All" : "全部"
   const set = (key: string, val: string) => setV((prev) => {
+    setActiveGuidanceKey(key)
     const next = { ...prev, [key]: val }
     return config.onValueChange?.(next, key, val) ?? next
   })
   const segKeys = config.props.filter((p) => p.type === "segment").map((p) => p.key)
   const activeSc = config.scenarios?.find((sc) => segKeys.every((key) => sc.values[key] === v[key]))
-  const guidanceProp = config.guidanceKey ? config.props.find((p) => p.type === "segment" && p.key === config.guidanceKey) : undefined
+  const guidanceProp = activeGuidanceKey ? config.props.find((p) => p.type === "segment" && p.key === activeGuidanceKey) : undefined
   const guidanceOption = guidanceProp?.type === "segment" ? guidanceProp.options.find((o) => o.value === v[guidanceProp.key]) : undefined
   const intentText = guidanceOption
     ? lang === "en" ? (guidanceOption.intentEn ?? guidanceOption.intent) : guidanceOption.intent
@@ -132,10 +136,13 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
   }
 
   return (
-    <div data-slot="card" className="overflow-hidden rounded-xl border border-border-container bg-card shadow-l1">
+    <div
+      data-slot="card"
+      className="overflow-hidden rounded-xl border border-border-container bg-card shadow-l1 [--card-spacing:var(--fx-panel-padding)] [--playground-gap:var(--fx-panel-gap)]"
+    >
       {config.scenarios ? (
         <div className="flex flex-col border-b border-border-subtle bg-card xl:flex-row">
-          <div className="flex-1 border-b border-border-subtle p-(--fx-panel-padding) xl:border-r xl:border-b-0">
+          <div className="flex-1 border-b border-border-subtle p-(--card-spacing) xl:border-r xl:border-b-0">
             <PlaygroundEyebrow dot="bg-info" zh={lang === "en" ? "Scenarios" : "场景预设"} en="SCENARIOS" />
             <PgSegmented
               value={activeSc?.id ?? ""}
@@ -143,7 +150,7 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
               options={config.scenarios.map((sc) => ({ value: sc.id, label: lang === "en" ? sc.en : sc.zh }))}
             />
             {activeSc ? (
-              <div className="mt-(--fx-panel-gap) space-y-(--fx-control-gap) rounded-xl border border-border-subtle bg-card p-(--fx-panel-padding) shadow-l1">
+              <div className="mt-(--playground-gap) space-y-(--fx-control-gap) rounded-xl border border-border-subtle bg-card p-(--card-spacing) shadow-l1">
                 <div>
                   <div className="mb-1 text-[max(12px,var(--fx-text-xs))] font-semibold tracking-wider text-[var(--fx-neutrals-10)] uppercase">{lang === "en" ? "Intent" : "使用意图"}</div>
                   <p className="text-base leading-relaxed text-foreground-secondary">{lang === "en" ? activeSc.intentEn : activeSc.intent}</p>
@@ -155,7 +162,7 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
               </div>
             ) : null}
           </div>
-          <div className="flex flex-1 flex-col gap-(--fx-panel-gap) p-(--fx-panel-padding)">
+          <div className="flex flex-1 flex-col gap-(--playground-gap) p-(--card-spacing)">
             <PlaygroundEyebrow dot="bg-primary" zh={lang === "en" ? "Interactive props" : "实时属性"} en="INTERACTIVE PROPS" />
             {config.props.map((p) => (
               <div key={p.key} className="flex flex-col gap-(--fx-control-gap-tight)">
@@ -175,9 +182,9 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
           </div>
         </div>
       ) : (
-        <div className="border-b border-border-subtle bg-card p-(--fx-panel-padding)">
-          <div className="grid gap-(--fx-panel-gap) xl:grid-cols-2">
-            <div className="flex flex-col gap-(--fx-panel-gap)">
+        <div className="border-b border-border-subtle bg-card p-(--card-spacing)">
+          <div className="grid gap-(--playground-gap) xl:grid-cols-2">
+            <div className="flex flex-col gap-(--playground-gap)">
               <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Interactive props" : "实时属性"}</PlaygroundSectionTitle>
               {config.props.map((p) => (
                 <div key={p.key} className="flex flex-col gap-(--fx-control-gap-tight)">
@@ -201,8 +208,8 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
                 </div>
                 ))}
             </div>
-            <div className="border-l border-border-subtle pl-(--fx-panel-padding)">
-              <div className="space-y-(--fx-panel-gap)">
+            <div className="border-l border-border-subtle pl-(--card-spacing)">
+              <div className="space-y-(--playground-gap)">
                 <div>
                   <div className="mb-1">
                     <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Intent" : "使用意图"}</PlaygroundSectionTitle>
@@ -219,20 +226,14 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
                     <p className="text-base leading-relaxed text-foreground-secondary">{constraintText}</p>
                   </div>
                 ) : null}
-                <div>
-                  <div className="mb-1">
-                    <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Recommended code" : "推荐写法"}</PlaygroundSectionTitle>
-                  </div>
-                  <code className="block rounded border border-border-subtle bg-muted px-(--fx-control-px-md) py-(--fx-control-px-xs) font-mono text-sm leading-relaxed break-words whitespace-pre-wrap text-foreground-secondary">{code}</code>
-                </div>
               </div>
             </div>
           </div>
         </div>
       )}
-      <div className="flex h-[calc(var(--fx-control-lg-height)+12px)] items-center justify-between bg-background px-(--fx-panel-padding)">
+      <div className="flex h-[calc(var(--fx-control-lg-height)+12px)] items-center justify-between bg-background px-(--card-spacing)">
         <div className="flex h-full items-center gap-1">
-          {([["preview", <EyeIcon className="size-4" />, "Preview"], ["code", <Code2Icon className="size-4" />, "Code"]] as const).map(([t, icon, label]) => (
+          {([["preview", <EyeIcon className="size-4" />, lang === "en" ? "Preview" : "预览"], ["code", <Code2Icon className="size-4" />, lang === "en" ? "Code" : "代码"]] as const).map(([t, icon, label]) => (
             <button
               key={t}
               type="button"
@@ -247,15 +248,15 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
         </div>
         <Button variant="outline" size="sm" onClick={copy}>
           {copied ? <CheckIcon data-icon="inline-start" className="text-success" /> : <CopyIcon data-icon="inline-start" />}
-          {copied ? (lang === "en" ? "Copied" : "已复制") : "Copy"}
+          {copied ? (lang === "en" ? "Copied" : "已复制") : (lang === "en" ? "Copy" : "复制")}
         </Button>
       </div>
       {tab === "preview" ? (
-        <div className="flex min-h-[300px] items-center justify-center bg-card p-[calc(var(--fx-panel-padding)*2)]">
-          <div className={isMatrix ? "flex flex-wrap items-center justify-center gap-(--fx-panel-gap)" : ""}>{items}</div>
+        <div className={config.previewClassName ?? "flex min-h-[200px] items-center justify-center bg-card p-[calc(var(--card-spacing)*2)]"}>
+          <div className={config.previewItemsClassName ?? (isMatrix ? "flex flex-wrap items-center justify-center gap-(--playground-gap)" : "")}>{items}</div>
         </div>
       ) : (
-        <div className="min-h-[300px] overflow-x-auto bg-foreground p-[calc(var(--fx-panel-padding)*2)]">
+        <div className="min-h-[200px] overflow-x-auto bg-foreground p-[calc(var(--card-spacing)*2)]">
           <pre className="font-mono text-sm leading-relaxed text-background/85"><code>{code}</code></pre>
         </div>
       )}

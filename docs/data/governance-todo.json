@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/governance-todo",
+  "updatedAt": "2026-07-01",
+  "truthSource": "docs/data/governance-todo.json",
+  "humanDoc": "docs/DOC_SITE_DESIGN.md",
+  "note": "治理联动的后续待办清单。用于让 AI 或工程师按优先级持续把规则页从“手抄”推进到“源头派生”。",
+  "items": [
+    {
+      "id": "todo-derive-check-layers",
+      "title": "继续提升 checks.layers 自动派生率",
+      "priority": "p1",
+      "status": "done",
+      "definitionOfDone": "checks.layers 的顺序与命令来源直接解析自 check-all.sh；title / desc 优先复用现有元数据，减少人工描述副本。"
+    },
+    {
+      "id": "todo-render-governance-todo",
+      "title": "把治理 TODO 渲染进 governance-map",
+      "priority": "p1",
+      "status": "done",
+      "definitionOfDone": "现状页可直接看到后续治理待办，而不是只存在 JSON 里。"
+    },
+    {
+      "id": "todo-derive-ssot-routes",
+      "title": "评估 documentation.ssotRoutes 的半自动生成",
+      "priority": "p2",
+      "status": "pending",
+      "definitionOfDone": "能从 DOCUMENTATION / doc-structure / governance-index 中派生一部分 SSOT 表，减少重复维护。"
+    },
+    {
+      "id": "todo-derive-install-structure",
+      "title": "评估 install / overview 的目录事实派生",
+      "priority": "p2",
+      "status": "pending",
+      "definitionOfDone": "把目录型事实优先收口到单一机器源，不在页面 manifest 和文档里双写。"
+    },
+    {
+      "id": "todo-build-all-hook",
+      "title": "决定是否把 build:governance-pages 接进更宽的构建链",
+      "priority": "p2",
+      "status": "done",
+      "definitionOfDone": "明确它应该手动运行、接入 check:all，还是并入更统一的治理构建入口。"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-30
+last_verified: 2026-07-02
 teaches: "公司设计 token 的基础架构、真实值和全局视觉使用规则"
 use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadcn 组件样式或判断视觉是否符合公司规范时"
 ---
@@ -210,6 +210,16 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `gap-5` | `1.25rem / 20px` | 章节标题组与主体内容之间 |
 | `gap-6` | `1.5rem / 24px` | 页面区块、小型章节之间 |
 | `gap-10` | `2.5rem / 40px` | 文档章节、主内容分组之间 |
+
+## 表格行高
+
+表格行高单独治理，不直接复用通用控件高度。当前 `Table` 的三档真实值为：
+
+| Token | 值 | 场景 |
+|------|-----|------|
+| `--fx-table-row-height-compact` | `28px` | 紧凑列表、信息密度高的表格 |
+| `--fx-table-row-height-default` | `36px` | 默认表格行高 |
+| `--fx-table-row-height-comfortable` | `42px` | 宽松列表、需要更强可读性的表格 |
 
 ## 阴影
 

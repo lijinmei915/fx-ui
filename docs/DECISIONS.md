@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-06-30
+last_verified: 2026-07-02
 teaches: "fx-ui 重要的技术/协作决策记录：选了什么、放弃了什么、为什么"
 use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论"
 ---
@@ -239,6 +239,16 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **首例落地**：Button 新增 `plain` 变体 + `tone`（中性/主色/链接/危险），用于表格操作列、行内弱化操作
 - **相关文件**：`docs/DESIGN_STANDARDS.md`、`src/components/ui/button.tsx`、`docs/components/button.md`、`src/App.tsx`
 
+### DEC-021: Table 行高单独治理，不复用通用控件高度
+
+- **日期**：2026-07-01
+- **状态**：已决定
+- **决定**：`Table` 的三档行高单独使用 `--fx-table-row-height-compact/default/comfortable`，真实值固定为 `28 / 36 / 42`，不再直接复用 `--fx-control-sm/md/lg-height`
+- **放弃**：让表格继续借用通用控件高度（当时实际会落成 `28 / 32 / 36`），再在文档里口头写成 `28 / 36 / 42`
+- **原因**：表格行高和按钮/输入框高度不是同一语义层。通用控件高度服务表单与操作控件，表格行高服务数据阅读密度；两者强绑会导致文档口径与真实渲染值分叉
+- **影响**：`TableHead` / `TableCell` 的密度切换改吃表格专用 token；调试台里“行高”三档现在和真实渲染一致
+- **相关文件**：`theme/fx-theme.css`、`src/components/ui/table.tsx`、`docs/TOKENS.md`、`src/App.tsx`
+
 ### DEC-021: 拆分 Badge（角标）与 Tag（标签），对齐 Ant 模型
 
 - **日期**：2026-06-25
@@ -403,6 +413,26 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
   3. 排版调用层统一写 Tailwind `text-*`，具体值由 token 注入。
   4. 主题面板这类“全局主题能力”必须只改 FX token，不以局部类覆盖代替。
 - **相关文件**：`docs/TOKENS.md`、`docs/LAYOUTS.md`、`theme/fx-theme.css`、`src/App.tsx`
+
+### DEC-035: 真相源与所有引用项必须联动同步
+
+- **日期**：2026-07-01
+- **状态**：已决定
+- **决定**：凡是有明确真相源的内容，所有引用到它的文档、网页、示例、manifest、数据视图、演示页面都必须和真相源建立联动关系。改动时按“真相源 ↔ 引用项”整条链路同步更新，不能只改其中一头。
+- **放弃**：把网页、Markdown、JSON、示例页当成彼此独立维护的静态副本；或者只靠人工记忆“顺手同步”。
+- **原因**：真正会漂移的不是“文档”单点，而是整条引用链。只改一处，其他被引用落点就会过期，最后页面、文档、机器事实、源码各说各话。把联动规则明确下来，才能让所有落点共享同一事实。
+- **影响**：以后涉及 token、组件 API、manifest、文档示例、页面预览、数据视图时，先确认真相源，再顺着引用关系检查所有上游/下游落点；如存在引用链，变更必须整链完成，不能留下孤立副本。
+- **相关文件**：`AGENTS.md`、`docs/MAP.md`、`docs/DOCUMENTATION.md`、`theme/fx-theme.css`、`docs/data/*.json`、`src/App.tsx`
+
+### DEC-036: 文档、manifest、生成脚本按用途分层
+
+- **日期**：2026-07-01
+- **状态**：已决定
+- **决定**：fx-ui 采用主流治理分层：**解释性内容写 Markdown；会被页面/AI/脚本共同消费的结构事实写 manifest；能从真相源稳定推导出的副本优先用生成脚本产出**。
+- **放弃**：① 所有规则都只写 Markdown；② 为了“统一”把所有内容都 JSON 化；③ 同一份结构事实在 Markdown、JSON、页面 JSX 里各维护一份。
+- **原因**：Markdown 适合表达“为什么”和“边界”，但不适合做页面与脚本共享的数据源；manifest 适合结构化事实，但不该承载长篇解释；能派生的副本继续手填，只会制造漂移。分层后，既保留可读性，也减少重复维护。
+- **影响**：以后新增治理内容时，先判断它是解释、事实还是可派生副本；解释进 `docs/*.md`，事实进 `docs/data/*.json`，可派生内容优先补 `scripts/build-*.mjs`。禁止制造“双真相源”。
+- **相关文件**：`docs/DOCUMENTATION.md`、`AGENTS.md`、`docs/data/*.json`、`scripts/build-*.mjs`
 
 ## 相关文件
 

@@ -84,7 +84,124 @@ for (const [index, dataset] of (governanceIndex.datasets ?? []).entries()) {
 }
 
 const docSiteManifest = await readJson("docs/data/doc-site.manifest.json")
+const governancePagesManifest = await readJson("docs/data/governance-pages.manifest.json")
+const governanceTodoManifest = await readJson("docs/data/governance-todo.json")
+const websiteStandardsManifest = await readJson("docs/data/website-standards.manifest.json")
 const appSource = await readText(docSiteManifest.truthSource)
+
+if (governanceTodoManifest.format !== "fx-ui/governance-todo") {
+  errors.push("governance-todo manifest format must be fx-ui/governance-todo")
+}
+
+for (const path of [governanceTodoManifest.truthSource, governanceTodoManifest.humanDoc]) {
+  if (typeof path !== "string" || path.trim().length === 0) {
+    errors.push("governance-todo manifest must declare truthSource and humanDoc")
+  } else if (!(await fileExists(path))) {
+    errors.push(`governance-todo manifest references missing path: ${path}`)
+  }
+}
+
+if (!Array.isArray(governanceTodoManifest.items) || governanceTodoManifest.items.length < 3) {
+  errors.push("governance-todo manifest must include items")
+}
+for (const item of governanceTodoManifest.items ?? []) {
+  if (!["pending", "in_progress", "done"].includes(item.status)) {
+    errors.push(`governance-todo item "${item.id}" has invalid status: ${item.status}`)
+  }
+}
+
+if (governancePagesManifest.format !== "fx-ui/governance-pages-manifest") {
+  errors.push("governance-pages manifest format must be fx-ui/governance-pages-manifest")
+}
+
+for (const path of [governancePagesManifest.truthSource, governancePagesManifest.humanDoc]) {
+  if (typeof path !== "string" || path.trim().length === 0) {
+    errors.push("governance-pages manifest must declare truthSource and humanDoc")
+  } else if (!(await fileExists(path))) {
+    errors.push(`governance-pages manifest references missing path: ${path}`)
+  }
+}
+
+if (!Array.isArray(governancePagesManifest.documentation?.ssotRoutes) || governancePagesManifest.documentation.ssotRoutes.length < 5) {
+  errors.push("governance-pages manifest must include documentation.ssotRoutes")
+}
+if (!Array.isArray(governancePagesManifest.documentation?.antiDriftLoop) || governancePagesManifest.documentation.antiDriftLoop.length < 3) {
+  errors.push("governance-pages manifest must include documentation.antiDriftLoop")
+}
+if (!Array.isArray(governancePagesManifest.documentation?.writeRules) || governancePagesManifest.documentation.writeRules.length < 5) {
+  errors.push("governance-pages manifest must include documentation.writeRules")
+}
+if (!Array.isArray(governancePagesManifest.checks?.commands) || governancePagesManifest.checks.commands.length < 5) {
+  errors.push("governance-pages manifest must include checks.commands")
+}
+if (!Array.isArray(governancePagesManifest.checks?.layers) || governancePagesManifest.checks.layers.length < 6) {
+  errors.push("governance-pages manifest must include checks.layers")
+}
+if (!Array.isArray(governancePagesManifest.checks?.finishChecklist) || governancePagesManifest.checks.finishChecklist.length < 5) {
+  errors.push("governance-pages manifest must include checks.finishChecklist")
+}
+if (!Array.isArray(governancePagesManifest.overview?.positioning) || governancePagesManifest.overview.positioning.length < 3) {
+  errors.push("governance-pages manifest must include overview.positioning")
+}
+if (!Array.isArray(governancePagesManifest.overview?.layers) || governancePagesManifest.overview.layers.length < 3) {
+  errors.push("governance-pages manifest must include overview.layers")
+}
+if (!Array.isArray(governancePagesManifest.overview?.audience) || governancePagesManifest.overview.audience.length < 3) {
+  errors.push("governance-pages manifest must include overview.audience")
+}
+if (!Array.isArray(governancePagesManifest.install?.prerequisites) || governancePagesManifest.install.prerequisites.length < 3) {
+  errors.push("governance-pages manifest must include install.prerequisites")
+}
+if (!Array.isArray(governancePagesManifest.install?.structure) || governancePagesManifest.install.structure.length < 4) {
+  errors.push("governance-pages manifest must include install.structure")
+}
+if (!Array.isArray(governancePagesManifest.install?.verify) || governancePagesManifest.install.verify.length < 3) {
+  errors.push("governance-pages manifest must include install.verify")
+}
+if (!Array.isArray(governancePagesManifest.theme?.semanticSlots) || governancePagesManifest.theme.semanticSlots.length < 3) {
+  errors.push("governance-pages manifest must include theme.semanticSlots")
+}
+if (!Array.isArray(governancePagesManifest.theme?.changeFlow) || governancePagesManifest.theme.changeFlow.length < 3) {
+  errors.push("governance-pages manifest must include theme.changeFlow")
+}
+if (!Array.isArray(governancePagesManifest.aiRules?.guardrails) || governancePagesManifest.aiRules.guardrails.length < 4) {
+  errors.push("governance-pages manifest must include aiRules.guardrails")
+}
+if (!Array.isArray(governancePagesManifest.aiRules?.styleFlow) || governancePagesManifest.aiRules.styleFlow.length < 4) {
+  errors.push("governance-pages manifest must include aiRules.styleFlow")
+}
+
+if (websiteStandardsManifest.format !== "fx-ui/website-standards-manifest") {
+  errors.push("website-standards manifest format must be fx-ui/website-standards-manifest")
+}
+
+for (const path of [websiteStandardsManifest.truthSource, websiteStandardsManifest.humanDoc]) {
+  if (typeof path !== "string" || path.trim().length === 0) {
+    errors.push("website-standards manifest must declare truthSource and humanDoc")
+  } else if (!(await fileExists(path))) {
+    errors.push(`website-standards manifest references missing path: ${path}`)
+  }
+}
+
+if (!Array.isArray(websiteStandardsManifest.pageLead?.visualBaseline) || websiteStandardsManifest.pageLead.visualBaseline.length < 4) {
+  errors.push("website-standards manifest must include pageLead.visualBaseline with at least 4 items")
+}
+
+if (!Array.isArray(websiteStandardsManifest.pageLead?.contentRules) || websiteStandardsManifest.pageLead.contentRules.length < 5) {
+  errors.push("website-standards manifest must include pageLead.contentRules with at least 5 items")
+}
+
+if (!Array.isArray(websiteStandardsManifest.sectionLead?.usageBullets) || websiteStandardsManifest.sectionLead.usageBullets.length < 3) {
+  errors.push("website-standards manifest must include sectionLead.usageBullets with at least 3 items")
+}
+
+if (!Array.isArray(websiteStandardsManifest.spacingRhythm) || websiteStandardsManifest.spacingRhythm.length !== 3) {
+  errors.push("website-standards manifest must include exactly 3 spacingRhythm items")
+}
+
+if (!Array.isArray(websiteStandardsManifest.linkageRules) || websiteStandardsManifest.linkageRules.length < 3) {
+  errors.push("website-standards manifest must include linkageRules")
+}
 
 if (appSource.includes("docsSpacing.sectionHeader")) {
   errors.push("doc-site section headings must use SectionLead instead of docsSpacing.sectionHeader")
@@ -103,6 +220,70 @@ if (!standardDocPageSource.includes("<SectionLead")) {
 }
 if (standardDocPageSource.includes("<h1 className=\"text-3xl") || standardDocPageSource.includes("<h2 className=\"text-xl")) {
   errors.push("StandardDocPage must not hand-roll page or section headings")
+}
+
+if (!appSource.includes("websiteStandardsManifest.pageLead.visualBaseline.map")) {
+  errors.push("website-standards page must render PageLead baseline cards from websiteStandardsManifest")
+}
+if (!appSource.includes("websiteStandardsManifest.pageLead.contentRules.map")) {
+  errors.push("website-standards page must render PageLead content rules from websiteStandardsManifest")
+}
+if (!appSource.includes("websiteStandardsManifest.sectionLead.usageBullets.map")) {
+  errors.push("website-standards page must render SectionLead usage bullets from websiteStandardsManifest")
+}
+if (!appSource.includes("websiteStandardsManifest.linkageRules.map")) {
+  errors.push("website-standards page must render linkage rules from websiteStandardsManifest")
+}
+if (!appSource.includes("governancePagesManifest.documentation.ssotRoutes.map")) {
+  errors.push("documentation page must render SSOT routes from governancePagesManifest")
+}
+if (!appSource.includes("governancePagesManifest.documentation.antiDriftLoop.map")) {
+  errors.push("documentation page must render anti-drift loop cards from governancePagesManifest")
+}
+if (!appSource.includes("governancePagesManifest.documentation.writeRules.map")) {
+  errors.push("documentation page must render write rules from governancePagesManifest")
+}
+if (!appSource.includes("governancePagesManifest.overview.positioning.map")) {
+  errors.push("overview page must render positioning cards from governancePagesManifest")
+}
+if (!appSource.includes("governancePagesManifest.overview.layers.map")) {
+  errors.push("overview page must render layer table from governancePagesManifest")
+}
+if (!appSource.includes("governancePagesManifest.overview.audience.map")) {
+  errors.push("overview page must render audience cards from governancePagesManifest")
+}
+if (!appSource.includes("governancePagesManifest.install.prerequisites.map")) {
+  errors.push("install page must render prerequisites from governancePagesManifest")
+}
+if (!appSource.includes("governancePagesManifest.install.structure.map")) {
+  errors.push("install page must render structure list from governancePagesManifest")
+}
+if (!appSource.includes("governancePagesManifest.install.verify.map")) {
+  errors.push("install page must render verify list from governancePagesManifest")
+}
+if (!appSource.includes("governancePagesManifest.theme.semanticSlots.map")) {
+  errors.push("theme page must render semantic slots from governancePagesManifest")
+}
+if (!appSource.includes("governancePagesManifest.theme.changeFlow.map")) {
+  errors.push("theme page must render change flow from governancePagesManifest")
+}
+if (!appSource.includes("governancePagesManifest.aiRules.guardrails.map")) {
+  errors.push("ai-rules page must render guardrails from governancePagesManifest")
+}
+if (!appSource.includes("governancePagesManifest.aiRules.styleFlow.map")) {
+  errors.push("ai-rules page must render style flow from governancePagesManifest")
+}
+if (!appSource.includes("governanceTodo.items.map")) {
+  errors.push("governance-map page must render TODO cards from governanceTodo")
+}
+if (!appSource.includes("governancePagesManifest.checks.commands.map")) {
+  errors.push("checks page must render commands from governancePagesManifest")
+}
+if (!appSource.includes("governancePagesManifest.checks.layers.map")) {
+  errors.push("checks page must render check layers from governancePagesManifest")
+}
+if (!appSource.includes("governancePagesManifest.checks.finishChecklist.map")) {
+  errors.push("checks page must render finish checklist from governancePagesManifest")
 }
 
 if (docSiteManifest.governance?.method !== "text-spec + machine-manifest + executable-check") {

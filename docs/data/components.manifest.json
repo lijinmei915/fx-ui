@@ -457,6 +457,37 @@
       ]
     },
     {
+      "name": "RadioGroup",
+      "source": "src/components/ui/radio-group.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/radio-group.md",
+      "category": "form",
+      "nativeStates": [
+        "focus-visible",
+        "disabled",
+        "aria-invalid",
+        "data-checked"
+      ],
+      "semanticDom": [
+        "data-slot=\"radio-group\"",
+        "data-slot=\"radio-group-item\"",
+        "data-slot=\"radio-group-indicator\""
+      ],
+      "tokenRefs": [
+        "--primary",
+        "--primary-foreground",
+        "--destructive",
+        "--border",
+        "--input",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 RadioGroup 前必须以 src/components/ui/radio-group.tsx 为真实 API。",
+        "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
       "name": "Collapsible",
       "source": "src/components/ui/collapsible.tsx",
       "docStatus": "complete",
@@ -1311,10 +1342,35 @@
       "usageRules": [
         "使用 PageLead 前必须以 src/components/fx/page-lead.tsx 为真实 API。",
         "PageLead 用于文档站、官网或内容页顶部介绍区；业务后台页面标题区优先使用 PageHeader。",
-        "PageLead 的视觉取值固定：面包屑 14px、标题 32/40、说明 14/24、动作区顶对齐。",
+        "PageLead 的视觉取值固定：面包屑 text-sm、标题 text-3xl、说明 text-base、动作区顶对齐，并随界面字号基准联动。",
         "PageLead 的 crumb 必须等于左侧导航分组 / 当前页名称，最后一段自动视为当前页。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ],
+      "ruleSync": [
+        {
+          "label": "source classes",
+          "path": "src/components/fx/page-lead.tsx",
+          "includes": [
+            "lead: \"mt-2 max-w-5xl text-base font-normal text-muted-foreground\"",
+            "titleMeta: \"text-lg font-bold text-muted-foreground\""
+          ]
+        },
+        {
+          "label": "component doc",
+          "path": "docs/components/fx-page-lead.md",
+          "includes": [
+            "| 说明 | `text-base`，400，`text-muted-foreground`，最大宽度 `max-w-5xl`，随界面字号基准联动；14 基准下为 16px |"
+          ]
+        },
+        {
+          "label": "website standards demo",
+          "path": "src/App.tsx",
+          "includes": [
+            "websiteStandardsManifest.pageLead.visualBaseline.map",
+            "websiteStandardsManifest.pageLead.contentRules.map"
+          ]
+        }
       ]
     },
     {
@@ -1376,7 +1432,7 @@
       "source": "src/components/fx/component-playground.tsx",
       "docStatus": "complete",
       "role": "文档页组件调试台，用于实时调属性、看预览、读使用意图并复制生成代码",
-      "doc": "docs/components/fx-component-playground.md",
+      "doc": "docs/components/component-playground.md",
       "category": "fx",
       "nativeStates": [
         "preview-tab",

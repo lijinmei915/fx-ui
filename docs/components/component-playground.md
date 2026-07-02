@@ -1,9 +1,9 @@
 ---
-category: Maintain
-group: 网站规范
+category: Components
+group: 组合组件
 title: ComponentPlayground
 subtitle: 组件调试台
-description: 网站规范项，用于维护本站组件文档里的交互调试台。
+description: fx 组合组件，用于组件文档里的通用交互调试台。
 source: src/components/fx/component-playground.tsx
 theme: theme/fx-theme.css
 tokens:
@@ -18,7 +18,7 @@ status: complete
 
 # ComponentPlayground 组件调试台
 
-网站规范项，用于维护本站组件文档里的交互调试台。
+fx 组合组件，用于组件文档里的通用交互调试台。
 
 源码来自 fx-ui 公司组合组件，由 Button、Input 等现有 shadcn/ui 能力组合而成。公司视觉通过 `theme/fx-theme.css` 的语义 token 注入，不通过重新封装、硬编码颜色或手写状态样式实现。
 

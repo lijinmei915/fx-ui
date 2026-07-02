@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-06-26
+last_verified: 2026-07-02
 teaches: "AI 在 fx-ui 项目里的行为红线：不手写组件、只注入 token、保护 token 真相源"
 use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token 时"
 ---
@@ -32,6 +32,7 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
    - className 只许用于**把组件放进布局**（外层容器的定位 / 宽度）；布局间距也照搬库里既有范例的写法，不自创（见红线 6）。
    - 改了页面 / 组合 / 视觉，**收尾必跑 `npm run test:visual` 看截图**（见自检清单 #10），没多余缝隙/圆角/漂移才算完。
    - 反例：给 `NavMenu` 加 `rounded-none border-r` 改它的圆角/边框 = 改外观（该加 variant 或别改）；给外层加范例没有的 `gap-2` = 偏离照搬（违反红线 6）。
+8. **不要只改“被引用的一头”。** 真相源 + 文档 + 网页 + 任何引用到它的示例 / manifest / 数据视图，都属于同一条联动链。改其中一处时，必须检查并同步所有被它引用或引用它的落点；禁止只改页面文案、只改 Markdown、只改 JSON、或只改源码后假设别处会自己对齐。
 
 ---
 
@@ -45,8 +46,10 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 - 图标统一从 `@/lib/icons` 导入（底层 **Tabler**，见 DEC-009）：线性默认，线宽由全局 `.tabler-icon { stroke-width: 1.75 }` 一处控制；面型/选中态用 `*Filled` 变体。**不引第二个图标库、不手写 SVG、不逐个图标硬调线宽或加描边**；缺图标就在 `src/lib/icons.ts` 加一行 Tabler 映射
 - 布局分两层（见 DEC-010）：**整页骨架**用 fx 组件 `Layout`（`src/components/fx/layout.tsx`，Header/Sider/Content/Footer）；**内容区分栏**用 Tailwind 24 列栅格工具类（`grid-cols-[repeat(24,…)]`/`col-span-[n]`/`gap-x/y`）。**不要给栅格封 `Row/Col` 组件**（Tailwind 类名已是栅格能力，再包多此一举）；尺寸默认值见 `docs/LAYOUTS.md`
 - 不确定一条信息该写进哪份文档（CHANGELOG / DECISIONS / LESSONS / 新建文档…）→ 先查 `docs/DOCUMENTATION.md` 的 SSOT 路由表；新建 `docs/*.md` 时必须同时在该表里登记一行，否则会变成孤岛文档
+- **说明写 Markdown，结构事实写 manifest，能从真相源派生的不要手填第二份**：页面、AI、脚本共同消费的内容优先收口到 `docs/data/*.json`；背景/原因/边界留在 `docs/*.md`
 - 用户说"记住这个规则"→ **先判断类型**：设计/架构/产品决策 → `docs/DECISIONS.md`；AI 行为偏好/跨项目约定 → memory；不要两个都写
 - **任何涉及 token 的改动，按固定顺序：① 先改 `theme/fx-theme.css`（真相源）② 同步 `docs/TOKENS.md` + 相关规则/`DECISIONS.md` ③ 跑 `npm run build:tokens` 重建 manifest ④ 最后才改组件等映射处**。顺序不能反——先改组件后补 token 会漂移
+- **任何存在引用关系的内容，都按“真相源 → 引用项”联动处理**：源码、Markdown、manifest、网页示例、数据表谁引用谁都要查清，改动时同步更新，不留孤立副本
 
 ---
 
@@ -74,25 +77,26 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 **动手前：**
 1. **路由唯一**：这条信息/能力唯一归哪个文件？查 `docs/DOCUMENTATION.md` SSOT 表——已有归属就别另起，别和别的文档蹭。
 2. **认准真相源**：要改的是不是真相源（`theme/fx-theme.css` / `docs/data/*.json`）？是就从源头改，别从下游改。
+3. **先找联动链**：这个内容被哪些 Markdown / 网页 / manifest / 示例 / 数据视图引用？没找清引用链前，不要只改眼前这一处。
 
 **改 token / 颜色：**
-3. 顺序铁律：**改 `theme/fx-theme.css` → 同步 `docs/TOKENS.md`+规则 → `npm run build:tokens` → 最后改组件**。顺序不能反。
-4. 交互态一律走色板阶梯（实心 09/08/10/05、浅色 01/02/03，仅浅色模式），禁 `color-mix`、禁 `/透明度`。
+4. 顺序铁律：**改 `theme/fx-theme.css` → 同步 `docs/TOKENS.md`+规则 → `npm run build:tokens` → 最后改组件**。顺序不能反。
+5. 交互态一律走色板阶梯（实心 09/08/10/05、浅色 01/02/03，仅浅色模式），禁 `color-mix`、禁 `/透明度`。
 
 **新建 / 改文档：**
-5. **登记**：新建 `docs/*.md` 同时①在 SSOT 表加一行 ②在 `docs/data/doc-structure.manifest.json` 声明唯一 `responsibility` + 必备章节。
-6. **不重复**：本文该写的别人不写；别人的活只放指针（link），不复制正文。
-7. **章节齐全**：对照 doc-structure 的 `requiredSections`，别产出残缺文档。
+6. **登记**：新建 `docs/*.md` 同时①在 SSOT 表加一行 ②在 `docs/data/doc-structure.manifest.json` 声明唯一 `responsibility` + 必备章节。
+7. **不重复**：本文该写的别人不写；别人的活只放指针（link），不复制正文。
+8. **章节齐全**：对照 doc-structure 的 `requiredSections`，别产出残缺文档。
 
 **新增长期规则：**
-8. **三件套**：文字规范（MD）→ 机器事实（JSON）→ 可执行检查（script 接 `check-all.sh`）。只写 MD 会飘。
-8b. **防膨胀**：规则一旦有 check 兜底，MD 只留"一句意图 + 指向 check"，**判定细节别在 MD 复述**；清单型事实（组件 prop、页面骨架）放 manifest，不抄进 MD。规范文档应越来越薄，不是越堆越长。
-8c. **检查不必一一接入**：加 check 前先过三门槛——①高价值且易静默漂移 ②机器能客观判定 ③构建/人工抓不到；不满足就靠 build + 人工核对 + 文字规范。**同类机械规则合并到一个脚本**（如禁用 import 都进 `check-imports.mjs`），不要一规则一脚本，否则检查也会膨胀。
+9. **三件套**：文字规范（MD）→ 机器事实（JSON）→ 可执行检查（script 接 `check-all.sh`）。只写 MD 会飘。
+9b. **防膨胀**：规则一旦有 check 兜底，MD 只留"一句意图 + 指向 check"，**判定细节别在 MD 复述**；清单型事实（组件 prop、页面骨架）放 manifest，不抄进 MD。规范文档应越来越薄，不是越堆越长。
+9c. **检查不必一一接入**：加 check 前先过三门槛——①高价值且易静默漂移 ②机器能客观判定 ③构建/人工抓不到；不满足就靠 build + 人工核对 + 文字规范。**同类机械规则合并到一个脚本**（如禁用 import 都进 `check-imports.mjs`），不要一规则一脚本，否则检查也会膨胀。
 
 **收尾：**
-9. `bash scripts/check-all.sh` 全绿才算完；`last_verified` 由 pre-commit 自动 bump，不用手填。
-10. **改了页面/组合/视觉 → 必须 `npm run test:visual` 并肉眼核对截图**（基线在 `tests/visual.spec.ts-snapshots/`），确认没多余缝隙/圆角/对齐漂移，再宣告完成。没看截图就说"好了" = 没做完。
-11. 不确定写哪 / 该不该删——先查文档，别凭感觉。
+10. `bash scripts/check-all.sh` 全绿才算完；`last_verified` 由 pre-commit 自动 bump，不用手填。
+11. **改了页面/组合/视觉 → 必须 `npm run test:visual` 并肉眼核对截图**（基线在 `tests/visual.spec.ts-snapshots/`），确认没多余缝隙/圆角/对齐漂移，再宣告完成。没看截图就说"好了" = 没做完。
+12. 不确定写哪 / 该不该删——先查文档，别凭感觉。
 
 ---
 

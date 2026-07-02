@@ -15,6 +15,7 @@
     "check:agent-ui": "node scripts/check-agent-ui-contract.mjs",
     "check:all": "bash scripts/check-all.sh",
     "build:tokens": "node scripts/build-design-tokens.mjs",
+    "build:governance-pages": "node scripts/build-governance-pages.mjs",
     "preview": "vite preview",
     "test:visual": "playwright test",
     "test:visual:update": "playwright test --update-snapshots",

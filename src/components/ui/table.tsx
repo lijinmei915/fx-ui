@@ -1,8 +1,9 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import { ChevronUpIcon, ChevronDownIcon, ChevronsUpDownIcon, MoreVerticalIcon } from "@/lib/icons"
+import { ChevronUpIcon, ChevronDownIcon, ChevronsUpDownIcon, MoreVerticalIcon, FilterIcon } from "@/lib/icons"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 function Table({
   className,
@@ -32,7 +33,7 @@ function Table({
       <table
         data-slot="table"
         data-density={density}
-        className={cn("group/table w-full caption-bottom text-base", className)}
+        className={cn("group/table w-full caption-bottom text-sm", className)}
         {...props}
       />
     </div>
@@ -48,7 +49,7 @@ function TableHeader({
     <thead
       data-slot="table-header"
       className={cn(
-        // 表头白底，靠「加粗文字 + 更深的下边线(neutrals05)」和表体区分（对齐公司列表页）
+        // 表头白底，靠「中等字重 + 下边线」和表体区分（更接近主流默认表格观感）
         "[&_tr]:border-b [&_tr]:border-border",
         // 吸顶：滚动时表头固定。需配合外层容器固定高度 + overflow-y-auto
         sticky && "sticky top-0 z-10 bg-card [&_th]:bg-card",
@@ -74,7 +75,7 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
     <tfoot
       data-slot="table-footer"
       className={cn(
-        "border-t border-border-subtle bg-muted font-medium [&>tr]:last:border-b-0",
+        "border-t border-border bg-muted font-medium [&>tr]:last:border-b-0",
         className
       )}
       {...props}
@@ -98,12 +99,18 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
 const alignClass = (align?: "left" | "center" | "right") =>
   align === "right" ? "text-right" : align === "center" ? "text-center" : "text-left"
 
-// 固定列：横向滚动时贴边不动。需不透明底遮挡滚动内容，并用内阴影做分隔线。
+const selectionCellClass =
+  "data-[selection-cell=true]:w-8 data-[selection-cell=true]:min-w-8 data-[selection-cell=true]:px-2 data-[selection-cell=true]:text-center data-[selection-cell=true]:[&>*]:mx-auto [&:has([role=checkbox])]:w-8 [&:has([role=checkbox])]:min-w-8 [&:has([role=checkbox])]:px-2 [&:has([role=checkbox])]:text-center [&:has([role=checkbox])>*]:mx-auto [&:has([role=radio])]:w-8 [&:has([role=radio])]:min-w-8 [&:has([role=radio])]:px-2 [&:has([role=radio])]:text-center [&:has([role=radio])>*]:mx-auto"
+
+const selectionHeadInnerClass =
+  "data-[selection-cell=true]:[&>div]:flex data-[selection-cell=true]:[&>div]:h-full data-[selection-cell=true]:[&>div]:w-full data-[selection-cell=true]:[&>div]:items-center data-[selection-cell=true]:[&>div]:justify-center [&:has([role=checkbox])>div]:flex [&:has([role=checkbox])>div]:h-full [&:has([role=checkbox])>div]:w-full [&:has([role=checkbox])>div]:items-center [&:has([role=checkbox])>div]:justify-center [&:has([role=radio])>div]:flex [&:has([role=radio])>div]:h-full [&:has([role=radio])>div]:w-full [&:has([role=radio])>div]:items-center [&:has([role=radio])>div]:justify-center"
+
+// 固定列：横向滚动时贴边不动。用柔和阴影表达层级，避免硬线和列边框叠出多根竖线。
 const pinnedClass = (pinned?: "left" | "right") =>
   pinned === "right"
-    ? "sticky right-0 z-[1] bg-card shadow-[inset_1px_0_0_var(--border-subtle)]"
+    ? "sticky right-0 z-[2] bg-card shadow-[-10px_0_18px_-10px_var(--fx-shadow-color)]"
     : pinned === "left"
-      ? "sticky left-0 z-[1] bg-card shadow-[inset_-1px_0_0_var(--border-subtle)]"
+      ? "sticky left-0 z-[2] bg-card shadow-[10px_0_18px_-10px_var(--fx-shadow-color)]"
       : ""
 
 // 冻结到此列（Excel 冻结窗格模型）：传 frozenLeft 数值 = 该列贴左的累加偏移；frozenEdge 标记冻结区最后一列（加右缘阴影分隔）。
@@ -112,7 +119,7 @@ function frozenStyle(frozenLeft?: number): React.CSSProperties | undefined {
 }
 function frozenClass(frozenLeft?: number, frozenEdge?: boolean) {
   if (frozenLeft == null) return ""
-  return cn("sticky z-[1] bg-card", frozenEdge && "shadow-[2px_0_6px_0_rgba(0,0,0,0.08)]")
+  return cn("sticky z-[2] bg-card", frozenEdge && "shadow-[10px_0_18px_-10px_var(--fx-shadow-color)]")
 }
 
 function TableHead({
@@ -124,6 +131,8 @@ function TableHead({
   sortable,
   sorted = false,
   onSort,
+  filterContent,
+  filtered,
   menuActions,
   children,
   style,
@@ -136,6 +145,9 @@ function TableHead({
   sortable?: boolean
   sorted?: "asc" | "desc" | false
   onSort?: () => void
+  // 列筛选弹层：适合搜索 + 多选 + 确认/重置这类需要停留操作的筛选面板。
+  filterContent?: React.ReactNode
+  filtered?: boolean
   // 列操作菜单（冻结/筛选等不常用操作收进 hover 出现的 ⋮ 菜单，避免平铺挤窄列）
   menuActions?: { label: string; icon?: React.ReactNode; onClick?: () => void }[]
 }) {
@@ -144,7 +156,9 @@ function TableHead({
       data-slot="table-head"
       data-sorted={sorted || undefined}
         className={cn(
-        "group/th h-(--fx-control-md-height) min-w-[112px] px-(--fx-control-px-xs) align-middle font-semibold whitespace-nowrap text-foreground group-data-[density=compact]:h-(--fx-control-sm-height) group-data-[density=comfortable]:h-(--fx-control-lg-height) [&:has([role=checkbox])]:pr-0",
+        "group/th relative h-(--fx-table-row-height-default) min-w-[96px] px-(--fx-control-px-xs) align-middle whitespace-nowrap text-foreground/88 group-data-[density=compact]/table:h-(--fx-table-row-height-compact) group-data-[density=comfortable]/table:h-(--fx-table-row-height-comfortable)",
+        selectionCellClass,
+        selectionHeadInnerClass,
         alignClass(align),
         pinnedClass(pinned),
         frozenClass(frozenLeft, frozenEdge),
@@ -171,6 +185,20 @@ function TableHead({
           </button>
         ) : (
           children
+        )}
+        {filterContent && (
+          <Popover>
+            <PopoverTrigger
+              aria-label="列筛选"
+              className="ml-0.5 inline-flex size-(--fx-control-xs-height) items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:bg-muted hover:text-foreground focus-visible:opacity-100 group-hover/th:opacity-100 data-popup-open:opacity-100 data-popup-open:bg-muted data-[filtered=true]:text-primary data-[filtered=true]:opacity-100 [&_svg]:size-3.5"
+              data-filtered={filtered ? "true" : undefined}
+            >
+              <FilterIcon />
+            </PopoverTrigger>
+            <PopoverContent align="start" className="w-72 p-0">
+              {filterContent}
+            </PopoverContent>
+          </Popover>
         )}
         {menuActions && menuActions.length > 0 && (
           <DropdownMenu>
@@ -209,7 +237,8 @@ function TableCell({
       data-slot="table-cell"
       className={cn(
         // 表体三档行高（对齐公司）：紧凑28 / 舒适36(默认) / 宽松42；统一 align-middle 垂直居中
-        "h-(--fx-control-md-height) px-(--fx-control-px-xs) py-0 align-middle whitespace-nowrap group-data-[density=compact]:h-(--fx-control-sm-height) group-data-[density=comfortable]:h-(--fx-control-lg-height) [&:has([role=checkbox])]:pr-0",
+        "relative h-(--fx-table-row-height-default) px-(--fx-control-px-xs) py-0 align-middle whitespace-nowrap group-data-[density=compact]/table:h-(--fx-table-row-height-compact) group-data-[density=comfortable]/table:h-(--fx-table-row-height-comfortable)",
+        selectionCellClass,
         alignClass(align),
         pinnedClass(pinned),
         frozenClass(frozenLeft, frozenEdge),
@@ -228,7 +257,7 @@ function TableCaption({
   return (
     <caption
       data-slot="table-caption"
-      className={cn("mt-4 text-base text-muted-foreground", className)}
+      className={cn("mt-3 text-sm text-muted-foreground", className)}
       {...props}
     />
   )

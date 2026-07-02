@@ -74,6 +74,7 @@ export {
   IconLoader2 as Loader2Icon,
   IconLogout as LogOutIcon,
   IconMessageReport as MessageSquareWarningIcon,
+  IconMinus as MinusIcon,
   IconDots as MoreHorizontalIcon,
   IconDotsVertical as MoreVerticalIcon,
   IconNavigation as NavigationIcon,

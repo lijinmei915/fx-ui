@@ -68,6 +68,42 @@
       "checkCommand": "npm run check:doc-site"
     },
     {
+      "id": "website-standards-manifest",
+      "path": "docs/data/website-standards.manifest.json",
+      "format": "fx-ui/website-standards-manifest",
+      "purpose": "登记网站规范页的卡槽、节奏标签和联动规则，让页面从机器事实表直接渲染。",
+      "ownerRole": "doc-site-governance",
+      "consumedBy": [
+        "src/App.tsx",
+        "scripts/check-doc-site-contract.mjs"
+      ],
+      "checkCommand": "npm run check:doc-site"
+    },
+    {
+      "id": "governance-pages-manifest",
+      "path": "docs/data/governance-pages.manifest.json",
+      "format": "fx-ui/governance-pages-manifest",
+      "purpose": "登记文档规范页与检查命令页的表格、卡片和清单，让治理型页面优先从机器事实表渲染。",
+      "ownerRole": "doc-site-governance",
+      "consumedBy": [
+        "src/App.tsx",
+        "scripts/check-doc-site-contract.mjs",
+        "scripts/build-governance-pages.mjs"
+      ],
+      "checkCommand": "npm run check:doc-site"
+    },
+    {
+      "id": "governance-todo",
+      "path": "docs/data/governance-todo.json",
+      "format": "fx-ui/governance-todo",
+      "purpose": "登记治理联动的后续待办，让 AI 和工程师按同一份优先级清单持续推进自动化和联动。",
+      "ownerRole": "doc-site-governance",
+      "consumedBy": [
+        "scripts/check-doc-site-contract.mjs"
+      ],
+      "checkCommand": "npm run check:doc-site"
+    },
+    {
       "id": "system-relations",
       "path": "docs/data/system-relations.json",
       "format": "fx-ui/system-relations",

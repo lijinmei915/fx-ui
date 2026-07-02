@@ -1,0 +1,280 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/governance-pages-manifest",
+  "updatedAt": "2026-07-02",
+  "truthSource": "docs/data/governance-pages.manifest.json",
+  "humanDoc": "docs/DOC_SITE_DESIGN.md",
+  "note": "治理页里的规则型卡槽机器事实表。文档规范和检查命令页面优先从这里读表格、卡片和清单，避免把治理文案写死在 src/App.tsx。",
+  "documentation": {
+    "ssotRoutes": [
+      {
+        "question": "AI 怎么行动",
+        "source": "AGENTS.md",
+        "usage": "AI 红线、组件改动核对、token 保护规则。"
+      },
+      {
+        "question": "项目现在到哪",
+        "source": "PROJECT.md / HANDOFF.md",
+        "usage": "当前优先级、交接状态、下一步。"
+      },
+      {
+        "question": "组件事实",
+        "source": "docs/components/*.md + docs/data/components.manifest.json",
+        "usage": "组件 API、示例、AI 可消费结构化事实。"
+      },
+      {
+        "question": "token 取值",
+        "source": "docs/TOKENS.md + docs/data/design-tokens.json",
+        "usage": "颜色、排版、圆角、间距等设计令牌。"
+      },
+      {
+        "question": "文档站骨架",
+        "source": "docs/DOC_SITE_DESIGN.md + docs/data/doc-site.manifest.json",
+        "usage": "顶部导航、左侧导航、内容区、右侧目录。"
+      }
+    ],
+    "antiDriftLoop": [
+      {
+        "title": "文字规范",
+        "file": "docs/*.md",
+        "desc": "解释为什么这么做、边界是什么。"
+      },
+      {
+        "title": "机器事实表",
+        "file": "docs/data/*.json",
+        "desc": "记录必须存在的结构事实，给脚本读取。"
+      },
+      {
+        "title": "可执行检查",
+        "file": "scripts/check-*.mjs",
+        "desc": "把规则接入 npm run check，防止页面和文档漂。"
+      }
+    ],
+    "writeRules": [
+      "新建 docs/*.md 时，必须同时在 docs/DOCUMENTATION.md 的 SSOT 表登记。",
+      "改组件文档或示例前，先读对应 src/components/ui/<component>.tsx，不要发明源码没有的 API。",
+      "结构事实会被代码消费时，补 docs/data/*.json；会随源码漂移时，再补检查脚本。",
+      "真相源一旦被网页、Markdown、manifest、示例或数据视图引用，就要按联动链同步更新，不能只改一头。",
+      "不要每次改动都同时更新 PROJECT / HANDOFF / CHANGELOG / DECISIONS，只更新真正被影响的真相源。"
+    ]
+  },
+  "checks": {
+    "commands": [
+      {
+        "command": "npm run check",
+        "usage": "默认交付门禁：组件契约、token、文档站、组件 manifest、构建一起跑。"
+      },
+      {
+        "command": "npm run check:components",
+        "usage": "改了组件文档、组件示例或 docs/data/components.manifest.json 时单独跑。"
+      },
+      {
+        "command": "npm run check:doc-site",
+        "usage": "改了顶部导航、左侧导航、右侧目录、文档站页面骨架时单独跑。"
+      },
+      {
+        "command": "npm run check:tokens",
+        "usage": "改了 theme/fx-theme.css、docs/TOKENS.md 或 design-tokens.json 时单独跑。"
+      },
+      {
+        "command": "npm run check:all",
+        "usage": "交接前的宽检查：额外跑文档路由登记、密钥扫描和交接提醒。"
+      }
+    ],
+    "layers": [
+      {
+        "title": "shadcn 组件契约",
+        "script": "scripts/check-shadcn-contract.mjs",
+        "desc": "守住 Button 这类高风险组件的真实 variant、size 和状态。"
+      },
+      {
+        "title": "治理页面数据重建",
+        "script": "scripts/build-governance-pages.mjs",
+        "desc": ""
+      },
+      {
+        "title": "token 漂移",
+        "script": "scripts/check-tokens-sync.sh",
+        "desc": "确认 token 文档、JSON 和主题文件没有互相飘。"
+      },
+      {
+        "title": "浮层阴影 token 检查",
+        "script": "scripts/check-shadow-tokens.mjs",
+        "desc": ""
+      },
+      {
+        "title": "目录锚点关联检查",
+        "script": "scripts/check-toc-anchors.mjs",
+        "desc": ""
+      },
+      {
+        "title": "组件文档 API 检查",
+        "script": "scripts/check-component-docs.mjs",
+        "desc": ""
+      },
+      {
+        "title": "交互态 token 检查",
+        "script": "scripts/check-interaction-tokens.mjs",
+        "desc": ""
+      },
+      {
+        "title": "组件体检硬伤检查",
+        "script": "scripts/check-component-hygiene.mjs",
+        "desc": ""
+      },
+      {
+        "title": "列表页来源检查",
+        "script": "scripts/check-list-page-source.mjs",
+        "desc": ""
+      },
+      {
+        "title": "导入约定检查",
+        "script": "scripts/check-imports.mjs",
+        "desc": ""
+      },
+      {
+        "title": "文档站骨架",
+        "script": "scripts/check-doc-site-contract.mjs",
+        "desc": "确认导航、页面骨架、右侧目录这些结构还存在。"
+      },
+      {
+        "title": "组件 manifest",
+        "script": "scripts/check-components-manifest.mjs",
+        "desc": "确认组件文档和机器事实表对得上。"
+      },
+      {
+        "title": "图标注册表检查",
+        "script": "scripts/check-icons.mjs",
+        "desc": ""
+      },
+      {
+        "title": "Agent UI 协议检查",
+        "script": "scripts/check-agent-ui-contract.mjs",
+        "desc": ""
+      },
+      {
+        "title": "文档路由登记检查",
+        "script": "scripts/check-docs-routing.sh",
+        "desc": ""
+      },
+      {
+        "title": "文档章节/职责契约检查",
+        "script": "scripts/check-doc-structure.mjs",
+        "desc": "登记每个治理文档的唯一职责（responsibility，路由不打架）和必备章节（防 AI 产出残缺）。"
+      }
+    ],
+    "finishChecklist": [
+      "组件文档变了：读源码，核对 variant / size / 状态，再跑 npm run check:components。",
+      "token 或主题变了：同步 token 文档和 JSON，再跑 npm run check:tokens。",
+      "文档站导航或页面骨架变了：同步 doc-site manifest，再跑 npm run check:doc-site。",
+      "新增文档：先登记 docs/DOCUMENTATION.md，交接前跑 npm run check:all。",
+      "宣告完成前默认跑 npm run check，检查不通过就继续修。"
+    ]
+  },
+  "overview": {
+    "positioning": [
+      {
+        "title": "基础组件",
+        "desc": "全部来自 shadcn/ui open-code，不做黑盒封装。"
+      },
+      {
+        "title": "公司视觉",
+        "desc": "通过 theme/fx-theme.css 注入 token，不逐个组件重写。"
+      },
+      {
+        "title": "AI 治理",
+        "desc": "规则进入 Markdown、JSON manifest 和检查脚本，防止漂移。"
+      }
+    ],
+    "layers": [
+      {
+        "layer": "基础组件",
+        "directory": "src/components/ui",
+        "responsibility": "shadcn/ui open-code 基础控件。"
+      },
+      {
+        "layer": "公司组合组件",
+        "directory": "src/components/fx",
+        "responsibility": "沉淀 PageHeader、SearchToolbar、ConfirmDangerDialog 等业务组合。"
+      },
+      {
+        "layer": "页面 Blocks / 布局规范",
+        "directory": "src/blocks + docs/LAYOUTS.md",
+        "responsibility": "从真实页面抽取页面模式和布局规则。"
+      }
+    ],
+    "audience": [
+      "工程师：查组件 API、复制真实用法、确认 token 规则。",
+      "设计/产品：查看组件语义、状态、场景和设计令牌。",
+      "AI：读取 Markdown + manifest + 检查脚本，生成不漂的页面。"
+    ]
+  },
+  "install": {
+    "prerequisites": [
+      "Vite + React + TypeScript。",
+      "Tailwind CSS v4，并通过全局 CSS 承载 shadcn 语义变量。",
+      "项目已初始化 shadcn；未初始化时先运行："
+    ],
+    "structure": [
+      "src/components/ui/：shadcn 基础组件，CLI 拉取，open-code 可读可改。",
+      "src/components/fx/：公司组合组件，由 shadcn 组件组合而成。",
+      "theme/fx-theme.css：公司 token 真相源，改它等于全局换肤。",
+      "docs/components/：组件文档资产，给工程师和 AI 共同消费。"
+    ],
+    "verify": [
+      "shadcn 组件已经进入 src/components/ui。",
+      "theme/fx-theme.css 在应用入口只导入一次。",
+      "宣告接入完成前运行 npm run check。"
+    ]
+  },
+  "theme": {
+    "semanticSlots": [
+      {
+        "layer": "Primitive",
+        "example": "--fx-primary: #FF8000",
+        "purpose": "公司原始视觉值，只在 token 真相源维护。"
+      },
+      {
+        "layer": "Semantic",
+        "example": "--primary / --background / --ring",
+        "purpose": "shadcn/ui 和 Tailwind 真正消费的语义槽。"
+      },
+      {
+        "layer": "Component Usage",
+        "example": "Button default -> bg-primary",
+        "purpose": "组件如何消费 token 的规则。"
+      }
+    ],
+    "changeFlow": [
+      "先判断这是全局主题问题，还是局部组件用法问题。",
+      "全局 token 改 theme/fx-theme.css；组件规则改 docs/components。",
+      "运行 npm run check，拦住 token 和文档漂移。"
+    ]
+  },
+  "aiRules": {
+    "guardrails": [
+      {
+        "title": "不手写基础组件",
+        "desc": "需要新组件时用 npx shadcn@latest add <component> 拉 open-code。"
+      },
+      {
+        "title": "不乱改 token 真相源",
+        "desc": "theme/fx-theme.css 是全局换肤入口，修改前说明影响范围。"
+      },
+      {
+        "title": "不发明组件 API",
+        "desc": "variant、size、state 必须来自 src/components/ui 源码。"
+      },
+      {
+        "title": "不手改 dist",
+        "desc": "所有样式任务都定位源码，dist 只作为构建产物。"
+      }
+    ],
+    "styleFlow": [
+      "从页面选择器或浏览器检查工具定位源码，不手改 dist。",
+      "判断应该固化到组件样式、token、组合组件，还是局部页面覆盖。",
+      "修改组件文档或示例时，先读取对应 src/components/ui/<component>.tsx。",
+      "完成后运行 npm run check，检查不通过不宣告完成。"
+    ]
+  }
+}

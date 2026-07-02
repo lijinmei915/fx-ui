@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-06-26
+last_verified: 2026-07-02
 teaches: "fx-ui 的文档分工边界、SSOT 规则——一条信息该写进哪个文件"
 use_when: "不确定一条新信息该记录到哪份文档时，先查这里的 SSOT 表和判断示例"
 ---
@@ -45,6 +45,41 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 | 组件事实 | `docs/components/*.md` | `docs/data/components.manifest.json` | `scripts/check-components-manifest.mjs` |
 | token | `docs/TOKENS.md` | `docs/data/design-tokens.json` | `scripts/check-tokens-sync.sh` |
 | 文档章节/职责 | 本文（SSOT 表） | `docs/data/doc-structure.manifest.json` | `scripts/check-doc-structure.mjs` |
+
+### Markdown / Manifest / Generated 分工
+
+主流做法不是“全写 Markdown”也不是“全做 JSON”，而是按用途分层：
+
+| 载体 | 适合放什么 | 不该放什么 |
+|------|------------|------------|
+| `docs/*.md` | 背景、原因、边界、判断原则、流程说明 | 会被页面/AI/脚本反复消费的结构化事实 |
+| `docs/data/*.json` | 页面、AI、脚本都要读取的结构化事实；需要状态、优先级、字段约束的内容 | 纯解释性长文、权衡过程、重复叙述 |
+| `scripts/build-*.mjs` / 生成脚本 | 能从真相源稳定推导出来的副本，例如命令表、token 清单、部分治理页面数据 | 再造一个新的真相源；把本该手写的判断逻辑硬塞成伪自动化 |
+
+判断顺序固定为：
+
+```txt
+先问：这是解释，还是事实？
+再问：这份事实会不会被页面 / AI / 脚本共同消费？
+再问：它能不能从别的真相源稳定派生？
+```
+
+落地规则：
+
+1. **解释写 Markdown。** “为什么这样定 / 边界是什么 / 什么时候例外”优先写 `docs/*.md`。
+2. **结构事实写 manifest。** 只要页面、AI、脚本中有两方以上要消费，同一份事实就应收口到 `docs/data/*.json`。
+3. **能派生的不要手填第二份。** 如果内容能从 `package.json`、源码、token 源、路由源或其他 manifest 稳定生成，就优先写生成脚本，而不是再手抄一个副本。
+4. **禁止双真相源。** 同一份结构化事实不能同时在 Markdown、JSON、页面 JSX 里各维护一份“都像真相源”的副本。
+5. **不要过度机器化。** 纯待讨论的想法、一次性备注、只给人看的 TODO，不必强行做成 JSON；只有当页面、AI 或脚本真的要消费时，才升级为 manifest。
+
+简单判断：
+
+| 场景 | 应该放哪 |
+|------|----------|
+| “为什么真相源和引用项要联动” | `docs/*.md` |
+| 页面上的规则卡槽 / 命令表 / 状态表 | `docs/data/*.json` |
+| `package.json scripts` 派生出来的命令展示 | `scripts/build-*.mjs` 生成到 manifest |
+| 临时脑暴、一次性备注 | Markdown 即可 |
 
 | 问题 | SSOT |
 |------|------|
@@ -144,7 +179,7 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 ---
 layer: knowledge | governance
 type: spec | status | log | architecture
-last_verified: 2026-06-26
+last_verified: 2026-07-02
 teaches: "这份文档回答什么问题"
 use_when: "什么场景下应该先查这份文档"
 ---

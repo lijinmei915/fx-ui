@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/design-tokens",
-  "updatedAt": "2026-06-29",
+  "updatedAt": "2026-07-01",
   "truthSource": "theme/fx-theme.css",
   "humanDoc": "docs/TOKENS.md",
   "note": "主项目采用 shadcn 友好的三层结构：primitive -> semantic -> componentUsage。报告 skill 的 Seed -> Map -> Alias -> Component 四层结构可作为独立 HTML 输出参考，但不替代本项目的 shadcn semantic slots。",

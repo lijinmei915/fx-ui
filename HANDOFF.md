@@ -1,8 +1,30 @@
-> **接手时间**：2026-06-26（最新一轮：网站样式优化 + playground）
+> **接手时间**：2026-07-06（最新一轮：playground 泛化收尾 + check-secrets 沙箱兼容 + 仓库清理）
 > **项目根目录**：fx-ui
-> **当前状态**：本轮做**网站样式优化（参考桌面 component-library-showcase）+ Button 交互调试台**。① 字体气质：全站展示标题加粗收紧并降一档（4xl→3xl/2xl→xl）、字重补 semibold(600)、中文字族改优先系统苹方（DEC-027/028）；② **Button playground**（`ButtonPlayground` in `src/App.tsx`，Button 页 `#playground`）——左场景预设 + 右实时属性（变体/尺寸/图标/禁用/文本），Preview/Code 切换 + Copy 代码生成，点阵预览区，「全部」铺变体矩阵，选中场景显 使用意图/推荐写法卡片，eyebrow 微标签；分段控件 `PgSegmented` 是 playground 自有 chrome（1:1 抠 showcase：muted 轨道+白滑块+「全部」竖线分隔，色值全走 token）；③ 暗色 token 层（DEC-026）+ 切换已落地但**暂搁置**（需全 token 体系一起做）。全在本地 main，**未推云端**
-> **下一步**：1）playground **铺到其他组件页**（Input/Select/Badge…）——当前 `ButtonPlayground` 是 Button 专用（PG_VARIANTS/pgButton/genButtonCode 硬编码），铺开前先泛化成 config 驱动通用引擎（scenarios[]/props[]/render/genCode）；2）场景预设激活态若要更贴 showcase 的"软底高亮"，给 Button 加 soft 变体走治理；3）旧待办仍在：block 升 fx（DEC-024）、逐个组件体检、下拉多选/单选选中样式
-> **风险**：① `theme/fx-theme.css` 是 token 真相源，动它即全局换肤（顺序 CSS→TOKENS.md→design-tokens.json→`build:tokens`→组件）；② **大块改动随手提交**，别攒一堆未提交；③ **改页面/组合/视觉，收尾必跑 `npm run test:visual` 看截图**（红线，曾因没看截图漏掉缝隙/圆角）；④ 视觉基线是 mac/chromium 版，换机/上 CI 需重定
+> **当前状态**：本轮把上一轮（6/26）攒下未提交的 playground 泛化改动收尾提交、推上云端，顺带修一个沙箱阻塞 + 清一批导出残留垃圾。① **playground 泛化已完成**（`src/components/fx/component-playground.tsx`）：从 Button 专用硬编码（PG_VARIANTS/pgButton/genButtonCode）泛化为 **config 驱动通用引擎**——`ComponentPlaygroundConfig`（scenarios[]/props[]/initial/guidanceKey/renderOne/genCode + onValueChange + disabledWhen/hiddenWhen 联动），segment/text 两类 prop，全程 zh/en 双语；真相源收口到 `docs/data/component-playgrounds.manifest.json`（schemaVersion 1），已配 icon/tag/buttonGroup 三个组件 + 28 个 autoScenarioComponents（从 props 自动生成场景）；② **check-secrets.sh mktemp 兼容沙箱/CI**：裸 `mktemp` 改 `mktemp "${TMPDIR:-/tmp}/..."`，macOS 沙箱（mktemp 不读 $TMPDIR）和 Linux CI 都能跑；③ **清导出残留**：删 `fx-ui-frontend-style/`+zip（已跟踪的项目快照副本，63 文件/2 万行）+ `button-page-export/`+zip（gitignore）。5 个提交已推 origin/main（2 旧 + fix + feat + chore）
+> **下一步**：1）playground 继续铺组件页——往 `component-playgrounds.manifest.json` 加配置即可（icon/tag/buttonGroup 已有范例），autoScenarioComponents 里 28 个走自动场景，优先补 Input/Select/Badge 等高频组件的 renderOne/genCode 适配；2）旧待办仍在：DEC-005 尾巴（toggle/table/tabs/sidebar 的 `/透明度`、旧 hover）、block 升 fx（DEC-024）、逐个组件体检、下拉多选/单选选中样式；3）视觉基线补 playground 截图
+> **风险**：① `theme/fx-theme.css` 是 token 真相源，动它即全局换肤（顺序 CSS→TOKENS.md→design-tokens.json→`build:tokens`→组件）；② **大块改动随手提交，别攒一堆未提交**（本轮就是攒了一堆才推）；③ **改页面/组合/视觉，收尾必跑 `npm run test:visual` 看截图**（红线，曾因没看截图漏掉缝隙/圆角）；④ 视觉基线是 mac/chromium 版，换机/上 CI 需重定；⑤ **沙箱网络只放行 aihub.firstshare.cn + api.anthropic.com，github.com 被拦**——`git push` 需在独立终端跑，Claude Code 会话里推不了
+
+---
+
+## 本轮（2026-07-06）playground 泛化收尾 + check-secrets 沙箱兼容 + 仓库清理
+
+**主线：把上一轮（6/26）攒下未提交的 playground 泛化改动收尾提交、推上云端，顺带修一个沙箱阻塞、清一批导出残留垃圾。**
+
+playground 泛化（上一轮写好的代码，本轮收尾提交，commit a0be21c）：
+- **config 驱动通用引擎**（`src/components/fx/component-playground.tsx`）：`ComponentPlaygroundConfig` = scenarios[] + props[] + initial + guidanceKey + renderOne + genCode + onValueChange，props 支持 segment（带 hasAll / 选项 intent+constraint 双语）和 text（bilingual），每个 prop 可 `disabledWhen`/`hiddenWhen` 联动；eyebrow/分段控件 chrome 全走 token
+- **真相源收口**：新增 `docs/data/component-playgrounds.manifest.json`（schemaVersion 1，`truthSource` 指向自身），组件页和网站规范页都从这里读场景/属性/意图/约束，源码只负责渲染
+- **已配 3 个组件**：icon / tag / buttonGroup（含完整 scenarios + props + intent/constraint 双语）；另声明 28 个 `autoScenarioComponents`（input/select/checkbox/...）走自动场景生成
+- 同步更新 button-group.tsx、theme/fx-theme.css（playground 相关 token）、App.tsx、button.md / component-playground.md、design-tokens.json、website-standards.manifest.json
+
+check-secrets 沙箱兼容（commit c17029d）：
+- `scripts/check-secrets.sh` 裸 `mktemp` 在 macOS 沙箱里走系统 `/var/folders/.../T/`（mktemp 不读 `$TMPDIR`），无写权限 → pre-commit 误报失败
+- 改 `mktemp "${TMPDIR:-/tmp}/secret-scan.XXXXXX"`，沙箱 / 本地终端 / Linux CI 都能跑，不削弱检查能力
+
+仓库清理（commit dcc6b54）：
+- 删 `fx-ui-frontend-style/` + zip（6/26 导出的整个项目快照副本，已被 git 跟踪，63 文件 / 20061 行——留着占体积 + 易被 AI 当真相源误读）
+- 删 `button-page-export/` + zip（gitignore 覆盖，本地残留）
+
+一句话给下个 AI：**playground 已泛化成 config 驱动，铺新组件 = 往 `component-playgrounds.manifest.json` 加配置 + 写 renderOne/genCode，别再复制 Button 专用那套。**
 
 ---
 

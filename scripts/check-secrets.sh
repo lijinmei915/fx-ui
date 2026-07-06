@@ -12,7 +12,7 @@ cd "$target"
 
 warnings=0
 errors=0
-secret_scan_tmp="$(mktemp)"
+secret_scan_tmp="$(mktemp "${TMPDIR:-/tmp}/secret-scan.XXXXXX")"
 
 cleanup() {
   rm -f "$secret_scan_tmp"

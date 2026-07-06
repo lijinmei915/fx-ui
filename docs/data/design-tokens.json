@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/design-tokens",
-  "updatedAt": "2026-07-01",
+  "updatedAt": "2026-07-03",
   "truthSource": "theme/fx-theme.css",
   "humanDoc": "docs/TOKENS.md",
   "note": "主项目采用 shadcn 友好的三层结构：primitive -> semantic -> componentUsage。报告 skill 的 Seed -> Map -> Alias -> Component 四层结构可作为独立 HTML 输出参考，但不替代本项目的 shadcn semantic slots。",
@@ -1417,31 +1417,31 @@
     },
     {
       "name": "--fx-shadow-color",
-      "value": "oklch(from var(--fx-neutrals-20) l c h / 0.12)",
+      "value": "oklch(from var(--fx-neutrals-20) l c h / 0.08)",
       "category": "palette",
       "usage": ""
     },
     {
       "name": "--fx-shadow-l1",
-      "value": "0px 2px 6px 0px var(--fx-shadow-color)",
+      "value": "0px 6px 18px -8px var(--fx-shadow-color)",
       "category": "palette",
       "usage": ""
     },
     {
       "name": "--fx-shadow-l2",
-      "value": "0px 4px 12px 0px var(--fx-shadow-color)",
+      "value": "0px 10px 30px -12px var(--fx-shadow-color)",
       "category": "palette",
       "usage": ""
     },
     {
       "name": "--fx-shadow-l3",
-      "value": "0px 6px 24px 0px var(--fx-shadow-color)",
+      "value": "0px 18px 48px -16px var(--fx-shadow-color)",
       "category": "palette",
       "usage": ""
     },
     {
       "name": "--fx-shadow-l1-up",
-      "value": "0px -2px 6px 0px var(--fx-shadow-color)",
+      "value": "0px -6px 18px -8px var(--fx-shadow-color)",
       "category": "palette",
       "usage": ""
     }

@@ -107,14 +107,20 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
     const next = { ...prev, [key]: val }
     return config.onValueChange?.(next, key, val) ?? next
   })
-  const segKeys = config.props.filter((p) => p.type === "segment").map((p) => p.key)
-  const activeSc = config.scenarios?.find((sc) => segKeys.every((key) => sc.values[key] === v[key]))
+  const activeSc = config.scenarios?.find((sc) =>
+    Object.entries(sc.values).every(([key, value]) => v[key] === value)
+  )
   const guidanceProp = activeGuidanceKey ? config.props.find((p) => p.type === "segment" && p.key === activeGuidanceKey) : undefined
   const guidanceOption = guidanceProp?.type === "segment" ? guidanceProp.options.find((o) => o.value === v[guidanceProp.key]) : undefined
-  const intentText = guidanceOption
+  const isAllGuidance = guidanceProp?.type === "segment" && guidanceProp.hasAll && v[guidanceProp.key] === "all"
+  const intentText = isAllGuidance
+    ? lang === "en" ? "Preview all values in this dimension to compare the component states side by side." : "同时预览这一维度下的所有取值，用来横向比较组件状态。"
+    : guidanceOption
     ? lang === "en" ? (guidanceOption.intentEn ?? guidanceOption.intent) : guidanceOption.intent
     : lang === "en" ? "Select a concrete variant to see the recommended usage." : "选择具体场景后查看推荐用法。"
-  const constraintText = guidanceOption
+  const constraintText = isAllGuidance
+    ? lang === "en" ? "“All” is only for matrix preview. Generated code still uses one concrete value and must not pass an all prop." : "“全部”只用于矩阵预览；复制代码仍然使用一个具体取值，不传 all 这类伪属性。"
+    : guidanceOption
     ? lang === "en" ? (guidanceOption.constraintEn ?? guidanceOption.constraint) : guidanceOption.constraint
     : lang === "en" ? "Keep props aligned with the component source. Do not invent local-only variants." : "调试项必须和组件源码能力一致，不发明局部变体。"
   const visibleProps = config.props.filter((p) => !(p.hiddenWhen?.(v) ?? false))

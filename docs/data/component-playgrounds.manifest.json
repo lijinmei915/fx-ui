@@ -1,0 +1,655 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/component-playgrounds",
+  "updatedAt": "2026-07-03",
+  "truthSource": "docs/data/component-playgrounds.manifest.json",
+  "humanDoc": "docs/components/component-playground.md",
+  "note": "组件调试台的结构化真相源。组件页和网站规范页都从这里读取场景、属性、意图和约束；源码侧只负责把这些值渲染为真实组件。",
+  "autoScenarioComponents": [
+    "input",
+    "select",
+    "checkbox",
+    "radio-group",
+    "switch",
+    "textarea",
+    "command",
+    "pagination",
+    "top-bar",
+    "badge",
+    "tooltip",
+    "dialog",
+    "alert-dialog",
+    "sheet",
+    "skeleton",
+    "avatar",
+    "breadcrumb",
+    "calendar",
+    "collapsible",
+    "dropdown-menu",
+    "popover",
+    "separator",
+    "link",
+    "sidebar",
+    "spinner",
+    "toast",
+    "tabs",
+    "toggle",
+    "toggle-group"
+  ],
+  "components": {
+    "icon": {
+      "componentName": "Icon",
+      "source": "src/lib/icons.ts",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "initial": {
+        "mode": "line",
+        "size": "20",
+        "color": "foreground"
+      },
+      "guidanceKey": "mode",
+      "props": [
+        {
+          "key": "mode",
+          "zh": "呈现方式",
+          "en": "Mode",
+          "propName": "composition",
+          "type": "segment",
+          "hasAll": true,
+          "options": [
+            {
+              "value": "line",
+              "label": "线性",
+              "labelEn": "Line",
+              "intent": "默认图标形态，用于绝大多数界面对象和操作。",
+              "intentEn": "Default icon form for most interface objects and actions.",
+              "constraint": "线宽由全局 .tabler-icon 控制，不逐个传 stroke。",
+              "constraintEn": "Stroke width is controlled globally by .tabler-icon; do not pass stroke per icon."
+            },
+            {
+              "value": "filled",
+              "label": "面型",
+              "labelEn": "Filled",
+              "intent": "用于选中、激活或需要更强识别的状态。",
+              "intentEn": "Use for selected, active, or more recognizable states.",
+              "constraint": "只使用 @/lib/icons 暴露的 Filled 变体；没有面型时回退线性。",
+              "constraintEn": "Use Filled variants exposed by @/lib/icons; fall back to line when unavailable."
+            },
+            {
+              "value": "button",
+              "label": "按钮内",
+              "labelEn": "In Button",
+              "intent": "用于带图标的操作按钮。",
+              "intentEn": "Use for action buttons with icons.",
+              "constraint": "图标写 data-icon，不能再手写 size-*。",
+              "constraintEn": "Set data-icon on the icon; do not add manual size-* classes."
+            },
+            {
+              "value": "chip",
+              "label": "圆底",
+              "labelEn": "Chip",
+              "intent": "用于徽标、入口或状态图标需要色块承托的场景。",
+              "intentEn": "Use when a badge, entry, or status icon needs a colored support shape.",
+              "constraint": "圆底用 bg-primary，图标用 text-primary-foreground 反白。",
+              "constraintEn": "Use bg-primary for the circle and text-primary-foreground for the icon."
+            }
+          ]
+        },
+        {
+          "key": "size",
+          "zh": "尺寸",
+          "en": "Size",
+          "propName": "className",
+          "type": "segment",
+          "hasAll": true,
+          "disabledWhen": {
+            "mode": "button"
+          },
+          "options": [
+            {
+              "value": "12",
+              "label": "12px",
+              "intent": "用于徽标、内联说明等极紧凑场景。",
+              "intentEn": "Use for badges and tiny inline hints.",
+              "constraint": "只和小字号搭配，不用于主要操作入口。",
+              "constraintEn": "Pair only with small text; avoid for primary action entry points."
+            },
+            {
+              "value": "16",
+              "label": "16px",
+              "intent": "正文、表格、工具栏里的默认小图标。",
+              "intentEn": "Default small icon size for body, tables, and toolbars.",
+              "constraint": "按钮内图标仍交给 Button 接管。",
+              "constraintEn": "Inside Button, let Button own icon sizing."
+            },
+            {
+              "value": "20",
+              "label": "20px",
+              "intent": "列表项、卡片标题旁的常规图标。",
+              "intentEn": "Use next to list items or card titles.",
+              "constraint": "用于需要稍强存在感的普通图标。",
+              "constraintEn": "Use for normal icons that need slightly stronger presence."
+            },
+            {
+              "value": "24",
+              "label": "24px",
+              "intent": "页面级入口或空状态里的大图标。",
+              "intentEn": "Use for page-level entries or empty states.",
+              "constraint": "不要塞进密集文本或表格单元格。",
+              "constraintEn": "Do not place inside dense text or table cells."
+            },
+            {
+              "value": "32",
+              "label": "32px",
+              "intent": "仅用于强调预览、空状态或品牌化入口。",
+              "intentEn": "Use only for emphasized previews, empty states, or branded entries.",
+              "constraint": "业务界面慎用，避免抢正文层级。",
+              "constraintEn": "Use sparingly in product UI to avoid overpowering content hierarchy."
+            }
+          ]
+        },
+        {
+          "key": "color",
+          "zh": "颜色",
+          "en": "Color",
+          "propName": "className",
+          "type": "segment",
+          "hasAll": true,
+          "disabledWhen": {
+            "mode": ["button", "chip"]
+          },
+          "options": [
+            {
+              "value": "foreground",
+              "label": "正文",
+              "labelEn": "Foreground",
+              "intent": "默认文字/图标层级，适合主要对象。",
+              "intentEn": "Default text/icon level for primary objects.",
+              "constraint": "让图标通过 currentColor 跟随父级语义色。",
+              "constraintEn": "Let icons follow semantic parent color through currentColor."
+            },
+            {
+              "value": "muted",
+              "label": "次要",
+              "labelEn": "Muted",
+              "intent": "用于说明、辅助信息和弱层级图标。",
+              "intentEn": "Use for descriptions, helper content, and low-emphasis icons.",
+              "constraint": "不要用于需要用户立即识别的关键状态。",
+              "constraintEn": "Do not use for critical states that need immediate recognition."
+            },
+            {
+              "value": "primary",
+              "label": "主题",
+              "labelEn": "Primary",
+              "intent": "用于当前选中、主入口或品牌强调。",
+              "intentEn": "Use for current selection, main entry points, or brand emphasis.",
+              "constraint": "只在需要强调时使用，避免满屏主色图标。",
+              "constraintEn": "Use only when emphasis is needed; avoid primary icons everywhere."
+            },
+            {
+              "value": "success",
+              "label": "成功",
+              "labelEn": "Success",
+              "intent": "用于完成、成功、生效等正向状态。",
+              "intentEn": "Use for complete, successful, or active-positive states.",
+              "constraint": "只表达状态，不作为装饰色。",
+              "constraintEn": "Use for status semantics, not decoration."
+            },
+            {
+              "value": "warning",
+              "label": "警告",
+              "labelEn": "Warning",
+              "intent": "用于需要注意、待处理或有风险的状态。",
+              "intentEn": "Use for attention, pending, or risky states.",
+              "constraint": "和 warning 文案或 Tag 搭配时保持同一语义。",
+              "constraintEn": "Keep the same warning semantics when paired with text or Tag."
+            },
+            {
+              "value": "destructive",
+              "label": "危险",
+              "labelEn": "Danger",
+              "intent": "用于删除、失败、不可逆等危险动作或状态。",
+              "intentEn": "Use for destructive actions, failure, or irreversible states.",
+              "constraint": "不要用红色表达普通强调。",
+              "constraintEn": "Do not use red for ordinary emphasis."
+            },
+            {
+              "value": "info",
+              "label": "信息",
+              "labelEn": "Info",
+              "intent": "用于信息提示、说明和中性引导。",
+              "intentEn": "Use for informational hints and neutral guidance.",
+              "constraint": "中性对象仍优先 foreground/muted。",
+              "constraintEn": "For neutral objects, prefer foreground or muted."
+            }
+          ]
+        }
+      ]
+    },
+    "tag": {
+      "componentName": "Tag",
+      "source": "src/components/ui/tag.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "initial": {
+        "variant": "default",
+        "color": "none",
+        "text": "标签",
+        "textEn": "Tag"
+      },
+      "guidanceKey": "variant",
+      "scenarios": [
+        {
+          "id": "default",
+          "zh": "默认",
+          "en": "Default",
+          "intent": "中性标签，不带状态情绪。",
+          "intentEn": "A neutral tag without status semantics.",
+          "values": {
+            "variant": "default",
+            "color": "none",
+            "text": "标签",
+            "textEn": "Tag"
+          }
+        },
+        {
+          "id": "success",
+          "zh": "成功",
+          "en": "Success",
+          "intent": "表示成功 / 已完成 / 生效中的状态。",
+          "intentEn": "Signals a success / done / active state.",
+          "values": {
+            "variant": "success",
+            "color": "none",
+            "text": "已支付",
+            "textEn": "Paid"
+          }
+        },
+        {
+          "id": "warning",
+          "zh": "警告",
+          "en": "Warning",
+          "intent": "表示需要注意 / 待处理的状态。",
+          "intentEn": "Signals an attention / pending state.",
+          "values": {
+            "variant": "warning",
+            "color": "none",
+            "text": "待审核",
+            "textEn": "Pending"
+          }
+        },
+        {
+          "id": "danger",
+          "zh": "危险",
+          "en": "Danger",
+          "intent": "表示失败 / 异常 / 已停用的状态。",
+          "intentEn": "Signals a failed / error / disabled state.",
+          "values": {
+            "variant": "destructive",
+            "color": "none",
+            "text": "已失效",
+            "textEn": "Expired"
+          }
+        },
+        {
+          "id": "outline",
+          "zh": "描边",
+          "en": "Outline",
+          "intent": "弱化的中性标签，描边不抢眼。",
+          "intentEn": "A low-key neutral tag with just an outline.",
+          "values": {
+            "variant": "outline",
+            "color": "none",
+            "text": "草稿",
+            "textEn": "Draft"
+          }
+        },
+        {
+          "id": "category",
+          "zh": "分类打标",
+          "en": "Category",
+          "intent": "分类用多彩 color（颜色=类别不是状态），color 覆盖 variant 配色。",
+          "intentEn": "Use the multicolor color axis for categories (color = category, not status); color overrides variant.",
+          "values": {
+            "variant": "default",
+            "color": "purple",
+            "text": "高意向",
+            "textEn": "High intent"
+          }
+        }
+      ],
+      "props": [
+        {
+          "key": "text",
+          "zh": "内容",
+          "en": "Text",
+          "propName": "children",
+          "type": "text",
+          "bilingual": true
+        },
+        {
+          "key": "variant",
+          "zh": "状态",
+          "en": "Variant",
+          "propName": "variant",
+          "type": "segment",
+          "hasAll": true,
+          "options": [
+            {
+              "value": "default",
+              "label": "default",
+              "intent": "用于中性标签，不表达状态情绪。",
+              "intentEn": "Use for neutral tags without status semantics.",
+              "constraint": "不要用 default 表达成功、警告或失败状态。",
+              "constraintEn": "Do not use default for success, warning, or failure states."
+            },
+            {
+              "value": "secondary",
+              "label": "secondary",
+              "intent": "用于低强调的中性辅助标签。",
+              "intentEn": "Use for low-emphasis neutral helper tags.",
+              "constraint": "只用于弱化信息，不承载关键状态。",
+              "constraintEn": "Use for subdued information, not critical states."
+            },
+            {
+              "value": "success",
+              "label": "success",
+              "intent": "用于成功、已完成、已生效等正向状态。",
+              "intentEn": "Use for success, completed, or active-positive states.",
+              "constraint": "只表达状态，不用作普通分类色。",
+              "constraintEn": "Use for status only, not general category color."
+            },
+            {
+              "value": "warning",
+              "label": "warning",
+              "intent": "用于待处理、需注意、临近风险的状态。",
+              "intentEn": "Use for pending, attention, or near-risk states.",
+              "constraint": "不要和 destructive 混用；严重错误改用 destructive。",
+              "constraintEn": "Do not mix with destructive; use destructive for severe errors."
+            },
+            {
+              "value": "destructive",
+              "label": "destructive",
+              "intent": "用于失败、异常、停用等负向状态。",
+              "intentEn": "Use for failed, error, or disabled-negative states.",
+              "constraint": "避免用自定义红色类替代组件状态。",
+              "constraintEn": "Do not replace with custom red classes."
+            },
+            {
+              "value": "outline",
+              "label": "outline",
+              "intent": "用于弱化展示的中性标签。",
+              "intentEn": "Use for understated neutral tags.",
+              "constraint": "仅改变标签外观，不表达业务状态。",
+              "constraintEn": "Only changes appearance; it does not imply business status."
+            }
+          ]
+        },
+        {
+          "key": "color",
+          "zh": "分类色",
+          "en": "Color",
+          "propName": "color",
+          "type": "segment",
+          "hasAll": true,
+          "options": [
+            {
+              "value": "none",
+              "label": "none",
+              "intent": "用于状态标签或不需要分类色的中性标签。",
+              "intentEn": "Use for status tags or neutral tags without category color.",
+              "constraint": "不传 color；让 variant 决定视觉。",
+              "constraintEn": "Do not pass color; let variant drive the visual."
+            },
+            {
+              "value": "gray",
+              "label": "gray",
+              "intent": "用于灰色分类标签或低强调分组标签。",
+              "intentEn": "Use for gray category tags or low-emphasis grouping labels.",
+              "constraint": "灰色仍是分类色；弱化状态优先用 secondary。",
+              "constraintEn": "Gray is still a category color; prefer secondary for subdued status."
+            },
+            {
+              "value": "red",
+              "label": "red",
+              "intent": "用于红色分类标签，不等同错误状态。",
+              "intentEn": "Use for red category tags, not error status.",
+              "constraint": "分类色只表达类别；错误状态用 destructive。",
+              "constraintEn": "Category color expresses category only; use destructive for errors."
+            },
+            {
+              "value": "amber",
+              "label": "amber",
+              "intent": "用于橙色分类或等级标签。",
+              "intentEn": "Use for amber category or tier tags.",
+              "constraint": "不要用 color 替代 warning 状态。",
+              "constraintEn": "Do not use color as a replacement for warning status."
+            },
+            {
+              "value": "yellow",
+              "label": "yellow",
+              "intent": "用于黄色分类标签。",
+              "intentEn": "Use for yellow category tags.",
+              "constraint": "分类色不承载状态语义。",
+              "constraintEn": "Category color does not carry status semantics."
+            },
+            {
+              "value": "lime",
+              "label": "lime",
+              "intent": "用于青柠色分类标签。",
+              "intentEn": "Use for lime category tags.",
+              "constraint": "同一数据维度内颜色映射保持稳定。",
+              "constraintEn": "Keep color mapping stable within the same data dimension."
+            },
+            {
+              "value": "green",
+              "label": "green",
+              "intent": "用于绿色分类标签，不等同成功状态。",
+              "intentEn": "Use for green category tags, not success status.",
+              "constraint": "成功状态用 success，不用 color=\"green\" 代替。",
+              "constraintEn": "Use success for success states, not color=\"green\"."
+            },
+            {
+              "value": "teal",
+              "label": "teal",
+              "intent": "用于蓝绿色分类标签。",
+              "intentEn": "Use for teal category tags.",
+              "constraint": "只通过 color prop 设置，不手写颜色类。",
+              "constraintEn": "Set via color prop only; do not hand-code color classes."
+            },
+            {
+              "value": "cyan",
+              "label": "cyan",
+              "intent": "用于青色分类标签。",
+              "intentEn": "Use for cyan category tags.",
+              "constraint": "避免同一页面给同一类别分配多个颜色。",
+              "constraintEn": "Avoid assigning multiple colors to the same category on one page."
+            },
+            {
+              "value": "blue",
+              "label": "blue",
+              "intent": "用于蓝色分类标签。",
+              "intentEn": "Use for blue category tags.",
+              "constraint": "不要把分类标签伪装成链接。",
+              "constraintEn": "Do not make category tags look like links."
+            },
+            {
+              "value": "purple",
+              "label": "purple",
+              "intent": "用于紫色分类标签，如客户等级或人群标签。",
+              "intentEn": "Use for purple category tags such as customer tiers or segments.",
+              "constraint": "颜色只表达类别，不表达可点击。",
+              "constraintEn": "Color expresses category, not clickability."
+            },
+            {
+              "value": "pink",
+              "label": "pink",
+              "intent": "用于粉色分类标签。",
+              "intentEn": "Use for pink category tags.",
+              "constraint": "保持为标签组件，不要当按钮使用。",
+              "constraintEn": "Keep it as a Tag; do not use it as a button."
+            }
+          ]
+        }
+      ]
+    },
+    "buttonGroup": {
+      "componentName": "ButtonGroup",
+      "source": "src/components/ui/button-group.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "initial": {
+        "pattern": "actions",
+        "orientation": "horizontal",
+        "size": "md",
+        "variant": "outline"
+      },
+      "guidanceKey": "pattern",
+      "props": [
+        {
+          "key": "pattern",
+          "zh": "组合方式",
+          "en": "ButtonGroup pattern",
+          "propName": "composition",
+          "type": "segment",
+          "options": [
+            {
+              "value": "actions",
+              "label": "操作组",
+              "labelEn": "Actions",
+              "intent": "把强相关、同层级的多个操作按钮合并为一组，弱化彼此边界。",
+              "intentEn": "Group strongly related peer actions together and soften the boundaries between them.",
+              "constraint": "只用按钮组和按钮组件；组内按钮变体保持一致，不混入互斥选择或危险操作。",
+              "constraintEn": "Use ButtonGroup + Button only; keep inner Button variants consistent and do not mix selection or destructive actions into the group."
+            },
+            {
+              "value": "split",
+              "label": "拆分按钮",
+              "labelEn": "Split",
+              "intent": "保留一个主操作，把更多动作收进右侧图标按钮。",
+              "intentEn": "Keep one main action visible and place more actions behind the trailing icon button.",
+              "constraint": "主操作在前，右侧图标按钮仍然使用按钮组件；更多动作配下拉菜单，不发明拆分按钮专属 API。",
+              "constraintEn": "Place the main action first; the trailing icon control is still a Button. Pair extra actions with DropdownMenu and do not invent split-specific APIs."
+            },
+            {
+              "value": "toolbar-icons",
+              "label": "工具图标组",
+              "labelEn": "Toolbar icons",
+              "intent": "用于视图切换、地图、分栏等同层级工具按钮，保持连续分组。",
+              "intentEn": "Use for peer toolbar controls such as list, grid, map, or split view switching.",
+              "constraint": "图标按钮必须有 aria-label；选中态用当前按钮的类型表达，不在组内混入文字主操作。",
+              "constraintEn": "Icon buttons must have aria-label. Express the active item through the current button style and do not mix primary text actions into this group."
+            }
+          ]
+        },
+        {
+          "key": "orientation",
+          "zh": "方向",
+          "en": "Orientation",
+          "propName": "orientation",
+          "type": "segment",
+          "hasAll": true,
+          "hiddenWhen": {
+            "pattern": ["split", "toolbar-icons"]
+          },
+          "options": [
+            {
+              "value": "horizontal",
+              "label": "横向",
+              "labelEn": "Horizontal",
+              "intent": "默认横向排列，适合工具栏和表格操作区。",
+              "intentEn": "The default horizontal layout for toolbars and table actions.",
+              "constraint": "沿用组件默认值，不需要时不要显式传 orientation。",
+              "constraintEn": "Rely on the default value and omit the prop when not needed."
+            },
+            {
+              "value": "vertical",
+              "label": "纵向",
+              "labelEn": "Vertical",
+              "intent": "用于侧边工具栏、排序控制等需要纵向排列的按钮组。",
+              "intentEn": "Use for side toolbars, ordering controls, or grouped actions that need vertical stacking.",
+              "constraint": "使用 orientation=\"vertical\"，让组件自动合并上下边框；如有分隔线，切换为 horizontal。",
+              "constraintEn": "Use orientation=\"vertical\" so the component merges top and bottom borders automatically; switch separators to horizontal when present."
+            }
+          ]
+        },
+        {
+          "key": "size",
+          "zh": "尺寸",
+          "en": "Inner Button size",
+          "propName": "Button.size",
+          "type": "segment",
+          "hasAll": true,
+          "options": [
+            {
+              "value": "xs",
+              "label": "超小24",
+              "intent": "用于极紧凑工具栏或密集表格内的轻量操作组。",
+              "intentEn": "Use for very compact toolbars or dense table action groups.",
+              "constraint": "只改内部按钮 size=\"xs\"；不要额外压缩按钮组间距或字号。",
+              "constraintEn": "Only set inner Button size=\"xs\"; do not manually compress group spacing or font size."
+            },
+            {
+              "value": "sm",
+              "label": "小28",
+              "intent": "用于表格行操作、筛选栏等紧凑但仍需清晰点击的区域。",
+              "intentEn": "Use for table row actions, filters, and compact areas that still need clear targets.",
+              "constraint": "只改内部按钮 size=\"sm\"；同一按钮组内尺寸保持一致。",
+              "constraintEn": "Only set inner Button size=\"sm\"; keep one size within a ButtonGroup."
+            },
+            {
+              "value": "md",
+              "label": "中32",
+              "intent": "用于常规表单、卡片和工具栏，是按钮组的默认推荐尺寸。",
+              "intentEn": "Use for normal forms, cards, and toolbars; this is the recommended default.",
+              "constraint": "内部按钮使用 size=\"md\"；不要和 icon-sm / lg 等尺寸混排。",
+              "constraintEn": "Use inner Button size=\"md\"; do not mix it with icon-sm or lg sizes."
+            },
+            {
+              "value": "lg",
+              "label": "大36",
+              "intent": "用于页面头部或需要更明显点击目标的操作组。",
+              "intentEn": "Use for page headers or grouped actions that need larger targets.",
+              "constraint": "只改内部按钮 size=\"lg\"；避免在密集表格或窄列内使用。",
+              "constraintEn": "Only set inner Button size=\"lg\"; avoid it in dense tables or narrow columns."
+            }
+          ]
+        },
+        {
+          "key": "variant",
+          "zh": "类型",
+          "en": "Inner Button variant",
+          "propName": "Button.variant",
+          "type": "segment",
+          "hasAll": true,
+          "options": [
+            {
+              "value": "outline",
+              "label": "描边",
+              "labelEn": "Outline",
+              "intent": "最常见的按钮组样式，边界清晰但不抢主视觉。",
+              "intentEn": "The most common grouped-button style with clear but restrained edges.",
+              "constraint": "按钮组本身没有变体属性，视觉来自内部按钮。",
+              "constraintEn": "ButtonGroup itself has no variant; the visual style comes from inner Buttons."
+            },
+            {
+              "value": "secondary",
+              "label": "次级",
+              "labelEn": "Secondary",
+              "intent": "弱化背景但保留成组关系，适合浅色操作区。",
+              "intentEn": "Use a softer filled style while keeping the grouped relationship visible.",
+              "constraint": "不要在调用处覆盖圆角和边框，改视觉只用按钮已有变体。",
+              "constraintEn": "Do not override radius or borders locally; switch visuals only through Button variants."
+            },
+            {
+              "value": "default",
+              "label": "主按钮",
+              "labelEn": "Default",
+              "intent": "强调一整组操作时使用，但应确保不会出现多个抢焦点的主操作组。",
+              "intentEn": "Use when the whole group needs emphasis, but avoid multiple competing primary groups.",
+              "constraint": "一个区域内谨慎使用高强调按钮组。",
+              "constraintEn": "Use emphasized grouped buttons sparingly within the same area."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

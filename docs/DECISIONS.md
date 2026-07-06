@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-07-02
+last_verified: 2026-07-06
 teaches: "fx-ui 重要的技术/协作决策记录：选了什么、放弃了什么、为什么"
 use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论"
 ---
@@ -374,6 +374,7 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
   1. “边框粗细” = 组件外轮廓线宽（默认 `1px`）
   2. “边框强度” = 外轮廓颜色深浅（如 `border-border-container` / `border-border` / `border-border-strong`）
   3. “结构线 / 分隔线” = 表格内线、区块分隔线，单独治理，不跟组件外框绑定
+- **补充（2026-07-03）**：主题面板里的边框粗细只作用于卡片、按钮等组件壳体；表单控件边框保持 `border-input` 语义，不跟随外观面板加粗或归零，避免影响表单可用性和校验状态。
 - **相关文件**：`docs/TOKENS.md`、`theme/fx-theme.css`、`src/components/fx/component-playground.tsx`
 
 ### DEC-032: 新增组件必须登记主题能力，检查从 manifest 派生

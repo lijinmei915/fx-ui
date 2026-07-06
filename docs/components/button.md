@@ -94,6 +94,28 @@ import { Button } from "@/components/ui/button"
 <Button variant="outline">Button</Button>
 ```
 
+## 排列组合 {#arrangement}
+
+页面头部、列表工具栏和操作区常见的是**独立按钮排列**：一个主操作，其余为次级或图标操作，按钮之间保留正常间距。这属于 Button 的组合用法，不属于 ButtonGroup。
+
+```tsx
+<div className="flex flex-wrap items-center gap-2">
+  <Button>
+    <PlusIcon data-icon="inline-start" />
+    新建
+  </Button>
+  <Button variant="outline">智能表单</Button>
+  <Button variant="outline">导入</Button>
+  <Button variant="ghost" size="icon-sm" aria-label="更多操作">
+    <MoreVerticalIcon />
+  </Button>
+</div>
+```
+
+- 使用意图：页面级或列表级操作区，用一个主按钮建立行动焦点，其余按钮承接辅助动作。
+- 约束：按钮之间有间距时保持 Button 独立排列；只有动作需要贴合成连续控件时，才使用 ButtonGroup。
+- 一个操作区通常只保留一个 `variant="default"` 主按钮，避免多个主按钮抢焦点。
+
 ## 调试台规则 {#playground-rules}
 
 Button 网页不再单独维护「组件总览」和「场景示例」决策表；交互调试台已经同时展示预览、使用意图、约束和推荐写法，避免同一套规则在页面里重复两遍。

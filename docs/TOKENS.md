@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-07-02
+last_verified: 2026-07-06
 teaches: "公司设计 token 的基础架构、真实值和全局视觉使用规则"
 use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadcn 组件样式或判断视觉是否符合公司规范时"
 ---
@@ -133,6 +133,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | 输入框边框 | `--fx-neutrals-07` | `border-input` |
 
 - 组件默认边框规格：当前主题默认按 **`1px`** 理解，这是主流 Web UI 的常规基线。
+- 主题面板里的边框粗细只作用于卡片、按钮等组件壳体；表单控件继续使用 `border-input`，不跟随外观面板加粗或归零。
 - 容器外框：优先讨论“要不要外框”和“外框颜色深浅”，不默认通过加粗来表达。
 - 分隔线 / 结构线：单独治理，不纳入“组件边框粗细”的口径。
 - 强调边框：只有选中、焦点、错误或其他高强调场景，才考虑 `2px` 或更强语义色。
@@ -227,16 +228,15 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 | Token | 值 | 场景 |
 |------|-----|------|
-| `shadow-l1` | `0 2px 6px` | 浮层菜单、Dropdown — 最近层 |
-| `shadow-l2` | `0 4px 12px` | Sheet、侧边滑出面板 — 中层 |
-| `shadow-l3` | `0 6px 24px` | Dialog、Modal — 最高层遮罩 |
-| `shadow-l1-up` | `0 -2px 6px` | 向上弹出的浮层（底部工具栏菜单） |
+| `shadow-l1` | `0 6px 18px -8px` | 浮层菜单、Dropdown — 最近层 |
+| `shadow-l2` | `0 10px 30px -12px` | Sheet、侧边滑出面板 — 中层 |
+| `shadow-l3` | `0 18px 48px -16px` | Dialog、Modal — 最高层遮罩 |
+| `shadow-l1-up` | `0 -6px 18px -8px` | 向上弹出的浮层（底部工具栏菜单） |
 
-**计算方式**：每档 = `0 {y}px {blur}px var(--fx-shadow-color)`，spread 恒为 0。
-- **颜色总开关** `--fx-shadow-color = oklch(from var(--fx-neutrals-20) l c h / .12)`：从最深中性灰（带品牌色相微染）派生 + 12% 透明，**跟随色板**而非写死纯黑；四档共用，调深浅/色板一处生效。
-- **y 偏移**：每升一层 +2px（2/4/6），光从上方来、越高落得越远。
-- **blur**：约每层翻倍（6/12/24），越高越柔越散。
-- 靠几何（y + blur）拉开层级，**不靠加深颜色**，浮层保持淡而中性；`shadow-l1-up` 是 L1 的 y 取负的方向变体。
+**计算方式**：每档 = `0 {y}px {blur}px {spread}px var(--fx-shadow-color)`，低档使用负 spread，让阴影更浅、更柔、更贴近表面。
+- **颜色总开关** `--fx-shadow-color = oklch(from var(--fx-neutrals-20) l c h / .08)`：从最深中性灰（带品牌色相微染）派生 + 8% 透明，**跟随色板**而非写死纯黑；四档共用，调深浅/色板一处生效。
+- **y 偏移 / blur / spread**：随层级升高，偏移和模糊增大，负 spread 收住边缘，避免低档阴影显脏或显硬。
+- 靠几何（y + blur + spread）拉开层级，**不靠加深颜色**，浮层保持淡而中性；`shadow-l1-up` 是 L1 的 y 取负的方向变体。
 
 ## 动效
 

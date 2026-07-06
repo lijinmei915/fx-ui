@@ -56,6 +56,13 @@
       "文案写法：一句话，说清这一节看什么。"
     ]
   },
+  "componentPlayground": {
+    "componentKey": "button",
+    "componentName": "Button",
+    "route": "#button",
+    "source": "src/components/ui/button.tsx",
+    "truthSource": "Button 页调试台结构"
+  },
   "cardSurfaceRules": [
     {
       "title": "外层卡片",
@@ -86,6 +93,10 @@
     {
       "title": "属性必须映射源码 API",
       "desc": "属性项优先对应组件真实 prop 或稳定可派生能力；不要发明页面私有开关。"
+    },
+    {
+      "title": "调试内容来自统一真相源",
+      "desc": "组件调试台的场景、属性、意图和约束收口到 `docs/data/component-playgrounds.manifest.json`；网站规范只展示这份事实，组件页读取同一份事实后渲染真实组件。"
     },
     {
       "title": "同级不混",

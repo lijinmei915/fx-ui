@@ -111,6 +111,10 @@ import {
   PolarAngleAxis,
   RadialBarChart,
   RadialBar,
+  FunnelChart,
+  Funnel,
+  LabelList,
+  Treemap,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -163,6 +167,7 @@ import { ListPageHeader } from "@/components/recipes/list-page-header";
 import componentsManifestRaw from "../docs/data/components.manifest.json?raw";
 import designTokensManifestRaw from "../docs/data/design-tokens.json?raw";
 import docSiteManifestRaw from "../docs/data/doc-site.manifest.json?raw";
+import componentPlaygroundsManifestRaw from "../docs/data/component-playgrounds.manifest.json?raw";
 import governanceStatusRaw from "../docs/data/governance-status.json?raw";
 import governanceTodoRaw from "../docs/data/governance-todo.json?raw";
 import projectGraphRaw from "../docs/data/project-graph.json?raw";
@@ -487,11 +492,11 @@ const themeShadowValues: Record<ThemeShadowLevel, Record<string, string>> = {
     "--fx-shadow-l1-up": "none"
   },
   low: {
-    "--fx-shadow-color": "oklch(from var(--fx-neutrals-20) l c h / 0.12)",
-    "--fx-shadow-l1": "0px 2px 6px 0px var(--fx-shadow-color)",
-    "--fx-shadow-l2": "0px 4px 12px 0px var(--fx-shadow-color)",
-    "--fx-shadow-l3": "0px 6px 24px 0px var(--fx-shadow-color)",
-    "--fx-shadow-l1-up": "0px -2px 6px 0px var(--fx-shadow-color)"
+    "--fx-shadow-color": "oklch(from var(--fx-neutrals-20) l c h / 0.08)",
+    "--fx-shadow-l1": "0px 6px 18px -8px var(--fx-shadow-color)",
+    "--fx-shadow-l2": "0px 10px 30px -12px var(--fx-shadow-color)",
+    "--fx-shadow-l3": "0px 18px 48px -16px var(--fx-shadow-color)",
+    "--fx-shadow-l1-up": "0px -6px 18px -8px var(--fx-shadow-color)"
   },
   medium: {
     "--fx-shadow-color": "oklch(from var(--fx-neutrals-20) l c h / 0.18)",
@@ -875,6 +880,13 @@ type WebsiteStandardsManifest = {
     componentName: string;
     usageBullets: string[];
   };
+  componentPlayground: {
+    componentKey: "button";
+    componentName: string;
+    route: string;
+    source: string;
+    truthSource: string;
+  };
   cardSurfaceRules: {
     title: string;
     desc: string;
@@ -885,6 +897,69 @@ type WebsiteStandardsManifest = {
   }[];
   spacingRhythm: { label: string }[];
   linkageRules: string[];
+};
+
+type ComponentPlaygroundManifestProp = {
+  key: string;
+  zh: string;
+  en: string;
+  propName: string;
+  type: "segment";
+  options: {
+    value: string;
+    label: string;
+    labelEn?: string;
+    title?: string;
+    titleEn?: string;
+    intent?: string;
+    intentEn?: string;
+    constraint?: string;
+    constraintEn?: string;
+  }[];
+  hasAll?: boolean;
+  disabledWhen?: Record<string, string | string[]>;
+  hiddenWhen?: Record<string, string | string[]>;
+} | {
+  key: string;
+  zh: string;
+  en: string;
+  propName: string;
+  type: "text";
+  bilingual?: boolean;
+  disabledWhen?: Record<string, string | string[]>;
+  hiddenWhen?: Record<string, string | string[]>;
+};
+
+type ComponentPlaygroundManifestComponent = {
+  componentName: string;
+  source: string;
+  playgroundComponent: string;
+  initial: Record<string, string>;
+  guidanceKey?: string;
+  scenarios?: {
+    id: string;
+    zh: string;
+    en: string;
+    intent: string;
+    intentEn: string;
+    values: Record<string, string>;
+  }[];
+  props: ComponentPlaygroundManifestProp[];
+};
+
+type ComponentPlaygroundsManifest = {
+  schemaVersion: number;
+  format: string;
+  updatedAt: string;
+  truthSource: string;
+  humanDoc: string;
+  note: string;
+  autoScenarioComponents?: string[];
+  components: {
+    [key: string]: ComponentPlaygroundManifestComponent;
+    icon: ComponentPlaygroundManifestComponent;
+    buttonGroup: ComponentPlaygroundManifestComponent;
+  };
 };
 
 type GovernancePagesManifest = {
@@ -943,12 +1018,25 @@ type GovernanceTodoManifest = {
 const componentsManifest = JSON.parse(componentsManifestRaw) as ComponentsManifest;
 const designTokensManifest = JSON.parse(designTokensManifestRaw) as DesignTokensManifest;
 const docSiteManifest = JSON.parse(docSiteManifestRaw) as DocSiteManifest;
+const componentPlaygroundsManifest = JSON.parse(componentPlaygroundsManifestRaw) as ComponentPlaygroundsManifest;
 const governanceStatus = JSON.parse(governanceStatusRaw) as GovernanceStatusManifest;
 const governanceTodo = JSON.parse(governanceTodoRaw) as GovernanceTodoManifest;
 const projectGraph = JSON.parse(projectGraphRaw) as ProjectGraph;
 const systemRelations = JSON.parse(systemRelationsRaw) as SystemRelationsManifest;
 const governancePagesManifest = JSON.parse(governancePagesManifestRaw) as GovernancePagesManifest;
 const websiteStandardsManifest = JSON.parse(websiteStandardsManifestRaw) as WebsiteStandardsManifest;
+
+function componentPlaygroundCondition(condition?: Record<string, string | string[]>) {
+  return condition ? (v: Record<string, string>) => Object.entries(condition).every(([key, value]) => Array.isArray(value) ? value.includes(v[key]) : v[key] === value) : undefined;
+}
+
+function componentPlaygroundPropsFromManifest(component: ComponentPlaygroundManifestComponent) {
+  return component.props.map((prop) => ({
+    ...prop,
+    disabledWhen: componentPlaygroundCondition(prop.disabledWhen),
+    hiddenWhen: componentPlaygroundCondition(prop.hiddenWhen),
+  }));
+}
 
 const allManifestComponents = [
 ...componentsManifest.uiComponents,
@@ -1207,6 +1295,40 @@ const agentSurfaceNavLabel = {
 const componentIndexSections = docsNav.filter((section) =>
 ["通用", "数据录入", "数据展示", "导航", "反馈", "业务组合组件", "Agent 界面"].includes(section.title)
 );
+
+function ComponentIndexGrid({ sections, lang }: {sections: typeof componentIndexSections;lang: Lang;}) {
+  return (
+    <div className="grid gap-4 lg:grid-cols-2">
+      {sections.map((section) =>
+      <Card key={section.title} size="sm" elevated>
+        <CardHeader>
+          <div>
+            <CardTitle>{lang === "en" ? section.titleEn : section.title}</CardTitle>
+          </div>
+          <CardAction>
+            <Tag variant="outline">{section.items.length}</Tag>
+          </CardAction>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {section.items.map((item) =>
+            <Button
+              key={item.href}
+              variant="secondary"
+              size="md"
+              render={<a href={item.href} />}
+              className="w-full justify-start">
+              <span className="truncate text-sm font-medium">{item.label}</span>
+              <span className="truncate text-xs font-normal text-muted-foreground">{item.labelEn}</span>
+            </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+      )}
+    </div>);
+
+}
 const tokenNavSections = docsNav.filter((section) => section.title === "设计令牌");
 const layoutNavSections = docsNav.filter((section) => section.title === "布局系统");
 const foundationNavSections = [...tokenNavSections, ...layoutNavSections];
@@ -1293,6 +1415,7 @@ const buttonDoDontRows = [
 const buttonAnchors = [
 { label: "调试台", labelEn: "Playground", href: "#playground" },
 { label: "使用方式", labelEn: "Usage", href: "#usage" },
+{ label: "排列组合", labelEn: "Arrangement", href: "#arrangement" },
 { label: "API", href: "#props" },
 { label: "语义 DOM", labelEn: "Semantic DOM", href: "#semantic-dom" },
 { label: "正误示例", labelEn: "Do / Don’t", href: "#do-dont" }];
@@ -1348,6 +1471,7 @@ const layoutAnchors = [
 
 
 const navMenuAnchors = [
+{ label: "调试台", labelEn: "Playground", href: "#nav-menu-playground" },
 { label: "组件总览", labelEn: "Overview", href: "#nav-menu-overview" },
 { label: "场景示例", labelEn: "Scenario examples", href: "#nav-menu-preview" },
 { label: "使用方式", labelEn: "Usage", href: "#nav-menu-usage" },
@@ -1376,6 +1500,7 @@ const navMenuDoDontRows = [
 
 const iconAnchors = [
 { label: "图标库", labelEn: "Icon Library", href: "#icon-library" },
+{ label: "调试台", labelEn: "Playground", href: "#icon-playground" },
 { label: "组件总览", labelEn: "Overview", href: "#icon-overview" },
 { label: "场景示例", labelEn: "Scenario examples", href: "#icon-preview" },
 { label: "使用方式", labelEn: "Usage", href: "#icon-usage" },
@@ -1754,6 +1879,7 @@ const tableDoDontRows = [
 
 
 const cardAnchors = [
+{ label: "调试台", labelEn: "Playground", href: "#card-playground" },
 { label: "组件总览", href: "#card-overview" },
 { label: "场景示例", href: "#card-preview" },
 { label: "使用方式", href: "#card-usage" },
@@ -2335,9 +2461,6 @@ const breadcrumbDoDontRows = [
 
 
 const buttonGroupAnchors = [
-{ label: "组件总览", href: "#button-group-overview" },
-{ label: "场景示例", href: "#button-group-preview" },
-{ label: "使用方式", href: "#button-group-usage" },
 { label: "API", href: "#button-group-props" },
 { label: "语义 DOM", href: "#button-group-semantic-dom" },
 { label: "正误示例", href: "#button-group-do-dont" }];
@@ -2347,24 +2470,24 @@ const buttonGroupScenarioExamples = [
   id: "basic",
   title: "操作组合",
   group: "type",
-  intent: "把强相关的多个操作按钮合并为一组，弱化彼此边界。",
-  rule: "组内按钮 variant 保持一致，避免主次操作混在一起。",
+  intent: "把强相关、同层级的多个操作按钮合并为一组，弱化彼此边界。",
+  rule: "只用 ButtonGroup + Button；组内 Button variant 保持一致，不混入互斥选择或危险操作。",
   code: `<ButtonGroup>\n  <Button variant="outline">复制</Button>\n  <Button variant="outline">分享</Button>\n  <Button variant="outline">归档</Button>\n</ButtonGroup>`
 },
 {
   id: "split",
   title: "拆分按钮",
   group: "type",
-  intent: "主操作 + 下拉箭头，把主操作与「更多选项」合并。",
-  rule: "主操作在前，箭头用 size=icon 收纳更多动作（配 DropdownMenu）。",
+  intent: "保留一个主操作，把更多动作收进右侧图标按钮。",
+  rule: "主操作在前，右侧图标按钮仍然是 Button；更多动作配 DropdownMenu，不发明 split 专属 API。",
   code: `<ButtonGroup>\n  <Button variant="outline">保存</Button>\n  <Button variant="outline" size="icon-md" aria-label="更多">\n    <ChevronDownIcon />\n  </Button>\n</ButtonGroup>`
 },
 {
   id: "vertical",
   title: "垂直方向",
   group: "type",
-  intent: "侧边工具栏等纵向排列的按钮组。",
-  rule: "用 orientation=\"vertical\"，自动合并上下边框。",
+  intent: "用于侧边工具栏、排序控制等需要纵向排列的按钮组。",
+  rule: "使用 orientation=\"vertical\"，让组件自动合并上下边框；如有分隔线，切换为 horizontal。",
   code: `<ButtonGroup orientation="vertical">\n  <Button variant="outline">上移</Button>\n  <Button variant="outline">居中</Button>\n  <Button variant="outline">下移</Button>\n</ButtonGroup>`
 },
 {
@@ -3311,7 +3434,7 @@ const semanticTokenGroups = [
   descEn: "From mid-light Neutrals — three levels: subtle (dividers) / default / strong (hover) + form input border.",
   tokens: [
   { name: "border-subtle", value: "", sourceToken: "--fx-neutrals-04", tailwind: "border-border-subtle", usage: "弱边框 — 分割线、表格内线、列表分隔", usageEn: "Subtle — dividers, table inner lines, list separators" },
-  { name: "border", value: "", sourceToken: "--fx-neutrals-05", tailwind: "border-border", usage: "默认边框 — 卡片、输入框外框", usageEn: "Default — cards, control outlines" },
+  { name: "border", value: "", sourceToken: "--fx-neutrals-05", tailwind: "border-border", usage: "默认边框 — 卡片、按钮等组件壳体", usageEn: "Default — cards, buttons, and component shells" },
   { name: "border-strong", value: "", sourceToken: "--fx-neutrals-08", tailwind: "border-border-strong", usage: "强边框 — hover 边框、选中态、需强调的边界", usageEn: "Strong — hover border, selected, emphasis" },
   { name: "input", value: "", sourceToken: "--fx-neutrals-07", tailwind: "border-input", usage: "表单可交互边框（比默认略重）", usageEn: "Interactive form input border" }]
 
@@ -3379,10 +3502,10 @@ const spacingTokens = [
 
 
 const shadowTokens = [
-{ name: "shadow-l1", value: "0 2px 6px var(--fx-shadow-color)", usage: "浮层菜单、Dropdown — 最近层", usageEn: "Dropdown menus and nearest-layer overlays" },
-{ name: "shadow-l2", value: "0 4px 12px var(--fx-shadow-color)", usage: "Sheet、侧边滑出面板 — 中层", usageEn: "Sheet panels and mid-layer surfaces" },
-{ name: "shadow-l3", value: "0 6px 24px var(--fx-shadow-color)", usage: "Dialog、Modal — 最高层遮罩", usageEn: "Dialogs and top-layer modal surfaces" },
-{ name: "shadow-l1-up", value: "0 -2px 6px var(--fx-shadow-color)", usage: "向上弹出的浮层（如底部工具栏菜单）", usageEn: "Upward overlays such as bottom toolbar menus" }];
+{ name: "shadow-l1", value: "0 6px 18px -8px var(--fx-shadow-color)", usage: "浮层菜单、Dropdown — 最近层", usageEn: "Dropdown menus and nearest-layer overlays" },
+{ name: "shadow-l2", value: "0 10px 30px -12px var(--fx-shadow-color)", usage: "Sheet、侧边滑出面板 — 中层", usageEn: "Sheet panels and mid-layer surfaces" },
+{ name: "shadow-l3", value: "0 18px 48px -16px var(--fx-shadow-color)", usage: "Dialog、Modal — 最高层遮罩", usageEn: "Dialogs and top-layer modal surfaces" },
+{ name: "shadow-l1-up", value: "0 -6px 18px -8px var(--fx-shadow-color)", usage: "向上弹出的浮层（如底部工具栏菜单）", usageEn: "Upward overlays such as bottom toolbar menus" }];
 
 // 浮层阴影一律用公司档 shadow-l1/l2/l3/l1-up；Tailwind 的 md/lg/xl 浮层档禁用（见 scripts/check-shadow-tokens.mjs）。shadow-sm 仅限非浮层的微抬升
 
@@ -5208,7 +5331,7 @@ function GettingStartedPage({
               <div className="flex items-start justify-between gap-4">
                 <SectionLead
                   title={lang === "en" ? "Component Playground" : "组件调试台"}
-                  description={lang === "en" ? "Website standards reuse the exact same playground structure as the Button page." : "网站规范这里直接复用 Button 页同一套调试台结构，后续组件也按这套来。"}
+                  description={lang === "en" ? "Website standards display the shared playground truth source. Component pages read the same source and render real components." : "网站规范这里只展示统一调试台真相源；组件页读取同一份数据，再渲染对应真实组件。"}
                 />
                 <Collapsible className="relative shrink-0">
                   <CollapsibleTrigger render={<Button variant="secondary" size="sm" className="w-fit shrink-0 [&[aria-expanded='true']_[data-icon='inline-end']]:rotate-180 [&_[data-icon='inline-end']]:transition-transform" />}>
@@ -5229,9 +5352,7 @@ function GettingStartedPage({
                   </CollapsibleContent>
                 </Collapsible>
               </div>
-              <div>
-                <ButtonPlayground lang={lang} />
-              </div>
+              <WebsiteStandardsPlayground lang={lang} />
             </div>
 
             <div className="flex flex-col gap-3">
@@ -6028,26 +6149,28 @@ ${installCommandsCode}`}
         <SectionLead
           title={lang === "en" ? "Semantic Slots" : "shadcn 语义槽"}
           description={lang === "en" ? "Components consume semantic token names, so product code does not need page-level visual overrides." : "组件消费语义 token，业务调用处不需要再覆盖颜色、边框、圆角和阴影。"} />
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[720px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-4">Layer</TableHead>
-                <TableHead>{lang === "en" ? "Example" : "例子"}</TableHead>
-                <TableHead className="pr-4">{lang === "en" ? "Purpose" : "用途"}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {governancePagesManifest.theme.semanticSlots.map((item) =>
-              <TableRow key={item.layer}>
-                  <TableCell className="pl-4 font-medium">{item.layer}</TableCell>
-                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{item.example}</code></TableCell>
-                  <TableCell className="pr-4 text-muted-foreground">{item.purpose}</TableCell>
+        <Card elevated className="p-0">
+          <CardContent className="p-0">
+            <Table className="min-w-[720px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="pl-4">Layer</TableHead>
+                  <TableHead>{lang === "en" ? "Example" : "例子"}</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "Purpose" : "用途"}</TableHead>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+              </TableHeader>
+              <TableBody>
+                {governancePagesManifest.theme.semanticSlots.map((item) =>
+                <TableRow key={item.layer}>
+                    <TableCell className="pl-4 font-medium">{item.layer}</TableCell>
+                    <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{item.example}</code></TableCell>
+                    <TableCell className="pr-4 text-muted-foreground">{item.purpose}</TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       </section>
 
       <section id="theme-flow" className={docsSpacing.sectionStack}>
@@ -6094,26 +6217,28 @@ ${installCommandsCode}`}
         </div>
 
         <h3 className="text-lg font-bold tracking-tight">{lang === "en" ? "Three Layers" : "三层体系"}</h3>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
-          <Table className="min-w-[760px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-4">Layer</TableHead>
-                <TableHead>{lang === "en" ? "Directory" : "目录"}</TableHead>
-                <TableHead className="pr-4">{lang === "en" ? "Responsibility" : "职责"}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {governancePagesManifest.overview.layers.map((item) =>
-              <TableRow key={item.layer}>
-                  <TableCell className="pl-4 font-medium">{item.layer}</TableCell>
-                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{item.directory}</code></TableCell>
-                  <TableCell className="pr-4 text-muted-foreground">{item.responsibility}</TableCell>
+        <Card elevated className="p-0">
+          <CardContent className="p-0">
+            <Table className="min-w-[760px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="pl-4">Layer</TableHead>
+                  <TableHead>{lang === "en" ? "Directory" : "目录"}</TableHead>
+                  <TableHead className="pr-4">{lang === "en" ? "Responsibility" : "职责"}</TableHead>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+              </TableHeader>
+              <TableBody>
+                {governancePagesManifest.overview.layers.map((item) =>
+                <TableRow key={item.layer}>
+                    <TableCell className="pl-4 font-medium">{item.layer}</TableCell>
+                    <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{item.directory}</code></TableCell>
+                    <TableCell className="pr-4 text-muted-foreground">{item.responsibility}</TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       </section>
 
         <section id="intro-audience" className={docsSpacing.sectionStack}>
@@ -6178,20 +6303,7 @@ const agentSections = componentIndexSections.filter((section) => section.title =
         "Installed shadcn/ui components and local documentation pages." :
         "已安装并在本站沉淀文档的 shadcn/ui 基础组件。"} />
 
-        
-        <div className="grid gap-x-12 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
-          {uiSections.flatMap((section) =>
-          section.items.map((item) =>
-          <a
-            key={item.href}
-            href={item.href}
-            className="rounded-lg py-1 text-base font-medium text-foreground transition-colors hover:text-primary">
-            
-                {getLabel(item, lang)}
-              </a>
-          )
-          )}
-        </div>
+        <ComponentIndexGrid sections={uiSections} lang={lang} />
       </section>
 
       <section id="components-fx" className={docsSpacing.sectionStack}>
@@ -6202,20 +6314,7 @@ const agentSections = componentIndexSections.filter((section) => section.title =
         "Company-level patterns composed from shadcn primitives." :
         "由 shadcn 基础组件组合出来的公司级模式。"} />
 
-        
-        <div className="grid gap-x-12 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
-          {fxSections.flatMap((section) =>
-          section.items.map((item) =>
-          <a
-            key={item.href}
-            href={item.href}
-            className="rounded-lg py-1 text-base font-medium text-foreground transition-colors hover:text-primary">
-            
-                {getLabel(item, lang)}
-              </a>
-          )
-          )}
-        </div>
+        <ComponentIndexGrid sections={fxSections} lang={lang} />
       </section>
 
       <section id="components-agent-ui" className={docsSpacing.sectionStack}>
@@ -6226,20 +6325,7 @@ const agentSections = componentIndexSections.filter((section) => section.title =
         "Controlled generative UI surfaces for Agent responses. Agents send JSON intent; fx-ui renders trusted React components." :
         "承载 Agent 回复里的受控生成式 UI。Agent 发 JSON 意图，fx-ui 渲染可信 React 组件。"} />
 
-        
-        <div className="grid gap-x-12 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
-          {agentSections.flatMap((section) =>
-          section.items.map((item) =>
-          <a
-            key={item.href}
-            href={item.href}
-            className="rounded-lg py-1 text-base font-medium text-foreground transition-colors hover:text-primary">
-            
-                {getLabel(item, lang)}
-              </a>
-          )
-          )}
-        </div>
+        <ComponentIndexGrid sections={agentSections} lang={lang} />
       </section>
 
     </div>);
@@ -6351,17 +6437,23 @@ const PG_VARIANTS: {value: PgVariant;label: string;labelEn: string;intent: strin
 { value: "plain", label: "纯文字", labelEn: "Plain", intent: "承载表格操作列或行内文字操作，无底色、无边框。", intentEn: "Use for table action columns or inline text actions with no fill or border.", constraint: "需要颜色差异时用 tone，不在调用处手写颜色类覆盖。", constraintEn: "Use tone for color semantics; do not override colors ad hoc at call sites." },
 { value: "destructive", label: "危险", labelEn: "Danger", intent: "承载删除、移除权限等危险或不可逆操作。", intentEn: "Use for dangerous or irreversible actions such as delete or remove access.", constraint: "通常配合二次确认，不要用 default 或红色自定义类替代。", constraintEn: "Usually pair with confirmation; do not replace with default or custom red classes." }];
 
-const PG_TONES: {value: PgTone;label: string;labelEn: string;title: string;titleEn: string;}[] = [
-{ value: "default", label: "默认", labelEn: "Default", title: "中性文字操作", titleEn: "Neutral text action" },
-{ value: "primary", label: "主色", labelEn: "Primary", title: "品牌主色文字操作", titleEn: "Brand-primary text action" },
-{ value: "info", label: "信息", labelEn: "Info", title: "蓝色信息 / 详情类文字操作，不等同链接", titleEn: "Blue info/detail text action, not a link" },
-{ value: "danger", label: "危险", labelEn: "Danger", title: "删除等危险文字操作", titleEn: "Dangerous text action such as delete" }];
+const PG_TONES: {value: PgTone;label: string;labelEn: string;title: string;titleEn: string;intent: string;intentEn: string;constraint: string;constraintEn: string;}[] = [
+{ value: "default", label: "默认", labelEn: "Default", title: "中性文字操作", titleEn: "Neutral text action", intent: "用于普通纯文字按钮，不额外表达语义色。", intentEn: "Use for neutral plain text buttons without extra semantic color.", constraint: "仅在 variant=\"plain\" 时生效；其他类型忽略 tone。", constraintEn: "Only applies when variant=\"plain\"; other variants ignore tone." },
+{ value: "primary", label: "主色", labelEn: "Primary", title: "品牌主色文字操作", titleEn: "Brand-primary text action", intent: "用于纯文字按钮中需要品牌主色强调的动作。", intentEn: "Use for plain text actions that need brand-primary emphasis.", constraint: "只通过 tone=\"primary\" 表达，不在调用处手写颜色类。", constraintEn: "Use tone=\"primary\" only; do not add ad hoc color classes." },
+{ value: "info", label: "信息", labelEn: "Info", title: "蓝色信息 / 详情类文字操作，不等同链接", titleEn: "Blue info/detail text action, not a link", intent: "用于查看、详情等信息类纯文字操作。", intentEn: "Use for informational plain actions like view or details.", constraint: "它仍然是按钮语义，不等同链接；跳转用 Link。", constraintEn: "It remains button semantics, not a link; use Link for navigation." },
+{ value: "danger", label: "危险", labelEn: "Danger", title: "删除等危险文字操作", titleEn: "Dangerous text action such as delete", intent: "用于删除、移除等危险纯文字操作。", intentEn: "Use for dangerous plain text actions such as delete or remove.", constraint: "仅表达文字色风险；高风险确认仍应配合弹窗。", constraintEn: "Only signals risk through text color; high-risk actions still need confirmation." }];
 
-const PG_SIZES: {value: PgSize;label: string;}[] = [
-{ value: "xs", label: "超小24" }, { value: "sm", label: "小28" }, { value: "md", label: "中32" }, { value: "lg", label: "大36" }];
+const PG_SIZES: {value: PgSize;label: string;intent: string;intentEn: string;constraint: string;constraintEn: string;}[] = [
+{ value: "xs", label: "超小24", intent: "用于极紧凑区域里的低频操作。", intentEn: "Use for low-frequency actions in very compact areas.", constraint: "只传 size=\"xs\"；不要额外改内部 padding 或字号。", constraintEn: "Pass size=\"xs\" only; do not override inner padding or font size." },
+{ value: "sm", label: "小28", intent: "用于表格行、筛选栏等紧凑操作。", intentEn: "Use for compact actions in table rows or filter bars.", constraint: "这是按钮源码的默认视觉档；不需要时可省略 size。", constraintEn: "This is the source default visual size; omit size when no override is needed." },
+{ value: "md", label: "中32", intent: "用于常规表单、卡片和工具栏操作。", intentEn: "Use for normal forms, cards, and toolbar actions.", constraint: "只传 size=\"md\"；同一操作区尺寸保持一致。", constraintEn: "Pass size=\"md\" only; keep sizes consistent in one action area." },
+{ value: "lg", label: "大36", intent: "用于页面头部或需要更大点击目标的主操作。", intentEn: "Use for page headers or primary actions that need larger targets.", constraint: "避免在密集表格、窄列或行内文本里使用。", constraintEn: "Avoid in dense tables, narrow columns, or inline text." }];
 
-const PG_ICONS: {value: PgIcon;label: string;}[] = [
-{ value: "none", label: "无" }, { value: "start", label: "左侧" }, { value: "end", label: "右侧" }, { value: "only", label: "仅图标" }];
+const PG_ICONS: {value: PgIcon;label: string;intent: string;intentEn: string;constraint: string;constraintEn: string;}[] = [
+{ value: "none", label: "无", intent: "用于文案已经足够清楚的普通按钮。", intentEn: "Use when the label is clear enough on its own.", constraint: "不要为了装饰强行加图标。", constraintEn: "Do not add decorative icons without meaning." },
+{ value: "start", label: "左侧", intent: "用于搜索、新建等图标能帮助识别动作的按钮。", intentEn: "Use when an icon helps identify actions like search or create.", constraint: "图标使用 data-icon=\"inline-start\"，尺寸交给按钮控制。", constraintEn: "Use data-icon=\"inline-start\" and let Button control icon sizing." },
+{ value: "end", label: "右侧", intent: "用于下拉、继续等图标补充动作方向的按钮。", intentEn: "Use when the icon supplements direction, such as dropdown or continue.", constraint: "图标使用 data-icon=\"inline-end\"，不要手写间距类。", constraintEn: "Use data-icon=\"inline-end\" and do not hand-code spacing classes." },
+{ value: "only", label: "仅图标", intent: "用于工具栏或表格操作列中的紧凑图标按钮。", intentEn: "Use for compact icon buttons in toolbars or table action columns.", constraint: "必须提供 aria-label；尺寸使用 icon-* 档。", constraintEn: "Must provide aria-label; use icon-* sizes." }];
 
 const PG_ICON_SIZE: Record<PgSize, "icon-xs" | "icon-sm" | "icon-md" | "icon-lg"> = { xs: "icon-xs", sm: "icon-sm", md: "icon-md", lg: "icon-lg" };
 type PgState = {variant: PgVariant | "all";tone: PgTone | "all";size: PgSize | "all";icon: PgIcon | "all";text: string;textEn: string;disabled: boolean | "all";loading: boolean | "all";};
@@ -6390,7 +6482,6 @@ const PG_SCENARIOS: PgScenario[] = [
 { id: "plain-text", zh: "纯文字", en: "Plain text", intent: "表格操作列、行内弱化操作，无边框无底色，hover 只变文字色。", intentEn: "Inline or table-row actions with no border or fill; hover changes text color only.", s: { variant: "plain", tone: "info", size: "md", icon: "none", text: "详情", textEn: "Details", disabled: false, loading: false } },
 { id: "loading", zh: "加载状态", en: "Loading", intent: "提交中、保存中等需要阻止重复点击的场景。", intentEn: "Pending submit or save actions that should prevent repeated clicks.", s: { variant: "default", tone: "default", size: "md", icon: "none", text: "提交中", textEn: "Submitting", disabled: true, loading: true } }];
 
-
 function genButtonCode(variant: PgVariant, tone: PgTone, size: PgSize, icon: PgIcon, disabled: boolean, loading: boolean, label: string): string {
   const attrs: string[] = [];
   if (variant !== "default") attrs.push(`variant="${variant}"`);
@@ -6412,12 +6503,12 @@ function genButtonCode(variant: PgVariant, tone: PgTone, size: PgSize, icon: PgI
 const buttonPlaygroundConfig = {
   props: [
   { key: "text", zh: "内容", en: "Text", propName: "children", type: "text" as const, bilingual: true, disabledWhen: (v: Record<string, string>) => v.icon === "only" },
-  { key: "variant", zh: "变体", en: "Variant", propName: "variant", type: "segment" as const, options: PG_VARIANTS, hasAll: true },
-  { key: "tone", zh: "语义色", en: "Tone", propName: "tone", type: "segment" as const, options: PG_TONES, disabledWhen: (v: Record<string, string>) => v.variant !== "plain" },
+  { key: "variant", zh: "类型", en: "Variant", propName: "variant", type: "segment" as const, options: PG_VARIANTS, hasAll: true },
+  { key: "tone", zh: "语义色", en: "Tone", propName: "tone", type: "segment" as const, options: PG_TONES, hasAll: true, disabledWhen: (v: Record<string, string>) => v.variant !== "plain" },
   { key: "size", zh: "尺寸", en: "Size", propName: "size", type: "segment" as const, options: PG_SIZES, hasAll: true },
   { key: "icon", zh: "图标位置", en: "Icon", propName: "iconLayout", type: "segment" as const, options: PG_ICONS, hasAll: true },
-  { key: "loading", zh: "加载", en: "Loading", propName: "loading", type: "segment" as const, options: [{ value: "true", label: "是" }, { value: "false", label: "否" }] },
-  { key: "disabled", zh: "禁用", en: "Disabled", propName: "disabled", type: "segment" as const, options: [{ value: "true", label: "是" }, { value: "false", label: "否" }], hasAll: true, disabledWhen: (v: Record<string, string>) => v.loading === "true" }],
+  { key: "loading", zh: "加载", en: "Loading", propName: "loading", type: "segment" as const, options: [{ value: "true", label: "是", intent: "用于提交中、保存中等需要阻止重复点击的状态。", intentEn: "Use for submit/save pending states that should prevent repeated clicks.", constraint: "源码没有 loading prop；用 disabled + Spinner 组合。", constraintEn: "Button has no loading prop; compose disabled + Spinner." }, { value: "false", label: "否", intent: "用于普通可交互按钮。", intentEn: "Use for normal interactive buttons.", constraint: "不渲染 Spinner，也不要传不存在的 loading 属性。", constraintEn: "Do not render Spinner or pass a non-existent loading prop." }] },
+  { key: "disabled", zh: "禁用", en: "Disabled", propName: "disabled", type: "segment" as const, options: [{ value: "true", label: "是", intent: "用于当前不可操作或条件未满足的按钮。", intentEn: "Use when the action is unavailable or prerequisites are unmet.", constraint: "直接使用 disabled；不要只靠样式伪装禁用。", constraintEn: "Use disabled directly; do not fake disabled with styling only." }, { value: "false", label: "否", intent: "用于当前可执行的操作。", intentEn: "Use when the action is currently available.", constraint: "保持真实可聚焦和可点击状态。", constraintEn: "Keep the button genuinely focusable and clickable." }], hasAll: true, disabledWhen: (v: Record<string, string>) => v.loading === "true" }],
 
   initial: { variant: "default", tone: "default", size: "md", icon: "none", disabled: "false", loading: "false", text: PG_SCENARIOS[0].s.text, textEn: PG_SCENARIOS[0].s.textEn },
   guidanceKey: "variant",
@@ -6431,8 +6522,139 @@ const buttonPlaygroundConfig = {
 };
 
 function ButtonPlayground({ lang }: {lang: Lang;}) {
-  return <ComponentPlayground config={buttonPlaygroundConfig} lang={lang} />;
+  return <ComponentPlayground key="button-playground" config={buttonPlaygroundConfig} lang={lang} />;
 }
+
+function WebsiteStandardsPlayground({ lang }: {lang: Lang;}) {
+  const playground = websiteStandardsManifest.componentPlayground;
+
+  return (
+    <div className="grid gap-3">
+      <div className="rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">
+        <div className="font-medium text-foreground">{playground.componentName}</div>
+        <div className="mt-1">路由：{playground.route}</div>
+        <div className="mt-1">真相源：{playground.truthSource}</div>
+        <div className="mt-1">组件源码：{playground.source}</div>
+      </div>
+      {playground.componentKey === "button" ? <ButtonPlayground lang={lang} /> : null}
+    </div>);
+
+}
+
+const buttonArrangementCode = `<div className="flex flex-wrap items-center gap-2">
+  <Button>
+    <PlusIcon data-icon="inline-start" />
+    新建
+  </Button>
+  <Button variant="outline">智能表单</Button>
+  <Button variant="outline">导入</Button>
+  <Button variant="ghost" size="icon-sm" aria-label="更多操作">
+    <MoreVerticalIcon />
+  </Button>
+</div>`;
+
+type ButtonGroupPattern = "actions" | "split" | "toolbar-icons";
+type ButtonGroupOrientation = "horizontal" | "vertical";
+type ButtonGroupButtonSize = "xs" | "sm" | "md" | "lg";
+type ButtonGroupButtonVariant = "outline" | "secondary" | "default";
+
+function renderButtonGroupPlayground(
+pattern: ButtonGroupPattern,
+orientation: ButtonGroupOrientation,
+size: ButtonGroupButtonSize,
+variant: ButtonGroupButtonVariant,
+lang: Lang)
+{
+  const effectiveOrientation = pattern === "actions" ? orientation : "horizontal";
+  const firstAction = lang === "en" ? "Copy" : "复制";
+  const secondAction = lang === "en" ? "Share" : "分享";
+  const thirdAction = lang === "en" ? "Archive" : "归档";
+  const mainAction = lang === "en" ? "Save" : "保存";
+  const moveUp = lang === "en" ? "Move up" : "上移";
+  const center = lang === "en" ? "Center" : "居中";
+  const moveDown = lang === "en" ? "Move down" : "下移";
+  const iconSize = size === "xs" ? "icon-xs" : size === "sm" ? "icon-sm" : size === "md" ? "icon-md" : "icon-lg";
+
+  if (pattern === "split") {
+    return (
+      <ButtonGroup orientation={effectiveOrientation}>
+        <Button size={size} variant={variant}>{mainAction}</Button>
+        <Button size={iconSize} variant={variant} aria-label={lang === "en" ? "More actions" : "更多操作"}>
+          <ChevronDownIcon />
+        </Button>
+      </ButtonGroup>);
+
+  }
+
+  if (pattern === "toolbar-icons") {
+    return (
+      <ButtonGroup>
+        <Button size={iconSize} variant={variant} aria-label="列表视图">
+          <ListIcon />
+        </Button>
+        <Button size={iconSize} variant="outline" aria-label="看板视图">
+          <LayoutGridIcon />
+        </Button>
+        <Button size={iconSize} variant="outline" aria-label="地图视图">
+          <MapPinIcon />
+        </Button>
+        <Button size={iconSize} variant="outline" aria-label="分栏视图">
+          <LayoutColumnsIcon />
+        </Button>
+      </ButtonGroup>);
+
+  }
+
+  return (
+    <ButtonGroup orientation={effectiveOrientation}>
+      <Button size={size} variant={variant}>{effectiveOrientation === "vertical" ? moveUp : firstAction}</Button>
+      <Button size={size} variant={variant}>{effectiveOrientation === "vertical" ? center : secondAction}</Button>
+      <Button size={size} variant={variant}>{effectiveOrientation === "vertical" ? moveDown : thirdAction}</Button>
+    </ButtonGroup>);
+}
+
+function genButtonGroupPlaygroundCode(
+pattern: ButtonGroupPattern,
+orientation: ButtonGroupOrientation,
+size: ButtonGroupButtonSize,
+variant: ButtonGroupButtonVariant,
+lang: Lang)
+{
+  const effectiveOrientation = pattern === "actions" ? orientation : "horizontal";
+  const groupAttrs = effectiveOrientation === "horizontal" ? "" : ` orientation="${effectiveOrientation}"`;
+  const buttonAttrs = [
+  size !== "md" ? `size="${size}"` : null,
+  variant !== "outline" ? `variant="${variant}"` : `variant="${variant}"`].filter(Boolean).join(" ");
+  const buttonOpen = buttonAttrs ? `<Button ${buttonAttrs}>` : "<Button>";
+  const firstAction = lang === "en" ? "Copy" : "复制";
+  const secondAction = lang === "en" ? "Share" : "分享";
+  const thirdAction = lang === "en" ? "Archive" : "归档";
+  const mainAction = lang === "en" ? "Save" : "保存";
+  const moveUp = lang === "en" ? "Move up" : "上移";
+  const center = lang === "en" ? "Center" : "居中";
+  const moveDown = lang === "en" ? "Move down" : "下移";
+  const iconSize = size === "xs" ? "icon-xs" : size === "sm" ? "icon-sm" : size === "md" ? "icon-md" : "icon-lg";
+  const iconAttrs = [`size="${iconSize}"`, `variant="${variant}"`].join(" ");
+
+  if (pattern === "split") {
+    return `<ButtonGroup${groupAttrs}>\n  ${buttonOpen}${mainAction}</Button>\n  <Button ${iconAttrs} aria-label="${lang === "en" ? "More actions" : "更多操作"}">\n    <ChevronDownIcon />\n  </Button>\n</ButtonGroup>`;
+  }
+
+  if (pattern === "toolbar-icons") {
+    return `<ButtonGroup>\n  <Button ${iconAttrs} aria-label="${lang === "en" ? "List view" : "列表视图"}">\n    <ListIcon />\n  </Button>\n  <Button ${iconAttrs} aria-label="${lang === "en" ? "Grid view" : "看板视图"}">\n    <LayoutGridIcon />\n  </Button>\n  <Button ${iconAttrs} aria-label="${lang === "en" ? "Map view" : "地图视图"}">\n    <MapPinIcon />\n  </Button>\n  <Button ${iconAttrs} aria-label="${lang === "en" ? "Split view" : "分栏视图"}">\n    <LayoutColumnsIcon />\n  </Button>\n</ButtonGroup>`;
+  }
+
+  return `<ButtonGroup${groupAttrs}>\n  ${buttonOpen}${effectiveOrientation === "vertical" ? moveUp : firstAction}</Button>\n  ${buttonOpen}${effectiveOrientation === "vertical" ? center : secondAction}</Button>\n  ${buttonOpen}${effectiveOrientation === "vertical" ? moveDown : thirdAction}</Button>\n</ButtonGroup>`;
+}
+
+const buttonGroupPlaygroundConfig = {
+  props: componentPlaygroundPropsFromManifest(componentPlaygroundsManifest.components.buttonGroup),
+  initial: componentPlaygroundsManifest.components.buttonGroup.initial,
+  guidanceKey: componentPlaygroundsManifest.components.buttonGroup.guidanceKey,
+  onValueChange: (next: Record<string, string>, key: string, value: string) => key === "pattern" && value !== "actions" ? { ...next, orientation: "horizontal" } : next,
+  renderOne: (c: Record<string, string>, lang: Lang) => renderButtonGroupPlayground(c.pattern as ButtonGroupPattern, c.orientation as ButtonGroupOrientation, c.size as ButtonGroupButtonSize, c.variant as ButtonGroupButtonVariant, lang),
+  genCode: (c: Record<string, string>, lang: Lang) => genButtonGroupPlaygroundCode(c.pattern as ButtonGroupPattern, c.orientation as ButtonGroupOrientation, c.size as ButtonGroupButtonSize, c.variant as ButtonGroupButtonVariant, lang)
+};
 
 function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
@@ -6447,6 +6669,10 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
       </section>
 
       <section id="playground" className={docsSpacing.sectionStack}>
+        <SectionLead
+          title={lang === "en" ? "Playground" : "调试台"}
+          description={lang === "en" ? "Pick a scenario or tweak props live, then copy the generated code." : "选场景或实时调属性，预览随之变化，写法可一键复制。"}
+        />
         <ButtonPlayground lang={lang} />
       </section>
 
@@ -6462,6 +6688,36 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         <DocSurfaceCard elevated>
           <CardContent className="px-5">
             <CopyCodeBlock code={buttonImportCode} label="Import" lang={lang} />
+          </CardContent>
+        </DocSurfaceCard>
+      </section>
+
+      <section id="arrangement" className={docsSpacing.sectionStack}>
+        <SectionLead
+          title={lang === "en" ? "Arrangement" : "排列组合"}
+          description={
+          lang === "en" ?
+          "Independent actions with spacing belong to Button arrangement, not ButtonGroup." :
+          "按钮之间有间距、存在主次层级时，归到按钮排列组合，不归到按钮组。"}
+        />
+        <DocSurfaceCard elevated>
+          <CardContent className="flex flex-col gap-5 px-5">
+            <div className="flex flex-wrap items-center gap-2">
+              <Button>
+                <PlusIcon data-icon="inline-start" />
+                {lang === "en" ? "Create" : "新建"}
+              </Button>
+              <Button variant="outline">{lang === "en" ? "Smart form" : "智能表单"}</Button>
+              <Button variant="outline">{lang === "en" ? "Import" : "导入"}</Button>
+              <Button variant="ghost" size="icon-sm" aria-label={lang === "en" ? "More actions" : "更多操作"}>
+                <MoreVerticalIcon />
+              </Button>
+            </div>
+            <div className="grid gap-3 text-sm text-muted-foreground md:grid-cols-2">
+              <p><span className="font-medium text-foreground">{lang === "en" ? "Intent" : "使用意图"}：</span>{lang === "en" ? "Use for page headers, list toolbars, and action areas where one primary action leads and the rest are secondary." : "用于页面头部、列表工具栏、操作区：一个主操作带领，其余操作作为次级补充。"}</p>
+              <p><span className="font-medium text-foreground">{lang === "en" ? "Constraint" : "约束"}：</span>{lang === "en" ? "Keep buttons independent with normal spacing. Use ButtonGroup only when actions should visually attach as one continuous control." : "按钮保持独立间距；只有需要视觉连续贴合成一个控件时，才使用 ButtonGroup。"}</p>
+            </div>
+            <CopyCodeBlock code={buttonArrangementCode} label={lang === "en" ? "Recommended code" : "推荐写法"} lang={lang} />
           </CardContent>
         </DocSurfaceCard>
       </section>
@@ -7428,12 +7684,34 @@ function NavMenuPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
         
       </section>
 
+      <section id="nav-menu-playground" className={docsSpacing.sectionStack}>
+        <SectionLead
+          title={lang === "en" ? "Playground" : "调试台"}
+          description={lang === "en" ? "Switch between the existing Nav Menu scenarios and copy the matching composition." : "切换现有导航菜单场景，复制对应真实组合写法。"}
+        />
+        <StandardScenarioPlayground
+          slug="nav-menu"
+          examples={navMenuScenarioRows.map((row) => ({
+            id: row.key,
+            title: row.title,
+            intent: row.intent,
+            rule: row.constraint,
+            code: row.code
+          }))}
+          renderScenarioPreview={(id) => navMenuScenarioRows.find((row) => row.key === id)?.preview ?? navMenuScenarioRows[0].preview}
+          importCode={importCode}
+          lang={lang}
+        />
+      </section>
+
       <section id="nav-menu-overview" className={docsSpacing.sectionStack}>
         <SectionLead title={
         lang === "en" ? "Overview" : "组件总览"} description={
         lang === "en" ? "App rail + second-level menu working together; click apps / items to switch, the footer arrow collapses the panel." : "一级应用栏 + 二级菜单的组合形态；点应用 / 菜单项切换，底部箭头收起面板。"} />
         
-        <div className="flex h-[560px] w-fit rounded-xl border border-border bg-muted/40 p-5">{comboDemo}</div>
+        <DocSurfaceCard elevated className="w-fit">
+          <CardContent className="flex h-[560px] bg-muted/40 p-5">{comboDemo}</CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id="nav-menu-preview" className={docsSpacing.sectionStack}>
@@ -7441,7 +7719,7 @@ function NavMenuPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
         lang === "en" ? "Scenario examples" : "场景示例"} description={
         lang === "en" ? "Forms and states; all from the same building blocks." : "各形态与状态；均由同一套零件组合。"} />
         
-        <ScenarioTable lang={lang} rows={navMenuScenarioRows} />
+        <ScenarioTable lang={lang} rows={navMenuScenarioRows} elevated />
       </section>
 
       <section id="nav-menu-usage" className={docsSpacing.sectionStack}>
@@ -7449,15 +7727,17 @@ function NavMenuPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
         lang === "en" ? "Usage" : "使用方式"} description={
         lang === "en" ? "Import the parts and compose; rail and menu are independent." : "按需导入零件组合；一级栏与二级菜单相互独立。"} />
         
-        <div className="flex flex-col gap-4 rounded-lg border border-border bg-card p-5">
+        <DocSurfaceCard elevated>
+          <CardContent className="flex flex-col gap-4 p-5">
           <CopyCodeBlock code={importCode} label="Import" lang={lang} />
           <CopyCodeBlock code={usageCode} label="Usage" lang={lang} />
-        </div>
+          </CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id="nav-menu-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "API Props" : "API 属性"}</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -7478,7 +7758,7 @@ function NavMenuPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="nav-menu-semantic-dom" className={docsSpacing.sectionStack}>
@@ -7486,7 +7766,7 @@ function NavMenuPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
         lang === "en" ? "Semantic DOM" : "语义 DOM"} description={
         lang === "en" ? "Semantic parts AI and engineers should target." : "AI 和工程师应该理解的语义部位。"} />
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -7503,12 +7783,12 @@ function NavMenuPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="nav-menu-do-dont" className={docsSpacing.sectionStack}>
         <SectionLead title={lang === "en" ? "Do / Don’t" : "正误示例"} />
-        <DocDoDont lang={lang} rows={navMenuDoDontRows} />
+        <DocDoDont lang={lang} rows={navMenuDoDontRows} elevated />
       </section>
     </div>);
 
@@ -7844,12 +8124,12 @@ function TokensShadowPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
             <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "How it's computed 计算方式" : "计算方式"}</h2>
             <p className="mt-2 text-base text-muted-foreground">
               {lang === "en" ?
-              "Each level is 0 {y}px {blur}px var(--fx-shadow-color), with no spread. Only y-offset and blur grow with elevation; the color stays the same." :
-              "每档 = 0 {y}px {blur}px var(--fx-shadow-color)，spread 恒为 0。随层级升高只增大 y 偏移和 blur，颜色不变。"}
+              "Each level is 0 {y}px {blur}px {spread}px var(--fx-shadow-color). Low elevation uses negative spread so the edge stays soft and shallow." :
+              "每档 = 0 {y}px {blur}px {spread}px var(--fx-shadow-color)。低档使用负 spread，让边缘更柔、更浅。"}
             </p>
           </div>
           <div className="rounded-lg border border-border bg-card p-5 text-base text-muted-foreground">
-            <p><span className="font-medium text-foreground">{lang === "en" ? "Color knob" : "颜色总开关"}</span>：<code className="rounded bg-muted px-1 text-sm">--fx-shadow-color = oklch(from --fx-neutrals-20 l c h / .12)</code>{lang === "en" ? "，derived from the darkest neutral (brand-tinted) at 12% alpha — follows the palette, not hard-coded black; one place to adjust." : "，从最深中性灰（带品牌色相）派生 + 12% 透明，跟随色板而非写死纯黑；四档共用、一处调深浅。"}</p>
+            <p><span className="font-medium text-foreground">{lang === "en" ? "Color knob" : "颜色总开关"}</span>：<code className="rounded bg-muted px-1 text-sm">--fx-shadow-color = oklch(from --fx-neutrals-20 l c h / .08)</code>{lang === "en" ? "，derived from the darkest neutral (brand-tinted) at 8% alpha — follows the palette, not hard-coded black; one place to adjust." : "，从最深中性灰（带品牌色相）派生 + 8% 透明，跟随色板而非写死纯黑；四档共用、一处调深浅。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Y-offset" : "y 偏移"}</span>：{lang === "en" ? "drop distance, +2px per level — 2 / 4 / 6 (light from top, higher floats drop further)." : "投影下移距离，每升一层 +2px——2 / 4 / 6（光从上方来，越高落得越远）。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">Blur</span>：{lang === "en" ? "softness, roughly doubles per level — 6 / 12 / 24 (higher = softer, more diffuse)." : "模糊半径，约每层翻倍——6 / 12 / 24（越高越柔、越散）。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">Spread</span>：0{lang === "en" ? " — never expand, keeps shadows clean." : "——不外扩，避免脏重。"}</p>
@@ -8038,6 +8318,95 @@ const iconScenarioFilters = [
 { value: "type", label: "类型", labelEn: "Type" },
 { value: "size", label: "尺寸", labelEn: "Size" }];
 
+type IconPlaygroundMode = "line" | "filled" | "button" | "chip";
+type IconPlaygroundColor = "foreground" | "muted" | "primary" | "success" | "warning" | "destructive" | "info";
+
+const iconPlaygroundDemoIcon = {
+  label: "首页",
+  labelEn: "Home",
+  importName: "HomeIcon, HomeFilledIcon",
+  line: HomeIcon,
+  lineName: "HomeIcon",
+  filled: HomeFilledIcon,
+  filledName: "HomeFilledIcon"
+};
+
+const iconPlaygroundColors: {value: IconPlaygroundColor;label: string;labelEn: string;className: string;}[] = [
+{ value: "foreground", label: "正文", labelEn: "Foreground", className: "text-foreground" },
+{ value: "muted", label: "次要", labelEn: "Muted", className: "text-muted-foreground" },
+{ value: "primary", label: "主题", labelEn: "Primary", className: "text-primary" },
+{ value: "success", label: "成功", labelEn: "Success", className: "text-success" },
+{ value: "warning", label: "警告", labelEn: "Warning", className: "text-warning" },
+{ value: "destructive", label: "危险", labelEn: "Danger", className: "text-destructive" },
+{ value: "info", label: "信息", labelEn: "Info", className: "text-info" }];
+
+function getIconPlaygroundColor(value: string) {
+  return iconPlaygroundColors.find((item) => item.value === value) ?? iconPlaygroundColors[0];
+}
+
+function getIconPlaygroundComponent(icon: typeof iconPlaygroundDemoIcon, mode: IconPlaygroundMode) {
+  return mode === "filled" || mode === "chip" ? icon.filled ?? icon.line : icon.line;
+}
+
+function getIconPlaygroundComponentName(icon: typeof iconPlaygroundDemoIcon, mode: IconPlaygroundMode) {
+  return mode === "filled" || mode === "chip" ? icon.filledName ?? icon.lineName : icon.lineName;
+}
+
+function renderIconPlayground(c: Record<string, string>, lang: Lang) {
+  const icon = iconPlaygroundDemoIcon;
+  const mode = c.mode as IconPlaygroundMode;
+  const Icon = getIconPlaygroundComponent(icon, mode);
+  const LineIcon = icon.line;
+  const size = Number(c.size) || 20;
+  const color = getIconPlaygroundColor(c.color);
+  const label = lang === "en" ? icon.labelEn : icon.label;
+  const style = { width: size, height: size } as React.CSSProperties;
+
+  if (mode === "button") {
+    return (
+      <Button>
+        <LineIcon data-icon="inline-start" />
+        {label}
+      </Button>);
+  }
+
+  if (mode === "chip") {
+    return (
+      <span className="flex size-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
+        <Icon style={style} />
+      </span>);
+  }
+
+  return <Icon className={color.className} style={style} />;
+}
+
+function genIconPlaygroundCode(c: Record<string, string>, lang: Lang) {
+  const icon = iconPlaygroundDemoIcon;
+  const mode = c.mode as IconPlaygroundMode;
+  const size = Number(c.size) || 20;
+  const color = getIconPlaygroundColor(c.color);
+  const label = lang === "en" ? icon.labelEn : icon.label;
+  const componentName = getIconPlaygroundComponentName(icon, mode);
+  const importCode = `import { ${icon.importName} } from "@/lib/icons"`;
+
+  if (mode === "button") {
+    return `${importCode}\n\n<Button>\n  <${icon.lineName} data-icon="inline-start" />\n  ${label}\n</Button>`;
+  }
+
+  if (mode === "chip") {
+    return `${importCode}\n\n<span className="flex size-16 items-center justify-center rounded-full bg-primary text-primary-foreground">\n  <${componentName} className="size-${size / 4}" />\n</span>`;
+  }
+
+  return `${importCode}\n\n<${componentName} className="size-${size / 4} ${color.className}" />`;
+}
+
+const iconPlaygroundConfig = {
+  props: componentPlaygroundPropsFromManifest(componentPlaygroundsManifest.components.icon),
+  initial: componentPlaygroundsManifest.components.icon.initial,
+  guidanceKey: componentPlaygroundsManifest.components.icon.guidanceKey,
+  renderOne: renderIconPlayground,
+  genCode: genIconPlaygroundCode
+};
 
 function IconPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   const iconImportCode = `import { SearchIcon, HomeFilledIcon } from "@/lib/icons"`;
@@ -8178,6 +8547,15 @@ function IconPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         
       </section>
 
+      <section id="icon-playground" className={docsSpacing.sectionStack}>
+        <SectionLead
+          title={lang === "en" ? "Playground" : "调试台"}
+          description={lang === "en" ?
+          "Options, intent, and constraints are read from the component playground manifest. Source rendering still uses @/lib/icons." :
+          "选项、意图和约束来自组件调试台 manifest；源码侧只负责用 @/lib/icons 渲染真实图标。"} />
+        <ComponentPlayground config={iconPlaygroundConfig} lang={lang} />
+      </section>
+
       <section id="icon-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Overview" : "组件总览"}</h2>
@@ -8187,61 +8565,63 @@ function IconPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             "紧凑展示图标的类型与尺寸，用来快速查看图标长什么样。"}
           </p>
         </div>
-        <div className="grid gap-6 rounded-lg border border-border-container bg-card p-6">
-          <div className="grid gap-3">
-            <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Monochrome line" : "单色线性"}</h3>
-            <div className="flex flex-wrap items-center gap-6 text-foreground">
-              <HomeIcon className="size-6" />
-              <CheckCircleIcon className="size-6" />
-              <BellIcon className="size-6" />
-              <StarIcon className="size-6" />
-              <DatabaseIcon className="size-6" />
+        <DocSurfaceCard elevated>
+          <CardContent className="grid gap-6 p-6">
+            <div className="grid gap-3">
+              <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Monochrome line" : "单色线性"}</h3>
+              <div className="flex flex-wrap items-center gap-6 text-foreground">
+                <HomeIcon className="size-6" />
+                <CheckCircleIcon className="size-6" />
+                <BellIcon className="size-6" />
+                <StarIcon className="size-6" />
+                <DatabaseIcon className="size-6" />
+              </div>
             </div>
-          </div>
-          <div className="border-t border-dashed border-border" />
-          <div className="grid gap-3">
-            <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Colored line" : "彩色线性"}</h3>
-            <div className="flex flex-wrap items-center gap-6">
-              <HomeIcon className="size-6 text-primary" />
-              <CheckCircleIcon className="size-6 text-success" />
-              <BellIcon className="size-6 text-warning" />
-              <StarIcon className="size-6 text-destructive" />
-              <DatabaseIcon className="size-6 text-info" />
+            <div className="border-t border-dashed border-border" />
+            <div className="grid gap-3">
+              <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Colored line" : "彩色线性"}</h3>
+              <div className="flex flex-wrap items-center gap-6">
+                <HomeIcon className="size-6 text-primary" />
+                <CheckCircleIcon className="size-6 text-success" />
+                <BellIcon className="size-6 text-warning" />
+                <StarIcon className="size-6 text-destructive" />
+                <DatabaseIcon className="size-6 text-info" />
+              </div>
             </div>
-          </div>
-          <div className="border-t border-dashed border-border" />
-          <div className="grid gap-3">
-            <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Solid" : "面型"}</h3>
-            <div className="flex flex-wrap items-center gap-6 text-primary">
-              <HomeFilledIcon className="size-6" />
-              <CheckCircleFilledIcon className="size-6" />
-              <BellFilledIcon className="size-6" />
-              <StarFilledIcon className="size-6" />
-              <DatabaseFilledIcon className="size-6" />
+            <div className="border-t border-dashed border-border" />
+            <div className="grid gap-3">
+              <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Solid" : "面型"}</h3>
+              <div className="flex flex-wrap items-center gap-6 text-primary">
+                <HomeFilledIcon className="size-6" />
+                <CheckCircleFilledIcon className="size-6" />
+                <BellFilledIcon className="size-6" />
+                <StarFilledIcon className="size-6" />
+                <DatabaseFilledIcon className="size-6" />
+              </div>
             </div>
-          </div>
-          <div className="border-t border-dashed border-border" />
-          <div className="grid gap-3">
-            <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Reverse" : "反白"}</h3>
-            <div className="flex flex-wrap items-center gap-6">
-              <span className="flex size-9 items-center justify-center rounded-md bg-primary"><HomeIcon className="size-5 text-primary-foreground" /></span>
-              <span className="flex size-9 items-center justify-center rounded-md bg-primary"><HomeFilledIcon className="size-5 text-primary-foreground" /></span>
-              <span className="flex size-9 items-center justify-center rounded-full bg-primary"><HomeIcon className="size-5 text-primary-foreground" /></span>
-              <span className="flex size-9 items-center justify-center rounded-full bg-primary"><HomeFilledIcon className="size-5 text-primary-foreground" /></span>
+            <div className="border-t border-dashed border-border" />
+            <div className="grid gap-3">
+              <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Reverse" : "反白"}</h3>
+              <div className="flex flex-wrap items-center gap-6">
+                <span className="flex size-9 items-center justify-center rounded-md bg-primary"><HomeIcon className="size-5 text-primary-foreground" /></span>
+                <span className="flex size-9 items-center justify-center rounded-md bg-primary"><HomeFilledIcon className="size-5 text-primary-foreground" /></span>
+                <span className="flex size-9 items-center justify-center rounded-full bg-primary"><HomeIcon className="size-5 text-primary-foreground" /></span>
+                <span className="flex size-9 items-center justify-center rounded-full bg-primary"><HomeFilledIcon className="size-5 text-primary-foreground" /></span>
+              </div>
             </div>
-          </div>
-          <div className="border-t border-dashed border-border" />
-          <div className="grid gap-3">
-            <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Size" : "尺寸"}</h3>
-            <div className="flex flex-wrap items-end gap-6 text-foreground">
-              <SettingsIcon className="size-3" />
-              <SettingsIcon className="size-3.5" />
-              <SettingsIcon className="size-4" />
-              <SettingsIcon className="size-5" />
-              <SettingsIcon className="size-6" />
+            <div className="border-t border-dashed border-border" />
+            <div className="grid gap-3">
+              <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Size" : "尺寸"}</h3>
+              <div className="flex flex-wrap items-end gap-6 text-foreground">
+                <SettingsIcon className="size-3" />
+                <SettingsIcon className="size-3.5" />
+                <SettingsIcon className="size-4" />
+                <SettingsIcon className="size-5" />
+                <SettingsIcon className="size-6" />
+              </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id="icon-preview" className={docsSpacing.sectionStack}>
@@ -8253,6 +8633,7 @@ function IconPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         
         <ScenarioTable
           lang={lang}
+          elevated
           filters={iconScenarioFilters}
           rows={iconScenarios.map((s) => ({
             key: s.title,
@@ -8275,14 +8656,16 @@ function IconPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         "图标库已装好，无需单独安装；统一从 @/lib/icons 导入。具体 JSX 写法见上方「场景示例」的推荐写法列。"} />
 
         
-        <div className="rounded-lg border border-border bg-card p-5">
+        <DocSurfaceCard elevated>
+          <CardContent className="p-5">
           <CopyCodeBlock code={iconImportCode} label="Import" lang={lang} />
-        </div>
+          </CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id="icon-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "API Props" : "API 属性"}</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -8303,7 +8686,7 @@ function IconPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="icon-semantic-dom" className={docsSpacing.sectionStack}>
@@ -8315,7 +8698,7 @@ function IconPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         "图标来自 Tabler。这里记录 AI 和工程师应该理解的语义部位。"} />
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -8334,7 +8717,7 @@ function IconPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="icon-do-dont" className={docsSpacing.sectionStack}>
@@ -8346,10 +8729,40 @@ function IconPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         "工程师和 AI 生成代码最容易犯的图标错误。"} />
 
         
-        <DocDoDont lang={lang} rows={iconDoDontRows} />
+        <DocDoDont lang={lang} rows={iconDoDontRows} elevated />
       </section>
     </div>);
 
+}
+
+function InputPreview({ id }: {id: string;}) {
+  if (id === "field") {
+    return (
+      <Field className="w-[220px]">
+        <FieldLabel htmlFor={`input-playground-${id}`}>姓名</FieldLabel>
+        <Input id={`input-playground-${id}`} placeholder="请输入姓名" />
+        <FieldDescription>请填写真实姓名。</FieldDescription>
+      </Field>);
+  }
+
+  if (id === "disabled") {
+    return (
+      <Field data-disabled className="w-[220px]">
+        <FieldLabel htmlFor={`input-playground-${id}`}>姓名</FieldLabel>
+        <Input id={`input-playground-${id}`} disabled placeholder="不可编辑" />
+      </Field>);
+  }
+
+  if (id === "invalid") {
+    return (
+      <Field data-invalid className="w-[220px]">
+        <FieldLabel htmlFor={`input-playground-${id}`}>邮箱</FieldLabel>
+        <Input id={`input-playground-${id}`} aria-invalid placeholder="请输入邮箱" />
+        <FieldError>请输入有效邮箱。</FieldError>
+      </Field>);
+  }
+
+  return <Input placeholder="请输入姓名" className="max-w-[220px]" />;
 }
 
 function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
@@ -8362,6 +8775,11 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         <PageLead crumb={lang === "en" ? "Components / Input" : "组件 / 输入框"} title="Input 输入框" lead="单行文本录入控件，用于表单字段、搜索框、内联编辑等场景。" actions={actions} />
       </section>
 
+      <section id="input-playground" className={docsSpacing.sectionStack}>
+        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Switch existing Input scenarios and copy the matching composition." : "切换现有输入框场景，复制对应真实组合写法。"} />
+        <StandardScenarioPlayground slug="input" examples={inputScenarioExamples} renderScenarioPreview={(id) => <InputPreview id={id} />} importCode={inputImportCode} lang={lang} />
+      </section>
+
       <section id="input-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-bold tracking-tight">组件总览</h2>
@@ -8370,7 +8788,7 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             视觉由公司 token 注入，不需要也不应该手写覆盖样式。
           </p>
         </div>
-        <Card>
+        <DocSurfaceCard elevated>
           <CardContent className="flex flex-col gap-3 p-5">
             <FieldGroup className="max-w-sm">
               <Field>
@@ -8380,7 +8798,7 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               </Field>
             </FieldGroup>
           </CardContent>
-        </Card>
+        </DocSurfaceCard>
       </section>
 
       <section id="input-preview" className={docsSpacing.sectionStack}>
@@ -8390,7 +8808,7 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-hidden rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[960px]">
             <TableHeader>
               <TableRow>
@@ -8444,7 +8862,7 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="input-usage" className={docsSpacing.sectionStack}>
@@ -8452,17 +8870,19 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="rounded-lg border border-border-container bg-card p-5">
+        <DocSurfaceCard elevated>
+          <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={inputImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={inputUsageCode} label="调用" lang={lang} />
           </div>
-        </div>
+          </CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id="input-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -8487,7 +8907,7 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="input-semantic-dom" className={docsSpacing.sectionStack}>
@@ -8497,7 +8917,7 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -8516,7 +8936,7 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="input-do-dont" className={docsSpacing.sectionStack}>
@@ -8524,34 +8944,7 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">推荐 Do</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {inputDoDontRows.map((row) =>
-              <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
-                  <span>{row.do}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">避免 Don't</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {inputDoDontRows.map((row) =>
-              <div key={`dont-${row.dont}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
-                  <span>{row.dont}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <DocDoDont rows={inputDoDontRows} elevated />
       </section>
     </div>);
 
@@ -8625,6 +9018,11 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         <PageLead crumb={lang === "en" ? "Components / Select" : "组件 / 选择器"} title="Select 选择器" lead="从一组互斥选项中选择一个值，用于表单字段、筛选条件等场景。" actions={actions} />
       </section>
 
+      <section id="select-playground" className={docsSpacing.sectionStack}>
+        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Switch existing Select scenarios and copy the matching composition." : "切换现有选择器场景，复制对应真实组合写法。"} />
+        <StandardScenarioPlayground slug="select" examples={selectScenarioExamples} renderScenarioPreview={(id) => <SelectPreview id={id} />} importCode={selectImportCode} lang={lang} />
+      </section>
+
       <section id="select-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-bold tracking-tight">组件总览</h2>
@@ -8633,7 +9031,7 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot</code> 标记各部位，视觉由公司 token 注入。
           </p>
         </div>
-        <Card>
+        <DocSurfaceCard elevated>
           <CardContent className="flex flex-col gap-3 p-5">
             <Label htmlFor="select-overview-demo">角色</Label>
             <Select>
@@ -8647,7 +9045,7 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               </SelectContent>
             </Select>
           </CardContent>
-        </Card>
+        </DocSurfaceCard>
       </section>
 
       <section id="select-preview" className={docsSpacing.sectionStack}>
@@ -8657,7 +9055,7 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-hidden rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[1040px]">
             <TableHeader>
               <TableRow>
@@ -8692,7 +9090,7 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="select-usage" className={docsSpacing.sectionStack}>
@@ -8700,17 +9098,19 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="rounded-lg border border-border-container bg-card p-5">
+        <DocSurfaceCard elevated>
+          <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={selectImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={selectUsageCode} label="调用" lang={lang} />
           </div>
-        </div>
+          </CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id="select-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -8735,7 +9135,7 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="select-semantic-dom" className={docsSpacing.sectionStack}>
@@ -8745,7 +9145,7 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -8764,7 +9164,7 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="select-do-dont" className={docsSpacing.sectionStack}>
@@ -8772,34 +9172,7 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">推荐 Do</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {selectDoDontRows.map((row) =>
-              <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
-                  <span>{row.do}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">避免 Don't</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {selectDoDontRows.map((row) =>
-              <div key={`dont-${row.dont}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
-                  <span>{row.dont}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <DocDoDont rows={selectDoDontRows} elevated />
       </section>
     </div>);
 
@@ -8859,6 +9232,11 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
         <PageLead crumb={lang === "en" ? "Components / Checkbox" : "组件 / 复选框"} title="Checkbox 复选框" lead="表达单个布尔选项的勾选，常用于条款确认、设置项、列表批量选择。" actions={actions} />
       </section>
 
+      <section id="checkbox-playground" className={docsSpacing.sectionStack}>
+        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Switch existing Checkbox scenarios and copy the matching composition." : "切换现有复选框场景，复制对应真实组合写法。"} />
+        <StandardScenarioPlayground slug="checkbox" examples={checkboxScenarioExamples} renderScenarioPreview={(id) => <CheckboxPreview id={id} />} importCode={checkboxImportCode} lang={lang} />
+      </section>
+
       <section id="checkbox-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-bold tracking-tight">组件总览</h2>
@@ -8867,14 +9245,14 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
             视觉由公司 token 注入，选中态颜色取自 primary。
           </p>
         </div>
-        <Card>
+        <DocSurfaceCard elevated>
           <CardContent className="flex flex-col gap-3 p-5">
             <div className="flex items-center gap-2">
               <Checkbox id="checkbox-overview-demo" />
               <Label htmlFor="checkbox-overview-demo">我已阅读并同意服务条款</Label>
             </div>
           </CardContent>
-        </Card>
+        </DocSurfaceCard>
       </section>
 
       <section id="checkbox-preview" className={docsSpacing.sectionStack}>
@@ -8884,7 +9262,7 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <div className="max-w-full overflow-hidden rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[1040px]">
             <TableHeader>
               <TableRow>
@@ -8919,7 +9297,7 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="checkbox-usage" className={docsSpacing.sectionStack}>
@@ -8927,17 +9305,19 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <div className="rounded-lg border border-border-container bg-card p-5">
+        <DocSurfaceCard elevated>
+          <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={checkboxImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={checkboxUsageCode} label="调用" lang={lang} />
           </div>
-        </div>
+          </CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id="checkbox-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -8962,7 +9342,7 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="checkbox-semantic-dom" className={docsSpacing.sectionStack}>
@@ -8972,7 +9352,7 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -8991,7 +9371,7 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="checkbox-do-dont" className={docsSpacing.sectionStack}>
@@ -8999,34 +9379,7 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">推荐 Do</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {checkboxDoDontRows.map((row) =>
-              <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
-                  <span>{row.do}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">避免 Don't</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {checkboxDoDontRows.map((row) =>
-              <div key={`dont-${row.dont}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
-                  <span>{row.dont}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <DocDoDont rows={checkboxDoDontRows} elevated />
       </section>
     </div>);
 
@@ -9036,6 +9389,22 @@ function RadioGroupPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;
   const [value, setValue] = useState("crm");
   const radioGroupImportCode = `import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"\nimport { Label } from "@/components/ui/label"`;
   const radioGroupUsageCode = `<RadioGroup value={value} onValueChange={setValue}>\n  <div className="flex items-center gap-2">\n    <RadioGroupItem id="crm" value="crm" />\n    <Label htmlFor="crm">CRM</Label>\n  </div>\n  <div className="flex items-center gap-2">\n    <RadioGroupItem id="bi" value="bi" />\n    <Label htmlFor="bi">BI</Label>\n  </div>\n</RadioGroup>`;
+  const radioGroupScenarioExamples = [
+    {
+      id: "default",
+      title: "基础单选",
+      intent: "用于一组选项中只能选择一个的表单字段。",
+      rule: "RadioGroup 负责 value / onValueChange，RadioGroupItem 必须有稳定 value。",
+      code: radioGroupUsageCode
+    },
+    {
+      id: "disabled",
+      title: "含禁用项",
+      intent: "用于某些选项当前不可选但仍需展示的场景。",
+      rule: "禁用写在 RadioGroupItem 上，不在调用处手写透明度或禁用样式。",
+      code: `<RadioGroup defaultValue="crm">\n  <RadioGroupItem id="crm" value="crm" />\n  <RadioGroupItem id="disabled" value="disabled" disabled />\n</RadioGroup>`
+    }
+  ];
 
   return (
     <div className={docsSpacing.pageStack}>
@@ -9043,9 +9412,42 @@ function RadioGroupPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;
         <PageLead crumb={lang === "en" ? "Components / Radio Group" : "组件 / 单选组"} title="RadioGroup 单选组" lead="表达一组选项中只能选择一个，适用于表单单选、设置项和表格单选列。" actions={actions} />
       </section>
 
+      <section id="radio-group-playground" className={docsSpacing.sectionStack}>
+        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Switch existing RadioGroup scenarios and copy the matching composition." : "切换现有单选组场景，复制对应真实组合写法。"} />
+        <StandardScenarioPlayground
+          slug="radio-group"
+          examples={radioGroupScenarioExamples}
+          renderScenarioPreview={(id) =>
+            id === "disabled" ?
+            <RadioGroup defaultValue="crm">
+              <div className="flex items-center gap-2">
+                <RadioGroupItem id="radio-playground-crm" value="crm" />
+                <Label htmlFor="radio-playground-crm">CRM</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem id="radio-playground-disabled" value="disabled" disabled />
+                <Label htmlFor="radio-playground-disabled" className="text-muted-foreground">不可选择</Label>
+              </div>
+            </RadioGroup> :
+            <RadioGroup defaultValue="crm">
+              <div className="flex items-center gap-2">
+                <RadioGroupItem id="radio-playground-basic-crm" value="crm" />
+                <Label htmlFor="radio-playground-basic-crm">CRM</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem id="radio-playground-basic-bi" value="bi" />
+                <Label htmlFor="radio-playground-basic-bi">BI</Label>
+              </div>
+            </RadioGroup>
+          }
+          importCode={radioGroupImportCode}
+          lang={lang}
+        />
+      </section>
+
       <section id="radio-group-overview" className={docsSpacing.sectionStack}>
         <SectionLead title="组件总览" description="RadioGroup 负责互斥选择状态，RadioGroupItem 负责单个选项的交互和选中态。" />
-        <Card>
+        <DocSurfaceCard elevated>
           <CardContent className="p-5">
             <RadioGroup value={value} onValueChange={setValue}>
               <div className="flex items-center gap-2">
@@ -9062,12 +9464,12 @@ function RadioGroupPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;
               </div>
             </RadioGroup>
           </CardContent>
-        </Card>
+        </DocSurfaceCard>
       </section>
 
       <section id="radio-group-usage" className={docsSpacing.sectionStack}>
         <SectionLead title="使用方式" description="把 import 和完整组装写法复制到业务页面里使用。" />
-        <DocSurfaceCard>
+        <DocSurfaceCard elevated>
           <CardContent className="grid gap-4 p-5">
             <CopyCodeBlock code={radioGroupImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={radioGroupUsageCode} label="调用" lang={lang} />
@@ -9077,7 +9479,7 @@ function RadioGroupPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;
 
       <section id="radio-group-props" className={docsSpacing.sectionStack}>
         <SectionLead title="API 属性" />
-        <DocSurfaceTableCard>
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -9103,7 +9505,7 @@ function RadioGroupPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;
 
       <section id="radio-group-semantic-dom" className={docsSpacing.sectionStack}>
         <SectionLead title="语义 DOM" description="RadioGroup 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。" />
-        <DocSurfaceTableCard>
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -9125,7 +9527,7 @@ function RadioGroupPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;
 
       <section id="radio-group-do-dont" className={docsSpacing.sectionStack}>
         <SectionLead title="正误示例" description="单选控件必须使用组件能力，不在业务处手写原生 radio 外观。" />
-        <DocDoDont rows={radioGroupDoDontRows} />
+        <DocDoDont rows={radioGroupDoDontRows} elevated />
       </section>
     </div>);
 
@@ -9179,6 +9581,11 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         <PageLead crumb={lang === "en" ? "Components / Switch" : "组件 / 开关"} title="Switch 开关" lead="表达立即生效的二元设置项，切换后无需额外提交，常用于偏好设置、功能开关。" actions={actions} />
       </section>
 
+      <section id="switch-playground" className={docsSpacing.sectionStack}>
+        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Switch existing Switch scenarios and copy the matching composition." : "切换现有开关场景，复制对应真实组合写法。"} />
+        <StandardScenarioPlayground slug="switch" examples={switchScenarioExamples} renderScenarioPreview={(id) => <SwitchPreview id={id} />} importCode={switchImportCode} lang={lang} />
+      </section>
+
       <section id="switch-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-bold tracking-tight">组件总览</h2>
@@ -9187,14 +9594,14 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             开启态轨道颜色取自 primary。
           </p>
         </div>
-        <Card>
+        <DocSurfaceCard elevated>
           <CardContent className="flex flex-col gap-3 p-5">
             <div className="flex items-center gap-2">
               <Switch id="switch-overview-demo" />
               <Label htmlFor="switch-overview-demo">接收消息通知</Label>
             </div>
           </CardContent>
-        </Card>
+        </DocSurfaceCard>
       </section>
 
       <section id="switch-preview" className={docsSpacing.sectionStack}>
@@ -9204,7 +9611,7 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-hidden rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[1040px]">
             <TableHeader>
               <TableRow>
@@ -9239,7 +9646,7 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="switch-usage" className={docsSpacing.sectionStack}>
@@ -9247,17 +9654,19 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="rounded-lg border border-border-container bg-card p-5">
+        <DocSurfaceCard elevated>
+          <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={switchImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={switchUsageCode} label="调用" lang={lang} />
           </div>
-        </div>
+          </CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id="switch-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -9282,7 +9691,7 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="switch-semantic-dom" className={docsSpacing.sectionStack}>
@@ -9292,7 +9701,7 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -9311,7 +9720,7 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="switch-do-dont" className={docsSpacing.sectionStack}>
@@ -9319,34 +9728,7 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">推荐 Do</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {switchDoDontRows.map((row) =>
-              <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
-                  <span>{row.do}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">避免 Don't</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {switchDoDontRows.map((row) =>
-              <div key={`dont-${row.dont}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
-                  <span>{row.dont}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <DocDoDont rows={switchDoDontRows} elevated />
       </section>
     </div>);
 
@@ -9379,6 +9761,11 @@ function TextareaPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
         <PageLead crumb={lang === "en" ? "Components / Textarea" : "组件 / 多行输入"} title="Textarea 多行输入" lead="录入较长文本，如备注、描述、反馈内容，高度随内容自适应。" actions={actions} />
       </section>
 
+      <section id="textarea-playground" className={docsSpacing.sectionStack}>
+        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Switch existing Textarea scenarios and copy the matching composition." : "切换现有多行输入场景，复制对应真实组合写法。"} />
+        <StandardScenarioPlayground slug="textarea" examples={textareaScenarioExamples} renderScenarioPreview={(id) => <TextareaPreview id={id} />} importCode={textareaImportCode} lang={lang} />
+      </section>
+
       <section id="textarea-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-bold tracking-tight">组件总览</h2>
@@ -9387,12 +9774,12 @@ function TextareaPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
             高度通过 field-sizing-content 自适应内容，不需要手写 rows 撑高度。
           </p>
         </div>
-        <Card>
+        <DocSurfaceCard elevated>
           <CardContent className="flex flex-col gap-3 p-5">
             <Label htmlFor="textarea-overview-demo">个人简介</Label>
             <Textarea id="textarea-overview-demo" placeholder="简单介绍一下自己" className="max-w-sm" />
           </CardContent>
-        </Card>
+        </DocSurfaceCard>
       </section>
 
       <section id="textarea-preview" className={docsSpacing.sectionStack}>
@@ -9400,7 +9787,7 @@ function TextareaPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[960px]">
             <TableHeader>
               <TableRow>
@@ -9435,7 +9822,7 @@ function TextareaPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="textarea-usage" className={docsSpacing.sectionStack}>
@@ -9443,17 +9830,19 @@ function TextareaPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <div className="rounded-lg border border-border bg-card p-5">
+        <DocSurfaceCard elevated>
+          <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={textareaImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={textareaUsageCode} label="调用" lang={lang} />
           </div>
-        </div>
+          </CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id="textarea-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -9478,7 +9867,7 @@ function TextareaPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="textarea-semantic-dom" className={docsSpacing.sectionStack}>
@@ -9488,7 +9877,7 @@ function TextareaPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -9507,7 +9896,7 @@ function TextareaPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="textarea-do-dont" className={docsSpacing.sectionStack}>
@@ -9515,34 +9904,7 @@ function TextareaPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">推荐 Do</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {textareaDoDontRows.map((row) =>
-              <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
-                  <span>{row.do}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">避免 Don't</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {textareaDoDontRows.map((row) =>
-              <div key={`dont-${row.dont}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
-                  <span>{row.dont}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <DocDoDont rows={textareaDoDontRows} elevated />
       </section>
     </div>);
 
@@ -10242,6 +10604,7 @@ const tablePlaygroundConfig = {
       en: "Row height",
       propName: "density",
       type: "segment" as const,
+      hasAll: true,
       options: [
         {
           value: "compact",
@@ -10305,6 +10668,7 @@ const tablePlaygroundConfig = {
       en: "Selection",
       propName: "selection",
       type: "segment" as const,
+      hasAll: true,
       options: [
         {
           value: "off",
@@ -10406,6 +10770,7 @@ const tablePlaygroundConfig = {
       en: "State",
       propName: "status",
       type: "segment" as const,
+      hasAll: true,
       options: [
         {
           value: "default",
@@ -10489,7 +10854,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocSurfaceCard>
+        <DocSurfaceCard elevated>
           <CardContent className="grid gap-4 p-5">
             <CopyCodeBlock code={tableImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={tableUsageCode} label="调用" lang={lang} />
@@ -10499,7 +10864,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
       <section id="table-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <DocSurfaceTableCard>
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -10534,7 +10899,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocSurfaceTableCard>
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -10561,11 +10926,121 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocDoDont rows={tableDoDontRows} />
+        <DocDoDont rows={tableDoDontRows} elevated />
       </section>
     </div>);
 
 }
+
+type CardPlaygroundScenario = "metric" | "info" | "action";
+
+const cardPlaygroundOptions = [
+{
+  value: "metric",
+  label: "数据概览",
+  labelEn: "Metric",
+  intent: "用于承载一个关键指标、说明和趋势变化。",
+  intentEn: "Use for one key metric, its description, and trend.",
+  constraint: "用 CardHeader + CardContent；不要在调用处覆盖 Card 的边框、圆角或阴影。",
+  constraintEn: "Use CardHeader + CardContent; do not override Card border, radius, or shadow at call sites."
+},
+{
+  value: "info",
+  label: "信息说明",
+  labelEn: "Info",
+  intent: "用于展示配置摘要、帮助说明等只读内容。",
+  intentEn: "Use for read-only content such as configuration summaries or help text.",
+  constraint: "静态内容不需要 CardAction 和 CardFooter，保持结构简单。",
+  constraintEn: "Static content does not need CardAction or CardFooter; keep the structure simple."
+},
+{
+  value: "action",
+  label: "可操作项",
+  labelEn: "Action",
+  intent: "用于卡片头部带主要局部操作的内容块。",
+  intentEn: "Use for content blocks with a local action in the header.",
+  constraint: "右上角操作放 CardAction；状态信息放 CardFooter。",
+  constraintEn: "Place the top-right action in CardAction and status content in CardFooter."
+}];
+
+function renderCardPlayground(values: Record<string, string>) {
+  const scenario = values.scenario as CardPlaygroundScenario;
+
+  if (scenario === "info") {
+    return (
+      <Card elevated className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle className="text-base">信息说明</CardTitle>
+          <CardDescription>仅展示静态内容，不含操作</CardDescription>
+        </CardHeader>
+        <CardContent className="text-sm text-muted-foreground">
+          用于展示帮助说明、配置摘要等只读信息，不需要 Footer 和 Action。
+        </CardContent>
+      </Card>);
+  }
+
+  if (scenario === "action") {
+    return (
+      <Card elevated className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle className="text-base">可操作列表项</CardTitle>
+          <CardAction>
+            <Button variant="outline" size="sm">编辑</Button>
+          </CardAction>
+        </CardHeader>
+        <CardContent className="text-sm text-muted-foreground">
+          头部右上角放置操作入口，交给 CardAction 自动布局对齐。
+        </CardContent>
+        <CardFooter>
+          <Tag variant="outline">已启用</Tag>
+        </CardFooter>
+      </Card>);
+  }
+
+  return (
+    <Card elevated className="w-full max-w-sm">
+      <CardHeader>
+        <CardTitle className="text-base">数据概览</CardTitle>
+        <CardDescription>关键指标 + 同比说明</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p className="text-xl font-bold tracking-tight">1,204</p>
+        <p className="mt-1 text-sm text-muted-foreground">较上周 +8.2%</p>
+      </CardContent>
+    </Card>);
+}
+
+function genCardPlaygroundCode(values: Record<string, string>) {
+  const scenario = values.scenario as CardPlaygroundScenario;
+  const importCode = `import {\n  Card,\n  CardAction,\n  CardContent,\n  CardDescription,\n  CardFooter,\n  CardHeader,\n  CardTitle,\n} from "@/components/ui/card"`;
+
+  if (scenario === "info") {
+    return `${importCode}\n\n<Card>\n  <CardHeader>\n    <CardTitle>信息说明</CardTitle>\n    <CardDescription>仅展示静态内容，不含操作</CardDescription>\n  </CardHeader>\n  <CardContent>用于展示帮助说明、配置摘要等只读信息。</CardContent>\n</Card>`;
+  }
+
+  if (scenario === "action") {
+    return `${importCode}\n\n<Card>\n  <CardHeader>\n    <CardTitle>可操作列表项</CardTitle>\n    <CardAction>\n      <Button variant="outline" size="sm">编辑</Button>\n    </CardAction>\n  </CardHeader>\n  <CardContent>头部右上角放置操作入口。</CardContent>\n  <CardFooter>\n    <Tag variant="outline">已启用</Tag>\n  </CardFooter>\n</Card>`;
+  }
+
+  return `${importCode}\n\n<Card>\n  <CardHeader>\n    <CardTitle>数据概览</CardTitle>\n    <CardDescription>关键指标 + 同比说明</CardDescription>\n  </CardHeader>\n  <CardContent>\n    <p>1,204</p>\n    <p>较上周 +8.2%</p>\n  </CardContent>\n</Card>`;
+}
+
+const cardPlaygroundConfig = {
+  props: [
+    {
+      key: "scenario",
+      zh: "场景",
+      en: "Scenario",
+      propName: "composition",
+      type: "segment" as const,
+      options: cardPlaygroundOptions
+    }
+  ],
+  initial: { scenario: "metric" },
+  guidanceKey: "scenario",
+  renderOne: renderCardPlayground,
+  genCode: genCardPlaygroundCode
+};
 
 function CardPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   const cardImportCode = `import {\n  Card,\n  CardAction,\n  CardContent,\n  CardDescription,\n  CardFooter,\n  CardHeader,\n  CardTitle,\n} from "@/components/ui/card"`;
@@ -10577,6 +11052,14 @@ function CardPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         <PageLead crumb={lang === "en" ? "Components / Card" : "组件 / 卡片"} title="Card 卡片" lead="通用内容容器，用 Header / Content / Footer 等子组件搭出统一的卡片骨架。" actions={actions} />
       </section>
 
+      <section id="card-playground" className={docsSpacing.sectionStack}>
+        <SectionLead
+          title={lang === "en" ? "Playground" : "调试台"}
+          description={lang === "en" ? "Switch Card composition scenarios while keeping the source Card parts as the only API." : "切换 Card 组合场景，保持源码 Card 子组件为唯一 API。"}
+        />
+        <ComponentPlayground config={cardPlaygroundConfig} lang={lang} />
+      </section>
+
       <section id="card-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-bold tracking-tight">组件总览</h2>
@@ -10585,7 +11068,7 @@ function CardPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot</code> 标记，视觉由公司 token 注入。
           </p>
         </div>
-        <Card className="w-full max-w-sm">
+        <Card elevated className="w-full max-w-sm">
           <CardHeader>
             <CardTitle>本月营收</CardTitle>
             <CardDescription>对比上月同期</CardDescription>
@@ -10610,7 +11093,7 @@ function CardPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
         
         <div className="grid gap-4 md:grid-cols-3">
-          <Card>
+          <Card elevated>
             <CardHeader>
               <CardTitle className="text-base">数据概览</CardTitle>
               <CardDescription>关键指标 + 同比说明</CardDescription>
@@ -10620,7 +11103,7 @@ function CardPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               <p className="mt-1 text-sm text-muted-foreground">较上周 +8.2%</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card elevated>
             <CardHeader>
               <CardTitle className="text-base">信息说明</CardTitle>
               <CardDescription>仅展示静态内容，不含操作</CardDescription>
@@ -10629,7 +11112,7 @@ function CardPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               用于展示帮助说明、配置摘要等只读信息，不需要 Footer 和 Action。
             </CardContent>
           </Card>
-          <Card>
+          <Card elevated>
             <CardHeader>
               <CardTitle className="text-base">可操作列表项</CardTitle>
               <CardAction>
@@ -10651,17 +11134,17 @@ function CardPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="rounded-lg border border-border bg-card p-5">
-          <div className="grid gap-4">
+        <DocSurfaceCard elevated>
+          <CardContent className="grid gap-4 p-5">
             <CopyCodeBlock code={cardImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={cardUsageCode} label="调用" lang={lang} />
-          </div>
-        </div>
+          </CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id="card-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -10686,7 +11169,7 @@ function CardPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="card-semantic-dom" className={docsSpacing.sectionStack}>
@@ -10696,7 +11179,7 @@ function CardPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -10715,7 +11198,7 @@ function CardPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="card-do-dont" className={docsSpacing.sectionStack}>
@@ -10724,7 +11207,7 @@ function CardPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
         
         <div className="grid gap-4 md:grid-cols-2">
-          <Card>
+          <Card elevated>
             <CardHeader>
               <CardTitle className="text-base text-foreground">推荐 Do</CardTitle>
             </CardHeader>
@@ -10737,7 +11220,7 @@ function CardPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </CardContent>
           </Card>
-          <Card>
+          <Card elevated>
             <CardHeader>
               <CardTitle className="text-base text-foreground">避免 Don't</CardTitle>
             </CardHeader>
@@ -10805,22 +11288,8 @@ function TagOverview() {
 
 }
 
-const TAG_VARIANTS = [
-{ value: "default", label: "default" },
-{ value: "secondary", label: "secondary" },
-{ value: "success", label: "success" },
-{ value: "warning", label: "warning" },
-{ value: "destructive", label: "destructive" },
-{ value: "outline", label: "outline" }];
-
-const TAG_COLORS = [
-{ value: "none", label: "none" }, { value: "red", label: "red" }, { value: "amber", label: "amber" },
-{ value: "yellow", label: "yellow" }, { value: "lime", label: "lime" }, { value: "green", label: "green" },
-{ value: "teal", label: "teal" }, { value: "cyan", label: "cyan" }, { value: "blue", label: "blue" },
-{ value: "purple", label: "purple" }, { value: "pink", label: "pink" }];
-
 type TagVariant = "default" | "secondary" | "success" | "warning" | "destructive" | "outline";
-type TagColor = "none" | "red" | "amber" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "purple" | "pink";
+type TagColor = "none" | "gray" | "red" | "amber" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "purple" | "pink";
 function genTagCode(variant: TagVariant, color: TagColor, label: string): string {
   const attrs: string[] = [];
   if (variant !== "default") attrs.push(`variant="${variant}"`);
@@ -10828,20 +11297,10 @@ function genTagCode(variant: TagVariant, color: TagColor, label: string): string
   return `<Tag${attrs.length ? " " + attrs.join(" ") : ""}>${label}</Tag>`;
 }
 const tagPlaygroundConfig = {
-  scenarios: [
-  { id: "default", zh: "默认", en: "Default", intent: "中性标签，不带状态情绪。", intentEn: "A neutral tag without status semantics.", values: { variant: "default", color: "none", text: "标签", textEn: "Tag" } },
-  { id: "success", zh: "成功", en: "Success", intent: "表示成功 / 已完成 / 生效中的状态。", intentEn: "Signals a success / done / active state.", values: { variant: "success", color: "none", text: "已支付", textEn: "Paid" } },
-  { id: "warning", zh: "警告", en: "Warning", intent: "表示需要注意 / 待处理的状态。", intentEn: "Signals an attention / pending state.", values: { variant: "warning", color: "none", text: "待审核", textEn: "Pending" } },
-  { id: "danger", zh: "危险", en: "Danger", intent: "表示失败 / 异常 / 已停用的状态。", intentEn: "Signals a failed / error / disabled state.", values: { variant: "destructive", color: "none", text: "已失效", textEn: "Expired" } },
-  { id: "outline", zh: "描边", en: "Outline", intent: "弱化的中性标签，描边不抢眼。", intentEn: "A low-key neutral tag with just an outline.", values: { variant: "outline", color: "none", text: "草稿", textEn: "Draft" } },
-  { id: "category", zh: "分类打标", en: "Category", intent: "分类用多彩 color（颜色=类别不是状态），color 覆盖 variant 配色。", intentEn: "Use the multicolor color axis for categories (color = category, not status); color overrides variant.", values: { variant: "default", color: "purple", text: "高意向", textEn: "High intent" } }],
-
-  props: [
-  { key: "text", zh: "内容", en: "Text", propName: "children", type: "text" as const, bilingual: true },
-  { key: "variant", zh: "状态", en: "Variant", propName: "variant", type: "segment" as const, options: TAG_VARIANTS, hasAll: true },
-  { key: "color", zh: "分类色", en: "Color", propName: "color", type: "segment" as const, options: TAG_COLORS, hasAll: true }],
-
-  initial: { variant: "default", color: "none", text: "标签", textEn: "Tag" },
+  scenarios: componentPlaygroundsManifest.components.tag.scenarios,
+  props: componentPlaygroundPropsFromManifest(componentPlaygroundsManifest.components.tag),
+  initial: componentPlaygroundsManifest.components.tag.initial,
+  guidanceKey: componentPlaygroundsManifest.components.tag.guidanceKey,
   renderOne: (c: Record<string, string>, lang: Lang) => <Tag variant={c.variant as TagVariant} color={c.color as TagColor}>{(lang === "en" ? c.textEn : c.text) || "Tag"}</Tag>,
   genCode: (c: Record<string, string>, lang: Lang) => genTagCode(c.variant as TagVariant, c.color as TagColor, (lang === "en" ? c.textEn : c.text) || "Tag")
 };
@@ -10852,7 +11311,7 @@ function TagPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
       slug="tag"
       title="Tag 标签"
       lead="行内的状态/分类小标签：状态用 variant，分类打标用多彩 color。角标红点/数字请用 Badge。"
-      playground={<ComponentPlayground config={tagPlaygroundConfig} lang={lang} />}
+      playground={<ComponentPlayground key="tag-playground" config={tagPlaygroundConfig} lang={lang} />}
       overview={null}
       overviewMatrix={<TagOverview />}
       scenarioExamples={tagScenarioExamples}
@@ -10876,12 +11335,14 @@ function BadgePreview({ id }: {id: string;}) {
 
 function BadgeOverview() {
   return (
-    <div className="flex flex-wrap items-center gap-8 rounded-xl bg-card p-6 ring-1 ring-border-subtle shadow-l1">
-      <Badge dot><BellIcon className="size-6 text-foreground" /></Badge>
-      <Badge count={5}><BellIcon className="size-6 text-foreground" /></Badge>
-      <Badge count={120} max={99}><BellIcon className="size-6 text-foreground" /></Badge>
-      <Badge count={8} tone="primary"><BellIcon className="size-6 text-foreground" /></Badge>
-    </div>);
+    <DocSurfaceCard elevated>
+      <CardContent className="flex flex-wrap items-center gap-8 p-6">
+        <Badge dot><BellIcon className="size-6 text-foreground" /></Badge>
+        <Badge count={5}><BellIcon className="size-6 text-foreground" /></Badge>
+        <Badge count={120} max={99}><BellIcon className="size-6 text-foreground" /></Badge>
+        <Badge count={8} tone="primary"><BellIcon className="size-6 text-foreground" /></Badge>
+      </CardContent>
+    </DocSurfaceCard>);
 
 }
 
@@ -10949,6 +11410,13 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
         <PageLead crumb={lang === "en" ? "Components / Tooltip" : "组件 / 提示"} title="Tooltip 提示" lead="鼠标悬浮或聚焦时弹出的简短说明，用于补充说明、可访问性兜底，不承载关键信息。" actions={actions} />
       </section>
 
+      <section id="tooltip-playground" className={docsSpacing.sectionStack}>
+        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Switch existing Tooltip scenarios and copy the matching composition." : "切换现有提示场景，复制对应真实组合写法。"} />
+        <TooltipProvider>
+          <StandardScenarioPlayground slug="tooltip" examples={tooltipScenarioExamples} renderScenarioPreview={(id) => <TooltipPreview id={id} />} importCode={tooltipImportCode} lang={lang} />
+        </TooltipProvider>
+      </section>
+
       <section id="tooltip-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-bold tracking-tight">组件总览</h2>
@@ -10958,7 +11426,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
             视觉由公司 token 注入。
           </p>
         </div>
-        <Card>
+        <DocSurfaceCard elevated>
           <CardContent className="flex items-center gap-3 p-5">
             <TooltipProvider>
               <Tooltip>
@@ -10974,7 +11442,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
             </TooltipProvider>
             <span className="text-sm text-muted-foreground">悬浮左侧图标按钮查看提示</span>
           </CardContent>
-        </Card>
+        </DocSurfaceCard>
       </section>
 
       <section id="tooltip-preview" className={docsSpacing.sectionStack}>
@@ -10985,7 +11453,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
 
         
         <TooltipProvider>
-          <div className="max-w-full overflow-hidden rounded-lg border border-border-container bg-card">
+          <DocSurfaceTableCard elevated>
             <Table className="min-w-[1000px]">
               <TableHeader>
                 <TableRow>
@@ -11020,7 +11488,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
                 )}
               </TableBody>
             </Table>
-          </div>
+          </DocSurfaceTableCard>
         </TooltipProvider>
       </section>
 
@@ -11029,17 +11497,19 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
 
 
         
-        <div className="rounded-lg border border-border-container bg-card p-5">
+        <DocSurfaceCard elevated>
+          <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={tooltipImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={tooltipUsageCode} label="调用" lang={lang} />
           </div>
-        </div>
+          </CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id="tooltip-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11064,7 +11534,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="tooltip-semantic-dom" className={docsSpacing.sectionStack}>
@@ -11074,7 +11544,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11093,7 +11563,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="tooltip-do-dont" className={docsSpacing.sectionStack}>
@@ -11101,34 +11571,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
 
 
         
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">推荐 Do</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {tooltipDoDontRows.map((row) =>
-              <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
-                  <span>{row.do}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">避免 Don't</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {tooltipDoDontRows.map((row) =>
-              <div key={`dont-${row.dont}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
-                  <span>{row.dont}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <DocDoDont rows={tooltipDoDontRows} elevated />
       </section>
     </div>);
 
@@ -11183,6 +11626,11 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         <PageLead crumb={lang === "en" ? "Components / Dialog" : "组件 / 对话框"} title="Dialog 对话框" lead="以模态浮层承载需要用户聚焦完成的单一任务，如表单录入、操作确认。" actions={actions} />
       </section>
 
+      <section id="dialog-playground" className={docsSpacing.sectionStack}>
+        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Switch existing Dialog scenarios and copy the matching composition." : "切换现有对话框场景，复制对应真实组合写法。"} />
+        <StandardScenarioPlayground slug="dialog" examples={dialogScenarioExamples} renderScenarioPreview={(id) => <DialogPreview id={id} />} importCode={dialogImportCode} lang={lang} />
+      </section>
+
       <section id="dialog-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-bold tracking-tight">组件总览</h2>
@@ -11191,7 +11639,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             Title/Description（语义标题与说明）组成，统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot</code> 标记。
           </p>
         </div>
-        <Card>
+        <DocSurfaceCard elevated>
           <CardContent className="flex items-center gap-3 p-5">
             <Dialog>
               <DialogTrigger render={<Button>打开示例对话框</Button>} />
@@ -11211,7 +11659,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             </Dialog>
             <span className="text-sm text-muted-foreground">点击按钮查看弹窗结构</span>
           </CardContent>
-        </Card>
+        </DocSurfaceCard>
       </section>
 
       <section id="dialog-preview" className={docsSpacing.sectionStack}>
@@ -11219,7 +11667,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-          <div className="max-w-full overflow-hidden rounded-lg border border-border-container bg-card">
+          <DocSurfaceTableCard elevated>
           <Table className="min-w-[1000px]">
             <TableHeader>
               <TableRow>
@@ -11254,7 +11702,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="dialog-usage" className={docsSpacing.sectionStack}>
@@ -11262,17 +11710,19 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="rounded-lg border border-border-container bg-card p-5">
+        <DocSurfaceCard elevated>
+          <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={dialogImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={dialogUsageCode} label="调用" lang={lang} />
           </div>
-        </div>
+          </CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id="dialog-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11297,7 +11747,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="dialog-semantic-dom" className={docsSpacing.sectionStack}>
@@ -11307,7 +11757,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11326,7 +11776,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="dialog-do-dont" className={docsSpacing.sectionStack}>
@@ -11334,34 +11784,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">推荐 Do</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {dialogDoDontRows.map((row) =>
-              <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
-                  <span>{row.do}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">避免 Don't</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {dialogDoDontRows.map((row) =>
-              <div key={`dont-${row.dont}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
-                  <span>{row.dont}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <DocDoDont rows={dialogDoDontRows} elevated />
       </section>
     </div>);
 
@@ -11413,6 +11836,11 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
         <PageLead crumb={lang === "en" ? "Components / Alert Dialog" : "组件 / 警告对话框"} title="Alert Dialog 警告对话框" lead="强制用户对不可逆或有重大影响的操作做出明确选择，不可通过点击遮罩或 Esc 关闭。" actions={actions} />
       </section>
 
+      <section id="alert-dialog-playground" className={docsSpacing.sectionStack}>
+        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Switch existing Alert Dialog scenarios and copy the matching composition." : "切换现有警告对话框场景，复制对应真实组合写法。"} />
+        <StandardScenarioPlayground slug="alert-dialog" examples={alertDialogScenarioExamples} renderScenarioPreview={(id) => <AlertDialogPreview id={id} />} importCode={alertDialogImportCode} lang={lang} />
+      </section>
+
       <section id="alert-dialog-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-bold tracking-tight">组件总览</h2>
@@ -11421,7 +11849,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
             并且默认强制用户通过 Action / Cancel 明确做出选择，不能随意关闭。
           </p>
         </div>
-        <Card>
+        <DocSurfaceCard elevated>
           <CardContent className="flex items-center gap-3 p-5">
             <AlertDialog>
               <AlertDialogTrigger render={<Button variant="destructive">删除项目</Button>} />
@@ -11438,7 +11866,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
             </AlertDialog>
             <span className="text-sm text-muted-foreground">点击按钮查看强制确认结构</span>
           </CardContent>
-        </Card>
+        </DocSurfaceCard>
       </section>
 
       <section id="alert-dialog-preview" className={docsSpacing.sectionStack}>
@@ -11446,7 +11874,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
 
 
         
-          <div className="max-w-full overflow-hidden rounded-lg border border-border-container bg-card">
+          <DocSurfaceTableCard elevated>
           <Table className="min-w-[1000px]">
             <TableHeader>
               <TableRow>
@@ -11481,7 +11909,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="alert-dialog-usage" className={docsSpacing.sectionStack}>
@@ -11489,17 +11917,19 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
 
 
         
-        <div className="rounded-lg border border-border-container bg-card p-5">
+        <DocSurfaceCard elevated>
+          <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={alertDialogImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={alertDialogUsageCode} label="调用" lang={lang} />
           </div>
-        </div>
+          </CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id="alert-dialog-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11524,7 +11954,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="alert-dialog-semantic-dom" className={docsSpacing.sectionStack}>
@@ -11534,7 +11964,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11553,7 +11983,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="alert-dialog-do-dont" className={docsSpacing.sectionStack}>
@@ -11561,34 +11991,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
 
 
         
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">推荐 Do</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {alertDialogDoDontRows.map((row) =>
-              <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
-                  <span>{row.do}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">避免 Don't</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {alertDialogDoDontRows.map((row) =>
-              <div key={`dont-${row.dont}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
-                  <span>{row.dont}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <DocDoDont rows={alertDialogDoDontRows} elevated />
       </section>
     </div>);
 
@@ -11643,6 +12046,11 @@ function SheetPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         <PageLead crumb={lang === "en" ? "Components / Sheet" : "组件 / 抽屉"} title="Sheet 抽屉" lead="从屏幕边缘滑出的浮层面板，用于在不离开当前上下文的情况下查看详情或执行操作。" actions={actions} />
       </section>
 
+      <section id="sheet-playground" className={docsSpacing.sectionStack}>
+        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Switch existing Sheet scenarios and copy the matching composition." : "切换现有抽屉场景，复制对应真实组合写法。"} />
+        <StandardScenarioPlayground slug="sheet" examples={sheetScenarioExamples} renderScenarioPreview={(id) => <SheetPreview id={id} />} importCode={sheetImportCode} lang={lang} />
+      </section>
+
       <section id="sheet-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-bold tracking-tight">组件总览</h2>
@@ -11651,7 +12059,7 @@ function SheetPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             适合承载和当前页面强相关的详情或操作。
           </p>
         </div>
-        <Card>
+        <DocSurfaceCard elevated>
           <CardContent className="flex items-center gap-3 p-5">
             <Sheet>
               <SheetTrigger render={<Button>打开示例抽屉</Button>} />
@@ -11671,7 +12079,7 @@ function SheetPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             </Sheet>
             <span className="text-sm text-muted-foreground">点击按钮查看从右侧滑出的面板</span>
           </CardContent>
-        </Card>
+        </DocSurfaceCard>
       </section>
 
       <section id="sheet-preview" className={docsSpacing.sectionStack}>
@@ -11679,7 +12087,7 @@ function SheetPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[1000px]">
             <TableHeader>
               <TableRow>
@@ -11714,7 +12122,7 @@ function SheetPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="sheet-usage" className={docsSpacing.sectionStack}>
@@ -11722,17 +12130,19 @@ function SheetPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="rounded-lg border border-border bg-card p-5">
+        <DocSurfaceCard elevated>
+          <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={sheetImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={sheetUsageCode} label="调用" lang={lang} />
           </div>
-        </div>
+          </CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id="sheet-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11757,7 +12167,7 @@ function SheetPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="sheet-semantic-dom" className={docsSpacing.sectionStack}>
@@ -11767,7 +12177,7 @@ function SheetPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11786,7 +12196,7 @@ function SheetPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="sheet-do-dont" className={docsSpacing.sectionStack}>
@@ -11794,34 +12204,7 @@ function SheetPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">推荐 Do</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {sheetDoDontRows.map((row) =>
-              <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
-                  <span>{row.do}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">避免 Don't</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {sheetDoDontRows.map((row) =>
-              <div key={`dont-${row.dont}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
-                  <span>{row.dont}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <DocDoDont rows={sheetDoDontRows} elevated />
       </section>
     </div>);
 
@@ -11858,6 +12241,11 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
         <PageLead crumb={lang === "en" ? "Components / Skeleton" : "组件 / 骨架屏"} title="Skeleton 骨架屏" lead="内容加载完成前展示的占位块，用呼吸动画提示正在加载，并提前还原真实内容的大致结构。" actions={actions} />
       </section>
 
+      <section id="skeleton-playground" className={docsSpacing.sectionStack}>
+        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Switch existing Skeleton scenarios and copy the matching composition." : "切换现有骨架屏场景，复制对应真实组合写法。"} />
+        <StandardScenarioPlayground slug="skeleton" examples={skeletonScenarioExamples} renderScenarioPreview={(id) => <SkeletonPreview id={id} />} importCode={skeletonImportCode} lang={lang} />
+      </section>
+
       <section id="skeleton-overview" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-bold tracking-tight">组件总览</h2>
@@ -11866,7 +12254,7 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
             通过 className 控制宽高与形状来还原真实内容结构。
           </p>
         </div>
-        <Card>
+        <DocSurfaceCard elevated>
           <CardContent className="flex items-center gap-4 p-5">
             <Skeleton className="size-12 rounded-full" />
             <div className="flex flex-col gap-2">
@@ -11874,7 +12262,7 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
               <Skeleton className="h-4 w-[120px]" />
             </div>
           </CardContent>
-        </Card>
+        </DocSurfaceCard>
       </section>
 
       <section id="skeleton-preview" className={docsSpacing.sectionStack}>
@@ -11882,7 +12270,7 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <div className="max-w-full overflow-hidden rounded-lg border border-border bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[1000px]">
             <TableHeader>
               <TableRow>
@@ -11917,7 +12305,7 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="skeleton-usage" className={docsSpacing.sectionStack}>
@@ -11925,17 +12313,19 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <div className="rounded-lg border border-border bg-card p-5">
+        <DocSurfaceCard elevated>
+          <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={skeletonImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={skeletonUsageCode} label="调用" lang={lang} />
           </div>
-        </div>
+          </CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id="skeleton-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11960,7 +12350,7 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="skeleton-semantic-dom" className={docsSpacing.sectionStack}>
@@ -11970,7 +12360,7 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11989,7 +12379,7 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
               )}
             </TableBody>
           </Table>
-        </div>
+        </DocSurfaceTableCard>
       </section>
 
       <section id="skeleton-do-dont" className={docsSpacing.sectionStack}>
@@ -11997,34 +12387,7 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">推荐 Do</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {skeletonDoDontRows.map((row) =>
-              <div key={`do-${row.do}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-success" />
-                  <span>{row.do}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base text-foreground">避免 Don't</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {skeletonDoDontRows.map((row) =>
-              <div key={`dont-${row.dont}`} className="flex gap-2">
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-destructive" />
-                  <span>{row.dont}</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <DocDoDont rows={skeletonDoDontRows} elevated />
       </section>
     </div>);
 
@@ -12032,7 +12395,8 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 function AvatarOverview({ lang }: {lang: Lang;}) {
   return (
-    <div className="grid gap-6 rounded-lg border border-border-container bg-card p-6">
+    <DocSurfaceCard elevated>
+      <CardContent className="grid gap-6 p-6">
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
         <div className="flex flex-wrap items-center gap-4">
@@ -12062,13 +12426,15 @@ function AvatarOverview({ lang }: {lang: Lang;}) {
           )}
         </div>
       </div>
-    </div>);
+      </CardContent>
+    </DocSurfaceCard>);
 
 }
 
 function SeparatorOverview({ lang }: {lang: Lang;}) {
   return (
-    <div className="grid gap-6 rounded-lg border border-border-container bg-card p-6">
+    <DocSurfaceCard elevated>
+      <CardContent className="grid gap-6 p-6">
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
         <div className="flex flex-wrap items-center gap-8">
@@ -12086,13 +12452,15 @@ function SeparatorOverview({ lang }: {lang: Lang;}) {
           </div>
         </div>
       </div>
-    </div>);
+      </CardContent>
+    </DocSurfaceCard>);
 
 }
 
 function LinkOverview({ lang }: {lang: Lang;}) {
   return (
-    <div className="grid gap-6 rounded-lg border border-border-container bg-card p-6">
+    <DocSurfaceCard elevated>
+      <CardContent className="grid gap-6 p-6">
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
         <div className="flex flex-wrap items-center gap-5">
@@ -12127,8 +12495,68 @@ function LinkOverview({ lang }: {lang: Lang;}) {
           <Link href="#link" size="lg">{lang === "en" ? "Large" : "大 lg"}</Link>
         </div>
       </div>
-    </div>);
+      </CardContent>
+    </DocSurfaceCard>);
 
+}
+
+type StandardScenarioExample = {
+  id: string;
+  title: string;
+  intent: string;
+  rule: string;
+  code: string;
+  group?: string;
+  spec?: string;
+};
+
+function StandardScenarioPlayground({
+  slug: _slug,
+  examples,
+  renderScenarioPreview,
+  importCode,
+  lang
+}: {
+  slug: string;
+  examples: StandardScenarioExample[];
+  renderScenarioPreview: (id: string) => React.ReactNode;
+  importCode: string;
+  lang: Lang;
+}) {
+  const first = examples[0];
+  if (!first) return null;
+
+  return (
+    <ComponentPlayground
+      lang={lang}
+      config={{
+        props: [
+          {
+            key: "scenario",
+            zh: "场景",
+            en: "Scenario",
+            propName: "composition",
+            type: "segment",
+            options: examples.map((example) => ({
+              value: example.id,
+              label: example.spec ? `${example.title} ${example.spec}` : example.title,
+              labelEn: example.spec ? `${example.title} ${example.spec}` : example.title,
+              intent: example.intent,
+              intentEn: example.intent,
+              constraint: example.rule,
+              constraintEn: example.rule
+            }))
+          }
+        ],
+        initial: { scenario: first.id },
+        guidanceKey: "scenario",
+        renderOne: (values) => renderScenarioPreview(values.scenario),
+        genCode: (values) => {
+          const selected = examples.find((example) => example.id === values.scenario) ?? first;
+          return `${importCode}\n\n${selected.code}`;
+        }
+      }}
+    />);
 }
 
 function StandardDocPage({
@@ -12138,6 +12566,9 @@ function StandardDocPage({
   playground,
   overview,
   overviewMatrix,
+  hideOverview,
+  hideScenarioExamples,
+  hideUsage,
   scenarioExamples,
   scenarioFilters,
   scenarioLayout,
@@ -12167,8 +12598,19 @@ function StandardDocPage({
 
 
 
-}: {slug: string;title: string;lead: string;playground?: React.ReactNode;overview: React.ReactNode;overviewMatrix?: React.ReactNode;scenarioExamples: {id: string;title: string;intent: string;rule: string;code: string;group?: string;spec?: string;}[];scenarioFilters?: {value: string;label: string;labelEn?: string;}[];scenarioLayout?: "table" | "stack";renderScenarioPreview: (id: string) => React.ReactNode;importCode: string;usageCode: string;propRows: {prop: string;type: string;defaultValue: string;desc: string;}[];semanticDomRows: {part: string;desc: string;}[];doDontRows: {do: string;dont: string;}[];actions: React.ReactNode;lang: Lang;}) {
+}: {slug: string;title: string;lead: string;playground?: React.ReactNode;overview: React.ReactNode;overviewMatrix?: React.ReactNode;hideOverview?: boolean;hideScenarioExamples?: boolean;hideUsage?: boolean;scenarioExamples: {id: string;title: string;intent: string;rule: string;code: string;group?: string;spec?: string;}[];scenarioFilters?: {value: string;label: string;labelEn?: string;}[];scenarioLayout?: "table" | "stack";renderScenarioPreview: (id: string) => React.ReactNode;importCode: string;usageCode: string;propRows: {prop: string;type: string;defaultValue: string;desc: string;}[];semanticDomRows: {part: string;desc: string;}[];doDontRows: {do: string;dont: string;}[];actions: React.ReactNode;lang: Lang;}) {
   const titleMeta = useContext(PageTitleMetaContext);
+  const resolvedPlayground = playground ?? (
+    componentPlaygroundsManifest.autoScenarioComponents?.includes(slug) ?
+    <StandardScenarioPlayground
+      slug={slug}
+      examples={scenarioExamples}
+      renderScenarioPreview={renderScenarioPreview}
+      importCode={importCode}
+      lang={lang}
+    /> :
+    null
+  );
 
   return (
     <div className={docsSpacing.pageStack}>
@@ -12182,17 +12624,17 @@ function StandardDocPage({
         
       </section>
 
-      {playground ?
+      {resolvedPlayground ?
       <section id={`${slug}-playground`} className={docsSpacing.sectionStack}>
           <SectionLead
             title={lang === "en" ? "Playground" : "调试台"}
             description={lang === "en" ? "Pick a scenario or tweak props live, then copy the generated code." : "选场景或实时调属性，预览随之变化，写法可一键复制。"}
           />
-          {playground}
+          {resolvedPlayground}
         </section> :
       null}
 
-      <section id={`${slug}-overview`} className={docsSpacing.sectionStack}>
+      {!hideOverview ? <section id={`${slug}-overview`} className={docsSpacing.sectionStack}>
         <SectionLead
           title={lang === "en" ? "Overview" : "组件总览"}
           description={lang === "en" ? "A compact look at the component to quickly see what it looks like." : "紧凑展示该组件的样子，用来快速查看长什么样。"}
@@ -12204,9 +12646,9 @@ function StandardDocPage({
             <CardContent className="flex items-center gap-3 p-5">{overview}</CardContent>
           </DocSurfaceCard>
         }
-      </section>
+      </section> : null}
 
-      <section id={`${slug}-preview`} className={docsSpacing.sectionStack}>
+      {!hideScenarioExamples ? <section id={`${slug}-preview`} className={docsSpacing.sectionStack}>
         <SectionLead title={"场景示例"} description={"常见用法与适用场景。"} />
 
 
@@ -12224,26 +12666,27 @@ function StandardDocPage({
             intent: example.intent,
             constraint: example.rule,
             code: example.code
-          }))} />
+          }))}
+          elevated />
         
-      </section>
+      </section> : null}
 
-      <section id={`${slug}-usage`} className={docsSpacing.sectionStack}>
+      {!hideUsage ? <section id={`${slug}-usage`} className={docsSpacing.sectionStack}>
         <SectionLead title={"使用方式"} description={
 
         usageCode ? "把 import 和完整组装写法复制到业务页面里使用。" : "复制 import 即可；具体 JSX 写法见上方「场景示例」的推荐写法列。"} />
         
-        <DocSurfaceCard>
+        <DocSurfaceCard elevated>
           <CardContent className="grid gap-4 p-5">
             <CopyCodeBlock code={importCode} label="Import" lang={lang} />
             {usageCode ? <CopyCodeBlock code={usageCode} label="调用" lang={lang} /> : null}
           </CardContent>
         </DocSurfaceCard>
-      </section>
+      </section> : null}
 
       <section id={`${slug}-props`} className={docsSpacing.sectionStack}>
         <SectionLead title="API 属性" />
-        <DocSurfaceTableCard>
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -12278,7 +12721,7 @@ function StandardDocPage({
 
 
         
-        <DocSurfaceTableCard>
+        <DocSurfaceTableCard elevated>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -12305,7 +12748,7 @@ function StandardDocPage({
 
 
         
-        <DocDoDont rows={doDontRows} />
+        <DocDoDont rows={doDontRows} elevated />
       </section>
     </div>);
 
@@ -12444,7 +12887,8 @@ function BreadcrumbDocPage({ actions, lang }: {actions: React.ReactNode;lang: La
       lead="展示当前页面在层级结构中的位置，帮助用户理解所处位置并快速返回上级。"
       overview={null}
       overviewMatrix={
-      <div className="grid gap-6 rounded-lg border border-border-container bg-card p-6">
+      <DocSurfaceCard elevated>
+        <CardContent className="grid gap-6 p-6">
           <div className="grid gap-3">
             <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
             <div className="flex flex-col gap-3">
@@ -12494,7 +12938,8 @@ function BreadcrumbDocPage({ actions, lang }: {actions: React.ReactNode;lang: La
             )}
             </div>
           </div>
-        </div>
+        </CardContent>
+      </DocSurfaceCard>
       }
       scenarioExamples={breadcrumbScenarioExamples}
       scenarioFilters={breadcrumbScenarioFilters}
@@ -12546,8 +12991,12 @@ function ButtonGroupPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
   return (
     <StandardDocPage
       slug="button-group"
-      title="Button Group 按钮组"
+      title={lang === "en" ? "Button Group" : "按钮组"}
       lead="把强相关的多个操作按钮合并为一组，自动合并相邻边框与圆角，弱化彼此边界。"
+      playground={<ComponentPlayground config={buttonGroupPlaygroundConfig} lang={lang} />}
+      hideOverview
+      hideScenarioExamples
+      hideUsage
       overview={
       <div className="flex w-full flex-col gap-6">
           <div className="grid gap-3">
@@ -12581,7 +13030,7 @@ function ButtonGroupPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
           </div>
           <div className="border-t border-dashed border-border" />
           <div className="grid gap-3">
-            <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Size (from inner Button)" : "尺寸（随内部按钮）"}</h3>
+            <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Inner Button size" : "尺寸"}</h3>
             <div className="flex flex-wrap items-center gap-4">
               {([
             { size: "xs", zh: "超小", en: "XS" },
@@ -12630,7 +13079,7 @@ function ButtonGroupPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
           </ButtonGroup>
 
       }
-      importCode={`import { ButtonGroup } from "@/components/ui/button-group"`}
+      importCode={`import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from "@/components/ui/button-group"`}
       usageCode=""
       propRows={buttonGroupPropRows}
       semanticDomRows={buttonGroupSemanticDomRows}
@@ -12820,7 +13269,8 @@ function SearchMenuDemo() {
 
 function DropdownMenuOverview({ lang }: {lang: Lang;}) {
   return (
-    <div className="grid gap-6 rounded-lg border border-border-container bg-card p-6">
+    <DocSurfaceCard elevated>
+      <CardContent className="grid gap-6 p-6">
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
         <div className="flex flex-wrap items-start gap-4">
@@ -12900,7 +13350,8 @@ function DropdownMenuOverview({ lang }: {lang: Lang;}) {
           </StaticMenu>
         </div>
       </div>
-    </div>);
+      </CardContent>
+    </DocSurfaceCard>);
 
 }
 
@@ -14000,6 +14451,54 @@ const radialChartConfig: ChartConfig = {
   value: { label: "配额完成率（%）" }
 };
 
+const chartStackedBarData = [
+{ month: "1月", 新客: 180, 老客: 120, 渠道: 80 },
+{ month: "2月", 新客: 160, 老客: 140, 渠道: 72 },
+{ month: "3月", 新客: 220, 老客: 180, 渠道: 96 },
+{ month: "4月", 新客: 260, 老客: 210, 渠道: 110 },
+{ month: "5月", 新客: 240, 老客: 230, 渠道: 128 },
+{ month: "6月", 新客: 300, 老客: 260, 渠道: 150 }];
+
+const stackedBarChartConfig: ChartConfig = {
+  新客: { label: "新客", color: "var(--chart-8)" },
+  老客: { label: "老客", color: "var(--chart-6)" },
+  渠道: { label: "渠道", color: "var(--chart-3)" }
+};
+
+const chartHorizontalBarData = [
+{ product: "CRM", value: 860 },
+{ product: "BI", value: 620 },
+{ product: "协同", value: 480 },
+{ product: "营销", value: 360 },
+{ product: "服务", value: 280 }];
+
+const horizontalBarChartConfig: ChartConfig = {
+  value: { label: "活跃客户", color: "var(--chart-9)" }
+};
+
+const chartFunnelData = [
+{ name: "访问", value: 2400, fill: "var(--chart-8)" },
+{ name: "注册", value: 1680, fill: "var(--chart-7)" },
+{ name: "试用", value: 980, fill: "var(--chart-6)" },
+{ name: "报价", value: 420, fill: "var(--chart-3)" },
+{ name: "成交", value: 160, fill: "var(--chart-1)" }];
+
+const funnelChartConfig: ChartConfig = {
+  value: { label: "数量" }
+};
+
+const chartTreemapData = [
+{ name: "企业微信", size: 420, fill: "var(--chart-8)" },
+{ name: "CRM", size: 360, fill: "var(--chart-9)" },
+{ name: "BI", size: 260, fill: "var(--chart-6)" },
+{ name: "审批", size: 180, fill: "var(--chart-3)" },
+{ name: "营销", size: 150, fill: "var(--chart-1)" },
+{ name: "服务", size: 120, fill: "var(--chart-10)" }];
+
+const treemapChartConfig: ChartConfig = {
+  size: { label: "使用量" }
+};
+
 function ChartPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
     <div className={docsSpacing.pageStack}>
@@ -14257,6 +14756,113 @@ function ChartPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
                   } />
                 
               </RadialBarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </section>
+
+      <Separator className="my-2" />
+
+      {/* 堆叠柱状图 */}
+      <section className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Stacked Bar Chart" : "堆叠柱状图"}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{lang === "en" ? "Compare total volume while preserving category composition." : "同时看总量和组成，适合渠道 / 客群拆分。"}</p>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>{lang === "en" ? "Revenue Mix by Customer Type" : "成交额客群构成"}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={stackedBarChartConfig} className="h-[280px] w-full">
+              <BarChart data={chartStackedBarData} margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                <XAxis dataKey="month" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                <YAxis tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <ChartLegend content={<ChartLegendContent />} />
+                <Bar dataKey="新客" stackId="total" fill="var(--chart-8)" radius={[0, 0, 4, 4]} />
+                <Bar dataKey="老客" stackId="total" fill="var(--chart-6)" />
+                <Bar dataKey="渠道" stackId="total" fill="var(--chart-3)" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </section>
+
+      <Separator className="my-2" />
+
+      {/* 横向条形图 */}
+      <section className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Horizontal Bar Chart" : "横向条形图"}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{lang === "en" ? "Rank categories with longer labels." : "适合排行和长分类名称，标签更好读。"}</p>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>{lang === "en" ? "Active Customers by Product" : "各产品活跃客户排行"}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={horizontalBarChartConfig} className="h-[280px] w-full">
+              <BarChart data={chartHorizontalBarData} layout="vertical" margin={{ top: 4, right: 24, left: 20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" horizontal={false} />
+                <XAxis type="number" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                <YAxis type="category" dataKey="product" width={56} tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Bar dataKey="value" fill="var(--chart-9)" radius={[0, 4, 4, 0]} />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </section>
+
+      <Separator className="my-2" />
+
+      {/* 漏斗图 */}
+      <section className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Funnel Chart" : "漏斗图"}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{lang === "en" ? "Show conversion across ordered stages." : "展示有顺序的转化过程，适合增长 / 销售漏斗。"}</p>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>{lang === "en" ? "Acquisition Conversion" : "获客转化漏斗"}</CardTitle>
+          </CardHeader>
+          <CardContent className="flex items-center justify-center">
+            <ChartContainer config={funnelChartConfig} className="h-[300px] w-full max-w-lg">
+              <FunnelChart>
+                <ChartTooltip content={<ChartTooltipContent nameKey="name" />} />
+                <Funnel dataKey="value" nameKey="name" data={chartFunnelData} isAnimationActive>
+                  <LabelList dataKey="name" position="right" fill="var(--foreground)" stroke="none" fontSize={12} />
+                </Funnel>
+              </FunnelChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </section>
+
+      <Separator className="my-2" />
+
+      {/* 树图 */}
+      <section className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Treemap" : "树图"}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{lang === "en" ? "Part-to-whole view for many categories." : "多分类占比总览，适合模块使用量 / 成本拆分。"}</p>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>{lang === "en" ? "Module Usage Share" : "模块使用量占比"}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={treemapChartConfig} className="h-[300px] w-full">
+              <Treemap
+                data={chartTreemapData}
+                dataKey="size"
+                nameKey="name"
+                stroke="var(--background)"
+                fill="var(--chart-8)"
+                aspectRatio={4 / 3}
+              />
             </ChartContainer>
           </CardContent>
         </Card>

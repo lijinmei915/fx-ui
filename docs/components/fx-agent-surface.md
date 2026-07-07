@@ -22,7 +22,7 @@ status: complete
 
 AgentSurface 是 fx-ui 第一阶段的 Agent UI 组件：Agent 不生成 React、HTML 或 JS，只生成受控 JSON；前端用本地 React 组件把 JSON 渲染成真实界面。
 
-源码来自 fx-ui 公司组合组件，底层组合 shadcn/ui 的 Card、Button 和 Badge。公司视觉通过 `theme/fx-theme.css` 的语义 token 注入，不通过执行 LLM 生成代码实现。
+源码来自 fx-ui 公司组合组件，底层组合 shadcn/ui 的 Card、Button 和 Tag。公司视觉通过 `theme/fx-theme.css` 的语义 token 注入，不通过执行 LLM 生成代码实现。
 
 AI 使用 AgentSurface 前必须先以 `src/components/fx/agent-surface.tsx` 为真实 API；本文档记录的是当前仓库源码能力，不是凭记忆推断的组件能力。
 
@@ -87,6 +87,7 @@ import { AgentSurface } from "@/components/fx/agent-surface"
 - 高频场景：对象信息、文件信息、建议/结论、操作区
 - 原生/数据状态：root、unsupported type
 - 变体：无独立 variant prop；块类型由 JSON 的 `type` 决定
+- 信息组织：多 block 默认聚合进一个连续结果面板；`object-card`、`file-card`、`insight-card` 通过分隔线和浅底信息块区分层级，不再各自渲染成松散大卡片
 - 导出项：AgentSurface
 
 ## 场景示例 {#examples}
@@ -195,6 +196,7 @@ import { AgentSurface } from "@/components/fx/agent-surface"
 | `--border` | 卡片边框和分隔线。 |
 | `--primary` | 主操作按钮和强调点。 |
 | `--primary-foreground` | 主操作按钮文字。 |
+| `--info` / `--success` / `--warning` / `--destructive` | insight tone 的提示色、浅底和边框。 |
 | `--ring` | focus-visible 焦点环。 |
 
 完整 token 规则见 `docs/TOKENS.md`。
@@ -207,6 +209,7 @@ import { AgentSurface } from "@/components/fx/agent-surface"
 - 未知 `type` 必须走安全兜底，不能尝试动态 import、eval 或 innerHTML。
 - 新增 block 前，先判断是否能用现有 `object-card`、`file-card`、`text`、`action-row` 表达；同类结构稳定复用后再扩展。
 - 高频场景先用通用 block 表达，不按客户、合同、员工等业务名无限拆组件。
+- 多个 block 连续出现时，保持一个连续结果 surface；不要重新拆成多张漂浮大卡。
 - 使用 AgentSurface 前必须以 src/components/fx/agent-surface.tsx 为真实 API。
 - 不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。
 - className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。

@@ -1353,7 +1353,7 @@
           "path": "src/components/fx/page-lead.tsx",
           "includes": [
             "lead: \"text-base font-normal text-muted-foreground md:col-span-2\"",
-            "titleMeta: \"text-lg font-bold text-muted-foreground\""
+            "titleMeta: \"text-lg font-medium text-muted-foreground\""
           ]
         },
         {

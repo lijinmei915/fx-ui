@@ -704,7 +704,7 @@ const docsSidebarSpacing = {
   searchTrigger: "mb-6",
   nav: "flex flex-col gap-4",
   group: "flex flex-col gap-1",
-  groupLabel: "text-xs font-semibold tracking-widest text-[var(--fx-neutrals-10)] uppercase",
+  groupLabel: "text-xs font-medium tracking-widest text-[var(--fx-neutrals-10)] uppercase",
   itemList: "flex flex-col gap-2"
 };
 
@@ -4545,13 +4545,13 @@ function App() {
                         href={item.href}
                         className={
                         isActive ?
-                        "flex h-(--fx-control-md-height) items-center justify-between gap-(--fx-control-gap) rounded-md bg-primary/10 px-(--fx-control-px-md) text-[length:var(--fx-menu-text)] leading-(--fx-menu-text--line-height) font-semibold text-primary" :
-                        "flex h-(--fx-control-md-height) items-center justify-between gap-(--fx-control-gap) rounded-md px-(--fx-control-px-md) text-[length:var(--fx-menu-text)] leading-(--fx-menu-text--line-height) font-semibold text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
+                        "flex h-(--fx-control-md-height) items-center justify-between gap-(--fx-control-gap) rounded-md bg-primary/10 px-(--fx-control-px-md) text-[length:var(--fx-menu-text)] leading-(--fx-menu-text--line-height) font-medium text-primary" :
+                        "flex h-(--fx-control-md-height) items-center justify-between gap-(--fx-control-gap) rounded-md px-(--fx-control-px-md) text-[length:var(--fx-menu-text)] leading-(--fx-menu-text--line-height) font-medium text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
                         }>
                         
                           <span className="truncate">{getLabel(item, lang)}</span>
                           {lang === "en" && item.labelEn && getLabel(item, lang) !== item.labelEn ?
-                        <span className={isActive ? "shrink-0 text-[length:max(12px,var(--fx-text-xs))] font-semibold text-primary/70" : "shrink-0 text-[length:max(12px,var(--fx-text-xs))] font-normal text-muted-foreground/70"}>{item.labelEn}</span> :
+                        <span className={isActive ? "shrink-0 text-[length:max(12px,var(--fx-text-xs))] font-medium text-primary/70" : "shrink-0 text-[length:max(12px,var(--fx-text-xs))] font-normal text-muted-foreground/70"}>{item.labelEn}</span> :
                         null}
                         </a>);
 

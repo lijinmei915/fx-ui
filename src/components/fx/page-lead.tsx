@@ -11,13 +11,13 @@ type PageLeadProps = {
 }
 
 const pageLeadSlots = {
-  root: "grid gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-start",
+  root: "grid gap-2 md:grid-cols-[minmax(0,1fr)_auto] md:items-start",
   content: "min-w-0",
   crumb: "mb-3 flex gap-2 text-sm font-normal text-muted-foreground",
   crumbCurrent: "font-medium text-foreground",
   titleRow: "flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1",
-  title: "text-3xl font-bold tracking-tight text-foreground",
-  titleMeta: "text-lg font-bold text-muted-foreground",
+  title: "text-3xl font-medium tracking-tight text-foreground",
+  titleMeta: "text-lg font-medium text-muted-foreground",
   lead: "text-base font-normal text-muted-foreground md:col-span-2",
   actions: "shrink-0 md:justify-self-end md:pt-0",
 }

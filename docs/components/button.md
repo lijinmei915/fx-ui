@@ -94,27 +94,36 @@ import { Button } from "@/components/ui/button"
 <Button variant="outline">Button</Button>
 ```
 
-## 排列组合 {#arrangement}
+## 按钮排列 {#arrangement}
 
-页面头部、列表工具栏和操作区常见的是**独立按钮排列**：一个主操作，其余为次级或图标操作，按钮之间保留正常间距。这属于 Button 的组合用法，不属于 ButtonGroup。
+页面头部、列表工具栏和操作区常见的是**独立按钮排列**：一个主操作，其余为次级或图标操作，按钮之间保留正常间距。这类布局使用 fx 组合组件 `ActionRow`，不直接手写容器；需要视觉贴合成一个连续控件时，才使用 ButtonGroup。
 
 ```tsx
-<div className="flex flex-wrap items-center gap-2">
-  <Button>
-    <PlusIcon data-icon="inline-start" />
-    新建
-  </Button>
-  <Button variant="outline">智能表单</Button>
-  <Button variant="outline">导入</Button>
-  <Button variant="ghost" size="icon-sm" aria-label="更多操作">
-    <MoreVerticalIcon />
-  </Button>
-</div>
+import { ActionRow } from "@/components/fx/page-actions"
+
+<ActionRow
+  primary={
+    <Button>
+      <PlusIcon data-icon="inline-start" />
+      新建
+    </Button>
+  }
+  secondary={[
+    <Button key="smart-form" variant="outline">智能表单</Button>,
+    <Button key="import" variant="outline">导入</Button>,
+  ]}
+  more={
+    <Button variant="outline" size="icon-sm" aria-label="更多操作">
+      <MoreHorizontalIcon />
+    </Button>
+  }
+/>
 ```
 
 - 使用意图：页面级或列表级操作区，用一个主按钮建立行动焦点，其余按钮承接辅助动作。
-- 约束：按钮之间有间距时保持 Button 独立排列；只有动作需要贴合成连续控件时，才使用 ButtonGroup。
+- 约束：ActionRow 只管理排列关系，不改变 Button 的 variant、size、tone 或交互态；只有动作需要贴合成连续控件时，才使用 ButtonGroup。
 - 一个操作区通常只保留一个 `variant="default"` 主按钮，避免多个主按钮抢焦点。
+- 数量：2 个用 `primary + secondary[1]`，3 个用 `primary + secondary[2]`，4 个时把低频动作放进 `more`。
 
 ## 调试台规则 {#playground-rules}
 

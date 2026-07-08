@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { ButtonGroup } from "@/components/ui/button-group"
+import { ButtonGroup, ButtonGroupSeparator } from "@/components/ui/button-group"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +24,30 @@ type PageActionsProps = {
   nextHref?: string
   onCopyPage?: () => void
   onCopyLink?: () => void
+}
+
+type ActionRowProps = {
+  primary: React.ReactNode
+  secondary?: React.ReactNode[]
+  more?: React.ReactNode
+}
+
+function ActionRow({ primary, secondary = [], more }: ActionRowProps) {
+  return (
+    <div data-component="ActionRow" data-slot="action-row" className="flex flex-wrap items-center gap-2">
+      {primary}
+      {secondary.map((action, index) => (
+        <span key={index} data-slot="action-row-secondary" className="contents">
+          {action}
+        </span>
+      ))}
+      {more ? (
+        <span data-slot="action-row-more" className="contents">
+          {more}
+        </span>
+      ) : null}
+    </div>
+  )
 }
 
 function PageActions({
@@ -94,6 +118,7 @@ function CopyPageAction({
           <CopyIcon data-icon="inline-start" />
           {copyLabel}
         </Button>
+        <ButtonGroupSeparator className="bg-white" />
         <DropdownMenuTrigger
           render={
             <Button
@@ -150,9 +175,11 @@ function PageStepActions({
 }
 
 export {
+  ActionRow,
   PageActions,
   PageActionsShell,
   CopyPageAction,
   PageStepActions,
+  type ActionRowProps,
   type PageActionsProps,
 }

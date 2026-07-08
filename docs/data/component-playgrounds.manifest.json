@@ -28,7 +28,6 @@
     "dropdown-menu",
     "popover",
     "separator",
-    "link",
     "sidebar",
     "spinner",
     "toast",
@@ -89,8 +88,8 @@
               "labelEn": "Chip",
               "intent": "用于徽标、入口或状态图标需要色块承托的场景。",
               "intentEn": "Use when a badge, entry, or status icon needs a colored support shape.",
-              "constraint": "圆底用 bg-primary，图标用 text-primary-foreground 反白。",
-              "constraintEn": "Use bg-primary for the circle and text-primary-foreground for the icon."
+              "constraint": "圆底用 bg-primary，图标用 text-primary-foreground 反白；圆底尺寸随图标尺寸缩放，不固定大圆。",
+              "constraintEn": "Use bg-primary for the circle and text-primary-foreground for the icon; scale the circle with the icon size."
             }
           ]
         },
@@ -491,6 +490,215 @@
         }
       ]
     },
+    "link": {
+      "componentName": "Link",
+      "source": "src/components/ui/link.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "initial": {
+        "underline": "hover",
+        "tone": "standard",
+        "size": "default",
+        "icon": "none",
+        "disabled": "false"
+      },
+      "guidanceKey": "underline",
+      "props": [
+        {
+          "key": "underline",
+          "zh": "类型",
+          "en": "Type",
+          "propName": "underline",
+          "type": "segment",
+          "hasAll": true,
+          "options": [
+            {
+              "value": "hover",
+              "label": "基础",
+              "labelEn": "Basic",
+              "intent": "默认文字链接，悬停时才显示下划线，适合大多数跳转场景。",
+              "intentEn": "Default text link; underline appears on hover for most navigation cases.",
+              "constraint": "使用 underline=\"hover\" 默认值；真实跳转必须给 href。",
+              "constraintEn": "Use the default underline=\"hover\" and provide a real href for navigation."
+            },
+            {
+              "value": "always",
+              "label": "下划线",
+              "labelEn": "Underlined",
+              "intent": "常驻下划线，用于正文内联或需要明确提示可点击的文字。",
+              "intentEn": "Persistent underline for inline body links or text that must clearly read as clickable.",
+              "constraint": "只通过 underline=\"always\" 表达，不手写 text-decoration。",
+              "constraintEn": "Use underline=\"always\" only; do not hand-write text-decoration styles."
+            }
+          ]
+        },
+        {
+          "key": "tone",
+          "zh": "语义色",
+          "en": "Tone",
+          "propName": "tone",
+          "type": "segment",
+          "hasAll": true,
+          "options": [
+            {
+              "value": "standard",
+              "label": "标准",
+              "labelEn": "Standard",
+              "intent": "标准链接色，用于常规导航、跳转和正文链接。",
+              "intentEn": "Standard link color for normal navigation and body links.",
+              "constraint": "颜色走 --link / --link-hover / --link-active，不手写色值。",
+              "constraintEn": "Use --link / --link-hover / --link-active; do not hard-code colors."
+            },
+            {
+              "value": "default",
+              "label": "默认",
+              "labelEn": "Default",
+              "intent": "中性文字链接，平时弱化，悬停转主色。",
+              "intentEn": "Neutral text link that stays quiet until hover.",
+              "constraint": "用于低强调入口，不拿它伪装普通正文。",
+              "constraintEn": "Use for low-emphasis entries, not as plain body text."
+            },
+            {
+              "value": "primary",
+              "label": "主要",
+              "labelEn": "Primary",
+              "intent": "品牌主色链接，用于需要更强识别的跳转。",
+              "intentEn": "Brand-primary link for stronger navigation emphasis.",
+              "constraint": "只通过 tone=\"primary\" 表达品牌色。",
+              "constraintEn": "Express brand color only through tone=\"primary\"."
+            },
+            {
+              "value": "success",
+              "label": "成功",
+              "labelEn": "Success",
+              "intent": "成功或正向语义的链接。",
+              "intentEn": "Link with success or positive semantics.",
+              "constraint": "语义必须来自业务含义，不为了装饰随意使用。",
+              "constraintEn": "Use only when the business meaning is positive, not as decoration."
+            },
+            {
+              "value": "warning",
+              "label": "警告",
+              "labelEn": "Warning",
+              "intent": "警告、注意或需要谨慎阅读的链接。",
+              "intentEn": "Link for warning, caution, or attention-seeking text.",
+              "constraint": "不要和危险删除语义混用。",
+              "constraintEn": "Do not use it for destructive danger semantics."
+            },
+            {
+              "value": "danger",
+              "label": "危险",
+              "labelEn": "Danger",
+              "intent": "风险说明、危险操作入口或删除相关链接。",
+              "intentEn": "Link for risk, destructive entry points, or delete-related text.",
+              "constraint": "强操作仍用 Button；Link 只表达导航或说明入口。",
+              "constraintEn": "Use Button for strong actions; Link is only for navigation or explanatory entry points."
+            }
+          ]
+        },
+        {
+          "key": "size",
+          "zh": "尺寸",
+          "en": "Size",
+          "propName": "size",
+          "type": "segment",
+          "hasAll": true,
+          "options": [
+            {
+              "value": "sm",
+              "label": "小12",
+              "labelEn": "Small 12",
+              "intent": "用于辅助说明、表格内紧凑链接。",
+              "intentEn": "Use for helper text and compact table links.",
+              "constraint": "只用于高密度区域，避免正文大段使用。",
+              "constraintEn": "Use only in dense areas; avoid for long body copy."
+            },
+            {
+              "value": "default",
+              "label": "默认14",
+              "labelEn": "Default 14",
+              "intent": "正文与常规链接的默认尺寸。",
+              "intentEn": "Default size for body and normal links.",
+              "constraint": "大多数场景保持默认，不需要显式传 size。",
+              "constraintEn": "Keep the default in most cases and omit size."
+            },
+            {
+              "value": "lg",
+              "label": "大16",
+              "labelEn": "Large 16",
+              "intent": "用于卡片头部、强调区或较大的操作入口。",
+              "intentEn": "Use for card headers, emphasis areas, or larger entry points.",
+              "constraint": "不要在密集表格或窄列内使用。",
+              "constraintEn": "Avoid in dense tables or narrow columns."
+            }
+          ]
+        },
+        {
+          "key": "icon",
+          "zh": "图标",
+          "en": "Icon",
+          "propName": "children",
+          "type": "segment",
+          "hasAll": true,
+          "options": [
+            {
+              "value": "none",
+              "label": "无",
+              "labelEn": "None",
+              "intent": "纯文字链接，默认推荐。",
+              "intentEn": "Plain text link; the default recommendation.",
+              "constraint": "没有识别负担时优先不用图标。",
+              "constraintEn": "Prefer no icon when recognition is already clear."
+            },
+            {
+              "value": "start",
+              "label": "前置",
+              "labelEn": "Start",
+              "intent": "前置图标增强对象识别。",
+              "intentEn": "Leading icon strengthens object recognition.",
+              "constraint": "图标写 data-icon=\"inline-start\"，尺寸交给 Link。",
+              "constraintEn": "Set data-icon=\"inline-start\" and let Link own icon sizing."
+            },
+            {
+              "value": "end",
+              "label": "后置",
+              "labelEn": "End",
+              "intent": "后置图标提示复制、外链等动作结果。",
+              "intentEn": "Trailing icon hints at copy, external-link, or result semantics.",
+              "constraint": "图标写 data-icon=\"inline-end\"，不要手写 size-*。",
+              "constraintEn": "Set data-icon=\"inline-end\"; do not add manual size-* classes."
+            }
+          ]
+        },
+        {
+          "key": "disabled",
+          "zh": "禁用",
+          "en": "Disabled",
+          "propName": "disabled",
+          "type": "segment",
+          "hasAll": true,
+          "options": [
+            {
+              "value": "false",
+              "label": "否",
+              "labelEn": "No",
+              "intent": "可点击的真实链接。",
+              "intentEn": "A real clickable link.",
+              "constraint": "可点击时必须有 href。",
+              "constraintEn": "A clickable Link must have href."
+            },
+            {
+              "value": "true",
+              "label": "是",
+              "labelEn": "Yes",
+              "intent": "无权限或暂不可用的链接。",
+              "intentEn": "A link that is unavailable or permission-gated.",
+              "constraint": "使用 disabled 去掉 href 并移出 tab 序，不只靠颜色伪装。",
+              "constraintEn": "Use disabled to remove href and tab focus; do not fake it with color only."
+            }
+          ]
+        }
+      ]
+    },
     "buttonGroup": {
       "componentName": "ButtonGroup",
       "source": "src/components/ui/button-group.tsx",
@@ -534,8 +742,8 @@
               "labelEn": "Toolbar icons",
               "intent": "用于视图切换、地图、分栏等同层级工具按钮，保持连续分组。",
               "intentEn": "Use for peer toolbar controls such as list, grid, map, or split view switching.",
-              "constraint": "图标按钮必须有 aria-label；选中态用当前按钮的类型表达，不在组内混入文字主操作。",
-              "constraintEn": "Icon buttons must have aria-label. Express the active item through the current button style and do not mix primary text actions into this group."
+              "constraint": "图标按钮必须有 aria-label；工具图标组不使用主按钮类型，不在组内混入文字主操作。",
+              "constraintEn": "Icon buttons must have aria-label. Toolbar icon groups do not use the primary button variant or mix primary text actions into the group."
             }
           ]
         },
@@ -588,11 +796,11 @@
             },
             {
               "value": "sm",
-              "label": "小28",
-              "intent": "用于表格行操作、筛选栏等紧凑但仍需清晰点击的区域。",
-              "intentEn": "Use for table row actions, filters, and compact areas that still need clear targets.",
-              "constraint": "只改内部按钮 size=\"sm\"；同一按钮组内尺寸保持一致。",
-              "constraintEn": "Only set inner Button size=\"sm\"; keep one size within a ButtonGroup."
+              "label": "默认28",
+              "intent": "用于表格行操作、筛选栏等紧凑但仍需清晰点击的区域，也是按钮源码默认尺寸。",
+              "intentEn": "Use for table row actions, filters, and compact areas that still need clear targets; this is Button's source default size.",
+              "constraint": "这是内部按钮源码的默认视觉档；同一按钮组内尺寸保持一致。",
+              "constraintEn": "This is the inner Button source default visual size; keep one size within a ButtonGroup."
             },
             {
               "value": "md",
@@ -645,7 +853,313 @@
               "intent": "强调一整组操作时使用，但应确保不会出现多个抢焦点的主操作组。",
               "intentEn": "Use when the whole group needs emphasis, but avoid multiple competing primary groups.",
               "constraint": "一个区域内谨慎使用高强调按钮组。",
-              "constraintEn": "Use emphasized grouped buttons sparingly within the same area."
+              "constraintEn": "Use emphasized grouped buttons sparingly within the same area.",
+              "hiddenWhen": {
+                "pattern": "toolbar-icons"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "avatar": {
+      "componentName": "Avatar",
+      "source": "src/components/ui/avatar.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "initial": {
+        "quantity": "single",
+        "shape": "circle",
+        "style": "image",
+        "color": "neutral",
+        "size": "default",
+        "status": "none",
+        "count": "4"
+      },
+      "guidanceKey": "quantity",
+      "props": [
+        {
+          "key": "quantity",
+          "zh": "数量",
+          "en": "Quantity",
+          "propName": "Avatar / AvatarGroup / AvatarComposite",
+          "type": "segment",
+          "hasAll": true,
+          "options": [
+            {
+              "value": "single",
+              "label": "单人",
+              "labelEn": "Single",
+              "intent": "展示单个用户或实体身份，优先渲染真实图片。",
+              "intentEn": "Show one user or entity identity, preferring the real image.",
+              "constraint": "始终提供兜底内容，图片失败时回退到文字或图标（AvatarFallback）。",
+              "constraintEn": "Always provide AvatarFallback so failed images fall back to text or icon."
+            },
+            {
+              "value": "group",
+              "label": "群组",
+              "labelEn": "Group",
+              "intent": "展示协作者、成员列表等多个独立身份。",
+              "intentEn": "Show multiple independent identities such as collaborators or members.",
+              "constraint": "固定展示前 3 个，超出折叠为 +N；折叠项 hover/focus 展示剩余成员（AvatarGroup + AvatarGroupCount + Tooltip）。",
+              "constraintEn": "Show the first 3, collapse the rest into +N, and reveal remaining members on hover/focus."
+            },
+            {
+              "value": "chat",
+              "label": "群聊",
+              "labelEn": "Chat",
+              "intent": "展示会话、群聊或多人实体头像。",
+              "intentEn": "Show a conversation, group chat, or multi-person entity avatar.",
+              "constraint": "用拼接头像按人数自动排布成员：2 人中线左右，3 人上中 + 下二，4 人田字；不在调用处手写宫格（AvatarComposite max）。",
+              "constraintEn": "Use AvatarComposite + max to arrange members: 2 centered side-by-side, 3 top-center plus two below, 4 in a 2x2 grid; do not hand-write the grid at the call site."
+            }
+          ]
+        },
+        {
+          "key": "count",
+          "zh": "群组数量",
+          "en": "Count",
+          "propName": "AvatarGroup.max / AvatarComposite.max",
+          "type": "segment",
+          "hasAll": true,
+          "hiddenWhen": {
+            "quantity": ["single", "group"]
+          },
+          "options": [
+            {
+              "value": "2",
+              "label": "2 个",
+              "labelEn": "2",
+              "intent": "展示最小多人关系。",
+              "intentEn": "Show the smallest multi-person relationship.",
+              "constraint": "头像组用最大显示数量控制露出几个；群组拼接按人数布局（max）。",
+              "constraintEn": "Use max for AvatarGroup; composite avatars layout by member count."
+            },
+            {
+              "value": "3",
+              "label": "3 个",
+              "labelEn": "3",
+              "intent": "展示常见小团队或三人群组。",
+              "intentEn": "Show a small team or three-person group.",
+              "constraint": "三人拼接为上 1 下 2；不要临时改成任意网格。",
+              "constraintEn": "Three-person composite uses 1 on top and 2 below; do not invent arbitrary grids."
+            },
+            {
+              "value": "4",
+              "label": "4 个",
+              "labelEn": "4",
+              "intent": "展示多人关系的默认上限。",
+              "intentEn": "Show the default upper bound for multiple identities.",
+              "constraint": "头像组超过最大数量自动显示 +N；拼接头像最多取前 4（max）。",
+              "constraintEn": "AvatarGroup collapses beyond max into +N; composite avatars use at most the first 4."
+            }
+          ]
+        },
+        {
+          "key": "shape",
+          "zh": "外观",
+          "en": "Appearance",
+          "propName": "shape",
+          "type": "segment",
+          "hasAll": true,
+          "hiddenWhen": {
+            "quantity": ["group", "chat"]
+          },
+          "options": [
+            {
+              "value": "circle",
+              "label": "圆形",
+              "labelEn": "Circle",
+              "intent": "默认头像形态，适合个人身份。",
+              "intentEn": "Default avatar form for personal identity.",
+              "constraint": "沿用头像默认形状，不需要显式传值（默认 shape）。",
+              "constraintEn": "Rely on Avatar's default shape; no explicit prop is needed."
+            },
+            {
+              "value": "square",
+              "label": "方形",
+              "labelEn": "Square",
+              "intent": "用于应用、文件夹、组织等更偏对象的身份。",
+              "intentEn": "Use for apps, folders, organizations, or object-like identities.",
+              "constraint": "只切换头像形状，不要在调用处覆盖圆角（shape=\"square\"）。",
+              "constraintEn": "Pass only shape=\"square\"; do not override rounded classes at the call site."
+            }
+          ]
+        },
+        {
+          "key": "style",
+          "zh": "样式",
+          "en": "Style",
+          "propName": "AvatarImage / AvatarFallback",
+          "type": "segment",
+          "hasAll": true,
+          "options": [
+            {
+              "value": "image",
+              "label": "图片",
+              "labelEn": "Image",
+              "intent": "优先展示真实头像图。",
+              "intentEn": "Prefer the real avatar image.",
+              "constraint": "渲染 AvatarImage，同时保留 AvatarFallback 兜底。",
+              "constraintEn": "Render AvatarImage while keeping AvatarFallback."
+            },
+            {
+              "value": "text",
+              "label": "文字",
+              "labelEn": "Text",
+              "intent": "用姓名缩写作为默认兜底，识别成本最低。",
+              "intentEn": "Use initials as the default fallback with the lowest recognition cost.",
+              "constraint": "缩写必须来自统一头像缩写规则，不手填第二套规则（avatarInitials）。",
+              "constraintEn": "Initials must come from avatarInitials; do not invent another rule."
+            },
+            {
+              "value": "icon",
+              "label": "图标",
+              "labelEn": "Icon",
+              "intent": "用于未知用户、系统账号或对象入口。",
+              "intentEn": "Use for unknown users, system accounts, or object entries.",
+              "constraint": "图标放进兜底结构里；仍然保留可访问的图片说明或上下文名称（AvatarFallback / alt）。",
+              "constraintEn": "Place the icon inside AvatarFallback; still keep accessible alt text or contextual naming."
+            }
+          ]
+        },
+        {
+          "key": "color",
+          "zh": "颜色",
+          "en": "Color",
+          "propName": "AvatarFallback.colorful",
+          "type": "segment",
+          "hasAll": true,
+          "options": [
+            {
+              "value": "neutral",
+              "label": "中性色",
+              "labelEn": "Neutral",
+              "intent": "使用中性色兜底，只保留身份缩写或图标本身。",
+              "intentEn": "Use a neutral fallback and keep only the initials or icon as identity.",
+              "constraint": "不传 colorful，沿用 AvatarFallback 默认 muted 背景。",
+              "constraintEn": "Do not pass colorful; keep AvatarFallback's default muted surface."
+            },
+            {
+              "value": "colorful",
+              "label": "彩色",
+              "labelEn": "Color",
+              "intent": "在列表中提高不同用户的区分度。",
+              "intentEn": "Improve user distinction in lists.",
+              "constraint": "使用彩色兜底，由组件按内容自动取色；不要手写背景色（colorful）。",
+              "constraintEn": "Use colorful so the component hashes the content into a tone; do not hard-code background colors."
+            }
+          ]
+        },
+        {
+          "key": "size",
+          "zh": "尺寸",
+          "en": "Size",
+          "propName": "size",
+          "type": "segment",
+          "hasAll": true,
+          "options": [
+            {
+              "value": "xs",
+              "label": "超小20",
+              "labelEn": "xs 20px",
+              "intent": "用于表格、徽标旁等极紧凑位置。",
+              "intentEn": "Use for very compact spots such as tables or next to badges.",
+              "constraint": "状态点会跟随头像尺寸自动缩放；不要额外覆盖内部尺寸（size-*）。",
+              "constraintEn": "The badge scales automatically; do not add manual size-* overrides inside."
+            },
+            {
+              "value": "sm",
+              "label": "小24",
+              "labelEn": "sm 24px",
+              "intent": "用于紧凑列表、菜单项或小型元信息。",
+              "intentEn": "Use for compact lists, menu items, or small metadata.",
+              "constraint": "保持文本不低于组件内置最小字号。",
+              "constraintEn": "Keep text at or above the component's built-in minimum size."
+            },
+            {
+              "value": "default",
+              "label": "默认32",
+              "labelEn": "Default 32px",
+              "intent": "常规列表、卡片和详情区的默认头像尺寸。",
+              "intentEn": "Default avatar size for normal lists, cards, and detail surfaces.",
+              "constraint": "这是组件默认尺寸；多数场景不需要显式传尺寸（size）。",
+              "constraintEn": "This is the source default; most cases can omit size."
+            },
+            {
+              "value": "lg",
+              "label": "大40",
+              "labelEn": "lg 40px",
+              "intent": "用于更强调的成员信息、个人卡片或弹层头部。",
+              "intentEn": "Use for more prominent member info, profile cards, or overlay headers.",
+              "constraint": "不要和同一列表里的 default 混排。",
+              "constraintEn": "Do not mix with default avatars in the same list."
+            },
+            {
+              "value": "xl",
+              "label": "超大48",
+              "labelEn": "xl 48px",
+              "intent": "用于个人资料页、详情头部等更高识别权重的位置。",
+              "intentEn": "Use for profile pages or detail headers with higher identity emphasis.",
+              "constraint": "只用于低密度区域，避免挤压表格或工具栏。",
+              "constraintEn": "Use only in low-density areas; avoid tables or toolbars."
+            }
+          ]
+        },
+        {
+          "key": "status",
+          "zh": "状态",
+          "en": "Status",
+          "propName": "AvatarBadge.status",
+          "type": "segment",
+          "hasAll": true,
+          "hiddenWhen": {
+            "quantity": ["group", "chat"]
+          },
+          "options": [
+            {
+              "value": "none",
+              "label": "无",
+              "labelEn": "None",
+              "intent": "只表达身份，不表达在线状态。",
+              "intentEn": "Show identity only, without presence.",
+              "constraint": "不渲染状态点，避免把装饰点误读为在线状态（AvatarBadge）。",
+              "constraintEn": "Do not render AvatarBadge, so a decorative dot is not mistaken for status."
+            },
+            {
+              "value": "online",
+              "label": "在线",
+              "labelEn": "Online",
+              "intent": "表达用户当前可响应。",
+              "intentEn": "Indicate the user is currently available.",
+              "constraint": "状态色只表达在线状态，不用于分类装饰（presence）。",
+              "constraintEn": "Presence colors are for status only, not category decoration."
+            },
+            {
+              "value": "away",
+              "label": "离开",
+              "labelEn": "Away",
+              "intent": "表达用户暂时离开或低响应。",
+              "intentEn": "Indicate the user is away or less responsive.",
+              "constraint": "使用离开状态，不手写警告色圆点（status=\"away\"）。",
+              "constraintEn": "Use status=\"away\"; do not hand-write a warning dot."
+            },
+            {
+              "value": "busy",
+              "label": "忙碌",
+              "labelEn": "Busy",
+              "intent": "表达用户忙碌或勿扰。",
+              "intentEn": "Indicate the user is busy or should not be disturbed.",
+              "constraint": "使用忙碌状态，语义不要和错误状态混淆（status=\"busy\"）。",
+              "constraintEn": "Use status=\"busy\" and do not confuse it with error status."
+            },
+            {
+              "value": "offline",
+              "label": "离线",
+              "labelEn": "Offline",
+              "intent": "表达用户当前不在线。",
+              "intentEn": "Indicate the user is currently offline.",
+              "constraint": "使用离线状态，不要用透明度降低整个头像（status=\"offline\"）。",
+              "constraintEn": "Use status=\"offline\"; do not lower the opacity of the whole avatar."
             }
           ]
         }

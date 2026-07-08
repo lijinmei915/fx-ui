@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-07-06
+last_verified: 2026-07-08
 teaches: "公司设计 token 的基础架构、真实值和全局视觉使用规则"
 use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadcn 组件样式或判断视觉是否符合公司规范时"
 ---
@@ -33,7 +33,7 @@ fx-ui 采用主流设计系统分层：**Tailwind 是表达层，FX token 是视
 | `typography` | **FX token → Tailwind 字号类** | 对外主推荐 `text-sm/base/lg/xl`；底层仍由企业字号 token 驱动，不靠 Tailwind 默认字号再乘百分比硬凑 |
 | `radius` | **FX token → Tailwind 圆角类** | 组件圆角走 `--radius` 派生档，不另立一套默认刻度 |
 | `shadow` | **FX token → Tailwind 阴影类** | 统一 `shadow-l1/l2/l3`，不用 Tailwind 默认 `shadow-sm/md/lg` |
-| `border-width` | **FX token / 主题能力** | 组件默认描边规格跟随主题，不在调用处临时另选一套 |
+| `border-width` | **FX token / 主题能力** | 容器表面描边规格跟随主题；控件描边保持组件自身语义，不在调用处临时另选一套 |
 | `motion` | **FX token / 约定档位** | 动效时长跟随主题或规范档位，不在单页随意发明时长 |
 
 一句话收口：**Tailwind 管形式，FX 管数值；FX 的值映射进 Tailwind 里用。**
@@ -133,7 +133,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | 输入框边框 | `--fx-neutrals-07` | `border-input` |
 
 - 组件默认边框规格：当前主题默认按 **`1px`** 理解，这是主流 Web UI 的常规基线。
-- 主题面板里的边框粗细只作用于卡片、按钮等组件壳体；表单控件继续使用 `border-input`，不跟随外观面板加粗或归零。
+- 主题面板里的边框粗细只作用于容器表面（如卡片、调试台）；Button outline、Toggle、Pagination 和表单控件继续使用控件自身描边，不跟随容器边框粗细加粗或归零。
 - 容器外框：优先讨论“要不要外框”和“外框颜色深浅”，不默认通过加粗来表达。
 - 分隔线 / 结构线：单独治理，不纳入“组件边框粗细”的口径。
 - 强调边框：只有选中、焦点、错误或其他高强调场景，才考虑 `2px` 或更强语义色。

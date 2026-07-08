@@ -80,7 +80,9 @@
         "data-slot=\"avatar-fallback\"",
         "data-slot=\"avatar-badge\"",
         "data-slot=\"avatar-group\"",
-        "data-slot=\"avatar-group-count\""
+        "data-slot=\"avatar-group-count\"",
+        "data-slot=\"avatar-composite\"",
+        "data-slot=\"avatar-composite-cell\""
       ],
       "tokenRefs": [
         "--primary",
@@ -264,6 +266,7 @@
       "usageRules": [
         "使用 ButtonGroup 前必须以 src/components/ui/button-group.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "实心按钮组的内部 1px 反白分隔由 ButtonGroup 源码负责，不在调用处插入空白或覆盖边框。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ]
     },
@@ -1368,9 +1371,38 @@
           "path": "src/App.tsx",
           "includes": [
             "websiteStandardsManifest.pageLead.visualBaseline.map",
-            "websiteStandardsManifest.pageLead.contentRules.map"
+            "websiteStandardsManifest.pageLead.rulePanel.sections.includes(\"values\")"
           ]
         }
+      ]
+    },
+    {
+      "name": "ActionRow",
+      "source": "src/components/fx/page-actions.tsx",
+      "docStatus": "complete",
+      "role": "业务操作区按钮排列：主操作、次级操作、更多操作",
+      "doc": "docs/components/fx-page-actions.md",
+      "category": "fx",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "action-row",
+        "action-row-secondary",
+        "action-row-more"
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--primary",
+        "--border"
+      ],
+      "usageRules": [
+        "使用 ActionRow 前必须以 src/components/fx/page-actions.tsx 为真实 API。",
+        "ActionRow 只管理独立按钮的排列关系，不改变 Button 的 variant、size、tone 或交互态。",
+        "ActionRow 用于页面头部、列表工具栏和业务操作区；需要连续贴合成一个控件时使用 ButtonGroup。",
+        "2 个动作使用 primary + secondary[1]；3 个动作使用 primary + secondary[2]；4 个动作把低频动作收进 more。",
+        "主操作通常放一个 Button default；次级操作通常使用 outline；更多操作使用 outline + icon-sm + aria-label。",
+        "不要在调用处手写 gap、颜色、圆角、边框和状态样式覆盖 ActionRow 或 Button。"
       ]
     },
     {
@@ -1460,6 +1492,7 @@
         "使用 ComponentPlayground 前必须以 src/components/fx/component-playground.tsx 为真实 API。",
         "ComponentPlayground 只用于文档站组件示例调试，不替代业务表单或真实配置面板。",
         "每个调试项必须来自组件源码真实 prop，不发明不存在的 prop。",
+        "任意维度选中全部时只展示矩阵预览，不展示代码 tab 和复制按钮；复制代码前必须选回具体取值。",
         "renderOne 与 genCode 必须保持同一组值，避免预览和复制代码不一致。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ]
@@ -1607,6 +1640,103 @@
         "用子件组合：TopBar + Brand/Divider/Apps/Search/Actions/IconButton，各司其职。",
         "应用切换、搜索词、搜索范围均受控，状态由页面持有；跳转/搜索逻辑不塞进组件内部。",
         "工具图标必带 aria-label + Tooltip，未读用角标(Badge dot/count)；className 只用于布局，不覆盖基础视觉。"
+      ]
+    },
+    {
+      "name": "WebsiteCardContainer",
+      "source": "src/components/fx/website-card-container.tsx",
+      "docStatus": "internal",
+      "role": "网站规范页卡片容器示意组件",
+      "category": "website-standards",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "data-slot=\"website-card-container\"",
+        "data-slot=\"website-card-inner-panel\"",
+        "data-slot=\"website-card-divider\"",
+        "data-slot=\"website-card-control-shell\"",
+        "data-slot=\"website-card-elevated-panel\""
+      ],
+      "tokenRefs": [
+        "--card",
+        "--background",
+        "--border",
+        "--border-subtle",
+        "--muted",
+        "--muted-foreground"
+      ],
+      "usageRules": [
+        "使用 WebsiteCardContainer 前必须以 src/components/fx/website-card-container.tsx 为真实 API。",
+        "WebsiteCardContainer 只负责网站规范页的卡片容器示意；外层卡片、内部区域、分隔线、控件壳和浮层容器都从组件插槽取值。",
+        "页面调用处不得重新手写卡片容器示意或卡片表面规则；需要调整视觉表示时改 WebsiteCardContainer。",
+        "查看规则里的取值逻辑必须同时展示 manifest 规则和组件插槽视觉取值。"
+      ]
+    },
+    {
+      "name": "WebsiteSpacingRhythm",
+      "source": "src/components/fx/website-spacing-rhythm.tsx",
+      "docStatus": "internal",
+      "role": "网站规范页间距节奏示意组件",
+      "category": "website-standards",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "data-slot=\"website-spacing-rhythm\"",
+        "data-slot=\"website-spacing-rhythm-viewport\"",
+        "data-slot=\"website-spacing-page-padding\"",
+        "data-slot=\"website-spacing-title-to-section\"",
+        "data-slot=\"website-spacing-section-gap\""
+      ],
+      "tokenRefs": [
+        "--card",
+        "--background",
+        "--border",
+        "--muted",
+        "--muted-foreground",
+        "--primary"
+      ],
+      "usageRules": [
+        "使用 WebsiteSpacingRhythm 前必须以 src/components/fx/website-spacing-rhythm.tsx 为真实 API。",
+        "WebsiteSpacingRhythm 只负责网站规范页的间距节奏示意图；数值从 docs/data/website-standards.manifest.json 传入。",
+        "页面调用处不得重新手写三列示意或标尺外观；需要调整节奏表示时改 WebsiteSpacingRhythm。",
+        "查看规则里的取值逻辑必须同时展示数值来源和组件插槽视觉取值。"
+      ]
+    },
+    {
+      "name": "WebsiteRulePanel",
+      "source": "src/components/fx/website-rule-panel.tsx",
+      "docStatus": "internal",
+      "role": "网站规范页查看规则弹层框架",
+      "category": "website-standards",
+      "nativeStates": [
+        "root"
+      ],
+      "semanticDom": [
+        "data-slot=\"website-rule-popover\"",
+        "data-slot=\"website-rule-popover-content\"",
+        "data-slot=\"website-rule-panel\"",
+        "data-slot=\"website-rule-panel-section\"",
+        "data-slot=\"website-rule-panel-sources\"",
+        "data-slot=\"website-rule-value-list\"",
+        "data-slot=\"website-rule-value-item\""
+      ],
+      "tokenRefs": [
+        "--card",
+        "--background",
+        "--border",
+        "--muted",
+        "--muted-foreground",
+        "--foreground"
+      ],
+      "usageRules": [
+        "使用 WebsiteRulePanel 前必须以 src/components/fx/website-rule-panel.tsx 为真实 API。",
+        "WebsiteRulePopover 负责网站规范页查看规则的触发按钮、箭头状态、弹窗定位和宽度；页面调用处不得重建 Collapsible 外壳。",
+        "WebsiteRulePanel 只负责网站规范页查看规则的展示框架；规则正文、视觉取值和来源必须从对应真相源映射进入。",
+        "WebsiteRuleValueList 负责查看规则里的取值逻辑列表；取值必须从真实组件插槽 class 或 manifest 映射进入。",
+        "WebsiteRuleValueList 面向前台读者展示时必须把 Tailwind 取值翻译成可理解的视觉描述，不直接裸露 w-[min(...)]、shrink-0 等原始 class。",
+        "不要在调用处重建卡片外壳、来源区或标题区；需要调整框架时改 WebsiteRulePanel。"
       ]
     }
   ],

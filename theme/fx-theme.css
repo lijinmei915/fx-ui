@@ -744,17 +744,17 @@
 }
 
 /* 运行时主题预览层：由主题配置面板写入 data-theme-* 和 CSS 变量。
-   “边框粗细”只作用于组件壳体，不扫全站结构线；表单控件边框保持 border-input 语义，不被外观面板误伤。 */
-[data-theme-border="none"] :where([data-slot="card"], [data-slot="button"], [data-slot="toggle"], [data-slot="toggle-group-item"], [data-slot="pagination-link"]):not(.fx-theme-panel-static *) {
+   “边框粗细”只作用于容器表面；Button outline / Toggle / Pagination / 表单控件保持控件自身描边，避免轻量操作被加重或归零。 */
+[data-theme-border="none"] :where([data-slot="card"]):not(.fx-theme-panel-static *) {
   border-width: 0 !important;
 }
-[data-theme-border="thin"] :where([data-slot="card"], [data-slot="button"], [data-slot="toggle"], [data-slot="toggle-group-item"], [data-slot="pagination-link"]):not(.fx-theme-panel-static *) {
+[data-theme-border="thin"] :where([data-slot="card"]):not(.fx-theme-panel-static *) {
   border-width: 1px;
 }
-[data-theme-border="medium"] :where([data-slot="card"], [data-slot="button"], [data-slot="toggle"], [data-slot="toggle-group-item"], [data-slot="pagination-link"]):not(.fx-theme-panel-static *) {
+[data-theme-border="medium"] :where([data-slot="card"]):not(.fx-theme-panel-static *) {
   border-width: 2px;
 }
-[data-theme-border="thick"] :where([data-slot="card"], [data-slot="button"], [data-slot="toggle"], [data-slot="toggle-group-item"], [data-slot="pagination-link"]):not(.fx-theme-panel-static *) {
+[data-theme-border="thick"] :where([data-slot="card"]):not(.fx-theme-panel-static *) {
   border-width: 3px;
 }
 

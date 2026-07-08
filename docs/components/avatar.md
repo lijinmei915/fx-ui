@@ -35,7 +35,7 @@ src/components/ui/avatar.tsx
 ## 使用方式 {#usage}
 
 ```tsx
-import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarBadge } from "@/components/ui/avatar"
+import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarComposite, AvatarBadge } from "@/components/ui/avatar"
 ```
 
 ```tsx
@@ -48,10 +48,10 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
 ## 组件总览 {#overview}
 
 - 类型：display
-- 语义 DOM：data-slot="avatar"、data-slot="avatar-image"、data-slot="avatar-fallback"、data-slot="avatar-badge"、data-slot="avatar-group"、data-slot="avatar-group-count"
+- 语义 DOM：data-slot="avatar"、data-slot="avatar-image"、data-slot="avatar-fallback"、data-slot="avatar-badge"、data-slot="avatar-group"、data-slot="avatar-group-count"、data-slot="avatar-composite"、data-slot="avatar-composite-cell"
 - 原生/数据状态：root
-- 能力：`size`（xs/sm/default/lg/xl = 20/24/32/40/48）、`shape`（circle/square）、`AvatarFallback colorful`（按内容 hash 取色板色）、`AvatarBadge status`（在线状态点：online 绿/away 黄/busy 红/offline 灰）、`AvatarGroup max`（超出自动折叠 +N）
-- 导出项：Avatar、AvatarImage、AvatarFallback、AvatarGroup、AvatarGroupCount、AvatarBadge
+- 能力：`size`（xs/sm/default/lg/xl = 20/24/32/40/48）、`shape`（circle/square）、`AvatarFallback colorful`（按内容 hash 取色板色）、`AvatarBadge status`（在线状态点：online 绿/away 黄/busy 红/offline 灰）、`AvatarGroup max`（超出自动折叠 +N）、`AvatarComposite max`（群聊拼接头像）
+- 导出项：Avatar、AvatarImage、AvatarFallback、AvatarGroup、AvatarGroupCount、AvatarComposite、AvatarBadge
 
 ## 场景示例 {#examples}
 
@@ -84,6 +84,8 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
 | `AvatarFallback.colorful` | `boolean` | `false` | 兜底文字按内容 hash 取色板色，实底（08 阶）+ 白字反白（参考 Gmail，08 比满饱和 09 柔半阶） |
 | `AvatarBadge.status` | `"online" \| "away" \| "busy" \| "offline"` | — | 右下角 presence 状态点：在线绿 / 离开黄 / 忙红 / 离线灰（参考 Slack/Teams）|
 | `AvatarGroup.max` | `number` | — | 最多展示几个，超出折叠为 `+N` |
+| `AvatarComposite.max` | `2 \| 3 \| 4` | `4` | 群聊拼接头像最多展示几个成员；2 中线左右、3 上中 + 下二、4 田字 |
+| `AvatarComposite.size` | `"xs" \| "sm" \| "default" \| "lg" \| "xl"` | `"default"` | 拼接头像整体尺寸档 20/24/32/40/48 |
 | `avatarInitials(name)` | `(string) => string` | — | 工具函数，从姓名取缩写（见下方取值逻辑） |
 
 ### 可点击头像 {#clickable}
@@ -99,17 +101,20 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
 
 ### 头像组 +N 悬停看全部 {#group-hover}
 
-协作者较多时，折叠的 `+N` 悬停展开剩余成员名单：手动模式下用 `Tooltip` 包住 `AvatarGroupCount`，`TooltipContent` 列出被折叠的成员，不要把名单平铺在页面上。
+协作者较多时，群组默认展示前 3 个头像，第 4 个起折叠为 `+N`；用 `Tooltip` 包住 `AvatarGroupCount`，hover/focus 时展示剩余成员名单，不要把名单平铺在页面上。
 
 ```tsx
-<AvatarGroup>
-  <Avatar>…</Avatar>
-  <Avatar>…</Avatar>
-  <Tooltip>
-    <TooltipTrigger render={<AvatarGroupCount>+3</AvatarGroupCount>} />
-    <TooltipContent>王五、赵六、孙七</TooltipContent>
-  </Tooltip>
-</AvatarGroup>
+<TooltipProvider>
+  <AvatarGroup>
+    {members.slice(0, 3).map((member) => (
+      <Avatar key={member.name}>…</Avatar>
+    ))}
+    <Tooltip>
+      <TooltipTrigger render={<AvatarGroupCount>+3</AvatarGroupCount>} />
+      <TooltipContent>王五、赵六、孙七</TooltipContent>
+    </Tooltip>
+  </AvatarGroup>
+</TooltipProvider>
 ```
 
 ### 群组头像：堆叠 vs 拼接 {#group-modes}
@@ -117,17 +122,17 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
 多用户群组头像有两种模式，别混用：
 
 - **堆叠**（overlap，`AvatarGroup`）→ 协作者列表、评论区，头像横向重叠 + `+N` 折叠。
-- **拼接**（composite 宫格）→ 群聊 / 多人会话头像，把成员头像按人数拼进一个方形。**成员有头像图就拼真实图（`AvatarImage`），无图才 `colorful` 文字兜底。** **按人数自适应**：2 左右各半、3 上 1 下 2（首格 `col-span-2`）、4 田字 2×2、≥5 取前 4（或九宫格）。格间用 `gap-px` + 容器 `bg-border` 留细缝；子项 `rounded-none`、外层 `rounded-lg overflow-hidden` 裁切。
+- **拼接**（composite，`AvatarComposite`）→ 群聊 / 多人会话头像，把成员头像按人数拼进一个群聊头像容器。**成员有头像图就拼真实图（`AvatarImage`），无图才 `colorful` 文字兜底。** **按人数自适应**：2 人中线左右两块、3 人上中一块 + 下方两块、4 人田字 2×2。图片撑满每个格子，单个头像不加圆角，调用处不要手写宫格。
 
 ```tsx
-<div className="grid size-10 grid-cols-2 overflow-hidden rounded-lg">
+<AvatarComposite max={4}>
   {members.slice(0, 4).map((m) => (
-    <Avatar className="size-full rounded-none">
+    <Avatar key={m.name}>
       <AvatarImage src={m.avatar} />
-      <AvatarFallback colorful>{m.name[0]}</AvatarFallback>
+      <AvatarFallback colorful>{avatarInitials(m.name)}</AvatarFallback>
     </Avatar>
   ))}
-</div>
+</AvatarComposite>
 ```
 
 ### 兜底文字取值逻辑 {#initials}
@@ -137,7 +142,7 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
 - **中文**：≤2 字全取（「张三」→张三）；≥3 字取**末两字**（名），「欧阳娜娜」→娜娜、「王小明」→小明。
 - **英文**：单名取首字母（Alice→A）；全名取**首末两词首字母**（John Doe→JD），统一大写。
 
-颜色：`colorful` 按内容 hash 在 6 色系（brand/green/amber/red/blue/purple）里取一色，浅底（03 阶）+ 同色系深字（11 阶），不写死颜色、不直引满饱和 09 阶。
+彩色兜底：`colorful` 按内容 hash 在 6 色系（brand/green/amber/red/blue/purple）里取一色，实底（08 阶）+ 白字反白，不写死颜色。
 
 
 ## Semantic DOM {#semantic-dom}

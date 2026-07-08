@@ -215,29 +215,48 @@
       "id": "website-standards-page-lead",
       "label": "网站规范页 PageLead 示例",
       "source": "src/App.tsx",
-      "intent": "PageLead 示例必须直接复用真实 FxPageLead 组件，并展示固定的 crumb、title、lead、actions 结构。",
+      "intent": "PageLead 示例必须直接复用真实 FxPageLead、PageActions 和 WebsiteRulePopover 组件，并展示固定的 crumb、title、lead、actions 结构。",
       "scopeStart": "<SectionLead title=\"PageLead\" description=\"用于文档页顶部，固定承载面包屑、标题、说明和右侧页面动作。\" />",
-      "scopeEnd": "actions={<PageActionsShell navActions={<PageStepActions previous={null} next={null} lang={lang} />}><CopyPageAction lang={lang} /></PageActionsShell>} />",
+      "scopeEnd": "onViewModeChange={() => {}}",
       "requiredSourceIncludes": [
         "<SectionLead title=\"PageLead\" description=\"用于文档页顶部，固定承载面包屑、标题、说明和右侧页面动作。\" />",
-        "查看规则",
+        "<WebsiteRulePopover",
+        "<WebsiteRulePanel",
+        "<WebsiteRuleValueList",
         "<FxPageLead",
         "crumb=\"维护 / 网站规范\"",
         "title=\"页面标题区\"",
         "lead=\"这里展示页面标题区的真实组件形态。标题下只保留一句说明，不再额外加线。\"",
-        "actions={<PageActionsShell navActions={<PageStepActions previous={null} next={null} lang={lang} />}><CopyPageAction lang={lang} /></PageActionsShell>}"
+        "<PageActions",
+        "doc={websiteStandardsDoc}",
+        "demo",
+        "navActions={<PageStepActions demo previous={null} next={null} lang={lang} />}",
+        "viewMode=\"page\"",
+        "onViewModeChange={() => {}}"
+      ],
+      "forbiddenSourceIncludes": [
+        "actions={<PageActionsShell navActions={<PageStepActions previous={null} next={null} lang={lang} />}><CopyPageAction lang={lang} /></PageActionsShell>}",
+        "<Collapsible className=\"relative shrink-0\">"
       ]
     },
     {
       "id": "website-standards-section-lead",
       "label": "网站规范页 SectionLead 示例",
       "source": "src/App.tsx",
-      "intent": "SectionLead 示例必须直接复用真实 SectionLead 组件，说明文案从 website-standards manifest 驱动，而不是在页面里手写。",
+      "intent": "SectionLead 示例卡片只放真实 SectionLead 组件；规则说明和取值逻辑必须放进查看规则，并从 website-standards manifest 与真实插槽读取。",
       "scopeStart": "<SectionLead title=\"SectionLead\" description=\"用于内容区小标题；标题和说明固定 4px 间距。\" />",
-      "scopeEnd": "</div>",
+      "scopeEnd": "<SectionLead title=\"小标题\" description=\"说明固定 14px，内容紧跟说明下方。\" />",
       "requiredSourceIncludes": [
+        "<WebsiteRulePopover",
+        "<WebsiteRulePanel",
+        "<WebsiteRuleValueList",
+        "websiteStandardsManifest.sectionLead.visualBaseline.map",
+        "websiteStandardsManifest.sectionLead.usageBullets.map",
         "<SectionLead title=\"小标题\" description=\"说明固定 14px，内容紧跟说明下方。\" />",
-        "websiteStandardsManifest.sectionLead.usageBullets.map"
+        "getSectionLeadSlotValue(item.slot)"
+      ],
+      "forbiddenSourceIncludes": [
+        "<Collapsible className=\"relative shrink-0\">"
       ]
     },
     {
@@ -258,6 +277,50 @@
       "forbiddenSourceIncludes": [
         "<PageActionsShell",
         "<CopyPageAction"
+      ]
+    },
+    {
+      "id": "website-standards-spacing-rhythm",
+      "label": "网站规范页间距节奏示意",
+      "source": "src/App.tsx",
+      "intent": "间距节奏示意必须复用 WebsiteSpacingRhythm 组件；取值逻辑放进查看规则，并从 website-standards manifest 与真实插槽读取。",
+      "scopeStart": "<section id=\"website-standards-spacing\"",
+      "scopeEnd": "<section id=\"website-standards-boundaries\"",
+      "requiredSourceIncludes": [
+        "<WebsiteRulePopover",
+        "<WebsiteRulePanel",
+        "<WebsiteRuleValueList",
+        "websiteStandardsManifest.spacingRhythm.items.map",
+        "websiteStandardsManifest.spacingRhythm.visualBaseline.map",
+        "getWebsiteSpacingRhythmSlotValue(item.slot)",
+        "<WebsiteSpacingRhythm items={websiteStandardsManifest.spacingRhythm.items} />"
+      ],
+      "forbiddenSourceIncludes": [
+        "websiteStandardsManifest.spacingRhythm[0]?.label",
+        "websiteStandardsManifest.spacingRhythm[1]?.label",
+        "websiteStandardsManifest.spacingRhythm[2]?.label"
+      ]
+    },
+    {
+      "id": "website-standards-card-container",
+      "label": "网站规范页卡片容器示意",
+      "source": "src/App.tsx",
+      "intent": "网站卡片容器必须复用 WebsiteCardContainer 组件；取值逻辑放进查看规则，并从 website-standards manifest 与真实插槽读取。",
+      "scopeStart": "<section id=\"website-standards-boundaries\"",
+      "scopeEnd": "</section>",
+      "requiredSourceIncludes": [
+        "<WebsiteRulePopover",
+        "<WebsiteRulePanel",
+        "<WebsiteRuleValueList",
+        "websiteStandardsManifest.websiteCardContainer.rules.map",
+        "websiteStandardsManifest.websiteCardContainer.visualBaseline.map",
+        "getWebsiteCardContainerSlotValue(item.slot)",
+        "<WebsiteCardContainer label={lang === \"en\" ? \"Internal area\" : \"内部区域\"} />"
+      ],
+      "forbiddenSourceIncludes": [
+        "websiteStandardsManifest.cardSurfaceRules.map",
+        "websiteStandardsManifest.linkageRules.map",
+        "<Card className=\"border-border\">"
       ]
     }
   ],

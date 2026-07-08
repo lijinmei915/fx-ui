@@ -54,6 +54,7 @@ import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText, buttonGroupVariants
 
 - 使用意图：把多个相关按钮组织成一个连续操作组。
 - 规则：优先使用源码已有子组件、props、状态和 token，不复制内部 JSX 到业务页面里重写。
+- 实心按钮组会自动在相邻按钮之间保留 1px 反白分隔线；outline 按钮组继续复用相邻边框合并，不手写额外分隔。
 
 ```tsx
 <ButtonGroup>
@@ -102,6 +103,7 @@ import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText, buttonGroupVariants
 - 少量互斥/多选项优先使用 ToggleGroup，不要手写一排 Button 管 active。
 - 使用 ButtonGroup 前必须以 src/components/ui/button-group.tsx 为真实 API。
 - 不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。
+- 实心按钮组的内部 1px 反白分隔由 ButtonGroup 源码负责，不在调用处插入空白或覆盖边框。
 - className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。
 
 ## 正误示例 {#do-dont}

@@ -7,49 +7,112 @@
   "note": "网站规范页的机器事实表。页面卡槽、规则项、说明文案从这里读取，避免把规则写死在 src/App.tsx 里。",
   "pageLead": {
     "componentName": "FxPageLead",
+    "rulePanel": {
+      "sections": [
+        "values",
+        "sources"
+      ],
+      "sources": [
+        {
+          "label": "源码",
+          "value": "src/components/fx/page-lead.tsx"
+        },
+        {
+          "label": "规则",
+          "value": "docs/data/components.manifest.json"
+        },
+        {
+          "label": "映射",
+          "value": "docs/data/website-standards.manifest.json"
+        }
+      ]
+    },
     "visualBaseline": [
       {
+        "title": "整体容器",
+        "slot": "root"
+      },
+      {
         "title": "面包屑",
-        "desc": "14px / 400；当前页 500 + 主文字色。"
+        "slot": "crumb"
       },
       {
-        "title": "标题",
-        "desc": "32px / 40px；700；主文字色。"
+        "title": "主标题",
+        "slot": "title"
       },
       {
-        "title": "说明",
-        "desc": "text-base / 400；弱文字色；随基准联动。"
+        "title": "标题补充",
+        "slot": "titleMeta"
       },
       {
-        "title": "对齐",
-        "desc": "标题组与右侧动作顶对齐，不在下方加线。"
+        "title": "说明文案",
+        "slot": "lead"
+      },
+      {
+        "title": "右侧动作",
+        "slot": "actions"
       }
     ],
     "contentRules": [
       {
-        "title": "crumb",
-        "desc": "导航分组 / 当前页名称；和左侧导航保持一致。"
+        "title": "面包屑写法",
+        "ruleKey": "crumb"
       },
       {
-        "title": "分隔",
-        "desc": "用 “ / ” 分隔；最后一段自动识别为当前页。"
+        "title": "标题写法",
+        "ruleKey": "title"
       },
       {
-        "title": "title",
-        "desc": "只写页面唯一主标题，不拆中英文样式。"
+        "title": "说明写法",
+        "ruleKey": "lead"
       },
       {
-        "title": "lead",
-        "desc": "只写一句页面用途，不塞代码和决策引用。"
+        "title": "动作边界",
+        "ruleKey": "actions"
       },
       {
-        "title": "actions",
-        "desc": "只放复制、更多、上一页、下一页。"
+        "title": "视觉取值",
+        "ruleKey": "visual"
       }
     ]
   },
   "sectionLead": {
     "componentName": "SectionLead",
+    "rulePanel": {
+      "sections": [
+        "values",
+        "usage",
+        "sources"
+      ],
+      "sources": [
+        {
+          "label": "源码",
+          "value": "src/components/fx/section-lead.tsx"
+        },
+        {
+          "label": "规则",
+          "value": "docs/data/components.manifest.json"
+        },
+        {
+          "label": "映射",
+          "value": "docs/data/website-standards.manifest.json"
+        }
+      ]
+    },
+    "visualBaseline": [
+      {
+        "title": "整体容器",
+        "slot": "root"
+      },
+      {
+        "title": "小标题",
+        "slot": "title"
+      },
+      {
+        "title": "说明文案",
+        "slot": "description"
+      }
+    ],
     "usageBullets": [
       "带说明：场景示例、使用方式、语义 DOM、正误示例。",
       "不带说明：API 属性默认省略。",
@@ -61,67 +124,263 @@
     "componentName": "Button",
     "route": "#button",
     "source": "src/components/ui/button.tsx",
-    "truthSource": "Button 页调试台结构"
+    "truthSource": "Button 页调试台结构",
+    "rulePanel": {
+      "sections": [
+        "values",
+        "sources"
+      ],
+      "sources": [
+        {
+          "label": "源码",
+          "value": "src/components/fx/component-playground.tsx"
+        },
+        {
+          "label": "规则",
+          "value": "docs/data/components.manifest.json"
+        },
+        {
+          "label": "映射",
+          "value": "docs/data/website-standards.manifest.json"
+        },
+        {
+          "label": "真相源",
+          "value": "docs/data/component-playgrounds.manifest.json"
+        }
+      ]
+    },
+    "rules": [
+      {
+        "title": "先分场景，再分属性",
+        "value": "scenario → props",
+        "logic": "场景用于表达“这是哪一类典型用法”（如基础 / 交互 / 高级）；属性用于表达“同一类用法内可调的参数”（如尺寸 / 密度 / 图标位置）。"
+      },
+      {
+        "title": "场景必须是成形用法",
+        "value": "stable scenario",
+        "logic": "能独立回答用户‘什么时候这样用’的，才配叫场景；单纯数值切换、视觉强度、尺寸差异，不单列为场景。"
+      },
+      {
+        "title": "先问‘何时用’，再问‘怎么调’",
+        "value": "intent first",
+        "logic": "如果这个切换项回答的是‘我现在处于哪类业务模式’，它属于场景；如果回答的是‘这类模式里的某个参数怎么调’，它属于属性。"
+      },
+      {
+        "title": "属性必须映射源码 API",
+        "value": "real API",
+        "logic": "属性项优先对应组件真实 prop 或稳定可派生能力；不要发明页面私有开关。"
+      },
+      {
+        "title": "调试内容来自统一真相源",
+        "value": "manifest SSOT",
+        "logic": "组件调试台的场景、属性、意图和约束收口到 docs/data/component-playgrounds.manifest.json；网站规范只展示这份事实，组件页读取同一份事实后渲染真实组件。"
+      },
+      {
+        "title": "同级不混",
+        "value": "no mixed level",
+        "logic": "不要把“基础 / 高级”和“行高 / 图标位置 / 尺寸”放在一排同级按钮里，否则用户会分不清这是模式切换还是参数切换。"
+      },
+      {
+        "title": "一个场景里允许多个属性",
+        "value": "multiple props",
+        "logic": "场景数量应保持少而稳；密度、尺寸、图标位置、对齐方式这类可连续复用的变化，应该挂在当前场景下面做实时属性，而不是继续横向加场景标签。"
+      },
+      {
+        "title": "实时属性统一算属性",
+        "value": "Interactive props",
+        "logic": "只要控件被放进“实时属性 / Interactive props”分组，它就统一表达当前场景下的可调参数；不要把其中某一项再当成并列场景解释。"
+      }
+    ]
   },
-  "cardSurfaceRules": [
-    {
-      "title": "外层卡片",
-      "desc": "文档站承载独立信息块、示例预览或说明区域的卡片，统一使用 `border-border` + `bg-card`。"
+  "websiteRulePopover": {
+    "componentName": "WebsiteRulePopover",
+    "rulePanel": {
+      "sections": [
+        "values",
+        "sources"
+      ],
+      "sources": [
+        {
+          "label": "源码",
+          "value": "src/components/fx/website-rule-panel.tsx"
+        },
+        {
+          "label": "规则",
+          "value": "docs/data/components.manifest.json"
+        },
+        {
+          "label": "映射",
+          "value": "docs/data/website-standards.manifest.json"
+        }
+      ]
     },
-    {
-      "title": "内部区域",
-      "desc": "卡片内部的分隔线、控件壳和辅助区域使用 `border-border-subtle`；不要再用另一套外框 token 造成两种卡片边框。"
+    "visualBaseline": [
+      {
+        "title": "弹层根节点",
+        "slot": "popoverRoot"
+      },
+      {
+        "title": "查看规则按钮",
+        "slot": "trigger"
+      },
+      {
+        "title": "弹窗位置",
+        "slot": "content"
+      },
+      {
+        "title": "默认宽度",
+        "slot": "defaultWidth"
+      },
+      {
+        "title": "规则面板",
+        "slot": "panelRoot"
+      },
+      {
+        "title": "来源标签",
+        "slot": "panelSources"
+      },
+      {
+        "title": "取值列表",
+        "slot": "valueList"
+      }
+    ]
+  },
+  "websiteCardContainer": {
+    "componentName": "WebsiteCardContainer",
+    "rulePanel": {
+      "sections": [
+        "values",
+        "sources"
+      ],
+      "sources": [
+        {
+          "label": "源码",
+          "value": "src/components/fx/website-card-container.tsx"
+        },
+        {
+          "label": "规则",
+          "value": "docs/data/components.manifest.json"
+        },
+        {
+          "label": "映射",
+          "value": "docs/data/website-standards.manifest.json"
+        }
+      ]
     },
-    {
-      "title": "阴影",
-      "desc": "纯展示页不默认加阴影；只有需要浮层感或调试台容器时，才使用组件已有 elevated / shadow 规则。"
-    }
-  ],
-  "playgroundRules": [
-    {
-      "title": "先分场景，再分属性",
-      "desc": "场景用于表达“这是哪一类典型用法”（如基础 / 交互 / 高级）；属性用于表达“同一类用法内可调的参数”（如尺寸 / 密度 / 图标位置）。"
+    "rules": [
+      {
+        "title": "外层卡片",
+        "value": "border-border + bg-card",
+        "logic": "文档站承载独立信息块、示例预览或说明区域时，外层统一使用标准边框和卡片底色。"
+      },
+      {
+        "title": "内部区域",
+        "value": "border-border-subtle",
+        "logic": "卡片内部的分隔线、控件壳和辅助区域使用弱分隔色；不要再用另一套外框 token 造成两种卡片边框。"
+      },
+      {
+        "title": "阴影",
+        "value": "默认无阴影 / 需要时 shadow-l1",
+        "logic": "纯展示页不默认加阴影；只有需要浮层感或调试台容器时，才使用组件已有 elevated 或 shadow 规则。"
+      }
+    ],
+    "visualBaseline": [
+      {
+        "title": "外层容器",
+        "slot": "root"
+      },
+      {
+        "title": "内部区域",
+        "slot": "innerPanel"
+      },
+      {
+        "title": "内部分隔",
+        "slot": "divider"
+      },
+      {
+        "title": "控件壳",
+        "slot": "controlShell"
+      },
+      {
+        "title": "浮层容器",
+        "slot": "elevatedPanel"
+      },
+      {
+        "title": "说明标签",
+        "slot": "label"
+      }
+    ]
+  },
+  "spacingRhythm": {
+    "componentName": "WebsiteSpacingRhythm",
+    "rulePanel": {
+      "sections": [
+        "values",
+        "sources"
+      ],
+      "sources": [
+        {
+          "label": "源码",
+          "value": "src/components/fx/website-spacing-rhythm.tsx"
+        },
+        {
+          "label": "数值",
+          "value": "docs/data/website-standards.manifest.json"
+        },
+        {
+          "label": "计算",
+          "value": "docs/TOKENS.md#间距"
+        }
+      ]
     },
-    {
-      "title": "场景必须是成形用法",
-      "desc": "能独立回答用户‘什么时候这样用’的，才配叫场景；单纯数值切换、视觉强度、尺寸差异，不单列为场景。"
-    },
-    {
-      "title": "先问‘何时用’，再问‘怎么调’",
-      "desc": "如果这个切换项回答的是‘我现在处于哪类业务模式’，它属于场景；如果回答的是‘这类模式里的某个参数怎么调’，它属于属性。"
-    },
-    {
-      "title": "属性必须映射源码 API",
-      "desc": "属性项优先对应组件真实 prop 或稳定可派生能力；不要发明页面私有开关。"
-    },
-    {
-      "title": "调试内容来自统一真相源",
-      "desc": "组件调试台的场景、属性、意图和约束收口到 `docs/data/component-playgrounds.manifest.json`；网站规范只展示这份事实，组件页读取同一份事实后渲染真实组件。"
-    },
-    {
-      "title": "同级不混",
-      "desc": "不要把“基础 / 高级”和“行高 / 图标位置 / 尺寸”放在一排同级按钮里，否则用户会分不清这是模式切换还是参数切换。"
-    },
-    {
-      "title": "一个场景里允许多个属性",
-      "desc": "场景数量应保持少而稳；密度、尺寸、图标位置、对齐方式这类可连续复用的变化，应该挂在当前场景下面做实时属性，而不是继续横向加场景标签。"
-    },
-    {
-      "title": "“实时属性”下面的都算属性",
-      "desc": "只要控件被放进“实时属性 / Interactive props”分组，它就统一表达当前场景下的可调参数；不要把其中某一项再当成并列场景解释。"
-    }
-  ],
-  "spacingRhythm": [
-    {
-      "label": "页面内边距 24 / 32"
-    },
-    {
-      "label": "标题组到首个小标题 40"
-    },
-    {
-      "label": "小标题之间 40"
-    }
-  ],
+    "items": [
+      {
+        "label": "页面内边距",
+        "value": "24 / 32",
+        "logic": "普通桌面内容区使用 24px；更宽或承载复杂内容时可放大到 32px，仍保持 4px 网格。"
+      },
+      {
+        "label": "标题组到首个小标题",
+        "value": "40",
+        "logic": "页面标题区结束后到第一个内容小标题保持 40px，让页面开场和正文内容有清晰停顿。"
+      },
+      {
+        "label": "小标题之间",
+        "value": "40",
+        "logic": "同一页面内相邻章节的小标题组之间保持 40px，形成稳定的阅读节奏。"
+      }
+    ],
+    "visualBaseline": [
+      {
+        "title": "示意外壳",
+        "slot": "root"
+      },
+      {
+        "title": "页面视口",
+        "slot": "viewport"
+      },
+      {
+        "title": "页面截面",
+        "slot": "page"
+      },
+      {
+        "title": "页面内边距标尺",
+        "slot": "pagePaddingMeasure"
+      },
+      {
+        "title": "标题到首节标尺",
+        "slot": "titleToSectionMeasure"
+      },
+      {
+        "title": "章节间距标尺",
+        "slot": "sectionGapMeasure"
+      },
+      {
+        "title": "数值标签",
+        "slot": "label"
+      }
+    ]
+  },
   "linkageRules": [
     "真相源和所有引用到它的落点要视为一条联动链：文档、网页、示例、manifest、数据视图必须一起更新。",
     "禁止只补页面文案、只改 Markdown、或只改 JSON 后假设别处会自己追上。",

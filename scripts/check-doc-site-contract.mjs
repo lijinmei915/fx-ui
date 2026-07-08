@@ -191,16 +191,44 @@ if (!Array.isArray(websiteStandardsManifest.pageLead?.contentRules) || websiteSt
   errors.push("website-standards manifest must include pageLead.contentRules with at least 5 items")
 }
 
+if (!Array.isArray(websiteStandardsManifest.pageLead?.rulePanel?.sections) || !websiteStandardsManifest.pageLead.rulePanel.sections.includes("values")) {
+  errors.push("website-standards manifest must include pageLead.rulePanel.sections with values")
+}
+
 if (!Array.isArray(websiteStandardsManifest.sectionLead?.usageBullets) || websiteStandardsManifest.sectionLead.usageBullets.length < 3) {
   errors.push("website-standards manifest must include sectionLead.usageBullets with at least 3 items")
 }
 
-if (!Array.isArray(websiteStandardsManifest.spacingRhythm) || websiteStandardsManifest.spacingRhythm.length !== 3) {
-  errors.push("website-standards manifest must include exactly 3 spacingRhythm items")
+if (!Array.isArray(websiteStandardsManifest.componentPlayground?.rules) || websiteStandardsManifest.componentPlayground.rules.length < 4) {
+  errors.push("website-standards manifest must include componentPlayground.rules with at least 4 items")
 }
 
-if (!Array.isArray(websiteStandardsManifest.linkageRules) || websiteStandardsManifest.linkageRules.length < 3) {
-  errors.push("website-standards manifest must include linkageRules")
+if (!Array.isArray(websiteStandardsManifest.componentPlayground?.rulePanel?.sections) || !websiteStandardsManifest.componentPlayground.rulePanel.sections.includes("values")) {
+  errors.push("website-standards manifest must include componentPlayground.rulePanel.sections with values")
+}
+
+if (!Array.isArray(websiteStandardsManifest.spacingRhythm?.items) || websiteStandardsManifest.spacingRhythm.items.length !== 3) {
+  errors.push("website-standards manifest must include exactly 3 spacingRhythm.items")
+}
+
+if (!Array.isArray(websiteStandardsManifest.spacingRhythm?.rulePanel?.sections) || !websiteStandardsManifest.spacingRhythm.rulePanel.sections.includes("values")) {
+  errors.push("website-standards manifest must include spacingRhythm.rulePanel.sections with values")
+}
+
+if (!Array.isArray(websiteStandardsManifest.spacingRhythm?.visualBaseline) || websiteStandardsManifest.spacingRhythm.visualBaseline.length < 5) {
+  errors.push("website-standards manifest must include spacingRhythm.visualBaseline with at least 5 items")
+}
+
+if (!Array.isArray(websiteStandardsManifest.websiteCardContainer?.rules) || websiteStandardsManifest.websiteCardContainer.rules.length < 3) {
+  errors.push("website-standards manifest must include websiteCardContainer.rules with at least 3 items")
+}
+
+if (!Array.isArray(websiteStandardsManifest.websiteCardContainer?.rulePanel?.sections) || !websiteStandardsManifest.websiteCardContainer.rulePanel.sections.includes("values")) {
+  errors.push("website-standards manifest must include websiteCardContainer.rulePanel.sections with values")
+}
+
+if (!Array.isArray(websiteStandardsManifest.websiteCardContainer?.visualBaseline) || websiteStandardsManifest.websiteCardContainer.visualBaseline.length < 5) {
+  errors.push("website-standards manifest must include websiteCardContainer.visualBaseline with at least 5 items")
 }
 
 if (appSource.includes("docsSpacing.sectionHeader")) {
@@ -225,14 +253,23 @@ if (standardDocPageSource.includes("<h1 className=\"text-3xl") || standardDocPag
 if (!appSource.includes("websiteStandardsManifest.pageLead.visualBaseline.map")) {
   errors.push("website-standards page must render PageLead baseline cards from websiteStandardsManifest")
 }
-if (!appSource.includes("websiteStandardsManifest.pageLead.contentRules.map")) {
-  errors.push("website-standards page must render PageLead content rules from websiteStandardsManifest")
+if (!appSource.includes("websiteStandardsManifest.pageLead.rulePanel.sections.includes(\"values\")")) {
+  errors.push("website-standards page must use rulePanel.sections to control PageLead rule panel display")
 }
 if (!appSource.includes("websiteStandardsManifest.sectionLead.usageBullets.map")) {
   errors.push("website-standards page must render SectionLead usage bullets from websiteStandardsManifest")
 }
-if (!appSource.includes("websiteStandardsManifest.linkageRules.map")) {
-  errors.push("website-standards page must render linkage rules from websiteStandardsManifest")
+if (!appSource.includes("websiteStandardsManifest.componentPlayground.rules.map")) {
+  errors.push("website-standards page must render ComponentPlayground rules from websiteStandardsManifest")
+}
+if (!appSource.includes("websiteStandardsManifest.componentPlayground.rulePanel.sections.includes(\"values\")")) {
+  errors.push("website-standards page must use rulePanel.sections to control ComponentPlayground rule panel display")
+}
+if (!appSource.includes("websiteStandardsManifest.websiteCardContainer.rules.map")) {
+  errors.push("website-standards page must render WebsiteCardContainer rules from websiteStandardsManifest")
+}
+if (!appSource.includes("<WebsiteCardContainer label={lang === \"en\" ? \"Internal area\" : \"内部区域\"} />")) {
+  errors.push("website-standards page must render WebsiteCardContainer component")
 }
 if (!appSource.includes("governancePagesManifest.documentation.ssotRoutes.map")) {
   errors.push("documentation page must render SSOT routes from governancePagesManifest")

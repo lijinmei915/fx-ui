@@ -1,11 +1,22 @@
 import { Fragment, createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { CommandPalette, type CommandItem } from "@/components/ui/command";
-import { PageLead as FxPageLead } from "@/components/fx/page-lead";
-import { SectionLead } from "@/components/fx/section-lead";
+import { PageLead as FxPageLead, pageLeadSlots } from "@/components/fx/page-lead";
+import { SectionLead, sectionLeadSlots } from "@/components/fx/section-lead";
 import { DocDoDont } from "@/components/fx/doc-do-dont";
 import { DocSurfaceCard, DocSurfaceTableCard } from "@/components/fx/doc-surface";
 import { ComponentPlayground } from "@/components/fx/component-playground";
+import {
+  WebsiteRulePanel,
+  WebsiteRulePopover,
+  WebsiteRuleValueList,
+  websiteRulePanelSlots,
+  websiteRulePopoverSlots,
+  websiteRuleValueListSlots
+} from "@/components/fx/website-rule-panel";
+import { WebsiteCardContainer, websiteCardContainerSlots } from "@/components/fx/website-card-container";
+import { WebsiteSpacingRhythm, websiteSpacingRhythmSlots } from "@/components/fx/website-spacing-rhythm";
+import { ActionRow as FxActionRow } from "@/components/fx/page-actions";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -21,7 +32,7 @@ import {
   MoonIcon,
   SunIcon,
   SlidersIcon,
-  MoreVerticalIcon,
+  MoreHorizontalIcon,
   InboxIcon,
   HelpIcon,
   BellIcon,
@@ -123,7 +134,7 @@ import {
   Cell } from
 "recharts";
 import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
+import { ButtonGroup, ButtonGroupSeparator } from "@/components/ui/button-group";
 import {
   Card,
   CardAction,
@@ -207,7 +218,7 @@ import {
 "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/ui/pagination";
-import { Avatar, AvatarFallback, AvatarImage, AvatarGroup, AvatarGroupCount, avatarInitials } from "@/components/ui/avatar";
+import { Avatar, AvatarBadge, AvatarComposite, AvatarFallback, AvatarImage, AvatarGroup, AvatarGroupCount, avatarInitials } from "@/components/ui/avatar";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -710,8 +721,16 @@ const docsSidebarSpacing = {
 
 type ComponentsManifest = {
   updatedAt: string;
-  uiComponents: {docStatus?: string;}[];
-  fxComponents: {docStatus?: string;}[];
+  uiComponents: {
+    name?: string;
+    docStatus?: string;
+    usageRules?: string[];
+  }[];
+  fxComponents: {
+    name?: string;
+    docStatus?: string;
+    usageRules?: string[];
+  }[];
 };
 
 type DesignTokensManifest = {
@@ -873,12 +892,29 @@ type WebsiteStandardsManifest = {
   note: string;
   pageLead: {
     componentName: string;
-    visualBaseline: { title: string; desc: string }[];
-    contentRules: { title: string; desc: string }[];
+    rulePanel: {
+      sections: ("usage" | "values" | "sources")[];
+      sources: { label: string; value: string }[];
+    };
+    visualBaseline: { title: string; slot: PageLeadWebsiteSlot }[];
+    contentRules: { title: string; ruleKey: string }[];
   };
   sectionLead: {
     componentName: string;
+    rulePanel: {
+      sections: ("usage" | "values" | "sources")[];
+      sources: { label: string; value: string }[];
+    };
+    visualBaseline: { title: string; slot: SectionLeadWebsiteSlot }[];
     usageBullets: string[];
+  };
+  websiteRulePopover: {
+    componentName: string;
+    rulePanel: {
+      sections: ("usage" | "values" | "sources")[];
+      sources: { label: string; value: string }[];
+    };
+    visualBaseline: { title: string; slot: WebsiteRulePopoverSlot }[];
   };
   componentPlayground: {
     componentKey: "button";
@@ -886,16 +922,30 @@ type WebsiteStandardsManifest = {
     route: string;
     source: string;
     truthSource: string;
+    rulePanel: {
+      sections: ("usage" | "values" | "sources")[];
+      sources: { label: string; value: string }[];
+    };
+    rules: { title: string; value: string; logic: string }[];
   };
-  cardSurfaceRules: {
-    title: string;
-    desc: string;
-  }[];
-  playgroundRules: {
-    title: string;
-    desc: string;
-  }[];
-  spacingRhythm: { label: string }[];
+  websiteCardContainer: {
+    componentName: string;
+    rulePanel: {
+      sections: ("usage" | "values" | "sources")[];
+      sources: { label: string; value: string }[];
+    };
+    rules: { title: string; value: string; logic: string }[];
+    visualBaseline: { title: string; slot: WebsiteCardContainerSlot }[];
+  };
+  spacingRhythm: {
+    componentName: string;
+    rulePanel: {
+      sections: ("usage" | "values" | "sources")[];
+      sources: { label: string; value: string }[];
+    };
+    items: { label: string; value: string; logic: string }[];
+    visualBaseline: { title: string; slot: WebsiteSpacingRhythmSlot }[];
+  };
   linkageRules: string[];
 };
 
@@ -915,6 +965,7 @@ type ComponentPlaygroundManifestProp = {
     intentEn?: string;
     constraint?: string;
     constraintEn?: string;
+    hiddenWhen?: Record<string, string | string[]>;
   }[];
   hasAll?: boolean;
   disabledWhen?: Record<string, string | string[]>;
@@ -1031,11 +1082,28 @@ function componentPlaygroundCondition(condition?: Record<string, string | string
 }
 
 function componentPlaygroundPropsFromManifest(component: ComponentPlaygroundManifestComponent) {
-  return component.props.map((prop) => ({
-    ...prop,
-    disabledWhen: componentPlaygroundCondition(prop.disabledWhen),
-    hiddenWhen: componentPlaygroundCondition(prop.hiddenWhen),
-  }));
+  return component.props.map((prop) => {
+    const disabledWhen = componentPlaygroundCondition(prop.disabledWhen)
+    const hiddenWhen = componentPlaygroundCondition(prop.hiddenWhen)
+
+    if (prop.type === "segment") {
+      return {
+        ...prop,
+        options: prop.options.map((option) => ({
+          ...option,
+          hiddenWhen: componentPlaygroundCondition(option.hiddenWhen),
+        })),
+        disabledWhen,
+        hiddenWhen,
+      }
+    }
+
+    return {
+      ...prop,
+      disabledWhen,
+      hiddenWhen,
+    }
+  });
 }
 
 const allManifestComponents = [
@@ -1073,6 +1141,173 @@ const governanceFreshness = {
   projectGraph: projectGraph.generatedAt,
   systemRelations: systemRelations.updatedAt
 };
+
+type PageLeadWebsiteSlot = "root" | "crumb" | "title" | "titleMeta" | "lead" | "actions";
+type SectionLeadWebsiteSlot = "root" | "title" | "description";
+type WebsiteRulePopoverSlot =
+  | "popoverRoot"
+  | "trigger"
+  | "content"
+  | "defaultWidth"
+  | "panelRoot"
+  | "panelSources"
+  | "valueList";
+type WebsiteSpacingRhythmSlot =
+  | "root"
+  | "viewport"
+  | "page"
+  | "pagePaddingMeasure"
+  | "titleToSectionMeasure"
+  | "sectionGapMeasure"
+  | "label";
+type WebsiteCardContainerSlot =
+  | "root"
+  | "innerPanel"
+  | "divider"
+  | "controlShell"
+  | "elevatedPanel"
+  | "label";
+
+const pageLeadSlotGuideMap = {
+  root: "负责把标题区和右侧动作排成同一行，桌面端顶部对齐。",
+  crumb: "显示页面层级路径，弱化呈现，最后一段自动作为当前页强调。",
+  title: "承载页面唯一主标题，是这一页最强的视觉焦点。",
+  titleMeta: "用于标题旁的补充英文或副标题，弱于主标题但保持同一基线。",
+  lead: "只放一两句页面说明，解释这一页是做什么的，不重复标题。",
+  actions: "放页面级动作，比如复制、更多、上一页、下一页，固定在右侧。"
+} satisfies Record<PageLeadWebsiteSlot, string>;
+
+const sectionLeadSlotGuideMap = {
+  root: "负责标题与说明的纵向堆叠，只表达节标题，不承载业务内容。",
+  title: "承载内容区小标题，层级低于页面标题但高于正文。",
+  description: "承载一句说明文案；没有说明时整个说明行不渲染。"
+} satisfies Record<SectionLeadWebsiteSlot, string>;
+
+const websiteRulePopoverSlotGuideMap = {
+  popoverRoot: "承载查看规则的展开状态和定位上下文，本身不写规则内容。",
+  trigger: "统一查看规则按钮，使用 secondary / sm，并在展开时旋转右侧箭头。",
+  content: "弹窗固定从按钮右下方展开，层级高于内容卡片。",
+  defaultWidth: "默认用于视觉取值类规则；宽度上限是 44rem，同时会避开视口左右边距，窄规则可以通过 widthClassName 覆盖。",
+  panelRoot: "弹窗里的规则面板外壳，统一边框、底色和内边距。",
+  panelSources: "展示源码、规则和映射来源，作为轻量来源标签行。",
+  valueList: "展示具体取值逻辑，默认两列排列，移动端自然单列。"
+} satisfies Record<WebsiteRulePopoverSlot, string>;
+
+const websiteSpacingRhythmSlotGuideMap = {
+  root: "承载间距节奏示意图，统一卡片边框、底色和外层内边距。",
+  viewport: "模拟文档页内容视口，用来表达页面内容与容器边界的距离。",
+  page: "把页面截面拆成三段：页面内边距、标题到首节、小标题之间。",
+  pagePaddingMeasure: "用短色条标记页面左右内边距的基准值。",
+  titleToSectionMeasure: "用虚线块标记页面标题组到第一个内容小标题的距离。",
+  sectionGapMeasure: "用弱虚线块标记两个内容小标题模块之间的距离。",
+  label: "显示对应数值名称，字重和正文说明保持可读但不抢主标题。"
+} satisfies Record<WebsiteSpacingRhythmSlot, string>;
+
+const websiteCardContainerSlotGuideMap = {
+  root: "承载文档站独立信息块、示例预览或说明区域，是网站卡片容器的外层表面。",
+  innerPanel: "用于卡片内部的辅助区域或分组区域，边框比外层更弱。",
+  divider: "用于卡片内部内容分隔，不另起一套外层卡片边框。",
+  controlShell: "用于卡片内部的控件壳、筛选壳或浅辅助区域。",
+  elevatedPanel: "只在需要浮层感或强调调试容器时使用阴影层级。",
+  label: "用于说明容器内部区域，不抢页面标题层级。"
+} satisfies Record<WebsiteCardContainerSlot, string>;
+
+function describeTailwindTokenValue(classes: string) {
+  const parts: string[] = [];
+  const sizeMap: Record<string, string> = {
+    "text-sm": "14px",
+    "text-base": "16px",
+    "text-lg": "18px",
+    "text-xl": "20px / 28px",
+    "text-3xl": "30px / 36px"
+  };
+  const weightMap: Record<string, string> = {
+    "font-normal": "400",
+    "font-medium": "500",
+    "font-semibold": "600",
+    "font-bold": "700"
+  };
+  const colorMap: Record<string, string> = {
+    "text-foreground": "主文字色",
+    "text-muted-foreground": "弱文字色"
+  };
+
+  Object.entries(sizeMap).find(([token]) => classes.includes(token))?.[1] && parts.push(`字号 ${Object.entries(sizeMap).find(([token]) => classes.includes(token))?.[1]}`);
+  Object.entries(weightMap).find(([token]) => classes.includes(token))?.[1] && parts.push(`字重 ${Object.entries(weightMap).find(([token]) => classes.includes(token))?.[1]}`);
+  Object.entries(colorMap).find(([token]) => classes.includes(token))?.[1] && parts.push(`颜色 ${Object.entries(colorMap).find(([token]) => classes.includes(token))?.[1]}`);
+
+  if (classes.includes("grid")) parts.push("布局 grid");
+  if (classes.includes("flex")) parts.push("布局 flex");
+  if (classes.includes("flex-col")) parts.push("纵向排列");
+  if (classes.includes("gap-1")) parts.push("间距 4px");
+  if (classes.includes("gap-2.5")) parts.push("间距 10px");
+  if (classes.includes("gap-3")) parts.push("间距 12px");
+  if (classes.includes("right-0")) parts.push("右侧对齐");
+  if (classes.includes("top-full")) parts.push("位于触发器下方");
+  if (classes.includes("z-20")) parts.push("层级 z-20");
+  if (classes.includes("mt-2")) parts.push("顶部偏移 8px");
+  if (classes.includes("rounded-2xl")) parts.push("圆角 16px");
+  if (classes.includes("border-border-subtle")) parts.push("边框 弱分隔色");else
+  if (classes.includes("border-border")) parts.push("边框 标准边框色");
+  if (classes.includes("bg-card")) parts.push("底色 卡片色");
+  if (classes.includes("bg-background")) parts.push("底色 页面底色");
+  if (classes.includes("bg-muted/30")) parts.push("底色 弱辅助填充");
+  if (classes.includes("shadow-l1")) parts.push("阴影 L1");
+  if (classes.includes("p-4")) parts.push("内边距 16px");
+  if (classes.includes("p-5")) parts.push("内边距 20px");
+  if (classes.includes("md:p-6")) parts.push("桌面端内边距 24px");
+  if (classes.includes("gap-6")) parts.push("间距 24px");
+  if (classes.includes("md:grid-cols-[0.95fr_1.05fr_1fr]")) parts.push("桌面端三列页面截面");
+  if (classes.includes("h-3")) parts.push("标尺高度 12px");
+  if (classes.includes("h-10")) parts.push("标尺高度 40px");
+  if (classes.includes("bg-primary/15")) parts.push("标尺色 主题色浅层");
+  if (classes.includes("border-primary/55")) parts.push("虚线边框 主题色");
+  if (classes.includes("border-dashed")) parts.push("边框 虚线");
+  const responsiveWidth = classes.match(/w-\[min\(([^,]+),calc\(100vw-([^)]+)\)\)\]/);
+  if (responsiveWidth) parts.push(`宽度 最大 ${responsiveWidth[1]}，且不超过视口宽度减 ${responsiveWidth[2]}`);
+  if (classes.includes("md:grid-cols-2")) parts.push("桌面端两列");
+  if (classes.includes("md:grid-cols-[minmax(0,1fr)_auto]")) parts.push("桌面端左内容 / 右动作双列");
+  if (classes.includes("md:items-start")) parts.push("桌面端顶部对齐");
+  if (classes.includes("md:col-span-2")) parts.push("桌面端横跨整行");
+  if (classes.includes("shrink-0")) parts.push("在横向布局中保持自身宽度，不被挤窄");
+  if (classes.includes("md:justify-self-end")) parts.push("桌面端右对齐");
+
+  return parts.join("；");
+}
+
+function getPageLeadSlotValue(slot: PageLeadWebsiteSlot) {
+  const value = describeTailwindTokenValue(pageLeadSlots[slot]);
+  return value || "由 PageLead 源码插槽控制。";
+}
+
+function getSectionLeadSlotValue(slot: SectionLeadWebsiteSlot) {
+  const value = describeTailwindTokenValue(sectionLeadSlots[slot]);
+  return value || "由 SectionLead 源码插槽控制。";
+}
+
+function getWebsiteRulePopoverSlotValue(slot: WebsiteRulePopoverSlot) {
+  const classBySlot: Record<WebsiteRulePopoverSlot, string> = {
+    popoverRoot: websiteRulePopoverSlots.root,
+    trigger: websiteRulePopoverSlots.trigger,
+    content: websiteRulePopoverSlots.content,
+    defaultWidth: websiteRulePopoverSlots.defaultWidth,
+    panelRoot: websiteRulePanelSlots.root,
+    panelSources: websiteRulePanelSlots.sources,
+    valueList: websiteRuleValueListSlots.root
+  };
+  const value = describeTailwindTokenValue(classBySlot[slot]);
+  return value || "由 WebsiteRulePopover 源码插槽控制。";
+}
+
+function getWebsiteSpacingRhythmSlotValue(slot: WebsiteSpacingRhythmSlot) {
+  const value = describeTailwindTokenValue(websiteSpacingRhythmSlots[slot]);
+  return value || "由 WebsiteSpacingRhythm 源码插槽控制。";
+}
+
+function getWebsiteCardContainerSlotValue(slot: WebsiteCardContainerSlot) {
+  const value = describeTailwindTokenValue(websiteCardContainerSlots[slot]);
+  return value || "由 WebsiteCardContainer 源码插槽控制。";
+}
 
 type SiteNavItem = {
   label: string;
@@ -1273,7 +1508,7 @@ const gettingStartedAnchors: Record<GettingStartedPage, {label: string;labelEn: 
   "website-standards": [
   { label: "页面组件", labelEn: "Page Components", href: "#website-standards-components" },
   { label: "间距节奏", labelEn: "Spacing Rhythm", href: "#website-standards-spacing" },
-  { label: "使用边界", labelEn: "Boundaries", href: "#website-standards-boundaries" }],
+  { label: "卡片容器", labelEn: "Card Container", href: "#website-standards-boundaries" }],
 
   checks: [
   { label: "常用命令", labelEn: "Commands", href: "#checks-commands" },
@@ -1415,7 +1650,6 @@ const buttonDoDontRows = [
 const buttonAnchors = [
 { label: "调试台", labelEn: "Playground", href: "#playground" },
 { label: "使用方式", labelEn: "Usage", href: "#usage" },
-{ label: "排列组合", labelEn: "Arrangement", href: "#arrangement" },
 { label: "API", href: "#props" },
 { label: "语义 DOM", labelEn: "Semantic DOM", href: "#semantic-dom" },
 { label: "正误示例", labelEn: "Do / Don’t", href: "#do-dont" }];
@@ -2288,20 +2522,44 @@ const avatarScenarioExamples = [
   code: `import { avatarInitials } from "@/components/ui/avatar"\n\n<AvatarFallback colorful>{avatarInitials("欧阳娜娜")}</AvatarFallback> // 娜娜\n<AvatarFallback colorful>{avatarInitials("John Doe")}</AvatarFallback> // JD`
 },
 {
+  id: "style-image",
+  title: "图片头像",
+  group: "style",
+  intent: "优先展示真实头像图。",
+  rule: "渲染 AvatarImage，同时保留 AvatarFallback 兜底。",
+  code: `<Avatar>\n  <AvatarImage src="/avatars/01.jpg" alt="陈昊" />\n  <AvatarFallback>{avatarInitials("陈昊")}</AvatarFallback>\n</Avatar>`
+},
+{
+  id: "style-neutral",
+  title: "中性色兜底",
+  group: "color",
+  intent: "默认中性兜底，不用彩底区分用户。",
+  rule: "不传 colorful，沿用 AvatarFallback 默认 muted 背景与弱化文字。",
+  code: `<Avatar>\n  <AvatarFallback>{avatarInitials("陈昊")}</AvatarFallback>\n</Avatar>`
+},
+{
+  id: "style-colorful",
+  title: "彩色兜底",
+  group: "color",
+  intent: "列表里需要更快区分不同用户时使用。",
+  rule: "传 colorful，让组件按内容 hash 自动取色；不要手写背景色。",
+  code: `<Avatar>\n  <AvatarFallback colorful>{avatarInitials("陈昊")}</AvatarFallback>\n</Avatar>`
+},
+{
   id: "group",
   title: "头像组",
   group: "type",
   intent: "在评论区、协作者列表等场景堆叠展示多个用户；折叠的 +N 可悬停看全部。",
-  rule: "AvatarGroup max 自动折叠 +N；需要悬停看名单时改手动模式，用 Tooltip 包住 AvatarGroupCount。",
-  code: `<AvatarGroup>\n  <Avatar><AvatarFallback>A</AvatarFallback></Avatar>\n  <Avatar><AvatarFallback>B</AvatarFallback></Avatar>\n  <Tooltip>\n    <TooltipTrigger render={<AvatarGroupCount>+3</AvatarGroupCount>} />\n    <TooltipContent>王五、赵六、孙七</TooltipContent>\n  </Tooltip>\n</AvatarGroup>`
+  rule: "群组默认展示前 3 个头像，第 4 个起折叠为 +N；用 Tooltip 包住 AvatarGroupCount，在 hover/focus 时展示剩余成员。",
+  code: `<AvatarGroup>\n  {members.slice(0, 3).map((member) => (\n    <Avatar key={member.name}>\n      <AvatarImage src={member.avatar} alt={member.name} />\n      <AvatarFallback>{avatarInitials(member.name)}</AvatarFallback>\n    </Avatar>\n  ))}\n  <Tooltip>\n    <TooltipTrigger render={<AvatarGroupCount>+3</AvatarGroupCount>} />\n    <TooltipContent>王五、赵六、孙七</TooltipContent>\n  </Tooltip>\n</AvatarGroup>`
 },
 {
   id: "composite",
   title: "群组拼接",
   group: "type",
   intent: "群聊 / 多人会话头像：把成员头像按人数拼进一个方形宫格。",
-  rule: "成员有头像图就拼真实图（AvatarImage），无图才 colorful 文字兜底。每格按 1:1 正方形排，贴外边、仅格间留缝（容器 bg-muted + gap），缝隙与人数不满处露灰底。按人数自适应：2 左右居中、3 上 1 下 2、4 田字 2×2、≥5 取前 4。子项 rounded-none、外层 rounded-lg overflow-hidden 裁切。和「堆叠 AvatarGroup」是两种群组模式——群聊用拼接、协作列表用堆叠。",
-  code: `// 3 人：上 1 下 2，1:1 方格 + 灰底色仅格间留缝\n<div className="flex size-10 flex-col items-center justify-center gap-[2px] overflow-hidden rounded-lg bg-muted">\n  <Avatar className="size-[19px] rounded-none">\n    <AvatarImage src={m1.avatar} /><AvatarFallback colorful>{m1.name[0]}</AvatarFallback>\n  </Avatar>\n  <div className="flex gap-[2px]">\n    <Avatar className="size-[19px] rounded-none">…</Avatar>\n    <Avatar className="size-[19px] rounded-none">…</Avatar>\n  </div>\n</div>`
+  rule: "成员有头像图就拼真实图（AvatarImage），无图才 colorful 文字兜底。每格按 1:1 正方形填满，头像图片撑满格子；单个头像不加圆角。按人数自适应：2 人中线左右两块、3 人上中一块 + 下方两块、4 人田字 2×2、≥5 取前 4。和「堆叠 AvatarGroup」是两种群组模式——群聊用拼接、协作列表用堆叠。",
+  code: `<AvatarComposite max={3}>\n  {members.map((member) => (\n    <Avatar key={member.name}>\n      <AvatarImage src={member.avatar} alt={member.name} />\n      <AvatarFallback colorful>{avatarInitials(member.name)}</AvatarFallback>\n    </Avatar>\n  ))}\n</AvatarComposite>`
 },
 {
   id: "size-xs",
@@ -2351,6 +2609,8 @@ const avatarScenarioExamples = [
 
 const avatarScenarioFilters = [
 { value: "type", label: "类型", labelEn: "Type" },
+{ value: "style", label: "样式", labelEn: "Style" },
+{ value: "color", label: "颜色", labelEn: "Color" },
 { value: "size", label: "尺寸", labelEn: "Size" }];
 
 const avatarPropRows = [
@@ -2359,7 +2619,7 @@ const avatarPropRows = [
 { prop: "AvatarImage", type: "AvatarPrimitive.Image.Props", defaultValue: "—", desc: "实际图片，加载失败时自动让出位置给 AvatarFallback。" },
 { prop: "AvatarFallback.colorful", type: "boolean", defaultValue: "false", desc: "兜底文字按内容 hash 自动取色板背景色 + 反白文字，便于区分用户。" },
 { prop: "AvatarBadge.status", type: "\"online\" | \"away\" | \"busy\" | \"offline\"", defaultValue: "—", desc: "右下角状态点的 presence 语义色：在线绿 / 离开黄 / 忙红 / 离线灰；随 size 自动缩放。" },
-{ prop: "AvatarGroup.max", type: "number", defaultValue: "—", desc: "最多展示几个头像，超出自动折叠为“+N”（AvatarGroupCount）。" }];
+{ prop: "AvatarGroup.max", type: "number", defaultValue: "—", desc: "最多展示几个头像，超出自动折叠为“+N”（AvatarGroupCount）；需要 hover/focus 展示剩余成员时手动渲染 AvatarGroupCount + Tooltip。" }];
 
 const avatarSemanticDomRows = [
 { part: "[data-slot=\"avatar\"][data-size]", desc: "头像容器，data-size 标记当前尺寸档位（default/sm/lg）。" },
@@ -3051,6 +3311,77 @@ const linkDoDontRows = [
 { do: "用 tone 表达语义色（如 danger 表示风险操作说明）。", dont: "给链接手写 text-[#xxx] 硬编码颜色。" },
 { do: "强操作（提交、删除按钮）改用 Button。", dont: "把 Link 当按钮，用 onClick 触发表单提交。" },
 { do: "图标用 data-icon 标位，尺寸交给 Link。", dont: "给链接内图标手写 size-4 等尺寸。" }];
+
+type LinkTone = "standard" | "default" | "primary" | "success" | "warning" | "danger";
+type LinkUnderline = "hover" | "always";
+type LinkSize = "sm" | "default" | "lg";
+type LinkIconMode = "none" | "start" | "end";
+
+function getLinkLabel(tone: LinkTone, lang: Lang) {
+  const labels: Record<LinkTone, { zh: string; en: string }> = {
+    standard: { zh: "标准链接", en: "Standard link" },
+    default: { zh: "默认链接", en: "Default link" },
+    primary: { zh: "主要链接", en: "Primary link" },
+    success: { zh: "成功链接", en: "Success link" },
+    warning: { zh: "警告链接", en: "Warning link" },
+    danger: { zh: "危险链接", en: "Danger link" },
+  };
+  return lang === "en" ? labels[tone].en : labels[tone].zh;
+}
+
+function renderLinkPlayground(
+underline: LinkUnderline,
+tone: LinkTone,
+size: LinkSize,
+icon: LinkIconMode,
+disabled: boolean,
+lang: Lang)
+{
+  const label = getLinkLabel(tone, lang);
+  return (
+    <Link
+      href="#link"
+      underline={underline}
+      tone={tone}
+      size={size}
+      disabled={disabled}
+    >
+      {icon === "start" ? <LinkIcon data-icon="inline-start" /> : null}
+      {label}
+      {icon === "end" ? <CopyIcon data-icon="inline-end" /> : null}
+    </Link>);
+}
+
+function genLinkPlaygroundCode(
+underline: LinkUnderline,
+tone: LinkTone,
+size: LinkSize,
+icon: LinkIconMode,
+disabled: boolean,
+lang: Lang)
+{
+  const attrs = disabled ? ["disabled"] : [`href="/docs"`];
+  if (underline !== "hover") attrs.push(`underline="${underline}"`);
+  if (tone !== "standard") attrs.push(`tone="${tone}"`);
+  if (size !== "default") attrs.push(`size="${size}"`);
+
+  const label = getLinkLabel(tone, lang);
+  const content = icon === "start" ?
+  `<LinkIcon data-icon="inline-start" />${label}` :
+  icon === "end" ?
+  `${label}<CopyIcon data-icon="inline-end" />` :
+  label;
+
+  return `import { Link } from "@/components/ui/link"\n${icon !== "none" ? `import { ${icon === "start" ? "LinkIcon" : "CopyIcon"} } from "@/lib/icons"\n` : ""}\n<Link ${attrs.join(" ")}>${content}</Link>`;
+}
+
+const linkPlaygroundConfig = {
+  props: componentPlaygroundPropsFromManifest(componentPlaygroundsManifest.components.link),
+  initial: componentPlaygroundsManifest.components.link.initial,
+  guidanceKey: componentPlaygroundsManifest.components.link.guidanceKey,
+  renderOne: (c: Record<string, string>, lang: Lang) => renderLinkPlayground(c.underline as LinkUnderline, c.tone as LinkTone, c.size as LinkSize, c.icon as LinkIconMode, c.disabled === "true", lang),
+  genCode: (c: Record<string, string>, lang: Lang) => genLinkPlaygroundCode(c.underline as LinkUnderline, c.tone as LinkTone, c.size as LinkSize, c.icon as LinkIconMode, c.disabled === "true", lang)
+};
 
 
 const sidebarAnchors = [
@@ -3828,24 +4159,24 @@ function ThemeCustomizerPanel({
         <SheetHeader className="p-[calc(var(--fx-panel-padding)*2)] pb-0">
           <div className="flex items-center gap-(--fx-control-gap)">
             <SettingsIcon className="size-5 text-muted-foreground" />
-            <SheetTitle className="text-xl font-semibold">{lang === "en" ? "Theme Customizer" : "主题定制"}</SheetTitle>
+            <SheetTitle className="text-lg font-medium">{lang === "en" ? "Theme Customizer" : "主题定制"}</SheetTitle>
           </div>
         </SheetHeader>
 
         <div className="flex min-h-0 flex-1 flex-col gap-[calc(var(--fx-panel-gap)*2)] overflow-y-auto p-[calc(var(--fx-panel-padding)*2)] pb-12">
           <section className="flex flex-col gap-(--fx-control-gap)">
             <ThemePanelHeading icon={<SunIcon />} title={lang === "en" ? "Appearance" : "外观模式"} />
-            <div className="flex h-9 gap-1 rounded-lg bg-muted p-0.5">
+            <div className="flex h-8 gap-0.5 rounded-lg bg-muted p-0.5">
               <button
                 type="button"
                 aria-pressed={config.mode === "light"}
                 onClick={() => setConfigValue("mode", "light")}
                 className={cn(
-                  "flex h-full flex-1 items-center justify-center gap-(--fx-control-gap) rounded-md px-(--fx-control-px-sm) text-base font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
-                  config.mode === "light" ? "bg-card text-foreground shadow-l1" : "text-muted-foreground hover:text-foreground"
+                  "flex h-full flex-1 items-center justify-center gap-(--fx-control-gap-tight) rounded-md px-(--fx-control-px-xs) text-sm font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                  config.mode === "light" ? "bg-card text-foreground shadow-l1" : "text-muted-foreground hover:text-foreground dark:text-foreground/70 dark:hover:text-foreground"
                 )}>
                 
-                <SunIcon className="size-4" />
+                <SunIcon className="size-3.5" />
                 {lang === "en" ? "Light" : "浅色"}
               </button>
               <button
@@ -3853,11 +4184,11 @@ function ThemeCustomizerPanel({
                 aria-pressed={config.mode === "dark"}
                 onClick={() => setConfigValue("mode", "dark")}
                 className={cn(
-                  "flex h-full flex-1 items-center justify-center gap-(--fx-control-gap) rounded-md px-(--fx-control-px-sm) text-base font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
-                  config.mode === "dark" ? "bg-card text-foreground shadow-l1" : "text-muted-foreground hover:text-foreground"
+                  "flex h-full flex-1 items-center justify-center gap-(--fx-control-gap-tight) rounded-md px-(--fx-control-px-xs) text-sm font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                  config.mode === "dark" ? "bg-card text-foreground shadow-l1" : "text-muted-foreground hover:text-foreground dark:text-foreground/70 dark:hover:text-foreground"
                 )}>
                 
-                <MoonIcon className="size-4" />
+                <MoonIcon className="size-3.5" />
                 {lang === "en" ? "Dark" : "深色"}
               </button>
             </div>
@@ -4007,7 +4338,7 @@ function ThemeCustomizerPanel({
                 aria-pressed={config.borderRadius === item.id}
                 onClick={() => setConfigValue("borderRadius", item.id)}
                 className={cn(
-                  "flex h-(--fx-control-sm-height) items-center justify-center rounded-lg border px-(--fx-control-px-xs) text-sm font-semibold outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                  "flex h-(--fx-control-sm-height) items-center justify-center rounded-lg border px-(--fx-control-px-xs) text-xs font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
                   config.borderRadius === item.id ? "border-foreground bg-muted text-foreground" : "border-border bg-surface text-muted-foreground hover:border-border-strong hover:text-foreground"
                 )}>
                 
@@ -4042,7 +4373,7 @@ function ThemeCustomizerPanel({
 
 function ThemePanelHeading({ icon, title }: {icon: React.ReactNode;title: string;}) {
   return (
-    <h3 className="flex items-center gap-(--fx-control-gap) text-base font-semibold text-foreground">
+    <h3 className="flex items-center gap-(--fx-control-gap) text-sm font-medium text-foreground">
       <span className="flex size-4 items-center justify-center text-muted-foreground [&_svg]:size-4">{icon}</span>
       {title}
     </h3>);
@@ -4076,8 +4407,8 @@ function ThemeChoiceButton({
         selected ? "border-foreground bg-muted text-foreground" : "border-border bg-surface text-muted-foreground hover:border-border-strong hover:text-foreground"
       )}>
       
-      <span className="text-sm font-semibold">{label}</span>
-      <span className="mt-0.5 text-xs text-muted-foreground">{desc}</span>
+      <span className="text-xs font-bold">{label}</span>
+      <span className="mt-0.5 text-[11px] text-muted-foreground">{desc}</span>
     </button>);
 
 }
@@ -4396,7 +4727,7 @@ function App() {
             </Tag>
           </div>
 
-          <nav className="hidden h-(--fx-topbar-height) items-center justify-center gap-[calc(var(--fx-panel-gap)*3)] text-[length:var(--fx-menu-text)] leading-(--fx-menu-text--line-height) font-semibold lg:flex xl:gap-[calc(var(--fx-panel-gap)*4)]">
+          <nav className="hidden h-(--fx-topbar-height) items-center justify-center gap-[calc(var(--fx-panel-gap)*3)] text-[length:var(--fx-menu-text)] leading-(--fx-menu-text--line-height) font-medium lg:flex xl:gap-[calc(var(--fx-panel-gap)*4)]">
             {topNav.map((item) => {
               const childItems = "items" in item ? item.items : undefined;
               const isActive =
@@ -4633,6 +4964,7 @@ function PageActions({
             <CopyIcon data-icon="inline-start" />
             {uiText[lang].copyPage}
           </Button>
+          <ButtonGroupSeparator className="bg-white" />
           <DropdownMenuTrigger
             render={
             <Button
@@ -5276,46 +5608,24 @@ function GettingStartedPage({
             <div className="flex flex-col gap-3">
               <div className="flex items-start justify-between gap-4">
                 <SectionLead title="PageLead" description="用于文档页顶部，固定承载面包屑、标题、说明和右侧页面动作。" />
-                <Collapsible className="relative shrink-0">
-                  <CollapsibleTrigger render={<Button variant="secondary" size="sm" className="w-fit shrink-0 [&[aria-expanded='true']_[data-icon='inline-end']]:rotate-180 [&_[data-icon='inline-end']]:transition-transform" />}>
-                    查看规则
-                    <ChevronDownIcon data-icon="inline-end" />
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="absolute top-full right-0 z-20 mt-2 w-[min(44rem,calc(100vw-3rem))]">
-                    <div className="rounded-2xl border border-border bg-card p-4">
-                      <div className="grid gap-3 md:grid-cols-2">
-                        <div className="rounded-xl border border-border-subtle bg-background p-4">
-                          <div className="mb-3 flex items-center justify-between gap-3">
-                            <p className="text-sm font-semibold text-foreground">取值逻辑</p>
-                            <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">视觉基线</span>
-                          </div>
-                          <div className="flex flex-col gap-2.5 text-sm text-muted-foreground">
-                            {websiteStandardsManifest.pageLead.visualBaseline.map((item) =>
-                            <div key={item.title} className="flex flex-col gap-0.5">
-                                <p className="font-medium text-foreground">{item.title}</p>
-                                <p>{item.desc}</p>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        <div className="rounded-xl border border-border-subtle bg-background p-4">
-                          <div className="mb-3 flex items-center justify-between gap-3">
-                            <p className="text-sm font-semibold text-foreground">内容规则</p>
-                            <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">文案边界</span>
-                          </div>
-                          <div className="flex flex-col gap-2.5 text-sm text-muted-foreground">
-                            {websiteStandardsManifest.pageLead.contentRules.map((item) =>
-                            <div key={item.title} className="flex flex-col gap-0.5">
-                                <p className="font-medium text-foreground">{item.title}</p>
-                                <p>{item.desc}</p>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CollapsibleContent>
-                </Collapsible>
+                <WebsiteRulePopover>
+                    {websiteStandardsManifest.pageLead.rulePanel.sections.includes("values") ? (
+                      <WebsiteRulePanel
+                        title="视觉取值"
+                        badge="PageLead 插槽"
+                        sources={websiteStandardsManifest.pageLead.rulePanel.sections.includes("sources") ? websiteStandardsManifest.pageLead.rulePanel.sources : []}
+                      >
+                        <WebsiteRuleValueList
+                          items={websiteStandardsManifest.pageLead.visualBaseline.map((item) => ({
+                            title: item.title,
+                            meta: item.slot,
+                            description: pageLeadSlotGuideMap[item.slot],
+                            value: getPageLeadSlotValue(item.slot)
+                          }))}
+                        />
+                      </WebsiteRulePanel>
+                    ) : null}
+                </WebsiteRulePopover>
               </div>
               <div className="flex flex-col gap-5 rounded-lg border border-border bg-card p-5">
                 <FxPageLead
@@ -5323,7 +5633,16 @@ function GettingStartedPage({
                   title="页面标题区"
                   titleMeta="PageLead"
                   lead="这里展示页面标题区的真实组件形态。标题下只保留一句说明，不再额外加线。"
-                  actions={<PageActionsShell navActions={<PageStepActions previous={null} next={null} lang={lang} />}><CopyPageAction lang={lang} /></PageActionsShell>} />
+                  actions={
+                    <PageActions
+                      doc={websiteStandardsDoc}
+                      demo
+                      lang={lang}
+                      navActions={<PageStepActions demo previous={null} next={null} lang={lang} />}
+                      viewMode="page"
+                      onViewModeChange={() => {}}
+                    />
+                  } />
               </div>
             </div>
 
@@ -5333,39 +5652,99 @@ function GettingStartedPage({
                   title={lang === "en" ? "Component Playground" : "组件调试台"}
                   description={lang === "en" ? "Website standards display the shared playground truth source. Component pages read the same source and render real components." : "网站规范这里只展示统一调试台真相源；组件页读取同一份数据，再渲染对应真实组件。"}
                 />
-                <Collapsible className="relative shrink-0">
-                  <CollapsibleTrigger render={<Button variant="secondary" size="sm" className="w-fit shrink-0 [&[aria-expanded='true']_[data-icon='inline-end']]:rotate-180 [&_[data-icon='inline-end']]:transition-transform" />}>
-                    查看规则
-                    <ChevronDownIcon data-icon="inline-end" />
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="absolute top-full right-0 z-20 mt-2 w-[min(26rem,calc(100vw-3rem))]">
-                    <div className="rounded-2xl border border-border bg-card p-4 shadow-l1">
-                      <div className="flex flex-col gap-3 text-sm text-muted-foreground">
-                        {websiteStandardsManifest.playgroundRules.map((item) => (
-                          <div key={item.title} className="flex flex-col gap-1">
-                            <div className="font-medium text-foreground">{item.title}</div>
-                            <div>{item.desc}</div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </CollapsibleContent>
-                </Collapsible>
+                <WebsiteRulePopover>
+                  {websiteStandardsManifest.componentPlayground.rulePanel.sections.includes("values") ? (
+                    <WebsiteRulePanel
+                      title="视觉取值"
+                      badge="ComponentPlayground"
+                      sources={websiteStandardsManifest.componentPlayground.rulePanel.sections.includes("sources") ? websiteStandardsManifest.componentPlayground.rulePanel.sources : []}
+                    >
+                      <WebsiteRuleValueList
+                        items={websiteStandardsManifest.componentPlayground.rules.map((item) => ({
+                          title: item.title,
+                          meta: item.value,
+                          description: item.logic,
+                          value: "从 docs/data/website-standards.manifest.json 读取；真实调试内容从 docs/data/component-playgrounds.manifest.json 渲染。"
+                        }))}
+                      />
+                    </WebsiteRulePanel>
+                  ) : null}
+                </WebsiteRulePopover>
               </div>
               <WebsiteStandardsPlayground lang={lang} />
             </div>
 
             <div className="flex flex-col gap-3">
-              <SectionLead title="SectionLead" description="用于内容区小标题；标题和说明固定 4px 间距。" />
+              <div className="flex items-start justify-between gap-4">
+                <SectionLead title="SectionLead" description="用于内容区小标题；标题和说明固定 4px 间距。" />
+                <WebsiteRulePopover>
+                    {websiteStandardsManifest.sectionLead.rulePanel.sections.includes("values") ? (
+                      <WebsiteRulePanel
+                        title="视觉取值"
+                        badge="SectionLead 插槽"
+                        sources={websiteStandardsManifest.sectionLead.rulePanel.sections.includes("sources") ? websiteStandardsManifest.sectionLead.rulePanel.sources : []}
+                      >
+                        <WebsiteRuleValueList
+                          items={websiteStandardsManifest.sectionLead.visualBaseline.map((item) => ({
+                            title: item.title,
+                            meta: item.slot,
+                            description: sectionLeadSlotGuideMap[item.slot],
+                            value: getSectionLeadSlotValue(item.slot)
+                          }))}
+                        />
+                        {websiteStandardsManifest.sectionLead.rulePanel.sections.includes("usage") ? (
+                          <div className="mt-4 grid gap-2 text-sm text-muted-foreground">
+                            {websiteStandardsManifest.sectionLead.usageBullets.map((item) => (
+                              <p key={item}>{item}</p>
+                            ))}
+                          </div>
+                        ) : null}
+                      </WebsiteRulePanel>
+                    ) : null}
+                </WebsiteRulePopover>
+              </div>
               <div className="rounded-lg border border-border bg-card p-5">
-                <div className="flex flex-col gap-4">
-                  <SectionLead title="小标题" description="说明固定 14px，内容紧跟说明下方。" />
-                  <div className="space-y-1 text-sm text-muted-foreground">
-                    {websiteStandardsManifest.sectionLead.usageBullets.map((item) =>
-                    <p key={item}>{item}</p>
-                    )}
-                  </div>
-                </div>
+                <SectionLead title="小标题" description="说明固定 14px，内容紧跟说明下方。" />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <div className="flex items-start justify-between gap-4">
+                <SectionLead title="WebsiteRulePopover" description="用于网站规范页的查看规则入口；按钮、箭头、弹窗定位和规则面板统一维护。" />
+                <WebsiteRulePopover>
+                    {websiteStandardsManifest.websiteRulePopover.rulePanel.sections.includes("values") ? (
+                      <WebsiteRulePanel
+                        title="视觉取值"
+                        badge="WebsiteRulePopover 插槽"
+                        sources={websiteStandardsManifest.websiteRulePopover.rulePanel.sections.includes("sources") ? websiteStandardsManifest.websiteRulePopover.rulePanel.sources : []}
+                      >
+                        <WebsiteRuleValueList
+                          items={websiteStandardsManifest.websiteRulePopover.visualBaseline.map((item) => ({
+                            title: item.title,
+                            meta: item.slot,
+                            description: websiteRulePopoverSlotGuideMap[item.slot],
+                            value: getWebsiteRulePopoverSlotValue(item.slot)
+                          }))}
+                        />
+                      </WebsiteRulePanel>
+                    ) : null}
+                </WebsiteRulePopover>
+              </div>
+              <div className="rounded-lg border border-border bg-card p-5">
+                <WebsiteRulePopover>
+                  <WebsiteRulePanel title="视觉取值" badge="示例">
+                    <WebsiteRuleValueList
+                      items={[
+                        {
+                          title: "查看规则",
+                          meta: "trigger",
+                          description: "点击后展开规则弹窗；再次点击收起。",
+                          value: "按钮、箭头和弹窗定位均由 WebsiteRulePopover 统一控制。"
+                        }
+                      ]}
+                    />
+                  </WebsiteRulePanel>
+                </WebsiteRulePopover>
               </div>
             </div>
 
@@ -5386,54 +5765,73 @@ function GettingStartedPage({
         </section>
 
         <section id="website-standards-spacing" className={docsSpacing.sectionStack}>
-          <SectionLead
-            title={lang === "en" ? "Spacing Rhythm" : "间距节奏"}
-            description={lang === "en" ? "Abstract page spacing with simple blocks so the rule is visible without depending on a specific component." : "用矩形块抽象页面边距、头部到小标题、小标题之间的节奏。"} />
-          <div className="rounded-lg border border-border bg-card p-5">
-            <div className="grid gap-4 text-sm text-muted-foreground md:grid-cols-3">
-              <div className="flex flex-col gap-2">
-                <div className="h-16 rounded-md bg-muted" />
-                <div className="h-3 rounded bg-primary/20" />
-                <span>{websiteStandardsManifest.spacingRhythm[0]?.label}</span>
-              </div>
-              <div className="flex flex-col gap-2">
-                <div className="h-8 rounded-md bg-muted" />
-                <div className="h-10 rounded-md border border-dashed border-primary bg-primary/5" />
-                <div className="h-8 rounded-md bg-muted" />
-                <span>{websiteStandardsManifest.spacingRhythm[1]?.label}</span>
-              </div>
-              <div className="flex flex-col gap-2">
-                <div className="h-8 rounded-md bg-muted" />
-                <div className="h-6 rounded-md border border-dashed border-border bg-background" />
-                <div className="h-8 rounded-md bg-muted" />
-                <span>{websiteStandardsManifest.spacingRhythm[2]?.label}</span>
-              </div>
-            </div>
+          <div className="flex items-start justify-between gap-4">
+            <SectionLead
+              title={lang === "en" ? "Spacing Rhythm" : "间距节奏"}
+              description={lang === "en" ? "Use a page-section diagram to show page padding, page lead to first section, and section-to-section rhythm." : "用页面截面示意页面边距、标题组到首个小标题、小标题之间的节奏。"} />
+            <WebsiteRulePopover>
+              {websiteStandardsManifest.spacingRhythm.rulePanel.sections.includes("values") ? (
+                <WebsiteRulePanel
+                  title="视觉取值"
+                  badge="WebsiteSpacingRhythm"
+                  sources={websiteStandardsManifest.spacingRhythm.rulePanel.sections.includes("sources") ? websiteStandardsManifest.spacingRhythm.rulePanel.sources : []}
+                >
+                  <WebsiteRuleValueList
+                    items={[
+                      ...websiteStandardsManifest.spacingRhythm.items.map((item) => ({
+                        title: item.label,
+                        meta: item.value,
+                        description: item.logic,
+                        value: "从 docs/data/website-standards.manifest.json 读取；页面示意只渲染组件。"
+                      })),
+                      ...websiteStandardsManifest.spacingRhythm.visualBaseline.map((item) => ({
+                        title: item.title,
+                        meta: item.slot,
+                        description: websiteSpacingRhythmSlotGuideMap[item.slot],
+                        value: getWebsiteSpacingRhythmSlotValue(item.slot)
+                      }))
+                    ]}
+                  />
+                </WebsiteRulePanel>
+              ) : null}
+            </WebsiteRulePopover>
           </div>
+          <WebsiteSpacingRhythm items={websiteStandardsManifest.spacingRhythm.items} />
         </section>
 
         <section id="website-standards-boundaries" className={docsSpacing.sectionStack}>
-          <SectionLead
-            title={lang === "en" ? "Boundaries" : "使用边界"}
-            description={lang === "en" ? "Website standards govern this documentation site. Business pages should use existing business compositions first." : "网站规范只治理文档站页面；业务页面优先使用已有业务组合组件。"} />
-          <Card className="border-border">
-            <CardContent className="flex flex-col gap-5 p-5 text-sm text-muted-foreground">
-              <div className="flex flex-col gap-3">
-                <p className="font-semibold text-foreground">{lang === "en" ? "Card Surface" : "卡片表面"}</p>
-                {websiteStandardsManifest.cardSurfaceRules.map((rule) =>
-                <div key={rule.title} className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span><span className="font-medium text-foreground">{rule.title}</span>：{rule.desc}</span></div>
-                )}
-              </div>
-              <div className="border-t border-dashed border-border pt-5">
-                <div className="flex flex-col gap-3">
-                  <p className="font-semibold text-foreground">{lang === "en" ? "Linkage" : "联动规则"}</p>
-                  {websiteStandardsManifest.linkageRules.map((rule) =>
-                  <div key={rule} className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{rule}</span></div>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="flex items-start justify-between gap-4">
+            <SectionLead
+              title={lang === "en" ? "Website Card Container" : "网站卡片容器"}
+              description={lang === "en" ? "The docs site card surface for standalone information blocks, previews, internal areas, and elevated containers." : "文档站承载独立信息块、示例预览、内部区域和浮层容器的卡片表面。"} />
+            <WebsiteRulePopover>
+              {websiteStandardsManifest.websiteCardContainer.rulePanel.sections.includes("values") ? (
+                <WebsiteRulePanel
+                  title="视觉取值"
+                  badge="WebsiteCardContainer"
+                  sources={websiteStandardsManifest.websiteCardContainer.rulePanel.sections.includes("sources") ? websiteStandardsManifest.websiteCardContainer.rulePanel.sources : []}
+                >
+                  <WebsiteRuleValueList
+                    items={[
+                      ...websiteStandardsManifest.websiteCardContainer.rules.map((item) => ({
+                        title: item.title,
+                        meta: item.value,
+                        description: item.logic,
+                        value: "从 docs/data/website-standards.manifest.json 读取；页面预览只渲染组件。"
+                      })),
+                      ...websiteStandardsManifest.websiteCardContainer.visualBaseline.map((item) => ({
+                        title: item.title,
+                        meta: item.slot,
+                        description: websiteCardContainerSlotGuideMap[item.slot],
+                        value: getWebsiteCardContainerSlotValue(item.slot)
+                      }))
+                    ]}
+                  />
+                </WebsiteRulePanel>
+              ) : null}
+            </WebsiteRulePopover>
+          </div>
+          <WebsiteCardContainer label={lang === "en" ? "Internal area" : "内部区域"} />
         </section>
       </div>);
 
@@ -6429,6 +6827,15 @@ type PgVariant = "default" | "secondary" | "outline" | "ghost" | "plain" | "dest
 type PgTone = "default" | "primary" | "info" | "danger";
 type PgSize = "xs" | "sm" | "md" | "lg";
 type PgIcon = "none" | "start" | "end" | "only";
+type PgButtonScenario = "single" | "action-row";
+type PgActionRowCount = "2" | "3" | "4";
+const PG_BUTTON_SCENARIOS: {value: PgButtonScenario;label: string;labelEn: string;intent: string;intentEn: string;constraint: string;constraintEn: string;}[] = [
+{ value: "single", label: "单按钮", labelEn: "Single", intent: "用于一个独立 Button 的类型、尺寸、图标、禁用和加载状态调试。", intentEn: "Use to tune one Button's variant, size, icon, disabled, and loading states.", constraint: "只表达 Button 自身 API；按钮之间的页面布局另选“按钮排列”。", constraintEn: "Only represents Button's own API; choose Action layout for page-level button layout." },
+{ value: "action-row", label: "按钮排列", labelEn: "ActionRow", intent: "用于页面头部、列表工具栏、操作区的按钮排布组件：一个主操作带领，其余操作作为次级补充。", intentEn: "Use the ActionRow component for page headers, list toolbars, and action areas where one primary action leads and the rest are secondary.", constraint: "ActionRow 只管理独立按钮的排列关系，不改变 Button 视觉；只有需要视觉连续贴合成一个控件时，才使用 ButtonGroup。", constraintEn: "ActionRow only manages independent button layout and does not change Button visuals. Use ButtonGroup only when actions should visually attach as one continuous control." }];
+const PG_ACTION_ROW_COUNTS: {value: PgActionRowCount;label: string;labelEn: string;intent: string;intentEn: string;constraint: string;constraintEn: string;}[] = [
+{ value: "2", label: "2个", labelEn: "2 actions", intent: "用于最轻量的操作区：一个主操作加一个次级操作。", intentEn: "Use for the lightest action area: one primary action plus one secondary action.", constraint: "不需要更多入口；保持两个按钮直接可见。", constraintEn: "No more menu is needed; keep both actions visible." },
+{ value: "3", label: "3个", labelEn: "3 actions", intent: "用于常规操作区：一个主操作加两个次级操作。", intentEn: "Use for a common action area: one primary action plus two secondary actions.", constraint: "三个操作仍可直接平铺；不要过早收进更多。", constraintEn: "Three actions can remain visible; do not collapse them too early." },
+{ value: "4", label: "4个", labelEn: "4 actions", intent: "用于动作开始变多的操作区：主操作和两个次级操作可见，低频动作收进更多。", intentEn: "Use when actions start to grow: keep the primary and two secondary actions visible, then collapse low-frequency actions into more.", constraint: "第四个入口用 outline 图标按钮承载更多操作，不再继续横向堆按钮。", constraintEn: "Use an outline icon button as the fourth more entry instead of continuing to add visible buttons." }];
 const PG_VARIANTS: {value: PgVariant;label: string;labelEn: string;intent: string;intentEn: string;constraint: string;constraintEn: string;}[] = [
 { value: "default", label: "实心", labelEn: "Solid", intent: "承载页面或区块内最主要的推进动作，视觉权重最高。", intentEn: "Use for the single most important forward action in a page or region.", constraint: "同一操作区只放一个 default，危险操作必须改用 destructive。", constraintEn: "Keep one default button per action area; destructive actions must use destructive." },
 { value: "secondary", label: "次级", labelEn: "Secondary", intent: "承载与主操作并列但优先级更低的辅助动作。", intentEn: "Use for supporting actions that sit beside the primary action.", constraint: "不要和 outline 在同一组里表达同一级别，避免层级重复。", constraintEn: "Avoid using secondary and outline for the same hierarchy in one group." },
@@ -6445,7 +6852,7 @@ const PG_TONES: {value: PgTone;label: string;labelEn: string;title: string;title
 
 const PG_SIZES: {value: PgSize;label: string;intent: string;intentEn: string;constraint: string;constraintEn: string;}[] = [
 { value: "xs", label: "超小24", intent: "用于极紧凑区域里的低频操作。", intentEn: "Use for low-frequency actions in very compact areas.", constraint: "只传 size=\"xs\"；不要额外改内部 padding 或字号。", constraintEn: "Pass size=\"xs\" only; do not override inner padding or font size." },
-{ value: "sm", label: "小28", intent: "用于表格行、筛选栏等紧凑操作。", intentEn: "Use for compact actions in table rows or filter bars.", constraint: "这是按钮源码的默认视觉档；不需要时可省略 size。", constraintEn: "This is the source default visual size; omit size when no override is needed." },
+{ value: "sm", label: "默认28", intent: "用于表格行、筛选栏等紧凑操作，也是按钮源码默认尺寸。", intentEn: "Use for compact actions in table rows or filter bars; this is Button's source default size.", constraint: "这是按钮源码的默认视觉档；不需要时可省略 size。", constraintEn: "This is the source default visual size; omit size when no override is needed." },
 { value: "md", label: "中32", intent: "用于常规表单、卡片和工具栏操作。", intentEn: "Use for normal forms, cards, and toolbar actions.", constraint: "只传 size=\"md\"；同一操作区尺寸保持一致。", constraintEn: "Pass size=\"md\" only; keep sizes consistent in one action area." },
 { value: "lg", label: "大36", intent: "用于页面头部或需要更大点击目标的主操作。", intentEn: "Use for page headers or primary actions that need larger targets.", constraint: "避免在密集表格、窄列或行内文本里使用。", constraintEn: "Avoid in dense tables, narrow columns, or inline text." }];
 
@@ -6499,26 +6906,97 @@ function genButtonCode(variant: PgVariant, tone: PgTone, size: PgSize, icon: PgI
   return `${open}${inner}</Button>`;
 }
 
+function renderButtonActionRow(lang: Lang, count: PgActionRowCount) {
+  const secondary = [
+  <Button key="smart-form" variant="outline">{lang === "en" ? "Smart form" : "智能表单"}</Button>];
+
+  if (count === "3" || count === "4") {
+    secondary.push(<Button key="import" variant="outline">{lang === "en" ? "Import" : "导入"}</Button>);
+  }
+
+  return (
+    <FxActionRow
+      primary={
+      <Button>
+          <PlusIcon data-icon="inline-start" />
+          {lang === "en" ? "Create" : "新建"}
+        </Button>
+      }
+      secondary={secondary}
+      more={count === "4" ?
+      <Button variant="outline" size="icon-sm" aria-label={lang === "en" ? "More actions" : "更多操作"}>
+          <MoreHorizontalIcon />
+        </Button>
+      : undefined} />);
+}
+
+function genButtonActionRowCode(lang: Lang, count: PgActionRowCount) {
+  const secondaryLines = lang === "en" ?
+  count === "2" ? `    <Button key="smart-form" variant="outline">Smart form</Button>,` : `    <Button key="smart-form" variant="outline">Smart form</Button>,
+    <Button key="import" variant="outline">Import</Button>,` :
+  count === "2" ? `    <Button key="smart-form" variant="outline">智能表单</Button>,` : `    <Button key="smart-form" variant="outline">智能表单</Button>,
+    <Button key="import" variant="outline">导入</Button>,`;
+  const moreBlock = lang === "en" ? `
+  more={
+    <Button variant="outline" size="icon-sm" aria-label="More actions">
+      <MoreHorizontalIcon />
+    </Button>
+  }` : `
+  more={
+    <Button variant="outline" size="icon-sm" aria-label="更多操作">
+      <MoreHorizontalIcon />
+    </Button>
+  }`;
+
+  return lang === "en" ? `import { ActionRow } from "@/components/fx/page-actions"
+
+<ActionRow
+  primary={
+    <Button>
+      <PlusIcon data-icon="inline-start" />
+      Create
+    </Button>
+  }
+  secondary={[
+${secondaryLines}
+  ]}${count === "4" ? moreBlock : ""}
+/>` : `import { ActionRow } from "@/components/fx/page-actions"
+
+<ActionRow
+  primary={
+    <Button>
+      <PlusIcon data-icon="inline-start" />
+      新建
+    </Button>
+  }
+  secondary={[
+${secondaryLines}
+  ]}${count === "4" ? moreBlock : ""}
+/>`;
+}
+
 // Button 的 playground 配置（把原 Button 专用逻辑收成 config，行为不变）
 const buttonPlaygroundConfig = {
   props: [
-  { key: "text", zh: "内容", en: "Text", propName: "children", type: "text" as const, bilingual: true, disabledWhen: (v: Record<string, string>) => v.icon === "only" },
-  { key: "variant", zh: "类型", en: "Variant", propName: "variant", type: "segment" as const, options: PG_VARIANTS, hasAll: true },
-  { key: "tone", zh: "语义色", en: "Tone", propName: "tone", type: "segment" as const, options: PG_TONES, hasAll: true, disabledWhen: (v: Record<string, string>) => v.variant !== "plain" },
-  { key: "size", zh: "尺寸", en: "Size", propName: "size", type: "segment" as const, options: PG_SIZES, hasAll: true },
-  { key: "icon", zh: "图标位置", en: "Icon", propName: "iconLayout", type: "segment" as const, options: PG_ICONS, hasAll: true },
-  { key: "loading", zh: "加载", en: "Loading", propName: "loading", type: "segment" as const, options: [{ value: "true", label: "是", intent: "用于提交中、保存中等需要阻止重复点击的状态。", intentEn: "Use for submit/save pending states that should prevent repeated clicks.", constraint: "源码没有 loading prop；用 disabled + Spinner 组合。", constraintEn: "Button has no loading prop; compose disabled + Spinner." }, { value: "false", label: "否", intent: "用于普通可交互按钮。", intentEn: "Use for normal interactive buttons.", constraint: "不渲染 Spinner，也不要传不存在的 loading 属性。", constraintEn: "Do not render Spinner or pass a non-existent loading prop." }] },
-  { key: "disabled", zh: "禁用", en: "Disabled", propName: "disabled", type: "segment" as const, options: [{ value: "true", label: "是", intent: "用于当前不可操作或条件未满足的按钮。", intentEn: "Use when the action is unavailable or prerequisites are unmet.", constraint: "直接使用 disabled；不要只靠样式伪装禁用。", constraintEn: "Use disabled directly; do not fake disabled with styling only." }, { value: "false", label: "否", intent: "用于当前可执行的操作。", intentEn: "Use when the action is currently available.", constraint: "保持真实可聚焦和可点击状态。", constraintEn: "Keep the button genuinely focusable and clickable." }], hasAll: true, disabledWhen: (v: Record<string, string>) => v.loading === "true" }],
+  { key: "scenario", zh: "模式", en: "Mode", propName: "usageMode", type: "segment" as const, options: PG_BUTTON_SCENARIOS },
+  { key: "actionCount", zh: "数量", en: "Count", propName: "actionCount", type: "segment" as const, options: PG_ACTION_ROW_COUNTS, hiddenWhen: (v: Record<string, string>) => v.scenario !== "action-row" },
+  { key: "text", zh: "内容", en: "Text", propName: "children", type: "text" as const, bilingual: true, disabledWhen: (v: Record<string, string>) => v.icon === "only", hiddenWhen: (v: Record<string, string>) => v.scenario === "action-row" },
+  { key: "variant", zh: "类型", en: "Variant", propName: "variant", type: "segment" as const, options: PG_VARIANTS, hasAll: true, hiddenWhen: (v: Record<string, string>) => v.scenario === "action-row" },
+  { key: "tone", zh: "语义色", en: "Tone", propName: "tone", type: "segment" as const, options: PG_TONES, hasAll: true, disabledWhen: (v: Record<string, string>) => v.variant !== "plain", hiddenWhen: (v: Record<string, string>) => v.scenario === "action-row" },
+  { key: "size", zh: "尺寸", en: "Size", propName: "size", type: "segment" as const, options: PG_SIZES, hasAll: true, hiddenWhen: (v: Record<string, string>) => v.scenario === "action-row" },
+  { key: "icon", zh: "图标位置", en: "Icon", propName: "iconLayout", type: "segment" as const, options: PG_ICONS, hasAll: true, hiddenWhen: (v: Record<string, string>) => v.scenario === "action-row" },
+  { key: "loading", zh: "加载", en: "Loading", propName: "loading", type: "segment" as const, options: [{ value: "true", label: "是", intent: "用于提交中、保存中等需要阻止重复点击的状态。", intentEn: "Use for submit/save pending states that should prevent repeated clicks.", constraint: "源码没有 loading prop；用 disabled + Spinner 组合。", constraintEn: "Button has no loading prop; compose disabled + Spinner." }, { value: "false", label: "否", intent: "用于普通可交互按钮。", intentEn: "Use for normal interactive buttons.", constraint: "不渲染 Spinner，也不要传不存在的 loading 属性。", constraintEn: "Do not render Spinner or pass a non-existent loading prop." }], hiddenWhen: (v: Record<string, string>) => v.scenario === "action-row" },
+  { key: "disabled", zh: "禁用", en: "Disabled", propName: "disabled", type: "segment" as const, options: [{ value: "true", label: "是", intent: "用于当前不可操作或条件未满足的按钮。", intentEn: "Use when the action is unavailable or prerequisites are unmet.", constraint: "直接使用 disabled；不要只靠样式伪装禁用。", constraintEn: "Use disabled directly; do not fake disabled with styling only." }, { value: "false", label: "否", intent: "用于当前可执行的操作。", intentEn: "Use when the action is currently available.", constraint: "保持真实可聚焦和可点击状态。", constraintEn: "Keep the button genuinely focusable and clickable." }], hasAll: true, disabledWhen: (v: Record<string, string>) => v.loading === "true", hiddenWhen: (v: Record<string, string>) => v.scenario === "action-row" }],
 
-  initial: { variant: "default", tone: "default", size: "md", icon: "none", disabled: "false", loading: "false", text: PG_SCENARIOS[0].s.text, textEn: PG_SCENARIOS[0].s.textEn },
-  guidanceKey: "variant",
+  initial: { scenario: "single", actionCount: "4", variant: "default", tone: "default", size: "sm", icon: "none", disabled: "false", loading: "false", text: PG_SCENARIOS[0].s.text, textEn: PG_SCENARIOS[0].s.textEn },
+  guidanceKey: "scenario",
   onValueChange: (next: Record<string, string>, key: string, value: string) => {
     if (key === "loading" && value === "true") return { ...next, disabled: "true" };
     if (key === "variant" && value !== "plain") return { ...next, tone: "default" };
     return next;
   },
-  renderOne: (c: Record<string, string>, lang: Lang) => pgButton(c.variant as PgVariant, c.tone as PgTone, c.size as PgSize, c.icon as PgIcon, c.disabled === "true", c.loading === "true", (lang === "en" ? c.textEn : c.text) || (lang === "en" ? "Button" : "按钮")),
-  genCode: (c: Record<string, string>, lang: Lang) => genButtonCode(c.variant as PgVariant, c.tone as PgTone, c.size as PgSize, c.icon as PgIcon, c.disabled === "true", c.loading === "true", (lang === "en" ? c.textEn : c.text) || (lang === "en" ? "Button" : "按钮"))
+  renderOne: (c: Record<string, string>, lang: Lang) => c.scenario === "action-row" ? renderButtonActionRow(lang, c.actionCount as PgActionRowCount) : pgButton(c.variant as PgVariant, c.tone as PgTone, c.size as PgSize, c.icon as PgIcon, c.disabled === "true", c.loading === "true", (lang === "en" ? c.textEn : c.text) || (lang === "en" ? "Button" : "按钮")),
+  genCode: (c: Record<string, string>, lang: Lang) => c.scenario === "action-row" ? genButtonActionRowCode(lang, c.actionCount as PgActionRowCount) : genButtonCode(c.variant as PgVariant, c.tone as PgTone, c.size as PgSize, c.icon as PgIcon, c.disabled === "true", c.loading === "true", (lang === "en" ? c.textEn : c.text) || (lang === "en" ? "Button" : "按钮"))
 };
 
 function ButtonPlayground({ lang }: {lang: Lang;}) {
@@ -6530,28 +7008,10 @@ function WebsiteStandardsPlayground({ lang }: {lang: Lang;}) {
 
   return (
     <div className="grid gap-3">
-      <div className="rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">
-        <div className="font-medium text-foreground">{playground.componentName}</div>
-        <div className="mt-1">路由：{playground.route}</div>
-        <div className="mt-1">真相源：{playground.truthSource}</div>
-        <div className="mt-1">组件源码：{playground.source}</div>
-      </div>
       {playground.componentKey === "button" ? <ButtonPlayground lang={lang} /> : null}
     </div>);
 
 }
-
-const buttonArrangementCode = `<div className="flex flex-wrap items-center gap-2">
-  <Button>
-    <PlusIcon data-icon="inline-start" />
-    新建
-  </Button>
-  <Button variant="outline">智能表单</Button>
-  <Button variant="outline">导入</Button>
-  <Button variant="ghost" size="icon-sm" aria-label="更多操作">
-    <MoreVerticalIcon />
-  </Button>
-</div>`;
 
 type ButtonGroupPattern = "actions" | "split" | "toolbar-icons";
 type ButtonGroupOrientation = "horizontal" | "vertical";
@@ -6592,13 +7052,13 @@ lang: Lang)
         <Button size={iconSize} variant={variant} aria-label="列表视图">
           <ListIcon />
         </Button>
-        <Button size={iconSize} variant="outline" aria-label="看板视图">
+        <Button size={iconSize} variant={variant} aria-label="看板视图">
           <LayoutGridIcon />
         </Button>
-        <Button size={iconSize} variant="outline" aria-label="地图视图">
+        <Button size={iconSize} variant={variant} aria-label="地图视图">
           <MapPinIcon />
         </Button>
-        <Button size={iconSize} variant="outline" aria-label="分栏视图">
+        <Button size={iconSize} variant={variant} aria-label="分栏视图">
           <LayoutColumnsIcon />
         </Button>
       </ButtonGroup>);
@@ -6651,7 +7111,13 @@ const buttonGroupPlaygroundConfig = {
   props: componentPlaygroundPropsFromManifest(componentPlaygroundsManifest.components.buttonGroup),
   initial: componentPlaygroundsManifest.components.buttonGroup.initial,
   guidanceKey: componentPlaygroundsManifest.components.buttonGroup.guidanceKey,
-  onValueChange: (next: Record<string, string>, key: string, value: string) => key === "pattern" && value !== "actions" ? { ...next, orientation: "horizontal" } : next,
+  onValueChange: (next: Record<string, string>, key: string, value: string) => {
+    if (key === "pattern" && value !== "actions") {
+      const variant = value === "toolbar-icons" && next.variant === "default" ? "outline" : next.variant
+      return { ...next, orientation: "horizontal", variant }
+    }
+    return next
+  },
   renderOne: (c: Record<string, string>, lang: Lang) => renderButtonGroupPlayground(c.pattern as ButtonGroupPattern, c.orientation as ButtonGroupOrientation, c.size as ButtonGroupButtonSize, c.variant as ButtonGroupButtonVariant, lang),
   genCode: (c: Record<string, string>, lang: Lang) => genButtonGroupPlaygroundCode(c.pattern as ButtonGroupPattern, c.orientation as ButtonGroupOrientation, c.size as ButtonGroupButtonSize, c.variant as ButtonGroupButtonVariant, lang)
 };
@@ -6671,7 +7137,7 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
       <section id="playground" className={docsSpacing.sectionStack}>
         <SectionLead
           title={lang === "en" ? "Playground" : "调试台"}
-          description={lang === "en" ? "Pick a scenario or tweak props live, then copy the generated code." : "选场景或实时调属性，预览随之变化，写法可一键复制。"}
+          description={lang === "en" ? "Pick a usage mode or tweak props live, then copy the generated code." : "选模式或实时调属性，预览随之变化，写法可一键复制。"}
         />
         <ButtonPlayground lang={lang} />
       </section>
@@ -6688,36 +7154,6 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         <DocSurfaceCard elevated>
           <CardContent className="px-5">
             <CopyCodeBlock code={buttonImportCode} label="Import" lang={lang} />
-          </CardContent>
-        </DocSurfaceCard>
-      </section>
-
-      <section id="arrangement" className={docsSpacing.sectionStack}>
-        <SectionLead
-          title={lang === "en" ? "Arrangement" : "排列组合"}
-          description={
-          lang === "en" ?
-          "Independent actions with spacing belong to Button arrangement, not ButtonGroup." :
-          "按钮之间有间距、存在主次层级时，归到按钮排列组合，不归到按钮组。"}
-        />
-        <DocSurfaceCard elevated>
-          <CardContent className="flex flex-col gap-5 px-5">
-            <div className="flex flex-wrap items-center gap-2">
-              <Button>
-                <PlusIcon data-icon="inline-start" />
-                {lang === "en" ? "Create" : "新建"}
-              </Button>
-              <Button variant="outline">{lang === "en" ? "Smart form" : "智能表单"}</Button>
-              <Button variant="outline">{lang === "en" ? "Import" : "导入"}</Button>
-              <Button variant="ghost" size="icon-sm" aria-label={lang === "en" ? "More actions" : "更多操作"}>
-                <MoreVerticalIcon />
-              </Button>
-            </div>
-            <div className="grid gap-3 text-sm text-muted-foreground md:grid-cols-2">
-              <p><span className="font-medium text-foreground">{lang === "en" ? "Intent" : "使用意图"}：</span>{lang === "en" ? "Use for page headers, list toolbars, and action areas where one primary action leads and the rest are secondary." : "用于页面头部、列表工具栏、操作区：一个主操作带领，其余操作作为次级补充。"}</p>
-              <p><span className="font-medium text-foreground">{lang === "en" ? "Constraint" : "约束"}：</span>{lang === "en" ? "Keep buttons independent with normal spacing. Use ButtonGroup only when actions should visually attach as one continuous control." : "按钮保持独立间距；只有需要视觉连续贴合成一个控件时，才使用 ButtonGroup。"}</p>
-            </div>
-            <CopyCodeBlock code={buttonArrangementCode} label={lang === "en" ? "Recommended code" : "推荐写法"} lang={lang} />
           </CardContent>
         </DocSurfaceCard>
       </section>
@@ -8321,6 +8757,22 @@ const iconScenarioFilters = [
 type IconPlaygroundMode = "line" | "filled" | "button" | "chip";
 type IconPlaygroundColor = "foreground" | "muted" | "primary" | "success" | "warning" | "destructive" | "info";
 
+const iconPlaygroundSizeClass: Record<string, string> = {
+  "12": "size-3",
+  "16": "size-4",
+  "20": "size-5",
+  "24": "size-6",
+  "32": "size-8"
+};
+
+const iconPlaygroundCircleSizeClass: Record<string, string> = {
+  "12": "size-7",
+  "16": "size-8",
+  "20": "size-9",
+  "24": "size-10",
+  "32": "size-12"
+};
+
 const iconPlaygroundDemoIcon = {
   label: "首页",
   labelEn: "Home",
@@ -8357,10 +8809,12 @@ function renderIconPlayground(c: Record<string, string>, lang: Lang) {
   const mode = c.mode as IconPlaygroundMode;
   const Icon = getIconPlaygroundComponent(icon, mode);
   const LineIcon = icon.line;
-  const size = Number(c.size) || 20;
+  const sizeKey = c.size || "20";
+  const size = Number(sizeKey) || 20;
   const color = getIconPlaygroundColor(c.color);
   const label = lang === "en" ? icon.labelEn : icon.label;
   const style = { width: size, height: size } as React.CSSProperties;
+  const circleSizeClass = iconPlaygroundCircleSizeClass[sizeKey] ?? iconPlaygroundCircleSizeClass["20"];
 
   if (mode === "button") {
     return (
@@ -8372,7 +8826,7 @@ function renderIconPlayground(c: Record<string, string>, lang: Lang) {
 
   if (mode === "chip") {
     return (
-      <span className="flex size-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
+      <span className={`flex ${circleSizeClass} items-center justify-center rounded-full bg-primary text-primary-foreground`}>
         <Icon style={style} />
       </span>);
   }
@@ -8383,21 +8837,23 @@ function renderIconPlayground(c: Record<string, string>, lang: Lang) {
 function genIconPlaygroundCode(c: Record<string, string>, lang: Lang) {
   const icon = iconPlaygroundDemoIcon;
   const mode = c.mode as IconPlaygroundMode;
-  const size = Number(c.size) || 20;
+  const sizeKey = c.size || "20";
   const color = getIconPlaygroundColor(c.color);
   const label = lang === "en" ? icon.labelEn : icon.label;
   const componentName = getIconPlaygroundComponentName(icon, mode);
   const importCode = `import { ${icon.importName} } from "@/lib/icons"`;
+  const iconSizeClass = iconPlaygroundSizeClass[sizeKey] ?? iconPlaygroundSizeClass["20"];
+  const circleSizeClass = iconPlaygroundCircleSizeClass[sizeKey] ?? iconPlaygroundCircleSizeClass["20"];
 
   if (mode === "button") {
     return `${importCode}\n\n<Button>\n  <${icon.lineName} data-icon="inline-start" />\n  ${label}\n</Button>`;
   }
 
   if (mode === "chip") {
-    return `${importCode}\n\n<span className="flex size-16 items-center justify-center rounded-full bg-primary text-primary-foreground">\n  <${componentName} className="size-${size / 4}" />\n</span>`;
+    return `${importCode}\n\n<span className="flex ${circleSizeClass} items-center justify-center rounded-full bg-primary text-primary-foreground">\n  <${componentName} className="${iconSizeClass}" />\n</span>`;
   }
 
-  return `${importCode}\n\n<${componentName} className="size-${size / 4} ${color.className}" />`;
+  return `${importCode}\n\n<${componentName} className="${iconSizeClass} ${color.className}" />`;
 }
 
 const iconPlaygroundConfig = {
@@ -11297,7 +11753,6 @@ function genTagCode(variant: TagVariant, color: TagColor, label: string): string
   return `<Tag${attrs.length ? " " + attrs.join(" ") : ""}>${label}</Tag>`;
 }
 const tagPlaygroundConfig = {
-  scenarios: componentPlaygroundsManifest.components.tag.scenarios,
   props: componentPlaygroundPropsFromManifest(componentPlaygroundsManifest.components.tag),
   initial: componentPlaygroundsManifest.components.tag.initial,
   guidanceKey: componentPlaygroundsManifest.components.tag.guidanceKey,
@@ -12401,8 +12856,8 @@ function AvatarOverview({ lang }: {lang: Lang;}) {
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
         <div className="flex flex-wrap items-center gap-4">
           <Avatar><AvatarImage src="/avatars/01.jpg" alt="陈昊" /><AvatarFallback>陈</AvatarFallback></Avatar>
-          <Avatar shape="square"><AvatarFallback colorful><FolderFilledIcon className="size-4" /></AvatarFallback></Avatar>
-          <Avatar><AvatarFallback colorful><UserFilledIcon className="size-4" /></AvatarFallback></Avatar>
+          <Avatar shape="square"><AvatarFallback colorful><FolderFilledIcon /></AvatarFallback></Avatar>
+          <Avatar><AvatarFallback colorful><UserFilledIcon /></AvatarFallback></Avatar>
           <Avatar><AvatarFallback colorful>{avatarInitials("欧阳娜娜")}</AvatarFallback></Avatar>
           <AvatarGroup>
             {["张三", "王五", "赵六"].map((n) =>
@@ -12410,11 +12865,14 @@ function AvatarOverview({ lang }: {lang: Lang;}) {
             )}
             <AvatarGroupCount>+3</AvatarGroupCount>
           </AvatarGroup>
-          <div className="grid size-8 grid-cols-2 grid-rows-2 gap-[2px] overflow-hidden rounded-lg bg-muted">
-            {[["陈", "01"], ["林", "02"], ["苏", "03"], ["周", "04"]].map(([c, f]) =>
-            <Avatar key={f} className="size-full rounded-none"><AvatarImage src={`/avatars/${f}.jpg`} /><AvatarFallback colorful className="size-full rounded-none text-[8px]">{c}</AvatarFallback></Avatar>
+          <AvatarComposite>
+            {["陈昊", "林舟", "苏婷", "周也"].map((name, index) =>
+            <Avatar key={name}>
+              <AvatarImage src={`/avatars/0${index + 1}.jpg`} alt={name} />
+              <AvatarFallback colorful>{avatarInitials(name)}</AvatarFallback>
+            </Avatar>
             )}
-          </div>
+          </AvatarComposite>
         </div>
       </div>
       <div className="border-t border-dashed border-border" />
@@ -12499,6 +12957,162 @@ function LinkOverview({ lang }: {lang: Lang;}) {
     </DocSurfaceCard>);
 
 }
+
+type AvatarPlaygroundQuantity = "single" | "group" | "chat";
+type AvatarPlaygroundShape = "circle" | "square";
+type AvatarPlaygroundStyle = "image" | "text" | "icon";
+type AvatarPlaygroundColor = "neutral" | "colorful";
+type AvatarPlaygroundSize = "xs" | "sm" | "default" | "lg" | "xl";
+type AvatarPlaygroundStatus = "none" | "online" | "away" | "busy" | "offline";
+type AvatarPlaygroundCount = "2" | "3" | "4";
+
+const avatarPlaygroundMembers = ["陈昊", "林舟", "苏婷", "周也", "王五", "赵六"];
+const avatarGroupVisibleCount = 3;
+
+function renderAvatarStatus(status: AvatarPlaygroundStatus) {
+  return status === "none" ? null : <AvatarBadge status={status} />;
+}
+
+function renderAvatarPlayground(c: Record<string, string>) {
+  const quantity = c.quantity as AvatarPlaygroundQuantity;
+  const shape = c.shape as AvatarPlaygroundShape;
+  const style = c.style as AvatarPlaygroundStyle;
+  const color = c.color as AvatarPlaygroundColor;
+  const size = c.size as AvatarPlaygroundSize;
+  const status = c.status as AvatarPlaygroundStatus;
+  const count = c.count as AvatarPlaygroundCount;
+  const colorful = color === "colorful";
+
+  if (quantity === "chat") {
+    return (
+      <AvatarComposite max={Number(count) as 2 | 3 | 4} size={size}>
+        {avatarPlaygroundMembers.map((name, index) => (
+          <Avatar key={name}>
+            {style === "image" ? <AvatarImage src={`/avatars/0${index + 1}.jpg`} alt={name} /> : null}
+            <AvatarFallback colorful={colorful}>
+              {style === "icon" ? <UserFilledIcon /> : avatarInitials(name)}
+            </AvatarFallback>
+          </Avatar>
+        ))}
+      </AvatarComposite>);
+  }
+
+  if (quantity === "group") {
+    const visibleMembers = avatarPlaygroundMembers.slice(0, avatarGroupVisibleCount);
+    const restMembers = avatarPlaygroundMembers.slice(avatarGroupVisibleCount);
+    return (
+      <TooltipProvider>
+        <AvatarGroup>
+          {visibleMembers.map((name, index) => (
+            <Avatar key={name} size={size}>
+              {style === "image" ? <AvatarImage src={`/avatars/0${index + 1}.jpg`} alt={name} /> : null}
+              <AvatarFallback colorful={colorful}>
+                {style === "icon" ? <UserFilledIcon /> : avatarInitials(name)}
+              </AvatarFallback>
+            </Avatar>
+          ))}
+          {restMembers.length > 0 ? (
+            <Tooltip>
+              <TooltipTrigger render={<AvatarGroupCount tabIndex={0} aria-label={`剩余成员：${restMembers.join("、")}`} className="cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring">+{restMembers.length}</AvatarGroupCount>} />
+              <TooltipContent>{restMembers.join("、")}</TooltipContent>
+            </Tooltip>
+          ) : null}
+        </AvatarGroup>
+      </TooltipProvider>);
+  }
+
+  const content = style === "icon"
+    ? <UserFilledIcon />
+    : avatarInitials("陈昊");
+
+  return (
+    <Avatar size={size} shape={shape}>
+      {style === "image" ? <AvatarImage src="/avatars/01.jpg" alt="陈昊" /> : null}
+      <AvatarFallback colorful={colorful}>{content}</AvatarFallback>
+      {renderAvatarStatus(status)}
+    </Avatar>);
+}
+
+function genAvatarPlaygroundCode(c: Record<string, string>) {
+  const quantity = c.quantity as AvatarPlaygroundQuantity;
+  const shape = c.shape as AvatarPlaygroundShape;
+  const style = c.style as AvatarPlaygroundStyle;
+  const color = c.color as AvatarPlaygroundColor;
+  const size = c.size as AvatarPlaygroundSize;
+  const status = c.status as AvatarPlaygroundStatus;
+  const count = c.count as AvatarPlaygroundCount;
+  const sizeAttr = size === "default" ? "" : ` size="${size}"`;
+  const shapeAttr = shape === "circle" ? "" : ` shape="${shape}"`;
+  const colorAttr = color === "colorful" ? " colorful" : "";
+  const imageLine = style === "image" ? `\n  <AvatarImage src="/avatars/01.jpg" alt="陈昊" />` : "";
+  const fallbackContent = style === "icon" ? "\n    <UserFilledIcon />\n  " : `陈`;
+  const statusLine = status === "none" ? "" : `\n  <AvatarBadge status="${status}" />`;
+
+  if (quantity === "chat") {
+    const imageCompositeLine = style === "image" ? `\n      <AvatarImage src={member.avatar} alt={member.name} />` : "";
+    const compositeFallbackContent = style === "icon" ? "\n        <UserFilledIcon />\n      " : "{avatarInitials(member.name)}";
+    const iconImport = style === "icon" ? `\nimport { UserFilledIcon } from "@/lib/icons"` : "";
+    return `import { Avatar, AvatarComposite, AvatarFallback, AvatarImage, avatarInitials } from "@/components/ui/avatar"${iconImport}
+
+<AvatarComposite max={${count}}${sizeAttr}>
+  {members.map((member) => (
+    <Avatar key={member.name}>${imageCompositeLine}
+      <AvatarFallback${colorAttr}>${compositeFallbackContent}</AvatarFallback>
+    </Avatar>
+  ))}
+</AvatarComposite>`;
+  }
+
+  if (quantity === "group") {
+    const imageGroupLine = style === "image" ? `\n      <AvatarImage src={member.avatar} alt={member.name} />` : "";
+    const groupFallbackContent = style === "icon" ? "\n        <UserFilledIcon />\n      " : "{avatarInitials(member.name)}";
+    const iconImport = style === "icon" ? `\nimport { UserFilledIcon } from "@/lib/icons"` : "";
+    return `import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage, avatarInitials } from "@/components/ui/avatar"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"${iconImport}
+
+const visibleMembers = members.slice(0, 3)
+const restMembers = members.slice(3)
+
+<TooltipProvider>
+  <AvatarGroup>
+    {visibleMembers.map((member) => (
+      <Avatar key={member.name}${sizeAttr}>${imageGroupLine}
+        <AvatarFallback${colorAttr}>${groupFallbackContent}</AvatarFallback>
+      </Avatar>
+    ))}
+    {restMembers.length > 0 ? (
+      <Tooltip>
+        <TooltipTrigger render={<AvatarGroupCount tabIndex={0} aria-label={\`剩余成员：\${restMembers.map((member) => member.name).join("、")}\`}>+{restMembers.length}</AvatarGroupCount>} />
+        <TooltipContent>{restMembers.map((member) => member.name).join("、")}</TooltipContent>
+      </Tooltip>
+    ) : null}
+  </AvatarGroup>
+</TooltipProvider>`;
+  }
+
+  if (style === "icon") {
+    return `import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { UserFilledIcon } from "@/lib/icons"
+
+<Avatar${sizeAttr}${shapeAttr}>${imageLine}
+  <AvatarFallback${colorAttr}>${fallbackContent}</AvatarFallback>${statusLine}
+</Avatar>`;
+  }
+
+  return `import { Avatar, AvatarBadge, AvatarFallback, AvatarImage, avatarInitials } from "@/components/ui/avatar"
+
+<Avatar${sizeAttr}${shapeAttr}>${imageLine}
+  <AvatarFallback${colorAttr}>{avatarInitials("陈昊")}</AvatarFallback>${statusLine}
+</Avatar>`;
+}
+
+const avatarPlaygroundConfig = {
+  props: componentPlaygroundPropsFromManifest(componentPlaygroundsManifest.components.avatar),
+  initial: componentPlaygroundsManifest.components.avatar.initial,
+  guidanceKey: componentPlaygroundsManifest.components.avatar.guidanceKey,
+  renderOne: renderAvatarPlayground,
+  genCode: genAvatarPlaygroundCode
+};
 
 type StandardScenarioExample = {
   id: string;
@@ -12600,6 +13214,7 @@ function StandardDocPage({
 
 }: {slug: string;title: string;lead: string;playground?: React.ReactNode;overview: React.ReactNode;overviewMatrix?: React.ReactNode;hideOverview?: boolean;hideScenarioExamples?: boolean;hideUsage?: boolean;scenarioExamples: {id: string;title: string;intent: string;rule: string;code: string;group?: string;spec?: string;}[];scenarioFilters?: {value: string;label: string;labelEn?: string;}[];scenarioLayout?: "table" | "stack";renderScenarioPreview: (id: string) => React.ReactNode;importCode: string;usageCode: string;propRows: {prop: string;type: string;defaultValue: string;desc: string;}[];semanticDomRows: {part: string;desc: string;}[];doDontRows: {do: string;dont: string;}[];actions: React.ReactNode;lang: Lang;}) {
   const titleMeta = useContext(PageTitleMetaContext);
+  const displayTitle = getDisplayTitle(title, lang === "en" ? undefined : titleMeta);
   const resolvedPlayground = playground ?? (
     componentPlaygroundsManifest.autoScenarioComponents?.includes(slug) ?
     <StandardScenarioPlayground
@@ -12616,8 +13231,8 @@ function StandardDocPage({
     <div className={docsSpacing.pageStack}>
       <section id={slug} className="flex flex-col gap-2">
         <FxPageLead
-          crumb={lang === "en" ? `Components / ${title}` : `组件 / ${title}`}
-          title={getDisplayTitle(title, lang === "en" ? undefined : titleMeta)}
+          crumb={lang === "en" ? `Components / ${title}` : `组件 / ${displayTitle}`}
+          title={displayTitle}
           titleMeta={lang === "en" ? undefined : titleMeta}
           lead={lead}
           actions={actions} />
@@ -12760,6 +13375,7 @@ function AvatarPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
       slug="avatar"
       title="Avatar 头像"
       lead="展示用户或实体身份的图像，支持图片加载失败回退、圆/方形、彩色文字头像与头像组。"
+      playground={<ComponentPlayground config={avatarPlaygroundConfig} lang={lang} />}
       overview={null}
       overviewMatrix={<AvatarOverview lang={lang} />}
       scenarioExamples={avatarScenarioExamples}
@@ -12773,7 +13389,7 @@ function AvatarPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
       id === "shape" ?
       <div className="flex items-center gap-3">
             <Avatar><AvatarImage src="/avatars/03.jpg" alt="苏婷" /><AvatarFallback colorful>苏</AvatarFallback></Avatar>
-            <Avatar shape="square"><AvatarFallback colorful><FolderFilledIcon className="size-4" /></AvatarFallback></Avatar>
+            <Avatar shape="square"><AvatarFallback colorful><FolderFilledIcon /></AvatarFallback></Avatar>
           </div> :
       id === "initials" ?
       <div className="flex items-center gap-3">
@@ -12781,8 +13397,14 @@ function AvatarPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         <Avatar key={n}><AvatarFallback colorful>{avatarInitials(n)}</AvatarFallback></Avatar>
         )}
           </div> :
+      id === "style-image" ?
+      <Avatar><AvatarImage src="/avatars/01.jpg" alt="陈昊" /><AvatarFallback>{avatarInitials("陈昊")}</AvatarFallback></Avatar> :
+      id === "style-neutral" ?
+      <Avatar><AvatarFallback>{avatarInitials("陈昊")}</AvatarFallback></Avatar> :
+      id === "style-colorful" ?
+      <Avatar><AvatarFallback colorful>{avatarInitials("陈昊")}</AvatarFallback></Avatar> :
       id === "icon" ?
-      <Avatar><AvatarFallback colorful><UserFilledIcon className="size-4" /></AvatarFallback></Avatar> :
+      <Avatar><AvatarFallback colorful><UserFilledIcon /></AvatarFallback></Avatar> :
       id === "group" ?
       <AvatarGroup>
             {["张三", "王五", "赵六"].map((n) =>
@@ -12795,27 +13417,16 @@ function AvatarPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           </AvatarGroup> :
       id === "composite" ?
       <div className="flex items-center gap-3">
-            {/* 2 人：左右两个方格，垂直居中、贴边，上下露灰底 */}
-            <div className="flex size-10 items-center justify-center gap-[2px] overflow-hidden rounded-lg bg-muted">
-              {[["陈", "01"], ["苏", "03"]].map(([c, f]) =>
-          <Avatar key={f} className="size-[19px] rounded-none"><AvatarImage src={`/avatars/${f}.jpg`} /><AvatarFallback colorful className="size-full rounded-none text-[8px]">{c}</AvatarFallback></Avatar>
+            {[2, 3, 4].map((count) =>
+        <AvatarComposite key={count} max={count as 2 | 3 | 4} size="lg">
+                {avatarPlaygroundMembers.slice(0, count).map((name, index) =>
+          <Avatar key={name}>
+                    <AvatarImage src={`/avatars/0${index + 1}.jpg`} alt={name} />
+                    <AvatarFallback colorful>{avatarInitials(name)}</AvatarFallback>
+                  </Avatar>
           )}
-            </div>
-            {/* 3 人：上 1 下 2，上格居中、左右露灰底 */}
-            <div className="flex size-10 flex-col items-center justify-center gap-[2px] overflow-hidden rounded-lg bg-muted">
-              <Avatar className="size-[19px] rounded-none"><AvatarImage src="/avatars/01.jpg" /><AvatarFallback colorful className="size-full rounded-none text-[8px]">陈</AvatarFallback></Avatar>
-              <div className="flex gap-[2px]">
-                {[["林", "02"], ["苏", "03"]].map(([c, f]) =>
-            <Avatar key={f} className="size-[19px] rounded-none"><AvatarImage src={`/avatars/${f}.jpg`} /><AvatarFallback colorful className="size-full rounded-none text-[8px]">{c}</AvatarFallback></Avatar>
-            )}
-              </div>
-            </div>
-            {/* 4 人：田字 2×2，贴边、仅格间留缝 */}
-            <div className="grid size-10 grid-cols-2 grid-rows-2 gap-[2px] overflow-hidden rounded-lg bg-muted">
-              {[["陈", "01"], ["林", "02"], ["苏", "03"], ["周", "04"]].map(([c, f]) =>
-          <Avatar key={f} className="size-full rounded-none"><AvatarImage src={`/avatars/${f}.jpg`} /><AvatarFallback colorful className="size-full rounded-none text-[8px]">{c}</AvatarFallback></Avatar>
-          )}
-            </div>
+              </AvatarComposite>
+        )}
           </div> :
 
       <Avatar size={id.replace("size-", "") as "xs" | "sm" | "default" | "lg" | "xl"}>
@@ -12823,7 +13434,7 @@ function AvatarPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           </Avatar>
 
       }
-      importCode={`import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"`}
+      importCode={`import { Avatar, AvatarComposite, AvatarFallback, AvatarImage } from "@/components/ui/avatar"`}
       usageCode={`<Avatar>\n  <AvatarImage src="/avatars/01.jpg" alt="陈昊" />\n  <AvatarFallback>陈</AvatarFallback>\n</Avatar>`}
       propRows={avatarPropRows}
       semanticDomRows={avatarSemanticDomRows}
@@ -13549,6 +14160,7 @@ function LinkPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
       slug="link"
       title="Link 链接"
       lead="用于页面内跳转或外部导航的文字链接，支持语义色与三档尺寸。"
+      playground={<ComponentPlayground config={linkPlaygroundConfig} lang={lang} />}
       overview={null}
       overviewMatrix={<LinkOverview lang={lang} />}
       scenarioExamples={linkScenarioExamples}
@@ -15004,7 +15616,7 @@ function CustomerListTemplate({ actions, lang }: {actions: React.ReactNode;lang:
                     <Button size="sm"><PlusIcon data-icon="inline-start" />新建</Button>
                     <Button variant="outline" size="sm">智能表单</Button>
                     <Button variant="outline" size="sm">导入</Button>
-                    <Button variant="outline" size="icon-sm" aria-label="更多"><MoreVerticalIcon /></Button>
+                    <Button variant="outline" size="icon-sm" aria-label="更多"><MoreHorizontalIcon /></Button>
                   </>
           } />
         

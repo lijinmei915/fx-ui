@@ -154,12 +154,11 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuSubContent } from
 "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+import { Input, InputAction, InputAddon, InputAffix, InputGroup } from "@/components/ui/input";
 import {
   Field,
   FieldDescription,
   FieldError,
-  FieldGroup,
   FieldLabel } from
 "@/components/ui/field";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -170,6 +169,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { AgentSurface, type AgentSurfaceEvent, type AgentSurfaceSchema } from "@/components/fx/agent-surface";
 import { NavRail, NavRailItem, NavMenu, NavMenuHeader, NavMenuSearch, NavMenuList, NavMenuGroupLabel, NavMenuItem, NavMenuFooter } from "@/components/fx/nav-menu";
 import { TopBar, TopBarBrand, TopBarDivider, TopBarApps, TopBarSearch, TopBarActions, TopBarIconButton } from "@/components/fx/top-bar";
+import { TimePicker } from "@/components/fx/time-picker";
 import { Progress } from "@/components/ui/progress";
 import { CrmAppShell } from "@/components/recipes/crm-app-shell";
 import { DataTable, type Column } from "@/components/recipes/data-table";
@@ -1377,6 +1377,7 @@ const docsNav = [
   items: [
   { label: "输入框", labelEn: "Input", href: "#input" },
   { label: "选择器", labelEn: "Select", href: "#select" },
+  { label: "时间选择器", labelEn: "Time Picker", href: "#time-picker" },
   { label: "复选框", labelEn: "Checkbox", href: "#checkbox" },
   { label: "单选组", labelEn: "Radio Group", href: "#radio-group" },
   { label: "开关", labelEn: "Switch", href: "#switch" },
@@ -1755,56 +1756,165 @@ const agentSurfaceAnchors = [
 
 
 const inputAnchors = [
-{ label: "组件总览", href: "#input-overview" },
-{ label: "场景示例", href: "#input-preview" },
 { label: "使用方式", href: "#input-usage" },
 { label: "API", href: "#input-props" },
 { label: "语义 DOM", href: "#input-semantic-dom" },
 { label: "正误示例", href: "#input-do-dont" }];
 
 
-const inputScenarioExamples = [
-{
-  id: "default",
-  title: "默认输入框",
-  intent: "最基础的单行文本录入，搭配 placeholder 提示输入内容。",
-  rule: "单独展示控件能力时可以直接用 Input；进入真实表单后放进 Field。",
-  code: `<Input placeholder="请输入姓名" />`
-},
-{
-  id: "field",
-  title: "标准字段",
-  intent: "真实表单里的标准写法，承载 label、输入控件和辅助说明。",
-  rule: "使用 FieldGroup + Field + FieldLabel，不用 div/grid 临时拼字段结构。",
-  code: `<FieldGroup>\n  <Field>\n    <FieldLabel htmlFor="name">姓名</FieldLabel>\n    <Input id="name" placeholder="请输入姓名" />\n    <FieldDescription>请填写真实姓名。</FieldDescription>\n  </Field>\n</FieldGroup>`
-},
-{
-  id: "disabled",
-  title: "禁用状态",
-  intent: "字段当前不可编辑（如只读详情、依赖未满足）。",
-  rule: "Field 标记 data-disabled，Input 使用 disabled，不要用样式假装禁用。",
-  code: `<Field data-disabled>\n  <FieldLabel htmlFor="readonly-name">姓名</FieldLabel>\n  <Input id="readonly-name" disabled placeholder="不可编辑" />\n</Field>`
-},
-{
-  id: "invalid",
-  title: "校验失败",
-  intent: "提交校验未通过时，提示用户当前字段有误。",
-  rule: "Field 标记 data-invalid，Input 使用 aria-invalid，并通过 FieldError 输出错误文案。",
-  code: `<Field data-invalid>\n  <FieldLabel htmlFor="email">邮箱</FieldLabel>\n  <Input id="email" aria-invalid placeholder="请输入邮箱" />\n  <FieldError>请输入有效邮箱。</FieldError>\n</Field>`
-}];
+const inputImportCodeForPlayground = `import { Input, InputAction, InputAddon, InputAffix, InputGroup } from "@/components/ui/input"
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { ChevronDownIcon, SearchIcon } from "@/lib/icons"`;
+
+const inputCapabilityOptions = [
+{ value: "basic", label: "基础", labelEn: "Basic", intent: "用于普通单行文本录入。", constraint: "基础能力可以直接使用 Input；需要字段标签时放进 Field。" },
+{ value: "search", label: "搜索", labelEn: "Search", intent: "用于检索信息，可搭配搜索图标、筛选范围或提交动作。", constraint: "搜索能力的组合统一由 InputGroup 承载，不在 Input 内部绝对定位。" }];
+
+const inputCompositionOptions = [
+{ value: "none", label: "无", labelEn: "None", intent: "只展示输入框本体。", constraint: "无组合时直接用 Input，不额外包 InputGroup。" },
+{ value: "icon", label: "图标", labelEn: "Icon", intent: "用图标提示输入含义，例如搜索、日期。", constraint: "图标放进 InputAffix，不改 Input 内边距。" },
+{ value: "text", label: "文字", labelEn: "Text", intent: "用于单位、协议、地区等固定文字前后缀。", constraint: "固定文字块用 InputAddon，轻量单位也可用 InputAffix。" },
+{ value: "filter", label: "筛选", labelEn: "Filter", intent: "用于搜索前的范围选择或类型筛选。", constraint: "筛选入口用 InputAddon，搜索动作可用 InputAction。" }];
+
+const inputPositionOptions = [
+{ value: "left", label: "左", labelEn: "Left", intent: "前置内容用于先说明输入含义或范围。", constraint: "用 side=\"start\"，不要手写定位。" },
+{ value: "right", label: "右", labelEn: "Right", intent: "后置内容用于单位、动作或补充标记。", constraint: "用 side=\"end\"，不要手写定位。" }];
+
+const inputStateOptions = [
+{ value: "normal", label: "默认", labelEn: "Default", intent: "默认可输入状态。", constraint: "不额外传状态 prop。" },
+{ value: "hover", label: "悬停", labelEn: "Hover", intent: "鼠标经过时提示当前可交互。", constraint: "悬停是原生交互态；业务代码不手写边框色模拟。" },
+{ value: "focus", label: "聚焦", labelEn: "Focus", intent: "输入框获得键盘焦点，显示边框反馈。", constraint: "聚焦由 focus-visible / focus-within 驱动；不要在调用处覆盖边框样式。" },
+{ value: "typing", label: "输入中", labelEn: "Typing", intent: "用户正在输入，字段已有临时内容。", constraint: "使用 value / defaultValue 表达输入内容；清除动作放 InputAction。" },
+{ value: "filled", label: "回填", labelEn: "Filled", intent: "已有系统回填或历史保存值。", constraint: "用 value / defaultValue 表达已填内容，不改 placeholder 样式假装。" },
+{ value: "disabled", label: "禁用", labelEn: "Disabled", intent: "字段当前不可编辑且无可提交值。", constraint: "使用 disabled，不用 opacity 或 pointer-events 假装禁用。" },
+{ value: "filled-disabled", label: "回填并禁用", labelEn: "Filled disabled", intent: "展示已有值，但当前不可编辑。", constraint: "同时使用 value / defaultValue 与 disabled。" },
+{ value: "invalid", label: "报错", labelEn: "Error", intent: "字段校验失败时提示用户修正。", constraint: "Input 设置 aria-invalid，字段错误文案放 FieldError。" }];
+
+const inputSizeOptions = [
+{ value: "xs", label: "超小24", labelEn: "XS 24", intent: "用于高密度表格、筛选条等区域。", constraint: "只传 size=\"xs\"，不覆盖高度。" },
+{ value: "sm", label: "默认28", labelEn: "Default 28", intent: "用于常规表单、筛选栏和工具栏，是 Input 默认尺寸。", constraint: "默认尺寸可省略 size；同一行尺寸一致。" },
+{ value: "md", label: "中32", labelEn: "Medium 32", intent: "用于更宽松的表单或需要更大点击目标的位置。", constraint: "只传 size=\"md\"，不覆盖高度。" }];
+
+function buildInputPlaygroundCode(values: Record<string, string>) {
+  const sizeProp = values.size === "sm" ? "" : ` size="${values.size}"`;
+  const placeholder = values.capability === "search" ? "搜索" : "请输入";
+  const hasValue = values.state === "typing" || values.state === "filled" || values.state === "filled-disabled";
+  const valueText = values.state === "typing" ? values.capability === "search" ? "北京" : "输入内容" : "北京纷享科技有限公司";
+  const valueProp = hasValue ? ` defaultValue="${valueText}"` : "";
+  const disabledProp = values.state === "disabled" || values.state === "filled-disabled" ? " disabled" : "";
+  const invalidProp = values.state === "invalid" ? " aria-invalid" : "";
+  const inputLine = `<Input${sizeProp}${valueProp}${disabledProp}${invalidProp} placeholder="${placeholder}" />`;
+  const side = values.position === "right" ? "end" : "start";
+
+  if (values.composition === "none") return inputLine;
+
+  if (values.composition === "icon") {
+    return `<InputGroup${sizeProp}>
+  ${side === "start" ? `<InputAffix side="start">
+    <SearchIcon />
+  </InputAffix>
+  ${inputLine}` : `${inputLine}
+  <InputAffix>
+    <SearchIcon />
+  </InputAffix>`}
+</InputGroup>`;
+  }
+
+  if (values.composition === "text") {
+    return `<InputGroup${sizeProp}>
+  ${side === "start" ? `<InputAddon>http://</InputAddon>
+  ${inputLine}` : `${inputLine}
+  <InputAddon side="end">PX</InputAddon>`}
+</InputGroup>`;
+  }
+
+  return `<InputGroup${sizeProp}>
+  <InputAddon>全部 <ChevronDownIcon /></InputAddon>
+  ${inputLine}
+  <InputAction aria-label="搜索">
+    <SearchIcon />
+  </InputAction>
+</InputGroup>`;
+}
+
+const inputPlaygroundConfig = {
+  props: [
+  {
+    key: "capability",
+    zh: "能力",
+    en: "Capability",
+    propName: "capability",
+    type: "segment" as const,
+    options: inputCapabilityOptions
+  },
+  {
+    key: "composition",
+    zh: "组合方式",
+    en: "Composition",
+    propName: "composition",
+    type: "segment" as const,
+    options: inputCompositionOptions
+  },
+  {
+    key: "position",
+    zh: "位置",
+    en: "Position",
+    propName: "side",
+    type: "segment" as const,
+    disabledWhen: (values: Record<string, string>) => values.composition === "none" || values.composition === "filter",
+    options: inputPositionOptions
+  },
+  {
+    key: "state",
+    zh: "交互状态",
+    en: "State",
+    propName: "state",
+    type: "segment" as const,
+    options: inputStateOptions
+  },
+  {
+    key: "size",
+    zh: "尺寸",
+    en: "Size",
+    propName: "size",
+    type: "segment" as const,
+    options: inputSizeOptions
+  }],
+  initial: { capability: "basic", composition: "none", position: "left", state: "normal", size: "sm" },
+  guidanceKey: "capability",
+  onValueChange: (next: Record<string, string>, key: string) => {
+    if (key === "composition" && (next.composition === "none" || next.composition === "filter")) {
+      return { ...next, position: "left" };
+    }
+    return next;
+  },
+  renderOne: (values: Record<string, string>) => <InputPreview values={values} />,
+  genCode: (values: Record<string, string>) => {
+    return `${inputImportCodeForPlayground}\n\n${buildInputPlaygroundCode(values)}`;
+  }
+};
 
 
 const inputPropRows = [
+{ prop: "size", type: "\"xs\" | \"sm\" | \"md\"", defaultValue: "sm", desc: "输入框尺寸：xs=24px、sm=28px（默认）、md=32px" },
 { prop: "type", type: "string", defaultValue: "text", desc: "原生 input 类型（text / number / password / email …）" },
 { prop: "disabled", type: "boolean", defaultValue: "false", desc: "禁用输入，触发禁用态样式" },
 { prop: "aria-invalid", type: "boolean", defaultValue: "false", desc: "标记当前值未通过校验，触发错误态样式" },
 { prop: "placeholder", type: "string", defaultValue: "—", desc: "占位提示文字" },
 { prop: "className", type: "string", defaultValue: "—", desc: "在保留基础样式的前提下追加 Tailwind 类名" },
-{ prop: "...props", type: "React.ComponentProps<\"input\">", defaultValue: "—", desc: "透传所有原生 input 属性（value / onChange / name / required 等）" }];
+{ prop: "InputGroup", type: "组件", defaultValue: "—", desc: "输入组合容器，承载前后缀、搜索按钮、固定标签等" },
+{ prop: "InputAddon", type: "组件", defaultValue: "side=start", desc: "前后置固定标签块，例如 http://、PX、全部" },
+{ prop: "InputAffix", type: "组件", defaultValue: "side=end", desc: "轻量前后缀内容，例如图标、%、清除提示" },
+{ prop: "InputAction", type: "button", defaultValue: "type=button", desc: "输入框内动作按钮，例如搜索、清除" },
+{ prop: "...props", type: "Omit<React.ComponentProps<\"input\">, \"size\">", defaultValue: "—", desc: "透传所有原生 input 属性（value / onChange / name / required 等），size 由组件尺寸接管" }];
 
 
 const inputSemanticDomRows = [
 { part: "data-slot=\"input\"", desc: "标记输入框根节点，供样式选择器和测试定位使用" },
+{ part: "data-slot=\"input-group\"", desc: "输入组合容器，统一持有边框、焦点、禁用和错误态" },
+{ part: "data-slot=\"input-addon\"", desc: "前后置固定标签块，带分隔线" },
+{ part: "data-slot=\"input-affix\"", desc: "轻量前后缀区域，常用于图标或单位" },
+{ part: "data-slot=\"input-action\"", desc: "输入框内动作按钮，必须提供 aria-label" },
 { part: "data-slot=\"field\"", desc: "Field 字段容器，承载 label、control、description 和 error 的语义分组" },
 { part: "data-slot=\"field-label\"", desc: "字段标签，通常通过 htmlFor 与 Input 的 id 关联" },
 { part: "data-slot=\"field-error\"", desc: "字段错误文案，使用 role=\"alert\" 向辅助技术宣布错误" },
@@ -1820,50 +1930,133 @@ const inputDoDontRows = [
 
 
 const selectAnchors = [
-{ label: "组件总览", href: "#select-overview" },
-{ label: "场景示例", href: "#select-preview" },
 { label: "使用方式", href: "#select-usage" },
 { label: "API", href: "#select-props" },
 { label: "语义 DOM", href: "#select-semantic-dom" },
 { label: "正误示例", href: "#select-do-dont" }];
 
 
-const selectScenarioExamples = [
-{
-  id: "default",
-  title: "默认选择器",
-  intent: "从一组互斥选项中选择一个值，触发器宽度自适应。",
-  rule: "用 SelectValue 的 placeholder 表达未选择态，不手写空字符串占位。",
-  code: `<Select>\n  <SelectTrigger className="w-[180px]">\n    <SelectValue placeholder="请选择角色" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectItem value="admin">管理员</SelectItem>\n    <SelectItem value="member">成员</SelectItem>\n  </SelectContent>\n</Select>`
-},
-{
-  id: "grouped",
-  title: "分组选项",
-  intent: "选项较多需要按类别归组时，用 SelectGroup + SelectLabel 标记分组标题。",
-  rule: "分组标题用 SelectLabel，不要用普通文本伪造分组标题。",
-  code: `<SelectContent>\n  <SelectGroup>\n    <SelectLabel>常用</SelectLabel>\n    <SelectItem value="cn">中国</SelectItem>\n    <SelectItem value="us">美国</SelectItem>\n  </SelectGroup>\n</SelectContent>`
-},
-{
-  id: "small",
-  title: "紧凑尺寸",
-  intent: "用于工具栏、表格筛选等空间紧张的场景。",
-  rule: "用 size=\"sm\" 切换尺寸，不手写高度类覆盖。",
-  code: `<SelectTrigger size="sm" className="w-[140px]">\n  <SelectValue placeholder="筛选状态" />\n</SelectTrigger>`
-},
-{
-  id: "disabled",
-  title: "禁用状态",
-  intent: "选择器当前不可操作（如依赖项未满足）。",
-  rule: "用原生 disabled，不要用样式假装禁用。",
-  code: `<Select disabled>\n  <SelectTrigger className="w-[180px]">\n    <SelectValue placeholder="暂不可选择" />\n  </SelectTrigger>\n</Select>`
-}];
+const selectImportCodeForPlayground = `import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"`;
+
+const selectCapabilityOptions = [
+{ value: "basic", label: "基础", labelEn: "Basic", intent: "用于表单字段、设置项等标准单选。", constraint: "基础选择器由 Select + SelectTrigger + SelectContent + SelectItem 组成，不手写下拉结构。" },
+{ value: "filter", label: "筛选", labelEn: "Filter", intent: "用于列表、表格、工具栏里的条件筛选。", constraint: "筛选选择器仍使用 SelectTrigger 的尺寸能力，不在调用处覆盖高度和内边距。" }];
+
+const selectOptionStructureOptions = [
+{ value: "plain", label: "普通", labelEn: "Plain", intent: "选项数量少、无需分类时使用单层选项。", constraint: "SelectItem 直接放在 SelectContent 内，value 在选项集合内唯一。" },
+{ value: "grouped", label: "分组", labelEn: "Grouped", intent: "选项较多或存在类别时使用分组结构。", constraint: "分组标题用 SelectLabel，不用普通文本或禁用选项伪造。" }];
+
+const selectValueStateOptions = [
+{ value: "placeholder", label: "占位", labelEn: "Placeholder", intent: "尚未选择时显示提示文案。", constraint: "占位文案放 SelectValue placeholder，不新增空值 SelectItem。" },
+{ value: "selected", label: "已选", labelEn: "Selected", intent: "已经存在选中值时展示当前选择。", constraint: "用 defaultValue / value 表达选中值，业务代码不要手写选中文案。" }];
+
+const selectStateOptions = [
+{ value: "normal", label: "默认", labelEn: "Default", intent: "默认可交互状态。", constraint: "不额外传状态 prop。" },
+{ value: "hover", label: "悬停", labelEn: "Hover", intent: "鼠标经过时提示可点击。", constraint: "悬停是原生交互态；调试台只用 data-state 预览，不作为业务 API。" },
+{ value: "focus", label: "聚焦", labelEn: "Focus", intent: "键盘焦点或点击聚焦时显示边框反馈。", constraint: "聚焦由 focus-visible 驱动，不在调用处覆盖边框。" },
+{ value: "open", label: "展开", labelEn: "Open", intent: "下拉浮层打开，用户正在查看选项。", constraint: "打开态由 Select 自身状态驱动；不要用固定展示的 div 替代浮层。" },
+{ value: "invalid", label: "报错", labelEn: "Error", intent: "字段校验失败，需要用户重新选择。", constraint: "在 SelectTrigger 上设置 aria-invalid，并用 FieldError 承载错误文案。" },
+{ value: "disabled", label: "禁用", labelEn: "Disabled", intent: "当前不可选择。", constraint: "使用 Select 的 disabled，不用 opacity 或 pointer-events 假装禁用。" }];
+
+const selectSizeOptions = [
+{ value: "xs", label: "超小24", labelEn: "XS 24", intent: "用于高密度表格筛选、紧凑工具栏。", constraint: "只传 size=\"xs\"，不覆盖高度。" },
+{ value: "sm", label: "默认28", labelEn: "Default 28", intent: "用于常规筛选和表单，是 Select 默认尺寸。", constraint: "默认尺寸可省略 size；同一行控件尺寸一致。" },
+{ value: "md", label: "中32", labelEn: "Medium 32", intent: "用于更宽松的表单或需要更大点击目标的位置。", constraint: "只传 size=\"md\"，不覆盖高度。" }];
+
+function buildSelectPlaygroundCode(values: Record<string, string>) {
+  const sizeProp = values.size === "sm" ? "" : ` size="${values.size}"`;
+  const placeholder = values.capability === "filter" ? "筛选状态" : "请选择角色";
+  const defaultValueProp = values.valueState === "selected" ? ` defaultValue="${values.capability === "filter" ? "active" : "admin"}"` : "";
+  const disabledProp = values.state === "disabled" ? " disabled" : "";
+  const invalidProp = values.state === "invalid" ? " aria-invalid" : "";
+  const triggerLine = `<SelectTrigger${sizeProp}${invalidProp}>
+    <SelectValue placeholder="${placeholder}" />
+  </SelectTrigger>`;
+
+  if (values.structure === "grouped") {
+    return `<Select${defaultValueProp}${disabledProp}>
+  ${triggerLine}
+  <SelectContent>
+    <SelectGroup>
+      <SelectLabel>常用</SelectLabel>
+      <SelectItem value="${values.capability === "filter" ? "active" : "admin"}">${values.capability === "filter" ? "进行中" : "管理员"}</SelectItem>
+      <SelectItem value="${values.capability === "filter" ? "done" : "member"}">${values.capability === "filter" ? "已完成" : "成员"}</SelectItem>
+    </SelectGroup>
+  </SelectContent>
+</Select>`;
+  }
+
+  return `<Select${defaultValueProp}${disabledProp}>
+  ${triggerLine}
+  <SelectContent>
+    <SelectItem value="${values.capability === "filter" ? "active" : "admin"}">${values.capability === "filter" ? "进行中" : "管理员"}</SelectItem>
+    <SelectItem value="${values.capability === "filter" ? "done" : "member"}">${values.capability === "filter" ? "已完成" : "成员"}</SelectItem>
+  </SelectContent>
+</Select>`;
+}
+
+const selectPlaygroundConfig = {
+  props: [
+  {
+    key: "capability",
+    zh: "能力",
+    en: "Capability",
+    propName: "capability",
+    type: "segment" as const,
+    options: selectCapabilityOptions
+  },
+  {
+    key: "structure",
+    zh: "选项结构",
+    en: "Option structure",
+    propName: "children",
+    type: "segment" as const,
+    options: selectOptionStructureOptions
+  },
+  {
+    key: "valueState",
+    zh: "值状态",
+    en: "Value state",
+    propName: "value",
+    type: "segment" as const,
+    options: selectValueStateOptions
+  },
+  {
+    key: "state",
+    zh: "交互状态",
+    en: "State",
+    propName: "state",
+    type: "segment" as const,
+    options: selectStateOptions
+  },
+  {
+    key: "size",
+    zh: "尺寸",
+    en: "Size",
+    propName: "size",
+    type: "segment" as const,
+    options: selectSizeOptions
+  }],
+  initial: { capability: "basic", structure: "plain", valueState: "placeholder", state: "normal", size: "sm" },
+  guidanceKey: "capability",
+  renderOne: (values: Record<string, string>) => <SelectPlaygroundPreview values={values} />,
+  genCode: (values: Record<string, string>) => `${selectImportCodeForPlayground}\n\n${buildSelectPlaygroundCode(values)}`
+};
 
 
 const selectPropRows = [
 { prop: "value / defaultValue", type: "string", defaultValue: "—", desc: "受控 / 非受控的当前选中值" },
 { prop: "onValueChange", type: "(value: string) => void", defaultValue: "—", desc: "选中值变化时的回调" },
 { prop: "disabled", type: "boolean", defaultValue: "false", desc: "禁用整个选择器" },
-{ prop: "size", type: "\"sm\" | \"default\"", defaultValue: "default", desc: "SelectTrigger 的尺寸（影响高度和圆角）" },
+{ prop: "size", type: "\"xs\" | \"sm\" | \"md\"", defaultValue: "sm", desc: "SelectTrigger 的尺寸：xs=24px、sm=28px（默认）、md=32px" },
 { prop: "value（SelectItem）", type: "string", defaultValue: "—", desc: "选项的取值，需要在选项集合内唯一" }];
 
 
@@ -1880,6 +2073,104 @@ const selectDoDontRows = [
 { do: "选项较多时用 SelectGroup + SelectLabel 分组。", dont: "把分组标题写成普通禁用选项。" },
 { do: "用 size 属性切换紧凑/默认尺寸。", dont: "用 className 覆盖高度、内边距来改尺寸。" },
 { do: "用 disabled 表达不可操作。", dont: "靠样式降低透明度但仍可点击触发。" }];
+
+const timePickerAnchors = [
+{ label: "使用方式", href: "#time-picker-usage" },
+{ label: "API", href: "#time-picker-props" },
+{ label: "语义 DOM", href: "#time-picker-semantic-dom" },
+{ label: "正误示例", href: "#time-picker-do-dont" }];
+
+const timePickerImportCodeForPlayground = `import { TimePicker } from "@/components/fx/time-picker"`;
+
+const timePickerCapabilityOptions = [
+{ value: "basic", label: "基础", labelEn: "Basic", intent: "用于表单中选择单个时间点。", constraint: "作为时间语义组件使用，不把普通 Select 当时间选择器。" },
+{ value: "range", label: "范围", labelEn: "Range", intent: "用于筛选开始/结束时间。", constraint: "范围由两个 TimePicker 组合，不在一个控件里塞两个值。" }];
+
+const timePickerModeOptions = [
+{ value: "popover", label: "弹层", labelEn: "Popover", intent: "展示时间列表，适合设计稿里的选择器形态。", constraint: "弹层内容由 TimePicker 内部维护，业务页面不重写时间列表。" },
+{ value: "native", label: "原生", labelEn: "Native", intent: "使用浏览器原生时间输入，适合表单快速录入。", constraint: "原生模式仍走 InputGroup，不手写图标定位。" }];
+
+const timePickerValueStateOptions = [
+{ value: "placeholder", label: "占位", labelEn: "Placeholder", intent: "尚未选择时提示用户选择时间。", constraint: "占位由组件 placeholder 承载，不写假值。" },
+{ value: "selected", label: "已选", labelEn: "Selected", intent: "展示已有时间值。", constraint: "用 value / defaultValue 表达时间值，格式使用 HH:mm。" },
+{ value: "clearable", label: "可清除", labelEn: "Clearable", intent: "已选后允许快速清空。", constraint: "只在有值且非禁用时展示清除入口。" }];
+
+const timePickerStateOptions = [
+{ value: "normal", label: "默认", labelEn: "Default", intent: "默认可选择状态。", constraint: "不额外传状态 prop。" },
+{ value: "hover", label: "悬停", labelEn: "Hover", intent: "鼠标经过时提示可点击。", constraint: "悬停是原生交互态；调试台只用 data-state 预览。" },
+{ value: "focus", label: "聚焦", labelEn: "Focus", intent: "键盘焦点时显示边框反馈。", constraint: "由 focus-visible 驱动，不在调用处覆盖边框。" },
+{ value: "open", label: "展开", labelEn: "Open", intent: "弹层打开，用户正在选择时间。", constraint: "只适用于弹层模式；原生模式由浏览器接管。" },
+{ value: "invalid", label: "报错", labelEn: "Error", intent: "时间未填或不合法。", constraint: "Field 设置 data-invalid，TimePicker 设置 aria-invalid，错误文案放 FieldError。" },
+{ value: "disabled", label: "禁用", labelEn: "Disabled", intent: "当前不可选择。", constraint: "使用 disabled，不用 opacity 或 pointer-events 假装禁用。" }];
+
+const timePickerStepOptions = [
+{ value: "15", label: "15分钟", labelEn: "15 min", intent: "用于需要较精细预约或排班的场景。", constraint: "选项会更多，避免在低频表单里默认使用。" },
+{ value: "30", label: "30分钟", labelEn: "30 min", intent: "常规半小时粒度，是默认步进。", constraint: "默认可省略 step。" },
+{ value: "60", label: "60分钟", labelEn: "60 min", intent: "用于小时级筛选。", constraint: "只用于不关心分钟的业务。" }];
+
+const timePickerSizeOptions = [
+{ value: "xs", label: "超小24", labelEn: "XS 24", intent: "用于高密度筛选条。", constraint: "只传 size=\"xs\"，不覆盖高度。" },
+{ value: "sm", label: "默认28", labelEn: "Default 28", intent: "常规表单和筛选默认尺寸。", constraint: "默认尺寸可省略 size。" },
+{ value: "md", label: "中32", labelEn: "Medium 32", intent: "用于更宽松表单。", constraint: "只传 size=\"md\"，不覆盖高度。" }];
+
+function buildTimePickerPlaygroundCode(values: Record<string, string>) {
+  const modeProp = values.mode === "popover" ? "" : ` mode="native"`;
+  const sizeProp = values.size === "sm" ? "" : ` size="${values.size}"`;
+  const stepProp = values.step === "30" ? "" : ` step={${values.step}}`;
+  const hasValue = values.valueState === "selected" || values.valueState === "clearable";
+  const valueProp = hasValue ? ` defaultValue="09:30"` : "";
+  const clearableProp = values.valueState === "clearable" ? " clearable" : "";
+  const disabledProp = values.state === "disabled" ? " disabled" : "";
+  const invalidProp = values.state === "invalid" ? " aria-invalid" : "";
+
+  if (values.capability === "range") {
+    return `<div className="flex items-center gap-2">
+  <TimePicker${modeProp}${sizeProp}${stepProp} placeholder="开始时间"${disabledProp}${invalidProp} />
+  <span className="text-muted-foreground">至</span>
+  <TimePicker${modeProp}${sizeProp}${stepProp} placeholder="结束时间"${disabledProp}${invalidProp} />
+</div>`;
+  }
+
+  return `<TimePicker${modeProp}${sizeProp}${stepProp}${valueProp}${clearableProp}${disabledProp}${invalidProp} />`;
+}
+
+const timePickerPlaygroundConfig = {
+  props: [
+  { key: "capability", zh: "能力", en: "Capability", propName: "capability", type: "segment" as const, options: timePickerCapabilityOptions },
+  { key: "mode", zh: "呈现方式", en: "Mode", propName: "mode", type: "segment" as const, options: timePickerModeOptions },
+  { key: "valueState", zh: "值状态", en: "Value state", propName: "value", type: "segment" as const, options: timePickerValueStateOptions },
+  { key: "state", zh: "交互状态", en: "State", propName: "state", type: "segment" as const, options: timePickerStateOptions },
+  { key: "step", zh: "步进", en: "Step", propName: "step", type: "segment" as const, options: timePickerStepOptions },
+  { key: "size", zh: "尺寸", en: "Size", propName: "size", type: "segment" as const, options: timePickerSizeOptions }],
+  initial: { capability: "basic", mode: "popover", valueState: "placeholder", state: "normal", step: "30", size: "sm" },
+  guidanceKey: "capability",
+  renderOne: (values: Record<string, string>) => <TimePickerPreview values={values} />,
+  genCode: (values: Record<string, string>) => `${timePickerImportCodeForPlayground}\n\n${buildTimePickerPlaygroundCode(values)}`
+};
+
+const timePickerPropRows = [
+{ prop: "value / defaultValue", type: "string", defaultValue: "—", desc: "受控 / 非受控的时间值，格式为 HH:mm" },
+{ prop: "onValueChange", type: "(value: string) => void", defaultValue: "—", desc: "时间变化回调" },
+{ prop: "mode", type: "\"popover\" | \"native\"", defaultValue: "popover", desc: "弹层时间列表或原生 time input" },
+{ prop: "step", type: "15 | 30 | 60", defaultValue: "30", desc: "分钟步进" },
+{ prop: "size", type: "\"xs\" | \"sm\" | \"md\"", defaultValue: "sm", desc: "尺寸：xs=24px、sm=28px、md=32px" },
+{ prop: "clearable", type: "boolean", defaultValue: "false", desc: "有值时是否展示清除入口" },
+{ prop: "disabled", type: "boolean", defaultValue: "false", desc: "禁用时间选择" },
+{ prop: "aria-invalid", type: "boolean", defaultValue: "false", desc: "标记校验失败" }];
+
+const timePickerSemanticDomRows = [
+{ part: "data-slot=\"time-picker\"", desc: "时间选择器触发器 / 原生输入组合根节点" },
+{ part: "data-slot=\"time-picker-value\"", desc: "弹层模式下展示当前时间或占位文本" },
+{ part: "data-slot=\"time-picker-clear\"", desc: "清除当前时间值的入口" },
+{ part: "data-slot=\"time-picker-list\"", desc: "弹层内的时间选项列表" },
+{ part: "aria-invalid", desc: "校验失败语义，同时驱动错误边框" },
+{ part: "disabled", desc: "禁用语义，阻止交互" }];
+
+const timePickerDoDontRows = [
+{ do: "时间选择用 TimePicker，不把普通 Select 临时改造成时间控件。", dont: "在 SelectItem 里手写一长串时间选项。" },
+{ do: "范围选择用两个 TimePicker 组合。", dont: "一个控件里拼 start-end 字符串。" },
+{ do: "错误态用 Field + aria-invalid + FieldError。", dont: "在页面里手写红色提示或覆盖边框。" },
+{ do: "尺寸用 size，步进用 step。", dont: "用 className 改高度或临时过滤时间选项。" }];
 
 
 const checkboxAnchors = [
@@ -3997,6 +4288,7 @@ const pageRegistry: Record<string, PageEntry> = {
   button: { anchors: buttonAnchors, render: (a, l) => <ButtonPage actions={a} lang={l} /> },
   input: { anchors: inputAnchors, render: (a, l) => <InputPage actions={a} lang={l} /> },
   select: { anchors: selectAnchors, render: (a, l) => <SelectPage actions={a} lang={l} /> },
+  "time-picker": { anchors: timePickerAnchors, render: (a, l) => <TimePickerPage actions={a} lang={l} /> },
   checkbox: { anchors: checkboxAnchors, render: (a, l) => <CheckboxPage actions={a} lang={l} /> },
   "radio-group": { anchors: radioGroupAnchors, render: (a, l) => <RadioGroupPage actions={a} lang={l} /> },
   switch: { anchors: switchAnchors, render: (a, l) => <SwitchPage actions={a} lang={l} /> },
@@ -9191,38 +9483,84 @@ function IconPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 }
 
-function InputPreview({ id }: {id: string;}) {
-  if (id === "field") {
-    return (
-      <Field className="w-[220px]">
-        <FieldLabel htmlFor={`input-playground-${id}`}>姓名</FieldLabel>
-        <Input id={`input-playground-${id}`} placeholder="请输入姓名" />
-        <FieldDescription>请填写真实姓名。</FieldDescription>
-      </Field>);
+function InputPreview({ values }: {values: Record<string, string>;}) {
+  const size = values.size as "xs" | "sm" | "md";
+  const side = values.position === "right" ? "end" : "start";
+  const placeholder = values.capability === "search" ? "搜索" : "请输入";
+  const hasValue = values.state === "typing" || values.state === "filled" || values.state === "filled-disabled";
+  const previewValue = values.state === "typing" ? values.capability === "search" ? "北京" : "输入内容" : "北京纷享科技有限公司";
+  const disabled = values.state === "disabled" || values.state === "filled-disabled";
+  const invalid = values.state === "invalid";
+  const visualState = values.state === "hover" || values.state === "focus" ? values.state : undefined;
+  const input = (
+    <Input
+      size={size}
+      data-state={visualState}
+      defaultValue={hasValue ? previewValue : undefined}
+      disabled={disabled}
+      aria-invalid={invalid ? true : undefined}
+      placeholder={placeholder}
+    />);
+
+  const withField = (node: React.ReactNode) =>
+  invalid ?
+  <Field data-invalid className="w-[280px]">
+      {node}
+      <FieldError>该项不能为空</FieldError>
+    </Field> :
+  <div className="w-[280px]">{node}</div>;
+  const groupState = visualState;
+
+  if (values.composition === "none") {
+    return withField(input);
   }
 
-  if (id === "disabled") {
-    return (
-      <Field data-disabled className="w-[220px]">
-        <FieldLabel htmlFor={`input-playground-${id}`}>姓名</FieldLabel>
-        <Input id={`input-playground-${id}`} disabled placeholder="不可编辑" />
-      </Field>);
+  if (values.composition === "icon") {
+    return withField(
+      <InputGroup size={size} data-state={groupState}>
+        {side === "start" ? (
+          <>
+            <InputAffix side="start">
+              <SearchIcon />
+            </InputAffix>
+            {input}
+          </>) : (
+          <>
+            {input}
+            <InputAffix>
+              <SearchIcon />
+            </InputAffix>
+          </>)}
+      </InputGroup>);
   }
 
-  if (id === "invalid") {
-    return (
-      <Field data-invalid className="w-[220px]">
-        <FieldLabel htmlFor={`input-playground-${id}`}>邮箱</FieldLabel>
-        <Input id={`input-playground-${id}`} aria-invalid placeholder="请输入邮箱" />
-        <FieldError>请输入有效邮箱。</FieldError>
-      </Field>);
+  if (values.composition === "text") {
+    return withField(
+      <InputGroup size={size} data-state={groupState}>
+        {side === "start" ? (
+          <>
+            <InputAddon>http://</InputAddon>
+            {input}
+          </>) : (
+          <>
+            {input}
+            <InputAddon side="end">PX</InputAddon>
+          </>)}
+      </InputGroup>);
   }
 
-  return <Input placeholder="请输入姓名" className="max-w-[220px]" />;
+  return withField(
+    <InputGroup size={size} data-state={groupState}>
+      <InputAddon>全部 <ChevronDownIcon /></InputAddon>
+      {input}
+      <InputAction aria-label="搜索" disabled={disabled}>
+        <SearchIcon />
+      </InputAction>
+    </InputGroup>);
 }
 
 function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
-  const inputImportCode = `import { Input } from "@/components/ui/input"\nimport { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field"`;
+  const inputImportCode = inputImportCodeForPlayground;
   const inputUsageCode = `<FieldGroup>\n  <Field>\n    <FieldLabel htmlFor="name">姓名</FieldLabel>\n    <Input id="name" placeholder="请输入姓名" />\n    <FieldDescription>请填写真实姓名。</FieldDescription>\n  </Field>\n</FieldGroup>`;
 
   return (
@@ -9232,93 +9570,8 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
       </section>
 
       <section id="input-playground" className={docsSpacing.sectionStack}>
-        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Switch existing Input scenarios and copy the matching composition." : "切换现有输入框场景，复制对应真实组合写法。"} />
-        <StandardScenarioPlayground slug="input" examples={inputScenarioExamples} renderScenarioPreview={(id) => <InputPreview id={id} />} importCode={inputImportCode} lang={lang} />
-      </section>
-
-      <section id="input-overview" className={docsSpacing.sectionStack}>
-        <div className="flex flex-col gap-1">
-          <h2 className="text-xl font-bold tracking-tight">组件总览</h2>
-          <p className="text-base text-muted-foreground">
-            Input 是基础 shadcn 组件，统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot="input"</code> 标记根节点，
-            视觉由公司 token 注入，不需要也不应该手写覆盖样式。
-          </p>
-        </div>
-        <DocSurfaceCard elevated>
-          <CardContent className="flex flex-col gap-3 p-5">
-            <FieldGroup className="max-w-sm">
-              <Field>
-                <FieldLabel htmlFor="input-overview-demo">姓名</FieldLabel>
-                <Input id="input-overview-demo" placeholder="请输入姓名" />
-                <FieldDescription>标准字段由 Field 承载结构，Input 只负责输入控件。</FieldDescription>
-              </Field>
-            </FieldGroup>
-          </CardContent>
-        </DocSurfaceCard>
-      </section>
-
-      <section id="input-preview" className={docsSpacing.sectionStack}>
-        <SectionLead title={"场景示例"} description={"常见的四类用法：默认、搭配 Label、禁用、校验失败。"} />
-
-
-
-
-        
-        <DocSurfaceTableCard elevated>
-          <Table className="min-w-[960px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[160px] pl-4">用法</TableHead>
-                <TableHead className="w-[220px]">示例</TableHead>
-                <TableHead className="w-[260px]">使用意图</TableHead>
-                <TableHead>约束</TableHead>
-                <TableHead className="w-[320px] pr-4">推荐写法</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {inputScenarioExamples.map((example) =>
-              <TableRow key={example.id}>
-                  <TableCell className="pl-4 align-top whitespace-normal">
-                    <span className="font-medium">{example.title}</span>
-                  </TableCell>
-                  <TableCell className="align-top">
-                    {example.id === "default" ?
-                  <Input placeholder="请输入姓名" className="max-w-[200px]" /> :
-                  example.id === "field" ?
-                  <Field className="w-[220px]">
-                        <FieldLabel htmlFor={`input-demo-${example.id}`}>姓名</FieldLabel>
-                        <Input id={`input-demo-${example.id}`} placeholder="请输入姓名" />
-                        <FieldDescription>请填写真实姓名。</FieldDescription>
-                      </Field> :
-                  example.id === "disabled" ?
-                  <Field data-disabled className="w-[220px]">
-                        <FieldLabel htmlFor={`input-demo-${example.id}`}>姓名</FieldLabel>
-                        <Input id={`input-demo-${example.id}`} disabled placeholder="不可编辑" />
-                      </Field> :
-
-                  <Field data-invalid className="w-[220px]">
-                        <FieldLabel htmlFor={`input-demo-${example.id}`}>邮箱</FieldLabel>
-                        <Input id={`input-demo-${example.id}`} aria-invalid placeholder="请输入邮箱" />
-                        <FieldError>请输入有效邮箱。</FieldError>
-                      </Field>
-                  }
-                  </TableCell>
-                  <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="min-w-[180px] max-w-[260px] leading-6">{example.intent}</p>
-                  </TableCell>
-                  <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
-                  </TableCell>
-                  <TableCell className="w-[360px] pr-4 align-top">
-                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-muted px-3 py-2 text-xs leading-6">
-                      {example.code}
-                    </code>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </DocSurfaceTableCard>
+        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Tune capability, composition, side, state, and size." : "按能力、组合方式、位置、交互状态和尺寸调试输入框。"} />
+        <ComponentPlayground config={inputPlaygroundConfig} lang={lang} />
       </section>
 
       <section id="input-usage" className={docsSpacing.sectionStack}>
@@ -9406,66 +9659,52 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 }
 
-function SelectPreview({ id }: {id: string;}) {
-  if (id === "default") {
-    return (
-      <Select>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="请选择角色" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="admin">管理员</SelectItem>
-          <SelectItem value="member">成员</SelectItem>
-        </SelectContent>
-      </Select>);
-
-  }
-
-  if (id === "grouped") {
-    return (
-      <Select>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="请选择国家" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>常用</SelectLabel>
-            <SelectItem value="cn">中国</SelectItem>
-            <SelectItem value="us">美国</SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>);
-
-  }
-
-  if (id === "small") {
-    return (
-      <Select>
-        <SelectTrigger size="sm" className="w-[140px]">
-          <SelectValue placeholder="筛选状态" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="active">进行中</SelectItem>
-          <SelectItem value="done">已完成</SelectItem>
-        </SelectContent>
-      </Select>);
-
-  }
-
-  return (
-    <Select disabled>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="暂不可选择" />
+function SelectPlaygroundPreview({ values }: {values: Record<string, string>;}) {
+  const size = values.size as "xs" | "sm" | "md";
+  const isFilter = values.capability === "filter";
+  const selectedValue = isFilter ? "active" : "admin";
+  const placeholder = isFilter ? "筛选状态" : "请选择角色";
+  const disabled = values.state === "disabled";
+  const invalid = values.state === "invalid";
+  const open = values.state === "open";
+  const visualState = (values.state === "hover" || values.state === "focus" || values.state === "open" ? values.state : undefined) as "hover" | "focus" | "open" | undefined;
+  const select = (
+    <Select
+      defaultValue={values.valueState === "selected" ? selectedValue : undefined}
+      disabled={disabled}
+      open={open ? true : undefined}>
+      <SelectTrigger
+        size={size}
+        data-state={visualState}
+        aria-invalid={invalid ? true : undefined}
+        className="w-[200px]">
+        <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="x">选项</SelectItem>
+        {values.structure === "grouped" ? (
+          <SelectGroup>
+            <SelectLabel>常用</SelectLabel>
+            <SelectItem value={isFilter ? "active" : "admin"}>{isFilter ? "进行中" : "管理员"}</SelectItem>
+            <SelectItem value={isFilter ? "done" : "member"}>{isFilter ? "已完成" : "成员"}</SelectItem>
+          </SelectGroup>) : (
+          <>
+            <SelectItem value={isFilter ? "active" : "admin"}>{isFilter ? "进行中" : "管理员"}</SelectItem>
+            <SelectItem value={isFilter ? "done" : "member"}>{isFilter ? "已完成" : "成员"}</SelectItem>
+          </>)}
       </SelectContent>
     </Select>);
 
+  if (!invalid) return <div className="w-[280px]">{select}</div>;
+
+  return (
+    <Field data-invalid className="w-[280px]">
+      {select}
+      <FieldError>请选择一个选项</FieldError>
+    </Field>);
 }
 
 function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
-  const selectImportCode = `import {\n  Select,\n  SelectContent,\n  SelectGroup,\n  SelectItem,\n  SelectLabel,\n  SelectTrigger,\n  SelectValue,\n} from "@/components/ui/select"`;
+  const selectImportCode = selectImportCodeForPlayground;
   const selectUsageCode = `<Select>\n  <SelectTrigger className="w-[180px]">\n    <SelectValue placeholder="请选择角色" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectItem value="admin">管理员</SelectItem>\n    <SelectItem value="member">成员</SelectItem>\n  </SelectContent>\n</Select>`;
 
   return (
@@ -9475,78 +9714,8 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
       </section>
 
       <section id="select-playground" className={docsSpacing.sectionStack}>
-        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Switch existing Select scenarios and copy the matching composition." : "切换现有选择器场景，复制对应真实组合写法。"} />
-        <StandardScenarioPlayground slug="select" examples={selectScenarioExamples} renderScenarioPreview={(id) => <SelectPreview id={id} />} importCode={selectImportCode} lang={lang} />
-      </section>
-
-      <section id="select-overview" className={docsSpacing.sectionStack}>
-        <div className="flex flex-col gap-1">
-          <h2 className="text-xl font-bold tracking-tight">组件总览</h2>
-          <p className="text-base text-muted-foreground">
-            Select 由 Trigger（触发器）、Content（下拉浮层）、Item（选项）等部位组合而成，
-            统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot</code> 标记各部位，视觉由公司 token 注入。
-          </p>
-        </div>
-        <DocSurfaceCard elevated>
-          <CardContent className="flex flex-col gap-3 p-5">
-            <Label htmlFor="select-overview-demo">角色</Label>
-            <Select>
-              <SelectTrigger id="select-overview-demo" className="w-[200px]">
-                <SelectValue placeholder="请选择角色" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="admin">管理员</SelectItem>
-                <SelectItem value="member">成员</SelectItem>
-                <SelectItem value="guest">访客</SelectItem>
-              </SelectContent>
-            </Select>
-          </CardContent>
-        </DocSurfaceCard>
-      </section>
-
-      <section id="select-preview" className={docsSpacing.sectionStack}>
-        <SectionLead title={"场景示例"} description={"常见的四类用法：默认、分组选项、紧凑尺寸、禁用。"} />
-
-
-
-
-        
-        <DocSurfaceTableCard elevated>
-          <Table className="min-w-[1040px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[160px] pl-4">用法</TableHead>
-                <TableHead className="w-[220px]">示例</TableHead>
-                <TableHead className="w-[260px]">使用意图</TableHead>
-                <TableHead>约束</TableHead>
-                <TableHead className="w-[340px] pr-4">推荐写法</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {selectScenarioExamples.map((example) =>
-              <TableRow key={example.id}>
-                  <TableCell className="pl-4 align-top whitespace-normal">
-                    <span className="font-medium">{example.title}</span>
-                  </TableCell>
-                  <TableCell className="align-top">
-                    <SelectPreview id={example.id} />
-                  </TableCell>
-                  <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="min-w-[180px] max-w-[260px] leading-6">{example.intent}</p>
-                  </TableCell>
-                  <TableCell className="align-top whitespace-normal text-muted-foreground">
-                    <p className="min-w-[200px] max-w-[280px] leading-6">{example.rule}</p>
-                  </TableCell>
-                  <TableCell className="w-[360px] pr-4 align-top">
-                    <code className="block max-w-[360px] overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-muted px-3 py-2 text-xs leading-6">
-                      {example.code}
-                    </code>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </DocSurfaceTableCard>
+        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Tune capability, option structure, value state, interaction state, and size." : "按能力、选项结构、值状态、交互状态和尺寸调试选择器。"} />
+        <ComponentPlayground config={selectPlaygroundConfig} lang={lang} />
       </section>
 
       <section id="select-usage" className={docsSpacing.sectionStack}>
@@ -13699,6 +13868,126 @@ function ButtonGroupPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
       lang={lang} />);
 
 
+}
+
+function TimePickerPreview({ values }: {values: Record<string, string>;}) {
+  const size = values.size as "xs" | "sm" | "md";
+  const mode = values.mode as "native" | "popover";
+  const step = Number(values.step) as 15 | 30 | 60;
+  const hasValue = values.valueState === "selected" || values.valueState === "clearable";
+  const disabled = values.state === "disabled";
+  const invalid = values.state === "invalid";
+  const visualState = (values.state === "hover" || values.state === "focus" || values.state === "open" ? values.state : undefined) as "hover" | "focus" | "open" | undefined;
+  const sharedProps = {
+    mode,
+    size,
+    step,
+    disabled,
+    "aria-invalid": invalid ? true : undefined,
+    "data-state": visualState,
+    clearable: values.valueState === "clearable",
+    defaultValue: hasValue ? "09:30" : undefined,
+    className: "w-[200px]"
+  };
+
+  const node = values.capability === "range" ? (
+    <div className="flex items-center gap-2">
+      <TimePicker {...sharedProps} defaultValue={undefined} placeholder="开始时间" />
+      <span className="text-muted-foreground">至</span>
+      <TimePicker {...sharedProps} defaultValue={undefined} placeholder="结束时间" />
+    </div>) : (
+    <TimePicker {...sharedProps} />);
+
+  if (!invalid) return <div className="w-[440px]">{node}</div>;
+
+  return (
+    <Field data-invalid className="w-[440px]">
+      {node}
+      <FieldError>请选择时间</FieldError>
+    </Field>);
+}
+
+function TimePickerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
+  const usageCode = `<Field data-invalid={error ? true : undefined}>
+  <FieldLabel>提醒时间</FieldLabel>
+  <TimePicker value={time} onValueChange={setTime} aria-invalid={error ? true : undefined} />
+  {error ? <FieldError>请选择时间</FieldError> : null}
+</Field>`;
+
+  return (
+    <div className={docsSpacing.pageStack}>
+      <section id="time-picker" className="flex flex-col gap-2">
+        <PageLead crumb={lang === "en" ? "Components / Time Picker" : "组件 / 时间选择器"} title="TimePicker 时间选择器" lead="用于选择 HH:mm 时间点；属于 fx 组合组件，由 Input、Popover 和 Button 组合而成，不作为 Select 的变体。" actions={actions} />
+      </section>
+
+      <section id="time-picker-playground" className={docsSpacing.sectionStack}>
+        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Tune capability, mode, value state, interaction state, step, and size." : "按能力、呈现方式、值状态、交互状态、步进和尺寸调试时间选择器。"} />
+        <ComponentPlayground config={timePickerPlaygroundConfig} lang={lang} />
+      </section>
+
+      <section id="time-picker-usage" className={docsSpacing.sectionStack}>
+        <SectionLead title="使用方式" description="把 import 和 JSX 调用复制到业务页面里使用。" />
+        <DocSurfaceCard elevated>
+          <CardContent className="p-5">
+            <div className="grid gap-4">
+              <CopyCodeBlock code={timePickerImportCodeForPlayground} label="Import" lang={lang} />
+              <CopyCodeBlock code={usageCode} label="调用" lang={lang} />
+            </div>
+          </CardContent>
+        </DocSurfaceCard>
+      </section>
+
+      <section id="time-picker-props" className={docsSpacing.sectionStack}>
+        <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
+        <DocSurfaceTableCard elevated>
+          <Table className="min-w-[680px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">属性</TableHead>
+                <TableHead>类型</TableHead>
+                <TableHead>默认值</TableHead>
+                <TableHead className="pr-4">描述</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {timePickerPropRows.map((row) =>
+              <TableRow key={row.prop}>
+                  <TableCell className="pl-4 font-medium">{row.prop}</TableCell>
+                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.type}</code></TableCell>
+                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.defaultValue}</code></TableCell>
+                  <TableCell className="pr-4 text-muted-foreground">{row.desc}</TableCell>
+                </TableRow>)}
+            </TableBody>
+          </Table>
+        </DocSurfaceTableCard>
+      </section>
+
+      <section id="time-picker-semantic-dom" className={docsSpacing.sectionStack}>
+        <SectionLead title="语义 DOM" description="TimePicker 保留可定位的 data-slot，便于测试和 AI 读取组件结构。" />
+        <DocSurfaceTableCard elevated>
+          <Table className="min-w-[620px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">部位</TableHead>
+                <TableHead className="pr-4">说明</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {timePickerSemanticDomRows.map((row) =>
+              <TableRow key={row.part}>
+                  <TableCell className="pl-4 font-medium"><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.part}</code></TableCell>
+                  <TableCell className="pr-4 text-muted-foreground">{row.desc}</TableCell>
+                </TableRow>)}
+            </TableBody>
+          </Table>
+        </DocSurfaceTableCard>
+      </section>
+
+      <section id="time-picker-do-dont" className={docsSpacing.sectionStack}>
+        <SectionLead title="正误示例" description="工程师和 AI 生成代码最容易犯的错误，照着做即可。" />
+        <DocDoDont rows={timePickerDoDontRows} elevated />
+      </section>
+    </div>);
 }
 
 function CalendarPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {

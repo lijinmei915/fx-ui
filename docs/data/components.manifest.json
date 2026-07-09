@@ -647,12 +647,18 @@
       "docStatus": "complete",
       "category": "form",
       "nativeStates": [
+        "hover",
         "focus-visible",
         "disabled",
         "aria-invalid"
       ],
       "semanticDom": [
-        "data-slot=\"input\""
+        "data-slot=\"input\"",
+        "data-slot=\"input-group\"",
+        "data-slot=\"input-addon\"",
+        "data-slot=\"input-affix\"",
+        "data-slot=\"input-action\"",
+        "data-state=\"hover|focus\""
       ],
       "tokenRefs": [
         "--foreground",
@@ -665,7 +671,9 @@
       ],
       "usageRules": [
         "使用 Input 前必须以 src/components/ui/input.tsx 为真实 API。",
+        "Input 调试台顺序固定为：能力（基础/搜索）→ 组合方式（无/图标/文字/筛选）→ 位置（左/右）→ 交互状态（默认/悬停/聚焦/输入中/回填/禁用/回填并禁用/报错）→ 尺寸（超小24/默认28/中32）。",
         "真实表单字段使用 FieldGroup + Field + FieldLabel + Input，不用 div/grid 临时拼。",
+        "前后缀、单位、搜索按钮和范围选择使用 InputGroup / InputAddon / InputAffix / InputAction，不在调用处绝对定位图标或覆盖内边距。",
         "错误态使用 Field 的 data-invalid + Input 的 aria-invalid + FieldError。",
         "禁用态使用 Field 的 data-disabled + Input 的 disabled。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
@@ -739,6 +747,11 @@
         "aria-invalid",
         "data-open",
         "data-closed"
+      ],
+      "sizes": [
+        "xs",
+        "sm",
+        "md"
       ],
       "semanticDom": [
         "data-slot=\"select-group\"",
@@ -1640,6 +1653,45 @@
         "用子件组合：TopBar + Brand/Divider/Apps/Search/Actions/IconButton，各司其职。",
         "应用切换、搜索词、搜索范围均受控，状态由页面持有；跳转/搜索逻辑不塞进组件内部。",
         "工具图标必带 aria-label + Tooltip，未读用角标(Badge dot/count)；className 只用于布局，不覆盖基础视觉。"
+      ]
+    },
+    {
+      "name": "TimePicker",
+      "source": "src/components/fx/time-picker.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/fx-time-picker.md",
+      "role": "时间点选择器：HH:mm 时间选择、时间范围组合、原生/弹层模式",
+      "category": "fx",
+      "nativeStates": [
+        "default",
+        "hover",
+        "focus-visible",
+        "open",
+        "disabled",
+        "aria-invalid"
+      ],
+      "semanticDom": [
+        "data-slot=\"time-picker\"",
+        "data-slot=\"time-picker-value\"",
+        "data-slot=\"time-picker-clear\"",
+        "data-slot=\"time-picker-list\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--muted",
+        "--muted-foreground",
+        "--input",
+        "--popover",
+        "--border",
+        "--ring",
+        "--destructive"
+      ],
+      "usageRules": [
+        "使用 TimePicker 前必须以 src/components/fx/time-picker.tsx 为真实 API。",
+        "TimePicker 是时间语义组件，不把普通 Select 临时改造成时间控件。",
+        "范围选择用两个 TimePicker 组合，不把开始/结束时间塞进一个字符串值。",
+        "错误态用 Field + aria-invalid + FieldError。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ]
     },
     {

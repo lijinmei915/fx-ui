@@ -8,6 +8,7 @@
   "autoScenarioComponents": [
     "input",
     "select",
+    "time-picker",
     "checkbox",
     "radio-group",
     "switch",
@@ -1092,7 +1093,10 @@
               "intent": "用于更强调的成员信息、个人卡片或弹层头部。",
               "intentEn": "Use for more prominent member info, profile cards, or overlay headers.",
               "constraint": "不要和同一列表里的 default 混排。",
-              "constraintEn": "Do not mix with default avatars in the same list."
+              "constraintEn": "Do not mix with default avatars in the same list.",
+              "hiddenWhen": {
+                "quantity": ["group", "chat"]
+              }
             },
             {
               "value": "xl",
@@ -1101,7 +1105,10 @@
               "intent": "用于个人资料页、详情头部等更高识别权重的位置。",
               "intentEn": "Use for profile pages or detail headers with higher identity emphasis.",
               "constraint": "只用于低密度区域，避免挤压表格或工具栏。",
-              "constraintEn": "Use only in low-density areas; avoid tables or toolbars."
+              "constraintEn": "Use only in low-density areas; avoid tables or toolbars.",
+              "hiddenWhen": {
+                "quantity": ["group", "chat"]
+              }
             }
           ]
         },
@@ -1160,6 +1167,201 @@
               "intentEn": "Indicate the user is currently offline.",
               "constraint": "使用离线状态，不要用透明度降低整个头像（status=\"offline\"）。",
               "constraintEn": "Use status=\"offline\"; do not lower the opacity of the whole avatar."
+            }
+          ]
+        }
+      ]
+    },
+    "select": {
+      "componentName": "Select",
+      "source": "src/components/ui/select.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "initial": {
+        "capability": "basic",
+        "structure": "plain",
+        "valueState": "placeholder",
+        "state": "normal",
+        "size": "sm"
+      },
+      "guidanceKey": "capability",
+      "props": [
+        {
+          "key": "capability",
+          "zh": "能力",
+          "en": "Capability",
+          "propName": "capability",
+          "type": "segment",
+          "options": [
+            {
+              "value": "basic",
+              "label": "基础",
+              "labelEn": "Basic",
+              "intent": "用于表单字段、设置项等标准单选。",
+              "intentEn": "Use for normal single-choice form fields and settings.",
+              "constraint": "基础选择器由 Select + SelectTrigger + SelectContent + SelectItem 组成，不手写下拉结构。",
+              "constraintEn": "Compose with Select, SelectTrigger, SelectContent, and SelectItem; do not hand-roll a dropdown."
+            },
+            {
+              "value": "filter",
+              "label": "筛选",
+              "labelEn": "Filter",
+              "intent": "用于列表、表格、工具栏里的条件筛选。",
+              "intentEn": "Use for filters in lists, tables, and toolbars.",
+              "constraint": "筛选选择器仍使用 SelectTrigger 的尺寸能力，不在调用处覆盖高度和内边距。",
+              "constraintEn": "Use SelectTrigger sizing for filter selects; do not override height or padding at call sites."
+            }
+          ]
+        },
+        {
+          "key": "structure",
+          "zh": "选项结构",
+          "en": "Option structure",
+          "propName": "children",
+          "type": "segment",
+          "options": [
+            {
+              "value": "plain",
+              "label": "普通",
+              "labelEn": "Plain",
+              "intent": "选项数量少、无需分类时使用单层选项。",
+              "intentEn": "Use a flat option list when choices are few and need no category.",
+              "constraint": "SelectItem 直接放在 SelectContent 内，value 在选项集合内唯一。",
+              "constraintEn": "Place SelectItem directly inside SelectContent; values must be unique."
+            },
+            {
+              "value": "grouped",
+              "label": "分组",
+              "labelEn": "Grouped",
+              "intent": "选项较多或存在类别时使用分组结构。",
+              "intentEn": "Use groups when options are many or categorical.",
+              "constraint": "分组标题用 SelectLabel，不用普通文本或禁用选项伪造。",
+              "constraintEn": "Use SelectLabel for group labels; do not fake labels with text or disabled items."
+            }
+          ]
+        },
+        {
+          "key": "valueState",
+          "zh": "值状态",
+          "en": "Value state",
+          "propName": "value",
+          "type": "segment",
+          "options": [
+            {
+              "value": "placeholder",
+              "label": "占位",
+              "labelEn": "Placeholder",
+              "intent": "尚未选择时显示提示文案。",
+              "intentEn": "Show a prompt before the user has selected a value.",
+              "constraint": "占位文案放 SelectValue placeholder，不新增空值 SelectItem。",
+              "constraintEn": "Put placeholder text on SelectValue; do not add an empty SelectItem."
+            },
+            {
+              "value": "selected",
+              "label": "已选",
+              "labelEn": "Selected",
+              "intent": "已经存在选中值时展示当前选择。",
+              "intentEn": "Show the current value after selection exists.",
+              "constraint": "用 defaultValue / value 表达选中值，业务代码不要手写选中文案。",
+              "constraintEn": "Use defaultValue or value for selection; do not hard-code selected display text."
+            }
+          ]
+        },
+        {
+          "key": "state",
+          "zh": "交互状态",
+          "en": "State",
+          "propName": "state",
+          "type": "segment",
+          "options": [
+            {
+              "value": "normal",
+              "label": "默认",
+              "labelEn": "Default",
+              "intent": "默认可交互状态。",
+              "intentEn": "Default interactive state.",
+              "constraint": "不额外传状态 prop。",
+              "constraintEn": "Pass no extra state prop."
+            },
+            {
+              "value": "hover",
+              "label": "悬停",
+              "labelEn": "Hover",
+              "intent": "鼠标经过时提示可点击。",
+              "intentEn": "Indicate clickability on hover.",
+              "constraint": "悬停是原生交互态；调试台只用 data-state 预览，不作为业务 API。",
+              "constraintEn": "Hover is native interaction; data-state is only for playground preview, not business API."
+            },
+            {
+              "value": "focus",
+              "label": "聚焦",
+              "labelEn": "Focus",
+              "intent": "键盘焦点或点击聚焦时显示边框反馈。",
+              "intentEn": "Show border feedback on keyboard or click focus.",
+              "constraint": "聚焦由 focus-visible 驱动，不在调用处覆盖边框。",
+              "constraintEn": "Focus is driven by focus-visible; do not override borders at call sites."
+            },
+            {
+              "value": "open",
+              "label": "展开",
+              "labelEn": "Open",
+              "intent": "下拉浮层打开，用户正在查看选项。",
+              "intentEn": "The popup is open and options are visible.",
+              "constraint": "打开态由 Select 自身状态驱动；不要用固定展示的 div 替代浮层。",
+              "constraintEn": "Open state is owned by Select; do not replace the popup with a static div."
+            },
+            {
+              "value": "invalid",
+              "label": "报错",
+              "labelEn": "Error",
+              "intent": "字段校验失败，需要用户重新选择。",
+              "intentEn": "Validation failed and the user must choose again.",
+              "constraint": "在 SelectTrigger 上设置 aria-invalid，并用 FieldError 承载错误文案。",
+              "constraintEn": "Set aria-invalid on SelectTrigger and show the message with FieldError."
+            },
+            {
+              "value": "disabled",
+              "label": "禁用",
+              "labelEn": "Disabled",
+              "intent": "当前不可选择。",
+              "intentEn": "Selection is currently unavailable.",
+              "constraint": "使用 Select 的 disabled，不用 opacity 或 pointer-events 假装禁用。",
+              "constraintEn": "Use Select disabled; do not fake disabled state with opacity or pointer-events."
+            }
+          ]
+        },
+        {
+          "key": "size",
+          "zh": "尺寸",
+          "en": "Size",
+          "propName": "size",
+          "type": "segment",
+          "options": [
+            {
+              "value": "xs",
+              "label": "超小24",
+              "labelEn": "XS 24",
+              "intent": "用于高密度表格筛选、紧凑工具栏。",
+              "intentEn": "Use in dense table filters and compact toolbars.",
+              "constraint": "只传 size=\"xs\"，不覆盖高度。",
+              "constraintEn": "Pass size=\"xs\" only; do not override height."
+            },
+            {
+              "value": "sm",
+              "label": "默认28",
+              "labelEn": "Default 28",
+              "intent": "用于常规筛选和表单，是 Select 默认尺寸。",
+              "intentEn": "Default size for regular filters and forms.",
+              "constraint": "默认尺寸可省略 size；同一行控件尺寸一致。",
+              "constraintEn": "Omit size for default; keep controls in the same row aligned."
+            },
+            {
+              "value": "md",
+              "label": "中32",
+              "labelEn": "Medium 32",
+              "intent": "用于更宽松的表单或需要更大点击目标的位置。",
+              "intentEn": "Use in roomier forms or where a larger target is needed.",
+              "constraint": "只传 size=\"md\"，不覆盖高度。",
+              "constraintEn": "Pass size=\"md\" only; do not override height."
             }
           ]
         }

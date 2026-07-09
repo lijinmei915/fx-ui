@@ -62,11 +62,12 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScro
 - 语义 DOM：data-slot="select-group"、data-slot="select-value"、data-slot="select-trigger"、data-slot="select-content"、data-slot="select-label"、data-slot="select-item"、data-slot="select-separator"、data-slot="select-scroll-up-button"、data-slot="select-scroll-down-button"
 - 原生/数据状态：hover、focus-visible、disabled、aria-invalid、data-open、data-closed
 - 变体：无独立 variant prop
+- 尺寸：`xs`=24px、`sm`=28px（默认）、`md`=32px
 - 导出项：Select、SelectContent、SelectGroup、SelectItem、SelectLabel、SelectScrollDownButton、SelectScrollUpButton、SelectSeparator、SelectTrigger、SelectValue
 
 ## 场景示例 {#examples}
 
-### 推荐场景
+### 基础选择
 
 - 使用意图：用于从一组选项中选择一个值。
 - 规则：优先使用源码已有子组件、props、状态和 token，不复制内部 JSX 到业务页面里重写。
@@ -85,6 +86,20 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScro
 </Select>
 ```
 
+### 筛选选择
+
+```tsx
+<Select>
+  <SelectTrigger size="xs">
+    <SelectValue placeholder="筛选状态" />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectItem value="active">进行中</SelectItem>
+    <SelectItem value="done">已完成</SelectItem>
+  </SelectContent>
+</Select>
+```
+
 ### 不适合场景
 
 - 不用 Select 承载它职责之外的语义。
@@ -95,6 +110,13 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScro
 
 该组件以源码导出的子组件和原生 props 为准。使用前读取 `src/components/ui/select.tsx`，不要凭空发明 API。
 
+| 属性 | 类型 | 默认值 | 描述 |
+| --- | --- | --- | --- |
+| `value / defaultValue` | `string` | - | 受控 / 非受控的当前选中值 |
+| `onValueChange` | `(value: string) => void` | - | 选中值变化时的回调 |
+| `disabled` | `boolean` | `false` | 禁用整个选择器 |
+| `size`（SelectTrigger） | `"xs" \| "sm" \| "md"` | `"sm"` | 触发器尺寸：24 / 28 / 32 |
+| `value`（SelectItem） | `string` | - | 选项取值，需要在选项集合内唯一 |
 
 ## Semantic DOM {#semantic-dom}
 
@@ -115,9 +137,9 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScro
 | 状态 | 说明 |
 | --- | --- |
 | `hover` | 鼠标悬停反馈，来自源码状态样式 |
-| `focus-visible` | 键盘焦点态，必须保留可访问焦点环 |
-| `disabled` | 禁用态，阻止交互并降低视觉权重 |
-| `aria-invalid` | 校验失败语义，同时驱动错误态样式 |
+| `focus-visible` | 键盘焦点态，以 1px 边框变化反馈，不加外扩 focus ring |
+| `disabled` | 禁用态，阻止交互并使用禁用语义色 |
+| `aria-invalid` | 校验失败语义，以 1px 错误边框反馈 |
 | `data-open` | 浮层或折叠内容打开态 |
 | `data-closed` | 浮层或折叠内容关闭态 |
 
@@ -147,6 +169,8 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScro
 - 禁用态使用源码支持的 `disabled` / `data-disabled`，不要靠 opacity 伪装。
 - `SelectItem` 放在 `SelectContent` 内，选项多时用 `SelectGroup + SelectLabel`。
 - 未选择态用 `SelectValue` 的 placeholder，不写空字符串选项。
+- 尺寸只用 `SelectTrigger size`：`xs` 24px、`sm` 28px（默认）、`md` 32px。
+- 校验失败时在 `SelectTrigger` 上设置 `aria-invalid`，错误文案放字段组件。
 - 使用 Select 前必须以 src/components/ui/select.tsx 为真实 API。
 - 不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。
 - className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。

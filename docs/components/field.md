@@ -135,7 +135,7 @@ Field 由多个 open-code 子组件组成。
 | `Field` | 单个字段容器 | `orientation`、`data-invalid`、`data-disabled` |
 | `FieldLabel` | 字段标签 | `htmlFor` |
 | `FieldDescription` | 辅助说明 | 原生 `p` 属性 |
-| `FieldError` | 错误文案 | `children`、`errors` |
+| `FieldError` | 错误文案 | `children`、`errors`；12px，距离控件 4px |
 | `FieldSet` | 一组相关字段 | 原生 `fieldset` 属性 |
 | `FieldLegend` | 字段组标题 | `variant="legend" | "label"` |
 | `FieldSeparator` | 字段组分隔线 | `children` |
@@ -150,7 +150,7 @@ Field 由多个 open-code 子组件组成。
 | `data-slot="field"` | 单个字段容器，默认 `role="group"` |
 | `data-slot="field-label"` | 字段标签或标题 |
 | `data-slot="field-description"` | 字段辅助说明 |
-| `data-slot="field-error"` | 字段错误文案，带 `role="alert"` |
+| `data-slot="field-error"` | 字段错误文案，带 `role="alert"`；文字 12px，和上方控件间距 4px |
 | `data-slot="field-set"` | 原生 fieldset |
 | `data-slot="field-legend"` | 原生 legend |
 | `data-slot="field-separator"` | 字段组分隔线 |
@@ -175,6 +175,7 @@ Field 由多个 open-code 子组件组成。
 - 禁用态必须同时有字段级 `data-disabled` 和控件级 `disabled`。
 - 多个相关字段用 `FieldSet + FieldLegend`，不要用普通标题加一堆 div。
 - `FieldError` 用于错误文案，不要用手写红色 `p`。
+- 错误文案统一使用 `FieldError` 的 12px 文本和 4px 上间距，不在 Input / Select 页面单独调。
 - `className` 只用于布局和外部间距，不覆盖 Field 的颜色、字号和状态样式。
 
 ## 正误示例 {#do-dont}

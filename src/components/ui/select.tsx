@@ -26,20 +26,29 @@ function SelectValue({ className, ...props }: SelectPrimitive.Value.Props) {
   )
 }
 
+const selectTriggerSizeClassName = {
+  xs: "h-(--fx-control-xs-height) rounded-md text-xs",
+  sm: "h-(--fx-control-sm-height) rounded-md text-sm",
+  md: "h-(--fx-control-md-height) rounded-lg text-base",
+} as const
+
+type SelectTriggerSize = keyof typeof selectTriggerSizeClassName
+
 function SelectTrigger({
   className,
-  size = "default",
+  size = "sm",
   children,
   ...props
 }: SelectPrimitive.Trigger.Props & {
-  size?: "sm" | "default"
+  size?: SelectTriggerSize
 }) {
   return (
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        "flex w-fit items-center justify-between gap-1.5 rounded-lg border border-input bg-transparent pr-(--fx-control-px-xs) pl-(--fx-control-px-sm) text-base whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-foreground-disabled data-[size=default]:h-(--fx-control-md-height) data-[size=sm]:h-(--fx-control-sm-height) data-[size=sm]:rounded-[min(var(--radius-md),10px)] *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "flex w-fit items-center justify-between gap-(--fx-control-gap-tight) border border-input bg-surface pr-(--fx-control-px-xs) pl-(--fx-control-px-sm) whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring disabled:cursor-not-allowed disabled:bg-muted disabled:text-foreground-disabled disabled:opacity-100 aria-invalid:border-destructive data-[state=hover]:border-ring data-[state=focus]:border-ring data-[state=open]:border-ring data-[state=open]:bg-muted data-placeholder:text-foreground-disabled *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-(--fx-control-gap-tight) dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        selectTriggerSizeClassName[size],
         className
       )}
       {...props}

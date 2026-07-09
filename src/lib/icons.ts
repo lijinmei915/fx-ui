@@ -48,6 +48,7 @@ export {
   IconLockOpen as LockOpenIcon,
   IconSelector as ChevronsUpDownIcon,
   IconCircle as CircleIcon,
+  IconClock as ClockIcon,
   IconCode as Code2Icon,
   IconComponents as ComponentsIcon,
   IconCopy as CopyIcon,

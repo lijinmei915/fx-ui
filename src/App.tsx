@@ -36,7 +36,6 @@ import {
   InboxIcon,
   HelpIcon,
   BellIcon,
-  BellFilledIcon,
   BoltIcon,
   BoldIcon,
   BorderStyleIcon,
@@ -67,10 +66,8 @@ import {
   CheckIcon,
   CheckCircleFilledIcon,
   HomeFilledIcon,
-  DatabaseFilledIcon,
   UserFilledIcon,
   FolderFilledIcon,
-  StarFilledIcon,
   CopyIcon,
   CreditCardIcon,
   DatabaseIcon,
@@ -86,7 +83,6 @@ import {
   SearchIcon,
   SettingsIcon,
   ShadowIcon,
-  SparklesIcon,
   StarIcon,
   TextSizeIcon,
   TypographyIcon,
@@ -1736,9 +1732,6 @@ const navMenuDoDontRows = [
 const iconAnchors = [
 { label: "图标库", labelEn: "Icon Library", href: "#icon-library" },
 { label: "调试台", labelEn: "Playground", href: "#icon-playground" },
-{ label: "组件总览", labelEn: "Overview", href: "#icon-overview" },
-{ label: "场景示例", labelEn: "Scenario examples", href: "#icon-preview" },
-{ label: "使用方式", labelEn: "Usage", href: "#icon-usage" },
 { label: "API", href: "#icon-props" },
 { label: "语义 DOM", labelEn: "Semantic DOM", href: "#icon-semantic-dom" },
 { label: "正误示例", labelEn: "Do / Don’t", href: "#icon-do-dont" }];
@@ -1756,6 +1749,7 @@ const agentSurfaceAnchors = [
 
 
 const inputAnchors = [
+{ label: "搜索归属", href: "#input-search-boundary" },
 { label: "使用方式", href: "#input-usage" },
 { label: "API", href: "#input-props" },
 { label: "语义 DOM", href: "#input-semantic-dom" },
@@ -7439,8 +7433,8 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         lang === "en" ? "Usage" : "使用方式"} description={
 
         lang === "en" ?
-        "Copy the import; JSX usage is in the recommended code panel in Playground above." :
-        "复制 import 即可；具体 JSX 写法见上方「调试台」右侧的推荐写法。"} />
+        "Copy the import; more JSX combinations are generated in the Playground code tab above." :
+        "复制 import 即可；更多组合写法见上方「调试台」的代码 Tab。"} />
 
         
         <DocSurfaceCard elevated>
@@ -9042,11 +9036,7 @@ const iconPropRows = [
 { prop: "data-icon", type: "'inline-start' | 'inline-end'", defaultValue: "—", desc: "放进 Button 时标记图标位置，尺寸交给 Button 接管，不再手写 size-*", descEn: "Marks icon placement inside Button; Button then controls sizing" }];
 
 
-const iconScenarioFilters = [
-{ value: "type", label: "类型", labelEn: "Type" },
-{ value: "size", label: "尺寸", labelEn: "Size" }];
-
-type IconPlaygroundMode = "line" | "filled" | "button" | "chip";
+type IconPlaygroundStyle = "line" | "filled";
 type IconPlaygroundColor = "foreground" | "muted" | "primary" | "success" | "warning" | "destructive" | "info";
 
 const iconPlaygroundSizeClass: Record<string, string> = {
@@ -9088,64 +9078,66 @@ function getIconPlaygroundColor(value: string) {
   return iconPlaygroundColors.find((item) => item.value === value) ?? iconPlaygroundColors[0];
 }
 
-function getIconPlaygroundComponent(icon: typeof iconPlaygroundDemoIcon, mode: IconPlaygroundMode) {
-  return mode === "filled" || mode === "chip" ? icon.filled ?? icon.line : icon.line;
+function getIconPlaygroundComponent(icon: typeof iconPlaygroundDemoIcon, style: IconPlaygroundStyle) {
+  return style === "filled" ? icon.filled ?? icon.line : icon.line;
 }
 
-function getIconPlaygroundComponentName(icon: typeof iconPlaygroundDemoIcon, mode: IconPlaygroundMode) {
-  return mode === "filled" || mode === "chip" ? icon.filledName ?? icon.lineName : icon.lineName;
+function getIconPlaygroundComponentName(icon: typeof iconPlaygroundDemoIcon, style: IconPlaygroundStyle) {
+  return style === "filled" ? icon.filledName ?? icon.lineName : icon.lineName;
 }
 
 function renderIconPlayground(c: Record<string, string>, lang: Lang) {
   const icon = iconPlaygroundDemoIcon;
-  const mode = c.mode as IconPlaygroundMode;
-  const Icon = getIconPlaygroundComponent(icon, mode);
-  const LineIcon = icon.line;
+  const styleValue = (c.style || "line") as IconPlaygroundStyle;
+  const hasBackground = c.background === "true";
+  const hasComposition = c.composition === "true";
+  const Icon = getIconPlaygroundComponent(icon, styleValue);
   const sizeKey = c.size || "20";
   const size = Number(sizeKey) || 20;
   const color = getIconPlaygroundColor(c.color);
   const label = lang === "en" ? icon.labelEn : icon.label;
   const style = { width: size, height: size } as React.CSSProperties;
   const circleSizeClass = iconPlaygroundCircleSizeClass[sizeKey] ?? iconPlaygroundCircleSizeClass["20"];
+  const iconNode = hasBackground ? (
+    <span className={`flex ${circleSizeClass} items-center justify-center rounded-full bg-primary text-primary-foreground`}>
+      <Icon style={style} />
+    </span>
+  ) : (
+    <Icon className={color.className} style={style} />
+  );
 
-  if (mode === "button") {
-    return (
-      <Button>
-        <LineIcon data-icon="inline-start" />
-        {label}
-      </Button>);
+  if (hasComposition) {
+    return <span className={`inline-flex items-center gap-(--fx-control-gap-tight) ${hasBackground ? "text-foreground" : color.className}`}>{iconNode}<span>{label}</span></span>;
   }
 
-  if (mode === "chip") {
-    return (
-      <span className={`flex ${circleSizeClass} items-center justify-center rounded-full bg-primary text-primary-foreground`}>
-        <Icon style={style} />
-      </span>);
-  }
-
-  return <Icon className={color.className} style={style} />;
+  return iconNode;
 }
 
 function genIconPlaygroundCode(c: Record<string, string>, lang: Lang) {
   const icon = iconPlaygroundDemoIcon;
-  const mode = c.mode as IconPlaygroundMode;
+  const styleValue = (c.style || "line") as IconPlaygroundStyle;
+  const hasBackground = c.background === "true";
+  const hasComposition = c.composition === "true";
   const sizeKey = c.size || "20";
   const color = getIconPlaygroundColor(c.color);
   const label = lang === "en" ? icon.labelEn : icon.label;
-  const componentName = getIconPlaygroundComponentName(icon, mode);
+  const componentName = getIconPlaygroundComponentName(icon, styleValue);
   const importCode = `import { ${icon.importName} } from "@/lib/icons"`;
   const iconSizeClass = iconPlaygroundSizeClass[sizeKey] ?? iconPlaygroundSizeClass["20"];
   const circleSizeClass = iconPlaygroundCircleSizeClass[sizeKey] ?? iconPlaygroundCircleSizeClass["20"];
+  const iconCode = hasBackground ?
+  `<span className="flex ${circleSizeClass} items-center justify-center rounded-full bg-primary text-primary-foreground">
+  <${componentName} className="${iconSizeClass}" />
+</span>` :
+  `<${componentName} className="${iconSizeClass} ${color.className}" />`;
 
-  if (mode === "button") {
-    return `${importCode}\n\n<Button>\n  <${icon.lineName} data-icon="inline-start" />\n  ${label}\n</Button>`;
+  if (hasComposition) {
+    const wrapperColorClass = hasBackground ? "text-foreground" : color.className;
+    const indentedIconCode = iconCode.split("\n").map((line) => `  ${line}`).join("\n");
+    return `${importCode}\n\n<span className="inline-flex items-center gap-(--fx-control-gap-tight) ${wrapperColorClass}">\n${indentedIconCode}\n  <span>${label}</span>\n</span>`;
   }
 
-  if (mode === "chip") {
-    return `${importCode}\n\n<span className="flex ${circleSizeClass} items-center justify-center rounded-full bg-primary text-primary-foreground">\n  <${componentName} className="${iconSizeClass}" />\n</span>`;
-  }
-
-  return `${importCode}\n\n<${componentName} className="${iconSizeClass} ${color.className}" />`;
+  return `${importCode}\n\n${iconCode}`;
 }
 
 const iconPlaygroundConfig = {
@@ -9157,8 +9149,6 @@ const iconPlaygroundConfig = {
 };
 
 function IconPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
-  const iconImportCode = `import { SearchIcon, HomeFilledIcon } from "@/lib/icons"`;
-
   const iconSemanticRows = [
   { part: "svg.tabler-icon", desc: "每个图标渲染为带 .tabler-icon 类的 <svg>，全局在此类上统一 stroke-width，不要逐个图标改线宽。", descEn: "Each icon renders as <svg class=\"tabler-icon\">; stroke-width is set globally on this class." },
   { part: "currentColor", desc: "描边/填充默认取 currentColor，跟随父级 text-* 语义色；改色改父级文字色即可。", descEn: "Stroke/fill default to currentColor and follow the parent text color." },
@@ -9170,117 +9160,6 @@ function IconPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   { do: "按钮内图标用 data-icon 标位，尺寸交给 Button。", doEn: "Mark icons in Button with data-icon; Button owns size.", dont: "给按钮内图标手写 size-4 等尺寸。", dontEn: "Hard-code icon size like size-4 inside Button." },
   { do: "纯图标按钮加 aria-label。", doEn: "Give icon-only buttons an aria-label.", dont: "纯图标按钮不给可访问名称。", dontEn: "Omit accessible names on icon-only buttons." },
   { do: "统一从 @/lib/icons 导入。", doEn: "Import from @/lib/icons.", dont: "引入第二个图标库（如 lucide-react）。", dontEn: "Add a second icon library like lucide-react." }];
-
-
-  const iconScenarios = [
-  {
-    title: "单色图标", titleEn: "Monochrome", group: "type",
-    preview:
-    <span className="flex items-center gap-3">
-          <HomeIcon className="size-5 text-foreground" />
-          <HomeIcon className="size-5 text-muted-foreground" />
-          <HomeIcon className="size-5 text-foreground-disabled" />
-        </span>,
-
-    intent: "绝大多数场景，跟随文字层级。", intentEn: "Most cases; follows the text hierarchy.",
-    constraint: "默认 text-foreground；次要降到 text-muted-foreground、禁用 text-foreground-disabled。", constraintEn: "Default text-foreground; muted for secondary, foreground-disabled for disabled.",
-    code: '<HomeIcon className="size-5 text-foreground" />'
-  },
-  {
-    title: "彩色语义图标", titleEn: "Colored semantic", group: "type",
-    preview:
-    <span className="flex items-center gap-2">
-          <CheckCircleIcon className="size-5 text-success" />
-          <BellIcon className="size-5 text-warning" />
-          <PackageIcon className="size-5 text-destructive" />
-        </span>,
-
-    intent: "表达状态或品牌强调。", intentEn: "Convey status or brand emphasis.",
-    constraint: "只用 success / warning / destructive 等语义色 token。", constraintEn: "Use only semantic color tokens.",
-    code: '<CheckCircleIcon className="size-5 text-success" />'
-  },
-  {
-    title: "面型", titleEn: "Solid", group: "type",
-    preview: <HomeFilledIcon className="size-5 text-primary" />,
-    intent: "选中、激活或需要强调时，由线性切换为面型。", intentEn: "Switch from line to solid for selected/active/emphasis.",
-    constraint: "用 Tabler 的 *Filled 变体，不手写填充路径。", constraintEn: "Use Tabler *Filled variants, not hand-drawn fills.",
-    code: '<HomeFilledIcon className="size-5 text-primary" />'
-  },
-  {
-    title: "反白圆底", titleEn: "Filled-reverse", group: "type",
-    preview:
-    <span className="flex size-9 items-center justify-center rounded-full bg-primary">
-          <HomeFilledIcon className="size-5 text-primary-foreground" />
-        </span>,
-
-    intent: "头像、入口或状态徽标等需要色块承托的场景。", intentEn: "Avatars, entries, and status badges that need a color chip.",
-    constraint: "圆底用 bg-primary 主题色，图标用 text-primary-foreground 反白。", constraintEn: "Circle uses bg-primary; icon uses text-primary-foreground.",
-    code: '<span className="rounded-full bg-primary">\n  <HomeFilledIcon className="text-primary-foreground" />\n</span>'
-  },
-  {
-    title: "按钮内图标", titleEn: "Icon in Button", group: "type",
-    preview:
-    <Button>
-          <SearchIcon data-icon="inline-start" />
-          {lang === "en" ? "Search" : "搜索"}
-        </Button>,
-
-    intent: "操作按钮带前/后置图标。", intentEn: "Action buttons with a leading/trailing icon.",
-    constraint: "用 data-icon 标位，尺寸交给 Button，不写 size-*。", constraintEn: "Mark with data-icon; Button controls size, no size-*.",
-    code: '<Button><SearchIcon data-icon="inline-start" />搜索</Button>'
-  },
-  {
-    title: "纯图标按钮", titleEn: "Icon-only Button", group: "type",
-    preview:
-    <Button size="icon-md" aria-label={lang === "en" ? "Notifications" : "通知"}>
-          <BellIcon data-icon="inline-start" />
-        </Button>,
-
-    intent: "工具栏等空间紧凑、含义明确的操作。", intentEn: "Compact toolbar actions with clear meaning.",
-    constraint: "必须提供 aria-label。", constraintEn: "Must provide an aria-label.",
-    code: '<Button size="icon-md" aria-label="通知"><BellIcon data-icon="inline-start" /></Button>'
-  },
-  {
-    title: "行内说明图标", titleEn: "Inline supporting", group: "type",
-    preview:
-    <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <SparklesIcon className="size-4" />
-          {lang === "en" ? "AI generated" : "AI 生成"}
-        </span>,
-
-    intent: "正文、提示中的辅助说明图标。", intentEn: "Supporting icons inside body text or hints.",
-    constraint: "用 text-muted-foreground，尺寸跟随文字。", constraintEn: "Use text-muted-foreground; size follows text.",
-    code: '<span className="text-muted-foreground"><SparklesIcon className="size-4" /> AI 生成</span>'
-  },
-  {
-    title: "size-3 · 12px", titleEn: "size-3 · 12px", group: "size",
-    preview: <SettingsIcon className="size-3" />,
-    intent: "内联、徽标等极小空间。", intentEn: "Inline and badges in very tight space.",
-    constraint: "跟随 12/13 小字号，不再放大。", constraintEn: "Pairs with 12/13 text; don't scale up.",
-    code: '<SettingsIcon className="size-3" />'
-  },
-  {
-    title: "size-4 · 16px", titleEn: "size-4 · 16px", group: "size",
-    preview: <SettingsIcon className="size-4" />,
-    intent: "默认尺寸，正文与按钮内的首选。", intentEn: "Default size; preferred in body text and buttons.",
-    constraint: "大多数场景用这一档；按钮内交给 data-icon。", constraintEn: "Use for most cases; inside Button use data-icon.",
-    code: '<SettingsIcon className="size-4" />'
-  },
-  {
-    title: "size-5 · 20px", titleEn: "size-5 · 20px", group: "size",
-    preview: <SettingsIcon className="size-5" />,
-    intent: "列表项、卡片标题旁的强调图标。", intentEn: "Emphasis icons next to list items or card titles.",
-    constraint: "用于需要稍强存在感的场景，不滥用。", constraintEn: "For slightly stronger presence; don't overuse.",
-    code: '<SettingsIcon className="size-5" />'
-  },
-  {
-    title: "size-6 · 24px", titleEn: "size-6 · 24px", group: "size",
-    preview: <SettingsIcon className="size-6" />,
-    intent: "页面级、空状态的大图标。", intentEn: "Page-level and empty-state large icons.",
-    constraint: "谨慎使用，不在密集文本里塞大图标。", constraintEn: "Use sparingly; avoid large icons in dense text.",
-    code: '<SettingsIcon className="size-6" />'
-  }];
-
 
   return (
     <div className={docsSpacing.pageStack}>
@@ -9302,113 +9181,6 @@ function IconPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
           "Options, intent, and constraints are read from the component playground manifest. Source rendering still uses @/lib/icons." :
           "选项、意图和约束来自组件调试台 manifest；源码侧只负责用 @/lib/icons 渲染真实图标。"} />
         <ComponentPlayground config={iconPlaygroundConfig} lang={lang} />
-      </section>
-
-      <section id="icon-overview" className={docsSpacing.sectionStack}>
-        <div className="flex flex-col gap-1">
-          <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Overview" : "组件总览"}</h2>
-          <p className={docsSpacing.sectionDesc}>
-            {lang === "en" ?
-            "A compact look at icon types and sizes, to quickly scan what icons look like." :
-            "紧凑展示图标的类型与尺寸，用来快速查看图标长什么样。"}
-          </p>
-        </div>
-        <DocSurfaceCard elevated>
-          <CardContent className="grid gap-6 p-6">
-            <div className="grid gap-3">
-              <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Monochrome line" : "单色线性"}</h3>
-              <div className="flex flex-wrap items-center gap-6 text-foreground">
-                <HomeIcon className="size-6" />
-                <CheckCircleIcon className="size-6" />
-                <BellIcon className="size-6" />
-                <StarIcon className="size-6" />
-                <DatabaseIcon className="size-6" />
-              </div>
-            </div>
-            <div className="border-t border-dashed border-border" />
-            <div className="grid gap-3">
-              <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Colored line" : "彩色线性"}</h3>
-              <div className="flex flex-wrap items-center gap-6">
-                <HomeIcon className="size-6 text-primary" />
-                <CheckCircleIcon className="size-6 text-success" />
-                <BellIcon className="size-6 text-warning" />
-                <StarIcon className="size-6 text-destructive" />
-                <DatabaseIcon className="size-6 text-info" />
-              </div>
-            </div>
-            <div className="border-t border-dashed border-border" />
-            <div className="grid gap-3">
-              <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Solid" : "面型"}</h3>
-              <div className="flex flex-wrap items-center gap-6 text-primary">
-                <HomeFilledIcon className="size-6" />
-                <CheckCircleFilledIcon className="size-6" />
-                <BellFilledIcon className="size-6" />
-                <StarFilledIcon className="size-6" />
-                <DatabaseFilledIcon className="size-6" />
-              </div>
-            </div>
-            <div className="border-t border-dashed border-border" />
-            <div className="grid gap-3">
-              <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Reverse" : "反白"}</h3>
-              <div className="flex flex-wrap items-center gap-6">
-                <span className="flex size-9 items-center justify-center rounded-md bg-primary"><HomeIcon className="size-5 text-primary-foreground" /></span>
-                <span className="flex size-9 items-center justify-center rounded-md bg-primary"><HomeFilledIcon className="size-5 text-primary-foreground" /></span>
-                <span className="flex size-9 items-center justify-center rounded-full bg-primary"><HomeIcon className="size-5 text-primary-foreground" /></span>
-                <span className="flex size-9 items-center justify-center rounded-full bg-primary"><HomeFilledIcon className="size-5 text-primary-foreground" /></span>
-              </div>
-            </div>
-            <div className="border-t border-dashed border-border" />
-            <div className="grid gap-3">
-              <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Size" : "尺寸"}</h3>
-              <div className="flex flex-wrap items-end gap-6 text-foreground">
-                <SettingsIcon className="size-3" />
-                <SettingsIcon className="size-3.5" />
-                <SettingsIcon className="size-4" />
-                <SettingsIcon className="size-5" />
-                <SettingsIcon className="size-6" />
-              </div>
-            </div>
-          </CardContent>
-        </DocSurfaceCard>
-      </section>
-
-      <section id="icon-preview" className={docsSpacing.sectionStack}>
-        <SectionLead title={
-        lang === "en" ? "Scenario examples" : "场景示例"} description={
-
-        lang === "en" ? "Common usages and where each fits." : "常见用法与适用场景。"} />
-
-        
-        <ScenarioTable
-          lang={lang}
-          elevated
-          filters={iconScenarioFilters}
-          rows={iconScenarios.map((s) => ({
-            key: s.title,
-            group: s.group,
-            title: lang === "en" ? s.titleEn : s.title,
-            preview: s.preview,
-            intent: lang === "en" ? s.intentEn : s.intent,
-            constraint: lang === "en" ? s.constraintEn : s.constraint,
-            code: s.code
-          }))} />
-        
-      </section>
-
-      <section id="icon-usage" className={docsSpacing.sectionStack}>
-        <SectionLead title={
-        lang === "en" ? "Usage" : "使用方式"} description={
-
-        lang === "en" ?
-        "Already installed; import from @/lib/icons. JSX patterns are in the recommended API column above." :
-        "图标库已装好，无需单独安装；统一从 @/lib/icons 导入。具体 JSX 写法见上方「场景示例」的推荐写法列。"} />
-
-        
-        <DocSurfaceCard elevated>
-          <CardContent className="p-5">
-          <CopyCodeBlock code={iconImportCode} label="Import" lang={lang} />
-          </CardContent>
-        </DocSurfaceCard>
       </section>
 
       <section id="icon-props" className={docsSpacing.sectionStack}>
@@ -9566,12 +9338,28 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
     <div className={docsSpacing.pageStack}>
       <section id="input" className="flex flex-col gap-2">
-        <PageLead crumb={lang === "en" ? "Components / Input" : "组件 / 输入框"} title="Input 输入框" lead="单行文本录入控件，用于表单字段、搜索框、内联编辑等场景。" actions={actions} />
+        <PageLead crumb={lang === "en" ? "Components / Input" : "组件 / 输入框"} title="Input 输入框" lead="单行文本录入控件，用于表单字段、搜索、内联编辑等场景。" actions={actions} />
       </section>
 
       <section id="input-playground" className={docsSpacing.sectionStack}>
         <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Tune capability, composition, side, state, and size." : "按能力、组合方式、位置、交互状态和尺寸调试输入框。"} />
         <ComponentPlayground config={inputPlaygroundConfig} lang={lang} />
+      </section>
+
+      <section id="input-search-boundary" className={docsSpacing.sectionStack}>
+        <SectionLead title={"搜索归属"} description={"搜索归入 Input 的能力组合，不新增基础 SearchInput。"} />
+        <DocSurfaceCard elevated>
+          <CardContent className="p-5">
+            <div className="grid gap-3 text-sm leading-6 text-muted-foreground">
+              <p>
+                Ant Design 在 Input 文档内提供 Input.Search / 带搜索的输入框，fx-ui 同样把搜索视为 Input 体系里的能力，由 InputGroup、InputAffix、InputAddon 和 InputAction 组合表达。
+              </p>
+              <p>
+                当前默认尺寸为 28px；输入文字为 14px / 20px / 400，placeholder 同为 400，颜色使用 text-foreground-disabled。边框为 1px，聚焦、悬停和错误态只替换边框 token，不额外添加聚焦环。
+              </p>
+            </div>
+          </CardContent>
+        </DocSurfaceCard>
       </section>
 
       <section id="input-usage" className={docsSpacing.sectionStack}>
@@ -13458,7 +13246,7 @@ function StandardDocPage({
       {!hideUsage ? <section id={`${slug}-usage`} className={docsSpacing.sectionStack}>
         <SectionLead title={"使用方式"} description={
 
-        usageCode ? "把 import 和完整组装写法复制到业务页面里使用。" : "复制 import 即可；具体 JSX 写法见上方「场景示例」的推荐写法列。"} />
+        usageCode ? "把 import 和完整组装写法复制到业务页面里使用。" : "复制 import 即可；更多组合写法见上方「调试台」的代码 Tab。"} />
         
         <DocSurfaceCard elevated>
           <CardContent className="grid gap-4 p-5">

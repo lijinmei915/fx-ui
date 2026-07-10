@@ -143,8 +143,8 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
       data-slot="card"
       className="overflow-hidden rounded-xl border border-border-container bg-card shadow-l1 [--card-spacing:var(--fx-panel-padding)] [--playground-gap:var(--fx-panel-gap)]"
     >
-      <div className="border-b border-border-subtle bg-card p-(--card-spacing)">
-        <div className="grid gap-(--playground-gap) xl:grid-cols-2">
+      <div className="overflow-x-auto border-b border-border-subtle bg-card">
+        <div className="grid min-w-[1080px] grid-cols-[minmax(0,1fr)_minmax(360px,1fr)] gap-(--playground-gap) p-(--card-spacing)">
           <div className="flex flex-col gap-(--playground-gap)">
             <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Interactive props" : "实时属性"}</PlaygroundSectionTitle>
             {visibleProps.map((p) => (

@@ -42,19 +42,20 @@
       "source": "src/lib/icons.ts",
       "playgroundComponent": "src/components/fx/component-playground.tsx",
       "initial": {
-        "mode": "line",
+        "style": "line",
+        "background": "false",
+        "composition": "false",
         "size": "20",
         "color": "foreground"
       },
-      "guidanceKey": "mode",
+      "guidanceKey": "style",
       "props": [
         {
-          "key": "mode",
-          "zh": "呈现方式",
-          "en": "Mode",
-          "propName": "composition",
+          "key": "style",
+          "zh": "样式",
+          "en": "Style",
+          "propName": "style",
           "type": "segment",
-          "hasAll": true,
           "options": [
             {
               "value": "line",
@@ -73,24 +74,60 @@
               "intentEn": "Use for selected, active, or more recognizable states.",
               "constraint": "只使用 @/lib/icons 暴露的 Filled 变体；没有面型时回退线性。",
               "constraintEn": "Use Filled variants exposed by @/lib/icons; fall back to line when unavailable."
+            }
+          ]
+        },
+        {
+          "key": "background",
+          "zh": "背景",
+          "en": "Background",
+          "propName": "background",
+          "type": "segment",
+          "options": [
+            {
+              "value": "false",
+              "label": "否",
+              "labelEn": "No",
+              "intent": "图标直接跟随文字色，用于绝大多数内容和操作。",
+              "intentEn": "The icon directly follows text color; use for most content and actions.",
+              "constraint": "无背景时颜色使用 text-* 语义类。",
+              "constraintEn": "Without a background, use text-* semantic color classes."
             },
             {
-              "value": "button",
-              "label": "按钮内",
-              "labelEn": "In Button",
-              "intent": "用于带图标的操作按钮。",
-              "intentEn": "Use for action buttons with icons.",
-              "constraint": "图标写 data-icon，不能再手写 size-*。",
-              "constraintEn": "Set data-icon on the icon; do not add manual size-* classes."
+              "value": "true",
+              "label": "是",
+              "labelEn": "Yes",
+              "intent": "用于入口、状态徽标等需要色块承托的场景。",
+              "intentEn": "Use for entries or status badges that need a colored support shape.",
+              "constraint": "背景用 bg-primary，图标用 text-primary-foreground 反白；背景尺寸随图标尺寸缩放。",
+              "constraintEn": "Use bg-primary with text-primary-foreground; scale the support shape with icon size."
+            }
+          ]
+        },
+        {
+          "key": "composition",
+          "zh": "文字组合",
+          "en": "Text combo",
+          "propName": "composition",
+          "type": "segment",
+          "options": [
+            {
+              "value": "false",
+              "label": "否",
+              "labelEn": "No",
+              "intent": "单独展示图标，适合工具栏、状态点和图标库预览。",
+              "intentEn": "Show the icon alone for toolbars, status marks, or icon previews.",
+              "constraint": "纯图标操作在真实组件里必须补 aria-label。",
+              "constraintEn": "Icon-only actions in real components must include aria-label."
             },
             {
-              "value": "chip",
-              "label": "圆底",
-              "labelEn": "Chip",
-              "intent": "用于徽标、入口或状态图标需要色块承托的场景。",
-              "intentEn": "Use when a badge, entry, or status icon needs a colored support shape.",
-              "constraint": "圆底用 bg-primary，图标用 text-primary-foreground 反白；圆底尺寸随图标尺寸缩放，不固定大圆。",
-              "constraintEn": "Use bg-primary for the circle and text-primary-foreground for the icon; scale the circle with the icon size."
+              "value": "true",
+              "label": "是",
+              "labelEn": "Yes",
+              "intent": "图标和文字共同表达含义，用于菜单项、提示和行内说明。",
+              "intentEn": "Pair icon and text for menu items, hints, or inline descriptions.",
+              "constraint": "图标与文字保持同一语义色；按钮内图标仍交给 Button 的 data-icon 规则。",
+              "constraintEn": "Keep icon and text in the same semantic color; inside Button, still use data-icon."
             }
           ]
         },
@@ -101,13 +138,11 @@
           "propName": "className",
           "type": "segment",
           "hasAll": true,
-          "disabledWhen": {
-            "mode": "button"
-          },
           "options": [
             {
               "value": "12",
-              "label": "12px",
+              "label": "极小 12px",
+              "labelEn": "Tiny 12px",
               "intent": "用于徽标、内联说明等极紧凑场景。",
               "intentEn": "Use for badges and tiny inline hints.",
               "constraint": "只和小字号搭配，不用于主要操作入口。",
@@ -115,7 +150,8 @@
             },
             {
               "value": "16",
-              "label": "16px",
+              "label": "小 16px",
+              "labelEn": "Small 16px",
               "intent": "正文、表格、工具栏里的默认小图标。",
               "intentEn": "Default small icon size for body, tables, and toolbars.",
               "constraint": "按钮内图标仍交给 Button 接管。",
@@ -123,7 +159,8 @@
             },
             {
               "value": "20",
-              "label": "20px",
+              "label": "默认 20px",
+              "labelEn": "Default 20px",
               "intent": "列表项、卡片标题旁的常规图标。",
               "intentEn": "Use next to list items or card titles.",
               "constraint": "用于需要稍强存在感的普通图标。",
@@ -131,7 +168,8 @@
             },
             {
               "value": "24",
-              "label": "24px",
+              "label": "大 24px",
+              "labelEn": "Large 24px",
               "intent": "页面级入口或空状态里的大图标。",
               "intentEn": "Use for page-level entries or empty states.",
               "constraint": "不要塞进密集文本或表格单元格。",
@@ -139,7 +177,8 @@
             },
             {
               "value": "32",
-              "label": "32px",
+              "label": "超大 32px",
+              "labelEn": "XL 32px",
               "intent": "仅用于强调预览、空状态或品牌化入口。",
               "intentEn": "Use only for emphasized previews, empty states, or branded entries.",
               "constraint": "业务界面慎用，避免抢正文层级。",
@@ -155,7 +194,7 @@
           "type": "segment",
           "hasAll": true,
           "disabledWhen": {
-            "mode": ["button", "chip"]
+            "background": "true"
           },
           "options": [
             {

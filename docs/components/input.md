@@ -3,7 +3,7 @@ category: Components
 group: 通用
 title: Input
 subtitle: 输入框
-description: 单行文本录入控件，用于表单字段、搜索框、内联编辑等场景。
+description: 单行文本录入控件，用于表单字段、搜索、内联编辑等场景。
 source: src/components/ui/input.tsx
 theme: theme/fx-theme.css
 tokens:
@@ -20,7 +20,7 @@ status: complete
 
 # Input 输入框
 
-Input 用于单行文本录入，适合表单字段、搜索框、内联编辑等场景。
+Input 用于单行文本录入，适合表单字段、搜索、内联编辑等场景。
 
 源码来自 shadcn/ui，进入项目后保持 open-code。公司视觉通过 `theme/fx-theme.css` 的语义 token 注入，不通过重新封装或硬编码样式实现。
 
@@ -91,6 +91,16 @@ Input 调试台按“先定能力，再定组合，再看状态和尺寸”的�
 5. **尺寸**：超小24、默认28、中32。
 
 新增 Input 能力时优先判断是否属于“基础”或“搜索”；新增组合时先归入“组合方式”，不要重新平铺成场景列表。页面只保留调试台作为实时示例入口，不再额外维护“组件总览”或“场景示例”重复区块。
+
+### 搜索归属
+
+Ant Design 在 Input 文档内提供 `Input.Search` / 带搜索的输入框，搜索被视为 Input 体系里的能力，而不是独立基础组件。fx-ui 采用同一边界：搜索归入 Input 的“能力”，由 `InputGroup`、`InputAffix`、`InputAddon` 和 `InputAction` 组合表达，不新增基础 `SearchInput`。
+
+如果搜索包含全局命令、建议下拉、历史记录、筛选联动或复杂结果面板，应沉淀为 fx 组合组件（例如 SearchToolbar / Command），而不是扩大基础 Input API。
+
+### 当前规格
+
+默认尺寸为 `sm`，高度 `28px`。默认输入文字使用 `14px / 20px / 400`；placeholder 同为 `400`，颜色走 `text-foreground-disabled`。输入框边框为 `1px`，聚焦、悬停和错误态只替换边框 token，不额外添加聚焦环。
 
 ## API {#api}
 

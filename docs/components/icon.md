@@ -65,7 +65,7 @@ import { SearchIcon, HomeFilledIcon } from "@/lib/icons"
 | --- | --- |
 | 普通说明图标 | 用 `size-*` 控尺寸、`text-*` 语义色控颜色 |
 | Button 内图标 | 用 `data-icon="inline-start | inline-end"`，不手写尺寸 |
-| 圆底图标 | 容器用 `bg-primary` + `text-primary-foreground`；圆底随图标尺寸缩放，例如 `size-5` 图标配 `size-9` 圆底，不使用固定大圆 |
+| 背景图标 | 容器用 `bg-primary` + `text-primary-foreground`；背景随图标尺寸缩放，例如 `size-5` 图标配 `size-9` 背景，不使用固定大色块 |
 | 纯图标按钮 | 必须提供 `aria-label` |
 | 状态 / 强调图标 | 颜色走语义 token，不写硬编码颜色、不直引 `var(--fx-*)` |
 | 业务图标 | 优先选通用语义图标，不为单个页面临时换一套风格 |

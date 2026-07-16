@@ -1,16 +1,28 @@
-"use client"
+"use client";
 
-import { useState, type ReactNode } from "react"
+import { useState, type ReactNode } from "react";
 
 import {
-  TopBar, TopBarBrand, TopBarDivider, TopBarApps, TopBarSearch, TopBarActions, TopBarIconButton, TooltipProvider,
-} from "@/components/fx/top-bar"
-import { CrmShellNav } from "@/components/recipes/crm-shell-nav"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+  TopBar,
+  TopBarBrand,
+  TopBarDivider,
+  TopBarApps,
+  TopBarSearch,
+  TopBarActions,
+  TopBarIconButton,
+  TooltipProvider,
+} from "@/components/fx/top-bar";
+import { CrmShellNav } from "@/components/recipes/crm-shell-nav";
+import { WebsiteCardContainer } from "@/components/fx/website-card-container";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
-  DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu"
-import { MessageCircleIcon, BellIcon, HelpIcon } from "@/lib/icons"
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { MessageCircleIcon, BellIcon, HelpIcon } from "@/lib/icons";
 
 // Block（区块 / 可搬运外壳，文件夹历史名 recipes/）：CRM 应用外壳 = TopBar 顶栏 + CrmShellNav 双层导航 + 内容卡插槽。
 // 固定 chrome（顶栏/导航/头像菜单）都在这里，页面只往 children 里塞内容（页头/工具栏/表格…）。
@@ -20,27 +32,57 @@ const shellApps = [
   { key: "marketing", label: "营销通" },
   { key: "service", label: "服务通" },
   { key: "bi", label: "BI 智能分析" },
-]
+];
 const shellScopes = [
   { key: "all", label: "全部" },
   { key: "cust", label: "客户" },
   { key: "contact", label: "联系人" },
-]
+];
 
-function CrmAppShell({ children, height = 600 }: { children: ReactNode; height?: number }) {
-  const [app, setApp] = useState("crm")
-  const [q, setQ] = useState("")
-  const [scope, setScope] = useState("all")
+function CrmAppShell({
+  children,
+  height = 600,
+}: {
+  children: ReactNode;
+  height?: number;
+}) {
+  const [app, setApp] = useState("crm");
+  const [q, setQ] = useState("");
+  const [scope, setScope] = useState("all");
   return (
     <TooltipProvider>
-      <div className="overflow-hidden rounded-xl border border-border bg-background shadow-l1">
+      <WebsiteCardContainer padding="none">
         <TopBar>
-          <TopBarBrand logo={<img src="/LOGO.svg" alt="" className="size-5 shrink-0 object-contain" />} name="北京易动纷享科技有限责任公司" />
+          <TopBarBrand
+            logo={
+              <img
+                src="/LOGO.svg"
+                alt=""
+                className="size-5 shrink-0 object-contain"
+              />
+            }
+            name="北京易动纷享科技有限责任公司"
+          />
           <TopBarDivider />
-          <TopBarApps current={shellApps.find((a) => a.key === app)!.label} apps={shellApps} onSelect={setApp} />
-          <TopBarSearch value={q} onValueChange={setQ} scope={scope} scopes={shellScopes} onScopeChange={setScope} placeholder="搜索" />
+          <TopBarApps
+            current={shellApps.find((a) => a.key === app)!.label}
+            apps={shellApps}
+            onSelect={setApp}
+          />
+          <TopBarSearch
+            value={q}
+            onValueChange={setQ}
+            scope={scope}
+            scopes={shellScopes}
+            onScopeChange={setScope}
+            placeholder="搜索"
+          />
           <TopBarActions>
-            <TopBarIconButton icon={<MessageCircleIcon />} label="企信" count={3} />
+            <TopBarIconButton
+              icon={<MessageCircleIcon />}
+              label="企信"
+              count={3}
+            />
             <TopBarIconButton icon={<BellIcon />} label="CRM提醒" dot />
             <TopBarIconButton icon={<HelpIcon />} label="帮助" />
           </TopBarActions>
@@ -57,7 +99,9 @@ function CrmAppShell({ children, height = 600 }: { children: ReactNode; height?:
               <DropdownMenuItem>个人中心</DropdownMenuItem>
               <DropdownMenuItem>账号设置</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive">退出登录</DropdownMenuItem>
+              <DropdownMenuItem variant="destructive">
+                退出登录
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </TopBar>
@@ -65,11 +109,13 @@ function CrmAppShell({ children, height = 600 }: { children: ReactNode; height?:
         {/* 灰底 + 圆角白卡浮起：外留白对齐公司 Figma —— 顶/左(导航↔卡)/右 各 12，底 0；导航与内容卡间隔 12 */}
         <div className="flex min-h-0 gap-3 pt-3 pr-3" style={{ height }}>
           <CrmShellNav />
-          <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-lg bg-card">{children}</div>
+          <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-lg bg-card">
+            {children}
+          </div>
         </div>
-      </div>
+      </WebsiteCardContainer>
     </TooltipProvider>
-  )
+  );
 }
 
-export { CrmAppShell }
+export { CrmAppShell };

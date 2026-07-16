@@ -1,8 +1,8 @@
-import { Fragment, type ReactNode, useState } from "react"
+import { Fragment, type ReactNode, useEffect, useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { CheckIcon, Code2Icon, CopyIcon, EyeIcon } from "@/lib/icons"
+import { CheckCircleIcon, CheckIcon, Code2Icon, ComponentsIcon, CopyIcon, EyeIcon, PaletteIcon, PencilIcon } from "@/lib/icons"
 
 export type ComponentPlaygroundLang = "zh" | "en"
 export type ComponentPlaygroundValues = Record<string, string>
@@ -19,14 +19,51 @@ export type ComponentPlaygroundOption = {
   hiddenWhen?: (v: ComponentPlaygroundValues) => boolean
 }
 export type ComponentPlaygroundPropDef =
-  | { key: string; zh: string; en: string; propName: string; type: "segment"; options: ComponentPlaygroundOption[]; hasAll?: boolean; disabledWhen?: (v: ComponentPlaygroundValues) => boolean; hiddenWhen?: (v: ComponentPlaygroundValues) => boolean }
-  | { key: string; zh: string; en: string; propName: string; type: "text"; bilingual?: boolean; disabledWhen?: (v: ComponentPlaygroundValues) => boolean; hiddenWhen?: (v: ComponentPlaygroundValues) => boolean }
+  | { key: string; zh: string; en: string; propName: string; type: "segment"; options: ComponentPlaygroundOption[]; hasAll?: boolean; owner?: string | string[]; group?: "props" | "tokens"; defaultVisible?: boolean; defaultOrder?: number; disabledWhen?: (v: ComponentPlaygroundValues) => boolean; hiddenWhen?: (v: ComponentPlaygroundValues) => boolean }
+  | { key: string; zh: string; en: string; propName: string; type: "text"; bilingual?: boolean; owner?: string | string[]; group?: "props" | "tokens"; defaultVisible?: boolean; defaultOrder?: number; disabledWhen?: (v: ComponentPlaygroundValues) => boolean; hiddenWhen?: (v: ComponentPlaygroundValues) => boolean }
+export type ComponentPlaygroundWorkbenchNode = {
+  key: string
+  zh: string
+  en: string
+  component: string
+  kind?: "component" | "tokens" | "states"
+  hiddenWhen?: (v: ComponentPlaygroundValues) => boolean
+}
+export type ComponentPlaygroundStateAssignment = {
+  key: string
+  zh: string
+  en: string
+  propertyZh: string
+  propertyEn: string
+  token: string
+  cssVar: string
+  palette: string
+  preview: { key: string; value: string }
+}
+export type ComponentPlaygroundWorkbenchCheck = {
+  key: string
+  zh: string
+  en: string
+}
+export type ComponentPlaygroundWorkbenchValidation = {
+  passed: boolean
+  detail: string
+  detailEn?: string
+}
+export type ComponentPlaygroundWorkbenchConfig = {
+  nodes: ComponentPlaygroundWorkbenchNode[]
+  checks: ComponentPlaygroundWorkbenchCheck[]
+  stateAssignments?: ComponentPlaygroundStateAssignment[]
+  inspectSlot: string
+  validate: (v: ComponentPlaygroundValues) => Record<string, ComponentPlaygroundWorkbenchValidation>
+}
 export type ComponentPlaygroundConfig = {
   props: ComponentPlaygroundPropDef[]
   initial: ComponentPlaygroundValues
   guidanceKey?: string
   previewClassName?: string
   previewItemsClassName?: string
+  workbench?: ComponentPlaygroundWorkbenchConfig
   onValueChange?: (next: ComponentPlaygroundValues, key: string, value: string) => ComponentPlaygroundValues
   renderOne: (v: ComponentPlaygroundValues, lang: ComponentPlaygroundLang) => ReactNode
   genCode: (v: ComponentPlaygroundValues, lang: ComponentPlaygroundLang) => string
@@ -86,11 +123,38 @@ function PgSegmented({ value, onChange, options, allLabel, disabled }: { value: 
   )
 }
 
+function PlaygroundStateAssignmentRow({ assignment, active, lang, onPreview }: { assignment: ComponentPlaygroundStateAssignment; active: boolean; lang: ComponentPlaygroundLang; onPreview: () => void }) {
+  return (
+    <Button
+      type="button"
+      variant={active ? "secondary" : "ghost"}
+      size="sm"
+      className="w-full justify-start"
+      onClick={onPreview}
+    >
+      <span className="w-16 shrink-0 text-left">{lang === "en" ? assignment.en : assignment.zh}</span>
+      <span className="w-12 shrink-0 text-left text-muted-foreground">{lang === "en" ? assignment.propertyEn : assignment.propertyZh}</span>
+      <code className="min-w-0 flex-1 truncate text-left text-xs text-foreground-secondary">{assignment.token}</code>
+      <span
+        aria-hidden="true"
+        className="size-3 shrink-0 rounded-xs border border-border-subtle"
+        style={{ backgroundColor: `var(${assignment.cssVar})` }}
+      />
+      <span className="w-24 shrink-0 text-left text-xs text-muted-foreground" title={`${assignment.token} -> ${assignment.palette}`}>{assignment.palette}</span>
+    </Button>
+  )
+}
+
 export function ComponentPlayground({ config, lang }: { config: ComponentPlaygroundConfig; lang: ComponentPlaygroundLang }) {
   const [v, setV] = useState<ComponentPlaygroundValues>(config.initial)
   const [tab, setTab] = useState("preview")
   const [copied, setCopied] = useState(false)
+  const [editing, setEditing] = useState(false)
   const [activeGuidanceKey, setActiveGuidanceKey] = useState(config.guidanceKey ?? config.props.find((p) => p.type === "segment")?.key)
+  const [selectedNode, setSelectedNode] = useState(config.workbench?.nodes[0]?.key ?? "")
+  const [inspection, setInspection] = useState<{ slot: string; height: string; background: string; borderColor: string } | null>(null)
+  const previewRef = useRef<HTMLDivElement>(null)
+  const preEditRef = useRef<{ values: ComponentPlaygroundValues; guidanceKey?: string; tab: string } | null>(null)
   const allLabel = lang === "en" ? "All" : "全部"
   const set = (key: string, val: string) => setV((prev) => {
     setActiveGuidanceKey(key)
@@ -110,7 +174,23 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
     : guidanceOption
     ? lang === "en" ? (guidanceOption.constraintEn ?? guidanceOption.constraint) : guidanceOption.constraint
     : lang === "en" ? "Keep props aligned with the component source. Do not invent local-only variants." : "调试项必须和组件源码能力一致，不发明局部变体。"
-  const visibleProps = config.props.filter((p) => !(p.hiddenWhen?.(v) ?? false))
+  const visibleNodes = config.workbench?.nodes.filter((node) => !(node.hiddenWhen?.(v) ?? false)) ?? []
+  const activeNode = visibleNodes.find((node) => node.key === selectedNode) ?? visibleNodes[0]
+  const workbenchActive = Boolean(config.workbench && editing)
+  const visibleProps = config.props.filter((p) => {
+    if (p.hiddenWhen?.(v) ?? false) return false
+    if (config.workbench && !workbenchActive) {
+      const owner = Array.isArray(p.owner) ? p.owner : p.owner ? [p.owner] : []
+      return p.defaultVisible ?? (p.group !== "tokens" && (owner.length === 0 || owner.includes("root")))
+    }
+    if (!workbenchActive || !activeNode || !p.owner) return true
+    return Array.isArray(p.owner) ? p.owner.includes(activeNode.key) : p.owner === activeNode.key
+  }).sort((a, b) => workbenchActive ? 0 : (a.defaultOrder ?? Number.MAX_SAFE_INTEGER) - (b.defaultOrder ?? Number.MAX_SAFE_INTEGER))
+
+  useEffect(() => {
+    if (!config.workbench || !activeNode || activeNode.key === selectedNode) return
+    setSelectedNode(activeNode.key)
+  }, [activeNode, config.workbench, selectedNode])
 
   let combos: ComponentPlaygroundValues[] = [v]
   for (const p of config.props) {
@@ -132,10 +212,67 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
     ...(isMatrix ? [] : [{ value: "code", icon: <Code2Icon className="size-4" />, label: lang === "en" ? "Code" : "代码" }]),
   ]
   const code = config.genCode(combos[0], lang)
+  const validations = config.workbench?.validate(v) ?? {}
+
+  useEffect(() => {
+    if (!workbenchActive || activeTab !== "preview") {
+      setInspection(null)
+      return
+    }
+    let inspectedElement: HTMLElement | null = null
+    const readInspection = () => {
+      if (!inspectedElement) return
+      const style = getComputedStyle(inspectedElement)
+      setInspection({
+        slot: inspectedElement.dataset.slot ?? "",
+        height: style.height,
+        background: style.backgroundColor,
+        borderColor: style.borderColor,
+      })
+    }
+    const frame = requestAnimationFrame(() => {
+      inspectedElement = previewRef.current?.querySelector<HTMLElement>(`[data-slot="${config.workbench?.inspectSlot}"]`)
+        ?? previewRef.current?.querySelector<HTMLElement>("[data-slot=input]")
+        ?? null
+      if (!inspectedElement) {
+        setInspection(null)
+        return
+      }
+      readInspection()
+      inspectedElement.addEventListener("transitionend", readInspection)
+      inspectedElement.addEventListener("transitioncancel", readInspection)
+    })
+    return () => {
+      cancelAnimationFrame(frame)
+      inspectedElement?.removeEventListener("transitionend", readInspection)
+      inspectedElement?.removeEventListener("transitioncancel", readInspection)
+    }
+  }, [activeTab, config.workbench, v, workbenchActive])
   const copy = () => {
     navigator.clipboard?.writeText(code)
     setCopied(true)
     setTimeout(() => setCopied(false), 1500)
+  }
+  const toggleEditing = () => {
+    if (editing) {
+      const beforeEdit = preEditRef.current
+      if (beforeEdit) {
+        setV(beforeEdit.values)
+        setActiveGuidanceKey(beforeEdit.guidanceKey)
+        setTab(beforeEdit.tab)
+      }
+      preEditRef.current = null
+      setSelectedNode(config.workbench?.nodes[0]?.key ?? "")
+      setEditing(false)
+      return
+    }
+
+    preEditRef.current = {
+      values: { ...v },
+      guidanceKey: activeGuidanceKey,
+      tab,
+    }
+    setEditing(true)
   }
 
   return (
@@ -144,10 +281,51 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
       className="overflow-hidden rounded-xl border border-border-container bg-card shadow-l1 [--card-spacing:var(--fx-panel-padding)] [--playground-gap:var(--fx-panel-gap)]"
     >
       <div className="overflow-x-auto border-b border-border-subtle bg-card">
-        <div className="grid min-w-[1080px] grid-cols-[minmax(0,1fr)_minmax(360px,1fr)] gap-(--playground-gap) p-(--card-spacing)">
+        <div className={workbenchActive ? "grid min-w-[1120px] grid-cols-[220px_minmax(360px,1fr)_minmax(320px,0.8fr)] gap-(--playground-gap) p-(--card-spacing)" : "grid min-w-[1080px] grid-cols-[minmax(0,1fr)_minmax(360px,1fr)] gap-(--playground-gap) p-(--card-spacing)"}>
+          {workbenchActive ? (
+            <div data-slot="component-playground-structure" className="flex flex-col gap-(--fx-control-gap)">
+              <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Structure" : "组件结构"}</PlaygroundSectionTitle>
+              <div className="flex flex-col gap-1" role="tree" aria-label={lang === "en" ? "Component structure" : "组件结构"}>
+                {visibleNodes.map((node, index) => (
+                  <Button
+                    key={node.key}
+                    type="button"
+                    role="treeitem"
+                    aria-selected={activeNode?.key === node.key}
+                    variant={activeNode?.key === node.key ? "secondary" : "ghost"}
+                    size="sm"
+                    className="w-full justify-start"
+                    onClick={() => setSelectedNode(node.key)}
+                  >
+                    {node.kind === "tokens" || node.kind === "states" ? <PaletteIcon data-icon="inline-start" /> : <ComponentsIcon data-icon="inline-start" />}
+                    <span className="min-w-0 flex-1 truncate text-left">{lang === "en" ? node.en : node.zh}</span>
+                    {index === 0 ? null : <span className="text-xs text-muted-foreground">{node.component}</span>}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          ) : null}
           <div className="flex flex-col gap-(--playground-gap)">
             <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Interactive props" : "实时属性"}</PlaygroundSectionTitle>
-            {visibleProps.map((p) => (
+            {workbenchActive && activeNode ? (
+              <div className="flex items-center gap-(--fx-control-gap-tight) text-sm text-muted-foreground">
+                <span className="font-medium text-foreground">{lang === "en" ? activeNode.en : activeNode.zh}</span>
+                <span>{activeNode.component}</span>
+              </div>
+            ) : null}
+            {activeNode?.kind === "states" ? (
+              <div className="flex flex-col gap-1" data-slot="component-playground-state-assignments">
+                {config.workbench?.stateAssignments?.map((assignment) => (
+                  <PlaygroundStateAssignmentRow
+                    key={assignment.key}
+                    assignment={assignment}
+                    active={v[assignment.preview.key] === assignment.preview.value}
+                    lang={lang}
+                    onPreview={() => set(assignment.preview.key, assignment.preview.value)}
+                  />
+                ))}
+              </div>
+            ) : visibleProps.map((p) => (
               <div key={p.key} className="flex flex-col gap-(--fx-control-gap-tight)">
                 <PlaygroundPropLabel zh={lang === "en" ? p.en : p.zh} />
                 {p.type === "text" ? (
@@ -172,7 +350,7 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
             ))}
           </div>
           <div className="border-l border-border-subtle pl-(--card-spacing)">
-            <div className="space-y-(--playground-gap)">
+            <div className="flex flex-col gap-(--playground-gap)">
               <div>
                 <div className="mb-1">
                   <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Intent" : "使用意图"}</PlaygroundSectionTitle>
@@ -187,6 +365,33 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
                     <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Constraint" : "约束"}</PlaygroundSectionTitle>
                   </div>
                   <p className="text-sm leading-relaxed text-foreground-secondary">{constraintText}</p>
+                </div>
+              ) : null}
+              {workbenchActive && config.workbench ? (
+                <div data-slot="component-playground-validation" className="flex flex-col gap-(--fx-control-gap)">
+                  <PlaygroundSectionTitle dot="bg-success">{lang === "en" ? "Effective state" : "生效确认"}</PlaygroundSectionTitle>
+                  <div className="flex flex-col gap-(--fx-control-gap-tight)">
+                    {config.workbench.checks.map((check) => {
+                      const result = validations[check.key]
+                      return (
+                        <div key={check.key} className="flex items-start gap-(--fx-control-gap-tight) text-sm">
+                          <CheckCircleIcon className={result?.passed ? "mt-0.5 size-4 shrink-0 text-success" : "mt-0.5 size-4 shrink-0 text-destructive"} />
+                          <div className="min-w-0">
+                            <div className="font-medium text-foreground">{lang === "en" ? check.en : check.zh}</div>
+                            <div className="text-xs text-muted-foreground">{lang === "en" ? (result?.detailEn ?? result?.detail) : result?.detail}</div>
+                          </div>
+                        </div>
+                      )
+                    })}
+                    {inspection ? (
+                      <div className="rounded-md border border-border-subtle bg-muted p-(--fx-control-px-xs) font-mono text-xs leading-relaxed text-muted-foreground">
+                        <div>data-slot=&quot;{inspection.slot}&quot;</div>
+                        <div>height: {inspection.height}</div>
+                        <div>background: {inspection.background}</div>
+                        <div>border: {inspection.borderColor}</div>
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
               ) : null}
             </div>
@@ -209,14 +414,26 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
           ))}
         </div>
         {isMatrix ? null : (
-          <Button variant="outline" size="sm" onClick={copy}>
-            {copied ? <CheckIcon data-icon="inline-start" className="text-success" /> : <CopyIcon data-icon="inline-start" />}
-            {copied ? (lang === "en" ? "Copied" : "已复制") : (lang === "en" ? "Copy" : "复制")}
-          </Button>
+          <div className="flex items-center gap-(--fx-control-gap-tight)">
+            {config.workbench ? (
+              <Button
+                variant={workbenchActive ? "secondary" : "outline"}
+                size="sm"
+                onClick={toggleEditing}
+              >
+                {workbenchActive ? <CheckIcon data-icon="inline-start" /> : <PencilIcon data-icon="inline-start" />}
+                {workbenchActive ? (lang === "en" ? "Finish editing" : "完成编辑") : (lang === "en" ? "Edit component" : "编辑组件")}
+              </Button>
+            ) : null}
+            <Button variant="outline" size="sm" onClick={copy}>
+              {copied ? <CheckIcon data-icon="inline-start" className="text-success" /> : <CopyIcon data-icon="inline-start" />}
+              {copied ? (lang === "en" ? "Copied" : "已复制") : (lang === "en" ? "Copy" : "复制")}
+            </Button>
+          </div>
         )}
       </div>
       {activeTab === "preview" ? (
-        <div className={config.previewClassName ?? "flex min-h-[200px] items-center justify-center bg-card p-[calc(var(--card-spacing)*2)]"}>
+        <div ref={previewRef} className={config.previewClassName ?? "flex min-h-[200px] items-center justify-center bg-card p-[calc(var(--card-spacing)*2)]"}>
           <div className={config.previewItemsClassName ?? (isMatrix ? "flex flex-wrap items-center justify-center gap-(--playground-gap)" : "")}>{items}</div>
         </div>
       ) : (

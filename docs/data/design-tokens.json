@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/design-tokens",
-  "updatedAt": "2026-07-03",
+  "updatedAt": "2026-07-16",
   "truthSource": "theme/fx-theme.css",
   "humanDoc": "docs/TOKENS.md",
-  "note": "主项目采用 shadcn 友好的三层结构：primitive -> semantic -> componentUsage。报告 skill 的 Seed -> Map -> Alias -> Component 四层结构可作为独立 HTML 输出参考，但不替代本项目的 shadcn semantic slots。",
+  "note": "主项目采用 shadcn 友好的两层 Token 命名空间 + 组件用法：primitive -> semantic -> componentUsage。componentUsage 是组件属性/状态消费语义 Token 的映射事实，不是独立组件 Token。报告 skill 的 Seed -> Map -> Alias -> Component 四层结构可作为独立 HTML 输出参考，但不替代本项目的 shadcn semantic slots。",
   "layers": [
     {
       "id": "primitive",
@@ -19,7 +19,7 @@
     {
       "id": "componentUsage",
       "label": "Component Usage",
-      "description": "组件和页面使用 token 的规则，不新增黑盒 token。"
+      "description": "组件属性和状态消费语义 token 的映射规则，不是独立组件 Token 命名空间，也不新增黑盒 token。"
     }
   ],
   "primitive": [
@@ -1422,26 +1422,38 @@
       "usage": ""
     },
     {
+      "name": "--fx-shadow-color-soft",
+      "value": "oklch(from var(--fx-neutrals-20) l c h / 0.05)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-shadow-color-faint",
+      "value": "oklch(from var(--fx-neutrals-20) l c h / 0.03)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
       "name": "--fx-shadow-l1",
-      "value": "0px 6px 18px -8px var(--fx-shadow-color)",
+      "value": "0px 2px 6px -2px var(--fx-shadow-color), 0px 4px 10px -4px var(--fx-shadow-color-soft)",
       "category": "palette",
       "usage": ""
     },
     {
       "name": "--fx-shadow-l2",
-      "value": "0px 10px 30px -12px var(--fx-shadow-color)",
+      "value": "0px 4px 12px -4px var(--fx-shadow-color), 0px 8px 20px -2px var(--fx-shadow-color-soft), 0px 12px 28px 0px var(--fx-shadow-color-faint)",
       "category": "palette",
       "usage": ""
     },
     {
       "name": "--fx-shadow-l3",
-      "value": "0px 18px 48px -16px var(--fx-shadow-color)",
+      "value": "0px 6px 16px -8px var(--fx-shadow-color), 0px 9px 28px 0px var(--fx-shadow-color-soft), 0px 12px 48px 16px var(--fx-shadow-color-faint)",
       "category": "palette",
       "usage": ""
     },
     {
       "name": "--fx-shadow-l1-up",
-      "value": "0px -6px 18px -8px var(--fx-shadow-color)",
+      "value": "0px -2px 6px -2px var(--fx-shadow-color), 0px -4px 10px -4px var(--fx-shadow-color-soft)",
       "category": "palette",
       "usage": ""
     }
@@ -1452,6 +1464,42 @@
       "value": "0.625rem",
       "category": "radius-source",
       "usage": "基础圆角真相源"
+    },
+    {
+      "name": "--radius-none",
+      "value": "0px",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--radius-inner",
+      "value": "calc(var(--radius) - 4px)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--radius-element",
+      "value": "calc(var(--radius) - 2px)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--radius-container",
+      "value": "var(--radius)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--radius-page",
+      "value": "calc(var(--radius) + 4px)",
+      "category": "shadcn-semantic",
+      "usage": ""
+    },
+    {
+      "name": "--radius-full",
+      "value": "9999px",
+      "category": "shadcn-semantic",
+      "usage": ""
     },
     {
       "name": "--background",
@@ -2051,16 +2099,73 @@
       "source": "src/components/ui/input.tsx",
       "tokens": [
         "--input",
+        "--surface",
+        "--muted",
         "--background",
         "--foreground",
+        "--foreground-disabled",
         "--muted-foreground",
+        "--primary",
         "--ring",
         "--destructive",
         "--radius"
       ],
       "rules": [
+        "正常与禁用边框使用 input，悬停与聚焦边框使用 primary，禁用表面使用 muted，错误边框使用 destructive。",
         "Field 校验失败用 data-invalid + aria-invalid，不手写红色边框。",
         "禁用态用 disabled，不用透明度伪装。"
+      ],
+      "typographyMappings": [
+        {
+          "element": "value",
+          "role": "body",
+          "implementation": "size=md 使用 text-base；size=sm/xs 仅为高密度控件降为 text-sm/text-xs，不新增另一套文本角色。",
+          "usage": "用户输入值；优先按表单密度选择 Input size。"
+        },
+        {
+          "element": "placeholder",
+          "role": "inherits-value",
+          "implementation": "继承当前 Input size 的字号；颜色由 placeholder:text-foreground-disabled 提供。",
+          "usage": "示例格式或预期输入，不替代字段标签。"
+        }
+      ],
+      "stateMappings": [
+        {
+          "element": "border",
+          "state": "default",
+          "token": "--input",
+          "description": "输入框正常边框"
+        },
+        {
+          "element": "border",
+          "state": "hover",
+          "token": "--primary",
+          "description": "输入框悬停边框"
+        },
+        {
+          "element": "border",
+          "state": "focus",
+          "token": "--primary",
+          "description": "输入框聚焦边框"
+        },
+        {
+          "element": "border",
+          "state": "invalid",
+          "token": "--destructive",
+          "description": "输入框校验失败边框"
+        },
+        {
+          "element": "surface",
+          "state": "disabled",
+          "token": "--muted",
+          "description": "输入框禁用表面"
+        },
+        {
+          "element": "text",
+          "state": "placeholder",
+          "token": "--foreground-disabled",
+          "description": "输入框占位文字"
+        }
       ]
     },
     {
@@ -2074,6 +2179,14 @@
       "rules": [
         "真实表单字段使用 FieldGroup + Field + FieldLabel。",
         "错误说明使用 FieldError，不把错误文案做成普通灰字。"
+      ],
+      "stateMappings": [
+        {
+          "element": "feedback",
+          "state": "invalid",
+          "token": "--destructive",
+          "description": "字段错误说明文字"
+        }
       ]
     },
     {
@@ -2118,6 +2231,20 @@
       "rules": [
         "表头、分割线、弱文字使用语义 token。",
         "不要在表格内手写灰色和边框色。"
+      ],
+      "typographyMappings": [
+        {
+          "element": "header",
+          "role": "label",
+          "implementation": "TableHead 使用 font-medium；保持单行，列标题只表达字段含义。",
+          "usage": "字段名、可排序列标题、列筛选入口。"
+        },
+        {
+          "element": "cell",
+          "role": "data-or-body",
+          "implementation": "原生 Table 不根据内容猜类型；DataTable 用 dataType 处理数值、日期、编号和状态，其余文本按 body 内容呈现。",
+          "usage": "业务文本列、数值列、日期和状态列。"
+        }
       ]
     },
     {
@@ -2157,31 +2284,227 @@
       ]
     }
   ],
+  "shape": {
+    "source": "theme/fx-theme.css",
+    "scale": [
+      {
+        "role": "none",
+        "token": "--radius-none",
+        "usage": "直角或结构性切边",
+        "fixed": true
+      },
+      {
+        "role": "inner",
+        "token": "--radius-inner",
+        "usage": "圆角容器内的嵌套表面"
+      },
+      {
+        "role": "element",
+        "token": "--radius-element",
+        "usage": "按钮、输入框、选择器等交互控件"
+      },
+      {
+        "role": "container",
+        "token": "--radius-container",
+        "usage": "卡片、下拉、面板等内容容器"
+      },
+      {
+        "role": "page",
+        "token": "--radius-page",
+        "usage": "Dialog、Sheet 和较大页面区域"
+      },
+      {
+        "role": "full",
+        "token": "--radius-full",
+        "usage": "胶囊、圆形状态点",
+        "fixed": true
+      }
+    ],
+    "concentricRule": "嵌套圆角表面需要保持同心：innerRadius = max(0px, outerRadius - inset)。仅组件内部已有嵌套表面时采用；调用处不得临时计算或覆盖圆角。"
+  },
+  "typography": {
+    "policy": "调用处按 text-{role} 文本角色选择；每个角色组合复用现有 Tailwind text-{size}/font-* 工具类，不新增字号或字重数值 API；具体数值仍由 theme/fx-theme.css 的 --text-* 注入。",
+    "conventions": [
+      {
+        "id": "mixed-language",
+        "rule": "中文与英文、数字混排统一使用默认字距和 --font-sans；不按语言拆出第二套字号或字距 API。",
+        "tailwind": [
+          "font-sans"
+        ],
+        "usage": "中文业务文案、英文产品名、数字同时出现的界面文本"
+      },
+      {
+        "id": "letter-spacing",
+        "rule": "新增或调整的中文、中英文混排不得使用负字距；默认不加 tracking 类。",
+        "prohibited": [
+          "tracking-tight",
+          "tracking-tighter"
+        ],
+        "usage": "所有面向用户的中文与混排文本"
+      },
+      {
+        "id": "uppercase",
+        "rule": "全大写仅用于短英文缩写或短标签；句子、说明和长标题保持原始大小写。",
+        "examples": [
+          "ID",
+          "API",
+          "SKU"
+        ],
+        "usage": "短字段名、技术缩写、状态码"
+      },
+      {
+        "id": "code",
+        "rule": "可复制、需逐字符辨认的代码、命令、字段名和密钥片段使用等宽字体；普通业务编号不改用等宽代码字体。",
+        "tailwind": [
+          "font-mono"
+        ],
+        "usage": "代码块、行内 code、CLI 命令、字段名、密钥片段"
+      },
+      {
+        "id": "truncation",
+        "rule": "长文本是否截断由具体内容容器显式选择 truncate；DataTable 不根据列名或字段类型自动截断。",
+        "tailwind": [
+          "truncate"
+        ],
+        "usage": "表格列、列表条目、单行摘要"
+      }
+    ],
+    "dataRules": [
+      {
+        "id": "number",
+        "align": "right",
+        "classes": [
+          "tabular-nums"
+        ],
+        "usage": "数量、数值、计量"
+      },
+      {
+        "id": "currency",
+        "align": "right",
+        "classes": [
+          "tabular-nums"
+        ],
+        "usage": "金额、财务数值"
+      },
+      {
+        "id": "percentage",
+        "align": "right",
+        "classes": [
+          "tabular-nums"
+        ],
+        "usage": "百分比、进度数值"
+      },
+      {
+        "id": "date",
+        "align": "left",
+        "classes": [
+          "tabular-nums",
+          "whitespace-nowrap"
+        ],
+        "usage": "日期、时间"
+      },
+      {
+        "id": "identifier",
+        "align": "left",
+        "classes": [
+          "tabular-nums",
+          "whitespace-nowrap"
+        ],
+        "usage": "订单号、手机号、编号"
+      },
+      {
+        "id": "status",
+        "align": "center",
+        "classes": [
+          "whitespace-nowrap"
+        ],
+        "usage": "短状态、Tag、Badge"
+      },
+      {
+        "id": "text",
+        "align": "left",
+        "classes": [],
+        "usage": "名称、说明、链接等普通文本"
+      }
+    ],
+    "roles": [
+      {
+        "id": "page-title",
+        "utility": "text-page-title",
+        "tailwind": [
+          "text-xl",
+          "font-bold"
+        ],
+        "usage": "页面、详情页主标题",
+        "avoid": "不要用于卡片或表格标题。"
+      },
+      {
+        "id": "section-title",
+        "utility": "text-section-title",
+        "tailwind": [
+          "text-lg",
+          "font-semibold"
+        ],
+        "usage": "区块、卡片、组件标题",
+        "avoid": "不要在普通正文中使用。"
+      },
+      {
+        "id": "body",
+        "utility": "text-body",
+        "tailwind": [
+          "text-base",
+          "font-normal"
+        ],
+        "usage": "默认正文、表单值、菜单、列表内容",
+        "avoid": "不要用更小字号替代弱化颜色。"
+      },
+      {
+        "id": "label",
+        "utility": "text-label",
+        "tailwind": [
+          "text-sm",
+          "font-medium"
+        ],
+        "usage": "字段标签、按钮、菜单项、短状态标签",
+        "avoid": "不要承载多句说明。"
+      },
+      {
+        "id": "caption",
+        "utility": "text-caption",
+        "tailwind": [
+          "text-sm",
+          "font-normal"
+        ],
+        "usage": "辅助说明、提示、元信息",
+        "avoid": "不要用于关键操作或主要正文。"
+      }
+    ]
+  },
   "shadow": [
     {
       "name": "--fx-shadow-l1",
-      "value": "0px 2px 6px 0px rgba(0,0,0,0.15)",
+      "value": "0px 2px 6px -2px var(--fx-shadow-color), 0px 4px 10px -4px var(--fx-shadow-color-soft)",
       "category": "shadow",
       "tailwind": "shadow-l1",
       "usage": "浮层菜单、Dropdown — 最近层"
     },
     {
       "name": "--fx-shadow-l2",
-      "value": "0px 4px 12px 0px rgba(0,0,0,0.15)",
+      "value": "0px 4px 12px -4px var(--fx-shadow-color), 0px 8px 20px -2px var(--fx-shadow-color-soft), 0px 12px 28px 0px var(--fx-shadow-color-faint)",
       "category": "shadow",
       "tailwind": "shadow-l2",
       "usage": "Sheet、侧边滑出面板 — 中层"
     },
     {
       "name": "--fx-shadow-l3",
-      "value": "0px 6px 24px 0px rgba(0,0,0,0.15)",
+      "value": "0px 6px 16px -8px var(--fx-shadow-color), 0px 9px 28px 0px var(--fx-shadow-color-soft), 0px 12px 48px 16px var(--fx-shadow-color-faint)",
       "category": "shadow",
       "tailwind": "shadow-l3",
       "usage": "Dialog、Modal — 最高层遮罩"
     },
     {
       "name": "--fx-shadow-l1-up",
-      "value": "0px -2px 6px 0px rgba(0,0,0,0.15)",
+      "value": "0px -2px 6px -2px var(--fx-shadow-color), 0px -4px 10px -4px var(--fx-shadow-color-soft)",
       "category": "shadow",
       "tailwind": "shadow-l1-up",
       "usage": "向上弹出的浮层（底部工具栏菜单等）"

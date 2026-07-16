@@ -31,11 +31,7 @@
       "docStatus": "complete",
       "doc": "docs/components/alert-dialog.md",
       "category": "feedback",
-      "nativeStates": [
-        "hover",
-        "data-open",
-        "data-closed"
-      ],
+      "nativeStates": ["hover", "data-open", "data-closed"],
       "semanticDom": [
         "data-slot=\"alert-dialog\"",
         "data-slot=\"alert-dialog-trigger\"",
@@ -71,9 +67,7 @@
       "docStatus": "complete",
       "doc": "docs/components/avatar.md",
       "category": "display",
-      "nativeStates": [
-        "root"
-      ],
+      "nativeStates": ["root"],
       "semanticDom": [
         "data-slot=\"avatar\"",
         "data-slot=\"avatar-image\"",
@@ -106,13 +100,8 @@
       "docStatus": "complete",
       "doc": "docs/components/badge.md",
       "category": "display",
-      "nativeStates": [
-        "root"
-      ],
-      "semanticDom": [
-        "data-slot=\"badge\"",
-        "data-slot=\"badge-root\""
-      ],
+      "nativeStates": ["root"],
+      "semanticDom": ["data-slot=\"badge\"", "data-slot=\"badge-root\""],
       "tokenRefs": [
         "--primary",
         "--primary-foreground",
@@ -133,14 +122,8 @@
       "doc": "docs/components/tag.md",
       "figma": "https://www.figma.com/design/k98zObf0bN7OKGVwpCyjBd/Web%E7%AB%AF%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6%E5%BA%93?node-id=13057-4564",
       "category": "display",
-      "nativeStates": [
-        "hover",
-        "focus-visible",
-        "aria-invalid"
-      ],
-      "semanticDom": [
-        "slot: \"tag\""
-      ],
+      "nativeStates": ["hover", "focus-visible", "aria-invalid"],
+      "semanticDom": ["slot: \"tag\""],
       "tokenRefs": [
         "--primary",
         "--secondary",
@@ -170,10 +153,7 @@
       "docStatus": "complete",
       "doc": "docs/components/breadcrumb.md",
       "category": "navigation",
-      "nativeStates": [
-        "hover",
-        "disabled"
-      ],
+      "nativeStates": ["hover", "disabled"],
       "semanticDom": [
         "data-slot=\"breadcrumb\"",
         "data-slot=\"breadcrumb-list\"",
@@ -182,11 +162,7 @@
         "data-slot=\"breadcrumb-separator\"",
         "data-slot=\"breadcrumb-ellipsis\""
       ],
-      "tokenRefs": [
-        "--foreground",
-        "--muted",
-        "--muted-foreground"
-      ],
+      "tokenRefs": ["--foreground", "--muted", "--muted-foreground"],
       "usageRules": [
         "使用 Breadcrumb 前必须以 src/components/ui/breadcrumb.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
@@ -199,15 +175,8 @@
       "docStatus": "complete",
       "doc": "docs/components/link.md",
       "category": "navigation",
-      "nativeStates": [
-        "hover",
-        "active",
-        "focus-visible",
-        "disabled"
-      ],
-      "semanticDom": [
-        "data-slot=\"link\""
-      ],
+      "nativeStates": ["hover", "active", "focus-visible", "disabled"],
+      "semanticDom": ["data-slot=\"link\""],
       "tokenRefs": [
         "--link",
         "--link-hover",
@@ -239,11 +208,7 @@
         "warning",
         "danger"
       ],
-      "sizes": [
-        "sm",
-        "default",
-        "lg"
-      ]
+      "sizes": ["sm", "default", "lg"]
     },
     {
       "name": "ButtonGroup",
@@ -251,18 +216,12 @@
       "docStatus": "complete",
       "doc": "docs/components/button-group.md",
       "category": "action",
-      "nativeStates": [
-        "focus-visible"
-      ],
+      "nativeStates": ["focus-visible"],
       "semanticDom": [
         "data-slot=\"button-group\"",
         "data-slot=\"button-group-separator\""
       ],
-      "tokenRefs": [
-        "--muted",
-        "--border",
-        "--input"
-      ],
+      "tokenRefs": ["--muted", "--border", "--input"],
       "usageRules": [
         "使用 ButtonGroup 前必须以 src/components/ui/button-group.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
@@ -313,9 +272,7 @@
           "note": "Button 没有 loading prop。"
         }
       ],
-      "semanticDom": [
-        "data-slot=\"button\""
-      ],
+      "semanticDom": ["data-slot=\"button\""],
       "tokenRefs": [
         "--primary",
         "--primary-foreground",
@@ -343,13 +300,8 @@
       "docStatus": "complete",
       "doc": "docs/components/calendar.md",
       "category": "form",
-      "nativeStates": [
-        "hover",
-        "disabled"
-      ],
-      "semanticDom": [
-        "data-slot=\"calendar\""
-      ],
+      "nativeStates": ["hover", "disabled"],
+      "semanticDom": ["data-slot=\"calendar\""],
       "tokenRefs": [
         "--primary",
         "--primary-foreground",
@@ -375,9 +327,7 @@
       "docStatus": "complete",
       "doc": "docs/components/card.md",
       "category": "container",
-      "nativeStates": [
-        "root"
-      ],
+      "nativeStates": ["root"],
       "semanticDom": [
         "data-slot=\"card\"",
         "data-slot=\"card-header\"",
@@ -408,12 +358,8 @@
       "docStatus": "complete",
       "doc": "docs/components/chart.md",
       "category": "display",
-      "nativeStates": [
-        "active"
-      ],
-      "semanticDom": [
-        "data-slot=\"chart\""
-      ],
+      "nativeStates": ["active"],
+      "semanticDom": ["data-slot=\"chart\""],
       "tokenRefs": [
         "--background",
         "--foreground",
@@ -496,18 +442,13 @@
       "docStatus": "complete",
       "doc": "docs/components/collapsible.md",
       "category": "container",
-      "nativeStates": [
-        "root"
-      ],
+      "nativeStates": ["root"],
       "semanticDom": [
         "data-slot=\"collapsible\"",
         "data-slot=\"collapsible-trigger\"",
         "data-slot=\"collapsible-content\""
       ],
-      "tokenRefs": [
-        "--foreground",
-        "--background"
-      ],
+      "tokenRefs": ["--foreground", "--background"],
       "usageRules": [
         "使用 Collapsible 前必须以 src/components/ui/collapsible.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
@@ -520,11 +461,7 @@
       "docStatus": "complete",
       "doc": "docs/components/dialog.md",
       "category": "feedback",
-      "nativeStates": [
-        "hover",
-        "data-open",
-        "data-closed"
-      ],
+      "nativeStates": ["hover", "data-open", "data-closed"],
       "semanticDom": [
         "data-slot=\"dialog\"",
         "data-slot=\"dialog-trigger\"",
@@ -558,11 +495,7 @@
       "docStatus": "complete",
       "doc": "docs/components/dropdown-menu.md",
       "category": "overlay",
-      "nativeStates": [
-        "disabled",
-        "data-open",
-        "data-closed"
-      ],
+      "nativeStates": ["disabled", "data-open", "data-closed"],
       "semanticDom": [
         "data-slot=\"dropdown-menu\"",
         "data-slot=\"dropdown-menu-portal\"",
@@ -606,15 +539,8 @@
       "doc": "docs/components/field.md",
       "docStatus": "complete",
       "category": "form",
-      "nativeStates": [
-        "data-invalid",
-        "data-disabled"
-      ],
-      "variants": [
-        "vertical",
-        "horizontal",
-        "responsive"
-      ],
+      "nativeStates": ["data-invalid", "data-disabled"],
+      "variants": ["vertical", "horizontal", "responsive"],
       "semanticDom": [
         "data-slot=\"field-group\"",
         "data-slot=\"field\"",
@@ -646,19 +572,14 @@
       "doc": "docs/components/input.md",
       "docStatus": "complete",
       "category": "form",
-      "nativeStates": [
-        "hover",
-        "focus-visible",
-        "disabled",
-        "aria-invalid"
-      ],
+      "nativeStates": ["hover", "focus-visible", "disabled", "aria-invalid"],
       "semanticDom": [
         "data-slot=\"input\"",
         "data-slot=\"input-group\"",
         "data-slot=\"input-addon\"",
         "data-slot=\"input-affix\"",
         "data-slot=\"input-action\"",
-        "data-state=\"hover|focus\""
+        "data-input-state=\"hover|focus\""
       ],
       "tokenRefs": [
         "--foreground",
@@ -667,14 +588,21 @@
         "--destructive",
         "--border",
         "--input",
+        "--primary",
         "--ring"
       ],
       "usageRules": [
         "使用 Input 前必须以 src/components/ui/input.tsx 为真实 API。",
-        "Input 调试台顺序固定为：能力（基础/搜索）→ 组合方式（无/图标/文字/筛选）→ 位置（左/右）→ 交互状态（默认/悬停/聚焦/输入中/回填/禁用/回填并禁用/报错）→ 尺寸（超小24/默认28/中32）。",
+        "Input 默认显示普通调试台；点击编辑组件后才进入制作台，顺序固定为：前后结构插槽 → 选中真实节点编辑属性 → Field 包装/状态/尺寸 → 语义 Token 槽位 → DOM/行为/代码同源验证；制作台只修改临时草稿，点击完成编辑后恢复进入编辑前的普通实时属性。",
+        "实时属性只暴露 InputAffix / InputAddon / InputAction 等结构零件及其位置；能由结构推导的业务语义不新增平行能力或伪 prop。搜索语义使用原生 type=search，SearchIcon 可前置或后置但不能同时出现；有值时默认提供后置清除动作，可选主搜索仍由后置 InputAction 拼出；范围下拉 + 全局搜索使用 TopBarSearch。",
+        "组合槽位按输入类型收窄：number 保留符号/标签/单位；email 默认使用前置 MailIcon，调试台在失焦后将原生格式结果映射为 aria-invalid；只有明确开启 Field 包装时才用 FieldError 显示“请输入有效的邮箱地址。”，不显示浏览器浮层；password 默认使用后置可访问的密码显隐 InputAction；search 默认使用前置 SearchIcon，允许改为后置 SearchIcon，且有值时自动提供清除、可选主搜索。切换类型时清除不兼容的前后内容。",
+        "制作台 Token 面板只开放 --surface / --input / --foreground-disabled 三个槽位；选项显示用途语义，底层 value 保持真实语义 Token，非默认映射生成组件作者草稿，不能作为页面调用处样式覆盖。",
+        "悬停和聚焦边框使用主题色 primary，错误态使用 destructive，不额外添加聚焦环。",
         "真实表单字段使用 FieldGroup + Field + FieldLabel + Input，不用 div/grid 临时拼。",
         "前后缀、单位、搜索按钮和范围选择使用 InputGroup / InputAddon / InputAffix / InputAction，不在调用处绝对定位图标或覆盖内边距。",
-        "错误态使用 Field 的 data-invalid + Input 的 aria-invalid + FieldError。",
+        "Input 内容与控件外侧统一为 8px；InputAffix 的图标和单字符符号共用最小 16px 内容槽位，placeholder 与前后缀相邻侧统一为 4px，左右镜像一致。",
+        "InputAddon 与输入区共享 surface，只用 input 竖分隔线划出固定标签；不得单独着色、起圆角或在调用处覆盖。",
+        "真实表单字段的错误态使用 Field 的 data-invalid + Input 的 aria-invalid + FieldError；裸 Input 仅使用 aria-invalid 错误边框，不凭空渲染字段标题或错误文案。",
         "禁用态使用 Field 的 data-disabled + Input 的 disabled。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
@@ -686,16 +614,9 @@
       "docStatus": "complete",
       "doc": "docs/components/label.md",
       "category": "form",
-      "nativeStates": [
-        "disabled"
-      ],
-      "semanticDom": [
-        "data-slot=\"label\""
-      ],
-      "tokenRefs": [
-        "--foreground",
-        "--background"
-      ],
+      "nativeStates": ["disabled"],
+      "semanticDom": ["data-slot=\"label\""],
+      "tokenRefs": ["--foreground", "--background"],
       "usageRules": [
         "使用 Label 前必须以 src/components/ui/label.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
@@ -708,10 +629,7 @@
       "docStatus": "complete",
       "doc": "docs/components/popover.md",
       "category": "overlay",
-      "nativeStates": [
-        "data-open",
-        "data-closed"
-      ],
+      "nativeStates": ["data-open", "data-closed"],
       "semanticDom": [
         "data-slot=\"popover\"",
         "data-slot=\"popover-trigger\"",
@@ -745,21 +663,24 @@
         "focus-visible",
         "disabled",
         "aria-invalid",
+        "data-popup-open",
         "data-open",
-        "data-closed"
+        "data-closed",
+        "data-highlighted",
+        "data-selected"
       ],
-      "sizes": [
-        "xs",
-        "sm",
-        "md"
-      ],
+      "sizes": ["xs", "sm", "md"],
       "semanticDom": [
         "data-slot=\"select-group\"",
+        "data-slot=\"select-control\"",
         "data-slot=\"select-value\"",
         "data-slot=\"select-trigger\"",
         "data-slot=\"select-content\"",
         "data-slot=\"select-label\"",
+        "data-slot=\"select-multi-value\"",
+        "data-slot=\"select-overflow-count\"",
         "data-slot=\"select-item\"",
+        "data-slot=\"select-clear\"",
         "data-slot=\"select-separator\"",
         "data-slot=\"select-scroll-up-button\"",
         "data-slot=\"select-scroll-down-button\""
@@ -781,7 +702,10 @@
       "usageRules": [
         "使用 Select 前必须以 src/components/ui/select.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
-        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。",
+        "多选已选值使用 SelectMultiValue；超出 maxVisible 后折叠为 +n。",
+        "SelectClear 与 SelectTrigger 同级放在 SelectControl 中，箭头热区始终保留。",
+        "其他输入使用受控 value + SelectItem value=\"other\" + Input 组合，不新增 Select prop。"
       ]
     },
     {
@@ -790,15 +714,9 @@
       "docStatus": "complete",
       "doc": "docs/components/separator.md",
       "category": "layout",
-      "nativeStates": [
-        "root"
-      ],
-      "semanticDom": [
-        "data-slot=\"separator\""
-      ],
-      "tokenRefs": [
-        "--border"
-      ],
+      "nativeStates": ["root"],
+      "semanticDom": ["data-slot=\"separator\""],
+      "tokenRefs": ["--border"],
       "usageRules": [
         "使用 Separator 前必须以 src/components/ui/separator.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
@@ -811,18 +729,12 @@
       "docStatus": "complete",
       "doc": "docs/components/pagination.md",
       "category": "navigation",
-      "nativeStates": [
-        "root"
-      ],
+      "nativeStates": ["root"],
       "semanticDom": [
         "data-slot=\"pagination\"",
         "data-slot=\"pagination-ellipsis\""
       ],
-      "tokenRefs": [
-        "--primary",
-        "--border",
-        "--muted-foreground"
-      ],
+      "tokenRefs": ["--primary", "--border", "--muted-foreground"],
       "usageRules": [
         "使用 Pagination 前必须以 src/components/ui/pagination.tsx 为真实 API。",
         "受控用法：自己持有 page 状态并在 onPageChange 更新；用 total + pageSize 推导页数。",
@@ -835,17 +747,9 @@
       "docStatus": "complete",
       "doc": "docs/components/command.md",
       "category": "navigation",
-      "nativeStates": [
-        "root"
-      ],
-      "semanticDom": [
-        "data-active"
-      ],
-      "tokenRefs": [
-        "--muted",
-        "--foreground",
-        "--border-subtle"
-      ],
+      "nativeStates": ["root"],
+      "semanticDom": ["data-active"],
+      "tokenRefs": ["--muted", "--foreground", "--border-subtle"],
       "usageRules": [
         "使用 CommandPalette 前必须以 src/components/ui/command.tsx 为真实 API。",
         "受控用法：自己持有 open 状态并在 onOpenChange 更新；items 提供可搜索项与 onSelect。",
@@ -858,9 +762,7 @@
       "docStatus": "complete",
       "doc": "docs/components/sheet.md",
       "category": "overlay",
-      "nativeStates": [
-        "root"
-      ],
+      "nativeStates": ["root"],
       "semanticDom": [
         "data-slot=\"sheet\"",
         "data-slot=\"sheet-trigger\"",
@@ -944,15 +846,8 @@
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
-      "variants": [
-        "default",
-        "outline"
-      ],
-      "sizes": [
-        "default",
-        "sm",
-        "lg"
-      ]
+      "variants": ["default", "outline"],
+      "sizes": ["default", "sm", "lg"]
     },
     {
       "name": "Skeleton",
@@ -960,15 +855,9 @@
       "docStatus": "complete",
       "doc": "docs/components/skeleton.md",
       "category": "feedback",
-      "nativeStates": [
-        "root"
-      ],
-      "semanticDom": [
-        "data-slot=\"skeleton\""
-      ],
-      "tokenRefs": [
-        "--muted"
-      ],
+      "nativeStates": ["root"],
+      "semanticDom": ["data-slot=\"skeleton\""],
+      "tokenRefs": ["--muted"],
       "usageRules": [
         "使用 Skeleton 前必须以 src/components/ui/skeleton.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
@@ -981,16 +870,9 @@
       "docStatus": "complete",
       "doc": "docs/components/spinner.md",
       "category": "feedback",
-      "nativeStates": [
-        "root"
-      ],
-      "semanticDom": [
-        "root"
-      ],
-      "tokenRefs": [
-        "--foreground",
-        "--background"
-      ],
+      "nativeStates": ["root"],
+      "semanticDom": ["root"],
+      "tokenRefs": ["--foreground", "--background"],
       "usageRules": [
         "使用 Spinner 前必须以 src/components/ui/spinner.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
@@ -1003,17 +885,9 @@
       "docStatus": "complete",
       "doc": "docs/components/toast.md",
       "category": "feedback",
-      "nativeStates": [
-        "root"
-      ],
-      "semanticDom": [
-        "root"
-      ],
-      "tokenRefs": [
-        "--popover",
-        "--popover-foreground",
-        "--border"
-      ],
+      "nativeStates": ["root"],
+      "semanticDom": ["root"],
+      "tokenRefs": ["--popover", "--popover-foreground", "--border"],
       "usageRules": [
         "使用 Toast 前必须以 src/components/ui/sonner.tsx 为真实 API。",
         "全局只挂一个 Toaster；业务代码直接调用 toast()，不重复挂载。",
@@ -1033,10 +907,7 @@
         "data-checked",
         "data-unchecked"
       ],
-      "semanticDom": [
-        "data-slot=\"switch\"",
-        "data-slot=\"switch-thumb\""
-      ],
+      "semanticDom": ["data-slot=\"switch\"", "data-slot=\"switch-thumb\""],
       "tokenRefs": [
         "--primary",
         "--primary-foreground",
@@ -1059,10 +930,7 @@
       "docStatus": "complete",
       "doc": "docs/components/table.md",
       "category": "display",
-      "nativeStates": [
-        "hover",
-        "aria-expanded"
-      ],
+      "nativeStates": ["hover", "aria-expanded"],
       "semanticDom": [
         "data-slot=\"table-container\"",
         "data-slot=\"table\"",
@@ -1119,10 +987,7 @@
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
-      "variants": [
-        "default",
-        "line"
-      ]
+      "variants": ["default", "line"]
     },
     {
       "name": "Textarea",
@@ -1130,14 +995,8 @@
       "docStatus": "complete",
       "doc": "docs/components/textarea.md",
       "category": "form",
-      "nativeStates": [
-        "focus-visible",
-        "disabled",
-        "aria-invalid"
-      ],
-      "semanticDom": [
-        "data-slot=\"textarea\""
-      ],
+      "nativeStates": ["focus-visible", "disabled", "aria-invalid"],
+      "semanticDom": ["data-slot=\"textarea\""],
       "tokenRefs": [
         "--foreground",
         "--muted",
@@ -1159,17 +1018,12 @@
       "docStatus": "complete",
       "doc": "docs/components/toggle-group.md",
       "category": "action",
-      "nativeStates": [
-        "focus-visible"
-      ],
+      "nativeStates": ["focus-visible"],
       "semanticDom": [
         "data-slot=\"toggle-group\"",
         "data-slot=\"toggle-group-item\""
       ],
-      "tokenRefs": [
-        "--border",
-        "--radius"
-      ],
+      "tokenRefs": ["--border", "--radius"],
       "usageRules": [
         "使用 ToggleGroup 前必须以 src/components/ui/toggle-group.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
@@ -1182,15 +1036,8 @@
       "docStatus": "complete",
       "doc": "docs/components/toggle.md",
       "category": "action",
-      "nativeStates": [
-        "hover",
-        "focus-visible",
-        "disabled",
-        "aria-invalid"
-      ],
-      "semanticDom": [
-        "data-slot=\"toggle\""
-      ],
+      "nativeStates": ["hover", "focus-visible", "disabled", "aria-invalid"],
+      "semanticDom": ["data-slot=\"toggle\""],
       "tokenRefs": [
         "--foreground",
         "--muted",
@@ -1205,15 +1052,8 @@
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
-      "variants": [
-        "default",
-        "outline"
-      ],
-      "sizes": [
-        "default",
-        "sm",
-        "lg"
-      ]
+      "variants": ["default", "outline"],
+      "sizes": ["default", "sm", "lg"]
     },
     {
       "name": "Tooltip",
@@ -1221,20 +1061,14 @@
       "docStatus": "complete",
       "doc": "docs/components/tooltip.md",
       "category": "overlay",
-      "nativeStates": [
-        "data-open",
-        "data-closed"
-      ],
+      "nativeStates": ["data-open", "data-closed"],
       "semanticDom": [
         "data-slot=\"tooltip-provider\"",
         "data-slot=\"tooltip\"",
         "data-slot=\"tooltip-trigger\"",
         "data-slot=\"tooltip-content\""
       ],
-      "tokenRefs": [
-        "--background",
-        "--foreground"
-      ],
+      "tokenRefs": ["--background", "--foreground"],
       "usageRules": [
         "使用 Tooltip 前必须以 src/components/ui/tooltip.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
@@ -1250,10 +1084,7 @@
       "role": "Agent JSON 安全渲染面",
       "doc": "docs/components/fx-agent-surface.md",
       "category": "agent-ui",
-      "nativeStates": [
-        "root",
-        "unsupported type"
-      ],
+      "nativeStates": ["root", "unsupported type"],
       "semanticDom": [
         "data-slot=\"agent-surface\"",
         "data-slot=\"agent-surface-header\"",
@@ -1291,16 +1122,9 @@
       "role": "危险操作二次确认",
       "doc": "docs/components/fx-confirm-danger-dialog.md",
       "category": "fx",
-      "nativeStates": [
-        "root"
-      ],
-      "semanticDom": [
-        "root"
-      ],
-      "tokenRefs": [
-        "--destructive",
-        "--ring"
-      ],
+      "nativeStates": ["root"],
+      "semanticDom": ["root"],
+      "tokenRefs": ["--destructive", "--ring"],
       "usageRules": [
         "使用 ConfirmDangerDialog 前必须以 src/components/fx/confirm-danger-dialog.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
@@ -1314,12 +1138,8 @@
       "role": "页面标题、描述、主操作",
       "doc": "docs/components/fx-page-header.md",
       "category": "fx",
-      "nativeStates": [
-        "root"
-      ],
-      "semanticDom": [
-        "root"
-      ],
+      "nativeStates": ["root"],
+      "semanticDom": ["root"],
       "tokenRefs": [
         "--foreground",
         "--muted",
@@ -1340,9 +1160,7 @@
       "role": "文档页面包屑、标题、说明、页面动作",
       "doc": "docs/components/fx-page-lead.md",
       "category": "fx",
-      "nativeStates": [
-        "root"
-      ],
+      "nativeStates": ["root"],
       "semanticDom": [
         "page-lead",
         "page-lead-content",
@@ -1351,10 +1169,7 @@
         "page-lead-description",
         "page-lead-actions"
       ],
-      "tokenRefs": [
-        "--foreground",
-        "--muted-foreground"
-      ],
+      "tokenRefs": ["--foreground", "--muted-foreground"],
       "usageRules": [
         "使用 PageLead 前必须以 src/components/fx/page-lead.tsx 为真实 API。",
         "PageLead 用于文档站、官网或内容页顶部介绍区；业务后台页面标题区优先使用 PageHeader。",
@@ -1396,19 +1211,9 @@
       "role": "业务操作区按钮排列：主操作、次级操作、更多操作",
       "doc": "docs/components/fx-page-actions.md",
       "category": "fx",
-      "nativeStates": [
-        "root"
-      ],
-      "semanticDom": [
-        "action-row",
-        "action-row-secondary",
-        "action-row-more"
-      ],
-      "tokenRefs": [
-        "--foreground",
-        "--primary",
-        "--border"
-      ],
+      "nativeStates": ["root"],
+      "semanticDom": ["action-row", "action-row-secondary", "action-row-more"],
+      "tokenRefs": ["--foreground", "--primary", "--border"],
       "usageRules": [
         "使用 ActionRow 前必须以 src/components/fx/page-actions.tsx 为真实 API。",
         "ActionRow 只管理独立按钮的排列关系，不改变 Button 的 variant、size、tone 或交互态。",
@@ -1425,21 +1230,9 @@
       "role": "文档页右上角页面级动作、更多菜单、页间导航",
       "doc": "docs/components/fx-page-actions.md",
       "category": "fx",
-      "nativeStates": [
-        "disabled",
-        "menu-open"
-      ],
-      "semanticDom": [
-        "root",
-        "copy-action",
-        "more-menu",
-        "page-navigation"
-      ],
-      "tokenRefs": [
-        "--foreground",
-        "--muted-foreground",
-        "--secondary"
-      ],
+      "nativeStates": ["disabled", "menu-open"],
+      "semanticDom": ["root", "copy-action", "more-menu", "page-navigation"],
+      "tokenRefs": ["--foreground", "--muted-foreground", "--secondary"],
       "usageRules": [
         "使用 PageActions 前必须以 src/components/fx/page-actions.tsx 为真实 API。",
         "PageActions 只放文档站页面级工具，不承载组件示例内部操作或业务操作。",
@@ -1455,16 +1248,9 @@
       "role": "内容页章节标题和说明",
       "doc": "docs/components/fx-section-lead.md",
       "category": "fx",
-      "nativeStates": [
-        "root"
-      ],
-      "semanticDom": [
-        "root"
-      ],
-      "tokenRefs": [
-        "--foreground",
-        "--muted-foreground"
-      ],
+      "nativeStates": ["root"],
+      "semanticDom": ["root"],
+      "tokenRefs": ["--foreground", "--muted-foreground"],
       "usageRules": [
         "使用 SectionLead 前必须以 src/components/fx/section-lead.tsx 为真实 API。",
         "SectionLead 用于内容页章节标题和一句说明；标题与说明固定 4px，说明文字固定 14px。",
@@ -1483,7 +1269,10 @@
         "preview-tab",
         "code-tab",
         "copied",
-        "scenario-selected"
+        "scenario-selected",
+        "workbench-editing",
+        "workbench-node-selected",
+        "state-assignment-previewed"
       ],
       "semanticDom": [
         "root",
@@ -1491,7 +1280,10 @@
         "intent",
         "recommended-code",
         "preview",
-        "code"
+        "code",
+        "data-slot=\"component-playground-structure\"",
+        "data-slot=\"component-playground-state-assignments\"",
+        "data-slot=\"component-playground-validation\""
       ],
       "tokenRefs": [
         "--card",
@@ -1507,6 +1299,14 @@
         "每个调试项必须来自组件源码真实 prop，不发明不存在的 prop。",
         "任意维度选中全部时只展示矩阵预览，不展示代码 tab 和复制按钮；复制代码前必须选回具体取值。",
         "renderOne 与 genCode 必须保持同一组值，避免预览和复制代码不一致。",
+        "制作台模式的结构节点、属性归属、语义 Token 槽位、状态语义映射和检查项必须来自 component-playgrounds manifest。",
+        "存在 workbench 配置时默认仍为普通调试视图；只有用户点击编辑组件后才展示结构树、节点属性、Token 和生效确认。",
+        "制作台编辑值必须与普通调试值隔离；进入编辑时保存普通值快照，完成编辑后恢复，不能把结构、状态或 Token 草稿带回普通实时属性。",
+        "Token 只在组件作者预览中按声明槽位映射；非默认映射必须生成组件草稿并经治理后落为 variant 或组件映射。",
+        "Token 选项默认展示协作者可理解的用途名称，真实 Token 只作为稳定 value、悬停提示和代码输出，不制造第二套视觉值。",
+        "槽位选择自身默认 Token 时省略局部 CSS 变量覆盖，禁止生成会失效的 CSS 变量自引用。",
+        "状态语义映射展示的色板名称必须从 design-tokens manifest 自动派生；不展示 oklch/rgb 原始值，色板名称不得成为可编辑配置或第二真相源。",
+        "生效确认必须读取真实 data-slot 与计算样式，并同时检查结构、语义 Token、可访问性和代码同源。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ]
     },
@@ -1516,18 +1316,9 @@
       "docStatus": "complete",
       "role": "页面骨架（Layout/Header/Sider/Content/Footer，参考 Semi）",
       "category": "fx",
-      "nativeStates": [
-        "root"
-      ],
-      "semanticDom": [
-        "root"
-      ],
-      "tokenRefs": [
-        "--background",
-        "--card",
-        "--border",
-        "--muted-foreground"
-      ],
+      "nativeStates": ["root"],
+      "semanticDom": ["root"],
+      "tokenRefs": ["--background", "--card", "--border", "--muted-foreground"],
       "usageRules": [
         "整页骨架用 Layout 拼装（含侧栏设 hasSider）；内容区内部分栏用 24 列栅格工具类，不再包 Row/Col。",
         "侧栏收起(collapsed)与响应式由使用方控制；默认尺寸见 docs/LAYOUTS.md，不逐页随手定。",
@@ -1541,16 +1332,9 @@
       "role": "后台页面外壳",
       "doc": "docs/components/fx-page-shell.md",
       "category": "fx",
-      "nativeStates": [
-        "root"
-      ],
-      "semanticDom": [
-        "root"
-      ],
-      "tokenRefs": [
-        "--background",
-        "--ring"
-      ],
+      "nativeStates": ["root"],
+      "semanticDom": ["root"],
+      "tokenRefs": ["--background", "--ring"],
       "usageRules": [
         "使用 PageShell 前必须以 src/components/fx/page-shell.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
@@ -1564,15 +1348,9 @@
       "role": "筛选区和查询/重置操作",
       "doc": "docs/components/fx-search-toolbar.md",
       "category": "fx",
-      "nativeStates": [
-        "root"
-      ],
-      "semanticDom": [
-        "root"
-      ],
-      "tokenRefs": [
-        "--card"
-      ],
+      "nativeStates": ["root"],
+      "semanticDom": ["root"],
+      "tokenRefs": ["--card"],
       "usageRules": [
         "使用 SearchToolbar 前必须以 src/components/fx/search-toolbar.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
@@ -1585,12 +1363,7 @@
       "docStatus": "complete",
       "role": "导航菜单：一级应用栏(NavRail) + 单面板二级菜单，1:1 还原设计稿",
       "category": "fx",
-      "nativeStates": [
-        "default",
-        "hover",
-        "active",
-        "expanded"
-      ],
+      "nativeStates": ["default", "hover", "active", "expanded"],
       "semanticDom": [
         "data-slot=\"nav-rail\"",
         "data-slot=\"nav-rail-item\"",
@@ -1626,12 +1399,7 @@
       "figma": "https://www.figma.com/design/kZSoa7pCfxCmKjiY83tw6l/%E6%96%B0%E7%89%88WebUI?node-id=1961-152595",
       "role": "全局应用顶栏：品牌 + 应用切换 + 全局搜索 + 工具图标 + 头像，1:1 参照公司 Figma",
       "category": "fx",
-      "nativeStates": [
-        "default",
-        "hover",
-        "focus-within",
-        "expanded"
-      ],
+      "nativeStates": ["default", "hover", "focus-within", "expanded"],
       "semanticDom": [
         "data-slot=\"top-bar\"",
         "data-slot=\"top-bar-brand\"",
@@ -1695,16 +1463,55 @@
       ]
     },
     {
+      "name": "DatePicker",
+      "source": "src/components/fx/date-picker.tsx",
+      "docStatus": "complete",
+      "doc": "docs/components/fx-date-picker.md",
+      "role": "单日期选择器：日历弹层、受控/非受控日期、清除与字段错误状态",
+      "category": "fx",
+      "nativeStates": [
+        "default",
+        "hover",
+        "focus-visible",
+        "open",
+        "disabled",
+        "aria-invalid"
+      ],
+      "semanticDom": [
+        "data-slot=\"date-picker\"",
+        "data-slot=\"date-picker-trigger\"",
+        "data-slot=\"date-picker-value\"",
+        "data-slot=\"date-picker-clear\"",
+        "data-slot=\"calendar\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--muted",
+        "--muted-foreground",
+        "--input",
+        "--popover",
+        "--border",
+        "--ring",
+        "--destructive"
+      ],
+      "usageRules": [
+        "使用 DatePicker 前必须以 src/components/fx/date-picker.tsx 为真实 API。",
+        "DatePicker 是日期语义组件，不给基础 Input 添加日期 prop 或日历图标业务语义。",
+        "日期范围用两个 DatePicker 组合，不把开始/结束日期塞进一个字符串值。",
+        "错误态用 Field + aria-invalid + FieldError。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ]
+    },
+    {
       "name": "WebsiteCardContainer",
       "source": "src/components/fx/website-card-container.tsx",
       "docStatus": "internal",
-      "role": "网站规范页卡片容器示意组件",
+      "role": "文档站独立信息卡的统一容器",
       "category": "website-standards",
-      "nativeStates": [
-        "root"
-      ],
+      "nativeStates": ["root"],
       "semanticDom": [
-        "data-slot=\"website-card-container\"",
+        "data-website-card-container",
+        "data-slot=\"card\"",
         "data-slot=\"website-card-inner-panel\"",
         "data-slot=\"website-card-divider\"",
         "data-slot=\"website-card-control-shell\"",
@@ -1716,12 +1523,16 @@
         "--border",
         "--border-subtle",
         "--muted",
-        "--muted-foreground"
+        "--muted-foreground",
+        "--fx-shadow-l1"
       ],
       "usageRules": [
         "使用 WebsiteCardContainer 前必须以 src/components/fx/website-card-container.tsx 为真实 API。",
-        "WebsiteCardContainer 只负责网站规范页的卡片容器示意；外层卡片、内部区域、分隔线、控件壳和浮层容器都从组件插槽取值。",
-        "页面调用处不得重新手写卡片容器示意或卡片表面规则；需要调整视觉表示时改 WebsiteCardContainer。",
+        "文档站的独立信息块、示例预览和说明区域统一使用 WebsiteCardContainer；它内部复用 shadcn Card 的真实 API。",
+        "WebsiteCardContainer 固定使用 shadow-l1；全局主题的 Shadow Level 统一控制其显示与强度，页面调用处不得传入 elevated。",
+        "padding 默认为 default；仅完整应用预览等必须贴合容器边缘的既有 block 可传 padding=\"none\"，不得以 className 覆盖内边距。",
+        "组件自身的 API 预览可直接使用 shadcn Card，确保示例仍是被说明组件的真实用法。",
+        "页面调用处不得重新手写卡片容器或卡片表面规则；需要调整网站卡片视觉时改 WebsiteCardContainer。",
         "查看规则里的取值逻辑必须同时展示 manifest 规则和组件插槽视觉取值。"
       ]
     },
@@ -1731,9 +1542,7 @@
       "docStatus": "internal",
       "role": "网站规范页间距节奏示意组件",
       "category": "website-standards",
-      "nativeStates": [
-        "root"
-      ],
+      "nativeStates": ["root"],
       "semanticDom": [
         "data-slot=\"website-spacing-rhythm\"",
         "data-slot=\"website-spacing-rhythm-viewport\"",
@@ -1762,9 +1571,7 @@
       "docStatus": "internal",
       "role": "网站规范页查看规则弹层框架",
       "category": "website-standards",
-      "nativeStates": [
-        "root"
-      ],
+      "nativeStates": ["root"],
       "semanticDom": [
         "data-slot=\"website-rule-popover\"",
         "data-slot=\"website-rule-popover-content\"",
@@ -1785,15 +1592,12 @@
       "usageRules": [
         "使用 WebsiteRulePanel 前必须以 src/components/fx/website-rule-panel.tsx 为真实 API。",
         "WebsiteRulePopover 负责网站规范页查看规则的触发按钮、箭头状态、弹窗定位和宽度；页面调用处不得重建 Collapsible 外壳。",
-        "WebsiteRulePanel 只负责网站规范页查看规则的展示框架；规则正文、视觉取值和来源必须从对应真相源映射进入。",
+        "WebsiteRulePanel 的浮层表面统一由 WebsiteCardContainer 承载；阴影跟随网站容器和全局 Shadow Level。规则正文、视觉取值和来源必须从对应真相源映射进入。",
         "WebsiteRuleValueList 负责查看规则里的取值逻辑列表；取值必须从真实组件插槽 class 或 manifest 映射进入。",
         "WebsiteRuleValueList 面向前台读者展示时必须把 Tailwind 取值翻译成可理解的视觉描述，不直接裸露 w-[min(...)]、shrink-0 等原始 class。",
         "不要在调用处重建卡片外壳、来源区或标题区；需要调整框架时改 WebsiteRulePanel。"
       ]
     }
   ],
-  "checks": [
-    "npm run check:components",
-    "npm run check"
-  ]
+  "checks": ["npm run check:components", "npm run check"]
 }

@@ -3,7 +3,7 @@ category: Components
 group: 组合组件
 title: ComponentPlayground
 subtitle: 组件调试台
-description: fx 组合组件，用于组件文档里的通用交互调试台。
+description: fx 组合组件，用于组件文档里的通用交互调试与受控组件制作。
 source: src/components/fx/component-playground.tsx
 theme: theme/fx-theme.css
 tokens:
@@ -18,7 +18,7 @@ status: complete
 
 # ComponentPlayground 组件调试台
 
-fx 组合组件，用于组件文档里的通用交互调试台。
+fx 组合组件，用于组件文档里的通用交互调试台。默认保持普通调试视图；配置制作台能力后，用户点击“编辑组件”才展开结构树、节点属性、语义 Token 槽位与真实渲染验证。制作台使用独立临时草稿；点击“完成编辑”返回普通调试视图并恢复进入编辑前的实时属性。
 
 源码来自 fx-ui 公司组合组件，由 Button、Input 等现有 shadcn/ui 能力组合而成。公司视觉通过 `theme/fx-theme.css` 的语义 token 注入，不通过重新封装、硬编码颜色或手写状态样式实现。
 
@@ -52,10 +52,12 @@ const config: ComponentPlaygroundConfig = {
 ## 组件总览 {#overview}
 
 - 类型：fx
-- 语义 DOM：root、interactive-props、intent、recommended-code、preview、code
-- 原生/数据状态：preview-tab、code-tab、copied、scenario-selected
+- 语义 DOM：root、interactive-props、intent、recommended-code、preview、code、`data-slot="component-playground-structure"`、`data-slot="component-playground-state-assignments"`、`data-slot="component-playground-validation"`
+- 原生/数据状态：preview-tab、code-tab、copied、scenario-selected、workbench-editing、workbench-node-selected、state-assignment-previewed
 - 变体：无独立 variant prop；能力由 `ComponentPlaygroundConfig` 驱动
 - 导出项：ComponentPlayground、ComponentPlaygroundConfig 及相关类型
+
+制作台模式仍由 `ComponentPlaygroundConfig` 驱动：结构事实、属性归属、Token 槽位、状态语义映射和检查项来自 `docs/data/component-playgrounds.manifest.json`；组件页只提供真实组件渲染和检查逻辑。存在 `workbench` 配置不代表默认展开，统一由调试台工具栏的“编辑组件 / 完成编辑”切换。
 
 ## 场景示例 {#examples}
 
@@ -101,6 +103,7 @@ const config: ComponentPlaygroundConfig = {
 | `initial` | 初始值 |
 | `scenarios?` | 可选场景预设 |
 | `guidanceKey?` | 用于展示使用意图的属性 key |
+| `workbench?` | 可选制作台配置：结构节点、状态语义映射、真实 DOM 检查目标和验证项 |
 | `renderOne` | 根据当前值渲染预览 |
 | `genCode` | 根据当前值生成复制代码 |
 
@@ -121,6 +124,15 @@ const config: ComponentPlaygroundConfig = {
 
 - 每个调试项必须来自组件源码真实 prop，不发明不存在的 prop。
 - `renderOne` 与 `genCode` 必须保持同一组值。
+- 制作台选中结构节点后，只展示归属于该节点的真实 props；节点增删由 manifest 中的结构插槽控制，不发明组件 prop。
+- 默认进入普通调试视图，只展示组件的常用根属性；制作台结构和 Token 必须在用户点击“编辑组件”后才显示。进入编辑时快照普通调试值，编辑期间只修改临时草稿，完成编辑后恢复快照，不能污染普通实时属性。
+- 带制作台的组件必须用 `defaultVisible/defaultOrder` 明确声明普通调试视图的调用属性；`owner` 只表达编辑态节点归属，不能再被当作默认可见性的替代判断。普通视图不展示 hover/focus 等不可调用状态或结构槽位。
+- Token 面板只展示组件契约声明的语义 Token；预览通过局部 CSS 变量映射验证效果，生成内容是组件作者草稿，不能作为页面调用处的样式覆盖。
+- Token 选项默认显示面向协作者的用途语义，真实 Token 作为稳定 value 和悬停提示保留；展示文案不能成为第二套 Token 真相源。
+- 当槽位选择自身默认 Token 时必须省略局部 CSS 变量覆盖；禁止生成 `--input: var(--input)` 这类自引用，否则浏览器会把该变量判为无效。
+- 状态语义映射只声明源码真实存在的组件状态；点击映射可切换真实预览。状态行展示语义 Token、当前主题色块和从 `design-tokens.json` 自动派生的色板名称，不展示 `oklch/rgb` 原始值，也不把色板名称开放为可编辑配置。
+- 状态映射统一按“组件用法（组件/属性/状态）→ 语义 Token → 基础色板”表达；当前 `componentUsage` 不是独立组件 Token 层。默认让组件直接消费 shadcn 语义槽，只有满足 DEC-037 准入条件时才新增组件 Token。
+- 生效确认必须同时展示真实 `data-slot`、计算高度/颜色、结构检查、可访问性检查和代码同源状态。
 - ComponentPlayground 只用于文档站组件示例调试，不替代业务表单或真实配置面板。
 - 使用 ComponentPlayground 前必须以 src/components/fx/component-playground.tsx 为真实 API。
 - className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。

@@ -321,6 +321,12 @@
   /* ===== shadcn 标准语义槽 ←映射← 公司 token ===== */
 
   --radius: 0.625rem;
+  --radius-none: 0px;
+  --radius-inner: calc(var(--radius) - 4px);
+  --radius-element: calc(var(--radius) - 2px);
+  --radius-container: var(--radius);
+  --radius-page: calc(var(--radius) + 4px);
+  --radius-full: 9999px;
 
   --background: var(--fx-neutrals-02);
   /* 文字/图标四级层级（文字与图标共用同一套，全部取自中性轴）
@@ -422,13 +428,15 @@
   --chart-10: #976AEB; /* Purple 05 */
 
   /* ===== 投影 Shadow（Figma「图层样式」规范） ===== */
-  /* 阴影色总开关：从最深中性灰(含品牌色相微染)派生 + 8% 透明，跟随色板，不写死纯黑。
-     所有档位共用，调深浅/色板一处生效；各档靠 y 偏移 + blur 拉开层次，不靠改色 */
+  /* 单个 elevation token 由 2~3 层投影组成：近层保留落点，远层提供柔和扩散。
+     三层色均从最深中性灰（含品牌色相微染）派生，不写死纯黑。 */
   --fx-shadow-color: oklch(from var(--fx-neutrals-20) l c h / 0.08);
-  --fx-shadow-l1:    0px 6px 18px -8px var(--fx-shadow-color);  /* L1 浮层菜单 / Dropdown */
-  --fx-shadow-l2:    0px 10px 30px -12px var(--fx-shadow-color); /* L2 页面滑出 / Sheet */
-  --fx-shadow-l3:    0px 18px 48px -16px var(--fx-shadow-color); /* L3 临时性插入 / Dialog / Modal */
-  --fx-shadow-l1-up: 0px -6px 18px -8px var(--fx-shadow-color); /* L1 向上变体：y 取负 */
+  --fx-shadow-color-soft: oklch(from var(--fx-neutrals-20) l c h / 0.05);
+  --fx-shadow-color-faint: oklch(from var(--fx-neutrals-20) l c h / 0.03);
+  --fx-shadow-l1:    0px 2px 6px -2px var(--fx-shadow-color), 0px 4px 10px -4px var(--fx-shadow-color-soft); /* L1 浮层菜单 / Dropdown */
+  --fx-shadow-l2:    0px 4px 12px -4px var(--fx-shadow-color), 0px 8px 20px -2px var(--fx-shadow-color-soft), 0px 12px 28px 0px var(--fx-shadow-color-faint); /* L2 页面滑出 / Sheet */
+  --fx-shadow-l3:    0px 6px 16px -8px var(--fx-shadow-color), 0px 9px 28px 0px var(--fx-shadow-color-soft), 0px 12px 48px 16px var(--fx-shadow-color-faint); /* L3 临时性插入 / Dialog / Modal */
+  --fx-shadow-l1-up: 0px -2px 6px -2px var(--fx-shadow-color), 0px -4px 10px -4px var(--fx-shadow-color-soft); /* L1 向上变体：y 取负 */
 
   /* sidebar */
   --sidebar: #FFFFFF;
@@ -598,6 +606,7 @@
   --radius-2xl: 1rem;   /* 16px */
   --radius-3xl: 1.5rem; /* 24px */
   --radius-4xl: 2rem;   /* 32px */
+
   --font-sans: var(--font-sans);
   --font-heading: var(--font-sans);
 
@@ -670,6 +679,27 @@
   --shadow-l1-up: var(--fx-shadow-l1-up);
 }
 
+/* 文本角色是调用层；字号和字重继续复用上面的现有 Tailwind token。 */
+@utility text-page-title {
+  @apply text-xl font-bold;
+}
+
+@utility text-section-title {
+  @apply text-lg font-semibold;
+}
+
+@utility text-body {
+  @apply text-base font-normal;
+}
+
+@utility text-label {
+  @apply text-sm font-medium;
+}
+
+@utility text-caption {
+  @apply text-sm font-normal;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -686,6 +716,38 @@
    选择器特异性 (0,3,0) 高于工具类 hover:bg-muted (0,2,0)，可覆盖。 */
 .fx-doc-static [data-slot="table-row"]:hover {
   background-color: transparent;
+}
+
+/* Input 交互态：Figma 规范为 hover/focus 主题色边框、invalid 错误色边框。
+   放在组件层选择器里，避免 Tailwind utility 与全局 base border 的层级顺序影响状态优先级。 */
+[data-slot="input"],
+[data-slot="input-group"] {
+  border-color: var(--input);
+}
+
+[data-slot="input"]:hover,
+[data-slot="input"]:focus-visible,
+[data-slot="input"][data-input-state="hover"],
+[data-slot="input"][data-input-state="focus"],
+[data-slot="input-group"]:hover,
+[data-slot="input-group"]:focus-within,
+[data-slot="input-group"][data-input-state="hover"],
+[data-slot="input-group"][data-input-state="focus"] {
+  border-color: var(--primary);
+}
+
+[data-slot="input"][aria-invalid="true"],
+[data-slot="input-group"]:has([aria-invalid="true"]) {
+  border-color: var(--destructive);
+}
+
+/* 轻量前后缀与输入内容的内侧留白必须镜像，避免左右组合密度漂移。 */
+[data-slot="input-group"] > [data-slot="input-affix"] + [data-slot="input"] {
+  padding-left: var(--fx-control-gap-tight);
+}
+
+[data-slot="input-group"] > [data-slot="input"]:has(+ [data-slot="input-affix"]) {
+  padding-right: var(--fx-control-gap-tight);
 }
 
 /* 图标线宽（Tabler）：全局默认描边粗细，一处统管，需要更粗/更细改这一个值。
@@ -737,10 +799,12 @@
   --fx-panel-padding: 0.75rem;
   --fx-theme-duration: 200ms;
   --fx-shadow-color: oklch(from var(--fx-neutrals-20) l c h / 0.08);
-  --fx-shadow-l1: 0px 6px 18px -8px var(--fx-shadow-color);
-  --fx-shadow-l2: 0px 10px 30px -12px var(--fx-shadow-color);
-  --fx-shadow-l3: 0px 18px 48px -16px var(--fx-shadow-color);
-  --fx-shadow-l1-up: 0px -6px 18px -8px var(--fx-shadow-color);
+  --fx-shadow-color-soft: oklch(from var(--fx-neutrals-20) l c h / 0.05);
+  --fx-shadow-color-faint: oklch(from var(--fx-neutrals-20) l c h / 0.03);
+  --fx-shadow-l1: 0px 2px 6px -2px var(--fx-shadow-color), 0px 4px 10px -4px var(--fx-shadow-color-soft);
+  --fx-shadow-l2: 0px 4px 12px -4px var(--fx-shadow-color), 0px 8px 20px -2px var(--fx-shadow-color-soft), 0px 12px 28px 0px var(--fx-shadow-color-faint);
+  --fx-shadow-l3: 0px 6px 16px -8px var(--fx-shadow-color), 0px 9px 28px 0px var(--fx-shadow-color-soft), 0px 12px 48px 16px var(--fx-shadow-color-faint);
+  --fx-shadow-l1-up: 0px -2px 6px -2px var(--fx-shadow-color), 0px -4px 10px -4px var(--fx-shadow-color-soft);
 }
 
 /* 运行时主题预览层：由主题配置面板写入 data-theme-* 和 CSS 变量。

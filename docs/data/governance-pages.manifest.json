@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/governance-pages-manifest",
-  "updatedAt": "2026-07-10",
+  "updatedAt": "2026-07-16",
   "truthSource": "docs/data/governance-pages.manifest.json",
   "humanDoc": "docs/DOC_SITE_DESIGN.md",
   "note": "治理页里的规则型卡槽机器事实表。文档规范和检查命令页面优先从这里读表格、卡片和清单，避免把治理文案写死在 src/App.tsx。",
@@ -96,6 +96,31 @@
         "title": "token 漂移",
         "script": "scripts/check-tokens-sync.sh",
         "desc": "确认 token 文档、JSON 和主题文件没有互相飘。"
+      },
+      {
+        "title": "Theme Contract 检查",
+        "script": "scripts/check-theme-contract.mjs",
+        "desc": ""
+      },
+      {
+        "title": "Agent 查询边界检查",
+        "script": "scripts/check-agent-query-contract.mjs",
+        "desc": ""
+      },
+      {
+        "title": "Agent 示例来源检查",
+        "script": "scripts/check-agent-examples.mjs",
+        "desc": ""
+      },
+      {
+        "title": "Agent 场景配方检查",
+        "script": "scripts/check-agent-recipes.mjs",
+        "desc": ""
+      },
+      {
+        "title": "页面 Build Kit 检查",
+        "script": "scripts/check-page-build-kit.mjs",
+        "desc": ""
       },
       {
         "title": "浮层阴影 token 检查",

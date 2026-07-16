@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-06-30
+last_verified: 2026-07-16
 teaches: "fx-ui 高价值结构改动的记录：改了什么、为什么改、影响到哪里"
 use_when: "需要回溯某次跨层改动的原因和影响范围时"
 ---
@@ -18,6 +18,54 @@ use_when: "需要回溯某次跨层改动的原因和影响范围时"
 - 一次连续任务合并成一条
 
 ---
+
+## 2026-07-16 — Elevation Token 复合阴影升级
+
+- **改动**：`shadow-l1/l2/l3/l1-up` 从单层改为两到三层复合阴影，以近层落点和远层扩散表达 elevation；主题预览强度映射、Token manifest 和阴影文档同步为同一组真实值。
+- **影响**：Dropdown、Sheet、Dialog 等已有调用不需要更换 utility，即可获得更清楚但仍克制的层级；调用方仍禁止叠加多个 elevation Token。
+- **相关文件**：`theme/fx-theme.css`、`src/App.tsx`、`docs/TOKENS.md`、`docs/data/design-tokens.json`、`docs/DECISIONS.md`
+
+## 2026-07-15 — Agent 查询/受控装配 contract + Shape 语义半径
+
+- **改动**：从现有 Token、组件和调试台 manifest 派生 Agent token/组件 contract 与快速上下文；新增统一 `npm run fx -- ...` 查询入口、doctor 诊断及页面 Build Kit。Build Kit 只开放已有 `gen:list-page` 的列表页骨架，详情页/表单页明确标记为 `needs-block`。新增 Shape 语义半径别名与同心嵌套规则，不改变组件默认外观。
+- **影响**：Agent 可先查询真实 API、Token 映射与页面生成边界，再读取源码或执行脚手架；派生物、Build Kit 和 Shape 映射均接入检查。主题构建只重建既有 CSS 真相源的派生产物；当前没有可执行的历史迁移，因此 upgrade 命令只报告该状态。
+- **相关文件**：`docs/data/{agent-tokens,agent-components,page-build-kit}.manifest.json`、`docs/data/agent-context.md`、`scripts/{fx-agent,doctor,build-agent-components,build-agent-context}.mjs`、`theme/fx-theme.css`、`docs/{TOKENS,PAGES,DECISIONS}.md`
+
+## 2026-07-16 — Agent 意图查询边界固化
+
+- **改动**：将可解释命中、组件/API 优先、调试台控制项非 API、示例只存来源指针固化到 Agent contract 和 AI 行为规则；新增 `check-agent-query-contract` 门禁。词表和排序权重保留在 CLI 内演进。
+- **影响**：协作者和 Agent 获得稳定查询边界，又不会把检索实现细节误当作组件或设计规范。
+- **相关文件**：`AGENTS.md`、`docs/DECISIONS.md`、`docs/data/agent-components.manifest.json`、`scripts/check-agent-query-contract.mjs`
+
+## 2026-07-16 — Agent 接入与诊断协议
+
+- **改动**：新增只读 `fx init --agent codex|claude|cursor` 接入片段；doctor 结果新增稳定 `FX_*` 错误码及修复命令。
+- **影响**：新协作者可快速获得最小正确上下文，自动化可按诊断代码处理问题，且不会被工具覆盖既有 Agent 配置。
+- **相关文件**：`scripts/{fx-agent,doctor,build-agent-context}.mjs`、`docs/{DECISIONS,CHANGELOG}.md`
+
+## 2026-07-16 — 受控页面任务计划
+
+- **改动**：新增 `fx plan`，由现有 Page Build Kit 为自然语言任务返回唯一的已验证页面路径、数据契约、来源指针和禁止项；未沉淀页型明确返回 blocked。
+- **影响**：Agent 从“查询组件”进入“受控装配”，但不会绕过页面 Block 治理生成临时 JSX。
+- **相关文件**：`scripts/fx-agent.mjs`、`docs/data/page-build-kit.manifest.json`、`scripts/check-agent-query-contract.mjs`、`docs/DECISIONS.md`
+
+## 2026-07-16 — 变更影响与示例来源门禁
+
+- **改动**：新增 `fx impact component|token`，沿既有 contract 输出真相源、下游引用和必跑检查；新增 Agent 示例来源验证，检查文档页文件、场景符号和锚点是否真实存在。
+- **影响**：协作者在修改前能看见受治理的影响链，示例入口不再因页面重构而静默失效。
+- **相关文件**：`scripts/{fx-agent,check-agent-examples,check-agent-query-contract}.mjs`、`docs/data/agent-components.manifest.json`、`AGENTS.md`
+
+## 2026-07-16 — Theme Contract 与主题审计
+
+- **改动**：从现有 Token contract 派生 Theme Contract，新增 `fx theme show/audit` 和 `check:theme`，明确可替换语义视觉槽与受保护结构 token；不创建新主题。
+- **影响**：主题边界、交互状态完整性和当前只支持 light 的事实变为可查询、可审计契约。
+- **相关文件**：`scripts/{build-agent-token-contract,check-theme-contract,fx-agent}.mjs`、`docs/data/agent-tokens.manifest.json`、`docs/{TOKENS,DECISIONS}.md`
+
+## 2026-07-16 — Agent 场景配方 Contract
+
+- **改动**：新增 `fx recipe` 和四条真实场景配方，记录跨组件组合、行为、验收、禁止项与证据来源；未知场景显式拒绝。新增 `check:agent-recipes` 门禁与 `FX_AGENT_RECIPE_DRIFT` 诊断码。
+- **影响**：协作者可查询经过验证的业务组合，不再从单个组件 API 自由猜测场景实现。
+- **相关文件**：`docs/data/agent-recipes.manifest.json`、`scripts/{fx-agent,check-agent-recipes}.mjs`、`docs/DECISIONS.md`
 
 ## 2026-06-18 — 图标库换 Tabler + 布局拆「布局/栅格」两页 + Layout 骨架组件
 

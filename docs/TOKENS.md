@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-07-08
+last_verified: 2026-07-16
 teaches: "公司设计 token 的基础架构、真实值和全局视觉使用规则"
 use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadcn 组件样式或判断视觉是否符合公司规范时"
 ---
@@ -13,6 +13,27 @@ use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadc
 > 改完 `fx-theme.css` 后，跑 `bash scripts/check-tokens-sync.sh` 校验本表的色值有没有漏抄/抄漂——脚本只查不改，发现差异要手动同步本表。
 
 fx-ui 的组件源码来自 shadcn/ui，公司的视觉统一不靠重写组件，而靠 token 注入。
+
+## Agent Token Contract
+
+Agent 不直接从色板挑数值。它应查询由 `docs/data/design-tokens.json` 派生的 `docs/data/agent-tokens.manifest.json`，只选择 semantic token 或组件已经声明的 `stateMappings`；primitive 色板仅供主题实现解析。该 contract 不新增 Token，也不是第二真相源。
+
+主题能力先通过 `npm run fx -- theme show --json` 查询：只允许替换声明过的语义视觉槽，半径、字族、间距和结构性效果不属于主题调用处覆盖面。`npm run fx -- theme audit --json` 与 `npm run check:theme` 只审计当前契约；当前只支持 light，不代表已经支持 dark 或可生成自定义主题。
+
+```bash
+# 按意图查语义 token 与组件映射
+npm run tokens -- search "Input invalid"
+
+# 追溯一个语义 token 到 CSS 变量与色板引用
+npm run tokens -- resolve semantic.destructive --json
+
+# 查看组件允许的 token 与状态映射
+npm run tokens -- component Input --json
+```
+
+`npm run build:tokens` 会先从 `theme/fx-theme.css` 重建 Token manifest，再重建 Agent contract。`npm run check:agent-tokens` 会阻止派生数据漂移；组件状态映射必须引用已声明的 semantic token，且不得在调用处改写视觉。
+
+统一 Agent CLI 也提供 `npm run fx -- token <query> --json` 与 `npm run fx -- theme`。其中 `npm run fx -- theme build` 只重建现有 CSS 主题的 Token/Agent 产物，**不**接受自由色值、临时组件覆盖或生成额外主题实现。
 
 ## 基础架构
 
@@ -142,6 +163,8 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 按组件**类型/层级**选档（标签<控件<卡片<弹窗），不是按同一组件的大小——同一按钮的大中小尺寸通常共用一档（fx-ui 小尺寸按钮降到 md，常规/大按钮用 lg）。核心档由唯一基准 `--radius` 按 **shadcn 标准 ±2px 步进**派生；大容器档用 Tailwind 默认固定值；`full` 是胶囊/圆形，不参与派生。
 
+为方便 Agent 按用途判断，Token manifest 额外提供 `none / inner / element / container / page / full` 六个**语义别名**，它们映射到现有圆角阶，不改变任何已落地组件外观。嵌套圆角表面遵守同心规则：`innerRadius = max(0px, outerRadius - inset)`；该计算只应由组件内部实现，业务调用处不手写 `calc()` 或覆盖圆角。
+
 **为什么 calc 派生而非固定值**：① 单一总开关，改 `--radius` 整套等量平移；② 步进恒定，相邻档差值一致不漂移；③ 品牌可调（更圆/更方一处生效）。固定值更直观但失去总开关，故表里同时标 px。
 
 **尺寸与圆角（0.15~0.35 比值带）**：先按组件类型选一档，套到该组件所有尺寸上算 `圆角 ÷ 高度`——每个尺寸都落在 0.15~0.35 就共用一档（如 8px 按钮在 28/32/36px → 0.29/0.25/0.22，全在带内，不破例）。掉出带的尺寸**自动**换相邻档：> 0.4 太圆下调、< 0.15 太尖上调，复用现有阶梯不造新值。判定靠比值算，不靠感觉，也不用逐组件预先指定。
@@ -186,7 +209,53 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 **行高随主题字号映射一并调整**（上表"字号/行高"列即定义）。正文/说明**不要手写 `leading-7`/`leading-8`** 把行距抬到 2.0+——那样换行太散，不符合主流正文行高（约 1.5）。
 
-> 治理建议：新代码只写 `text-xs / text-sm / text-base / text-lg / text-xl`，不要再引入第二套 FX 字号类。
+> 治理建议：新增或调整的面向用户文本调用已注册的 `text-{role}` 角色；`text-{size}` 是角色内部复用的基础字号 Token，不再作为业务调用层另行拼接。
+
+### 文本角色
+
+先按文本用途选角色，并在调用处只写对应的 `text-{role}` 工具类；不要凭视觉大小临时拼 `text-{size}` 与 `font-*`，也不要在同一元素叠加两者。`text-{size}` 与 `font-*` 是角色的底层映射，用于追溯，不是第二套调用方式。机器事实在 `docs/data/design-tokens.json#typography.roles`，可用 `npm run tokens -- search "section title"` 查询。
+
+| 角色 | 字号 Token | 字重 Token | 调用 | 用于 | 不用于 |
+|------|------------|------------|------|------|--------|
+| page-title | `text-xl` | `font-bold` | `text-page-title` | 页面、详情页主标题 | 卡片或表格标题 |
+| section-title | `text-lg` | `font-semibold` | `text-section-title` | 区块、卡片、组件标题 | 普通正文 |
+| body | `text-base` | `font-normal` | `text-body` | 默认正文、表单值、菜单、列表内容 | 用小字伪装弱信息 |
+| label | `text-sm` | `font-medium` | `text-label` | 字段标签、按钮、菜单项、短状态标签 | 多句说明 |
+| caption | `text-sm` | `font-normal` | `text-caption` | 辅助说明、提示、元信息 | 关键操作或主要正文 |
+
+### 数据排版
+
+表格和列表列先按字段类型声明，再由 `DataTable` 的 `dataType` 采用对应对齐和字形。机器事实在 `docs/data/design-tokens.json#typography.dataRules`；不以列标题猜数据类型。名称、说明等长文本是否截断仍由具体列内容明确选择 `truncate`，避免组件擅自隐藏业务信息。
+
+| 字段类型 | `DataTable` | 对齐 / 字形 | 场景 |
+|------|------|------|------|
+| number / currency / percentage | `dataType="…"` | 右对齐 + `tabular-nums` | 数量、金额、百分比 |
+| date / identifier | `dataType="…"` | 左对齐 + 等宽数字 + 不换行 | 日期、订单号、手机号 |
+| status | `dataType="status"` | 居中 + 不换行 | 短状态、Tag、Badge |
+| text | `dataType="text"` 或省略 | 左对齐 | 名称、说明、链接 |
+
+### 混排、代码与编号
+
+这部分是 Agent 和协作者的调用约定，机器事实在 `docs/data/design-tokens.json#typography.conventions`；`npm run tokens -- search "代码 字体" --json` 可查询。
+
+| 内容 | 约定 |
+|------|------|
+| 中文 / 中英文混排 | 使用默认字距与 `font-sans`，不另造中文字号或字距 API；新增或调整的中文、混排文本不使用 `tracking-tight` / `tracking-tighter`。 |
+| 英文全大写 | 仅短缩写或短标签，如 `ID`、`API`、`SKU`；句子、说明和长标题保持原始大小写。 |
+| 代码与字段名 | 需要复制或逐字符辨认时使用 `font-mono`：代码、命令、字段名、密钥片段。 |
+| 业务编号 | 日期、订单号、手机号等仍走数据字段规则的 `tabular-nums`，不因其包含字母数字就改为代码字体。 |
+| 长文本 | 是否截断由实际列或内容容器显式添加 `truncate`；`DataTable` 不自动猜测。 |
+
+### 组件排版映射
+
+组件内部文本先查 `docs/data/design-tokens.json#componentUsage[].typographyMappings`，再读本地源码；可用 `npm run tokens -- component Input --json` 或 `npm run tokens -- component Table --json` 查询。
+
+| 组件 | 元素 | 角色与边界 |
+|------|------|------|
+| Input | value | `size="md"` 用 body 的 `text-base`；`sm/xs` 是高密度控件降级，不另造角色。 |
+| Input | placeholder | 继承当前值的字号，颜色走 `foreground-disabled`；不替代 FieldLabel。 |
+| Table | header | label，`TableHead` 用 `font-medium`，只承载短字段名。 |
+| Table | cell | 原生 Table 不猜数据类型；使用 `DataTable` 时用 `dataType` 处理数据列，其余按 body 内容呈现。 |
 
 **字重**：`font-normal`(400) 常规·正文 / `font-medium`(500) 中等·标签·按钮·菜单 / `font-semibold`(**600**) 次强调·小标题/卡片标题（500 偏轻、700 偏重时的中间档）/ `font-bold`(**700**) 加粗·页/区块标题·强调（见 DEC-028）。
 
@@ -228,15 +297,15 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 | Token | 值 | 场景 |
 |------|-----|------|
-| `shadow-l1` | `0 6px 18px -8px` | 浮层菜单、Dropdown — 最近层 |
-| `shadow-l2` | `0 10px 30px -12px` | Sheet、侧边滑出面板 — 中层 |
-| `shadow-l3` | `0 18px 48px -16px` | Dialog、Modal — 最高层遮罩 |
-| `shadow-l1-up` | `0 -6px 18px -8px` | 向上弹出的浮层（底部工具栏菜单） |
+| `shadow-l1` | 两层：`0 2 6 -2` / `0 4 10 -4` | 浮层菜单、Dropdown — 最近层 |
+| `shadow-l2` | 三层：`0 4 12 -4` / `0 8 20 -2` / `0 12 28 0` | Sheet、侧边滑出面板 — 中层 |
+| `shadow-l3` | 三层：`0 6 16 -8` / `0 9 28 0` / `0 12 48 16` | Dialog、Modal — 最高层遮罩 |
+| `shadow-l1-up` | 两层：`0 -2 6 -2` / `0 -4 10 -4` | 向上弹出的浮层（底部工具栏菜单） |
 
-**计算方式**：每档 = `0 {y}px {blur}px {spread}px var(--fx-shadow-color)`，低档使用负 spread，让阴影更浅、更柔、更贴近表面。
-- **颜色总开关** `--fx-shadow-color = oklch(from var(--fx-neutrals-20) l c h / .08)`：从最深中性灰（带品牌色相微染）派生 + 8% 透明，**跟随色板**而非写死纯黑；四档共用，调深浅/色板一处生效。
-- **y 偏移 / blur / spread**：随层级升高，偏移和模糊增大，负 spread 收住边缘，避免低档阴影显脏或显硬。
-- 靠几何（y + blur + spread）拉开层级，**不靠加深颜色**，浮层保持淡而中性；`shadow-l1-up` 是 L1 的 y 取负的方向变体。
+**计算方式**：一个 elevation token 由两到三层 `0 {y}px {blur}px {spread}px var(--fx-shadow-color-*)` 组成。近层保留落点，远层负责柔和扩散；调用方只选择一档，不叠加多个 elevation token。
+- **颜色总开关** `--fx-shadow-color / soft / faint = 8% / 5% / 3%`：均从最深中性灰（带品牌色相微染）派生，**跟随色板**而非写死纯黑。
+- **y 偏移 / blur / spread**：随层级升高，偏移和模糊增大；近层的负 spread 收住边缘，L3 最外层的正 spread 保证高层投影仍可见。
+- `shadow-l1-up` 是 L1 的 y 取负方向变体；阴影只表达 elevation，不作装饰性边框。
 
 ## 动效
 
@@ -375,7 +444,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | 主图标 | `text-foreground`（neutrals-20） |
 | 次图标 | `text-muted-foreground`（neutrals-11） |
 | 禁用图标 | `text-foreground-disabled`（neutrals-06） |
-| 反白图标（深底/品牌底） | `text-primary-foreground`（neutrals-01） |
+| 主色/危险色底图标 | `text-primary-foreground` / `text-destructive-foreground`（neutrals-20） |
 
 **2. 彩色线性图标 — 语义/品牌色**：`text-primary` / `text-success` / `text-warning` / `text-destructive` / `text-info`，分类场景可用 chart 色系（09 阶）。
 

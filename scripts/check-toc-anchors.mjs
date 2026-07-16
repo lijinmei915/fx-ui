@@ -39,7 +39,7 @@ for (const [, name, body] of anchorBlocks) {
 // 每个列出的页面：其 *Anchors 的 href 目标集合，必须与下面声明的模块 id 集合完全一致。
 // 新增模块/页面时，既要在页面加 id，又要更新 *Anchors 和这张表，三者对齐才过。
 const pageModules = {
-  tokenTypographyAnchors: ["tokens-typography-size", "tokens-typography-weight", "tokens-typography-family"],
+  tokenTypographyAnchors: ["tokens-typography-roles", "tokens-typography-size", "tokens-typography-weight", "tokens-typography-family"],
   tokenRadiusAnchors: ["tokens-radius-scale", "tokens-radius-compute"],
   tokenShadowAnchors: ["tokens-shadow-scale", "tokens-shadow-compute"],
   tokenSpacingAnchors: ["tokens-spacing-scale", "tokens-spacing-compute"],

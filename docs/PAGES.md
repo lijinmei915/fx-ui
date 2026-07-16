@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-06-26
+last_verified: 2026-07-16
 teaches: "fx-ui 页面装配 playbook：怎么拼出一个页面才不出错（拼装现成 block，不现拼）"
 use_when: "要生成 / 改造任意页面（列表页、表单页、详情页、看板…）前，先按这套流程走"
 ---
@@ -22,6 +22,12 @@ npm run gen:list-page -- --name 订单 --slug order
 它生成 `src/pages/<slug>-list.tsx`（已拼好 `CrmAppShell + ListPageHeader + ListToolbar + DataTable + Pagination`），并打印要在 `src/App.tsx` 接的 3 行（import + `pageRegistry` + `docsNav`）。接好后**只改 `columns`/`rows`**，跑 `check:all` + `test:visual`。其它页型暂无生成器 → 走下面的通用 6 步。
 
 > **强制**：`src/pages/` 里手写列表页（用了 `ListToolbar` + `DataTable` 却没 `@generated fx-ui:list-page` 标记）会被 `scripts/check-list-page-source.mjs` 拦下——列表页只能由生成器产出。
+
+Agent 先查询受控 Build Kit，再执行已登记的生成器；当前只有列表页处于 `ready`，详情页/表单页会明确返回 `needs-block`，不得降级为临时拼装。
+
+```bash
+npm run fx -- build list --json
+```
 
 ## 装配流程（无生成器的页型走这个）
 
@@ -70,6 +76,8 @@ block 既不能僵（不能变），也不能堆成 ProTable 那种 config 怪�
 | `ListToolbar` | `src/components/recipes/list-toolbar.tsx` | 列表页工具栏：筛选 + 复合搜索 + 视图切换 + 右侧动作，全受控配置化 |
 | `ListPageHeader` | `src/components/recipes/list-page-header.tsx` | 列表页标题栏：标题 + 可选视图下拉(`views?`) + 操作插槽(`actions` 0..N) |
 | 客户列表页模板 | `src/App.tsx` `CustomerListTemplate` | 列表页范例 = `CrmAppShell` + `ListPageHeader` + `ListToolbar` + `DataTable` + `Pagination`，只换 columns/数据 |
+
+`DataTable.Column` 的 `dataType` 管数据排版：`number / currency / percentage` 默认右对齐并使用等宽数字；`date / identifier` 左对齐、不换行且使用等宽数字；`status` 居中。普通 `text` 不必声明。名称或说明需要截断时，在真实列内容中显式使用 `truncate`，不要让表格 block 猜测。
 
 ## 正反例
 

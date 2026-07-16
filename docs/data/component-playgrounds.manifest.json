@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/component-playgrounds",
-  "updatedAt": "2026-07-03",
+  "updatedAt": "2026-07-15",
   "truthSource": "docs/data/component-playgrounds.manifest.json",
   "humanDoc": "docs/components/component-playground.md",
   "note": "组件调试台的结构化真相源。组件页和网站规范页都从这里读取场景、属性、意图和约束；源码侧只负责把这些值渲染为真实组件。",
@@ -1211,46 +1211,313 @@
         }
       ]
     },
+    "input": {
+      "componentName": "Input",
+      "source": "src/components/ui/input.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "initial": {
+        "leading": "none",
+        "trailing": "none",
+        "field": "false",
+        "state": "normal",
+        "disabled": "false",
+        "invalid": "false",
+        "size": "sm",
+        "placeholder": "请输入",
+        "type": "text",
+        "leadingText": "¥",
+        "trailingText": "%",
+        "actionLabel": "搜索",
+        "surfaceToken": "surface",
+        "borderToken": "input",
+        "placeholderToken": "foreground-disabled"
+      },
+      "guidanceKey": "type",
+      "workbench": {
+        "inspectSlot": "input-group",
+        "nodes": [
+          {
+            "key": "root",
+            "zh": "输入组合",
+            "en": "Input composition",
+            "component": "InputGroup"
+          },
+          {
+            "key": "leading",
+            "zh": "前置内容",
+            "en": "Leading content",
+            "component": "InputAffix / InputAddon",
+            "hiddenWhen": { "leading": "none" }
+          },
+          {
+            "key": "input",
+            "zh": "输入框",
+            "en": "Input",
+            "component": "Input"
+          },
+          {
+            "key": "trailing",
+            "zh": "后置内容",
+            "en": "Trailing content",
+            "component": "InputAffix / InputAction",
+            "hiddenWhen": { "trailing": "none" }
+          },
+          {
+            "key": "tokens",
+            "zh": "语义 Token",
+            "en": "Semantic tokens",
+            "component": "Token slots",
+            "kind": "tokens"
+          },
+          {
+            "key": "states",
+            "zh": "状态语义",
+            "en": "State semantics",
+            "component": "State mappings",
+            "kind": "states"
+          }
+        ],
+        "stateAssignments": [
+          { "key": "border-normal", "zh": "正常", "en": "Default", "propertyZh": "边框", "propertyEn": "Border", "token": "input", "cssVar": "--input", "preview": { "key": "state", "value": "normal" } },
+          { "key": "border-hover", "zh": "悬停", "en": "Hover", "propertyZh": "边框", "propertyEn": "Border", "token": "primary", "cssVar": "--primary", "preview": { "key": "state", "value": "hover" } },
+          { "key": "border-focus", "zh": "聚焦", "en": "Focus", "propertyZh": "边框", "propertyEn": "Border", "token": "primary", "cssVar": "--primary", "preview": { "key": "state", "value": "focus" } },
+          { "key": "border-disabled", "zh": "禁用", "en": "Disabled", "propertyZh": "边框", "propertyEn": "Border", "token": "input", "cssVar": "--input", "preview": { "key": "state", "value": "disabled" } },
+          { "key": "surface-disabled", "zh": "禁用", "en": "Disabled", "propertyZh": "表面", "propertyEn": "Surface", "token": "muted", "cssVar": "--muted", "preview": { "key": "state", "value": "disabled" } },
+          { "key": "border-invalid", "zh": "错误", "en": "Error", "propertyZh": "边框", "propertyEn": "Border", "token": "destructive", "cssVar": "--destructive", "preview": { "key": "state", "value": "invalid" } }
+        ],
+        "checks": [
+          { "key": "realDom", "zh": "真实组件已渲染", "en": "Real component rendered" },
+          { "key": "structure", "zh": "组合结构合法", "en": "Composition is valid" },
+          { "key": "tokens", "zh": "仅使用语义 Token", "en": "Semantic tokens only" },
+          { "key": "stateSemantics", "zh": "状态映射来自真实组件", "en": "State mappings match the component" },
+          { "key": "accessibility", "zh": "动作具备可访问名称", "en": "Actions have accessible names" },
+          { "key": "code", "zh": "预览与组件草稿同源", "en": "Preview and draft share state" }
+        ]
+      },
+      "props": [
+        {
+          "key": "leading",
+          "zh": "前置内容",
+          "en": "Leading slot",
+          "propName": "children",
+          "type": "segment",
+          "owner": "root",
+          "defaultVisible": true,
+          "defaultOrder": 3,
+          "options": [
+            { "value": "none", "label": "无", "labelEn": "None", "intent": "输入框左侧不放附加内容。", "intentEn": "Keep the leading side empty.", "constraint": "不渲染前置节点。", "constraintEn": "Render no leading node." },
+            { "value": "search-icon", "label": "搜索图标", "labelEn": "Search icon", "intent": "用放大镜提示这是搜索输入。", "intentEn": "Use a search icon to identify a search input.", "constraint": "仅在 type=search 时使用 InputAffix + SearchIcon。", "constraintEn": "Use InputAffix + SearchIcon only with type=search.", "hiddenWhen": { "type": ["text", "number", "email", "password"] } },
+            { "value": "email-icon", "label": "邮箱图标", "labelEn": "Email icon", "intent": "用邮箱图标提示邮箱地址输入。", "intentEn": "Use a mail icon to identify an email-address input.", "constraint": "仅在 type=email 时使用 InputAffix + MailIcon。", "constraintEn": "Use InputAffix + MailIcon only with type=email.", "hiddenWhen": { "type": ["text", "number", "search", "password"] } },
+            { "value": "text", "label": "符号", "labelEn": "Symbol", "intent": "用于货币等轻量前缀。", "intentEn": "Use for lightweight prefixes such as currency.", "constraint": "使用 InputAffix，不发明 prefix prop。", "constraintEn": "Use InputAffix; do not invent a prefix prop.", "hiddenWhen": { "type": ["search", "email", "password"] } },
+            { "value": "addon", "label": "标签", "labelEn": "Addon", "intent": "用固定标签说明范围或协议。", "intentEn": "Use a fixed label for scope or protocol.", "constraint": "使用 InputAddon，固定内容与输入区保留分隔线。", "constraintEn": "Use InputAddon with its separator.", "hiddenWhen": { "type": ["search", "email", "password"] } }
+          ]
+        },
+        {
+          "key": "trailing",
+          "zh": "后置内容",
+          "en": "Trailing slot",
+          "propName": "children",
+          "type": "segment",
+          "owner": "root",
+          "defaultVisible": true,
+          "defaultOrder": 4,
+          "options": [
+            { "value": "none", "label": "无", "labelEn": "None", "intent": "输入框右侧不放附加内容。", "intentEn": "Keep the trailing side empty.", "constraint": "不渲染后置节点。", "constraintEn": "Render no trailing node." },
+            { "value": "search-icon", "label": "搜索图标", "labelEn": "Search icon", "intent": "在右侧用放大镜提示搜索。", "intentEn": "Use a search icon as a trailing search cue.", "constraint": "仅在 type=search 时使用 InputAffix side=end；与前置搜索图标互斥。", "constraintEn": "Use InputAffix side=end only with type=search; it is mutually exclusive with the leading search icon.", "hiddenWhen": { "type": ["text", "number", "email", "password"] } },
+            { "value": "text", "label": "符号", "labelEn": "Symbol", "intent": "用于百分比、单位等后缀。", "intentEn": "Use for percentages and unit suffixes.", "constraint": "使用 InputAffix side=end，不改 Input padding。", "constraintEn": "Use InputAffix with side=end; do not override Input padding.", "hiddenWhen": { "type": ["search", "email", "password"] } },
+            { "value": "password-toggle", "label": "显示密码", "labelEn": "Password visibility", "intent": "切换密码明文与掩码显示。", "intentEn": "Toggle password masking and visible text.", "constraint": "仅在 type=password 时使用 InputAction + EyeIcon/EyeOffIcon，并随状态更新 aria-label。", "constraintEn": "Use InputAction + EyeIcon/EyeOffIcon only with type=password and update the aria-label with state.", "hiddenWhen": { "type": ["text", "number", "email", "search"] } },
+            { "value": "primary", "label": "主搜索", "labelEn": "Primary search", "intent": "紧贴搜索输入放置主按钮。", "intentEn": "Place a primary action attached to a search input.", "constraint": "仅在 type=search 时使用 InputAction variant=primary，不在调用处手写按钮底色或圆角。", "constraintEn": "Use InputAction variant=primary only with type=search; do not hand-style the button.", "hiddenWhen": { "type": ["text", "number", "email", "password"] } }
+          ]
+        },
+        {
+          "key": "field",
+          "zh": "字段包装",
+          "en": "Field wrapper",
+          "propName": "Field",
+          "type": "segment",
+          "owner": "root",
+          "defaultVisible": false,
+          "options": [
+            { "value": "false", "label": "无", "labelEn": "None", "intent": "用于工具栏或独立输入。", "intentEn": "Use for toolbars or standalone input.", "constraint": "不额外渲染字段说明。", "constraintEn": "Render no field metadata." },
+            { "value": "true", "label": "字段", "labelEn": "Field", "intent": "用于真实表单字段。", "intentEn": "Use for a real form field.", "constraint": "字段包装单独决定标题、说明和 FieldError；它不改变 Input 的 disabled 或 aria-invalid 状态。", "constraintEn": "The wrapper alone owns labels, helper copy, and FieldError; it does not change the Input disabled or aria-invalid state." }
+          ]
+        },
+        {
+          "key": "state",
+          "zh": "交互状态",
+          "en": "State",
+          "propName": "state",
+          "type": "segment",
+          "owner": "root",
+          "defaultVisible": false,
+          "options": [
+            { "value": "normal", "label": "默认", "labelEn": "Default", "intent": "默认可输入状态。", "intentEn": "Default editable state.", "constraint": "不额外传状态 prop。", "constraintEn": "Pass no state prop." },
+            { "value": "hover", "label": "悬停", "labelEn": "Hover", "intent": "预览鼠标悬停反馈。", "intentEn": "Preview hover feedback.", "constraint": "仅用 data-input-state 在调试台模拟。", "constraintEn": "Simulate only with data-input-state in the playground." },
+            { "value": "focus", "label": "聚焦", "labelEn": "Focus", "intent": "预览键盘聚焦反馈。", "intentEn": "Preview focus feedback.", "constraint": "真实业务由 focus-visible/focus-within 驱动。", "constraintEn": "Business UI uses focus-visible/focus-within." },
+            { "value": "disabled", "label": "禁用", "labelEn": "Disabled", "intent": "当前字段不可编辑。", "intentEn": "The field is not editable.", "constraint": "使用 disabled，不用透明度假装。", "constraintEn": "Use disabled; do not fake it with opacity." },
+            { "value": "invalid", "label": "报错", "labelEn": "Error", "intent": "字段校验失败。", "intentEn": "Field validation failed.", "constraint": "控件使用 aria-invalid；仅字段包装显示 FieldError。", "constraintEn": "Use aria-invalid; render FieldError only with a field wrapper." }
+          ]
+        },
+        {
+          "key": "size",
+          "zh": "尺寸",
+          "en": "Size",
+          "propName": "size",
+          "type": "segment",
+          "owner": "root",
+          "defaultVisible": true,
+          "defaultOrder": 5,
+          "options": [
+            { "value": "xs", "label": "超小24", "labelEn": "XS 24", "intent": "用于高密度区域。", "intentEn": "Use in dense interfaces.", "constraint": "只传 size=xs。", "constraintEn": "Pass size=xs only." },
+            { "value": "sm", "label": "默认28", "labelEn": "Default 28", "intent": "常规表单默认尺寸。", "intentEn": "Default form size.", "constraint": "默认可省略 size。", "constraintEn": "Omit size for the default." },
+            { "value": "md", "label": "中32", "labelEn": "Medium 32", "intent": "用于更宽松的表单。", "intentEn": "Use in roomier forms.", "constraint": "只传 size=md。", "constraintEn": "Pass size=md only." }
+          ]
+        },
+        {
+          "key": "placeholder",
+          "zh": "占位文字",
+          "en": "Placeholder",
+          "propName": "placeholder",
+          "type": "text",
+          "owner": "input",
+          "defaultVisible": true,
+          "defaultOrder": 1
+        },
+        {
+          "key": "type",
+          "zh": "输入类型",
+          "en": "Input type",
+          "propName": "type",
+          "type": "segment",
+          "owner": "input",
+          "defaultVisible": true,
+          "defaultOrder": 2,
+          "options": [
+            { "value": "text", "label": "文本", "labelEn": "Text", "intent": "录入普通文本。", "intentEn": "Enter plain text.", "constraint": "使用原生 type=text。", "constraintEn": "Use native type=text." },
+            { "value": "number", "label": "数字", "labelEn": "Number", "intent": "录入数字。", "intentEn": "Enter numeric values.", "constraint": "使用原生 type=number；隐藏默认微调箭头，保留键盘步进和校验。", "constraintEn": "Use native type=number; hide browser steppers while keeping keyboard stepping and validation." },
+            { "value": "email", "label": "邮箱", "labelEn": "Email", "intent": "录入邮箱地址。", "intentEn": "Enter an email address.", "constraint": "使用原生 type=email；失焦后把原生格式结果映射为 aria-invalid。仅字段包装开启时用 FieldError 显示格式错误，不显示浏览器浮层。", "constraintEn": "Use native type=email; after blur, map native validity to aria-invalid. Show the inline FieldError only when the field wrapper is enabled, without a browser popup." },
+            { "value": "password", "label": "密码", "labelEn": "Password", "intent": "录入敏感文本。", "intentEn": "Enter sensitive text.", "constraint": "使用原生 type=password。", "constraintEn": "Use native type=password." },
+            { "value": "search", "label": "搜索", "labelEn": "Search", "intent": "录入查询关键词。", "intentEn": "Enter a search query.", "constraint": "使用原生 type=search；搜索图标由结构插槽组合，有关键词时默认提供可访问的清除动作。", "constraintEn": "Use native type=search; compose search icons through structure slots and provide a labelled clear action when a query exists." }
+          ]
+        },
+        {
+          "key": "disabled",
+          "zh": "禁用",
+          "en": "Disabled",
+          "propName": "disabled",
+          "type": "segment",
+          "owner": "input",
+          "defaultVisible": true,
+          "defaultOrder": 6,
+          "options": [
+            { "value": "true", "label": "是", "labelEn": "Yes", "intent": "当前输入不可编辑。", "intentEn": "Prevent editing this input.", "constraint": "使用原生 disabled，不用透明度模拟。", "constraintEn": "Use the native disabled prop; do not simulate it with opacity." },
+            { "value": "false", "label": "否", "labelEn": "No", "intent": "保持输入框可编辑。", "intentEn": "Keep the input editable.", "constraint": "默认可省略 disabled。", "constraintEn": "Omit disabled by default." }
+          ]
+        },
+        {
+          "key": "invalid",
+          "zh": "报错",
+          "en": "Invalid",
+          "propName": "aria-invalid",
+          "type": "segment",
+          "owner": "input",
+          "defaultVisible": true,
+          "defaultOrder": 7,
+          "options": [
+            { "value": "true", "label": "是", "labelEn": "Yes", "intent": "标记输入内容未通过校验。", "intentEn": "Mark the input value as invalid.", "constraint": "控件使用 aria-invalid；Field 组合同时使用 data-invalid。", "constraintEn": "Use aria-invalid on the control and data-invalid on a Field wrapper." },
+            { "value": "false", "label": "否", "labelEn": "No", "intent": "当前输入内容没有校验错误。", "intentEn": "The current value has no validation error.", "constraint": "默认不传 aria-invalid。", "constraintEn": "Omit aria-invalid by default." }
+          ]
+        },
+        {
+          "key": "leadingText",
+          "zh": "内容",
+          "en": "Content",
+          "propName": "children",
+          "type": "text",
+          "owner": "leading",
+          "hiddenWhen": { "leading": ["none", "icon"] }
+        },
+        {
+          "key": "trailingText",
+          "zh": "内容",
+          "en": "Content",
+          "propName": "children",
+          "type": "text",
+          "owner": "trailing",
+          "hiddenWhen": { "trailing": ["none", "icon", "action"] }
+        },
+        {
+          "key": "actionLabel",
+          "zh": "动作名称",
+          "en": "Action label",
+          "propName": "aria-label",
+          "type": "text",
+          "owner": "trailing",
+          "hiddenWhen": { "trailing": ["none", "icon", "text"] }
+        },
+        {
+          "key": "surfaceToken",
+          "zh": "控件表面",
+          "en": "Control surface",
+          "propName": "--surface",
+          "type": "segment",
+          "owner": "tokens",
+          "group": "tokens",
+          "options": [
+            { "value": "surface", "label": "默认表面", "labelEn": "Default surface", "title": "Token: surface", "intent": "标准输入控件的默认表面。", "constraint": "底层映射到 surface，不写色值。" },
+            { "value": "background", "label": "页面融合", "labelEn": "Blend with page", "title": "Token: background", "intent": "让输入区域与页面背景融合。", "constraint": "底层映射到 background，只用于明确的内嵌场景。" },
+            { "value": "muted", "label": "弱化表面", "labelEn": "Muted surface", "title": "Token: muted", "intent": "降低输入控件的视觉强调。", "constraint": "底层映射到 muted，沉淀为 variant 后才能用于业务。" },
+            { "value": "card", "label": "容器表面", "labelEn": "Container surface", "title": "Token: card", "intent": "让控件跟随卡片或容器表面。", "constraint": "底层映射到 card，先确认组件确实属于容器语义。" }
+          ]
+        },
+        {
+          "key": "borderToken",
+          "zh": "控件边框",
+          "en": "Control border",
+          "propName": "--input",
+          "type": "segment",
+          "owner": "tokens",
+          "group": "tokens",
+          "options": [
+            { "value": "input", "label": "默认输入边框", "labelEn": "Default input", "title": "Token: input", "intent": "标准表单输入控件的默认边框。", "constraint": "底层映射到 input，是 Input 默认选择。" },
+            { "value": "border", "label": "常规边界", "labelEn": "Regular boundary", "title": "Token: border", "intent": "使用普通结构边界，弱化输入感。", "constraint": "底层映射到 border，仅在弱化输入边界时使用。" },
+            { "value": "border-strong", "label": "强调边界", "labelEn": "Strong boundary", "title": "Token: border-strong", "intent": "让控件边界更容易识别。", "constraint": "底层映射到 border-strong，不代替 hover/focus 状态。" },
+            { "value": "primary", "label": "品牌边界", "labelEn": "Brand boundary", "title": "Token: primary", "intent": "用品牌语义强调控件边界。", "constraint": "底层映射到 primary，应沉淀为明确 variant，不作为默认。" }
+          ]
+        },
+        {
+          "key": "placeholderToken",
+          "zh": "占位文字",
+          "en": "Placeholder text",
+          "propName": "--foreground-disabled",
+          "type": "segment",
+          "owner": "tokens",
+          "group": "tokens",
+          "options": [
+            { "value": "foreground-disabled", "label": "占位与禁用", "labelEn": "Placeholder & disabled", "title": "Token: foreground-disabled", "intent": "标准占位文字和禁用信息层级。", "constraint": "底层映射到 foreground-disabled，是 Input 默认选择。" },
+            { "value": "muted-foreground", "label": "辅助文字", "labelEn": "Helper text", "title": "Token: muted-foreground", "intent": "让占位提示具有更强识别度。", "constraint": "底层映射到 muted-foreground，仅在提示确实需要加强时评估。" },
+            { "value": "foreground-secondary", "label": "次要正文", "labelEn": "Secondary text", "title": "Token: foreground-secondary", "intent": "使用次要正文的信息层级。", "constraint": "底层映射到 foreground-secondary，通常不用于 placeholder，需评审。" }
+          ]
+        }
+      ]
+    },
     "select": {
       "componentName": "Select",
       "source": "src/components/ui/select.tsx",
       "playgroundComponent": "src/components/fx/component-playground.tsx",
       "initial": {
-        "capability": "basic",
         "structure": "plain",
+        "variant": "outline",
+        "selection": "single",
+        "search": "none",
+        "clearable": "false",
+        "otherInput": "none",
         "valueState": "placeholder",
         "state": "normal",
         "size": "sm"
       },
-      "guidanceKey": "capability",
+      "guidanceKey": "structure",
       "props": [
-        {
-          "key": "capability",
-          "zh": "能力",
-          "en": "Capability",
-          "propName": "capability",
-          "type": "segment",
-          "options": [
-            {
-              "value": "basic",
-              "label": "基础",
-              "labelEn": "Basic",
-              "intent": "用于表单字段、设置项等标准单选。",
-              "intentEn": "Use for normal single-choice form fields and settings.",
-              "constraint": "基础选择器由 Select + SelectTrigger + SelectContent + SelectItem 组成，不手写下拉结构。",
-              "constraintEn": "Compose with Select, SelectTrigger, SelectContent, and SelectItem; do not hand-roll a dropdown."
-            },
-            {
-              "value": "filter",
-              "label": "筛选",
-              "labelEn": "Filter",
-              "intent": "用于列表、表格、工具栏里的条件筛选。",
-              "intentEn": "Use for filters in lists, tables, and toolbars.",
-              "constraint": "筛选选择器仍使用 SelectTrigger 的尺寸能力，不在调用处覆盖高度和内边距。",
-              "constraintEn": "Use SelectTrigger sizing for filter selects; do not override height or padding at call sites."
-            }
-          ]
-        },
         {
           "key": "structure",
           "zh": "选项结构",
@@ -1275,6 +1542,141 @@
               "intentEn": "Use groups when options are many or categorical.",
               "constraint": "分组标题用 SelectLabel，不用普通文本或禁用选项伪造。",
               "constraintEn": "Use SelectLabel for group labels; do not fake labels with text or disabled items."
+            },
+            {
+              "value": "disabled",
+              "label": "禁用项",
+              "labelEn": "Disabled option",
+              "intent": "保留不可选项的可见性，例如无权限或已停用。",
+              "intentEn": "Keep unavailable options visible, such as permission-limited or inactive choices.",
+              "constraint": "禁用单项用 SelectItem disabled，不用普通文本假装。",
+              "constraintEn": "Use SelectItem disabled for disabled options; do not fake them with plain text."
+            },
+            {
+              "value": "description",
+              "label": "描述项",
+              "labelEn": "With description",
+              "intent": "选项需要补充部门、说明或范围时使用。",
+              "intentEn": "Use when options need secondary text such as department, description, or scope.",
+              "constraint": "描述文字放在 SelectItem 内容里，仍保持唯一 value。",
+              "constraintEn": "Put secondary text inside SelectItem content while keeping each value unique."
+            },
+            {
+              "value": "other",
+              "label": "其他",
+              "labelEn": "Other",
+              "intent": "预设选项之外允许用户补充一个自定义值。",
+              "intentEn": "Allow the user to provide a custom value beyond predefined options.",
+              "constraint": "使用 Select + Input 的受控组合；其他输入不是 Select 原生 prop。",
+              "constraintEn": "Compose controlled Select with Input; other input is not a native Select prop."
+            }
+          ]
+        },
+        {
+          "key": "variant",
+          "zh": "样式",
+          "en": "Variant",
+          "propName": "variant",
+          "type": "segment",
+          "options": [
+            {
+              "value": "outline",
+              "label": "有边框",
+              "labelEn": "Outline",
+              "intent": "用于表单字段、筛选条件等需要明确输入区域的位置。",
+              "intentEn": "Use when the input area needs a visible boundary, such as forms and filters.",
+              "constraint": "默认样式，不需要传 variant。",
+              "constraintEn": "This is the default; no variant prop is needed."
+            },
+            {
+              "value": "borderless",
+              "label": "无边框",
+              "labelEn": "Borderless",
+              "intent": "用于表格筛选、工具栏或容器内已有边界的紧凑场景。",
+              "intentEn": "Use in dense table filters, toolbars, or containers that already provide a boundary.",
+              "constraint": "使用 SelectTrigger variant=\"borderless\"，不在调用处覆盖 border。",
+              "constraintEn": "Use SelectTrigger variant=\"borderless\"; do not override borders at call sites."
+            }
+          ]
+        },
+        {
+          "key": "selection",
+          "zh": "选择数量",
+          "en": "Selection",
+          "propName": "multiple",
+          "type": "segment",
+          "options": [
+            {
+              "value": "single",
+              "label": "单选",
+              "labelEn": "Single",
+              "intent": "从互斥选项中选择一个值，是 Select 默认模式。",
+              "intentEn": "Choose one value from mutually exclusive options; this is the default Select mode.",
+              "constraint": "默认不传 multiple；少于 5 个平铺选项可优先考虑 Radio。",
+              "constraintEn": "Do not pass multiple by default; consider Radio for fewer than five visible choices."
+            },
+            {
+              "value": "multiple",
+              "label": "多选",
+              "labelEn": "Multiple",
+              "intent": "用于筛选条件中选择多个枚举值。",
+              "intentEn": "Use for selecting multiple enum values in filters.",
+              "constraint": "使用 Select multiple 和数组 value；已选值用 SelectMultiValue 展示，超出 maxVisible 折叠为 +n。",
+              "constraintEn": "Use Select multiple with array values and SelectMultiValue; values beyond maxVisible collapse into +n."
+            }
+          ]
+        },
+        {
+          "key": "search",
+          "zh": "搜索",
+          "en": "Search",
+          "propName": "composition",
+          "type": "segment",
+          "options": [
+            {
+              "value": "none",
+              "label": "无",
+              "labelEn": "None",
+              "intent": "选项较少时直接浏览选择。",
+              "intentEn": "Browse options directly when the option set is small.",
+              "constraint": "不渲染搜索输入，也不要把搜索逻辑塞进 SelectItem。",
+              "constraintEn": "Do not render a search input or put search logic inside SelectItem."
+            },
+            {
+              "value": "local",
+              "label": "本地搜索",
+              "labelEn": "Local search",
+              "intent": "选项较多但数据已在前端时使用本地过滤。",
+              "intentEn": "Use local filtering when options are already available on the client.",
+              "constraint": "搜索输入作为 SelectContent 内的组合；远程搜索、人员选择沉淀为 fx 组合组件。",
+              "constraintEn": "Compose the search input inside SelectContent; remote search and people pickers belong in fx components."
+            }
+          ]
+        },
+        {
+          "key": "clearable",
+          "zh": "清除",
+          "en": "Clear",
+          "propName": "composition",
+          "type": "segment",
+          "options": [
+            {
+              "value": "false",
+              "label": "否",
+              "labelEn": "No",
+              "intent": "必填或不允许回到空值时使用。",
+              "intentEn": "Use when a value is required or cannot return to empty.",
+              "constraint": "不提供清除动作。",
+              "constraintEn": "Do not provide a clear action."
+            },
+            {
+              "value": "true",
+              "label": "是",
+              "labelEn": "Yes",
+              "intent": "允许用户撤销已选值，回到 placeholder。",
+              "intentEn": "Allow users to remove the selected value and return to the placeholder.",
+              "constraint": "清除用受控 value + SelectControl + SelectClear，清除按钮与 trigger 保持同级。",
+              "constraintEn": "Use controlled value, SelectControl, and SelectClear with the clear action as a trigger sibling."
             }
           ]
         },
@@ -1302,6 +1704,42 @@
               "intentEn": "Show the current value after selection exists.",
               "constraint": "用 defaultValue / value 表达选中值，业务代码不要手写选中文案。",
               "constraintEn": "Use defaultValue or value for selection; do not hard-code selected display text."
+            }
+          ]
+        },
+        {
+          "key": "otherInput",
+          "zh": "其他输入",
+          "en": "Other input",
+          "propName": "composition",
+          "type": "segment",
+          "options": [
+            {
+              "value": "none",
+              "label": "无",
+              "labelEn": "None",
+              "intent": "只允许从已有选项中选择。",
+              "intentEn": "Only allow predefined options.",
+              "constraint": "不渲染额外输入框。",
+              "constraintEn": "Do not render an extra input."
+            },
+            {
+              "value": "optional",
+              "label": "选填",
+              "labelEn": "Optional",
+              "intent": "选择其他后可补充说明；不填也可提交其他。",
+              "intentEn": "Allow extra detail after choosing Other; empty input is still valid.",
+              "constraint": "选填直接回填其他，不强制校验输入框。",
+              "constraintEn": "Optional input can submit Other directly; do not force validation."
+            },
+            {
+              "value": "required",
+              "label": "必填",
+              "labelEn": "Required",
+              "intent": "选择其他后必须补充具体值。",
+              "intentEn": "Require a concrete value after choosing Other.",
+              "constraint": "必填校验放在输入框 aria-invalid / FieldError，不发明 Select prop。",
+              "constraintEn": "Put required validation on the input via aria-invalid / FieldError; do not invent a Select prop."
             }
           ]
         },
@@ -1349,6 +1787,33 @@
               "constraintEn": "Open state is owned by Select; do not replace the popup with a static div."
             },
             {
+              "value": "searching",
+              "label": "输入搜索",
+              "labelEn": "Searching",
+              "intent": "用户正在搜索选项。",
+              "intentEn": "The user is searching options.",
+              "constraint": "仅在搜索=本地搜索时展示；远程搜索不塞进基础 Select。",
+              "constraintEn": "Only show this with local search; do not put remote search into base Select."
+            },
+            {
+              "value": "empty",
+              "label": "空结果",
+              "labelEn": "Empty",
+              "intent": "搜索后没有可选结果。",
+              "intentEn": "No options match the search.",
+              "constraint": "用空状态文案反馈，不渲染空白浮层。",
+              "constraintEn": "Show empty copy instead of a blank popup."
+            },
+            {
+              "value": "loading",
+              "label": "加载",
+              "labelEn": "Loading",
+              "intent": "选项仍在加载中。",
+              "intentEn": "Options are still loading.",
+              "constraint": "用 Spinner + 文案组合；远程数据逻辑由上层组合组件持有。",
+              "constraintEn": "Compose Spinner + text; remote data logic belongs to an upper-level component."
+            },
+            {
               "value": "invalid",
               "label": "报错",
               "labelEn": "Error",
@@ -1381,7 +1846,7 @@
               "labelEn": "XS 24",
               "intent": "用于高密度表格筛选、紧凑工具栏。",
               "intentEn": "Use in dense table filters and compact toolbars.",
-              "constraint": "只传 size=\"xs\"，不覆盖高度。",
+              "constraint": "SelectTrigger 与 SelectContent 都传 size=\"xs\"，不覆盖高度或字号。",
               "constraintEn": "Pass size=\"xs\" only; do not override height."
             },
             {
@@ -1390,7 +1855,7 @@
               "labelEn": "Default 28",
               "intent": "用于常规筛选和表单，是 Select 默认尺寸。",
               "intentEn": "Default size for regular filters and forms.",
-              "constraint": "默认尺寸可省略 size；同一行控件尺寸一致。",
+              "constraint": "Trigger 与 Content 默认均为 sm，可同时省略 size。",
               "constraintEn": "Omit size for default; keep controls in the same row aligned."
             },
             {
@@ -1399,7 +1864,7 @@
               "labelEn": "Medium 32",
               "intent": "用于更宽松的表单或需要更大点击目标的位置。",
               "intentEn": "Use in roomier forms or where a larger target is needed.",
-              "constraint": "只传 size=\"md\"，不覆盖高度。",
+              "constraint": "SelectTrigger 与 SelectContent 都传 size=\"md\"，不覆盖高度或字号。",
               "constraintEn": "Pass size=\"md\" only; do not override height."
             }
           ]

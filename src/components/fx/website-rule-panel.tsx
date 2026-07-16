@@ -1,6 +1,8 @@
 import type { ReactNode } from "react"
 import { Button } from "@/components/ui/button"
+import { CardContent } from "@/components/ui/card"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { WebsiteCardContainer } from "@/components/fx/website-card-container"
 import { ChevronDownIcon } from "@/lib/icons"
 
 type WebsiteRulePanelSource = {
@@ -17,7 +19,7 @@ const websiteRulePopoverSlots = {
 } as const
 
 const websiteRulePanelSlots = {
-  root: "rounded-2xl border border-border bg-card p-4",
+  root: "contents",
   inner: "grid gap-3",
   section: "px-2 py-1",
   heading: "mb-3 flex items-center justify-between gap-3",
@@ -88,32 +90,36 @@ function WebsiteRulePopover({
 function WebsiteRulePanel({ title, badge, children, sources = [] }: WebsiteRulePanelProps) {
   return (
     <div data-slot="website-rule-panel" className={websiteRulePanelSlots.root}>
-      <div className={websiteRulePanelSlots.inner}>
-        <section data-slot="website-rule-panel-section" className={websiteRulePanelSlots.section}>
-          <div className={websiteRulePanelSlots.heading}>
-            <p className={websiteRulePanelSlots.title}>{title}</p>
-            {badge ? (
-              <span className={websiteRulePanelSlots.badge}>
-                {badge}
-              </span>
+      <WebsiteCardContainer>
+        <CardContent className="p-4">
+          <div className={websiteRulePanelSlots.inner}>
+            <section data-slot="website-rule-panel-section" className={websiteRulePanelSlots.section}>
+              <div className={websiteRulePanelSlots.heading}>
+                <p className={websiteRulePanelSlots.title}>{title}</p>
+                {badge ? (
+                  <span className={websiteRulePanelSlots.badge}>
+                    {badge}
+                  </span>
+                ) : null}
+              </div>
+              {children}
+            </section>
+
+            {sources.length > 0 ? (
+              <div
+                data-slot="website-rule-panel-sources"
+                className={websiteRulePanelSlots.sources}
+              >
+                {sources.map((source) => (
+                  <span key={`${source.label}-${source.value}`} className={websiteRulePanelSlots.sourceTag}>
+                    {source.label}：{source.value}
+                  </span>
+                ))}
+              </div>
             ) : null}
           </div>
-          {children}
-        </section>
-
-        {sources.length > 0 ? (
-          <div
-            data-slot="website-rule-panel-sources"
-            className={websiteRulePanelSlots.sources}
-          >
-            {sources.map((source) => (
-              <span key={`${source.label}-${source.value}`} className={websiteRulePanelSlots.sourceTag}>
-                {source.label}：{source.value}
-              </span>
-            ))}
-          </div>
-        ) : null}
-      </div>
+        </CardContent>
+      </WebsiteCardContainer>
     </div>
   )
 }

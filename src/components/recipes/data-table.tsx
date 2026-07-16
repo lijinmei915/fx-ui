@@ -13,11 +13,22 @@ export type Column<T> = {
   cell: (row: T) => ReactNode
   headClassName?: string // 列宽/对齐，如 "w-40" "w-8"
   align?: "left" | "center" | "right"
+  dataType?: "text" | "number" | "currency" | "percentage" | "date" | "identifier" | "status"
   pinned?: "left" | "right"            // 冻结列
   sortable?: boolean                    // 表头排序（点击切 asc/desc）
   sortValue?: (row: T) => string | number // 排序取值；不传则只显示箭头不真排
   menuActions?: { label: string; icon?: ReactNode; onClick?: () => void }[] // ⋮ 列菜单：锁定/筛选等
 }
+
+const dataTypeDefaults = {
+  number: { align: "right", className: "tabular-nums" },
+  currency: { align: "right", className: "tabular-nums" },
+  percentage: { align: "right", className: "tabular-nums" },
+  date: { align: "left", className: "tabular-nums whitespace-nowrap" },
+  identifier: { align: "left", className: "tabular-nums whitespace-nowrap" },
+  status: { align: "center", className: "whitespace-nowrap" },
+  text: { align: "left", className: "" },
+} as const
 
 function DataTable<T>({
   columns,
@@ -73,7 +84,7 @@ function DataTable<T>({
             <TableHead
               key={c.key}
               className={c.headClassName}
-              align={c.align}
+              align={c.align ?? dataTypeDefaults[c.dataType ?? "text"].align}
               pinned={c.pinned}
               sortable={c.sortable}
               sorted={sort?.key === c.key ? sort.dir : false}
@@ -97,7 +108,13 @@ function DataTable<T>({
                 </TableCell>
               )}
               {columns.map((c) => (
-                <TableCell key={c.key}>{c.cell(row)}</TableCell>
+                <TableCell
+                  key={c.key}
+                  align={c.align ?? dataTypeDefaults[c.dataType ?? "text"].align}
+                  className={dataTypeDefaults[c.dataType ?? "text"].className}
+                >
+                  {c.cell(row)}
+                </TableCell>
               ))}
               {rowActions && <TableCell className="pr-1">{rowActions(row)}</TableCell>}
             </TableRow>

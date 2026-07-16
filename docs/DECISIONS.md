@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-07-08
+last_verified: 2026-07-16
 teaches: "fx-ui 重要的技术/协作决策记录：选了什么、放弃了什么、为什么"
 use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论"
 ---
@@ -435,10 +435,145 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **影响**：以后新增治理内容时，先判断它是解释、事实还是可派生副本；解释进 `docs/*.md`，事实进 `docs/data/*.json`，可派生内容优先补 `scripts/build-*.mjs`。禁止制造“双真相源”。
 - **相关文件**：`docs/DOCUMENTATION.md`、`AGENTS.md`、`docs/data/*.json`、`scripts/build-*.mjs`
 
+### DEC-037: 组件配方台把语义 Token 作为受控属性，不开放原始视觉值
+
+- **日期**：2026-07-14
+- **状态**：已决定
+- **决定**：后续组件配方台由“结构树 + 真实组件预览 + 属性编辑”组成，属性面板同时支持真实组件 props 与组件声明过的视觉 Token 槽位。Token 选择器只展示语义 Token（例如 `background`、`foreground`、`primary`、`destructive`、`border`、`surface`），不把十六进制色值、色板原始阶梯、任意 Tailwind 视觉类或自由 CSS 作为可编辑选项。状态语义层只读展示语义 Token 对应的色板名称，名称必须从 token manifest 自动派生；界面不展示 `oklch/rgb` 原始计算值，色板名称不得回写为配置或成为第二真相源。
+- **架构口径**：fx-ui 当前采用 **两层 Token 命名空间 + 一层组件用法**，即 `Primitive 色板 → Semantic 语义 Token → Component Usage 组件属性/状态消费规则`。`Component Usage` 是“哪个组件的哪个属性、在哪个状态使用哪个语义 Token”的映射事实，不是 `--input-border-hover` 这类独立组件 Token。制作台可以把三段关系可视化，但必须标为“组件用法 → 语义 Token → 色板”，不得宣称当前已有三层 Token。
+- **编辑边界**：每个组件可编辑哪些 Token，必须由组件契约按槽位声明，例如 `backgroundToken`、`textToken`、`borderToken`；制作台不能把所有 Token 无差别开放。结构零件、真实 props 和 Token 槽位共用一份结构数据，实时预览、生成 JSX、DOM/尺寸/行为验证都从该数据派生。
+- **组件 Token 准入**：默认沿用 shadcn 的语义槽，由组件源码直接消费语义 Token；只有某个组件确实需要长期独立换肤、跨变体复用且通用语义无法准确表达时，才单独评估新增组件 Token，并走 token SSOT、文档、manifest 和检查的完整治理。不得为每个组件状态批量生成组件 Token。
+- **生效确认**：Token 变更必须同时通过四个信号确认：真实仓库组件即时重渲染、实际 DOM/CSS 变量可追踪、生成代码与预览一致、TypeScript/组件契约/token 检查通过。只改变面板选中值但未影响真实组件，不算生效。
+- **治理边界**：页面或业务调用处仍禁止用 `className` 临时覆盖组件视觉。配方台中的 Token 编辑属于组件作者模式，只能写入已声明槽位并生成受治理的 variant、组件映射或草稿；一次性页面组合只能选择现有 variant 和语义能力，不能借制作台绕过组件治理。
+- **放弃**：① 自由颜色选择器；② 原始色板值直接绑定组件；③ 任意圆角、边框、padding 和 CSS 输入；④ 预览与生成代码各维护一份状态；⑤ 把视觉组合伪装成不存在的组件 prop。
+- **原因**：语义 Token 能表达用途并继续跟随主题，原始视觉值只能表达当前外观。将 Token 纳入制作台可以提升组合效率，但若不限制槽位和作用层级，会退化成调用处样式覆盖，破坏 fx-ui 的 token SSOT、variant 治理与可验证性。
+- **后续落地**：制作台开工时，将组件可编辑 Token 槽位写入 `docs/data/*.json` 的唯一机器事实，并让属性面板和检查脚本共同消费；在此之前不提前维护一份未被实现消费的 manifest。
+- **相关文件**：`theme/fx-theme.css`、`docs/TOKENS.md`、`docs/DOC_SITE_DESIGN.md`、`docs/data/design-tokens.json`、`docs/data/components.manifest.json`、`src/components/fx/component-playground.tsx`
+
+### DEC-038: InputAction 用受治理变体承载紧贴输入框的主搜索按钮
+
+- **日期**：2026-07-15
+- **状态**：已决定
+- **决定**：`InputAction` 保持 `icon` 默认变体，并新增 `primary` 变体承载紧贴 `InputGroup` 的主搜索按钮。搜索图标前置/后置、固定范围标签和主按钮都继续由 `InputAffix` / `InputAddon` / `InputAction` 结构零件组合，不新增 `search` prop。范围下拉 + 全局搜索继续使用已有 fx `TopBarSearch`。
+- **放弃**：① 在每个调用处给 Button 临时覆盖圆角、底色和高度；② 给 Input 新增 `search`、`scope` 等业务伪 prop；③ 把 TopBarSearch 的全局范围语义塞进基础 Input。
+- **原因**：主搜索按钮是输入组合中的一个可见动作，不是新的输入框类型。变体让视觉和禁用态由组件层统一治理，同时保留结构拼接的可读性与 AI 可调用性。
+- **相关文件**：`src/components/ui/input.tsx`、`docs/components/input.md`、`docs/data/components.manifest.json`、`docs/data/component-playgrounds.manifest.json`、`src/App.tsx`
+
+### DEC-039: Token 面向 Agent 以派生 contract 与查询 CLI 提供，不新增视觉真相源
+
+- **日期**：2026-07-15
+- **状态**：已决定
+- **决定**：保留 `theme/fx-theme.css -> docs/data/design-tokens.json` 的现有真相源链路；从后者自动派生 `docs/data/agent-tokens.manifest.json`，通过 `npm run tokens -- search|resolve|component` 提供只读查询。Agent 只能选择 semantic token 或 `componentUsage.stateMappings` 中声明的状态映射，不能直接选择 primitive 色板值。
+- **放弃**：① 再手写一份 Agent token 清单；② 给每个组件批量创建独立 component token；③ 让 Agent 从 CSS 色值或色板阶数猜测组件状态。
+- **原因**：Agent 需要稳定、紧凑、可查询的上下文，但视觉值仍必须只有一个真相源。派生 contract 同时保留 shadcn 语义槽和 open-code 组件的可读性，避免为了自动化复制 Astryx 的命名或主题实现。
+- **影响**：Token 构建后必须同步 Agent contract；`check:agent-tokens` 会检查其派生结果，`check:tokens` 会检查 `stateMappings` 对 semantic token 的引用完整性。首批结构化状态映射覆盖 Input 与 Field，其他组件按真实源码能力逐步补齐。
+- **相关文件**：`theme/fx-theme.css`、`docs/TOKENS.md`、`docs/data/design-tokens.json`、`docs/data/agent-tokens.manifest.json`、`scripts/build-agent-token-contract.mjs`、`scripts/token-agent.mjs`
+
+### DEC-040: Agent 通过派生组件/页面 contract 工作，页面生成只开放已验证骨架
+
+- **日期**：2026-07-15
+- **状态**：已决定
+- **决定**：组件事实从 `components.manifest.json` 与调试台 manifest 派生为 Agent contract；页面能力用 `page-build-kit.manifest.json` 显式区分 `ready` 与 `needs-block`。统一入口为 `npm run fx -- search|component|build|token|context|doctor|theme|upgrade`。组件查询必须指出真实 `apiSource`，调试台控制项明确标记为非组件 API。
+- **放弃**：① 给 Agent 一份手抄组件/API 目录；② 把详情页、表单页等尚未沉淀的页面类型伪装成模板；③ 让 Agent 根据名称自行拼装页面；④ 为尚无破坏性变更的版本预造空 codemod。
+- **原因**：Agent 的效率来自可发现的真实能力，不来自扩大自由度。用派生 contract 收紧查询，用 Build Kit 收紧装配，既复用现有 open-code 组件和列表页生成器，也遵守“不手写重拼页面”的治理边界。
+- **Shape**：补 `none / inner / element / container / page / full` 的语义圆角别名及同心嵌套规则；别名只映射现有半径阶，不批量改变组件外观。`theme build` 只重建现有主题的派生产物；迁移命令在存在已发布破坏性 API/token 改名时才登记实际 codemod。
+- **诊断补充**：`doctor` 不复制校验规则，而是聚合 Token、组件源码/API、组件文档表、文档站示例、Build Kit 和 Agent UI 的既有检查；每项失败返回对应修复命令。这样协作者和 Agent 可先定位问题，完整门禁仍由 `check-all` 负责。
+- **相关文件**：`docs/data/agent-components.manifest.json`、`docs/data/page-build-kit.manifest.json`、`docs/data/agent-context.md`、`scripts/fx-agent.mjs`、`scripts/doctor.mjs`、`docs/PAGES.md`、`docs/TOKENS.md`
+
+### DEC-041: Agent 查询的边界固定，检索策略保持可演进
+
+- **日期**：2026-07-16
+- **状态**：已决定
+- **决定**：Agent 意图搜索必须返回可解释的命中依据，优先给出组件和已验证页面骨架；组件写入前必须明确并读取 `apiSource`；调试台控制项永远标为非组件 API；组件示例只返回真实文档页或调试台的来源指针，不复制 JSX 成为第二真相源。
+- **放弃**：① 只按全文字符串匹配却不说明为什么命中；② 把调试台选项当作可调用 props；③ 为查询方便手抄独立示例库；④ 将同义词、排序权重写入组件或设计规范。
+- **原因**：前四项是长期可信边界，必须稳定且可检查；同义词和权重需要随着协作语言、组件覆盖和检索效果持续调整，固化后反而会把工具实现误当设计规则。
+- **影响**：派生组件 contract 声明 `queryPolicy`；`check-agent-query-contract` 会验证 policy、来源指针、调试台非 API 标记，以及“邮箱输入”意图查询是否以 Input 为首个可解释结果。词表和权重只在 `fx-agent.mjs` 内演进。
+- **相关文件**：`AGENTS.md`、`docs/data/agent-components.manifest.json`、`scripts/{fx-agent,build-agent-components,check-agent-query-contract}.mjs`
+
+### DEC-042: Agent 接入走只读 init 适配器，诊断使用稳定错误码
+
+- **日期**：2026-07-16
+- **状态**：已决定
+- **决定**：`fx init --agent codex|claude|cursor` 只输出一段可复制的短入口，不直接改写目标 Agent 的已有配置文件；`doctor` 为每项诊断返回稳定的 `FX_*` 错误码、检查名称、详情和修复命令。
+- **放弃**：① 自动写入或覆盖 `.cursor` / `.claude` / Agent 配置；② 只输出随脚本文案变化的自然语言错误；③ 为每个 Agent 维护独立的组件或 Token 真相源。
+- **原因**：协作项目的 Agent 配置常包含团队规则，自动写入容易覆盖上下文。短入口能让新 Agent 快速接入，而真实规则仍以仓库 `AGENTS.md` 为准。稳定错误码使人和自动化都能可靠地按失败类别处理问题。
+- **影响**：新协作者可运行 `npm run fx -- init --agent <target> --json` 获取接入片段；自动化可消费 `npm run fx -- doctor --json` 的 `code` 字段，不依赖错误中文文案。
+- **相关文件**：`scripts/fx-agent.mjs`、`scripts/doctor.mjs`、`docs/data/agent-context.md`
+
+### DEC-043: 页面任务先解析为已验证 Build Kit 路径，不直接生成 JSX
+
+- **日期**：2026-07-16
+- **状态**：已决定
+- **决定**：`fx plan <intent>` 只从 `page-build-kit.manifest.json` 选择已验证 archetype，返回生成器、固定 frame、数据契约、真实来源指针、工作流和禁止项。`ready` 可输出可执行生成命令；`needs-block` 必须返回 `blocked`，不生成替代 JSX。
+- **放弃**：① 根据自然语言任务自由拼页面；② 将组件搜索结果直接当页面实现；③ 给未沉淀的详情/表单页编造模板。
+- **原因**：页面正确性不只取决于组件存在，还取决于已验证的组合、交互和路由接入路径。任务计划应缩小可选空间，而不是把 Agent 引回从零组装。
+- **影响**：列表类任务可走唯一生成器路径；表单和详情任务会明确停在 block 治理边界。`check-agent-query-contract` 覆盖这两类结果。
+- **相关文件**：`scripts/fx-agent.mjs`、`docs/data/page-build-kit.manifest.json`、`scripts/check-agent-query-contract.mjs`、`docs/PAGES.md`
+
+### DEC-044: 变更影响只沿声明引用链追踪，示例来源必须可验证
+
+- **日期**：2026-07-16
+- **状态**：已决定
+- **决定**：`fx impact component <Name>` 和 `fx impact token <id|cssVar>` 只报告 contract、Token manifest、Build Kit 和示例指针中已经声明的上下游关系，并返回对应检查。Agent 示例来源必须校验文件、场景/调试台符号和文档锚点实际存在。
+- **放弃**：① 用全文搜索把偶然文字提及伪装成依赖图；② 只给变更者一句“记得同步文档”；③ 让 Agent contract 指向已经删除的示例或锚点。
+- **原因**：可解释、可验证的引用关系比貌似全面的模糊图更可靠。现有 manifest 已经表达关键治理链，应该直接用于变更前检查；示例指针若不能落到真实内容，查询结果就会失去协作价值。
+- **影响**：组件影响会列出 API 源码、文档、示例、Token 和 Build Kit 关系；Token 影响会列出 CSS 真相源、semantic mapping 和已声明 consumers。`check-agent-examples` 与 `check-agent-query-contract` 共同防止影响链和示例入口漂移。
+- **相关文件**：`scripts/{fx-agent,check-agent-examples,check-agent-query-contract}.mjs`、`docs/data/{agent-components,agent-tokens}.manifest.json`、`AGENTS.md`
+
+### DEC-045: Theme Contract 只开放语义视觉槽，当前维持单一浅色主题
+
+- **日期**：2026-07-16
+- **状态**：已决定
+- **决定**：从 Token contract 派生 Theme Contract。主题可替换声明过的语义视觉 token，必须保留交互状态阶梯；半径、字族和结构性效果 token 受保护。`fx theme show` 查询边界，`fx theme audit` / `check:theme` 审计契约。当前仅声明 light，不创建或宣称 dark / 自定义主题构建能力。
+- **放弃**：① 在页面或组件调用处以 className 覆盖实现“主题”；② 允许 primitive 色板直接作为主题输入；③ 在没有多主题产物前预造主题编辑器或 dark mode 宣称。
+- **原因**：主题是 semantic token 的整体映射，不是局部换色。先把可替换面与交互完整性变成契约，才能在未来安全扩展多品牌，而不破坏 token SSOT 和组件治理。
+- **影响**：Token contract 新增 `themeContract`；现有 Token 同步与交互态检查被 `check-theme-contract` 聚合，doctor 用 `FX_THEME_CONTRACT` 报告失败。
+- **相关文件**：`theme/fx-theme.css`、`docs/TOKENS.md`、`docs/data/{design-tokens,agent-tokens}.manifest.json`、`scripts/check-theme-contract.mjs`、`scripts/fx-agent.mjs`
+
+### DEC-046: 场景配方只沉淀已验证组合，不从组件 API 自由推导
+
+- **日期**：2026-07-16
+- **状态**：已决定
+- **决定**：新增 `agent-recipes.manifest.json` 作为跨组件场景组合的唯一机器事实。每个 recipe 必须声明真实组件、结构零件、语义 Token、行为、验收条件、禁止项和真实证据。`fx recipe <intent>` 只返回已验证配方；未知场景返回 `no-proven-recipe`。
+- **放弃**：① 根据单个组件 API 临时推导业务组合；② 复制 JSX 当作配方真相源；③ 将结构零件伪装成组件 prop；④ 未验证场景也返回“看似可用”的方案。
+- **原因**：组件可用不等于组合正确。协作共建需要把可复用的行为与验收条件一并沉淀，才能让 Agent 和工程师得到同一条经过验证的实现路径。
+- **影响**：首批覆盖邮箱字段校验、可清除搜索输入、带范围的全局搜索和日期范围筛选。`check-agent-recipes` 检查配方引用的组件、Token、证据文件和符号；视觉变化仍需按既有规则运行 `test:visual`。
+- **相关文件**：`docs/data/agent-recipes.manifest.json`、`scripts/{fx-agent,check-agent-recipes}.mjs`、`AGENTS.md`
+
+### DEC-047: Elevation Token 以单档复合阴影表达层次
+
+- **日期**：2026-07-16
+- **状态**：已决定
+- **决定**：`shadow-l1` 使用两层投影，`shadow-l2` 与 `shadow-l3` 使用三层投影；近层为 `8%` 品牌微染中性灰，远层降为 `5%` 与 `3%`。调用方只能选择一个 elevation Token，不叠加 L1/L2/L3。
+- **放弃**：① 单层阴影只加大透明度或 blur；② 让页面调用处叠加多个 shadow utility；③ 使用 Material 风格的高不透明度重阴影。
+- **原因**：单层 L3 在浅色表面缺少可读的落点和扩散，简单加黑会显脏。复合阴影借鉴 Ant 的近/中/远层结构，并保持 Astryx 的 low/med/high 场景分工：tooltip、dropdown、dialog 只各取一档。
+- **影响**：四个公司 shadow utility 的实际几何升级；主题预览强度映射、Token 文档、机器 manifest 与 Agent Token contract 必须同时更新。
+- **相关文件**：`theme/fx-theme.css`、`src/App.tsx`、`docs/TOKENS.md`、`docs/data/{design-tokens,agent-tokens}.manifest.json`
+
+### DEC-048: 文档站独立信息卡统一通过 WebsiteCardContainer
+
+- **日期**：2026-07-16
+- **状态**：已决定
+- **决定**：文档站中的独立信息块、示例预览、说明区和表格外壳统一使用 fx 组合组件 `WebsiteCardContainer`；它内部复用 shadcn `Card` 的真实 API。完整应用预览可用受控 `padding="none"` 贴合容器边缘，组件自身的 API 预览保留直接使用 shadcn `Card`，保证示例仍能准确说明该基础组件。
+- **放弃**：① 页面按需直接写 `Card` 或裸 `div`；② 把 WebsiteCardContainer 仅作为规范页静态示意；③ 在调用处覆盖卡片的圆角、边框、背景或阴影。
+- **原因**：文档站是产品界面，不是基础组件样例的随意拼接场。集中入口能让网站卡片的视觉和结构随同一个组合组件演进，同时不污染基础 Card 的业务语义和真实示例。
+- **影响**：`DocSurfaceCard` 委托 WebsiteCardContainer；组件索引、治理表格、规则代码块、间距节奏和 CRM 完整预览均通过它承载；`check-doc-site-contract` 验证该委托关系。网站卡片的视觉改动只在 WebsiteCardContainer 层完成。
+- **相关文件**：`src/components/fx/{website-card-container,doc-surface}.tsx`、`src/App.tsx`、`docs/data/{components,doc-site,website-standards}.manifest.json`、`docs/DOC_SITE_DESIGN.md`、`scripts/check-doc-site-contract.mjs`
+
+### DEC-049: 网站卡片阴影固定为 L1 并跟随全局 Shadow Level
+
+- **日期**：2026-07-16
+- **状态**：已决定
+- **决定**：`WebsiteCardContainer` 固定使用 shadcn `Card elevated`，以公司 `shadow-l1` 作为网站卡片的唯一阴影。容器不暴露 `elevated` 调用选项；全局主题的 Shadow Level 仍通过 `--fx-shadow-l1` 控制其关闭和强度。
+- **放弃**：① 每个页面或卡片实例自行传 `elevated`；② 为文档站写死一套不受主题影响的 `box-shadow`；③ 将网站卡片改成无阴影而只让浮层有阴影。
+- **原因**：网站卡片是同一类产品表面，应保持一致的层次感。复用全局 Shadow Level 既让用户能统一关闭或调整阴影，也避免网站风格脱离系统 token。
+- **影响**：网站卡片、文档表面和规则面板都自动获得 L1 阴影；全局 Shadow Level = none 时全部关闭。
+- **相关文件**：`src/components/fx/{website-card-container,doc-surface,website-rule-panel}.tsx`、`theme/fx-theme.css`、`src/App.tsx`、`docs/data/{components,website-standards}.manifest.json`
+
 ## 相关文件
 
-| 文件 | 关系 |
-|------|------|
-| `docs/LESSONS.md` | 决策失误时转为教训记录 |
-| `docs/ARCHITECTURE.md` | 架构决策影响系统结构 |
-| `docs/CHANGELOG.md` | 决策落地后的变更记录 |
+| 文件                   | 关系                   |
+| ---------------------- | ---------------------- |
+| `docs/LESSONS.md`      | 决策失误时转为教训记录 |
+| `docs/ARCHITECTURE.md` | 架构决策影响系统结构   |
+| `docs/CHANGELOG.md`    | 决策落地后的变更记录   |

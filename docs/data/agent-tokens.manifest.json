@@ -1,0 +1,2263 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/agent-token-contract",
+  "derivedFrom": {
+    "tokenManifest": "docs/data/design-tokens.json",
+    "truthSource": "theme/fx-theme.css",
+    "humanDoc": "docs/TOKENS.md"
+  },
+  "policy": {
+    "primitiveAccess": "internal-only",
+    "componentTokenLayer": "componentUsage mappings only; do not create independent component tokens",
+    "callingRule": "Agents select semantic tokens or declared component state mappings; they do not select primitive palette values."
+  },
+  "semanticTokens": [
+    {
+      "id": "semantic.radius",
+      "cssVar": "--radius",
+      "category": "radius-source",
+      "usage": "基础圆角真相源",
+      "resolvesTo": [],
+      "consumers": [
+        "Badge",
+        "Button",
+        "Card",
+        "Dialog",
+        "Input",
+        "Sheet"
+      ]
+    },
+    {
+      "id": "semantic.radius-none",
+      "cssVar": "--radius-none",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [],
+      "consumers": []
+    },
+    {
+      "id": "semantic.radius-inner",
+      "cssVar": "--radius-inner",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--radius"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.radius-element",
+      "cssVar": "--radius-element",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--radius"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.radius-container",
+      "cssVar": "--radius-container",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--radius"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.radius-page",
+      "cssVar": "--radius-page",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--radius"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.radius-full",
+      "cssVar": "--radius-full",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [],
+      "consumers": []
+    },
+    {
+      "id": "semantic.background",
+      "cssVar": "--background",
+      "category": "surface-text",
+      "usage": "页面底色",
+      "resolvesTo": [
+        "--fx-neutrals-02",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": [
+        "Button",
+        "Dialog",
+        "Input",
+        "Sheet"
+      ]
+    },
+    {
+      "id": "semantic.foreground",
+      "cssVar": "--foreground",
+      "category": "surface-text",
+      "usage": "主文字",
+      "resolvesTo": [
+        "--fx-neutrals-20",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": [
+        "Badge",
+        "Button",
+        "Card",
+        "Dialog",
+        "Field",
+        "Input",
+        "Sheet",
+        "Table"
+      ]
+    },
+    {
+      "id": "semantic.foreground-secondary",
+      "cssVar": "--foreground-secondary",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-neutrals-15",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.foreground-disabled",
+      "cssVar": "--foreground-disabled",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-neutrals-06",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": [
+        "Input"
+      ]
+    },
+    {
+      "id": "semantic.card",
+      "cssVar": "--card",
+      "category": "surface-text",
+      "usage": "卡片和内容容器背景",
+      "resolvesTo": [],
+      "consumers": [
+        "Card"
+      ]
+    },
+    {
+      "id": "semantic.card-foreground",
+      "cssVar": "--card-foreground",
+      "category": "surface-text",
+      "usage": "卡片文字",
+      "resolvesTo": [
+        "--fx-neutrals-20",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": [
+        "Card"
+      ]
+    },
+    {
+      "id": "semantic.surface",
+      "cssVar": "--surface",
+      "category": "surface-text",
+      "usage": "浮起控件白底（outline 按钮等），与 card 同值、语义独立",
+      "resolvesTo": [
+        "--fx-neutrals-01"
+      ],
+      "consumers": [
+        "Input"
+      ]
+    },
+    {
+      "id": "semantic.surface-disabled",
+      "cssVar": "--surface-disabled",
+      "category": "surface-text",
+      "usage": "控件禁用底（outline 按钮禁用态），比 surface 略灰",
+      "resolvesTo": [
+        "--fx-neutrals-02",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.popover",
+      "cssVar": "--popover",
+      "category": "surface-text",
+      "usage": "浮层背景",
+      "resolvesTo": [],
+      "consumers": []
+    },
+    {
+      "id": "semantic.popover-foreground",
+      "cssVar": "--popover-foreground",
+      "category": "surface-text",
+      "usage": "浮层文字",
+      "resolvesTo": [
+        "--fx-neutrals-20",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.overlay",
+      "cssVar": "--overlay",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-neutrals-20",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.overlay-blur",
+      "cssVar": "--overlay-blur",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [],
+      "consumers": []
+    },
+    {
+      "id": "semantic.primary",
+      "cssVar": "--primary",
+      "category": "action-state",
+      "usage": "主操作、激活态、品牌强调",
+      "resolvesTo": [
+        "--fx-brand-09",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": [
+        "Badge",
+        "Button",
+        "Input"
+      ]
+    },
+    {
+      "id": "semantic.primary-foreground",
+      "cssVar": "--primary-foreground",
+      "category": "action-state",
+      "usage": "主色背景上的文字和图标",
+      "resolvesTo": [],
+      "consumers": [
+        "Badge",
+        "Button"
+      ]
+    },
+    {
+      "id": "semantic.secondary",
+      "cssVar": "--secondary",
+      "category": "action-state",
+      "usage": "次级按钮和弱操作背景",
+      "resolvesTo": [
+        "--fx-neutrals-03",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": [
+        "Badge",
+        "Button"
+      ]
+    },
+    {
+      "id": "semantic.secondary-hover",
+      "cssVar": "--secondary-hover",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-neutrals-04",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.secondary-active",
+      "cssVar": "--secondary-active",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-neutrals-05",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.secondary-foreground",
+      "cssVar": "--secondary-foreground",
+      "category": "action-state",
+      "usage": "次级背景上的文字",
+      "resolvesTo": [
+        "--fx-neutrals-20",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": [
+        "Badge",
+        "Button"
+      ]
+    },
+    {
+      "id": "semantic.muted",
+      "cssVar": "--muted",
+      "category": "surface-text",
+      "usage": "次级背景、弱按钮、代码块",
+      "resolvesTo": [
+        "--fx-neutrals-03",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": [
+        "Badge",
+        "Button",
+        "Card",
+        "Input",
+        "Table"
+      ]
+    },
+    {
+      "id": "semantic.muted-hover",
+      "cssVar": "--muted-hover",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-neutrals-04",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.muted-active",
+      "cssVar": "--muted-active",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-neutrals-05",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.muted-foreground",
+      "cssVar": "--muted-foreground",
+      "category": "surface-text",
+      "usage": "辅助说明、弱信息",
+      "resolvesTo": [
+        "--fx-neutrals-11",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": [
+        "Field",
+        "Input",
+        "Table"
+      ]
+    },
+    {
+      "id": "semantic.fill-subtle",
+      "cssVar": "--fill-subtle",
+      "category": "shadcn-semantic",
+      "usage": "透明容器上填充控件的待命底（半透明，自适应宿主底色），如顶栏搜索框",
+      "resolvesTo": [
+        "--foreground",
+        "--fx-neutrals-20",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.fill-hover",
+      "cssVar": "--fill-hover",
+      "category": "shadcn-semantic",
+      "usage": "上述填充控件的 hover 加深 / 无底色图标按钮 hover",
+      "resolvesTo": [
+        "--foreground",
+        "--fx-neutrals-20",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.accent",
+      "cssVar": "--accent",
+      "category": "surface-text",
+      "usage": "悬浮态、轻量高亮背景",
+      "resolvesTo": [
+        "--fx-orange-01",
+        "--fx-seed-orange"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.accent-foreground",
+      "cssVar": "--accent-foreground",
+      "category": "surface-text",
+      "usage": "高亮背景上的文字",
+      "resolvesTo": [
+        "--fx-neutrals-20",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.destructive",
+      "cssVar": "--destructive",
+      "category": "action-state",
+      "usage": "删除、危险、不可逆操作",
+      "resolvesTo": [
+        "--fx-red-09",
+        "--fx-seed-red"
+      ],
+      "consumers": [
+        "Badge",
+        "Button",
+        "Field",
+        "Input"
+      ]
+    },
+    {
+      "id": "semantic.destructive-hover",
+      "cssVar": "--destructive-hover",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-red-08",
+        "--fx-seed-red"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.destructive-active",
+      "cssVar": "--destructive-active",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-red-10",
+        "--fx-seed-red"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.destructive-disabled",
+      "cssVar": "--destructive-disabled",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-red-04",
+        "--fx-seed-red"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.destructive-foreground",
+      "cssVar": "--destructive-foreground",
+      "category": "action-state",
+      "usage": "危险背景上的文字",
+      "resolvesTo": [],
+      "consumers": []
+    },
+    {
+      "id": "semantic.destructive-light",
+      "cssVar": "--destructive-light",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-danger-light",
+        "--fx-red-01",
+        "--fx-seed-red"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.destructive-light-hover",
+      "cssVar": "--destructive-light-hover",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-danger-light-hover",
+        "--fx-red-02",
+        "--fx-seed-red"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.destructive-light-active",
+      "cssVar": "--destructive-light-active",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-danger-light-active",
+        "--fx-red-03",
+        "--fx-seed-red"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.link",
+      "cssVar": "--link",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-blue-09",
+        "--fx-seed-blue"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.link-hover",
+      "cssVar": "--link-hover",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-blue-08",
+        "--fx-seed-blue"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.link-active",
+      "cssVar": "--link-active",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-blue-10",
+        "--fx-seed-blue"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.link-disabled",
+      "cssVar": "--link-disabled",
+      "category": "shadcn-semantic",
+      "usage": "链接禁用态（淡化蓝）",
+      "resolvesTo": [
+        "--fx-blue-04",
+        "--fx-seed-blue"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.border-faint",
+      "cssVar": "--border-faint",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-neutrals-03",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.border-container",
+      "cssVar": "--border-container",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-neutrals-04",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.border-subtle",
+      "cssVar": "--border-subtle",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-neutrals-04",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.border",
+      "cssVar": "--border",
+      "category": "border-focus",
+      "usage": "边框、分割线",
+      "resolvesTo": [
+        "--fx-neutrals-05",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": [
+        "Badge",
+        "Button",
+        "Dialog",
+        "Sheet",
+        "Table"
+      ]
+    },
+    {
+      "id": "semantic.border-strong",
+      "cssVar": "--border-strong",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-neutrals-08",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.input",
+      "cssVar": "--input",
+      "category": "border-focus",
+      "usage": "表单边框",
+      "resolvesTo": [
+        "--fx-neutrals-07",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": [
+        "Input"
+      ]
+    },
+    {
+      "id": "semantic.ring",
+      "cssVar": "--ring",
+      "category": "border-focus",
+      "usage": "键盘焦点和可访问性焦点环",
+      "resolvesTo": [
+        "--fx-brand-09",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": [
+        "Badge",
+        "Button",
+        "Dialog",
+        "Input",
+        "Sheet"
+      ]
+    },
+    {
+      "id": "semantic.success",
+      "cssVar": "--success",
+      "category": "status",
+      "usage": "成功状态",
+      "resolvesTo": [
+        "--fx-green-09",
+        "--fx-seed-green"
+      ],
+      "consumers": [
+        "Badge"
+      ]
+    },
+    {
+      "id": "semantic.success-hover",
+      "cssVar": "--success-hover",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-green-08",
+        "--fx-seed-green"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.success-active",
+      "cssVar": "--success-active",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-green-10",
+        "--fx-seed-green"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.success-disabled",
+      "cssVar": "--success-disabled",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-green-05",
+        "--fx-seed-green"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.success-foreground",
+      "cssVar": "--success-foreground",
+      "category": "status",
+      "usage": "成功背景上的文字",
+      "resolvesTo": [],
+      "consumers": []
+    },
+    {
+      "id": "semantic.warning",
+      "cssVar": "--warning",
+      "category": "status",
+      "usage": "警告状态",
+      "resolvesTo": [
+        "--fx-amber-09",
+        "--fx-seed-amber"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.warning-hover",
+      "cssVar": "--warning-hover",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-amber-08",
+        "--fx-seed-amber"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.warning-active",
+      "cssVar": "--warning-active",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-amber-10",
+        "--fx-seed-amber"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.warning-disabled",
+      "cssVar": "--warning-disabled",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-amber-05",
+        "--fx-seed-amber"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.warning-foreground",
+      "cssVar": "--warning-foreground",
+      "category": "status",
+      "usage": "警告背景上的文字",
+      "resolvesTo": [],
+      "consumers": []
+    },
+    {
+      "id": "semantic.info",
+      "cssVar": "--info",
+      "category": "status",
+      "usage": "信息状态",
+      "resolvesTo": [
+        "--fx-blue-09",
+        "--fx-seed-blue"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.info-hover",
+      "cssVar": "--info-hover",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-blue-08",
+        "--fx-seed-blue"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.info-active",
+      "cssVar": "--info-active",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-blue-10",
+        "--fx-seed-blue"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.info-disabled",
+      "cssVar": "--info-disabled",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-blue-04",
+        "--fx-seed-blue"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.info-foreground",
+      "cssVar": "--info-foreground",
+      "category": "status",
+      "usage": "信息背景上的文字",
+      "resolvesTo": [
+        "--fx-neutrals-01"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.font-sans",
+      "cssVar": "--font-sans",
+      "category": "font-source",
+      "usage": "默认字体族",
+      "resolvesTo": [],
+      "consumers": []
+    },
+    {
+      "id": "semantic.chart-1",
+      "cssVar": "--chart-1",
+      "category": "chart",
+      "usage": "图表序列色",
+      "resolvesTo": [],
+      "consumers": [
+        "Chart"
+      ]
+    },
+    {
+      "id": "semantic.chart-2",
+      "cssVar": "--chart-2",
+      "category": "chart",
+      "usage": "图表序列色",
+      "resolvesTo": [],
+      "consumers": [
+        "Chart"
+      ]
+    },
+    {
+      "id": "semantic.chart-3",
+      "cssVar": "--chart-3",
+      "category": "chart",
+      "usage": "图表序列色",
+      "resolvesTo": [],
+      "consumers": [
+        "Chart"
+      ]
+    },
+    {
+      "id": "semantic.chart-4",
+      "cssVar": "--chart-4",
+      "category": "chart",
+      "usage": "图表序列色",
+      "resolvesTo": [],
+      "consumers": [
+        "Chart"
+      ]
+    },
+    {
+      "id": "semantic.chart-5",
+      "cssVar": "--chart-5",
+      "category": "chart",
+      "usage": "图表序列色",
+      "resolvesTo": [],
+      "consumers": [
+        "Chart"
+      ]
+    },
+    {
+      "id": "semantic.chart-6",
+      "cssVar": "--chart-6",
+      "category": "chart",
+      "usage": "图表序列色",
+      "resolvesTo": [],
+      "consumers": [
+        "Chart"
+      ]
+    },
+    {
+      "id": "semantic.chart-7",
+      "cssVar": "--chart-7",
+      "category": "chart",
+      "usage": "图表序列色",
+      "resolvesTo": [],
+      "consumers": [
+        "Chart"
+      ]
+    },
+    {
+      "id": "semantic.chart-8",
+      "cssVar": "--chart-8",
+      "category": "chart",
+      "usage": "图表序列色",
+      "resolvesTo": [],
+      "consumers": [
+        "Chart"
+      ]
+    },
+    {
+      "id": "semantic.chart-9",
+      "cssVar": "--chart-9",
+      "category": "chart",
+      "usage": "图表序列色",
+      "resolvesTo": [],
+      "consumers": [
+        "Chart"
+      ]
+    },
+    {
+      "id": "semantic.chart-10",
+      "cssVar": "--chart-10",
+      "category": "chart",
+      "usage": "图表序列色",
+      "resolvesTo": [],
+      "consumers": [
+        "Chart"
+      ]
+    },
+    {
+      "id": "semantic.sidebar",
+      "cssVar": "--sidebar",
+      "category": "sidebar",
+      "usage": "侧边栏背景",
+      "resolvesTo": [],
+      "consumers": [
+        "Sidebar"
+      ]
+    },
+    {
+      "id": "semantic.sidebar-foreground",
+      "cssVar": "--sidebar-foreground",
+      "category": "sidebar",
+      "usage": "侧边栏文字",
+      "resolvesTo": [
+        "--fx-neutrals-20",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": [
+        "Sidebar"
+      ]
+    },
+    {
+      "id": "semantic.sidebar-primary",
+      "cssVar": "--sidebar-primary",
+      "category": "sidebar",
+      "usage": "侧边栏主操作",
+      "resolvesTo": [],
+      "consumers": [
+        "Sidebar"
+      ]
+    },
+    {
+      "id": "semantic.sidebar-primary-foreground",
+      "cssVar": "--sidebar-primary-foreground",
+      "category": "sidebar",
+      "usage": "侧边栏主操作文字",
+      "resolvesTo": [],
+      "consumers": []
+    },
+    {
+      "id": "semantic.sidebar-accent",
+      "cssVar": "--sidebar-accent",
+      "category": "sidebar",
+      "usage": "侧边栏选中/悬浮背景",
+      "resolvesTo": [],
+      "consumers": [
+        "Sidebar"
+      ]
+    },
+    {
+      "id": "semantic.sidebar-accent-foreground",
+      "cssVar": "--sidebar-accent-foreground",
+      "category": "sidebar",
+      "usage": "侧边栏选中/悬浮文字",
+      "resolvesTo": [
+        "--fx-neutrals-20",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.sidebar-border",
+      "cssVar": "--sidebar-border",
+      "category": "sidebar",
+      "usage": "侧边栏边框",
+      "resolvesTo": [],
+      "consumers": [
+        "Sidebar"
+      ]
+    },
+    {
+      "id": "semantic.sidebar-ring",
+      "cssVar": "--sidebar-ring",
+      "category": "sidebar",
+      "usage": "侧边栏焦点环",
+      "resolvesTo": [],
+      "consumers": [
+        "Sidebar"
+      ]
+    }
+  ],
+  "componentMappings": [
+    {
+      "component": "Button",
+      "source": "src/components/ui/button.tsx",
+      "tokenIds": [
+        "semantic.primary",
+        "semantic.primary-foreground",
+        "semantic.secondary",
+        "semantic.secondary-foreground",
+        "semantic.muted",
+        "semantic.foreground",
+        "semantic.destructive",
+        "semantic.ring",
+        "semantic.border",
+        "semantic.background",
+        "semantic.radius"
+      ],
+      "stateMappings": [],
+      "typographyMappings": [],
+      "rules": [
+        "用 variant 和 size 表达语义，不手写颜色和圆角。",
+        "Loading 是 disabled + Spinner 的组合态，Button 没有 loading prop。",
+        "图标放入 Button 时使用 data-icon 标记位置，不手写图标尺寸。"
+      ]
+    },
+    {
+      "component": "Badge",
+      "source": "src/components/ui/badge.tsx",
+      "tokenIds": [
+        "semantic.primary",
+        "semantic.primary-foreground",
+        "semantic.secondary",
+        "semantic.secondary-foreground",
+        "semantic.destructive",
+        "semantic.success",
+        "semantic.ring",
+        "semantic.border",
+        "semantic.foreground",
+        "semantic.muted",
+        "semantic.radius"
+      ],
+      "stateMappings": [],
+      "typographyMappings": [],
+      "rules": [
+        "用 variant 表达状态语义，不手写颜色 class。",
+        "可点击 Badge 使用 render 渲染为链接，不把 Badge 伪装成 Button。"
+      ]
+    },
+    {
+      "component": "Card",
+      "source": "src/components/ui/card.tsx",
+      "tokenIds": [
+        "semantic.card",
+        "semantic.card-foreground",
+        "semantic.muted",
+        "semantic.foreground",
+        "semantic.radius"
+      ],
+      "stateMappings": [],
+      "typographyMappings": [],
+      "rules": [
+        "Card 只承载容器语义，背景使用 bg-card。",
+        "Footer 等弱区域使用 muted，不写死灰色。"
+      ]
+    },
+    {
+      "component": "Input",
+      "source": "src/components/ui/input.tsx",
+      "tokenIds": [
+        "semantic.input",
+        "semantic.surface",
+        "semantic.muted",
+        "semantic.background",
+        "semantic.foreground",
+        "semantic.foreground-disabled",
+        "semantic.muted-foreground",
+        "semantic.primary",
+        "semantic.ring",
+        "semantic.destructive",
+        "semantic.radius"
+      ],
+      "stateMappings": [
+        {
+          "element": "border",
+          "state": "default",
+          "token": "--input",
+          "description": "输入框正常边框",
+          "tokenId": "semantic.input"
+        },
+        {
+          "element": "border",
+          "state": "hover",
+          "token": "--primary",
+          "description": "输入框悬停边框",
+          "tokenId": "semantic.primary"
+        },
+        {
+          "element": "border",
+          "state": "focus",
+          "token": "--primary",
+          "description": "输入框聚焦边框",
+          "tokenId": "semantic.primary"
+        },
+        {
+          "element": "border",
+          "state": "invalid",
+          "token": "--destructive",
+          "description": "输入框校验失败边框",
+          "tokenId": "semantic.destructive"
+        },
+        {
+          "element": "surface",
+          "state": "disabled",
+          "token": "--muted",
+          "description": "输入框禁用表面",
+          "tokenId": "semantic.muted"
+        },
+        {
+          "element": "text",
+          "state": "placeholder",
+          "token": "--foreground-disabled",
+          "description": "输入框占位文字",
+          "tokenId": "semantic.foreground-disabled"
+        }
+      ],
+      "typographyMappings": [
+        {
+          "element": "value",
+          "role": "body",
+          "implementation": "size=md 使用 text-base；size=sm/xs 仅为高密度控件降为 text-sm/text-xs，不新增另一套文本角色。",
+          "usage": "用户输入值；优先按表单密度选择 Input size。"
+        },
+        {
+          "element": "placeholder",
+          "role": "inherits-value",
+          "implementation": "继承当前 Input size 的字号；颜色由 placeholder:text-foreground-disabled 提供。",
+          "usage": "示例格式或预期输入，不替代字段标签。"
+        }
+      ],
+      "rules": [
+        "正常与禁用边框使用 input，悬停与聚焦边框使用 primary，禁用表面使用 muted，错误边框使用 destructive。",
+        "Field 校验失败用 data-invalid + aria-invalid，不手写红色边框。",
+        "禁用态用 disabled，不用透明度伪装。"
+      ]
+    },
+    {
+      "component": "Field",
+      "source": "src/components/ui/field.tsx",
+      "tokenIds": [
+        "semantic.foreground",
+        "semantic.muted-foreground",
+        "semantic.destructive"
+      ],
+      "stateMappings": [
+        {
+          "element": "feedback",
+          "state": "invalid",
+          "token": "--destructive",
+          "description": "字段错误说明文字",
+          "tokenId": "semantic.destructive"
+        }
+      ],
+      "typographyMappings": [],
+      "rules": [
+        "真实表单字段使用 FieldGroup + Field + FieldLabel。",
+        "错误说明使用 FieldError，不把错误文案做成普通灰字。"
+      ]
+    },
+    {
+      "component": "Dialog",
+      "source": "src/components/ui/dialog.tsx",
+      "tokenIds": [
+        "semantic.background",
+        "semantic.foreground",
+        "semantic.border",
+        "semantic.ring",
+        "semantic.radius"
+      ],
+      "stateMappings": [],
+      "typographyMappings": [],
+      "rules": [
+        "浮层背景和文字使用语义槽。",
+        "Dialog 必须有 Title；隐藏标题用 sr-only。"
+      ]
+    },
+    {
+      "component": "Sheet",
+      "source": "src/components/ui/sheet.tsx",
+      "tokenIds": [
+        "semantic.background",
+        "semantic.foreground",
+        "semantic.border",
+        "semantic.ring",
+        "semantic.radius"
+      ],
+      "stateMappings": [],
+      "typographyMappings": [],
+      "rules": [
+        "边缘面板使用语义背景与边框。",
+        "Sheet 必须有 Title，不能为了视觉省掉可访问标题。"
+      ]
+    },
+    {
+      "component": "Table",
+      "source": "src/components/ui/table.tsx",
+      "tokenIds": [
+        "semantic.foreground",
+        "semantic.muted-foreground",
+        "semantic.muted",
+        "semantic.border"
+      ],
+      "stateMappings": [],
+      "typographyMappings": [
+        {
+          "element": "header",
+          "role": "label",
+          "implementation": "TableHead 使用 font-medium；保持单行，列标题只表达字段含义。",
+          "usage": "字段名、可排序列标题、列筛选入口。"
+        },
+        {
+          "element": "cell",
+          "role": "data-or-body",
+          "implementation": "原生 Table 不根据内容猜类型；DataTable 用 dataType 处理数值、日期、编号和状态，其余文本按 body 内容呈现。",
+          "usage": "业务文本列、数值列、日期和状态列。"
+        }
+      ],
+      "rules": [
+        "表头、分割线、弱文字使用语义 token。",
+        "不要在表格内手写灰色和边框色。"
+      ]
+    },
+    {
+      "component": "Sidebar",
+      "source": "src/components/ui/sidebar.tsx",
+      "tokenIds": [
+        "semantic.sidebar",
+        "semantic.sidebar-foreground",
+        "semantic.sidebar-primary",
+        "semantic.sidebar-accent",
+        "semantic.sidebar-border",
+        "semantic.sidebar-ring"
+      ],
+      "stateMappings": [],
+      "typographyMappings": [],
+      "rules": [
+        "侧边栏使用 sidebar 专用语义槽。",
+        "当前态用 sidebar-accent/primary，不复用业务硬编码颜色。"
+      ]
+    },
+    {
+      "component": "Chart",
+      "source": "src/components/ui/chart.tsx",
+      "tokenIds": [
+        "semantic.chart-1",
+        "semantic.chart-2",
+        "semantic.chart-3",
+        "semantic.chart-4",
+        "semantic.chart-5",
+        "semantic.chart-6",
+        "semantic.chart-7",
+        "semantic.chart-8",
+        "semantic.chart-9",
+        "semantic.chart-10"
+      ],
+      "stateMappings": [],
+      "typographyMappings": [],
+      "rules": [
+        "图表序列色使用 chart token。",
+        "业务图表优先使用 CSS variables，不把 hex 色值散在配置里。"
+      ]
+    }
+  ],
+  "typography": {
+    "policy": "调用处按 text-{role} 文本角色选择；每个角色组合复用现有 Tailwind text-{size}/font-* 工具类，不新增字号或字重数值 API；具体数值仍由 theme/fx-theme.css 的 --text-* 注入。",
+    "conventions": [
+      {
+        "id": "mixed-language",
+        "rule": "中文与英文、数字混排统一使用默认字距和 --font-sans；不按语言拆出第二套字号或字距 API。",
+        "tailwind": [
+          "font-sans"
+        ],
+        "usage": "中文业务文案、英文产品名、数字同时出现的界面文本"
+      },
+      {
+        "id": "letter-spacing",
+        "rule": "新增或调整的中文、中英文混排不得使用负字距；默认不加 tracking 类。",
+        "prohibited": [
+          "tracking-tight",
+          "tracking-tighter"
+        ],
+        "usage": "所有面向用户的中文与混排文本"
+      },
+      {
+        "id": "uppercase",
+        "rule": "全大写仅用于短英文缩写或短标签；句子、说明和长标题保持原始大小写。",
+        "examples": [
+          "ID",
+          "API",
+          "SKU"
+        ],
+        "usage": "短字段名、技术缩写、状态码"
+      },
+      {
+        "id": "code",
+        "rule": "可复制、需逐字符辨认的代码、命令、字段名和密钥片段使用等宽字体；普通业务编号不改用等宽代码字体。",
+        "tailwind": [
+          "font-mono"
+        ],
+        "usage": "代码块、行内 code、CLI 命令、字段名、密钥片段"
+      },
+      {
+        "id": "truncation",
+        "rule": "长文本是否截断由具体内容容器显式选择 truncate；DataTable 不根据列名或字段类型自动截断。",
+        "tailwind": [
+          "truncate"
+        ],
+        "usage": "表格列、列表条目、单行摘要"
+      }
+    ],
+    "dataRules": [
+      {
+        "id": "number",
+        "align": "right",
+        "classes": [
+          "tabular-nums"
+        ],
+        "usage": "数量、数值、计量"
+      },
+      {
+        "id": "currency",
+        "align": "right",
+        "classes": [
+          "tabular-nums"
+        ],
+        "usage": "金额、财务数值"
+      },
+      {
+        "id": "percentage",
+        "align": "right",
+        "classes": [
+          "tabular-nums"
+        ],
+        "usage": "百分比、进度数值"
+      },
+      {
+        "id": "date",
+        "align": "left",
+        "classes": [
+          "tabular-nums",
+          "whitespace-nowrap"
+        ],
+        "usage": "日期、时间"
+      },
+      {
+        "id": "identifier",
+        "align": "left",
+        "classes": [
+          "tabular-nums",
+          "whitespace-nowrap"
+        ],
+        "usage": "订单号、手机号、编号"
+      },
+      {
+        "id": "status",
+        "align": "center",
+        "classes": [
+          "whitespace-nowrap"
+        ],
+        "usage": "短状态、Tag、Badge"
+      },
+      {
+        "id": "text",
+        "align": "left",
+        "classes": [],
+        "usage": "名称、说明、链接等普通文本"
+      }
+    ],
+    "roles": [
+      {
+        "id": "page-title",
+        "utility": "text-page-title",
+        "tailwind": [
+          "text-xl",
+          "font-bold"
+        ],
+        "usage": "页面、详情页主标题",
+        "avoid": "不要用于卡片或表格标题。"
+      },
+      {
+        "id": "section-title",
+        "utility": "text-section-title",
+        "tailwind": [
+          "text-lg",
+          "font-semibold"
+        ],
+        "usage": "区块、卡片、组件标题",
+        "avoid": "不要在普通正文中使用。"
+      },
+      {
+        "id": "body",
+        "utility": "text-body",
+        "tailwind": [
+          "text-base",
+          "font-normal"
+        ],
+        "usage": "默认正文、表单值、菜单、列表内容",
+        "avoid": "不要用更小字号替代弱化颜色。"
+      },
+      {
+        "id": "label",
+        "utility": "text-label",
+        "tailwind": [
+          "text-sm",
+          "font-medium"
+        ],
+        "usage": "字段标签、按钮、菜单项、短状态标签",
+        "avoid": "不要承载多句说明。"
+      },
+      {
+        "id": "caption",
+        "utility": "text-caption",
+        "tailwind": [
+          "text-sm",
+          "font-normal"
+        ],
+        "usage": "辅助说明、提示、元信息",
+        "avoid": "不要用于关键操作或主要正文。"
+      }
+    ]
+  },
+  "shape": {
+    "source": "theme/fx-theme.css",
+    "scale": [
+      {
+        "role": "none",
+        "token": "--radius-none",
+        "usage": "直角或结构性切边",
+        "fixed": true
+      },
+      {
+        "role": "inner",
+        "token": "--radius-inner",
+        "usage": "圆角容器内的嵌套表面"
+      },
+      {
+        "role": "element",
+        "token": "--radius-element",
+        "usage": "按钮、输入框、选择器等交互控件"
+      },
+      {
+        "role": "container",
+        "token": "--radius-container",
+        "usage": "卡片、下拉、面板等内容容器"
+      },
+      {
+        "role": "page",
+        "token": "--radius-page",
+        "usage": "Dialog、Sheet 和较大页面区域"
+      },
+      {
+        "role": "full",
+        "token": "--radius-full",
+        "usage": "胶囊、圆形状态点",
+        "fixed": true
+      }
+    ],
+    "concentricRule": "嵌套圆角表面需要保持同心：innerRadius = max(0px, outerRadius - inset)。仅组件内部已有嵌套表面时采用；调用处不得临时计算或覆盖圆角。"
+  },
+  "interactionStates": [
+    {
+      "role": "primary",
+      "semanticRoleTokenId": "semantic.primary",
+      "states": {
+        "default": {
+          "paletteStep": "09"
+        },
+        "hover": {
+          "paletteStep": "08"
+        },
+        "active": {
+          "paletteStep": "10"
+        },
+        "disabled": {
+          "paletteStep": "04"
+        }
+      }
+    },
+    {
+      "role": "success",
+      "semanticRoleTokenId": "semantic.success",
+      "states": {
+        "default": {
+          "paletteStep": "09"
+        },
+        "hover": {
+          "paletteStep": "08"
+        },
+        "active": {
+          "paletteStep": "10"
+        },
+        "disabled": {
+          "paletteStep": "05"
+        }
+      }
+    },
+    {
+      "role": "warning",
+      "semanticRoleTokenId": "semantic.warning",
+      "states": {
+        "default": {
+          "paletteStep": "09"
+        },
+        "hover": {
+          "paletteStep": "08"
+        },
+        "active": {
+          "paletteStep": "10"
+        },
+        "disabled": {
+          "paletteStep": "05"
+        }
+      }
+    },
+    {
+      "role": "destructive",
+      "semanticRoleTokenId": "semantic.destructive",
+      "states": {
+        "default": {
+          "paletteStep": "09"
+        },
+        "hover": {
+          "paletteStep": "08"
+        },
+        "active": {
+          "paletteStep": "10"
+        },
+        "disabled": {
+          "paletteStep": "04"
+        }
+      }
+    },
+    {
+      "role": "info",
+      "semanticRoleTokenId": "semantic.info",
+      "states": {
+        "default": {
+          "paletteStep": "09"
+        },
+        "hover": {
+          "paletteStep": "08"
+        },
+        "active": {
+          "paletteStep": "10"
+        },
+        "disabled": {
+          "paletteStep": "04"
+        }
+      }
+    },
+    {
+      "role": "link",
+      "semanticRoleTokenId": "semantic.link",
+      "states": {
+        "default": {
+          "paletteStep": "09"
+        },
+        "hover": {
+          "paletteStep": "08"
+        },
+        "active": {
+          "paletteStep": "10"
+        }
+      }
+    }
+  ],
+  "themeContract": {
+    "status": "single-light-mode",
+    "truthSource": "theme/fx-theme.css",
+    "humanDoc": "docs/TOKENS.md",
+    "supportedModes": [
+      "light"
+    ],
+    "unsupportedModes": [
+      "dark",
+      "custom-theme-build"
+    ],
+    "applyPolicy": "A theme may replace declared semantic visual tokens only. It must not use primitive palette values, add page-level visual overrides, or change protected structural tokens.",
+    "replaceableTokens": [
+      {
+        "id": "semantic.background",
+        "cssVar": "--background",
+        "category": "surface-text",
+        "usage": "页面底色"
+      },
+      {
+        "id": "semantic.foreground",
+        "cssVar": "--foreground",
+        "category": "surface-text",
+        "usage": "主文字"
+      },
+      {
+        "id": "semantic.foreground-secondary",
+        "cssVar": "--foreground-secondary",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.foreground-disabled",
+        "cssVar": "--foreground-disabled",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.card",
+        "cssVar": "--card",
+        "category": "surface-text",
+        "usage": "卡片和内容容器背景"
+      },
+      {
+        "id": "semantic.card-foreground",
+        "cssVar": "--card-foreground",
+        "category": "surface-text",
+        "usage": "卡片文字"
+      },
+      {
+        "id": "semantic.surface",
+        "cssVar": "--surface",
+        "category": "surface-text",
+        "usage": "浮起控件白底（outline 按钮等），与 card 同值、语义独立"
+      },
+      {
+        "id": "semantic.surface-disabled",
+        "cssVar": "--surface-disabled",
+        "category": "surface-text",
+        "usage": "控件禁用底（outline 按钮禁用态），比 surface 略灰"
+      },
+      {
+        "id": "semantic.popover",
+        "cssVar": "--popover",
+        "category": "surface-text",
+        "usage": "浮层背景"
+      },
+      {
+        "id": "semantic.popover-foreground",
+        "cssVar": "--popover-foreground",
+        "category": "surface-text",
+        "usage": "浮层文字"
+      },
+      {
+        "id": "semantic.overlay",
+        "cssVar": "--overlay",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.primary",
+        "cssVar": "--primary",
+        "category": "action-state",
+        "usage": "主操作、激活态、品牌强调"
+      },
+      {
+        "id": "semantic.primary-foreground",
+        "cssVar": "--primary-foreground",
+        "category": "action-state",
+        "usage": "主色背景上的文字和图标"
+      },
+      {
+        "id": "semantic.secondary",
+        "cssVar": "--secondary",
+        "category": "action-state",
+        "usage": "次级按钮和弱操作背景"
+      },
+      {
+        "id": "semantic.secondary-hover",
+        "cssVar": "--secondary-hover",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.secondary-active",
+        "cssVar": "--secondary-active",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.secondary-foreground",
+        "cssVar": "--secondary-foreground",
+        "category": "action-state",
+        "usage": "次级背景上的文字"
+      },
+      {
+        "id": "semantic.muted",
+        "cssVar": "--muted",
+        "category": "surface-text",
+        "usage": "次级背景、弱按钮、代码块"
+      },
+      {
+        "id": "semantic.muted-hover",
+        "cssVar": "--muted-hover",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.muted-active",
+        "cssVar": "--muted-active",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.muted-foreground",
+        "cssVar": "--muted-foreground",
+        "category": "surface-text",
+        "usage": "辅助说明、弱信息"
+      },
+      {
+        "id": "semantic.fill-subtle",
+        "cssVar": "--fill-subtle",
+        "category": "shadcn-semantic",
+        "usage": "透明容器上填充控件的待命底（半透明，自适应宿主底色），如顶栏搜索框"
+      },
+      {
+        "id": "semantic.fill-hover",
+        "cssVar": "--fill-hover",
+        "category": "shadcn-semantic",
+        "usage": "上述填充控件的 hover 加深 / 无底色图标按钮 hover"
+      },
+      {
+        "id": "semantic.accent",
+        "cssVar": "--accent",
+        "category": "surface-text",
+        "usage": "悬浮态、轻量高亮背景"
+      },
+      {
+        "id": "semantic.accent-foreground",
+        "cssVar": "--accent-foreground",
+        "category": "surface-text",
+        "usage": "高亮背景上的文字"
+      },
+      {
+        "id": "semantic.destructive",
+        "cssVar": "--destructive",
+        "category": "action-state",
+        "usage": "删除、危险、不可逆操作"
+      },
+      {
+        "id": "semantic.destructive-hover",
+        "cssVar": "--destructive-hover",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.destructive-active",
+        "cssVar": "--destructive-active",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.destructive-disabled",
+        "cssVar": "--destructive-disabled",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.destructive-foreground",
+        "cssVar": "--destructive-foreground",
+        "category": "action-state",
+        "usage": "危险背景上的文字"
+      },
+      {
+        "id": "semantic.destructive-light",
+        "cssVar": "--destructive-light",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.destructive-light-hover",
+        "cssVar": "--destructive-light-hover",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.destructive-light-active",
+        "cssVar": "--destructive-light-active",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.link",
+        "cssVar": "--link",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.link-hover",
+        "cssVar": "--link-hover",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.link-active",
+        "cssVar": "--link-active",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.link-disabled",
+        "cssVar": "--link-disabled",
+        "category": "shadcn-semantic",
+        "usage": "链接禁用态（淡化蓝）"
+      },
+      {
+        "id": "semantic.border-faint",
+        "cssVar": "--border-faint",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.border-container",
+        "cssVar": "--border-container",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.border-subtle",
+        "cssVar": "--border-subtle",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.border",
+        "cssVar": "--border",
+        "category": "border-focus",
+        "usage": "边框、分割线"
+      },
+      {
+        "id": "semantic.border-strong",
+        "cssVar": "--border-strong",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.input",
+        "cssVar": "--input",
+        "category": "border-focus",
+        "usage": "表单边框"
+      },
+      {
+        "id": "semantic.ring",
+        "cssVar": "--ring",
+        "category": "border-focus",
+        "usage": "键盘焦点和可访问性焦点环"
+      },
+      {
+        "id": "semantic.success",
+        "cssVar": "--success",
+        "category": "status",
+        "usage": "成功状态"
+      },
+      {
+        "id": "semantic.success-hover",
+        "cssVar": "--success-hover",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.success-active",
+        "cssVar": "--success-active",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.success-disabled",
+        "cssVar": "--success-disabled",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.success-foreground",
+        "cssVar": "--success-foreground",
+        "category": "status",
+        "usage": "成功背景上的文字"
+      },
+      {
+        "id": "semantic.warning",
+        "cssVar": "--warning",
+        "category": "status",
+        "usage": "警告状态"
+      },
+      {
+        "id": "semantic.warning-hover",
+        "cssVar": "--warning-hover",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.warning-active",
+        "cssVar": "--warning-active",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.warning-disabled",
+        "cssVar": "--warning-disabled",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.warning-foreground",
+        "cssVar": "--warning-foreground",
+        "category": "status",
+        "usage": "警告背景上的文字"
+      },
+      {
+        "id": "semantic.info",
+        "cssVar": "--info",
+        "category": "status",
+        "usage": "信息状态"
+      },
+      {
+        "id": "semantic.info-hover",
+        "cssVar": "--info-hover",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.info-active",
+        "cssVar": "--info-active",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.info-disabled",
+        "cssVar": "--info-disabled",
+        "category": "shadcn-semantic",
+        "usage": ""
+      },
+      {
+        "id": "semantic.info-foreground",
+        "cssVar": "--info-foreground",
+        "category": "status",
+        "usage": "信息背景上的文字"
+      },
+      {
+        "id": "semantic.chart-1",
+        "cssVar": "--chart-1",
+        "category": "chart",
+        "usage": "图表序列色"
+      },
+      {
+        "id": "semantic.chart-2",
+        "cssVar": "--chart-2",
+        "category": "chart",
+        "usage": "图表序列色"
+      },
+      {
+        "id": "semantic.chart-3",
+        "cssVar": "--chart-3",
+        "category": "chart",
+        "usage": "图表序列色"
+      },
+      {
+        "id": "semantic.chart-4",
+        "cssVar": "--chart-4",
+        "category": "chart",
+        "usage": "图表序列色"
+      },
+      {
+        "id": "semantic.chart-5",
+        "cssVar": "--chart-5",
+        "category": "chart",
+        "usage": "图表序列色"
+      },
+      {
+        "id": "semantic.chart-6",
+        "cssVar": "--chart-6",
+        "category": "chart",
+        "usage": "图表序列色"
+      },
+      {
+        "id": "semantic.chart-7",
+        "cssVar": "--chart-7",
+        "category": "chart",
+        "usage": "图表序列色"
+      },
+      {
+        "id": "semantic.chart-8",
+        "cssVar": "--chart-8",
+        "category": "chart",
+        "usage": "图表序列色"
+      },
+      {
+        "id": "semantic.chart-9",
+        "cssVar": "--chart-9",
+        "category": "chart",
+        "usage": "图表序列色"
+      },
+      {
+        "id": "semantic.chart-10",
+        "cssVar": "--chart-10",
+        "category": "chart",
+        "usage": "图表序列色"
+      },
+      {
+        "id": "semantic.sidebar",
+        "cssVar": "--sidebar",
+        "category": "sidebar",
+        "usage": "侧边栏背景"
+      },
+      {
+        "id": "semantic.sidebar-foreground",
+        "cssVar": "--sidebar-foreground",
+        "category": "sidebar",
+        "usage": "侧边栏文字"
+      },
+      {
+        "id": "semantic.sidebar-primary",
+        "cssVar": "--sidebar-primary",
+        "category": "sidebar",
+        "usage": "侧边栏主操作"
+      },
+      {
+        "id": "semantic.sidebar-primary-foreground",
+        "cssVar": "--sidebar-primary-foreground",
+        "category": "sidebar",
+        "usage": "侧边栏主操作文字"
+      },
+      {
+        "id": "semantic.sidebar-accent",
+        "cssVar": "--sidebar-accent",
+        "category": "sidebar",
+        "usage": "侧边栏选中/悬浮背景"
+      },
+      {
+        "id": "semantic.sidebar-accent-foreground",
+        "cssVar": "--sidebar-accent-foreground",
+        "category": "sidebar",
+        "usage": "侧边栏选中/悬浮文字"
+      },
+      {
+        "id": "semantic.sidebar-border",
+        "cssVar": "--sidebar-border",
+        "category": "sidebar",
+        "usage": "侧边栏边框"
+      },
+      {
+        "id": "semantic.sidebar-ring",
+        "cssVar": "--sidebar-ring",
+        "category": "sidebar",
+        "usage": "侧边栏焦点环"
+      }
+    ],
+    "protectedTokens": [
+      {
+        "id": "semantic.radius",
+        "cssVar": "--radius",
+        "reason": "Structural geometry, typography, or effect behavior is not a theme override surface."
+      },
+      {
+        "id": "semantic.radius-none",
+        "cssVar": "--radius-none",
+        "reason": "Structural geometry, typography, or effect behavior is not a theme override surface."
+      },
+      {
+        "id": "semantic.radius-inner",
+        "cssVar": "--radius-inner",
+        "reason": "Structural geometry, typography, or effect behavior is not a theme override surface."
+      },
+      {
+        "id": "semantic.radius-element",
+        "cssVar": "--radius-element",
+        "reason": "Structural geometry, typography, or effect behavior is not a theme override surface."
+      },
+      {
+        "id": "semantic.radius-container",
+        "cssVar": "--radius-container",
+        "reason": "Structural geometry, typography, or effect behavior is not a theme override surface."
+      },
+      {
+        "id": "semantic.radius-page",
+        "cssVar": "--radius-page",
+        "reason": "Structural geometry, typography, or effect behavior is not a theme override surface."
+      },
+      {
+        "id": "semantic.radius-full",
+        "cssVar": "--radius-full",
+        "reason": "Structural geometry, typography, or effect behavior is not a theme override surface."
+      },
+      {
+        "id": "semantic.overlay-blur",
+        "cssVar": "--overlay-blur",
+        "reason": "Structural geometry, typography, or effect behavior is not a theme override surface."
+      },
+      {
+        "id": "semantic.font-sans",
+        "cssVar": "--font-sans",
+        "reason": "Structural geometry, typography, or effect behavior is not a theme override surface."
+      }
+    ],
+    "protectedStructuralSources": [
+      {
+        "source": "docs/data/design-tokens.json#spacing",
+        "reason": "Layout spacing is a structural scale, not a theme override surface."
+      },
+      {
+        "source": "docs/data/design-tokens.json#shape",
+        "reason": "Shape roles and concentric-radius rules are structural, not a theme override surface."
+      }
+    ],
+    "requiredInteractionGroups": [
+      {
+        "role": "primary",
+        "semanticRoleTokenId": "semantic.primary",
+        "states": {
+          "default": {
+            "paletteStep": "09"
+          },
+          "hover": {
+            "paletteStep": "08"
+          },
+          "active": {
+            "paletteStep": "10"
+          },
+          "disabled": {
+            "paletteStep": "04"
+          }
+        }
+      },
+      {
+        "role": "success",
+        "semanticRoleTokenId": "semantic.success",
+        "states": {
+          "default": {
+            "paletteStep": "09"
+          },
+          "hover": {
+            "paletteStep": "08"
+          },
+          "active": {
+            "paletteStep": "10"
+          },
+          "disabled": {
+            "paletteStep": "05"
+          }
+        }
+      },
+      {
+        "role": "warning",
+        "semanticRoleTokenId": "semantic.warning",
+        "states": {
+          "default": {
+            "paletteStep": "09"
+          },
+          "hover": {
+            "paletteStep": "08"
+          },
+          "active": {
+            "paletteStep": "10"
+          },
+          "disabled": {
+            "paletteStep": "05"
+          }
+        }
+      },
+      {
+        "role": "destructive",
+        "semanticRoleTokenId": "semantic.destructive",
+        "states": {
+          "default": {
+            "paletteStep": "09"
+          },
+          "hover": {
+            "paletteStep": "08"
+          },
+          "active": {
+            "paletteStep": "10"
+          },
+          "disabled": {
+            "paletteStep": "04"
+          }
+        }
+      },
+      {
+        "role": "info",
+        "semanticRoleTokenId": "semantic.info",
+        "states": {
+          "default": {
+            "paletteStep": "09"
+          },
+          "hover": {
+            "paletteStep": "08"
+          },
+          "active": {
+            "paletteStep": "10"
+          },
+          "disabled": {
+            "paletteStep": "04"
+          }
+        }
+      },
+      {
+        "role": "link",
+        "semanticRoleTokenId": "semantic.link",
+        "states": {
+          "default": {
+            "paletteStep": "09"
+          },
+          "hover": {
+            "paletteStep": "08"
+          },
+          "active": {
+            "paletteStep": "10"
+          }
+        }
+      }
+    ],
+    "buildBoundary": "npm run fx -- theme build regenerates contracts from the existing CSS truth source; it does not create a theme or change component APIs."
+  },
+  "commands": {
+    "search": "npm run tokens -- search <query> [--json]",
+    "resolve": "npm run tokens -- resolve <semantic.id|--css-var> [--json]",
+    "component": "npm run tokens -- component <name> [--json]"
+  }
+}

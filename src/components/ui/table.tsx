@@ -176,7 +176,7 @@ function TableHead({
       data-slot="table-head"
       data-sorted={sorted || undefined}
         className={cn(
-        "group/th relative h-(--fx-table-row-height-default) min-w-[96px] px-(--fx-control-px-xs) align-middle whitespace-nowrap text-foreground/88 group-data-[density=compact]/table:h-(--fx-table-row-height-compact) group-data-[density=comfortable]/table:h-(--fx-table-row-height-comfortable)",
+        "group/th relative h-(--fx-table-row-height-default) min-w-[96px] px-(--fx-control-px-xs) align-middle whitespace-nowrap font-medium text-foreground/88 group-data-[density=compact]/table:h-(--fx-table-row-height-compact) group-data-[density=comfortable]/table:h-(--fx-table-row-height-comfortable)",
         selectionCellClass,
         selectionHeadInnerClass,
         alignClass(align),

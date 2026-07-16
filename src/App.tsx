@@ -14,7 +14,7 @@ import {
   websiteRulePopoverSlots,
   websiteRuleValueListSlots
 } from "@/components/fx/website-rule-panel";
-import { WebsiteCardContainer, websiteCardContainerSlots } from "@/components/fx/website-card-container";
+import { WebsiteCardContainer, WebsiteCardContainerPreview, websiteCardContainerSlots } from "@/components/fx/website-card-container";
 import { WebsiteSpacingRhythm, websiteSpacingRhythmSlots } from "@/components/fx/website-spacing-rhythm";
 import { ActionRow as FxActionRow } from "@/components/fx/page-actions";
 import {
@@ -23,9 +23,11 @@ import {
   LinkIcon,
   PlusIcon,
   EyeIcon,
+  EyeOffIcon,
   PencilIcon,
   Trash2Icon,
   LockIcon,
+  MailIcon,
   ListIcon,
   LayoutColumnsIcon,
   RefreshIcon,
@@ -166,6 +168,7 @@ import { AgentSurface, type AgentSurfaceEvent, type AgentSurfaceSchema } from "@
 import { NavRail, NavRailItem, NavMenu, NavMenuHeader, NavMenuSearch, NavMenuList, NavMenuGroupLabel, NavMenuItem, NavMenuFooter } from "@/components/fx/nav-menu";
 import { TopBar, TopBarBrand, TopBarDivider, TopBarApps, TopBarSearch, TopBarActions, TopBarIconButton } from "@/components/fx/top-bar";
 import { TimePicker } from "@/components/fx/time-picker";
+import { DatePicker } from "@/components/fx/date-picker";
 import { Progress } from "@/components/ui/progress";
 import { CrmAppShell } from "@/components/recipes/crm-app-shell";
 import { DataTable, type Column } from "@/components/recipes/data-table";
@@ -250,10 +253,13 @@ import { Toggle } from "@/components/ui/toggle";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   Select,
+  SelectClear,
+  SelectControl,
   SelectContent,
   SelectGroup,
   SelectItem,
   SelectLabel,
+  SelectMultiValue,
   SelectTrigger,
   SelectValue } from
 "@/components/ui/select";
@@ -320,7 +326,7 @@ const defaultThemeConfig: ThemeConfig = {
   textScale: "standard",
   borderRadius: "md",
   borderWidth: "thin",
-  shadowLevel: "low",
+  shadowLevel: "medium",
   animationStyle: "smooth"
 };
 
@@ -493,6 +499,8 @@ const themeTextScaleValues: Record<ThemeTextScale, Record<string, string>> = {
 const themeShadowValues: Record<ThemeShadowLevel, Record<string, string>> = {
   none: {
     "--fx-shadow-color": "transparent",
+    "--fx-shadow-color-soft": "transparent",
+    "--fx-shadow-color-faint": "transparent",
     "--fx-shadow-l1": "none",
     "--fx-shadow-l2": "none",
     "--fx-shadow-l3": "none",
@@ -500,24 +508,30 @@ const themeShadowValues: Record<ThemeShadowLevel, Record<string, string>> = {
   },
   low: {
     "--fx-shadow-color": "oklch(from var(--fx-neutrals-20) l c h / 0.08)",
-    "--fx-shadow-l1": "0px 6px 18px -8px var(--fx-shadow-color)",
-    "--fx-shadow-l2": "0px 10px 30px -12px var(--fx-shadow-color)",
-    "--fx-shadow-l3": "0px 18px 48px -16px var(--fx-shadow-color)",
-    "--fx-shadow-l1-up": "0px -6px 18px -8px var(--fx-shadow-color)"
+    "--fx-shadow-color-soft": "oklch(from var(--fx-neutrals-20) l c h / 0.05)",
+    "--fx-shadow-color-faint": "oklch(from var(--fx-neutrals-20) l c h / 0.03)",
+    "--fx-shadow-l1": "0px 2px 6px -2px var(--fx-shadow-color), 0px 4px 10px -4px var(--fx-shadow-color-soft)",
+    "--fx-shadow-l2": "0px 4px 12px -4px var(--fx-shadow-color), 0px 8px 20px -2px var(--fx-shadow-color-soft), 0px 12px 28px 0px var(--fx-shadow-color-faint)",
+    "--fx-shadow-l3": "0px 6px 16px -8px var(--fx-shadow-color), 0px 9px 28px 0px var(--fx-shadow-color-soft), 0px 12px 48px 16px var(--fx-shadow-color-faint)",
+    "--fx-shadow-l1-up": "0px -2px 6px -2px var(--fx-shadow-color), 0px -4px 10px -4px var(--fx-shadow-color-soft)"
   },
   medium: {
     "--fx-shadow-color": "oklch(from var(--fx-neutrals-20) l c h / 0.18)",
-    "--fx-shadow-l1": "0px 4px 10px -2px var(--fx-shadow-color)",
-    "--fx-shadow-l2": "0px 8px 20px -6px var(--fx-shadow-color)",
-    "--fx-shadow-l3": "0px 14px 36px -10px var(--fx-shadow-color)",
-    "--fx-shadow-l1-up": "0px -4px 12px -4px var(--fx-shadow-color)"
+    "--fx-shadow-color-soft": "oklch(from var(--fx-neutrals-20) l c h / 0.10)",
+    "--fx-shadow-color-faint": "oklch(from var(--fx-neutrals-20) l c h / 0.05)",
+    "--fx-shadow-l1": "0px 2px 6px -2px var(--fx-shadow-color), 0px 4px 10px -4px var(--fx-shadow-color-soft)",
+    "--fx-shadow-l2": "0px 4px 12px -4px var(--fx-shadow-color), 0px 8px 20px -2px var(--fx-shadow-color-soft), 0px 12px 28px 0px var(--fx-shadow-color-faint)",
+    "--fx-shadow-l3": "0px 6px 16px -8px var(--fx-shadow-color), 0px 9px 28px 0px var(--fx-shadow-color-soft), 0px 12px 48px 16px var(--fx-shadow-color-faint)",
+    "--fx-shadow-l1-up": "0px -2px 6px -2px var(--fx-shadow-color), 0px -4px 10px -4px var(--fx-shadow-color-soft)"
   },
   high: {
     "--fx-shadow-color": "oklch(from var(--fx-neutrals-20) l c h / 0.22)",
-    "--fx-shadow-l1": "0px 6px 18px -8px var(--fx-shadow-color)",
-    "--fx-shadow-l2": "0px 14px 36px -14px var(--fx-shadow-color)",
-    "--fx-shadow-l3": "0px 24px 64px -20px var(--fx-shadow-color)",
-    "--fx-shadow-l1-up": "0px -8px 22px -12px var(--fx-shadow-color)"
+    "--fx-shadow-color-soft": "oklch(from var(--fx-neutrals-20) l c h / 0.12)",
+    "--fx-shadow-color-faint": "oklch(from var(--fx-neutrals-20) l c h / 0.06)",
+    "--fx-shadow-l1": "0px 2px 6px -2px var(--fx-shadow-color), 0px 4px 10px -4px var(--fx-shadow-color-soft)",
+    "--fx-shadow-l2": "0px 4px 12px -4px var(--fx-shadow-color), 0px 8px 20px -2px var(--fx-shadow-color-soft), 0px 12px 28px 0px var(--fx-shadow-color-faint)",
+    "--fx-shadow-l3": "0px 6px 16px -8px var(--fx-shadow-color), 0px 9px 28px 0px var(--fx-shadow-color-soft), 0px 12px 48px 16px var(--fx-shadow-color-faint)",
+    "--fx-shadow-l1-up": "0px -2px 6px -2px var(--fx-shadow-color), 0px -4px 10px -4px var(--fx-shadow-color-soft)"
   }
 };
 
@@ -729,11 +743,35 @@ type ComponentsManifest = {
   }[];
 };
 
+type DesignTokenManifestEntry = {
+  name: string;
+  value: string;
+  category: string;
+  usage: string;
+};
+
 type DesignTokensManifest = {
   updatedAt: string;
-  primitive: unknown[];
-  semantic: unknown[];
+  primitive: DesignTokenManifestEntry[];
+  semantic: DesignTokenManifestEntry[];
   componentUsage: unknown[];
+  typography: {
+    roles: {
+      id: string;
+      utility: string;
+      tailwind: [string, string];
+      usage: string;
+      avoid: string;
+    }[];
+    conventions: {
+      id: string;
+      rule: string;
+      usage: string;
+      tailwind?: string[];
+      prohibited?: string[];
+      examples?: string[];
+    }[];
+  };
 };
 
 type DocSiteManifest = {
@@ -964,6 +1002,10 @@ type ComponentPlaygroundManifestProp = {
     hiddenWhen?: Record<string, string | string[]>;
   }[];
   hasAll?: boolean;
+  owner?: string | string[];
+  group?: "props" | "tokens";
+  defaultVisible?: boolean;
+  defaultOrder?: number;
   disabledWhen?: Record<string, string | string[]>;
   hiddenWhen?: Record<string, string | string[]>;
 } | {
@@ -973,6 +1015,10 @@ type ComponentPlaygroundManifestProp = {
   propName: string;
   type: "text";
   bilingual?: boolean;
+  owner?: string | string[];
+  group?: "props" | "tokens";
+  defaultVisible?: boolean;
+  defaultOrder?: number;
   disabledWhen?: Record<string, string | string[]>;
   hiddenWhen?: Record<string, string | string[]>;
 };
@@ -983,6 +1029,32 @@ type ComponentPlaygroundManifestComponent = {
   playgroundComponent: string;
   initial: Record<string, string>;
   guidanceKey?: string;
+  workbench?: {
+    inspectSlot: string;
+    nodes: {
+      key: string;
+      zh: string;
+      en: string;
+      component: string;
+      kind?: "component" | "tokens" | "states";
+      hiddenWhen?: Record<string, string | string[]>;
+    }[];
+    stateAssignments?: {
+      key: string;
+      zh: string;
+      en: string;
+      propertyZh: string;
+      propertyEn: string;
+      token: string;
+      cssVar: string;
+      preview: { key: string; value: string };
+    }[];
+    checks: {
+      key: string;
+      zh: string;
+      en: string;
+    }[];
+  };
   scenarios?: {
     id: string;
     zh: string;
@@ -1072,6 +1144,13 @@ const projectGraph = JSON.parse(projectGraphRaw) as ProjectGraph;
 const systemRelations = JSON.parse(systemRelationsRaw) as SystemRelationsManifest;
 const governancePagesManifest = JSON.parse(governancePagesManifestRaw) as GovernancePagesManifest;
 const websiteStandardsManifest = JSON.parse(websiteStandardsManifestRaw) as WebsiteStandardsManifest;
+
+const semanticTokenPaletteNames = new Map(
+  designTokensManifest.semantic.map((token) => {
+    const paletteReference = token.value.match(/var\(--fx-([^)]+)\)/)?.[1] ?? token.name.replace(/^--/, "");
+    return [token.name.replace(/^--/, ""), paletteReference];
+  })
+);
 
 function componentPlaygroundCondition(condition?: Record<string, string | string[]>) {
   return condition ? (v: Record<string, string>) => Object.entries(condition).every(([key, value]) => Array.isArray(value) ? value.includes(v[key]) : v[key] === value) : undefined;
@@ -1374,6 +1453,7 @@ const docsNav = [
   { label: "输入框", labelEn: "Input", href: "#input" },
   { label: "选择器", labelEn: "Select", href: "#select" },
   { label: "时间选择器", labelEn: "Time Picker", href: "#time-picker" },
+  { label: "日期选择器", labelEn: "Date Picker", href: "#date-picker" },
   { label: "复选框", labelEn: "Checkbox", href: "#checkbox" },
   { label: "单选组", labelEn: "Radio Group", href: "#radio-group" },
   { label: "开关", labelEn: "Switch", href: "#switch" },
@@ -1532,7 +1612,7 @@ function ComponentIndexGrid({ sections, lang }: {sections: typeof componentIndex
   return (
     <div className="grid gap-4 lg:grid-cols-2">
       {sections.map((section) =>
-      <Card key={section.title} size="sm" elevated>
+      <WebsiteCardContainer key={section.title} size="sm">
         <CardHeader>
           <div>
             <CardTitle>{lang === "en" ? section.titleEn : section.title}</CardTitle>
@@ -1556,7 +1636,7 @@ function ComponentIndexGrid({ sections, lang }: {sections: typeof componentIndex
             )}
           </div>
         </CardContent>
-      </Card>
+      </WebsiteCardContainer>
       )}
     </div>);
 
@@ -1669,6 +1749,7 @@ const tokenColorsAnchors = [
 { label: "语义颜色", labelEn: "Semantic Colors", href: "#tokens-colors-semantic" }];
 
 const tokenTypographyAnchors = [
+{ label: "文本角色", labelEn: "Text Roles", href: "#tokens-typography-roles" },
 { label: "字号", labelEn: "Size", href: "#tokens-typography-size" },
 { label: "字重", labelEn: "Weight", href: "#tokens-typography-weight" },
 { label: "字体", labelEn: "Family", href: "#tokens-typography-family" }];
@@ -1749,7 +1830,6 @@ const agentSurfaceAnchors = [
 
 
 const inputAnchors = [
-{ label: "搜索归属", href: "#input-search-boundary" },
 { label: "使用方式", href: "#input-usage" },
 { label: "API", href: "#input-props" },
 { label: "语义 DOM", href: "#input-semantic-dom" },
@@ -1757,149 +1837,146 @@ const inputAnchors = [
 
 
 const inputImportCodeForPlayground = `import { Input, InputAction, InputAddon, InputAffix, InputGroup } from "@/components/ui/input"
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { ChevronDownIcon, SearchIcon } from "@/lib/icons"`;
-
-const inputCapabilityOptions = [
-{ value: "basic", label: "基础", labelEn: "Basic", intent: "用于普通单行文本录入。", constraint: "基础能力可以直接使用 Input；需要字段标签时放进 Field。" },
-{ value: "search", label: "搜索", labelEn: "Search", intent: "用于检索信息，可搭配搜索图标、筛选范围或提交动作。", constraint: "搜索能力的组合统一由 InputGroup 承载，不在 Input 内部绝对定位。" }];
-
-const inputCompositionOptions = [
-{ value: "none", label: "无", labelEn: "None", intent: "只展示输入框本体。", constraint: "无组合时直接用 Input，不额外包 InputGroup。" },
-{ value: "icon", label: "图标", labelEn: "Icon", intent: "用图标提示输入含义，例如搜索、日期。", constraint: "图标放进 InputAffix，不改 Input 内边距。" },
-{ value: "text", label: "文字", labelEn: "Text", intent: "用于单位、协议、地区等固定文字前后缀。", constraint: "固定文字块用 InputAddon，轻量单位也可用 InputAffix。" },
-{ value: "filter", label: "筛选", labelEn: "Filter", intent: "用于搜索前的范围选择或类型筛选。", constraint: "筛选入口用 InputAddon，搜索动作可用 InputAction。" }];
-
-const inputPositionOptions = [
-{ value: "left", label: "左", labelEn: "Left", intent: "前置内容用于先说明输入含义或范围。", constraint: "用 side=\"start\"，不要手写定位。" },
-{ value: "right", label: "右", labelEn: "Right", intent: "后置内容用于单位、动作或补充标记。", constraint: "用 side=\"end\"，不要手写定位。" }];
-
-const inputStateOptions = [
-{ value: "normal", label: "默认", labelEn: "Default", intent: "默认可输入状态。", constraint: "不额外传状态 prop。" },
-{ value: "hover", label: "悬停", labelEn: "Hover", intent: "鼠标经过时提示当前可交互。", constraint: "悬停是原生交互态；业务代码不手写边框色模拟。" },
-{ value: "focus", label: "聚焦", labelEn: "Focus", intent: "输入框获得键盘焦点，显示边框反馈。", constraint: "聚焦由 focus-visible / focus-within 驱动；不要在调用处覆盖边框样式。" },
-{ value: "typing", label: "输入中", labelEn: "Typing", intent: "用户正在输入，字段已有临时内容。", constraint: "使用 value / defaultValue 表达输入内容；清除动作放 InputAction。" },
-{ value: "filled", label: "回填", labelEn: "Filled", intent: "已有系统回填或历史保存值。", constraint: "用 value / defaultValue 表达已填内容，不改 placeholder 样式假装。" },
-{ value: "disabled", label: "禁用", labelEn: "Disabled", intent: "字段当前不可编辑且无可提交值。", constraint: "使用 disabled，不用 opacity 或 pointer-events 假装禁用。" },
-{ value: "filled-disabled", label: "回填并禁用", labelEn: "Filled disabled", intent: "展示已有值，但当前不可编辑。", constraint: "同时使用 value / defaultValue 与 disabled。" },
-{ value: "invalid", label: "报错", labelEn: "Error", intent: "字段校验失败时提示用户修正。", constraint: "Input 设置 aria-invalid，字段错误文案放 FieldError。" }];
-
-const inputSizeOptions = [
-{ value: "xs", label: "超小24", labelEn: "XS 24", intent: "用于高密度表格、筛选条等区域。", constraint: "只传 size=\"xs\"，不覆盖高度。" },
-{ value: "sm", label: "默认28", labelEn: "Default 28", intent: "用于常规表单、筛选栏和工具栏，是 Input 默认尺寸。", constraint: "默认尺寸可省略 size；同一行尺寸一致。" },
-{ value: "md", label: "中32", labelEn: "Medium 32", intent: "用于更宽松的表单或需要更大点击目标的位置。", constraint: "只传 size=\"md\"，不覆盖高度。" }];
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"`;
 
 function buildInputPlaygroundCode(values: Record<string, string>) {
   const sizeProp = values.size === "sm" ? "" : ` size="${values.size}"`;
-  const placeholder = values.capability === "search" ? "搜索" : "请输入";
-  const hasValue = values.state === "typing" || values.state === "filled" || values.state === "filled-disabled";
-  const valueText = values.state === "typing" ? values.capability === "search" ? "北京" : "输入内容" : "北京纷享科技有限公司";
-  const valueProp = hasValue ? ` defaultValue="${valueText}"` : "";
-  const disabledProp = values.state === "disabled" || values.state === "filled-disabled" ? " disabled" : "";
-  const invalidProp = values.state === "invalid" ? " aria-invalid" : "";
-  const inputLine = `<Input${sizeProp}${valueProp}${disabledProp}${invalidProp} placeholder="${placeholder}" />`;
-  const side = values.position === "right" ? "end" : "start";
-
-  if (values.composition === "none") return inputLine;
-
-  if (values.composition === "icon") {
-    return `<InputGroup${sizeProp}>
-  ${side === "start" ? `<InputAffix side="start">
-    <SearchIcon />
-  </InputAffix>
-  ${inputLine}` : `${inputLine}
-  <InputAffix>
-    <SearchIcon />
-  </InputAffix>`}
+  const passwordToggle = values.trailing === "password-toggle";
+  const searchClear = values.type === "search";
+  const nativeEmailValidation = values.type === "email";
+  const usesState = passwordToggle || searchClear || nativeEmailValidation;
+  const typeProp = passwordToggle ? ' type={showPassword ? "text" : "password"}' : values.type === "text" ? "" : ` type="${values.type}"`;
+  const disabledProp = values.state === "disabled" ? " disabled" : "";
+  const invalidProp = nativeEmailValidation ? ` aria-invalid={emailInvalid${values.state === "invalid" ? " || true" : ""} || undefined}` : values.state === "invalid" ? " aria-invalid" : "";
+  const idProp = values.field === "true" ? " id=\"input-recipe\"" : "";
+  const emailValidationProps = nativeEmailValidation ? " value={email} onChange={(event) => { setEmail(event.target.value); if (emailTouched) setEmailInvalid(event.currentTarget.validity.typeMismatch) }} onBlur={(event) => { setEmailTouched(true); setEmailInvalid(event.currentTarget.validity.typeMismatch) }}" : "";
+  const inputLine = `<Input${idProp}${sizeProp}${typeProp}${searchClear ? " value={query} onChange={(event) => setQuery(event.target.value)}" : ""}${emailValidationProps}${disabledProp}${invalidProp} placeholder="${values.placeholder}" />`;
+  const leading = values.leading === "search-icon" ? `  <InputAffix side="start"><SearchIcon /></InputAffix>\n` :
+    values.leading === "email-icon" ? `  <InputAffix side="start"><MailIcon /></InputAffix>\n` :
+    values.leading === "text" ? `  <InputAffix side="start">${values.leadingText}</InputAffix>\n` :
+    values.leading === "addon" ? `  <InputAddon side="start">${values.leadingText}</InputAddon>\n` : "";
+  const clearAction = searchClear ? `\n  {query ? <InputAction aria-label="清除搜索" onClick={() => setQuery("")}><XIcon /></InputAction> : null}` : "";
+  const trailing = values.trailing === "search-icon" ? `\n  <InputAffix side="end"><SearchIcon /></InputAffix>${clearAction}` :
+    values.trailing === "text" ? `\n  <InputAffix side="end">${values.trailingText}</InputAffix>` :
+    passwordToggle ? `\n  <InputAction aria-label={showPassword ? "隐藏密码" : "显示密码"} onClick={() => setShowPassword((visible) => !visible)}>{showPassword ? <EyeOffIcon /> : <EyeIcon />}</InputAction>` :
+    values.trailing === "primary" ? `${clearAction}\n  <InputAction variant="primary">${values.actionLabel}</InputAction>` : clearAction;
+  const control = values.leading === "none" && values.trailing === "none" && !searchClear ? inputLine : `<InputGroup${sizeProp}>
+${leading}  ${inputLine}${trailing}
 </InputGroup>`;
-  }
+  const usesField = values.field === "true";
+  const fieldInvalid = values.state === "invalid" ? " data-invalid" : nativeEmailValidation ? " data-invalid={emailInvalid || undefined}" : "";
+  const fieldFeedback = values.state === "invalid" ? "<FieldError>该项不能为空</FieldError>" : nativeEmailValidation ? "{emailInvalid ? <FieldError>请输入有效的邮箱地址。</FieldError> : <FieldDescription>字段辅助说明</FieldDescription>}" : "<FieldDescription>字段辅助说明</FieldDescription>";
+  const field = usesField ? `<Field${fieldInvalid}>
+  <FieldLabel htmlFor="input-recipe">字段名称</FieldLabel>
+  ${control}
+  ${fieldFeedback}
+</Field>` : control;
+  const tokenOverrides = [
+    values.surfaceToken !== "surface" ? `  "--surface": "var(--${values.surfaceToken})",` : "",
+    values.borderToken !== "input" ? `  "--input": "var(--${values.borderToken})",` : "",
+    values.placeholderToken !== "foreground-disabled" ? `  "--foreground-disabled": "var(--${values.placeholderToken})",` : "",
+  ].filter(Boolean);
 
-  if (values.composition === "text") {
-    return `<InputGroup${sizeProp}>
-  ${side === "start" ? `<InputAddon>http://</InputAddon>
-  ${inputLine}` : `${inputLine}
-  <InputAddon side="end">PX</InputAddon>`}
-</InputGroup>`;
-  }
+  const iconImports = [
+    values.leading === "search-icon" || values.trailing === "search-icon" ? "SearchIcon" : "",
+    values.leading === "email-icon" ? "MailIcon" : "",
+    passwordToggle ? "EyeIcon, EyeOffIcon" : "",
+    searchClear ? "XIcon" : "",
+  ].filter(Boolean).join(", ");
+  return `import${usesState ? " { useState }" : " type { CSSProperties }"} from "react"
+${usesState ? 'import type { CSSProperties } from "react"\n' : ""}${inputImportCodeForPlayground}
+${iconImports ? `import { ${iconImports} } from "@/lib/icons"` : ""}
 
-  return `<InputGroup${sizeProp}>
-  <InputAddon>全部 <ChevronDownIcon /></InputAddon>
-  ${inputLine}
-  <InputAction aria-label="搜索">
-    <SearchIcon />
-  </InputAction>
-</InputGroup>`;
+const inputRecipeTokens = {
+${tokenOverrides.join("\n")}
+} as CSSProperties
+
+export function InputRecipe() {
+${passwordToggle ? "  const [showPassword, setShowPassword] = useState(false)\n" : ""}${searchClear ? "  const [query, setQuery] = useState(\"\")\n" : ""}${nativeEmailValidation ? "  const [email, setEmail] = useState(\"\")\n  const [emailTouched, setEmailTouched] = useState(false)\n  const [emailInvalid, setEmailInvalid] = useState(false)\n" : ""}  return <div style={inputRecipeTokens}>${field.includes("\n") ? `\n${field.split("\n").map((line) => `    ${line}`).join("\n")}\n  ` : field}</div>
+}`;
 }
 
+const inputPlaygroundManifest = componentPlaygroundsManifest.components.input;
 const inputPlaygroundConfig = {
-  props: [
-  {
-    key: "capability",
-    zh: "能力",
-    en: "Capability",
-    propName: "capability",
-    type: "segment" as const,
-    options: inputCapabilityOptions
+  props: componentPlaygroundPropsFromManifest(inputPlaygroundManifest),
+  initial: inputPlaygroundManifest.initial,
+  guidanceKey: inputPlaygroundManifest.guidanceKey,
+  workbench: {
+    inspectSlot: inputPlaygroundManifest.workbench!.inspectSlot,
+    nodes: inputPlaygroundManifest.workbench!.nodes.map((node) => ({
+      ...node,
+      hiddenWhen: componentPlaygroundCondition(node.hiddenWhen),
+    })),
+    stateAssignments: inputPlaygroundManifest.workbench!.stateAssignments?.map((assignment) => ({
+      ...assignment,
+      palette: semanticTokenPaletteNames.get(assignment.token) ?? assignment.token,
+    })),
+    checks: inputPlaygroundManifest.workbench!.checks,
+    validate: (values: Record<string, string>) => {
+      const semanticTokens = new Set(["surface", "background", "muted", "card", "input", "border", "border-strong", "primary", "destructive", "foreground-disabled", "muted-foreground", "foreground-secondary"]);
+      const stateAssignments = inputPlaygroundManifest.workbench!.stateAssignments ?? [];
+      return {
+        realDom: { passed: true, detail: "预览直接渲染仓库内 Input 组件。", detailEn: "The preview renders the repository Input directly." },
+        structure: { passed: true, detail: `前置 ${values.leading} / 后置 ${values.trailing}`, detailEn: `Leading ${values.leading} / trailing ${values.trailing}` },
+        tokens: { passed: [values.surfaceToken, values.borderToken, values.placeholderToken].every((token) => semanticTokens.has(token)), detail: "三个槽位均映射到语义 Token。", detailEn: "All three slots map to semantic tokens." },
+        stateSemantics: { passed: stateAssignments.every((assignment) => semanticTokens.has(assignment.token)), detail: `${stateAssignments.length} 条状态映射来自 Input 源码契约。`, detailEn: `${stateAssignments.length} state mappings come from the Input source contract.` },
+        accessibility: { passed: true, detail: values.type === "search" ? "搜索输入在存在关键词时自动显示清除按钮，并带有 aria-label。" : values.trailing === "password-toggle" ? "密码显隐按钮会同步更新 aria-label。" : "当前没有图标动作节点。", detailEn: values.type === "search" ? "Search inputs automatically render a labelled clear action when a query exists." : values.trailing === "password-toggle" ? "The password visibility action updates its aria-label with state." : "No icon action node." },
+        code: { passed: true, detail: "结构 JSON 同时驱动预览和组件草稿。", detailEn: "The same structure state drives preview and component draft." },
+      };
+    },
   },
-  {
-    key: "composition",
-    zh: "组合方式",
-    en: "Composition",
-    propName: "composition",
-    type: "segment" as const,
-    options: inputCompositionOptions
-  },
-  {
-    key: "position",
-    zh: "位置",
-    en: "Position",
-    propName: "side",
-    type: "segment" as const,
-    disabledWhen: (values: Record<string, string>) => values.composition === "none" || values.composition === "filter",
-    options: inputPositionOptions
-  },
-  {
-    key: "state",
-    zh: "交互状态",
-    en: "State",
-    propName: "state",
-    type: "segment" as const,
-    options: inputStateOptions
-  },
-  {
-    key: "size",
-    zh: "尺寸",
-    en: "Size",
-    propName: "size",
-    type: "segment" as const,
-    options: inputSizeOptions
-  }],
-  initial: { capability: "basic", composition: "none", position: "left", state: "normal", size: "sm" },
-  guidanceKey: "capability",
-  onValueChange: (next: Record<string, string>, key: string) => {
-    if (key === "composition" && (next.composition === "none" || next.composition === "filter")) {
-      return { ...next, position: "left" };
+  onValueChange: (next: Record<string, string>, key: string, value: string) => {
+    if (key === "type") {
+      if (value === "number") {
+        next.leading = ["search-icon", "email-icon"].includes(next.leading) ? "none" : next.leading;
+        next.trailing = ["search-icon", "primary", "password-toggle"].includes(next.trailing) ? "none" : next.trailing;
+      } else if (value === "email") {
+        next.leading = "email-icon";
+        next.trailing = "none";
+      } else if (value === "password") {
+        next.leading = "none";
+        next.trailing = "password-toggle";
+      } else if (value === "search") {
+        next.leading = "search-icon";
+        next.trailing = ["search-icon", "primary"].includes(next.trailing) ? next.trailing : "none";
+      } else {
+        next.leading = ["email-icon", "search-icon"].includes(next.leading) ? "none" : next.leading;
+        next.trailing = ["search-icon", "primary", "password-toggle"].includes(next.trailing) ? "none" : next.trailing;
+      }
+    } else if (key === "leading" && value === "search-icon" && next.trailing === "search-icon") {
+      next.trailing = "none";
+    } else if (key === "trailing" && value === "search-icon") {
+      next.leading = "none";
+    } else if (key === "disabled") {
+      next.invalid = value === "true" ? "false" : next.invalid;
+      next.state = value === "true" ? "disabled" : next.state === "disabled" ? "normal" : next.state;
+    } else if (key === "invalid") {
+      next.disabled = value === "true" ? "false" : next.disabled;
+      next.state = value === "true" ? "invalid" : next.state === "invalid" ? "normal" : next.state;
+    } else if (key === "state") {
+      next.disabled = value === "disabled" ? "true" : "false";
+      next.invalid = value === "invalid" ? "true" : "false";
     }
     return next;
   },
   renderOne: (values: Record<string, string>) => <InputPreview values={values} />,
   genCode: (values: Record<string, string>) => {
-    return `${inputImportCodeForPlayground}\n\n${buildInputPlaygroundCode(values)}`;
+    return buildInputPlaygroundCode(values);
   }
 };
 
 
 const inputPropRows = [
 { prop: "size", type: "\"xs\" | \"sm\" | \"md\"", defaultValue: "sm", desc: "输入框尺寸：xs=24px、sm=28px（默认）、md=32px" },
-{ prop: "type", type: "string", defaultValue: "text", desc: "原生 input 类型（text / number / password / email …）" },
+{ prop: "type", type: "string", defaultValue: "text", desc: "原生 input 类型（text / number / email / password / search …）" },
 { prop: "disabled", type: "boolean", defaultValue: "false", desc: "禁用输入，触发禁用态样式" },
 { prop: "aria-invalid", type: "boolean", defaultValue: "false", desc: "标记当前值未通过校验，触发错误态样式" },
 { prop: "placeholder", type: "string", defaultValue: "—", desc: "占位提示文字" },
 { prop: "className", type: "string", defaultValue: "—", desc: "在保留基础样式的前提下追加 Tailwind 类名" },
 { prop: "InputGroup", type: "组件", defaultValue: "—", desc: "输入组合容器，承载前后缀、搜索按钮、固定标签等" },
 { prop: "InputAddon", type: "组件", defaultValue: "side=start", desc: "前后置固定标签块，例如 http://、PX、全部" },
-{ prop: "InputAffix", type: "组件", defaultValue: "side=end", desc: "轻量前后缀内容，例如图标、%、清除提示" },
-{ prop: "InputAction", type: "button", defaultValue: "type=button", desc: "输入框内动作按钮，例如搜索、清除" },
+{ prop: "InputAffix", type: "组件", defaultValue: "side=end", desc: "轻量前后缀内容，例如图标、¥、清除提示" },
+{ prop: "InputAction", type: "button + variant=icon | primary", defaultValue: "type=button, variant=icon", desc: "输入框内动作按钮；icon 用于图标搜索/清除，primary 用于紧贴输入框的主搜索按钮" },
 { prop: "...props", type: "Omit<React.ComponentProps<\"input\">, \"size\">", defaultValue: "—", desc: "透传所有原生 input 属性（value / onChange / name / required 等），size 由组件尺寸接管" }];
 
 
@@ -1908,7 +1985,7 @@ const inputSemanticDomRows = [
 { part: "data-slot=\"input-group\"", desc: "输入组合容器，统一持有边框、焦点、禁用和错误态" },
 { part: "data-slot=\"input-addon\"", desc: "前后置固定标签块，带分隔线" },
 { part: "data-slot=\"input-affix\"", desc: "轻量前后缀区域，常用于图标或单位" },
-{ part: "data-slot=\"input-action\"", desc: "输入框内动作按钮，必须提供 aria-label" },
+{ part: "data-slot=\"input-action\"", desc: "输入框内动作按钮；icon 必须提供 aria-label，primary 用可见按钮文本表达动作" },
 { part: "data-slot=\"field\"", desc: "Field 字段容器，承载 label、control、description 和 error 的语义分组" },
 { part: "data-slot=\"field-label\"", desc: "字段标签，通常通过 htmlFor 与 Input 的 id 关联" },
 { part: "data-slot=\"field-error\"", desc: "字段错误文案，使用 role=\"alert\" 向辅助技术宣布错误" },
@@ -1932,21 +2009,47 @@ const selectAnchors = [
 
 const selectImportCodeForPlayground = `import {
   Select,
+  SelectClear,
+  SelectControl,
   SelectContent,
   SelectGroup,
   SelectItem,
   SelectLabel,
+  SelectMultiValue,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"`;
-
-const selectCapabilityOptions = [
-{ value: "basic", label: "基础", labelEn: "Basic", intent: "用于表单字段、设置项等标准单选。", constraint: "基础选择器由 Select + SelectTrigger + SelectContent + SelectItem 组成，不手写下拉结构。" },
-{ value: "filter", label: "筛选", labelEn: "Filter", intent: "用于列表、表格、工具栏里的条件筛选。", constraint: "筛选选择器仍使用 SelectTrigger 的尺寸能力，不在调用处覆盖高度和内边距。" }];
+const selectExtraImportCodeForPlayground = `import { Input } from "@/components/ui/input"
+import { Spinner } from "@/components/ui/spinner"
+import { useState } from "react"`;
 
 const selectOptionStructureOptions = [
 { value: "plain", label: "普通", labelEn: "Plain", intent: "选项数量少、无需分类时使用单层选项。", constraint: "SelectItem 直接放在 SelectContent 内，value 在选项集合内唯一。" },
-{ value: "grouped", label: "分组", labelEn: "Grouped", intent: "选项较多或存在类别时使用分组结构。", constraint: "分组标题用 SelectLabel，不用普通文本或禁用选项伪造。" }];
+{ value: "grouped", label: "分组", labelEn: "Grouped", intent: "选项较多或存在类别时使用分组结构。", constraint: "分组标题用 SelectLabel，不用普通文本或禁用选项伪造。" },
+{ value: "disabled", label: "禁用项", labelEn: "Disabled option", intent: "保留不可选项的可见性，例如无权限或已停用。", constraint: "禁用单项用 SelectItem disabled，不用普通文本假装。" },
+{ value: "description", label: "描述项", labelEn: "With description", intent: "选项需要补充部门、说明或范围时使用。", constraint: "描述文字放在 SelectItem 内容里，仍保持唯一 value。" },
+{ value: "other", label: "其他", labelEn: "Other", intent: "预设选项之外允许用户补充一个自定义值。", constraint: "使用 Select + Input 的受控组合；其他输入不是 Select 原生 prop。" }];
+
+const selectVariantOptions = [
+{ value: "outline", label: "有边框", labelEn: "Outline", intent: "用于表单字段、筛选条件等需要明确输入区域的位置。", constraint: "默认样式，不需要传 variant。" },
+{ value: "borderless", label: "无边框", labelEn: "Borderless", intent: "用于表格筛选、工具栏或容器内已有边界的紧凑场景。", constraint: "使用 SelectTrigger variant=\"borderless\"，不在调用处覆盖 border。" }];
+
+const selectSelectionOptions = [
+{ value: "single", label: "单选", labelEn: "Single", intent: "从互斥选项中选择一个值，是 Select 默认模式。", constraint: "默认不传 multiple；少于 5 个平铺选项可优先考虑 Radio。" },
+{ value: "multiple", label: "多选", labelEn: "Multiple", intent: "用于筛选条件中选择多个枚举值。", constraint: "使用 Select multiple 和数组 value；已选值用 SelectMultiValue 展示，超出 maxVisible 折叠为 +n。" }];
+
+const selectSearchOptions = [
+{ value: "none", label: "无", labelEn: "None", intent: "选项较少时直接浏览选择。", constraint: "不渲染搜索输入，也不要把搜索逻辑塞进 SelectItem。" },
+{ value: "local", label: "本地搜索", labelEn: "Local search", intent: "选项较多但数据已在前端时使用本地过滤。", constraint: "搜索输入作为 SelectContent 内的组合；远程搜索、人员选择沉淀为 fx 组合组件。" }];
+
+const selectClearableOptions = [
+{ value: "false", label: "否", labelEn: "No", intent: "必填或不允许回到空值时使用。", constraint: "不提供清除动作。" },
+{ value: "true", label: "是", labelEn: "Yes", intent: "允许用户撤销已选值，回到 placeholder。", constraint: "清除用受控 value + SelectControl + SelectClear，清除按钮与 trigger 保持同级。" }];
+
+const selectOtherInputOptions = [
+{ value: "none", label: "无", labelEn: "None", intent: "只允许从已有选项中选择。", constraint: "不渲染额外输入框。" },
+{ value: "optional", label: "选填", labelEn: "Optional", intent: "选择其他后可补充说明；不填也可提交其他。", constraint: "选填直接回填其他，不强制校验输入框。" },
+{ value: "required", label: "必填", labelEn: "Required", intent: "选择其他后必须补充具体值。", constraint: "必填校验放在输入框 aria-invalid / FieldError，不发明 Select prop。" }];
 
 const selectValueStateOptions = [
 { value: "placeholder", label: "占位", labelEn: "Placeholder", intent: "尚未选择时显示提示文案。", constraint: "占位文案放 SelectValue placeholder，不新增空值 SelectItem。" },
@@ -1957,42 +2060,149 @@ const selectStateOptions = [
 { value: "hover", label: "悬停", labelEn: "Hover", intent: "鼠标经过时提示可点击。", constraint: "悬停是原生交互态；调试台只用 data-state 预览，不作为业务 API。" },
 { value: "focus", label: "聚焦", labelEn: "Focus", intent: "键盘焦点或点击聚焦时显示边框反馈。", constraint: "聚焦由 focus-visible 驱动，不在调用处覆盖边框。" },
 { value: "open", label: "展开", labelEn: "Open", intent: "下拉浮层打开，用户正在查看选项。", constraint: "打开态由 Select 自身状态驱动；不要用固定展示的 div 替代浮层。" },
+{ value: "searching", label: "输入搜索", labelEn: "Searching", intent: "用户正在搜索选项。", constraint: "仅在搜索=本地搜索时展示；远程搜索不塞进基础 Select。" },
+{ value: "empty", label: "空结果", labelEn: "Empty", intent: "搜索后没有可选结果。", constraint: "用空状态文案反馈，不渲染空白浮层。" },
+{ value: "loading", label: "加载", labelEn: "Loading", intent: "选项仍在加载中。", constraint: "用 Spinner + 文案组合；远程数据逻辑由上层组合组件持有。" },
 { value: "invalid", label: "报错", labelEn: "Error", intent: "字段校验失败，需要用户重新选择。", constraint: "在 SelectTrigger 上设置 aria-invalid，并用 FieldError 承载错误文案。" },
 { value: "disabled", label: "禁用", labelEn: "Disabled", intent: "当前不可选择。", constraint: "使用 Select 的 disabled，不用 opacity 或 pointer-events 假装禁用。" }];
 
 const selectSizeOptions = [
-{ value: "xs", label: "超小24", labelEn: "XS 24", intent: "用于高密度表格筛选、紧凑工具栏。", constraint: "只传 size=\"xs\"，不覆盖高度。" },
-{ value: "sm", label: "默认28", labelEn: "Default 28", intent: "用于常规筛选和表单，是 Select 默认尺寸。", constraint: "默认尺寸可省略 size；同一行控件尺寸一致。" },
-{ value: "md", label: "中32", labelEn: "Medium 32", intent: "用于更宽松的表单或需要更大点击目标的位置。", constraint: "只传 size=\"md\"，不覆盖高度。" }];
+{ value: "xs", label: "超小24", labelEn: "XS 24", intent: "用于高密度表格筛选、紧凑工具栏。", constraint: "SelectTrigger 与 SelectContent 都传 size=\"xs\"，不覆盖高度或字号。" },
+{ value: "sm", label: "默认28", labelEn: "Default 28", intent: "用于常规筛选和表单，是 Select 默认尺寸。", constraint: "Trigger 与 Content 默认均为 sm，可同时省略 size。" },
+{ value: "md", label: "中32", labelEn: "Medium 32", intent: "用于更宽松的表单或需要更大点击目标的位置。", constraint: "SelectTrigger 与 SelectContent 都传 size=\"md\"，不覆盖高度或字号。" }];
 
 function buildSelectPlaygroundCode(values: Record<string, string>) {
   const sizeProp = values.size === "sm" ? "" : ` size="${values.size}"`;
-  const placeholder = values.capability === "filter" ? "筛选状态" : "请选择角色";
-  const defaultValueProp = values.valueState === "selected" ? ` defaultValue="${values.capability === "filter" ? "active" : "admin"}"` : "";
+  const contentSizeProp = values.size === "sm" ? "" : ` size="${values.size}"`;
+  const variantProp = values.variant === "borderless" ? ` variant="borderless"` : "";
+  const placeholder = "请选择角色";
+  const isMultiple = values.selection === "multiple";
+  const hasOtherInput = values.structure === "other" && values.otherInput !== "none";
+  const isOtherRequired = values.otherInput === "required";
+  const selectedValue = "admin";
+  const secondValue = "member";
+  const defaultValueProp = values.valueState === "selected" ? isMultiple ? ` defaultValue={["${selectedValue}", "${secondValue}", "auditor", "guest"]}` : ` defaultValue="${selectedValue}"` : "";
+  const multipleProp = isMultiple ? " multiple" : "";
   const disabledProp = values.state === "disabled" ? " disabled" : "";
   const invalidProp = values.state === "invalid" ? " aria-invalid" : "";
-  const triggerLine = `<SelectTrigger${sizeProp}${invalidProp}>
-    <SelectValue placeholder="${placeholder}" />
-  </SelectTrigger>`;
+  const searchLine = values.search === "local" ? `    <div className="p-1">
+      <Input size="xs" placeholder="搜索选项" />
+    </div>
+` : "";
+  const emptyLine = values.state === "empty" ? `    <div className="px-2 py-6 text-center text-sm text-muted-foreground">无匹配结果</div>
+` : "";
+  const loadingLine = values.state === "loading" ? `    <div className="flex items-center gap-2 px-2 py-3 text-sm text-muted-foreground">
+      <Spinner className="size-4" />
+      正在加载
+    </div>
+` : "";
+  const clearLine = values.clearable === "true" && values.valueState === "selected" ? `
+    <SelectClear aria-label="清除选择" onClick={() => setValue(${isMultiple ? "[]" : "null"})} />` : "";
+  const triggerWrapStart = values.clearable === "true" && values.valueState === "selected" ? `  <SelectControl className="w-[200px]">
+` : "";
+  const triggerWrapEnd = values.clearable === "true" && values.valueState === "selected" ? `
+${clearLine}
+  </SelectControl>` : "";
+  const itemA = `<SelectItem value="${selectedValue}">管理员</SelectItem>`;
+  const itemB = `<SelectItem value="${secondValue}"${values.structure === "disabled" ? " disabled" : ""}>成员</SelectItem>`;
+  const extraItems = isMultiple ? `
+    <SelectItem value="auditor">审计员</SelectItem>
+    <SelectItem value="guest">访客</SelectItem>` : "";
+  const itemDescriptionA = `<SelectItem value="${selectedValue}">
+      <span className="flex flex-col">
+        <span>管理员</span>
+        <span className="text-xs text-muted-foreground">拥有全部管理权限</span>
+      </span>
+    </SelectItem>`;
+  const itemDescriptionB = `<SelectItem value="${secondValue}">
+      <span className="flex flex-col">
+        <span>成员</span>
+        <span className="text-xs text-muted-foreground">拥有基础使用权限</span>
+      </span>
+    </SelectItem>`;
+  const itemLines = values.state === "empty" || values.state === "loading" ?
+  "" :
+  values.structure === "description" ?
+  `    ${itemDescriptionA}
+    ${itemDescriptionB}` :
+  `    ${itemA}
+    ${itemB}${extraItems}`;
+  const valueLine = isMultiple ? `    <SelectValue placeholder="${placeholder}">
+      {(value: string[]) => value?.length ? (
+        <SelectMultiValue
+          items={value.map((item) => ({ value: item, label: roleLabels[item] }))}
+          maxVisible={2}
+        />
+      ) : "${placeholder}"}
+    </SelectValue>` : `    <SelectValue placeholder="${placeholder}" />`;
+
+  if (hasOtherInput) {
+    return `const [value, setValue] = useState<string | null>(${values.valueState === "selected" ? `"other"` : "null"})
+const [otherValue, setOtherValue] = useState(${values.valueState === "selected" ? `"选项n"` : `""`})
+const [open, setOpen] = useState(false)
+const otherInvalid = value === "other" && ${isOtherRequired ? "!otherValue.trim()" : "false"}
+
+<Select
+  value={value}
+  onValueChange={(next) => {
+    setValue(next)
+    if (next === "other") setOpen(true)
+  }}
+  open={open}
+  onOpenChange={setOpen}
+>
+  <SelectTrigger${sizeProp}${variantProp} aria-invalid={otherInvalid || undefined} className="w-[200px]">
+    <SelectValue placeholder="${placeholder}">
+      {(current) =>
+        current === "other" && otherValue ? otherValue :
+        current === "other" ? "其他" :
+        current === "${selectedValue}" ? "管理员" :
+        current === "${secondValue}" ? "成员" :
+        undefined}
+    </SelectValue>
+  </SelectTrigger>
+  <SelectContent${contentSizeProp}>
+    <SelectItem value="${selectedValue}">管理员</SelectItem>
+    <SelectItem value="${secondValue}">成员</SelectItem>
+    <SelectItem value="other">其他</SelectItem>
+    {value === "other" ? (
+      <div className="px-2 pt-1 pb-2">
+        <Input
+          size="${values.size === "sm" ? "sm" : values.size}"
+          value={otherValue}
+          onChange={(event) => setOtherValue(event.target.value)}
+          placeholder="${isOtherRequired ? "请输入（必填）" : "请输入（选填）"}"
+          aria-invalid={otherInvalid || undefined}
+          onKeyDown={(event) => event.stopPropagation()}
+        />
+      </div>
+    ) : null}
+  </SelectContent>
+</Select>`;
+  }
 
   if (values.structure === "grouped") {
-    return `<Select${defaultValueProp}${disabledProp}>
-  ${triggerLine}
-  <SelectContent>
+    return `${isMultiple ? `const roleLabels: Record<string, string> = { admin: "管理员", member: "成员", auditor: "审计员", guest: "访客" }\n\n` : ""}${values.clearable === "true" && values.valueState === "selected" ? `const [value, setValue] = useState${isMultiple ? `<string[]>(["${selectedValue}", "${secondValue}", "auditor", "guest"])` : `<string | null>("${selectedValue}")`}\n\n` : ""}<Select${multipleProp}${values.clearable === "true" && values.valueState === "selected" ? ` value={value} onValueChange={setValue}` : defaultValueProp}${disabledProp}>
+${triggerWrapStart}  <SelectTrigger${sizeProp}${variantProp}${invalidProp}${values.clearable === "true" && values.valueState === "selected" ? " clearable" : ""}${values.clearable === "true" && values.valueState === "selected" ? ` className="w-full"` : ""}>
+${valueLine}
+  </SelectTrigger>${triggerWrapEnd}
+  <SelectContent${contentSizeProp}>
+${searchLine}${emptyLine}${loadingLine}
     <SelectGroup>
       <SelectLabel>常用</SelectLabel>
-      <SelectItem value="${values.capability === "filter" ? "active" : "admin"}">${values.capability === "filter" ? "进行中" : "管理员"}</SelectItem>
-      <SelectItem value="${values.capability === "filter" ? "done" : "member"}">${values.capability === "filter" ? "已完成" : "成员"}</SelectItem>
+      ${values.state === "empty" || values.state === "loading" ? "" : `${itemA}
+      ${itemB}${extraItems}`}
     </SelectGroup>
   </SelectContent>
 </Select>`;
   }
 
-  return `<Select${defaultValueProp}${disabledProp}>
-  ${triggerLine}
-  <SelectContent>
-    <SelectItem value="${values.capability === "filter" ? "active" : "admin"}">${values.capability === "filter" ? "进行中" : "管理员"}</SelectItem>
-    <SelectItem value="${values.capability === "filter" ? "done" : "member"}">${values.capability === "filter" ? "已完成" : "成员"}</SelectItem>
+  return `${isMultiple ? `const roleLabels: Record<string, string> = { admin: "管理员", member: "成员", auditor: "审计员", guest: "访客" }\n\n` : ""}${values.clearable === "true" && values.valueState === "selected" ? `const [value, setValue] = useState${isMultiple ? `<string[]>(["${selectedValue}", "${secondValue}", "auditor", "guest"])` : `<string | null>("${selectedValue}")`}\n\n` : ""}<Select${multipleProp}${values.clearable === "true" && values.valueState === "selected" ? ` value={value} onValueChange={setValue}` : defaultValueProp}${disabledProp}>
+${triggerWrapStart}  <SelectTrigger${sizeProp}${variantProp}${invalidProp}${values.clearable === "true" && values.valueState === "selected" ? " clearable" : ""}${values.clearable === "true" && values.valueState === "selected" ? ` className="w-full"` : ""}>
+${valueLine}
+  </SelectTrigger>${triggerWrapEnd}
+  <SelectContent${contentSizeProp}>
+${searchLine}${emptyLine}${loadingLine}${itemLines}
   </SelectContent>
 </Select>`;
 }
@@ -2000,20 +2210,52 @@ function buildSelectPlaygroundCode(values: Record<string, string>) {
 const selectPlaygroundConfig = {
   props: [
   {
-    key: "capability",
-    zh: "能力",
-    en: "Capability",
-    propName: "capability",
-    type: "segment" as const,
-    options: selectCapabilityOptions
-  },
-  {
     key: "structure",
     zh: "选项结构",
     en: "Option structure",
     propName: "children",
     type: "segment" as const,
     options: selectOptionStructureOptions
+  },
+  {
+    key: "variant",
+    zh: "样式",
+    en: "Variant",
+    propName: "variant",
+    type: "segment" as const,
+    options: selectVariantOptions
+  },
+  {
+    key: "selection",
+    zh: "选择数量",
+    en: "Selection",
+    propName: "multiple",
+    type: "segment" as const,
+    options: selectSelectionOptions
+  },
+  {
+    key: "search",
+    zh: "搜索",
+    en: "Search",
+    propName: "composition",
+    type: "segment" as const,
+    options: selectSearchOptions
+  },
+  {
+    key: "clearable",
+    zh: "清除",
+    en: "Clear",
+    propName: "composition",
+    type: "segment" as const,
+    options: selectClearableOptions
+  },
+  {
+    key: "otherInput",
+    zh: "其他输入",
+    en: "Other input",
+    propName: "composition",
+    type: "segment" as const,
+    options: selectOtherInputOptions
   },
   {
     key: "valueState",
@@ -2039,32 +2281,60 @@ const selectPlaygroundConfig = {
     type: "segment" as const,
     options: selectSizeOptions
   }],
-  initial: { capability: "basic", structure: "plain", valueState: "placeholder", state: "normal", size: "sm" },
-  guidanceKey: "capability",
+  initial: { structure: "plain", variant: "outline", selection: "single", search: "none", clearable: "false", otherInput: "none", valueState: "placeholder", state: "normal", size: "sm" },
+  guidanceKey: "structure",
+  onValueChange: (next: Record<string, string>, key: string) => {
+    if (key === "state" && (next.state === "searching" || next.state === "empty")) return { ...next, search: "local" };
+    if (key === "state" && next.state === "open") return { ...next, valueState: "selected" };
+    if (key === "clearable" && next.clearable === "true") return { ...next, valueState: "selected" };
+    if (key === "structure" && next.structure !== "other") return { ...next, otherInput: "none" };
+    if (key === "structure" && next.structure === "other") return { ...next, selection: "single", otherInput: next.otherInput === "none" ? "optional" : next.otherInput, valueState: "selected", state: "open" };
+    if (key === "otherInput" && next.otherInput !== "none") return { ...next, structure: "other", selection: "single", valueState: "selected", state: "open" };
+    if (key === "otherInput" && next.otherInput === "none") return { ...next, structure: next.structure === "other" ? "plain" : next.structure };
+    if (key === "selection" && next.selection === "multiple") return { ...next, structure: next.structure === "other" ? "plain" : next.structure, otherInput: "none" };
+    return next;
+  },
   renderOne: (values: Record<string, string>) => <SelectPlaygroundPreview values={values} />,
-  genCode: (values: Record<string, string>) => `${selectImportCodeForPlayground}\n\n${buildSelectPlaygroundCode(values)}`
+  genCode: (values: Record<string, string>) => {
+    const needsExtraImports = values.search === "local" || values.clearable === "true" || values.state === "loading" || values.otherInput !== "none";
+    return `${selectImportCodeForPlayground}${needsExtraImports ? `\n${selectExtraImportCodeForPlayground}` : ""}\n\n${buildSelectPlaygroundCode(values)}`;
+  }
 };
 
 
 const selectPropRows = [
-{ prop: "value / defaultValue", type: "string", defaultValue: "—", desc: "受控 / 非受控的当前选中值" },
-{ prop: "onValueChange", type: "(value: string) => void", defaultValue: "—", desc: "选中值变化时的回调" },
+{ prop: "value / defaultValue", type: "string | string[] | null", defaultValue: "—", desc: "受控 / 非受控的当前选中值；多选时为数组" },
+{ prop: "onValueChange", type: "(value: string | string[] | null) => void", defaultValue: "—", desc: "选中值变化时的回调" },
+{ prop: "multiple", type: "boolean", defaultValue: "false", desc: "开启多选，value / defaultValue 使用数组" },
 { prop: "disabled", type: "boolean", defaultValue: "false", desc: "禁用整个选择器" },
+{ prop: "variant", type: "\"outline\" | \"borderless\"", defaultValue: "outline", desc: "触发器样式：有边框 / 无边框" },
 { prop: "size", type: "\"xs\" | \"sm\" | \"md\"", defaultValue: "sm", desc: "SelectTrigger 的尺寸：xs=24px、sm=28px（默认）、md=32px" },
-{ prop: "value（SelectItem）", type: "string", defaultValue: "—", desc: "选项的取值，需要在选项集合内唯一" }];
+{ prop: "size（SelectContent）", type: "\"xs\" | \"sm\" | \"md\"", defaultValue: "sm", desc: "下拉选项字号尺寸，应与 SelectTrigger 传相同值" },
+{ prop: "value（SelectItem）", type: "string", defaultValue: "—", desc: "选项的取值，需要在选项集合内唯一" },
+{ prop: "disabled（SelectItem）", type: "boolean", defaultValue: "false", desc: "禁用单个选项" },
+{ prop: "其他输入", type: "受控 value + Input 组合", defaultValue: "—", desc: "选择 value=\"other\" 后在 SelectContent 内渲染 Input；必填校验由输入框 aria-invalid 承载" },
+{ prop: "items / maxVisible（SelectMultiValue）", type: "SelectMultiValueItem[] / number", defaultValue: "— / 2", desc: "多选已选值与可见数量上限，剩余项折叠为 +n" },
+{ prop: "side / align / alignItemWithTrigger", type: "SelectContent props", defaultValue: "bottom / center / false", desc: "控制浮层位置、对齐和是否将已选项对齐触发器；默认从触发器下方展开" }];
 
 
 const selectSemanticDomRows = [
 { part: "data-slot=\"select-trigger\"", desc: "选择器触发按钮，承载边框、圆角、尺寸样式" },
+{ part: "data-slot=\"select-control\"", desc: "触发器与清除动作的定位、hover 和 focus 热区容器" },
 { part: "data-slot=\"select-value\"", desc: "展示当前选中值或 placeholder 的文本节点" },
 { part: "data-slot=\"select-content\"", desc: "下拉浮层容器，承载阴影、动效、滚动" },
-{ part: "data-slot=\"select-item\"", desc: "单个选项节点，包含选中态指示图标" },
-{ part: "data-slot=\"select-group\" / \"select-label\"", desc: "选项分组容器与分组标题" }];
+{ part: "data-slot=\"select-item\"", desc: "单个选项节点；选中态使用品牌色文字表达" },
+{ part: "data-slot=\"select-group\" / \"select-label\"", desc: "选项分组容器与分组标题" },
+{ part: "data-slot=\"select-multi-value\" / \"select-overflow-count\"", desc: "多选已选值与超出 maxVisible 后的 +n 折叠计数" }];
 
 
 const selectDoDontRows = [
 { do: "用 SelectValue 的 placeholder 表达未选择态。", dont: "手写一个空字符串选项当作占位符。" },
 { do: "选项较多时用 SelectGroup + SelectLabel 分组。", dont: "把分组标题写成普通禁用选项。" },
+{ do: "多选筛选用 Select multiple 和数组值。", dont: "用自由 tags 冒充多选选择器。" },
+{ do: "本地搜索作为 SelectContent 内组合，远程搜索沉淀为 fx 组合。", dont: "给 Select 发明 showSearch / remoteSearch 这类不存在的 prop。" },
+{ do: "其他输入用受控 value + SelectContent 内 Input 组合。", dont: "给 Select 发明 allowOther / otherRequired 这类源码没有的 prop。" },
+{ do: "清除选择用受控 value + 外部动作。", dont: "在 SelectTrigger 里嵌套 button 或发明 allowClear prop。" },
+{ do: "无边框场景用 SelectTrigger variant=\"borderless\"。", dont: "在调用处用 className 覆盖 border / bg。" },
 { do: "用 size 属性切换紧凑/默认尺寸。", dont: "用 className 覆盖高度、内边距来改尺寸。" },
 { do: "用 disabled 表达不可操作。", dont: "靠样式降低透明度但仍可点击触发。" }];
 
@@ -2073,6 +2343,40 @@ const timePickerAnchors = [
 { label: "API", href: "#time-picker-props" },
 { label: "语义 DOM", href: "#time-picker-semantic-dom" },
 { label: "正误示例", href: "#time-picker-do-dont" }];
+
+const datePickerAnchors = [
+{ label: "组件总览", href: "#date-picker-overview" },
+{ label: "场景示例", href: "#date-picker-preview" },
+{ label: "使用方式", href: "#date-picker-usage" },
+{ label: "API", href: "#date-picker-props" },
+{ label: "语义 DOM", href: "#date-picker-semantic-dom" },
+{ label: "正误示例", href: "#date-picker-do-dont" }];
+
+const datePickerScenarioExamples = [
+{ id: "single", title: "单日期", intent: "在表单或筛选中选择一个日期。", rule: "值使用 Date；不要把日历图标加到基础 Input。", code: `<DatePicker defaultValue={new Date(2026, 6, 15)} clearable />` },
+{ id: "range", title: "日期范围", intent: "按开始和结束日期筛选。", rule: "由两个 DatePicker 组合，分别传递开始和结束日期。", code: `<div className="flex items-center gap-2">\n  <DatePicker placeholder="开始日期" />\n  <span className="text-muted-foreground">至</span>\n  <DatePicker placeholder="结束日期" />\n</div>` }];
+
+const datePickerPropRows = [
+{ prop: "value / defaultValue", type: "Date", defaultValue: "—", desc: "受控 / 非受控日期值。" },
+{ prop: "onValueChange", type: "(value: Date | undefined) => void", defaultValue: "—", desc: "选择或清除日期时的回调。" },
+{ prop: "placeholder", type: "string", defaultValue: "请选择日期", desc: "未选值时显示的提示。" },
+{ prop: "size", type: "xs | sm | md", defaultValue: "sm", desc: "触发器尺寸：24 / 28 / 32。" },
+{ prop: "clearable", type: "boolean", defaultValue: "false", desc: "有值时展示清除入口。" },
+{ prop: "disabled", type: "boolean", defaultValue: "false", desc: "禁止打开日历或修改日期。" },
+{ prop: "aria-invalid", type: "boolean", defaultValue: "false", desc: "标记字段校验失败。" }];
+
+const datePickerSemanticDomRows = [
+{ part: "data-slot=\"date-picker\"", desc: "日期选择器控件根节点。" },
+{ part: "data-slot=\"date-picker-trigger\"", desc: "打开日历的日期触发器。" },
+{ part: "data-slot=\"date-picker-value\"", desc: "已选日期或占位文本。" },
+{ part: "data-slot=\"date-picker-clear\"", desc: "清除当前日期的入口。" },
+{ part: "data-slot=\"calendar\"", desc: "弹层内的 Calendar 根节点。" },
+{ part: "aria-invalid / disabled", desc: "字段错误与禁用语义。" }];
+
+const datePickerDoDontRows = [
+{ do: "选择日期时使用 DatePicker。", dont: "在基础 Input 里临时加日历图标或 date prop。" },
+{ do: "日期范围由两个 DatePicker 组合。", dont: "把开始和结束日期拼成一个字符串值。" },
+{ do: "错误态使用 Field + aria-invalid + FieldError。", dont: "在调用处覆盖日期选择器边框颜色。" }];
 
 const timePickerImportCodeForPlayground = `import { TimePicker } from "@/components/fx/time-picker"`;
 
@@ -4085,6 +4389,7 @@ const typeSizeTokens = [
 const typeWeightTokens = [
 { name: "font-normal", value: "400", cls: "font-normal", usage: "Regular 常规 — 正文默认", usageEn: "Regular — default body" },
 { name: "font-medium", value: "500", cls: "font-medium", usage: "Medium 中等 — 标签、按钮、菜单、轻强调", usageEn: "Medium — labels, buttons, menus" },
+{ name: "font-semibold", value: "600", cls: "font-semibold", usage: "Semibold 次强调 — 小标题、卡片标题", usageEn: "Semibold — section and card titles" },
 { name: "font-bold", value: "700", cls: "font-bold", usage: "Bold 加粗 — 标题、强调", usageEn: "Bold — headings, emphasis" }];
 
 
@@ -4118,10 +4423,10 @@ const spacingTokens = [
 
 
 const shadowTokens = [
-{ name: "shadow-l1", value: "0 6px 18px -8px var(--fx-shadow-color)", usage: "浮层菜单、Dropdown — 最近层", usageEn: "Dropdown menus and nearest-layer overlays" },
-{ name: "shadow-l2", value: "0 10px 30px -12px var(--fx-shadow-color)", usage: "Sheet、侧边滑出面板 — 中层", usageEn: "Sheet panels and mid-layer surfaces" },
-{ name: "shadow-l3", value: "0 18px 48px -16px var(--fx-shadow-color)", usage: "Dialog、Modal — 最高层遮罩", usageEn: "Dialogs and top-layer modal surfaces" },
-{ name: "shadow-l1-up", value: "0 -6px 18px -8px var(--fx-shadow-color)", usage: "向上弹出的浮层（如底部工具栏菜单）", usageEn: "Upward overlays such as bottom toolbar menus" }];
+{ name: "shadow-l1", value: "0 2px 6px -2px, 0 4px 10px -4px", usage: "浮层菜单、Dropdown — 最近层", usageEn: "Dropdown menus and nearest-layer overlays" },
+{ name: "shadow-l2", value: "0 4px 12px -4px, 0 8px 20px -2px, 0 12px 28px 0", usage: "Sheet、侧边滑出面板 — 中层", usageEn: "Sheet panels and mid-layer surfaces" },
+{ name: "shadow-l3", value: "0 6px 16px -8px, 0 9px 28px 0, 0 12px 48px 16px", usage: "Dialog、Modal — 最高层遮罩", usageEn: "Dialogs and top-layer modal surfaces" },
+{ name: "shadow-l1-up", value: "0 -2px 6px -2px, 0 -4px 10px -4px", usage: "向上弹出的浮层（如底部工具栏菜单）", usageEn: "Upward overlays such as bottom toolbar menus" }];
 
 // 浮层阴影一律用公司档 shadow-l1/l2/l3/l1-up；Tailwind 的 md/lg/xl 浮层档禁用（见 scripts/check-shadow-tokens.mjs）。shadow-sm 仅限非浮层的微抬升
 
@@ -4283,6 +4588,7 @@ const pageRegistry: Record<string, PageEntry> = {
   input: { anchors: inputAnchors, render: (a, l) => <InputPage actions={a} lang={l} /> },
   select: { anchors: selectAnchors, render: (a, l) => <SelectPage actions={a} lang={l} /> },
   "time-picker": { anchors: timePickerAnchors, render: (a, l) => <TimePickerPage actions={a} lang={l} /> },
+  "date-picker": { anchors: datePickerAnchors, render: (a, l) => <DatePickerPage actions={a} lang={l} /> },
   checkbox: { anchors: checkboxAnchors, render: (a, l) => <CheckboxPage actions={a} lang={l} /> },
   "radio-group": { anchors: radioGroupAnchors, render: (a, l) => <RadioGroupPage actions={a} lang={l} /> },
   switch: { anchors: switchAnchors, render: (a, l) => <SwitchPage actions={a} lang={l} /> },
@@ -5913,8 +6219,9 @@ function GettingStartedPage({
                     ) : null}
                 </WebsiteRulePopover>
               </div>
-              <div className="flex flex-col gap-5 rounded-lg border border-border bg-card p-5">
-                <FxPageLead
+              <WebsiteCardContainer>
+                <CardContent className="flex flex-col gap-5 p-5">
+                  <FxPageLead
                   crumb="维护 / 网站规范"
                   title="页面标题区"
                   titleMeta="PageLead"
@@ -5929,7 +6236,8 @@ function GettingStartedPage({
                       onViewModeChange={() => {}}
                     />
                   } />
-              </div>
+                </CardContent>
+              </WebsiteCardContainer>
             </div>
 
             <div className="flex flex-col gap-3">
@@ -5989,9 +6297,11 @@ function GettingStartedPage({
                     ) : null}
                 </WebsiteRulePopover>
               </div>
-              <div className="rounded-lg border border-border bg-card p-5">
-                <SectionLead title="小标题" description="说明固定 14px，内容紧跟说明下方。" />
-              </div>
+              <WebsiteCardContainer>
+                <CardContent className="p-5">
+                  <SectionLead title="小标题" description="说明固定 14px，内容紧跟说明下方。" />
+                </CardContent>
+              </WebsiteCardContainer>
             </div>
 
             <div className="flex flex-col gap-3">
@@ -6016,8 +6326,9 @@ function GettingStartedPage({
                     ) : null}
                 </WebsiteRulePopover>
               </div>
-              <div className="rounded-lg border border-border bg-card p-5">
-                <WebsiteRulePopover>
+              <WebsiteCardContainer>
+                <CardContent className="p-5">
+                  <WebsiteRulePopover>
                   <WebsiteRulePanel title="视觉取值" badge="示例">
                     <WebsiteRuleValueList
                       items={[
@@ -6030,22 +6341,25 @@ function GettingStartedPage({
                       ]}
                     />
                   </WebsiteRulePanel>
-                </WebsiteRulePopover>
-              </div>
+                  </WebsiteRulePopover>
+                </CardContent>
+              </WebsiteCardContainer>
             </div>
 
             <div className="flex flex-col gap-3">
               <SectionLead title="PageActions" description="页面级动作只放在标题右侧：复制、更多、上一页、下一页。" />
-              <div className="flex rounded-lg border border-border bg-card p-5">
-                <PageActions
+              <WebsiteCardContainer>
+                <CardContent className="flex p-5">
+                  <PageActions
                   doc={websiteStandardsDoc}
                   demo
                   lang={lang}
                   navActions={<PageStepActions demo previous={{ label: "文档规范", labelEn: "Documentation", href: "#documentation", group: "维护", groupEn: "Maintain" }} next={{ label: "检查命令", labelEn: "Checks", href: "#checks", group: "维护", groupEn: "Maintain" }} lang={lang} />}
                   viewMode="page"
-                  onViewModeChange={() => {}}
-                />
-              </div>
+                    onViewModeChange={() => {}}
+                  />
+                </CardContent>
+              </WebsiteCardContainer>
             </div>
           </div>
         </section>
@@ -6117,7 +6431,7 @@ function GettingStartedPage({
               ) : null}
             </WebsiteRulePopover>
           </div>
-          <WebsiteCardContainer label={lang === "en" ? "Internal area" : "内部区域"} />
+          <WebsiteCardContainerPreview label={lang === "en" ? "Internal area" : "内部区域"} />
         </section>
       </div>);
 
@@ -6148,17 +6462,17 @@ function GettingStartedPage({
           
           <div className="grid gap-4 md:grid-cols-3">
             {governanceStatus.statusCards.map((card) =>
-            <Card key={card.title}>
+            <WebsiteCardContainer key={card.title}>
                 <CardHeader>
                   <CardDescription>{card.title}</CardDescription>
                   <CardTitle className="text-2xl">{governanceSnapshot[card.valueKey as keyof typeof governanceSnapshot]}</CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm text-muted-foreground">{card.desc}</CardContent>
-              </Card>
+              </WebsiteCardContainer>
             )}
           </div>
           <GraphCockpit lang={lang} />
-          <Card elevated>
+          <WebsiteCardContainer >
             <CardHeader>
               <CardTitle className="text-base">{governanceStatus.maintenanceModel.title}</CardTitle>
               <CardDescription>{governanceStatus.maintenanceModel.desc}</CardDescription>
@@ -6186,7 +6500,7 @@ function GettingStartedPage({
                 </ul>
               </div>
             </CardContent>
-          </Card>
+          </WebsiteCardContainer>
         </section>
 
         <section id="governance-map-system" className={docsSpacing.sectionStack}>
@@ -6291,7 +6605,7 @@ function GettingStartedPage({
           "这是现状看板背后的规则模型，平时不用先看它。"} />
 
           
-          <Card elevated>
+          <WebsiteCardContainer >
             <CardContent className="grid gap-4 p-5 md:grid-cols-4">
               {governanceStatus.loop.map((item, index) =>
               <div key={item.file} className="relative rounded-xl border border-border bg-background p-4">
@@ -6302,7 +6616,7 @@ function GettingStartedPage({
                 </div>
               )}
             </CardContent>
-          </Card>
+          </WebsiteCardContainer>
         </section>
 
         <section id="governance-map-references" className={docsSpacing.sectionStack}>
@@ -6316,7 +6630,7 @@ function GettingStartedPage({
           
           <div className="grid gap-4 md:grid-cols-3">
             {governanceStatus.references.map((reference) =>
-            <Card key={reference.title}>
+            <WebsiteCardContainer key={reference.title}>
                 <CardHeader>
                   <CardTitle className="text-base">{reference.title}</CardTitle>
                   <CardDescription>{reference.desc}</CardDescription>
@@ -6326,7 +6640,7 @@ function GettingStartedPage({
                     {lang === "en" ? "Open reference" : "查看参考"}
                   </a>
                 </CardContent>
-              </Card>
+              </WebsiteCardContainer>
             )}
           </div>
         </section>
@@ -6341,7 +6655,7 @@ function GettingStartedPage({
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {governanceTodo.items.map((item) =>
-            <Card key={item.id}>
+            <WebsiteCardContainer key={item.id}>
                 <CardHeader>
                   <div className="flex items-center justify-between gap-3">
                     <CardTitle className="text-base">{item.title}</CardTitle>
@@ -6354,7 +6668,7 @@ function GettingStartedPage({
                 <CardContent className="text-sm text-muted-foreground">
                   <p>{item.definitionOfDone}</p>
                 </CardContent>
-              </Card>
+              </WebsiteCardContainer>
             )}
           </div>
         </section>
@@ -6378,13 +6692,13 @@ function GettingStartedPage({
 
         <section id="install-prerequisites" className={docsSpacing.sectionStack}>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Prerequisites" : "接入前提"}</h2>
-          <Card elevated>
+          <WebsiteCardContainer >
             <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
               {governancePagesManifest.install.prerequisites.map((item) =>
               <div key={item} className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{item}</span></div>
               )}
             </CardContent>
-          </Card>
+          </WebsiteCardContainer>
           <CopyCodeBlock code={initShadcnCode} label="shadcn" lang={lang} />
         </section>
 
@@ -6413,24 +6727,24 @@ function GettingStartedPage({
 
         <section id="install-structure" className={docsSpacing.sectionStack}>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Structure" : "目录约定"}</h2>
-          <Card elevated>
+          <WebsiteCardContainer >
             <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
               {governancePagesManifest.install.structure.map((item) =>
               <p key={item}>{item}</p>
               )}
             </CardContent>
-          </Card>
+          </WebsiteCardContainer>
         </section>
 
         <section id="install-verify" className={docsSpacing.sectionStack}>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Verify" : "启动检查"}</h2>
-          <Card elevated>
+          <WebsiteCardContainer >
             <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
               {governancePagesManifest.install.verify.map((item) =>
               <div key={item} className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{item}</span></div>
               )}
             </CardContent>
-          </Card>
+          </WebsiteCardContainer>
         </section>
       </div>);
 
@@ -6451,7 +6765,7 @@ function GettingStartedPage({
 
         <section id="theme-source" className={docsSpacing.sectionStack}>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Token Source" : "token 真相源"}</h2>
-          <Card elevated>
+          <WebsiteCardContainer >
             <CardContent className="grid gap-4 p-5 md:grid-cols-2">
               <div>
                 <Tag variant="secondary">SSOT</Tag>
@@ -6462,7 +6776,7 @@ function GettingStartedPage({
               </div>
               <CopyCodeBlock code={themeImportCode} label="src/main.tsx" lang={lang} />
             </CardContent>
-          </Card>
+          </WebsiteCardContainer>
         </section>
 
         <section id="theme-slots" className={docsSpacing.sectionStack}>
@@ -6491,13 +6805,13 @@ function GettingStartedPage({
 
         <section id="theme-flow" className={docsSpacing.sectionStack}>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Change Flow" : "修改流程"}</h2>
-          <Card>
+          <WebsiteCardContainer>
             <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
               {governancePagesManifest.theme.changeFlow.map((item, index) =>
               <p key={item}>{index + 1}. {item}</p>
               )}
             </CardContent>
-          </Card>
+          </WebsiteCardContainer>
         </section>
       </div>);
 
@@ -6520,28 +6834,32 @@ function GettingStartedPage({
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Guardrails" : "行为红线"}</h2>
           <div className="grid gap-4 md:grid-cols-2">
             {governancePagesManifest.aiRules.guardrails.map((item) =>
-            <Card key={item.title}>
+            <WebsiteCardContainer key={item.title}>
                 <CardHeader><CardTitle className="text-base">{item.title}</CardTitle></CardHeader>
                 <CardContent className="text-sm text-muted-foreground">{item.desc}</CardContent>
-              </Card>
+              </WebsiteCardContainer>
             )}
           </div>
         </section>
 
         <section id="ai-style-flow" className={docsSpacing.sectionStack}>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Style Flow" : "改样式流程"}</h2>
-          <Card>
+          <WebsiteCardContainer>
             <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
               {governancePagesManifest.aiRules.styleFlow.map((item, index) =>
               <p key={item}>{index + 1}. {item}</p>
               )}
             </CardContent>
-          </Card>
+          </WebsiteCardContainer>
         </section>
 
         <section id="ai-checks" className={docsSpacing.sectionStack}>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Checks" : "交付检查"}</h2>
-          <CopyCodeBlock code="npm run check" label="check" lang={lang} />
+          <WebsiteCardContainer>
+            <CardContent>
+              <CopyCodeBlock code="npm run check" label="check" lang={lang} />
+            </CardContent>
+          </WebsiteCardContainer>
           <p className="text-base text-muted-foreground">
             {lang === "en" ?
             "This runs shadcn contract checks, token drift checks, doc-site contract checks, component manifest checks, and the production build." :
@@ -6573,7 +6891,7 @@ function GettingStartedPage({
             "One kind of information has one truth source, and every referenced surface must stay linked to it instead of drifting into separate copies." :
             "同一类信息只维护一个真相源；所有引用到它的地方都必须和它联动，不能各自漂成副本。"}
           </p>
-          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <DocSurfaceTableCard>
             <Table className="min-w-[760px]">
               <TableHeader>
                 <TableRow>
@@ -6592,40 +6910,44 @@ function GettingStartedPage({
                 )}
               </TableBody>
             </Table>
-          </div>
+          </DocSurfaceTableCard>
         </section>
 
         <section id="documentation-anti-drift" className={docsSpacing.sectionStack}>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Anti-Drift Loop" : "防漂三件套"}</h2>
-          <Card>
-            <CardContent className="grid gap-4 p-5 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-3">
               {governancePagesManifest.documentation.antiDriftLoop.map((item) =>
-              <div key={item.title} className="rounded-lg border border-border bg-background p-4">
+              <WebsiteCardContainer key={item.title} size="sm">
+                <CardContent className="p-4">
                   <Tag variant="secondary">{item.title}</Tag>
                   <p className="mt-3 font-medium"><code>{item.file}</code></p>
                   <p className="mt-2 text-sm text-muted-foreground">{item.desc}</p>
-                </div>
+                </CardContent>
+              </WebsiteCardContainer>
               )}
-            </CardContent>
-          </Card>
-          <CopyCodeBlock
-            code={`文字规范 text spec
+          </div>
+          <WebsiteCardContainer>
+            <CardContent>
+              <CopyCodeBlock
+                code={`文字规范 text spec
   -> 机器事实表 machine manifest
   -> 可执行检查 executable check`}
-            label="governance loop"
-            lang={lang} />
+                label="governance loop"
+                lang={lang} />
+            </CardContent>
+          </WebsiteCardContainer>
           
         </section>
 
         <section id="documentation-write-rules" className={docsSpacing.sectionStack}>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Write Rules" : "写入规则"}</h2>
-          <Card>
+          <WebsiteCardContainer>
             <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
               {governancePagesManifest.documentation.writeRules.map((rule) =>
               <div key={rule} className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{rule}</span></div>
               )}
             </CardContent>
-          </Card>
+          </WebsiteCardContainer>
         </section>
       </div>);
 
@@ -6647,7 +6969,7 @@ function GettingStartedPage({
 
         <section id="checks-commands" className={docsSpacing.sectionStack}>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Commands" : "常用命令"}</h2>
-          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <DocSurfaceTableCard>
             <Table className="min-w-[760px]">
               <TableHeader>
                 <TableRow>
@@ -6664,14 +6986,14 @@ function GettingStartedPage({
                 )}
               </TableBody>
             </Table>
-          </div>
+          </DocSurfaceTableCard>
         </section>
 
         <section id="checks-layers" className={docsSpacing.sectionStack}>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Check Layers" : "检查分层"}</h2>
           <div className="grid gap-4 md:grid-cols-2">
             {governancePagesManifest.checks.layers.map((item) =>
-            <Card key={item.title}>
+            <WebsiteCardContainer key={item.title}>
                 <CardHeader>
                   <CardTitle className="text-base">{item.title}</CardTitle>
                 </CardHeader>
@@ -6679,20 +7001,20 @@ function GettingStartedPage({
                   <p><code>{item.script}</code></p>
                   <p className="mt-2">{item.desc}</p>
                 </CardContent>
-              </Card>
+              </WebsiteCardContainer>
             )}
           </div>
         </section>
 
         <section id="checks-checklist" className={docsSpacing.sectionStack}>
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Finish Checklist" : "收尾清单"}</h2>
-          <Card>
+          <WebsiteCardContainer>
             <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
               {governancePagesManifest.checks.finishChecklist.map((item) =>
               <div key={item} className="flex gap-2"><CheckCircleIcon className="mt-1 size-4 text-primary" /> <span>{item}</span></div>
               )}
             </CardContent>
-          </Card>
+          </WebsiteCardContainer>
         </section>
       </div>);
 
@@ -6710,7 +7032,7 @@ function GettingStartedPage({
           actions={actions} />
 
         <div className="grid gap-4 md:grid-cols-3">
-          <Card elevated>
+          <WebsiteCardContainer >
             <CardHeader>
               <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary-light text-primary">
                 <PackageIcon className="size-5" />
@@ -6722,8 +7044,8 @@ function GettingStartedPage({
               "Base controls live in src/components/ui as shadcn source code. We use existing components first, not hand-written lookalikes." :
               "基础组件进入 src/components/ui，源码可见可改。优先使用现成 shadcn 组件，不手写一个“看起来像”的控件。"}
             </CardContent>
-          </Card>
-          <Card elevated>
+          </WebsiteCardContainer>
+          <WebsiteCardContainer >
             <CardHeader>
               <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary-light text-primary">
                 <PaletteIcon className="size-5" />
@@ -6735,8 +7057,8 @@ function GettingStartedPage({
               "theme/fx-theme.css is the visual truth source. Components consume semantic slots instead of hard-coded colors." :
               "theme/fx-theme.css 是视觉真相源。组件吃语义 token，不在调用处硬编码颜色、圆角、边框或阴影。"}
             </CardContent>
-          </Card>
-          <Card elevated>
+          </WebsiteCardContainer>
+          <WebsiteCardContainer >
             <CardHeader>
               <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary-light text-primary">
                 <BoltIcon className="size-5" />
@@ -6748,7 +7070,7 @@ function GettingStartedPage({
               "Docs, manifests, and checks move together, so UI changes are reviewable and AI agents have a stable contract." :
               "文档、manifest 和检查联动，保证组件能力、token、页面路由和 AI 规则不会各自漂移。"}
             </CardContent>
-          </Card>
+          </WebsiteCardContainer>
         </div>
       </section>
 
@@ -6758,10 +7080,10 @@ function GettingStartedPage({
           description={lang === "en" ? "fx-ui is not a theme skin or a black-box ProTable. It is a governed open-code system for real product pages." : "fx-ui 不是一套皮肤，也不是黑盒 ProTable，而是服务真实业务页面的 open-code 生产体系。"} />
         <div className="grid gap-4 md:grid-cols-3">
           {governancePagesManifest.overview.positioning.map((item) =>
-          <Card key={item.title} elevated>
+          <WebsiteCardContainer key={item.title} >
               <CardHeader><CardTitle className="text-base">{item.title}</CardTitle></CardHeader>
               <CardContent className="text-sm leading-6 text-muted-foreground">{item.desc}</CardContent>
-            </Card>
+            </WebsiteCardContainer>
           )}
         </div>
       </section>
@@ -6771,7 +7093,7 @@ function GettingStartedPage({
           title={lang === "en" ? "How to Install and Use" : "如何安装和引入"}
           description={lang === "en" ? "Start from shadcn, add only the components you need, then import the fx-ui theme tokens." : "从 shadcn 项目起步，按需拉取组件，再引入 fx-ui 公司主题 token。"} />
 
-        <Card elevated>
+        <WebsiteCardContainer >
           <CardHeader>
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -6793,9 +7115,9 @@ ${installCommandsCode}`}
               label="install commands"
               lang={lang} />
           </CardContent>
-        </Card>
+        </WebsiteCardContainer>
 
-        <Card elevated>
+        <WebsiteCardContainer >
           <CardHeader>
             <CardTitle className="text-base">{lang === "en" ? "Method 2: Copy & Paste" : "方法二：手动 Copy & Paste"}</CardTitle>
             <CardDescription>
@@ -6808,14 +7130,14 @@ ${installCommandsCode}`}
             <p><span className="font-medium text-foreground">3. 接入主题：</span>复制 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">theme/fx-theme.css</code>，并在入口文件引入。</p>
             <p><span className="font-medium text-foreground">4. 保留契约：</span>不要在业务调用处覆盖组件视觉；需要新外观时在组件层沉淀 variant。</p>
           </CardContent>
-        </Card>
+        </WebsiteCardContainer>
       </section>
 
       <section id="theme-source" className={docsSpacing.sectionStack}>
         <SectionLead
           title={lang === "en" ? "Theme Setup" : "主题接入"}
           description={lang === "en" ? "fx-ui does not restyle every component by hand. Company visuals are injected through shadcn semantic tokens." : "fx-ui 不逐个重写组件样式。公司视觉通过 shadcn 语义 token 注入。"} />
-        <Card elevated>
+        <WebsiteCardContainer >
           <CardContent className="grid gap-4 p-5 md:grid-cols-2">
             <div>
               <Tag variant="secondary">SSOT</Tag>
@@ -6826,14 +7148,14 @@ ${installCommandsCode}`}
             </div>
             <CopyCodeBlock code={themeImportCode} label="src/main.tsx" lang={lang} />
           </CardContent>
-        </Card>
+        </WebsiteCardContainer>
       </section>
 
       <section id="theme-slots" className={docsSpacing.sectionStack}>
         <SectionLead
           title={lang === "en" ? "Semantic Slots" : "shadcn 语义槽"}
           description={lang === "en" ? "Components consume semantic token names, so product code does not need page-level visual overrides." : "组件消费语义 token，业务调用处不需要再覆盖颜色、边框、圆角和阴影。"} />
-        <Card elevated className="p-0">
+        <WebsiteCardContainer>
           <CardContent className="p-0">
             <Table className="min-w-[720px]">
               <TableHeader>
@@ -6854,20 +7176,20 @@ ${installCommandsCode}`}
               </TableBody>
             </Table>
           </CardContent>
-        </Card>
+        </WebsiteCardContainer>
       </section>
 
       <section id="theme-flow" className={docsSpacing.sectionStack}>
         <SectionLead
           title={lang === "en" ? "Change Flow" : "修改流程"}
           description={lang === "en" ? "Token changes start from the visual truth source, then flow into docs, manifests, and component mappings." : "token 改动从视觉真相源开始，再同步文档、manifest 和组件映射。"} />
-        <Card elevated>
+        <WebsiteCardContainer >
           <CardContent className="flex flex-col gap-3 p-5 text-sm text-muted-foreground">
             {governancePagesManifest.theme.changeFlow.map((item, index) =>
             <p key={item}>{index + 1}. {item}</p>
             )}
           </CardContent>
-        </Card>
+        </WebsiteCardContainer>
       </section>
 
       <section id="intro-layers" className={docsSpacing.sectionStack}>
@@ -6876,7 +7198,7 @@ ${installCommandsCode}`}
           description={lang === "en" ? "When you change fx-ui itself, follow the source-routing and verification chain instead of editing only the visible page." : "如果你是在维护 fx-ui 本身，先看真相源和联动链，不只改眼前页面。"} />
 
         <div className="grid gap-4 md:grid-cols-2">
-          <Card elevated>
+          <WebsiteCardContainer >
             <CardHeader>
               <CardTitle className="text-base">{lang === "en" ? "Add or change components" : "如何新增或修改组件？"}</CardTitle>
             </CardHeader>
@@ -6886,8 +7208,8 @@ ${installCommandsCode}`}
               <p>3. 同步源码、组件文档、manifest、文档页示例和导航入口。</p>
               <p>4. 收尾运行 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">npm run check</code>；视觉改动补跑 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">npm run test:visual</code>。</p>
             </CardContent>
-          </Card>
-          <Card elevated>
+          </WebsiteCardContainer>
+          <WebsiteCardContainer >
             <CardHeader>
               <CardTitle className="text-base">{lang === "en" ? "Change theme tokens" : "如何更新主题 token？"}</CardTitle>
             </CardHeader>
@@ -6897,11 +7219,11 @@ ${installCommandsCode}`}
               <p>3. 运行 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">npm run build:tokens</code> 重建 token manifest。</p>
               <p>4. 最后才改组件映射，避免组件和 token 真相源漂移。</p>
             </CardContent>
-          </Card>
+          </WebsiteCardContainer>
         </div>
 
         <h3 className="text-lg font-bold tracking-tight">{lang === "en" ? "Three Layers" : "三层体系"}</h3>
-        <Card elevated className="p-0">
+        <WebsiteCardContainer>
           <CardContent className="p-0">
             <Table className="min-w-[760px]">
               <TableHeader>
@@ -6922,14 +7244,14 @@ ${installCommandsCode}`}
               </TableBody>
             </Table>
           </CardContent>
-        </Card>
+        </WebsiteCardContainer>
       </section>
 
         <section id="intro-audience" className={docsSpacing.sectionStack}>
           <SectionLead
             title={lang === "en" ? "Team Workflow and Deployment" : "团队协同和项目部署"}
             description={lang === "en" ? "A small checklist for keeping the project reviewable and deployable." : "维护时保持可审查、可回滚、可部署的一组最小规则。"} />
-          <Card elevated>
+          <WebsiteCardContainer >
             <CardContent className="flex flex-col gap-5 p-5 text-sm leading-6 text-muted-foreground">
               <div>
                 <h3 className="font-semibold text-foreground">1. 分支与代码审查</h3>
@@ -6956,7 +7278,7 @@ ${installCommandsCode}`}
                 )}
               </div>
             </CardContent>
-          </Card>
+          </WebsiteCardContainer>
         </section>
     </div>);
 
@@ -7437,7 +7759,7 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         "复制 import 即可；更多组合写法见上方「调试台」的代码 Tab。"} />
 
         
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="px-5">
             <CopyCodeBlock code={buttonImportCode} label="Import" lang={lang} />
           </CardContent>
@@ -7446,7 +7768,7 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
       <section id="props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "API Props" : "API 属性"}</h2>
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -7483,7 +7805,7 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         "Button 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。"} />
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -7514,7 +7836,7 @@ function ButtonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         "这些例子记录工程师和 AI 生成代码最容易犯的错误。"} />
 
         
-        <DocDoDont lang={lang} rows={buttonDoDontRows} elevated />
+        <DocDoDont lang={lang} rows={buttonDoDontRows} />
       </section>
     </div>);
 
@@ -7553,7 +7875,7 @@ function TokensPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
         <div className="grid gap-4 md:grid-cols-2">
           {tokenLayers.map((layer) =>
-          <Card key={layer.title}>
+          <WebsiteCardContainer key={layer.title}>
               <CardHeader>
                 <CardTitle className="text-base">{layer.title}</CardTitle>
               </CardHeader>
@@ -7561,7 +7883,7 @@ function TokensPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
                 <p>{lang === "en" ? layer.descEn : layer.desc}</p>
                 <code className="rounded-lg bg-muted px-3 py-2 text-xs text-foreground">{layer.example}</code>
               </CardContent>
-            </Card>
+            </WebsiteCardContainer>
           )}
         </div>
       </section>
@@ -7647,7 +7969,7 @@ function SeedPreview({ lang: _lang }: {lang: Lang;}) {
   };
 
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4">
+    <DocSurfaceCard className="flex flex-col gap-3 p-4">
       <div className="flex items-center gap-3">
         <div className="h-10 w-10 shrink-0 rounded-md border border-black/10 shadow-sm"
         style={{ backgroundColor: input.trim() || "var(--fx-brand)" }} />
@@ -7702,7 +8024,7 @@ function SeedPreview({ lang: _lang }: {lang: Lang;}) {
         })}
       </div>
       {copied && <p className="text-xs text-muted-foreground text-center">已复制 {copied}</p>}
-    </div>);
+    </DocSurfaceCard>);
 
 }
 
@@ -8062,7 +8384,7 @@ function TokensColorsPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
               <h3 className="text-base font-semibold">{lang === "en" ? group.labelEn : group.label}</h3>
               <p className="text-sm text-muted-foreground">{lang === "en" ? group.descEn : group.desc}</p>
             </div>
-            <div className="max-w-full overflow-x-auto rounded-lg border border-border-container bg-card">
+            <DocSurfaceTableCard>
               <Table className="min-w-[860px]">
                 <TableHeader>
                   <TableRow>
@@ -8094,7 +8416,7 @@ function TokensColorsPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
                 )}
                 </TableBody>
               </Table>
-            </div>
+            </DocSurfaceTableCard>
           </div>
         )}
       </section>
@@ -8431,7 +8753,7 @@ function NavMenuPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
         lang === "en" ? "Overview" : "组件总览"} description={
         lang === "en" ? "App rail + second-level menu working together; click apps / items to switch, the footer arrow collapses the panel." : "一级应用栏 + 二级菜单的组合形态；点应用 / 菜单项切换，底部箭头收起面板。"} />
         
-        <DocSurfaceCard elevated className="w-fit">
+        <DocSurfaceCard className="w-fit">
           <CardContent className="flex h-[560px] bg-muted/40 p-5">{comboDemo}</CardContent>
         </DocSurfaceCard>
       </section>
@@ -8449,7 +8771,7 @@ function NavMenuPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
         lang === "en" ? "Usage" : "使用方式"} description={
         lang === "en" ? "Import the parts and compose; rail and menu are independent." : "按需导入零件组合；一级栏与二级菜单相互独立。"} />
         
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="flex flex-col gap-4 p-5">
           <CopyCodeBlock code={importCode} label="Import" lang={lang} />
           <CopyCodeBlock code={usageCode} label="Usage" lang={lang} />
@@ -8459,7 +8781,7 @@ function NavMenuPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
 
       <section id="nav-menu-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "API Props" : "API 属性"}</h2>
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -8488,7 +8810,7 @@ function NavMenuPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
         lang === "en" ? "Semantic DOM" : "语义 DOM"} description={
         lang === "en" ? "Semantic parts AI and engineers should target." : "AI 和工程师应该理解的语义部位。"} />
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -8510,7 +8832,7 @@ function NavMenuPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
 
       <section id="nav-menu-do-dont" className={docsSpacing.sectionStack}>
         <SectionLead title={lang === "en" ? "Do / Don’t" : "正误示例"} />
-        <DocDoDont lang={lang} rows={navMenuDoDontRows} elevated />
+        <DocDoDont lang={lang} rows={navMenuDoDontRows} />
       </section>
     </div>);
 
@@ -8576,14 +8898,51 @@ function LayoutPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 }
 
 function TokensTypographyPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
+  const typographyRoles = designTokensManifest.typography.roles;
+  const typographyConventions = designTokensManifest.typography.conventions;
   return (
     <div className={docsSpacing.pageStack}>
       <section id="tokens-typography" className="flex flex-col gap-2">
         <PageLead
           crumb={lang === "en" ? "Design Tokens / Typography" : "设计令牌 / 排版"}
           title={lang === "en" ? "Typography" : "排版"}
-          lead={lang === "en" ? "Typography is split into three parts: size (with heading levels), weight, and family." : "排版分三部分：字号（含标题层级）、字重、字体。"}
+          lead={lang === "en" ? "Typography defines text roles first, then size, weight, and family." : "排版先定义文本角色，再看字号、字重与字体。"}
           actions={actions} />
+      </section>
+
+      <section id="tokens-typography-roles" className={`${docsSpacing.sectionStack} scroll-mt-24`}>
+        <div>
+          <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Text roles 文本角色" : "文本角色"}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {lang === "en" ? "Choose by purpose first. Call the role utility; its size and weight remain traceable base tokens." : "先按用途选择角色；调用角色工具类，字号和字重仍可追溯到基础 Token。"}
+          </p>
+        </div>
+        <DocSurfaceTableCard>
+          <Table className="min-w-[920px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">{lang === "en" ? "Role" : "角色"}</TableHead>
+                <TableHead>{lang === "en" ? "Size" : "字号 Token"}</TableHead>
+                <TableHead>{lang === "en" ? "Weight" : "字重 Token"}</TableHead>
+                <TableHead>{lang === "en" ? "Call" : "调用"}</TableHead>
+                <TableHead>{lang === "en" ? "Example" : "示例"}</TableHead>
+                <TableHead className="pr-4">{lang === "en" ? "Usage" : "用法"}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {typographyRoles.map((role) => (
+                <TableRow key={role.id}>
+                  <TableCell className="pl-4 font-medium"><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{role.id}</code></TableCell>
+                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{role.tailwind[0]}</code></TableCell>
+                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{role.tailwind[1]}</code></TableCell>
+                  <TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{role.utility}</code></TableCell>
+                  <TableCell><span className={`leading-none text-foreground ${role.utility}`}>示例文字 Aa</span></TableCell>
+                  <TableCell className="pr-4 text-foreground">{role.usage}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </DocSurfaceTableCard>
       </section>
 
       {([
@@ -8596,7 +8955,7 @@ function TokensTypographyPage({ actions, lang }: {actions: React.ReactNode;lang:
             <h2 className="text-xl font-bold tracking-tight">{group.title}</h2>
             <p className="mt-1 text-sm text-muted-foreground">{group.desc}</p>
           </div>
-          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <DocSurfaceTableCard>
             <Table className="min-w-[680px]">
               <TableHeader>
                 <TableRow>
@@ -8619,12 +8978,44 @@ function TokensTypographyPage({ actions, lang }: {actions: React.ReactNode;lang:
               )}
               </TableBody>
             </Table>
-          </div>
+          </DocSurfaceTableCard>
         </section>
       )}
 
+      <section id="tokens-typography-conventions" className={`${docsSpacing.sectionStack} scroll-mt-24`}>
+        <div>
+          <h2 className="text-xl font-bold">{lang === "en" ? "Text conventions" : "混排、代码与编号"}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">{lang === "en" ? "Use these conventions for new or adjusted user-facing text. The source is the typography token manifest." : "新增或调整面向用户的文本时遵循这些约定；内容直接来自排版 Token manifest。"}</p>
+        </div>
+        <DocSurfaceTableCard>
+          <Table className="min-w-[680px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">{lang === "en" ? "Rule" : "规则"}</TableHead>
+                <TableHead>{lang === "en" ? "Convention" : "约定"}</TableHead>
+                <TableHead className="pr-4">{lang === "en" ? "Use" : "使用场景"}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {typographyConventions.map((convention) => (
+                <TableRow key={convention.id}>
+                  <TableCell className="pl-4 font-medium"><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{convention.id}</code></TableCell>
+                  <TableCell className="text-foreground">
+                    <p>{convention.rule}</p>
+                    {convention.tailwind?.length ? <p className="mt-1 font-mono text-xs text-muted-foreground">{convention.tailwind.join(" ")}</p> : null}
+                    {convention.prohibited?.length ? <p className="mt-1 font-mono text-xs text-muted-foreground">{convention.prohibited.join(" · ")}</p> : null}
+                    {convention.examples?.length ? <p className="mt-1 font-mono text-xs text-muted-foreground">{convention.examples.join(" · ")}</p> : null}
+                  </TableCell>
+                  <TableCell className="pr-4 text-muted-foreground">{convention.usage}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </DocSurfaceTableCard>
+      </section>
+
       <section className={docsSpacing.sectionStack}>
-        <div className="rounded-lg border border-border bg-muted/40 p-5 text-sm text-muted-foreground">
+        <DocSurfaceCard className="bg-muted/40 p-5 text-sm text-muted-foreground">
           <p className="font-medium text-foreground">{lang === "en" ? "Font family" : "字族说明"}</p>
           <p className="mt-1">
             {lang === "en" ?
@@ -8635,7 +9026,7 @@ function TokensTypographyPage({ actions, lang }: {actions: React.ReactNode;lang:
           </p>
           <pre className="mt-3 overflow-x-auto rounded-md bg-card p-3 text-xs leading-6"><code>{`--font-sans: "Inter Variable", "Noto Sans SC",
   "Helvetica Neue", "PingFang SC", "Microsoft Yahei", "微软雅黑", Arial, sans-serif;`}</code></pre>
-        </div>
+        </DocSurfaceCard>
       </section>
     </div>);
 
@@ -8661,7 +9052,7 @@ function TokensRadiusPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
               "全部圆角档位，从直角到胶囊——按组件「类型」选，不是按大小选。逐档对应组件见右侧场景列。"}
             </p>
           </div>
-          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <DocSurfaceTableCard>
             <Table className="min-w-[720px]">
               <TableHeader>
                 <TableRow>
@@ -8688,7 +9079,7 @@ function TokensRadiusPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
                 )}
               </TableBody>
             </Table>
-          </div>
+          </DocSurfaceTableCard>
       </section>
 
       <section id="tokens-radius-compute" className={`${docsSpacing.sectionStack} scroll-mt-24`}>
@@ -8700,7 +9091,7 @@ function TokensRadiusPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
               "核心档由唯一基准值按固定 ±2px 步进派生（shadcn 标准做法）；大容器档用 Tailwind 默认值。"}
             </p>
           </div>
-          <div className="rounded-lg border border-border bg-card p-5 text-base text-muted-foreground">
+          <DocSurfaceCard className="p-5 text-base text-muted-foreground">
             <p><span className="font-medium text-foreground">{lang === "en" ? "Base" : "基准"}</span>：<code className="rounded bg-muted px-1 text-sm">--radius = 0.625rem（10px）</code>{lang === "en" ? "，equals rounded-lg." : "，即 rounded-lg。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Core ±2px step" : "核心档 ±2px 步进"}</span>：sm = <code className="rounded bg-muted px-1 text-sm">base − 4px</code>，md = <code className="rounded bg-muted px-1 text-sm">base − 2px</code>，lg = <code className="rounded bg-muted px-1 text-sm">base</code>，xl = <code className="rounded bg-muted px-1 text-sm">base + 4px</code>{lang === "en" ? "。Changing the base shifts the whole scale together." : "。改基准值整套等量平移，差值恒定可预测。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Large steps" : "大容器档"}</span>：2xl = 16px，3xl = 24px，4xl = 32px{lang === "en" ? " (Tailwind defaults)." : "（Tailwind 默认固定值）。"}</p>
@@ -8713,7 +9104,7 @@ function TokensRadiusPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
             <p className="mt-1">{lang === "en" ?
               "Pick one step by component type, then apply it to all size variants and check radius ÷ height. As long as every size stays within 0.15–0.35 it shares one radius (e.g. an 8px button at 28/32/36px → 0.29/0.25/0.22, all in band). A size that falls out steps to a neighboring step automatically — > 0.4 (too round) steps down, < 0.15 (too sharp) steps up — reusing the existing scale, never a new value." :
               "先按组件类型选一档，套到该组件所有尺寸上算「圆角 ÷ 高度」：只要每个尺寸都落在 0.15~0.35 就共用一档（如 8px 按钮在 28/32/36px → 0.29/0.25/0.22，全在带内）。掉出带的尺寸自动换到相邻档——> 0.4（太圆）下调、< 0.15（太尖）上调——复用现有阶梯，不造新值。判定靠比值算，不靠拍脑袋，也不用逐组件预先指定。"}</p>
-          </div>
+          </DocSurfaceCard>
       </section>
     </div>);
 
@@ -8739,7 +9130,7 @@ function TokensSpacingPage({ actions, lang }: {actions: React.ReactNode;lang: La
               "基于 4px 基准的常用档位。示例长条是真实大小，逐档场景见右侧。"}
             </p>
           </div>
-          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <DocSurfaceTableCard>
             <Table className="min-w-[720px]">
               <TableHeader>
                 <TableRow>
@@ -8766,7 +9157,7 @@ function TokensSpacingPage({ actions, lang }: {actions: React.ReactNode;lang: La
                 )}
               </TableBody>
             </Table>
-          </div>
+          </DocSurfaceTableCard>
       </section>
 
       <section id="tokens-spacing-compute" className={`${docsSpacing.sectionStack} scroll-mt-24`}>
@@ -8778,12 +9169,12 @@ function TokensSpacingPage({ actions, lang }: {actions: React.ReactNode;lang: La
               "每个间距 = 4px 基准单位 × 档位数字，构成 4 点网格。"}
             </p>
           </div>
-          <div className="rounded-lg border border-border bg-card p-5 text-base text-muted-foreground">
+          <DocSurfaceCard className="p-5 text-base text-muted-foreground">
             <p><span className="font-medium text-foreground">{lang === "en" ? "Base unit" : "基准单位"}</span>：<code className="rounded bg-muted px-1 text-sm">--spacing = 0.25rem（4px）</code>{lang === "en" ? " (Tailwind default)." : "（Tailwind 默认）。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Formula" : "公式"}</span>：<code className="rounded bg-muted px-1 text-sm">gap-n = calc(var(--spacing) * n)</code>{lang === "en" ? "，e.g. gap-4 = 4×4 = 16px, gap-6 = 4×6 = 24px." : "，如 gap-4 = 4×4 = 16px、gap-6 = 4×6 = 24px。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "4-point grid" : "4 点网格"}</span>：{lang === "en" ? "all spacing snaps to multiples of 4px, so rhythm stays even and predictable across pages." : "所有间距都落在 4px 的倍数上，页面节奏统一、可预测，不出现 5/7/13 这种随手值。"}</p>
             <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Rule" : "用法"}</span>：{lang === "en" ? "use Tailwind spacing utilities (gap/p/m/space) — never hand-write arbitrary px. Same knob as padding/margin/gap." : "一律用 Tailwind 间距工具类（gap / p / m / space），不手写任意 px；padding、margin、gap 共用这一套刻度。"}</p>
-          </div>
+          </DocSurfaceCard>
       </section>
     </div>);
 
@@ -8809,7 +9200,7 @@ function TokensShadowPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
               "阴影表达元素「离页面多高」——越高、投影越往下、越散。按浮层层级选档，逐档对应组件见右侧场景列。"}
             </p>
           </div>
-          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <DocSurfaceTableCard>
             <Table className="min-w-[720px]">
               <TableHeader>
                 <TableRow>
@@ -8838,7 +9229,7 @@ function TokensShadowPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
                 )}
               </TableBody>
             </Table>
-          </div>
+          </DocSurfaceTableCard>
       </section>
 
       <section id="tokens-shadow-compute" className={`${docsSpacing.sectionStack} scroll-mt-24`}>
@@ -8846,18 +9237,18 @@ function TokensShadowPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
             <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "How it's computed 计算方式" : "计算方式"}</h2>
             <p className="mt-2 text-base text-muted-foreground">
               {lang === "en" ?
-              "Each level is 0 {y}px {blur}px {spread}px var(--fx-shadow-color). Low elevation uses negative spread so the edge stays soft and shallow." :
-              "每档 = 0 {y}px {blur}px {spread}px var(--fx-shadow-color)。低档使用负 spread，让边缘更柔、更浅。"}
+              "Each elevation token combines two or three shadows: a defined near edge plus softer, wider falloff." :
+              "每个 elevation token 由两到三层阴影组成：近层保留落点，远层负责更柔、更宽的扩散。"}
             </p>
           </div>
-          <div className="rounded-lg border border-border bg-card p-5 text-base text-muted-foreground">
-            <p><span className="font-medium text-foreground">{lang === "en" ? "Color knob" : "颜色总开关"}</span>：<code className="rounded bg-muted px-1 text-sm">--fx-shadow-color = oklch(from --fx-neutrals-20 l c h / .08)</code>{lang === "en" ? "，derived from the darkest neutral (brand-tinted) at 8% alpha — follows the palette, not hard-coded black; one place to adjust." : "，从最深中性灰（带品牌色相）派生 + 8% 透明，跟随色板而非写死纯黑；四档共用、一处调深浅。"}</p>
-            <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Y-offset" : "y 偏移"}</span>：{lang === "en" ? "drop distance, +2px per level — 2 / 4 / 6 (light from top, higher floats drop further)." : "投影下移距离，每升一层 +2px——2 / 4 / 6（光从上方来，越高落得越远）。"}</p>
-            <p className="mt-1"><span className="font-medium text-foreground">Blur</span>：{lang === "en" ? "softness, roughly doubles per level — 6 / 12 / 24 (higher = softer, more diffuse)." : "模糊半径，约每层翻倍——6 / 12 / 24（越高越柔、越散）。"}</p>
-            <p className="mt-1"><span className="font-medium text-foreground">Spread</span>：0{lang === "en" ? " — never expand, keeps shadows clean." : "——不外扩，避免脏重。"}</p>
+          <DocSurfaceCard className="p-5 text-base text-muted-foreground">
+            <p><span className="font-medium text-foreground">{lang === "en" ? "Color knobs" : "颜色总开关"}</span>：<code className="rounded bg-muted px-1 text-sm">--fx-shadow-color / soft / faint = 8% / 5% / 3%</code>{lang === "en" ? "，all derived from the darkest brand-tinted neutral rather than hard-coded black." : "，均从最深中性灰（带品牌色相）派生，不写死纯黑。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Y-offset" : "y 偏移"}</span>：{lang === "en" ? "near to far, L1 is 2 / 4px; L2 is 4 / 8 / 12px; L3 is 6 / 9 / 12px." : "从近到远，L1 为 2 / 4px；L2 为 4 / 8 / 12px；L3 为 6 / 9 / 12px。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">Blur</span>：{lang === "en" ? "L1 6 / 10px; L2 12 / 20 / 28px; L3 16 / 28 / 48px. Higher layers stay more diffuse." : "L1 为 6 / 10px；L2 为 12 / 20 / 28px；L3 为 16 / 28 / 48px。层级越高，扩散越明显。"}</p>
+            <p className="mt-1"><span className="font-medium text-foreground">Spread</span>：{lang === "en" ? "near layers use negative spread to keep edges clean; L3's outer layer expands to 16px so its falloff remains visible." : "近层用负 spread 收住边缘；L3 最外层扩至 16px，让高层浮起后的扩散仍可见。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "Direction variant" : "方向变体"}</span>：{lang === "en" ? "shadow-l1-up = L1 with negative y, for overlays that pop upward (bottom toolbar menus)." : "shadow-l1-up = L1 的 y 取负，用于从下往上弹的浮层（底部工具栏菜单）。"}</p>
-            <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Why this way" : "为什么这样做"}</span>：{lang === "en" ? "layers are separated by geometry (y + blur), not by darkening color — so overlays stay light and neutral instead of muddy. Built-in Tailwind shadow-sm/md/lg are banned: they aren't mapped to company tokens and would drift." : "靠几何（y + blur）拉开层级，不靠加深颜色——浮层保持淡而中性，不发脏。只用 shadow-l1/l2/l3/l1-up，别用 Tailwind 自带的 shadow-sm/md/lg：那是另一套独立数值、不跟随公司阴影变量，混用会让全站阴影深浅对不上、以后也调不动。"}</p>
-          </div>
+            <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Why this way" : "为什么这样做"}</span>：{lang === "en" ? "one elevation token owns its layered shadow; consumers never stack L1/L2/L3. This keeps overlays light, readable, and predictable. Built-in Tailwind shadow-sm/md/lg remain banned because they are not mapped to company tokens." : "一个 elevation token 自己拥有多层投影；调用方不叠加 L1/L2/L3。这样既保留层次，也不会发脏或失控。Tailwind 内置 shadow-sm/md/lg 仍禁用，因为它们不跟随公司 Token。"}</p>
+          </DocSurfaceCard>
       </section>
     </div>);
 
@@ -8884,7 +9275,7 @@ function TokensMotionPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
               {lang === "en" ? "Short, tiered durations — small overlays snap fast, larger movement eases a bit longer. Click to replay." : "短促、分档：小浮层快、位移大的稍慢。点按钮可重播示例。"}
             </p>
           </div>
-          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <DocSurfaceTableCard>
             <Table className="min-w-[720px]">
               <TableHeader>
                 <TableRow>
@@ -8914,7 +9305,7 @@ function TokensMotionPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
                 )}
               </TableBody>
             </Table>
-          </div>
+          </DocSurfaceTableCard>
       </section>
 
       <section id="tokens-motion-primitives" className={`${docsSpacing.sectionStack} scroll-mt-24`}>
@@ -8924,7 +9315,7 @@ function TokensMotionPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
               {lang === "en" ? "Composed from a few primitives, driven by state — not hand-written keyframes." : "由几个原语组合、靠状态驱动，不手写关键帧。"}
             </p>
           </div>
-          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          <DocSurfaceTableCard>
             <Table className="min-w-[720px]">
               <TableHeader>
                 <TableRow>
@@ -8943,12 +9334,12 @@ function TokensMotionPage({ actions, lang }: {actions: React.ReactNode;lang: Lan
                 )}
               </TableBody>
             </Table>
-          </div>
-          <div className="rounded-lg border border-border bg-card p-5 text-base text-muted-foreground">
+          </DocSurfaceTableCard>
+          <DocSurfaceCard className="p-5 text-base text-muted-foreground">
             <p><span className="font-medium text-foreground">{lang === "en" ? "Short" : "短促"}</span>：{lang === "en" ? "100–200ms; UI motion is feedback, not spectacle." : "100–200ms 区间；界面动效是反馈，不是表演。"}</p>
             <p className="mt-1"><span className="font-medium text-foreground">{lang === "en" ? "State driven" : "状态驱动"}</span>：{lang === "en" ? "enter/exit triggered by data-open / data-closed / data-state, not manual timers." : "进入/退出由 data-open / data-closed / data-state 触发，不手动计时。"}</p>
             <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Rule" : "用法"}</span>：{lang === "en" ? "compose fade / zoom / slide via tw-animate-css utilities; don't invent one-off keyframes per page." : "用 tw-animate-css 工具类组合 fade / zoom / slide，不为单页临时写关键帧动画。"}</p>
-          </div>
+          </DocSurfaceCard>
       </section>
     </div>);
 
@@ -8975,7 +9366,7 @@ function TokensLayerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
             </p>
           </div>
           {/* 堆叠示例：档位越高越压在上面 */}
-          <div className="rounded-lg border border-border bg-card p-5">
+          <DocSurfaceCard className="p-5">
             <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "Higher value stacks on top (closer to you)." : "数字越大，越压在上面（越靠近你）。"}</p>
             <div className="relative h-32">
               {layerTokens.map((row, i) =>
@@ -8988,8 +9379,8 @@ function TokensLayerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
                 </div>
               )}
             </div>
-          </div>
-          <div className="max-w-full overflow-x-auto rounded-lg border border-border bg-card">
+          </DocSurfaceCard>
+          <DocSurfaceTableCard>
             <Table className="min-w-[720px]">
               <TableHeader>
                 <TableRow>
@@ -9008,7 +9399,7 @@ function TokensLayerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
                 )}
               </TableBody>
             </Table>
-          </div>
+          </DocSurfaceTableCard>
       </section>
 
       <section id="tokens-layer-logic" className={`${docsSpacing.sectionStack} scroll-mt-24`}>
@@ -9018,11 +9409,11 @@ function TokensLayerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
               {lang === "en" ? "Why a few fixed tiers instead of arbitrary numbers." : "为什么用几个固定档位，而不是随手写数字。"}
             </p>
           </div>
-          <div className="rounded-lg border border-border bg-card p-5 text-base leading-relaxed text-muted-foreground">
+          <DocSurfaceCard className="p-5 text-base leading-relaxed text-muted-foreground">
             <p><span className="font-medium text-foreground">{lang === "en" ? "From low to high" : "从低到高"}</span>：{lang === "en" ? "page content → local controls → fixed/stuck headers → overlays. The bigger the number, the closer to you (on top)." : "页面内容 → 局部控件 → 固定/吸顶的头部 → 弹层。数字越大，离你越近、压在越上面。"}</p>
             <p className="mt-2"><span className="font-medium text-foreground">{lang === "en" ? "Overlays all use the top tier" : "弹层都用最高一档"}</span>：{lang === "en" ? "dialogs, dropdowns, popovers, sheets and tooltips all sit at the top tier; which one shows on top depends on who opens later, not on a bigger number." : "对话框、下拉、气泡、抽屉、提示框都用最高一档（z-50）；谁后打开谁在上，不靠更大的数字。"}</p>
             <p className="mt-3 border-t border-border pt-3"><span className="font-medium text-foreground">{lang === "en" ? "Rule" : "怎么用"}</span>：{lang === "en" ? "stick to these few tiers; if something gets covered, fit it into an existing tier — don't invent a bigger number." : "只用这几档；万一被挡住，把它归到现有的某一档，别去编一个更大的数字（不然以后谁都往上加，越堆越乱）。"}</p>
-          </div>
+          </DocSurfaceCard>
       </section>
     </div>);
 
@@ -9185,7 +9576,7 @@ function IconPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
       <section id="icon-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "API Props" : "API 属性"}</h2>
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -9218,7 +9609,7 @@ function IconPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         "图标来自 Tabler。这里记录 AI 和工程师应该理解的语义部位。"} />
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -9249,86 +9640,103 @@ function IconPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
         "工程师和 AI 生成代码最容易犯的图标错误。"} />
 
         
-        <DocDoDont lang={lang} rows={iconDoDontRows} elevated />
+        <DocDoDont lang={lang} rows={iconDoDontRows} />
       </section>
     </div>);
 
 }
 
 function InputPreview({ values }: {values: Record<string, string>;}) {
+  const [showPassword, setShowPassword] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [emailValue, setEmailValue] = useState("");
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [emailInvalid, setEmailInvalid] = useState(false);
+  useEffect(() => {
+    if (values.trailing !== "password-toggle") setShowPassword(false);
+  }, [values.trailing]);
+  useEffect(() => {
+    if (values.type !== "search") setSearchQuery("");
+  }, [values.type]);
+  useEffect(() => {
+    if (values.type !== "email") {
+      setEmailValue("");
+      setEmailTouched(false);
+      setEmailInvalid(false);
+    }
+  }, [values.type]);
   const size = values.size as "xs" | "sm" | "md";
-  const side = values.position === "right" ? "end" : "start";
-  const placeholder = values.capability === "search" ? "搜索" : "请输入";
-  const hasValue = values.state === "typing" || values.state === "filled" || values.state === "filled-disabled";
-  const previewValue = values.state === "typing" ? values.capability === "search" ? "北京" : "输入内容" : "北京纷享科技有限公司";
-  const disabled = values.state === "disabled" || values.state === "filled-disabled";
+  const disabled = values.state === "disabled";
   const invalid = values.state === "invalid";
+  const nativeEmailValidation = values.type === "email";
   const visualState = values.state === "hover" || values.state === "focus" ? values.state : undefined;
+  const previewStateProps = visualState ? { "data-input-state": visualState } : {};
+  const tokenStyle = {
+    ...(values.surfaceToken !== "surface" ? { "--surface": `var(--${values.surfaceToken})` } : {}),
+    ...(values.borderToken !== "input" ? { "--input": `var(--${values.borderToken})` } : {}),
+    ...(values.placeholderToken !== "foreground-disabled" ? { "--foreground-disabled": `var(--${values.placeholderToken})` } : {})
+  } as React.CSSProperties;
+  const inputType = values.trailing === "password-toggle" && showPassword ? "text" : values.type;
+  const inputValue = values.type === "search" ? searchQuery : nativeEmailValidation ? emailValue : undefined;
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (values.type === "search") {
+      setSearchQuery(event.target.value);
+    } else if (nativeEmailValidation) {
+      setEmailValue(event.target.value);
+      if (emailTouched) setEmailInvalid(event.currentTarget.validity.typeMismatch);
+    }
+  };
   const input = (
     <Input
+      id={values.field === "true" ? "input-workbench-preview" : undefined}
       size={size}
-      data-state={visualState}
-      defaultValue={hasValue ? previewValue : undefined}
+      type={inputType}
+      value={inputValue}
+      onChange={values.type === "search" || nativeEmailValidation ? handleChange : undefined}
+      {...previewStateProps}
       disabled={disabled}
-      aria-invalid={invalid ? true : undefined}
-      placeholder={placeholder}
+      onBlur={nativeEmailValidation ? (event) => {
+        setEmailTouched(true);
+        setEmailInvalid(event.currentTarget.validity.typeMismatch);
+      } : undefined}
+      aria-invalid={invalid || emailInvalid ? true : undefined}
+      placeholder={values.placeholder}
     />);
-
-  const withField = (node: React.ReactNode) =>
-  invalid ?
-  <Field data-invalid className="w-[280px]">
-      {node}
-      <FieldError>该项不能为空</FieldError>
-    </Field> :
-  <div className="w-[280px]">{node}</div>;
-  const groupState = visualState;
-
-  if (values.composition === "none") {
-    return withField(input);
-  }
-
-  if (values.composition === "icon") {
-    return withField(
-      <InputGroup size={size} data-state={groupState}>
-        {side === "start" ? (
-          <>
-            <InputAffix side="start">
-              <SearchIcon />
-            </InputAffix>
-            {input}
-          </>) : (
-          <>
-            {input}
-            <InputAffix>
-              <SearchIcon />
-            </InputAffix>
-          </>)}
-      </InputGroup>);
-  }
-
-  if (values.composition === "text") {
-    return withField(
-      <InputGroup size={size} data-state={groupState}>
-        {side === "start" ? (
-          <>
-            <InputAddon>http://</InputAddon>
-            {input}
-          </>) : (
-          <>
-            {input}
-            <InputAddon side="end">PX</InputAddon>
-          </>)}
-      </InputGroup>);
-  }
-
-  return withField(
-    <InputGroup size={size} data-state={groupState}>
-      <InputAddon>全部 <ChevronDownIcon /></InputAddon>
+  const groupStateProps = visualState ? { "data-input-state": visualState } : {};
+  const leading = values.leading === "search-icon" ? <InputAffix side="start"><SearchIcon /></InputAffix> :
+    values.leading === "email-icon" ? <InputAffix side="start"><MailIcon /></InputAffix> :
+    values.leading === "text" ? <InputAffix side="start">{values.leadingText}</InputAffix> :
+    values.leading === "addon" ? <InputAddon side="start">{values.leadingText}</InputAddon> : null;
+  const clearAction = values.type === "search" && searchQuery ? <InputAction aria-label="清除搜索" disabled={disabled} onClick={() => setSearchQuery("")}><XIcon /></InputAction> : null;
+  const trailing = values.trailing === "search-icon" ? <><InputAffix side="end"><SearchIcon /></InputAffix>{clearAction}</> :
+    values.trailing === "text" ? <InputAffix side="end">{values.trailingText}</InputAffix> :
+    values.trailing === "password-toggle" ? <InputAction aria-label={showPassword ? "隐藏密码" : "显示密码"} disabled={disabled} onClick={() => setShowPassword((visible) => !visible)}>{showPassword ? <EyeOffIcon /> : <EyeIcon />}</InputAction> :
+    values.trailing === "primary" ? <>{clearAction}<InputAction variant="primary" disabled={disabled}>{values.actionLabel}</InputAction></> : clearAction;
+  const control = leading || trailing ? (
+    <InputGroup size={size} {...groupStateProps}>
+      {leading}
       {input}
-      <InputAction aria-label="搜索" disabled={disabled}>
-        <SearchIcon />
-      </InputAction>
-    </InputGroup>);
+      {trailing}
+    </InputGroup>
+  ) : input;
+
+  return (
+    <div
+      data-slot="input-workbench-preview"
+      data-surface-token={values.surfaceToken}
+      data-border-token={values.borderToken}
+      data-placeholder-token={values.placeholderToken}
+      className="w-[320px]"
+      style={tokenStyle}
+    >
+      {values.field === "true" ? (
+        <Field data-invalid={invalid || emailInvalid || undefined} data-disabled={disabled || undefined}>
+          <FieldLabel htmlFor="input-workbench-preview">字段名称</FieldLabel>
+          {control}
+          {invalid ? <FieldError>该项不能为空</FieldError> : emailInvalid ? <FieldError>请输入有效的邮箱地址。</FieldError> : <FieldDescription>字段辅助说明</FieldDescription>}
+        </Field>
+      ) : control}
+    </div>);
 }
 
 function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
@@ -9342,24 +9750,8 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
       </section>
 
       <section id="input-playground" className={docsSpacing.sectionStack}>
-        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Tune capability, composition, side, state, and size." : "按能力、组合方式、位置、交互状态和尺寸调试输入框。"} />
+        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Tune common Input props by default, then choose Edit component to compose parts and semantic token slots." : "默认调试常用 Input 属性；点击“编辑组件”后进入结构拼接、节点属性与语义 Token 制作模式。"} />
         <ComponentPlayground config={inputPlaygroundConfig} lang={lang} />
-      </section>
-
-      <section id="input-search-boundary" className={docsSpacing.sectionStack}>
-        <SectionLead title={"搜索归属"} description={"搜索归入 Input 的能力组合，不新增基础 SearchInput。"} />
-        <DocSurfaceCard elevated>
-          <CardContent className="p-5">
-            <div className="grid gap-3 text-sm leading-6 text-muted-foreground">
-              <p>
-                Ant Design 在 Input 文档内提供 Input.Search / 带搜索的输入框，fx-ui 同样把搜索视为 Input 体系里的能力，由 InputGroup、InputAffix、InputAddon 和 InputAction 组合表达。
-              </p>
-              <p>
-                当前默认尺寸为 28px；输入文字为 14px / 20px / 400，placeholder 同为 400，颜色使用 text-foreground-disabled。边框为 1px，聚焦、悬停和错误态只替换边框 token，不额外添加聚焦环。
-              </p>
-            </div>
-          </CardContent>
-        </DocSurfaceCard>
       </section>
 
       <section id="input-usage" className={docsSpacing.sectionStack}>
@@ -9367,7 +9759,7 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={inputImportCode} label="Import" lang={lang} />
@@ -9379,7 +9771,7 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
       <section id="input-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -9414,7 +9806,7 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -9441,7 +9833,7 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocDoDont rows={inputDoDontRows} elevated />
+        <DocDoDont rows={inputDoDontRows} />
       </section>
     </div>);
 
@@ -9449,44 +9841,194 @@ function InputPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 function SelectPlaygroundPreview({ values }: {values: Record<string, string>;}) {
   const size = values.size as "xs" | "sm" | "md";
-  const isFilter = values.capability === "filter";
-  const selectedValue = isFilter ? "active" : "admin";
-  const placeholder = isFilter ? "筛选状态" : "请选择角色";
+  const variant = values.variant === "borderless" ? "borderless" : "outline";
+  const selectedValue = "admin";
+  const secondValue = "member";
+  const placeholder = "请选择角色";
+  const isMultiple = values.selection === "multiple";
+  const hasOtherInput = values.structure === "other" && values.otherInput !== "none";
+  const isOtherRequired = values.otherInput === "required";
+  const hasValue = values.valueState === "selected";
+  const [previewValue, setPreviewValue] = useState<string | string[] | null>(null);
+  const [otherValue, setOtherValue] = useState("");
   const disabled = values.state === "disabled";
   const invalid = values.state === "invalid";
-  const open = values.state === "open";
+  const open = values.state === "open" || values.state === "searching" || values.state === "empty" || values.state === "loading" || hasOtherInput;
   const visualState = (values.state === "hover" || values.state === "focus" || values.state === "open" ? values.state : undefined) as "hover" | "focus" | "open" | undefined;
-  const select = (
-    <Select
-      defaultValue={values.valueState === "selected" ? selectedValue : undefined}
-      disabled={disabled}
-      open={open ? true : undefined}>
-      <SelectTrigger
+  const showSearch = values.search === "local";
+  const showEmpty = values.state === "empty";
+  const showLoading = values.state === "loading";
+  const itemA = <SelectItem value={selectedValue}>管理员</SelectItem>;
+  const itemB = <SelectItem value={secondValue} disabled={values.structure === "disabled"}>成员</SelectItem>;
+  const extraItems = isMultiple ? (
+    <>
+      <SelectItem value="auditor">审计员</SelectItem>
+      <SelectItem value="guest">访客</SelectItem>
+    </>) : null;
+  const labelByValue: Record<string, string> = {
+    [selectedValue]: "管理员",
+    [secondValue]: "成员",
+    auditor: "审计员",
+    guest: "访客",
+    other: otherValue || "其他"
+  };
+  const selectValueNode = isMultiple ? (
+    <SelectValue placeholder={placeholder}>
+      {(value: string[]) =>
+      value?.length ? (
+        <SelectMultiValue
+          items={value.map((item) => ({ value: item, label: labelByValue[item] ?? item }))}
+          maxVisible={2} />) :
+      placeholder
+      }
+    </SelectValue>) : (
+    <SelectValue placeholder={placeholder}>
+      {(value: string | null) =>
+      value === "other" && otherValue ? otherValue :
+      value === "other" ? "其他" :
+      value ? labelByValue[value] ?? value : undefined
+      }
+    </SelectValue>);
+  const descriptionItems = (
+    <>
+      <SelectItem value={selectedValue}>
+        <span className="flex flex-col">
+          <span>管理员</span>
+          <span className="text-xs text-muted-foreground">拥有全部管理权限</span>
+        </span>
+      </SelectItem>
+      <SelectItem value={secondValue}>
+        <span className="flex flex-col">
+          <span>成员</span>
+          <span className="text-xs text-muted-foreground">拥有基础使用权限</span>
+        </span>
+      </SelectItem>
+    </>);
+  const contentLead = (
+    <>
+      {showSearch ? (
+        <div className="p-1">
+          <Input size="xs" placeholder="搜索选项" defaultValue={values.state === "searching" || showEmpty ? "已" : undefined} />
+        </div>) : null}
+      {showEmpty ? <div className="px-2 py-6 text-center text-sm text-muted-foreground">无匹配结果</div> : null}
+      {showLoading ? (
+        <div className="flex items-center gap-2 px-2 py-3 text-sm text-muted-foreground">
+          <Spinner className="size-4" />
+          正在加载
+        </div>) : null}
+    </>);
+  const selectKey = [
+    values.structure,
+    values.variant,
+    values.selection,
+    values.search,
+    values.otherInput,
+    values.valueState,
+    values.state,
+    values.size
+  ].join("-");
+  useEffect(() => {
+    setPreviewValue(hasValue ? isMultiple ? [selectedValue, secondValue, "auditor", "guest"] : hasOtherInput ? "other" : selectedValue : isMultiple ? [] : null);
+    setOtherValue(hasOtherInput && hasValue && !isOtherRequired ? "选项n" : "");
+  }, [hasOtherInput, hasValue, isMultiple, isOtherRequired, selectedValue, secondValue, selectKey]);
+  const hasPreviewValue = Array.isArray(previewValue) ? previewValue.length > 0 : previewValue != null;
+  const otherInputInvalid = hasOtherInput && isOtherRequired && previewValue === "other" && !otherValue.trim();
+  const otherInputNode = hasOtherInput ? (
+    <div className="px-2 pt-1 pb-2">
+      <Input
         size={size}
-        data-state={visualState}
-        aria-invalid={invalid ? true : undefined}
-        className="w-[200px]">
-        <SelectValue placeholder={placeholder} />
-      </SelectTrigger>
-      <SelectContent>
+        value={otherValue}
+        onChange={(event) => setOtherValue(event.target.value)}
+        placeholder={isOtherRequired ? "请输入（必填）" : "请输入（选填）"}
+        aria-invalid={otherInputInvalid ? true : undefined}
+        onKeyDown={(event) => event.stopPropagation()} />
+    </div>) : null;
+  const selectChildren = (
+    <>
+      {values.clearable === "true" && hasPreviewValue ? (
+        <SelectControl className="w-[200px]">
+          <SelectTrigger
+            size={size}
+            variant={variant}
+            clearable
+            data-state={visualState}
+            aria-invalid={invalid || otherInputInvalid ? true : undefined}
+            className="w-full">
+            {selectValueNode}
+          </SelectTrigger>
+          <SelectClear
+            aria-label="清除选择"
+            onClick={(event) => {
+              event.stopPropagation();
+              setPreviewValue(isMultiple ? [] : null);
+            }} />
+        </SelectControl>) : (
+        <SelectTrigger
+          size={size}
+          variant={variant}
+          data-state={visualState}
+          aria-invalid={invalid || otherInputInvalid ? true : undefined}
+          className="w-[200px]">
+          {selectValueNode}
+        </SelectTrigger>)}
+      <SelectContent size={size} collisionAvoidance={open ? { side: "none", align: "none" } : undefined}>
         {values.structure === "grouped" ? (
           <SelectGroup>
+            {contentLead}
             <SelectLabel>常用</SelectLabel>
-            <SelectItem value={isFilter ? "active" : "admin"}>{isFilter ? "进行中" : "管理员"}</SelectItem>
-            <SelectItem value={isFilter ? "done" : "member"}>{isFilter ? "已完成" : "成员"}</SelectItem>
+            {showEmpty || showLoading ? null : (
+              <>
+                {itemA}
+                {itemB}
+                {extraItems}
+                {hasOtherInput ? <SelectItem value="other">其他</SelectItem> : null}
+                {otherInputNode}
+              </>)}
           </SelectGroup>) : (
           <>
-            <SelectItem value={isFilter ? "active" : "admin"}>{isFilter ? "进行中" : "管理员"}</SelectItem>
-            <SelectItem value={isFilter ? "done" : "member"}>{isFilter ? "已完成" : "成员"}</SelectItem>
+            {contentLead}
+            {showEmpty || showLoading ? null : values.structure === "description" ? descriptionItems : (
+              <>
+                {itemA}
+                {itemB}
+                {extraItems}
+                {hasOtherInput ? <SelectItem value="other">其他</SelectItem> : null}
+                {otherInputNode}
+              </>)}
           </>)}
       </SelectContent>
+    </>);
+  const select = isMultiple ? (
+    <Select
+      key={selectKey}
+      multiple
+      value={Array.isArray(previewValue) ? previewValue : []}
+      onValueChange={setPreviewValue}
+      disabled={disabled}
+      modal={open ? false : undefined}
+      open={open ? true : undefined}>
+      {selectChildren}
+    </Select>) : (
+    <Select
+      key={selectKey}
+      value={typeof previewValue === "string" ? previewValue : null}
+      onValueChange={(next) => setPreviewValue(next)}
+      disabled={disabled}
+      modal={open ? false : undefined}
+      open={open ? true : undefined}>
+      {selectChildren}
     </Select>);
 
-  if (!invalid) return <div className="w-[280px]">{select}</div>;
+  const preview = (
+    <div className="inline-flex items-center">
+      {select}
+    </div>);
+
+  if (!invalid) return <div className={cn("w-[320px]", open && "min-h-[220px]")}>{preview}</div>;
 
   return (
-    <Field data-invalid className="w-[280px]">
-      {select}
+    <Field data-invalid className={cn("w-[320px]", open && "min-h-[220px]")}>
+      {preview}
       <FieldError>请选择一个选项</FieldError>
     </Field>);
 }
@@ -9498,11 +10040,11 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
   return (
     <div className={docsSpacing.pageStack}>
       <section id="select" className="flex flex-col gap-2">
-        <PageLead crumb={lang === "en" ? "Components / Select" : "组件 / 选择器"} title="Select 选择器" lead="从一组互斥选项中选择一个值，用于表单字段、筛选条件等场景。" actions={actions} />
+        <PageLead crumb={lang === "en" ? "Components / Select" : "组件 / 选择器"} title="Select 选择器" lead="从一组选项中选择一个或多个值，用于表单字段、筛选条件等场景。" actions={actions} />
       </section>
 
       <section id="select-playground" className={docsSpacing.sectionStack}>
-        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Tune capability, option structure, value state, interaction state, and size." : "按能力、选项结构、值状态、交互状态和尺寸调试选择器。"} />
+        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Tune option structure, selection count, search, clear action, other input, value state, interaction state, and size." : "按选项结构、选择数量、搜索、清除、其他输入、值状态、交互状态和尺寸调试选择器。"} />
         <ComponentPlayground config={selectPlaygroundConfig} lang={lang} />
       </section>
 
@@ -9511,7 +10053,7 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={selectImportCode} label="Import" lang={lang} />
@@ -9523,7 +10065,7 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
       <section id="select-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -9558,7 +10100,7 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -9585,7 +10127,7 @@ function SelectPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocDoDont rows={selectDoDontRows} elevated />
+        <DocDoDont rows={selectDoDontRows} />
       </section>
     </div>);
 
@@ -9658,7 +10200,7 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
             视觉由公司 token 注入，选中态颜色取自 primary。
           </p>
         </div>
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="flex flex-col gap-3 p-5">
             <div className="flex items-center gap-2">
               <Checkbox id="checkbox-overview-demo" />
@@ -9675,7 +10217,7 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[1040px]">
             <TableHeader>
               <TableRow>
@@ -9718,7 +10260,7 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={checkboxImportCode} label="Import" lang={lang} />
@@ -9730,7 +10272,7 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
       <section id="checkbox-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -9765,7 +10307,7 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -9792,7 +10334,7 @@ function CheckboxPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <DocDoDont rows={checkboxDoDontRows} elevated />
+        <DocDoDont rows={checkboxDoDontRows} />
       </section>
     </div>);
 
@@ -9860,7 +10402,7 @@ function RadioGroupPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;
 
       <section id="radio-group-overview" className={docsSpacing.sectionStack}>
         <SectionLead title="组件总览" description="RadioGroup 负责互斥选择状态，RadioGroupItem 负责单个选项的交互和选中态。" />
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="p-5">
             <RadioGroup value={value} onValueChange={setValue}>
               <div className="flex items-center gap-2">
@@ -9882,7 +10424,7 @@ function RadioGroupPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;
 
       <section id="radio-group-usage" className={docsSpacing.sectionStack}>
         <SectionLead title="使用方式" description="把 import 和完整组装写法复制到业务页面里使用。" />
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="grid gap-4 p-5">
             <CopyCodeBlock code={radioGroupImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={radioGroupUsageCode} label="调用" lang={lang} />
@@ -9892,7 +10434,7 @@ function RadioGroupPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;
 
       <section id="radio-group-props" className={docsSpacing.sectionStack}>
         <SectionLead title="API 属性" />
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -9918,7 +10460,7 @@ function RadioGroupPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;
 
       <section id="radio-group-semantic-dom" className={docsSpacing.sectionStack}>
         <SectionLead title="语义 DOM" description="RadioGroup 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。" />
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -9940,7 +10482,7 @@ function RadioGroupPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;
 
       <section id="radio-group-do-dont" className={docsSpacing.sectionStack}>
         <SectionLead title="正误示例" description="单选控件必须使用组件能力，不在业务处手写原生 radio 外观。" />
-        <DocDoDont rows={radioGroupDoDontRows} elevated />
+        <DocDoDont rows={radioGroupDoDontRows} />
       </section>
     </div>);
 
@@ -10007,7 +10549,7 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             开启态轨道颜色取自 primary。
           </p>
         </div>
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="flex flex-col gap-3 p-5">
             <div className="flex items-center gap-2">
               <Switch id="switch-overview-demo" />
@@ -10024,7 +10566,7 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[1040px]">
             <TableHeader>
               <TableRow>
@@ -10067,7 +10609,7 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={switchImportCode} label="Import" lang={lang} />
@@ -10079,7 +10621,7 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
       <section id="switch-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -10114,7 +10656,7 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -10141,7 +10683,7 @@ function SwitchPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocDoDont rows={switchDoDontRows} elevated />
+        <DocDoDont rows={switchDoDontRows} />
       </section>
     </div>);
 
@@ -10187,7 +10729,7 @@ function TextareaPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
             高度通过 field-sizing-content 自适应内容，不需要手写 rows 撑高度。
           </p>
         </div>
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="flex flex-col gap-3 p-5">
             <Label htmlFor="textarea-overview-demo">个人简介</Label>
             <Textarea id="textarea-overview-demo" placeholder="简单介绍一下自己" className="max-w-sm" />
@@ -10200,7 +10742,7 @@ function TextareaPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[960px]">
             <TableHeader>
               <TableRow>
@@ -10243,7 +10785,7 @@ function TextareaPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={textareaImportCode} label="Import" lang={lang} />
@@ -10255,7 +10797,7 @@ function TextareaPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
       <section id="textarea-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -10290,7 +10832,7 @@ function TextareaPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -10317,7 +10859,7 @@ function TextareaPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <DocDoDont rows={textareaDoDontRows} elevated />
+        <DocDoDont rows={textareaDoDontRows} />
       </section>
     </div>);
 
@@ -11267,7 +11809,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="grid gap-4 p-5">
             <CopyCodeBlock code={tableImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={tableUsageCode} label="调用" lang={lang} />
@@ -11277,7 +11819,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
       <section id="table-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11312,7 +11854,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow>
@@ -11339,7 +11881,7 @@ function TablePage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocDoDont rows={tableDoDontRows} elevated />
+        <DocDoDont rows={tableDoDontRows} />
       </section>
     </div>);
 
@@ -11547,7 +12089,7 @@ function CardPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="grid gap-4 p-5">
             <CopyCodeBlock code={cardImportCode} label="Import" lang={lang} />
             <CopyCodeBlock code={cardUsageCode} label="调用" lang={lang} />
@@ -11557,7 +12099,7 @@ function CardPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
       <section id="card-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11592,7 +12134,7 @@ function CardPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11747,7 +12289,7 @@ function BadgePreview({ id }: {id: string;}) {
 
 function BadgeOverview() {
   return (
-    <DocSurfaceCard elevated>
+    <DocSurfaceCard>
       <CardContent className="flex flex-wrap items-center gap-8 p-6">
         <Badge dot><BellIcon className="size-6 text-foreground" /></Badge>
         <Badge count={5}><BellIcon className="size-6 text-foreground" /></Badge>
@@ -11838,7 +12380,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
             视觉由公司 token 注入。
           </p>
         </div>
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="flex items-center gap-3 p-5">
             <TooltipProvider>
               <Tooltip>
@@ -11865,7 +12407,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
 
         
         <TooltipProvider>
-          <DocSurfaceTableCard elevated>
+          <DocSurfaceTableCard>
             <Table className="min-w-[1000px]">
               <TableHeader>
                 <TableRow>
@@ -11909,7 +12451,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
 
 
         
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={tooltipImportCode} label="Import" lang={lang} />
@@ -11921,7 +12463,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
 
       <section id="tooltip-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11956,7 +12498,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
 
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -11983,7 +12525,7 @@ function TooltipPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) 
 
 
         
-        <DocDoDont rows={tooltipDoDontRows} elevated />
+        <DocDoDont rows={tooltipDoDontRows} />
       </section>
     </div>);
 
@@ -12051,7 +12593,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             Title/Description（语义标题与说明）组成，统一用 <code className="rounded bg-muted px-1.5 py-0.5">data-slot</code> 标记。
           </p>
         </div>
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="flex items-center gap-3 p-5">
             <Dialog>
               <DialogTrigger render={<Button>打开示例对话框</Button>} />
@@ -12079,7 +12621,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-          <DocSurfaceTableCard elevated>
+          <DocSurfaceTableCard>
           <Table className="min-w-[1000px]">
             <TableHeader>
               <TableRow>
@@ -12122,7 +12664,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={dialogImportCode} label="Import" lang={lang} />
@@ -12134,7 +12676,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
       <section id="dialog-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -12169,7 +12711,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -12196,7 +12738,7 @@ function DialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocDoDont rows={dialogDoDontRows} elevated />
+        <DocDoDont rows={dialogDoDontRows} />
       </section>
     </div>);
 
@@ -12261,7 +12803,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
             并且默认强制用户通过 Action / Cancel 明确做出选择，不能随意关闭。
           </p>
         </div>
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="flex items-center gap-3 p-5">
             <AlertDialog>
               <AlertDialogTrigger render={<Button variant="destructive">删除项目</Button>} />
@@ -12286,7 +12828,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
 
 
         
-          <DocSurfaceTableCard elevated>
+          <DocSurfaceTableCard>
           <Table className="min-w-[1000px]">
             <TableHeader>
               <TableRow>
@@ -12329,7 +12871,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
 
 
         
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={alertDialogImportCode} label="Import" lang={lang} />
@@ -12341,7 +12883,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
 
       <section id="alert-dialog-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -12376,7 +12918,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
 
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -12403,7 +12945,7 @@ function AlertDialogPage({ actions, lang }: {actions: React.ReactNode;lang: Lang
 
 
         
-        <DocDoDont rows={alertDialogDoDontRows} elevated />
+        <DocDoDont rows={alertDialogDoDontRows} />
       </section>
     </div>);
 
@@ -12471,7 +13013,7 @@ function SheetPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
             适合承载和当前页面强相关的详情或操作。
           </p>
         </div>
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="flex items-center gap-3 p-5">
             <Sheet>
               <SheetTrigger render={<Button>打开示例抽屉</Button>} />
@@ -12499,7 +13041,7 @@ function SheetPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[1000px]">
             <TableHeader>
               <TableRow>
@@ -12542,7 +13084,7 @@ function SheetPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={sheetImportCode} label="Import" lang={lang} />
@@ -12554,7 +13096,7 @@ function SheetPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
       <section id="sheet-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -12589,7 +13131,7 @@ function SheetPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -12616,7 +13158,7 @@ function SheetPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
 
 
         
-        <DocDoDont rows={sheetDoDontRows} elevated />
+        <DocDoDont rows={sheetDoDontRows} />
       </section>
     </div>);
 
@@ -12666,7 +13208,7 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
             通过 className 控制宽高与形状来还原真实内容结构。
           </p>
         </div>
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="flex items-center gap-4 p-5">
             <Skeleton className="size-12 rounded-full" />
             <div className="flex flex-col gap-2">
@@ -12682,7 +13224,7 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[1000px]">
             <TableHeader>
               <TableRow>
@@ -12725,7 +13267,7 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="p-5">
           <div className="grid gap-4">
             <CopyCodeBlock code={skeletonImportCode} label="Import" lang={lang} />
@@ -12737,7 +13279,7 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
       <section id="skeleton-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -12772,7 +13314,7 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -12799,7 +13341,7 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 
         
-        <DocDoDont rows={skeletonDoDontRows} elevated />
+        <DocDoDont rows={skeletonDoDontRows} />
       </section>
     </div>);
 
@@ -12807,7 +13349,7 @@ function SkeletonPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;})
 
 function AvatarOverview({ lang }: {lang: Lang;}) {
   return (
-    <DocSurfaceCard elevated>
+    <DocSurfaceCard>
       <CardContent className="grid gap-6 p-6">
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
@@ -12848,7 +13390,7 @@ function AvatarOverview({ lang }: {lang: Lang;}) {
 
 function SeparatorOverview({ lang }: {lang: Lang;}) {
   return (
-    <DocSurfaceCard elevated>
+    <DocSurfaceCard>
       <CardContent className="grid gap-6 p-6">
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
@@ -12874,7 +13416,7 @@ function SeparatorOverview({ lang }: {lang: Lang;}) {
 
 function LinkOverview({ lang }: {lang: Lang;}) {
   return (
-    <DocSurfaceCard elevated>
+    <DocSurfaceCard>
       <CardContent className="grid gap-6 p-6">
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
@@ -13214,7 +13756,7 @@ function StandardDocPage({
         {overviewMatrix ?
         overviewMatrix :
 
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
             <CardContent className="flex items-center gap-3 p-5">{overview}</CardContent>
           </DocSurfaceCard>
         }
@@ -13248,7 +13790,7 @@ function StandardDocPage({
 
         usageCode ? "把 import 和完整组装写法复制到业务页面里使用。" : "复制 import 即可；更多组合写法见上方「调试台」的代码 Tab。"} />
         
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="grid gap-4 p-5">
             <CopyCodeBlock code={importCode} label="Import" lang={lang} />
             {usageCode ? <CopyCodeBlock code={usageCode} label="调用" lang={lang} /> : null}
@@ -13258,7 +13800,7 @@ function StandardDocPage({
 
       <section id={`${slug}-props`} className={docsSpacing.sectionStack}>
         <SectionLead title="API 属性" />
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -13293,7 +13835,7 @@ function StandardDocPage({
 
 
         
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
@@ -13320,7 +13862,7 @@ function StandardDocPage({
 
 
         
-        <DocDoDont rows={doDontRows} elevated />
+        <DocDoDont rows={doDontRows} />
       </section>
     </div>);
 
@@ -13455,7 +13997,7 @@ function BreadcrumbDocPage({ actions, lang }: {actions: React.ReactNode;lang: La
       lead="展示当前页面在层级结构中的位置，帮助用户理解所处位置并快速返回上级。"
       overview={null}
       overviewMatrix={
-      <DocSurfaceCard elevated>
+      <DocSurfaceCard>
         <CardContent className="grid gap-6 p-6">
           <div className="grid gap-3">
             <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
@@ -13715,7 +14257,7 @@ function TimePickerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;
 
       <section id="time-picker-usage" className={docsSpacing.sectionStack}>
         <SectionLead title="使用方式" description="把 import 和 JSX 调用复制到业务页面里使用。" />
-        <DocSurfaceCard elevated>
+        <DocSurfaceCard>
           <CardContent className="p-5">
             <div className="grid gap-4">
               <CopyCodeBlock code={timePickerImportCodeForPlayground} label="Import" lang={lang} />
@@ -13727,7 +14269,7 @@ function TimePickerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;
 
       <section id="time-picker-props" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">API 属性</h2>
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[680px]">
             <TableHeader>
               <TableRow>
@@ -13752,7 +14294,7 @@ function TimePickerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;
 
       <section id="time-picker-semantic-dom" className={docsSpacing.sectionStack}>
         <SectionLead title="语义 DOM" description="TimePicker 保留可定位的 data-slot，便于测试和 AI 读取组件结构。" />
-        <DocSurfaceTableCard elevated>
+        <DocSurfaceTableCard>
           <Table className="min-w-[620px]">
             <TableHeader>
               <TableRow>
@@ -13773,9 +14315,35 @@ function TimePickerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;
 
       <section id="time-picker-do-dont" className={docsSpacing.sectionStack}>
         <SectionLead title="正误示例" description="工程师和 AI 生成代码最容易犯的错误，照着做即可。" />
-        <DocDoDont rows={timePickerDoDontRows} elevated />
+        <DocDoDont rows={timePickerDoDontRows} />
       </section>
     </div>);
+}
+
+function DatePickerPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
+  return (
+    <StandardDocPage
+      slug="date-picker"
+      title="DatePicker 日期选择器"
+      lead="用于从日历中选择单个日期；属于 fx 组合组件，由 Popover 和 Calendar 组成，不向基础 Input 增加日期业务语义。"
+      overview={<DatePicker defaultValue={new Date(2026, 6, 15)} clearable className="w-[220px]" />}
+      scenarioExamples={datePickerScenarioExamples}
+      renderScenarioPreview={(id) => id === "range" ? (
+        <div className="flex items-center gap-2">
+          <DatePicker placeholder="开始日期" className="w-[150px]" />
+          <span className="text-muted-foreground">至</span>
+          <DatePicker placeholder="结束日期" className="w-[150px]" />
+        </div>
+      ) : <DatePicker defaultValue={new Date(2026, 6, 15)} clearable className="w-[220px]" />}
+      importCode={`import { DatePicker } from "@/components/fx/date-picker"`}
+      usageCode={`<DatePicker defaultValue={new Date(2026, 6, 15)} clearable />`}
+      propRows={datePickerPropRows}
+      semanticDomRows={datePickerSemanticDomRows}
+      doDontRows={datePickerDoDontRows}
+      actions={actions}
+      lang={lang}
+    />
+  )
 }
 
 function CalendarPage({ actions, lang }: {actions: React.ReactNode;lang: Lang;}) {
@@ -13957,7 +14525,7 @@ function SearchMenuDemo() {
 
 function DropdownMenuOverview({ lang }: {lang: Lang;}) {
   return (
-    <DocSurfaceCard elevated>
+    <DocSurfaceCard>
       <CardContent className="grid gap-6 p-6">
       <div className="grid gap-3">
         <h3 className="text-sm font-medium text-muted-foreground">{lang === "en" ? "Types" : "类型"}</h3>
@@ -15641,13 +16209,13 @@ const tplColMenu = [
 const customerColumns: Column<TplCustomer>[] = [
 { key: "name", header: "客户名称", sortable: true, sortValue: (c) => c.name, menuActions: tplColMenu, cell: (c) => <a href="#template-customer-list" className="text-foreground hover:text-link hover:underline">{c.name}</a> },
 { key: "level", header: "客户级别", sortable: true, sortValue: (c) => c.level, menuActions: tplColMenu, cell: (c) => <Tag color={c.levelColor}>{c.level}</Tag> },
-{ key: "progress", header: "跟进进度", headClassName: "w-40", sortable: true, sortValue: (c) => c.progress, menuActions: tplColMenu, cell: (c) =>
-  <span className="flex items-center gap-2">
+{ key: "progress", header: "跟进进度", dataType: "percentage", headClassName: "w-40", sortable: true, sortValue: (c) => c.progress, menuActions: tplColMenu, cell: (c) =>
+  <span className="flex items-center justify-end gap-2">
       <Progress value={c.progress} tone={c.progressTone} className="w-[60px]" trackClassName="h-1" />
       <span className="w-9 shrink-0 text-sm tabular-nums text-muted-foreground">{c.progress}%</span>
     </span>
 },
-{ key: "phone", header: "电话", menuActions: tplColMenu, cell: (c) => <span className="inline-flex items-center gap-1.5 tabular-nums"><span>{c.flag}</span>{c.phone}</span> },
+{ key: "phone", header: "电话", dataType: "identifier", menuActions: tplColMenu, cell: (c) => <span className="inline-flex items-center gap-1.5"><span>{c.flag}</span>{c.phone}</span> },
 { key: "owner", header: "负责人", menuActions: tplColMenu, cell: (c) =>
   <span className="inline-flex items-center gap-1.5">
       <Avatar className="size-5"><AvatarImage src={c.avatar} alt={c.owner} /><AvatarFallback colorful>{avatarInitials(c.owner)}</AvatarFallback></Avatar>

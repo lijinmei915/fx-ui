@@ -271,7 +271,7 @@
       {
         "title": "外层卡片",
         "value": "border-border + bg-card",
-        "logic": "文档站承载独立信息块、示例预览或说明区域时，外层统一使用标准边框和卡片底色。"
+        "logic": "文档站承载独立信息块、示例预览或说明区域时，统一通过 WebsiteCardContainer 渲染；该容器复用 shadcn Card 的标准边框和卡片底色。"
       },
       {
         "title": "内部区域",
@@ -280,8 +280,8 @@
       },
       {
         "title": "阴影",
-        "value": "默认无阴影 / 需要时 shadow-l1",
-        "logic": "纯展示页不默认加阴影；只有需要浮层感或调试台容器时，才使用组件已有 elevated 或 shadow 规则。"
+        "value": "固定 shadow-l1 / 跟随 Shadow Level",
+        "logic": "所有 WebsiteCardContainer 统一使用 shadow-l1；全局主题的 Shadow Level 设为 none 时阴影同时关闭，low、medium、high 则统一调整强度。"
       }
     ],
     "visualBaseline": [

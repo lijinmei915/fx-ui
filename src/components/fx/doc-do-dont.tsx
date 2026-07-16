@@ -12,15 +12,14 @@ type DocDoDontRow = {
 type DocDoDontProps = {
   lang?: "zh" | "en"
   rows: DocDoDontRow[]
-  elevated?: boolean
 }
 
-function DocDoDont({ lang = "zh", rows, elevated = false }: DocDoDontProps) {
+function DocDoDont({ lang = "zh", rows }: DocDoDontProps) {
   const isEnglish = lang === "en"
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      <DocSurfaceCard elevated={elevated}>
+      <DocSurfaceCard>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base text-foreground">
             <CheckCircleIcon className="size-[18px] text-success" />
@@ -37,7 +36,7 @@ function DocDoDont({ lang = "zh", rows, elevated = false }: DocDoDontProps) {
         </CardContent>
       </DocSurfaceCard>
 
-      <DocSurfaceCard elevated={elevated}>
+      <DocSurfaceCard>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base text-foreground">
             <AlertTriangleIcon className="size-[18px] text-destructive" />

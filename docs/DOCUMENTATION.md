@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-07-02
+last_verified: 2026-07-16
 teaches: "fx-ui 的文档分工边界、SSOT 规则——一条信息该写进哪个文件"
 use_when: "不确定一条新信息该记录到哪份文档时，先查这里的 SSOT 表和判断示例"
 ---
@@ -43,7 +43,8 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 |------|----------|------------|------|
 | 文档站骨架 | `docs/DOC_SITE_DESIGN.md` | `docs/data/doc-site.manifest.json` | `scripts/check-doc-site-contract.mjs` |
 | 组件事实 | `docs/components/*.md` | `docs/data/components.manifest.json` | `scripts/check-components-manifest.mjs` |
-| token | `docs/TOKENS.md` | `docs/data/design-tokens.json` | `scripts/check-tokens-sync.sh` |
+| token | `docs/TOKENS.md` | `docs/data/design-tokens.json`（映射事实）→ `docs/data/agent-tokens.manifest.json`（派生 Agent / Theme contract） | `scripts/check-tokens-sync.sh` + `scripts/build-agent-token-contract.mjs --check` + `scripts/check-theme-contract.mjs` |
+| Agent 查询能力 | `AGENTS.md`（行为边界）、现有组件/token/page 真相源 | `docs/data/agent-*.manifest.json`、`docs/data/agent-context.md`、`docs/data/page-build-kit.manifest.json`、`docs/data/agent-recipes.manifest.json` | `doctor` 聚合 Token、组件源码/API、文档示例、Build Kit 与 Agent UI 检查；`check:agent-query` 守查询/计划/影响/配方边界，`check:agent-examples` 守示例来源，`check:agent-recipes` 守场景证据 |
 | 文档章节/职责 | 本文（SSOT 表） | `docs/data/doc-structure.manifest.json` | `scripts/check-doc-structure.mjs` |
 
 ### Markdown / Manifest / Generated 分工
@@ -179,7 +180,7 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 ---
 layer: knowledge | governance
 type: spec | status | log | architecture
-last_verified: 2026-07-02
+last_verified: 2026-07-16
 teaches: "这份文档回答什么问题"
 use_when: "什么场景下应该先查这份文档"
 ---

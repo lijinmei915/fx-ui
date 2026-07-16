@@ -88,6 +88,7 @@ const governancePagesManifest = await readJson("docs/data/governance-pages.manif
 const governanceTodoManifest = await readJson("docs/data/governance-todo.json")
 const websiteStandardsManifest = await readJson("docs/data/website-standards.manifest.json")
 const appSource = await readText(docSiteManifest.truthSource)
+const docSurfaceSource = await readText("src/components/fx/doc-surface.tsx")
 
 if (governanceTodoManifest.format !== "fx-ui/governance-todo") {
   errors.push("governance-todo manifest format must be fx-ui/governance-todo")
@@ -268,8 +269,11 @@ if (!appSource.includes("websiteStandardsManifest.componentPlayground.rulePanel.
 if (!appSource.includes("websiteStandardsManifest.websiteCardContainer.rules.map")) {
   errors.push("website-standards page must render WebsiteCardContainer rules from websiteStandardsManifest")
 }
-if (!appSource.includes("<WebsiteCardContainer label={lang === \"en\" ? \"Internal area\" : \"内部区域\"} />")) {
-  errors.push("website-standards page must render WebsiteCardContainer component")
+if (!appSource.includes("<WebsiteCardContainerPreview label={lang === \"en\" ? \"Internal area\" : \"内部区域\"} />")) {
+  errors.push("website-standards page must render WebsiteCardContainerPreview")
+}
+if (!docSurfaceSource.includes('from "@/components/fx/website-card-container"') || !docSurfaceSource.includes("<WebsiteCardContainer")) {
+  errors.push("doc-site independent surfaces must compose WebsiteCardContainer")
 }
 if (!appSource.includes("governancePagesManifest.documentation.ssotRoutes.map")) {
   errors.push("documentation page must render SSOT routes from governancePagesManifest")

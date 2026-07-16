@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-07-06
+last_verified: 2026-07-16
 teaches: "AI 在 fx-ui 项目里的行为红线：不手写组件、只注入 token、保护 token 真相源"
 use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token 时"
 ---
@@ -48,8 +48,11 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 - 布局分两层（见 DEC-010）：**整页骨架**用 fx 组件 `Layout`（`src/components/fx/layout.tsx`，Header/Sider/Content/Footer）；**内容区分栏**用 Tailwind 24 列栅格工具类（`grid-cols-[repeat(24,…)]`/`col-span-[n]`/`gap-x/y`）。**不要给栅格封 `Row/Col` 组件**（Tailwind 类名已是栅格能力，再包多此一举）；尺寸默认值见 `docs/LAYOUTS.md`
 - 不确定一条信息该写进哪份文档（CHANGELOG / DECISIONS / LESSONS / 新建文档…）→ 先查 `docs/DOCUMENTATION.md` 的 SSOT 路由表；新建 `docs/*.md` 时必须同时在该表里登记一行，否则会变成孤岛文档
 - **说明写 Markdown，结构事实写 manifest，能从真相源派生的不要手填第二份**：页面、AI、脚本共同消费的内容优先收口到 `docs/data/*.json`；背景/原因/边界留在 `docs/*.md`
+- **面向用户的新建或调整文本先选 `text-{role}` 文本角色**：如 `text-page-title`、`text-body`；不得在同一元素再叠加基础 `text-{size}` / `font-*`。既有代码不做批量迁移；角色、底层映射与检查以 `docs/data/design-tokens.json#typography.roles` 为准。
+- **Agent 查询先查 contract，再读源码**：意图搜索的结果必须给出命中依据，优先返回组件与已验证页面骨架；组件实现前必须读取 `apiSource`，调试台控制项不是组件 API；场景组合先查 `fx recipe`，只能复用已验证配方；示例只能返回真实文档页/调试台来源指针，不得复制成第二份 JSX 真相源。改动前用 `fx impact` 查看已声明的联动链与检查；可扩展的同义词和排序权重留在查询实现中，不作为组件或设计规则。
 - 用户说"记住这个规则"→ **先判断类型**：设计/架构/产品决策 → `docs/DECISIONS.md`；AI 行为偏好/跨项目约定 → memory；不要两个都写
 - **任何涉及 token 的改动，按固定顺序：① 先改 `theme/fx-theme.css`（真相源）② 同步 `docs/TOKENS.md` + 相关规则/`DECISIONS.md` ③ 跑 `npm run build:tokens` 重建 manifest ④ 最后才改组件等映射处**。顺序不能反——先改组件后补 token 会漂移
+- **主题先查 Theme Contract，再谈多主题**：`fx theme show` 只开放已声明的语义视觉槽；半径、字族、间距和结构性效果不是主题调用处可覆盖项。`fx theme audit` 通过前不得宣称主题契约完整；当前只有 light，不能伪称已支持 dark 或自定义主题构建。
 - **任何存在引用关系的内容，都按“真相源 → 引用项”联动处理**：源码、Markdown、manifest、网页示例、数据表谁引用谁都要查清，改动时同步更新，不留孤立副本
 
 ---

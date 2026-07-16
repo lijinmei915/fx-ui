@@ -112,6 +112,8 @@ for (const section of ["primitive", "semantic"]) {
 }
 
 const componentUsage = manifest.componentUsage
+const semanticNames = new Set((manifest.semantic ?? []).map((token) => token.name))
+const allowedStateNames = new Set(["default", "hover", "focus", "active", "disabled", "invalid", "placeholder"])
 
 if (!Array.isArray(componentUsage) || componentUsage.length === 0) {
   errors.push("design-tokens.json 的 componentUsage 必须是非空数组。")
@@ -141,7 +143,154 @@ if (!Array.isArray(componentUsage) || componentUsage.length === 0) {
     if (!Array.isArray(item.rules) || item.rules.length === 0) {
       errors.push(`componentUsage.${item.component} 必须声明 rules。`)
     }
+
+    const requiredTypographyMappings = {
+      Input: new Map([["value", "body"], ["placeholder", "inherits-value"]]),
+      Table: new Map([["header", "label"], ["cell", "data-or-body"]]),
+    }
+    const requiredMappings = requiredTypographyMappings[item.component]
+    if (requiredMappings) {
+      if (!Array.isArray(item.typographyMappings) || item.typographyMappings.length !== requiredMappings.size) {
+        errors.push(`componentUsage.${item.component}.typographyMappings 必须完整声明组件排版映射。`)
+      } else {
+        const mappedElements = new Set()
+        for (const mapping of item.typographyMappings) {
+          if (!mapping.element || !mapping.role || !mapping.implementation || !mapping.usage) {
+            errors.push(`componentUsage.${item.component}.typographyMappings 存在缺少 element/role/implementation/usage 的条目。`)
+            continue
+          }
+          mappedElements.add(mapping.element)
+          if (requiredMappings.get(mapping.element) !== mapping.role) {
+            errors.push(`componentUsage.${item.component}.typographyMappings.${mapping.element} 的角色不符合契约。`)
+          }
+        }
+        for (const element of requiredMappings.keys()) if (!mappedElements.has(element)) errors.push(`componentUsage.${item.component}.typographyMappings 缺少 ${element}。`)
+      }
+    }
+
+    if (item.stateMappings !== undefined) {
+      if (!Array.isArray(item.stateMappings) || item.stateMappings.length === 0) {
+        errors.push(`componentUsage.${item.component}.stateMappings 如声明则必须是非空数组。`)
+        continue
+      }
+
+      const states = new Set()
+      for (const mapping of item.stateMappings) {
+        if (!mapping.element || !mapping.state || !mapping.token || !mapping.description) {
+          errors.push(`componentUsage.${item.component}.stateMappings 存在缺少 element/state/token/description 的条目。`)
+          continue
+        }
+        if (!allowedStateNames.has(mapping.state)) {
+          errors.push(`componentUsage.${item.component}.stateMappings 的 state 不受支持：${mapping.state}`)
+        }
+        if (!semanticNames.has(mapping.token)) {
+          errors.push(`componentUsage.${item.component}.stateMappings 的 ${mapping.token} 必须是已声明的 semantic token。`)
+        }
+        if (!item.tokens.includes(mapping.token)) {
+          errors.push(`componentUsage.${item.component}.stateMappings 的 ${mapping.token} 必须同时列在 tokens。`)
+        }
+        const key = `${mapping.element}:${mapping.state}`
+        if (states.has(key)) {
+          errors.push(`componentUsage.${item.component}.stateMappings 重复声明 ${key}。`)
+        }
+        states.add(key)
+      }
+    }
   }
+}
+
+const shape = manifest.shape
+if (!shape || !Array.isArray(shape.scale) || !shape.concentricRule) {
+  errors.push("design-tokens.json 的 shape 必须声明 scale 与 concentricRule。")
+} else {
+  for (const item of shape.scale) {
+    if (!item.role || !item.token || !item.usage) {
+      errors.push("shape.scale 存在缺少 role/token/usage 的条目。")
+    } else if (!cssVars.has(item.token)) {
+      errors.push(`shape.scale 的 ${item.token} 不存在于 theme/fx-theme.css。`)
+    }
+  }
+}
+
+const typography = manifest.typography
+const allowedTypographyClasses = new Set(["text-xl", "text-lg", "text-base", "text-sm", "text-xs", "font-normal", "font-medium", "font-semibold", "font-bold"])
+if (!typography || !Array.isArray(typography.roles) || typography.roles.length === 0) {
+  errors.push("design-tokens.json 的 typography.roles 必须是非空数组。")
+} else {
+  const roleIds = new Set()
+  const utilities = new Set()
+  for (const role of typography.roles) {
+    if (!role.id || !role.utility || !role.usage || !role.avoid || !Array.isArray(role.tailwind) || role.tailwind.length !== 2) {
+      errors.push("typography.roles 存在缺少 id/utility/tailwind/usage/avoid 的条目。")
+      continue
+    }
+    if (roleIds.has(role.id)) errors.push(`typography.roles 重复声明 ${role.id}。`)
+    roleIds.add(role.id)
+    if (role.utility !== `text-${role.id}`) {
+      errors.push(`typography.roles.${role.id}.utility 必须为 text-${role.id}。`)
+    }
+    if (utilities.has(role.utility)) errors.push(`typography.roles 重复声明 utility ${role.utility}。`)
+    utilities.add(role.utility)
+    if (!new RegExp(`@utility\\s+${role.utility}\\s*\\{`).test(css)) {
+      errors.push(`theme/fx-theme.css 缺少 typography.roles.${role.id} 对应的 @utility ${role.utility}。`)
+    }
+    if (!role.tailwind.every((item) => allowedTypographyClasses.has(item))) {
+      errors.push(`typography.roles.${role.id} 只能引用已声明的 text-* / font-* 工具类。`)
+    }
+    if (!role.tailwind.some((item) => item.startsWith("text-")) || !role.tailwind.some((item) => item.startsWith("font-"))) {
+      errors.push(`typography.roles.${role.id} 必须各声明一个 text-* 与 font-* 工具类。`)
+    }
+  }
+}
+
+const requiredTypographyConventionIds = new Set(["mixed-language", "letter-spacing", "uppercase", "code", "truncation"])
+const allowedConventionClasses = new Set(["font-sans", "font-mono", "truncate"])
+if (!Array.isArray(typography?.conventions) || typography.conventions.length !== requiredTypographyConventionIds.size) {
+  errors.push("typography.conventions 必须完整声明 5 条混排、代码与编号约定。")
+} else {
+  const conventionIds = new Set()
+  for (const convention of typography.conventions) {
+    if (!convention.id || !convention.rule || !convention.usage) {
+      errors.push("typography.conventions 存在缺少 id/rule/usage 的条目。")
+      continue
+    }
+    conventionIds.add(convention.id)
+    if (!requiredTypographyConventionIds.has(convention.id)) {
+      errors.push(`typography.conventions 不支持 ${convention.id}。`)
+    }
+    if (convention.tailwind !== undefined && (!Array.isArray(convention.tailwind) || !convention.tailwind.every((item) => allowedConventionClasses.has(item)))) {
+      errors.push(`typography.conventions.${convention.id} 只能引用 font-sans / font-mono / truncate。`)
+    }
+    if (convention.id === "letter-spacing" && JSON.stringify(convention.prohibited) !== JSON.stringify(["tracking-tight", "tracking-tighter"])) {
+      errors.push("typography.conventions.letter-spacing 必须禁止 tracking-tight 与 tracking-tighter。")
+    }
+    if (convention.id === "uppercase" && (!Array.isArray(convention.examples) || convention.examples.length === 0)) {
+      errors.push("typography.conventions.uppercase 必须提供短缩写示例。")
+    }
+  }
+  for (const id of requiredTypographyConventionIds) if (!conventionIds.has(id)) errors.push(`typography.conventions 缺少 ${id}。`)
+}
+
+const allowedDataClasses = new Set(["tabular-nums", "whitespace-nowrap"])
+const allowedDataTypes = new Set(["text", "number", "currency", "percentage", "date", "identifier", "status"])
+if (!Array.isArray(typography?.dataRules) || typography.dataRules.length !== allowedDataTypes.size) {
+  errors.push("typography.dataRules 必须完整声明 7 种数据字段类型。")
+} else {
+  const dataIds = new Set()
+  for (const rule of typography.dataRules) {
+    if (!rule.id || !rule.align || !rule.usage || !Array.isArray(rule.classes)) {
+      errors.push("typography.dataRules 存在缺少 id/align/classes/usage 的条目。")
+      continue
+    }
+    dataIds.add(rule.id)
+    if (!allowedDataTypes.has(rule.id) || !["left", "center", "right"].includes(rule.align)) {
+      errors.push(`typography.dataRules.${rule.id} 的类型或对齐值不受支持。`)
+    }
+    if (!rule.classes.every((item) => allowedDataClasses.has(item))) {
+      errors.push(`typography.dataRules.${rule.id} 只能引用 tabular-nums / whitespace-nowrap。`)
+    }
+  }
+  for (const id of allowedDataTypes) if (!dataIds.has(id)) errors.push(`typography.dataRules 缺少 ${id}。`)
 }
 
 // 交互色状态阶梯校验：hover/active/disabled 必须按 interactionLadder 取阶

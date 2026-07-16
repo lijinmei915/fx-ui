@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/page-build-kit",
+  "policy": "Only expose proven blocks and generators. An unavailable archetype must not be composed ad hoc.",
+  "archetypes": [
+    {
+      "id": "list",
+      "name": "实体列表页",
+      "status": "ready",
+      "intent": ["列表", "表格", "筛选", "分页", "管理"],
+      "generator": "npm run gen:list-page -- --name <实体名称> --slug <slug>",
+      "source": "scripts/gen-list-page.mjs",
+      "frame": ["CrmAppShell", "ListPageHeader", "ListToolbar", "DataTable", "Pagination"],
+      "dataContract": ["columns", "rows", "views", "scopes", "rowActions"],
+      "constraints": ["生成后只填 columns、rows 和受控配置。", "路由登记 pageRegistry 与 docsNav。", "完成后运行 check:all 与 test:visual。"]
+    },
+    {
+      "id": "detail",
+      "name": "详情页",
+      "status": "needs-block",
+      "intent": ["详情", "对象", "信息页"],
+      "constraint": "当前没有经过验证的 DetailPageBlock；先沉淀 block，不能临时拼页面。"
+    },
+    {
+      "id": "form",
+      "name": "编辑表单页",
+      "status": "needs-block",
+      "intent": ["表单", "新建", "编辑"],
+      "constraint": "当前没有经过验证的 EditFormBlock；先沉淀 block，不能临时拼页面。"
+    }
+  ]
+}

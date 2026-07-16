@@ -106,6 +106,15 @@ import { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableC
 
 完整 token 规则见 `docs/TOKENS.md`。
 
+## 排版 Typography {#typography}
+
+| 元素 | 规则 |
+| --- | --- |
+| 表头 | `TableHead` 使用 label 的 `font-medium`，只承载短字段名、排序和筛选入口。 |
+| 单元格 | 原生 Table 不猜字段类型。使用 `DataTable` 时，数值、日期、编号和状态用 `dataType`；普通文本按 body 内容呈现。 |
+
+机器映射在 `docs/data/design-tokens.json#componentUsage`，可用 `npm run tokens -- component Table --json` 查询。
+
 ## AI Rules {#ai-rules}
 
 - 展示组件只负责呈现数据或身份，不承载提交类动作。

@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-07-03
+last_verified: 2026-07-16
 teaches: "fx-ui 文档站自身的页面结构、样式边界和改样式流程"
 use_when: "要改 fx-ui 文档网站的顶部导航、侧边栏、内容区、目录、示例区、代码块或文档页展示样式时"
 depends_on: [theme/fx-theme.css, docs/TOKENS.md, docs/LAYOUTS.md, src/App.tsx]
@@ -25,18 +25,18 @@ fx-ui 文档站是组件、token、Blocks 和 AI 规则的承载界面。它本�
 
 ## 样式来源
 
-| 层级 | 管什么 | 修改位置 |
-|------|--------|----------|
-| 全局视觉 | 品牌色、背景、文字、边框、圆角、字体 | `theme/fx-theme.css` |
-| token 说明 | token 值、用途、Tailwind 用法 | `docs/TOKENS.md` |
-| token 机器事实表 | token 分层、语义槽、组件消费规则 | `docs/data/design-tokens.json` |
-| 组件机器事实表 | 组件来源、文档状态、API 契约和 AI 可读规则 | `docs/data/components.manifest.json` |
-| 治理数据总入口 | 机器事实表目录、用途、消费方、维护角色和检查命令 | `docs/data/governance-index.json` |
-| 文档站骨架 | 顶部导航、左侧导航、内容区、右侧目录、搜索入口 | `src/App.tsx` |
-| 工程文件关系 | 文档站和项目文件之间的读取、导入、检查、约束和产出关系 | `docs/data/system-relations.json` |
-| 现状治理内容 | 当前状态卡、数据新鲜度、规则资产、治理闭环和参考案例 | `docs/data/governance-status.json` |
-| 组件文档内容 | Button / Icon 等组件的规则和示例文本 | `docs/components/*.md` 与 `src/App.tsx` 中对应数据 |
-| 页面布局沉淀 | 业务后台页面布局规则 | `docs/LAYOUTS.md` |
+| 层级             | 管什么                                                 | 修改位置                                           |
+| ---------------- | ------------------------------------------------------ | -------------------------------------------------- |
+| 全局视觉         | 品牌色、背景、文字、边框、圆角、字体                   | `theme/fx-theme.css`                               |
+| token 说明       | token 值、用途、Tailwind 用法                          | `docs/TOKENS.md`                                   |
+| token 机器事实表 | token 分层、语义槽、组件消费规则                       | `docs/data/design-tokens.json`                     |
+| 组件机器事实表   | 组件来源、文档状态、API 契约和 AI 可读规则             | `docs/data/components.manifest.json`               |
+| 治理数据总入口   | 机器事实表目录、用途、消费方、维护角色和检查命令       | `docs/data/governance-index.json`                  |
+| 文档站骨架       | 顶部导航、左侧导航、内容区、右侧目录、搜索入口         | `src/App.tsx`                                      |
+| 工程文件关系     | 文档站和项目文件之间的读取、导入、检查、约束和产出关系 | `docs/data/system-relations.json`                  |
+| 现状治理内容     | 当前状态卡、数据新鲜度、规则资产、治理闭环和参考案例   | `docs/data/governance-status.json`                 |
+| 组件文档内容     | Button / Icon 等组件的规则和示例文本                   | `docs/components/*.md` 与 `src/App.tsx` 中对应数据 |
+| 页面布局沉淀     | 业务后台页面布局规则                                   | `docs/LAYOUTS.md`                                  |
 
 ## 机器可读结构
 
@@ -56,15 +56,17 @@ docs/DOC_SITE_DESIGN.md
 
 ### token 分层
 
-主项目采用 shadcn 友好的三层结构：
+主项目采用 shadcn 友好的“两层 Token + 组件用法”结构：
 
 ```txt
 Primitive -> Semantic -> Component Usage
 ```
 
-- `Primitive`：公司原始视觉值，例如 `--fx-primary`。
+- `Primitive`：公司原始视觉值，例如 `--fx-brand-09`。
 - `Semantic`：shadcn/ui 和 Tailwind 真正消费的槽位，例如 `--primary`、`--background`、`--ring`。
-- `Component Usage`：组件如何消费 token 的规则，例如 Button 不手写颜色，Loading 用 `disabled + Spinner`。
+- `Component Usage`：组件的属性/状态如何消费语义 token 的规则，例如 Input 的 hover 边框使用 `--primary`；它是映射事实，不是独立的组件 Token 命名空间。
+
+因此关系可以画成三段，但准确名称是 `组件用法 → 语义 Token → 基础色板`，不能把它写成“三层 Token”。只有组件确实需要长期独立换肤且通用语义无法表达时，才按 DEC-037 单独评估组件 Token；不为每个组件状态默认建 Token。
 
 `fx-ui-report-skill` 的 `Seed -> Map -> Alias -> Component` 四层结构可作为报告输出参考，但不替代主项目的 shadcn semantic slots。文档站和组件体系以 `docs/data/design-tokens.json` 为机器可读 token 入口。
 
@@ -182,15 +184,15 @@ Primitive -> Semantic -> Component Usage
 
 **① 组件文档页**（Button 独立页 / 所有走 `StandardDocPage` 的组件）——固定 7 段，顺序不变、缺一不可：
 
-| 段 | 内容 | 要点 |
-|----|------|------|
-| 头部 | `PageLead` | 面包屑 `组件 / Xxx` + 大标题 + 一句 lead |
-| 组件总览 | 真实组件预览 | 「紧凑展示该组件的样子」；**每个小标题块 = 场景示例的一个 tab（一一对应），块内示例也对应该 tab 的场景**。总览只快速展示，不加额外说明文字/旁注（说明留给场景示例的约束列） |
-| 场景示例 | 表：场景 / 示例 / 使用意图 / 约束 / 推荐写法 | 示例列在场景前；行不可点（关 hover） |
-| 使用方式 | `import` +（可选）一段**完整组装** JSX | 组合型组件（带 Provider/结构/useState，如 Sidebar/Tabs/Calendar）保留完整组装范例；用法极简、场景示例已完整覆盖的（如 Button）只留 `import`、不重复 |
-| **API 属性** | 表：**属性 / 类型 / 默认值 / 说明 四列** | **组件页和 token 页的核心区别——必须讲清可配置 prop 及其类型，不能只有名字没类型** |
-| 语义 DOM | `data-slot` 等结构 | 来自源码，不杜撰 |
-| 正误示例 | do / don't | 用现有能力，不发明 API |
+| 段           | 内容                                         | 要点                                                                                                                                                                        |
+| ------------ | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 头部         | `PageLead`                                   | 面包屑 `组件 / Xxx` + 大标题 + 一句 lead                                                                                                                                    |
+| 组件总览     | 真实组件预览                                 | 「紧凑展示该组件的样子」；**每个小标题块 = 场景示例的一个 tab（一一对应），块内示例也对应该 tab 的场景**。总览只快速展示，不加额外说明文字/旁注（说明留给场景示例的约束列） |
+| 场景示例     | 表：场景 / 示例 / 使用意图 / 约束 / 推荐写法 | 示例列在场景前；行不可点（关 hover）                                                                                                                                        |
+| 使用方式     | `import` +（可选）一段**完整组装** JSX       | 组合型组件（带 Provider/结构/useState，如 Sidebar/Tabs/Calendar）保留完整组装范例；用法极简、场景示例已完整覆盖的（如 Button）只留 `import`、不重复                         |
+| **API 属性** | 表：**属性 / 类型 / 默认值 / 说明 四列**     | **组件页和 token 页的核心区别——必须讲清可配置 prop 及其类型，不能只有名字没类型**                                                                                           |
+| 语义 DOM     | `data-slot` 等结构                           | 来自源码，不杜撰                                                                                                                                                            |
+| 正误示例     | do / don't                                   | 用现有能力，不发明 API                                                                                                                                                      |
 
 - **场景示例的筛选 tab**：场景较多需分组时用筛选 tab。**不要「全部」tab**，默认选中第一个分组；维度要对该组件有意义（Button = 类型/尺寸/状态/图标，ButtonGroup = 类型/尺寸，Icon = 用色/用法）。
 - **尺寸类分组逐档一行**：凡是「尺寸」分组，必须每个尺寸（xs/sm/default/lg）单独一行，写清各档的规格 + 用在什么情况 + 约束，对齐 Button 尺寸表，不要用一行「不同尺寸」糊弄过去。
@@ -259,25 +261,26 @@ Primitive -> Semantic -> Component Usage
 
 ### 卡片
 
-- 卡片用于承载独立信息块、示例预览或说明区域。
+- 文档站的独立信息块、示例预览或说明区域统一使用 `WebsiteCardContainer`；它内部复用 shadcn `Card`，组件自身 API 的预览才直接使用 `Card`。机器约束见 `docs/data/components.manifest.json` 与 `check:doc-site`。
 - 不要卡片套卡片形成过重层级。
 - 卡片边框使用 `border-border`，背景使用 `bg-card`。
 - 卡片内部的分隔线、控件壳和辅助区域使用 `border-border-subtle`；不要把 `border-border-container` 当作另一套卡片外框，否则文档站会出现两种边框强度。
-- 纯展示页不滥用阴影。
+- `WebsiteCardContainer` 固定使用 `shadow-l1`；阴影显示与强度只由全局主题的 Shadow Level 控制，页面调用处不得另传 `elevated` 或覆盖 shadow。
+- 只有完整应用预览这类必须贴边的既有 block 才使用容器 API `padding="none"`；不要在调用处用 `p-0` 覆盖内边距。
 - **卡片内分节用虚线**：卡片**内部**把内容分成几小节时，用虚线分隔 `border-t border-dashed border-border`；**页面级/卡片之间**才用实线 `Separator`。两者区分，避免卡片里实线显得割裂。（Separator 组件自身的演示页除外）
 
 ## 改样式流程
 
 改文档站样式前，先判断改动属于哪一类：
 
-| 想改什么 | 应该改哪里 | 备注 |
-|----------|------------|------|
-| 全站颜色、圆角、字体、背景 | `theme/fx-theme.css` | 全局影响，动手前说明影响范围 |
-| token 文案和值说明 | `docs/TOKENS.md` | 改 token 后要同步检查 token 文档 |
-| 顶部导航、侧边栏、右侧目录、文档页布局 | `src/App.tsx` | 文档站局部骨架 |
-| 某个组件文档的内容规则 | `docs/components/*.md` 和对应数据 | 需要和源码 API 对齐 |
-| shadcn 基础组件默认样式 | `src/components/ui/<component>.tsx` | 不新增黑盒封装 |
-| 公司组合模式 | `src/components/fx/` | 底层仍然由 shadcn 组合 |
+| 想改什么                               | 应该改哪里                          | 备注                             |
+| -------------------------------------- | ----------------------------------- | -------------------------------- |
+| 全站颜色、圆角、字体、背景             | `theme/fx-theme.css`                | 全局影响，动手前说明影响范围     |
+| token 文案和值说明                     | `docs/TOKENS.md`                    | 改 token 后要同步检查 token 文档 |
+| 顶部导航、侧边栏、右侧目录、文档页布局 | `src/App.tsx`                       | 文档站局部骨架                   |
+| 某个组件文档的内容规则                 | `docs/components/*.md` 和对应数据   | 需要和源码 API 对齐              |
+| shadcn 基础组件默认样式                | `src/components/ui/<component>.tsx` | 不新增黑盒封装                   |
+| 公司组合模式                           | `src/components/fx/`                | 底层仍然由 shadcn 组合           |
 
 ## 禁止事项
 
@@ -301,18 +304,18 @@ Primitive -> Semantic -> Component Usage
 
 ## 相关文件
 
-| 文件 | 关系 |
-|------|------|
-| `src/App.tsx` | 当前文档站主要页面骨架和渲染入口 |
-| `theme/fx-theme.css` | 文档站和组件共同使用的视觉 token 真相源 |
-| `docs/TOKENS.md` | token 值和用法说明 |
-| `docs/data/governance-index.json` | 治理数据总入口，登记所有机器事实表 |
-| `docs/data/design-tokens.json` | token 机器可读事实表 |
-| `docs/data/components.manifest.json` | 组件机器可读事实表 |
-| `docs/data/doc-site.manifest.json` | 文档站骨架机器可读事实表 |
-| `docs/data/system-relations.json` | 工程运行图文件关系机器事实表 |
-| `docs/data/governance-status.json` | 现状看板当前状态、数据新鲜度、治理内容和历史沉淀机器事实表 |
-| `scripts/check-doc-site-contract.mjs` | 文档站骨架和 manifest 基础一致性检查 |
-| `docs/LAYOUTS.md` | 业务后台页面布局规范，不等同于文档站布局 |
-| `docs/DESIGN_STANDARDS.md` | 设计规则总览 |
-| `docs/components/` | 组件文档内容来源 |
+| 文件                                  | 关系                                                       |
+| ------------------------------------- | ---------------------------------------------------------- |
+| `src/App.tsx`                         | 当前文档站主要页面骨架和渲染入口                           |
+| `theme/fx-theme.css`                  | 文档站和组件共同使用的视觉 token 真相源                    |
+| `docs/TOKENS.md`                      | token 值和用法说明                                         |
+| `docs/data/governance-index.json`     | 治理数据总入口，登记所有机器事实表                         |
+| `docs/data/design-tokens.json`        | token 机器可读事实表                                       |
+| `docs/data/components.manifest.json`  | 组件机器可读事实表                                         |
+| `docs/data/doc-site.manifest.json`    | 文档站骨架机器可读事实表                                   |
+| `docs/data/system-relations.json`     | 工程运行图文件关系机器事实表                               |
+| `docs/data/governance-status.json`    | 现状看板当前状态、数据新鲜度、治理内容和历史沉淀机器事实表 |
+| `scripts/check-doc-site-contract.mjs` | 文档站骨架和 manifest 基础一致性检查                       |
+| `docs/LAYOUTS.md`                     | 业务后台页面布局规范，不等同于文档站布局                   |
+| `docs/DESIGN_STANDARDS.md`            | 设计规则总览                                               |
+| `docs/components/`                    | 组件文档内容来源                                           |

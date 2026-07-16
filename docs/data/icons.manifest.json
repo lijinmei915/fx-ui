@@ -22,6 +22,9 @@
   "categories": ["action", "navigation", "status", "object", "media", "editor"],
   "icons": [
     { "name": "SearchIcon", "source": "tabler", "style": "line", "category": "action", "keywords": ["搜索", "查找", "search", "放大镜", "magnifier"] },
+    { "name": "MailIcon", "source": "tabler", "style": "line", "category": "object", "keywords": ["邮箱", "邮件", "email", "mail", "信箱"] },
+    { "name": "EyeIcon", "source": "tabler", "style": "line", "category": "action", "keywords": ["查看", "显示", "密码", "eye", "visibility"] },
+    { "name": "EyeOffIcon", "source": "tabler", "style": "line", "category": "action", "keywords": ["隐藏", "密码", "eye off", "visibility off"] },
     { "name": "PlusIcon", "source": "tabler", "style": "line", "category": "action", "keywords": ["新增", "添加", "add", "plus", "创建"] },
     { "name": "SettingsIcon", "source": "tabler", "style": "line", "category": "action", "keywords": ["设置", "配置", "settings", "齿轮", "gear"] },
     { "name": "SlidersIcon", "source": "tabler", "style": "line", "category": "action", "keywords": ["调节", "控制", "sliders", "偏好", "筛选设置"] },

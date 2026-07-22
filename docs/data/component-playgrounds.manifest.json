@@ -1,21 +1,601 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "format": "fx-ui/component-playgrounds",
-  "updatedAt": "2026-07-15",
+  "updatedAt": "2026-07-18",
   "truthSource": "docs/data/component-playgrounds.manifest.json",
   "humanDoc": "docs/components/component-playground.md",
-  "note": "组件调试台的结构化真相源。组件页和网站规范页都从这里读取场景、属性、意图和约束；源码侧只负责把这些值渲染为真实组件。",
+  "note": "Playground 与组件文档的结构化真相源。每个组件使用 Storybook-lite stories（id/name/args/parameters）；页面、视觉测试和 Agent 只引用这些 story，不再维护重复场景数据。",
+  "controlPanelContract": {
+    "appliesWhen": "new-or-touched-playground",
+    "realTimeGroupOrder": ["content", "semantics", "structure", "appearance", "behavior"],
+    "realTimeGroups": {
+      "content": "可见内容或可编辑数据",
+      "appearance": "源码定义的视觉 API，例如 variant、size、tone",
+      "behavior": "原生交互态与明确的业务组合态，例如 disabled、loading、invalid",
+      "structure": "真实子槽位或组合结构，例如 header、leading、trailing、footer",
+      "semantics": "改变原生 HTML 或无障碍语义的能力，例如 type、required、readOnly、aria-*"
+    },
+    "scenarioPresets": {
+      "placement": "after-realtime-props",
+      "showOnlyWhen": ["changes-structure", "requires-linked-real-props-or-states", "has-verified-intent-and-constraint"],
+      "hideWhen": ["single-prop-duplicate", "independently-configurable-props", "layout-only-override"],
+      "order": "explicit-order-ascending"
+    }
+  },
+  "customPlaygrounds": {
+    "button": {
+      "componentName": "Button",
+      "source": "src/components/ui/button.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "customConfigSource": "src/pages/docs/components/button-playground.tsx#buttonPlaygroundConfig",
+      "mode": "custom-config",
+      "initial": {
+        "scenario": "single",
+        "actionCount": "4",
+        "variant": "default",
+        "tone": "default",
+        "size": "sm",
+        "icon": "none",
+        "disabled": "false",
+        "loading": "false",
+        "text": "主要操作",
+        "textEn": "Primary action"
+      },
+      "props": [
+        {
+          "key": "actionCount",
+          "zh": "数量",
+          "en": "Count",
+          "propName": "actionCount",
+          "type": "segment",
+          "hiddenWhen": {
+            "scenario": "single"
+          },
+          "options": [
+            {
+              "value": "2",
+              "label": "2个",
+              "labelEn": "2 actions"
+            },
+            {
+              "value": "3",
+              "label": "3个",
+              "labelEn": "3 actions"
+            },
+            {
+              "value": "4",
+              "label": "4个",
+              "labelEn": "4 actions"
+            }
+          ]
+        },
+        {
+          "key": "text",
+          "zh": "内容",
+          "en": "Text",
+          "propName": "children",
+          "type": "text",
+          "bilingual": true,
+          "hiddenWhen": {
+            "scenario": "action-row"
+          },
+          "disabledWhen": {
+            "icon": "only"
+          }
+        },
+        {
+          "key": "variant",
+          "zh": "类型",
+          "en": "Variant",
+          "propName": "variant",
+          "type": "segment",
+          "hasAll": true,
+          "hiddenWhen": {
+            "scenario": "action-row"
+          },
+          "options": [
+            {
+              "value": "default",
+              "label": "实心",
+              "labelEn": "Solid"
+            },
+            {
+              "value": "secondary",
+              "label": "次级",
+              "labelEn": "Secondary"
+            },
+            {
+              "value": "outline",
+              "label": "描边",
+              "labelEn": "Outline"
+            },
+            {
+              "value": "ghost",
+              "label": "幽灵",
+              "labelEn": "Ghost"
+            },
+            {
+              "value": "plain",
+              "label": "纯文字",
+              "labelEn": "Plain"
+            },
+            {
+              "value": "destructive",
+              "label": "危险",
+              "labelEn": "Danger"
+            }
+          ]
+        },
+        {
+          "key": "tone",
+          "zh": "语义色",
+          "en": "Tone",
+          "propName": "tone",
+          "type": "segment",
+          "hasAll": true,
+          "hiddenWhen": {
+            "scenario": "action-row"
+          },
+          "disabledWhen": {
+            "variant": [
+              "default",
+              "secondary",
+              "outline",
+              "ghost",
+              "destructive"
+            ]
+          },
+          "options": [
+            {
+              "value": "default",
+              "label": "默认",
+              "labelEn": "Default"
+            },
+            {
+              "value": "primary",
+              "label": "主色",
+              "labelEn": "Primary"
+            },
+            {
+              "value": "info",
+              "label": "信息",
+              "labelEn": "Info"
+            },
+            {
+              "value": "danger",
+              "label": "危险",
+              "labelEn": "Danger"
+            }
+          ]
+        },
+        {
+          "key": "size",
+          "zh": "尺寸",
+          "en": "Size",
+          "propName": "size",
+          "type": "segment",
+          "hasAll": true,
+          "hiddenWhen": {
+            "scenario": "action-row"
+          },
+          "options": [
+            {
+              "value": "xs",
+              "label": "超小24",
+              "labelEn": "XS 24"
+            },
+            {
+              "value": "sm",
+              "label": "默认28",
+              "labelEn": "SM 28"
+            },
+            {
+              "value": "md",
+              "label": "中32",
+              "labelEn": "MD 32"
+            },
+            {
+              "value": "lg",
+              "label": "大36",
+              "labelEn": "LG 36"
+            }
+          ]
+        },
+        {
+          "key": "icon",
+          "zh": "图标位置",
+          "en": "Icon",
+          "propName": "iconLayout",
+          "type": "segment",
+          "hasAll": true,
+          "hiddenWhen": {
+            "scenario": "action-row"
+          },
+          "options": [
+            {
+              "value": "none",
+              "label": "无",
+              "labelEn": "None"
+            },
+            {
+              "value": "start",
+              "label": "左侧",
+              "labelEn": "Start"
+            },
+            {
+              "value": "end",
+              "label": "右侧",
+              "labelEn": "End"
+            },
+            {
+              "value": "only",
+              "label": "仅图标",
+              "labelEn": "Icon only"
+            }
+          ]
+        },
+        {
+          "key": "loading",
+          "zh": "加载",
+          "en": "Loading",
+          "propName": "loading",
+          "type": "segment",
+          "hiddenWhen": {
+            "scenario": "action-row"
+          },
+          "options": [
+            {
+              "value": "true",
+              "label": "是",
+              "labelEn": "Yes",
+              "constraint": "Button 没有 loading prop；用 disabled + Spinner 组合。"
+            },
+            {
+              "value": "false",
+              "label": "否",
+              "labelEn": "No"
+            }
+          ]
+        },
+        {
+          "key": "disabled",
+          "zh": "禁用",
+          "en": "Disabled",
+          "propName": "disabled",
+          "type": "segment",
+          "hasAll": true,
+          "hiddenWhen": {
+            "scenario": "action-row"
+          },
+          "disabledWhen": {
+            "loading": "true"
+          },
+          "options": [
+            {
+              "value": "true",
+              "label": "是",
+              "labelEn": "Yes"
+            },
+            {
+              "value": "false",
+              "label": "否",
+              "labelEn": "No"
+            }
+          ]
+        }
+      ],
+      "visualTests": ["Button 交互调试台"],
+      "visual": {
+        "route": "#button",
+        "selector": "#playground",
+        "screenshot": "button-playground.png"
+      },
+      "stories": [
+        {
+          "id": "single",
+          "name": "单按钮",
+          "nameEn": "Single",
+          "args": {
+            "scenario": "single",
+            "actionCount": "4",
+            "variant": "default",
+            "tone": "default",
+            "size": "sm",
+            "icon": "none",
+            "disabled": "false",
+            "loading": "false",
+            "text": "主要操作",
+            "textEn": "Primary action"
+          },
+          "parameters": {
+            "intent": "调试一个 Button 的类型、尺寸、图标、禁用和加载状态。",
+            "intentEn": "Tune one Button's variant, size, icon, disabled, and loading states.",
+            "source": "src/components/ui/button.tsx#single"
+          }
+        },
+        {
+          "id": "action-row",
+          "name": "按钮排列",
+          "nameEn": "Action row",
+          "args": {
+            "scenario": "action-row",
+            "actionCount": "4",
+            "variant": "default",
+            "tone": "default",
+            "size": "sm",
+            "icon": "none",
+            "disabled": "false",
+            "loading": "false",
+            "text": "主要操作",
+            "textEn": "Primary action"
+          },
+          "parameters": {
+            "intent": "用于页面头部、列表工具栏和操作区的按钮排布。",
+            "intentEn": "Arrange actions for page headers, list toolbars, and action areas.",
+            "source": "src/components/ui/button.tsx#action-row"
+          }
+        }
+      ]
+    },
+    "datePicker": {
+      "componentName": "DatePicker",
+      "source": "src/components/fx/date-picker.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "customConfigSource": "src/pages/docs/components/date-picker-page.tsx#datePickerPlaygroundConfig",
+      "mode": "custom-config",
+      "initial": {
+        "scenario": "single",
+        "size": "sm",
+        "clearable": "true",
+        "disabled": "false",
+        "invalid": "false",
+        "value": "selected"
+      },
+      "props": [
+        {
+          "key": "scenario",
+          "zh": "模式",
+          "en": "Mode",
+          "propName": "usageMode",
+          "type": "segment",
+          "options": [
+            { "value": "single", "label": "单日期", "labelEn": "Single date" },
+            { "value": "range", "label": "日期范围", "labelEn": "Date range" }
+          ]
+        },
+        {
+          "key": "size",
+          "zh": "尺寸",
+          "en": "Size",
+          "propName": "size",
+          "type": "segment",
+          "options": [
+            { "value": "xs", "label": "小", "labelEn": "XS" },
+            { "value": "sm", "label": "标准", "labelEn": "SM" },
+            { "value": "md", "label": "大", "labelEn": "MD" }
+          ]
+        },
+        {
+          "key": "clearable",
+          "zh": "可清除",
+          "en": "Clearable",
+          "propName": "clearable",
+          "type": "segment",
+          "options": [
+            { "value": "true", "label": "是", "labelEn": "Yes" },
+            { "value": "false", "label": "否", "labelEn": "No" }
+          ]
+        },
+        {
+          "key": "disabled",
+          "zh": "禁用",
+          "en": "Disabled",
+          "propName": "disabled",
+          "type": "segment",
+          "options": [
+            { "value": "true", "label": "是", "labelEn": "Yes" },
+            { "value": "false", "label": "否", "labelEn": "No" }
+          ]
+        },
+        {
+          "key": "invalid",
+          "zh": "错误态",
+          "en": "Invalid",
+          "propName": "aria-invalid",
+          "type": "segment",
+          "options": [
+            { "value": "true", "label": "是", "labelEn": "Yes" },
+            { "value": "false", "label": "否", "labelEn": "No" }
+          ]
+        },
+        {
+          "key": "value",
+          "zh": "值状态",
+          "en": "Value",
+          "propName": "defaultValue",
+          "type": "segment",
+          "options": [
+            { "value": "selected", "label": "已有日期", "labelEn": "Selected" },
+            { "value": "empty", "label": "未选择", "labelEn": "Empty" }
+          ]
+        }
+      ],
+      "visualTests": ["DatePicker Playground 主入口"],
+      "visual": {
+        "route": "#date-picker",
+        "selector": "#date-picker-playground",
+        "screenshot": "date-picker-playground.png"
+      },
+      "stories": [
+        {
+          "id": "single",
+          "name": "单日期",
+          "nameEn": "Single date",
+          "args": {
+            "scenario": "single",
+            "size": "sm",
+            "clearable": "true",
+            "disabled": "false",
+            "invalid": "false",
+            "value": "selected"
+          },
+          "parameters": {
+            "intent": "在表单或筛选中选择一个日期。",
+            "intentEn": "Select one date in forms or filters.",
+            "source": "src/components/fx/date-picker.tsx#single"
+          }
+        },
+        {
+          "id": "range",
+          "name": "日期范围",
+          "nameEn": "Date range",
+          "args": {
+            "scenario": "range",
+            "size": "sm",
+            "clearable": "true",
+            "disabled": "false",
+            "invalid": "false",
+            "value": "empty"
+          },
+          "parameters": {
+            "intent": "组合两个 DatePicker 选择开始和结束日期。",
+            "intentEn": "Compose two DatePickers for a start and end date.",
+            "source": "src/components/fx/date-picker.tsx#range"
+          }
+        }
+      ]
+    },
+    "timePicker": {
+      "componentName": "TimePicker",
+      "source": "src/components/fx/time-picker.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "customConfigSource": "src/pages/docs/components/time-picker-page.tsx#timePickerPlaygroundConfig",
+      "mode": "custom-config",
+      "initial": {
+        "capability": "basic",
+        "mode": "popover",
+        "valueState": "placeholder",
+        "state": "normal",
+        "step": "30",
+        "size": "sm"
+      },
+      "guidanceKey": "mode",
+      "props": [
+        {
+          "key": "mode",
+          "zh": "呈现方式",
+          "en": "Mode",
+          "propName": "mode",
+          "type": "segment",
+          "options": [
+            { "value": "popover", "label": "弹层", "labelEn": "Popover" },
+            { "value": "native", "label": "原生", "labelEn": "Native" }
+          ]
+        },
+        {
+          "key": "valueState",
+          "zh": "值状态",
+          "en": "Value state",
+          "propName": "value",
+          "type": "segment",
+          "options": [
+            {
+              "value": "placeholder",
+              "label": "占位",
+              "labelEn": "Placeholder"
+            },
+            { "value": "selected", "label": "已选", "labelEn": "Selected" },
+            { "value": "clearable", "label": "可清除", "labelEn": "Clearable" }
+          ]
+        },
+        {
+          "key": "state",
+          "zh": "交互状态",
+          "en": "State",
+          "propName": "state",
+          "type": "segment",
+          "options": [
+            { "value": "normal", "label": "默认", "labelEn": "Default" },
+            { "value": "hover", "label": "悬停", "labelEn": "Hover" },
+            { "value": "focus", "label": "聚焦", "labelEn": "Focus" },
+            { "value": "open", "label": "展开", "labelEn": "Open" },
+            { "value": "invalid", "label": "报错", "labelEn": "Error" },
+            { "value": "disabled", "label": "禁用", "labelEn": "Disabled" }
+          ]
+        },
+        {
+          "key": "step",
+          "zh": "步进",
+          "en": "Step",
+          "propName": "step",
+          "type": "segment",
+          "options": [
+            { "value": "15", "label": "15分钟", "labelEn": "15 min" },
+            { "value": "30", "label": "30分钟", "labelEn": "30 min" },
+            { "value": "60", "label": "60分钟", "labelEn": "60 min" }
+          ]
+        },
+        {
+          "key": "size",
+          "zh": "尺寸",
+          "en": "Size",
+          "propName": "size",
+          "type": "segment",
+          "options": [
+            { "value": "xs", "label": "超小24", "labelEn": "XS 24" },
+            { "value": "sm", "label": "默认28", "labelEn": "Default 28" },
+            { "value": "md", "label": "中32", "labelEn": "Medium 32" }
+          ]
+        }
+      ],
+      "stories": [
+        {
+          "id": "basic",
+          "name": "基础时间",
+          "nameEn": "Basic time",
+          "args": {
+            "capability": "basic",
+            "mode": "popover",
+            "valueState": "placeholder",
+            "state": "normal",
+            "step": "30",
+            "size": "sm"
+          },
+          "parameters": {
+            "intent": "在表单中选择单个时间点。",
+            "intentEn": "Select a single time in a form.",
+            "source": "src/components/fx/time-picker.tsx#basic"
+          }
+        },
+        {
+          "id": "range",
+          "name": "时间范围",
+          "nameEn": "Time range",
+          "args": {
+            "capability": "range",
+            "mode": "popover",
+            "valueState": "placeholder",
+            "state": "normal",
+            "step": "30",
+            "size": "sm"
+          },
+          "parameters": {
+            "intent": "组合两个时间选择器表达开始和结束时间。",
+            "intentEn": "Compose two time pickers for a start and end time.",
+            "source": "src/components/fx/time-picker.tsx#range"
+          }
+        }
+      ]
+    }
+  },
   "autoScenarioComponents": [
     "input",
+    "field",
+    "label",
     "select",
     "time-picker",
-    "checkbox",
     "radio-group",
-    "switch",
-    "textarea",
-    "command",
     "pagination",
-    "top-bar",
     "badge",
     "tooltip",
     "dialog",
@@ -24,18 +604,303 @@
     "skeleton",
     "avatar",
     "breadcrumb",
-    "calendar",
-    "collapsible",
     "dropdown-menu",
-    "popover",
     "separator",
-    "sidebar",
     "spinner",
-    "toast",
+    "collapsible",
     "tabs",
-    "toggle",
-    "toggle-group"
+    "popover",
+    "sidebar",
+    "command",
+    "toggle-group",
+    "toast"
   ],
+  "autoVisuals": {
+    "field": {
+      "route": "#field",
+      "selector": "#field-playground",
+      "test": "Field Playground 主入口"
+    },
+    "label": {
+      "route": "#label",
+      "selector": "#label-playground",
+      "test": "Label Playground 主入口"
+    },
+    "tooltip": {
+      "route": "#tooltip",
+      "selector": "#tooltip-playground",
+      "test": "Tooltip Playground 主入口"
+    },
+    "avatar": {
+      "route": "#avatar",
+      "selector": "#avatar-playground",
+      "test": "Avatar Playground 主入口"
+    },
+    "breadcrumb": {
+      "route": "#breadcrumb",
+      "selector": "#breadcrumb-playground",
+      "test": "Breadcrumb Playground 主入口"
+    },
+    "alert-dialog": {
+      "route": "#alert-dialog",
+      "selector": "#alert-dialog-playground",
+      "test": "AlertDialog Playground 主入口"
+    },
+    "sheet": {
+      "route": "#sheet",
+      "selector": "#sheet-playground",
+      "test": "Sheet Playground 主入口"
+    },
+    "skeleton": {
+      "route": "#skeleton",
+      "selector": "#skeleton-playground",
+      "test": "Skeleton Playground 主入口"
+    },
+    "pagination": {
+      "route": "#pagination",
+      "selector": "#pagination-playground",
+      "test": "Pagination Playground 主入口"
+    },
+    "checkbox": {
+      "route": "#checkbox",
+      "selector": "#checkbox-playground",
+      "test": "Checkbox Playground 主入口"
+    },
+    "switch": {
+      "route": "#switch",
+      "selector": "#switch-playground",
+      "test": "Switch Playground 主入口"
+    },
+    "textarea": {
+      "route": "#textarea",
+      "selector": "#textarea-playground",
+      "test": "Textarea Playground 主入口"
+    },
+    "separator": {
+      "route": "#separator",
+      "selector": "#separator-playground",
+      "test": "Separator Playground 主入口"
+    },
+    "spinner": {
+      "route": "#spinner",
+      "selector": "#spinner-playground",
+      "test": "Spinner Playground 主入口"
+    },
+    "collapsible": {
+      "route": "#collapsible",
+      "selector": "#collapsible-playground",
+      "test": "Collapsible Playground 主入口"
+    },
+    "tabs": {
+      "route": "#tabs",
+      "selector": "#tabs-playground",
+      "test": "Tabs Playground 主入口"
+    },
+    "popover": {
+      "route": "#popover",
+      "selector": "#popover-playground",
+      "test": "Popover Playground 主入口"
+    },
+    "sidebar": {
+      "route": "#sidebar",
+      "selector": "#sidebar-playground",
+      "test": "Sidebar Playground 主入口"
+    },
+    "command": {
+      "route": "#command",
+      "selector": "#command-playground",
+      "test": "Command Playground 主入口"
+    },
+    "toggle-group": {
+      "route": "#toggle-group",
+      "selector": "#toggle-group-playground",
+      "test": "ToggleGroup Playground 主入口"
+    },
+    "toast": {
+      "route": "#toast",
+      "selector": "#toast-playground",
+      "test": "Toast Playground 主入口"
+    },
+    "radio-group": {
+      "route": "#radio-group",
+      "selector": "#radio-group-playground",
+      "test": "RadioGroup Playground 主入口"
+    },
+    "dropdown-menu": {
+      "route": "#dropdown-menu",
+      "selector": "#dropdown-menu-playground",
+      "test": "DropdownMenu Playground 主入口"
+    }
+  },
+  "pageVisuals": {
+    "table": {
+      "route": "#table",
+      "selector": "#table-playground",
+      "test": "Table Playground 主入口"
+    },
+    "chart": {
+      "route": "#chart",
+      "selector": "#chart",
+      "test": "Chart 页面按需加载"
+    },
+    "nav-menu": {
+      "route": "#nav-menu",
+      "selector": "#nav-menu-playground",
+      "test": "NavMenu 页面模块"
+    },
+    "icon": {
+      "route": "#icon",
+      "selector": "#icon-playground",
+      "test": "Icon 页面模块"
+    },
+    "agent-surface": {
+      "route": "#agent-surface",
+      "selector": "#agent-surface-playground",
+      "test": "AgentSurface 页面模块"
+    },
+    "date-picker": {
+      "route": "#date-picker",
+      "selector": "[data-slot=\"date-picker\"]",
+      "test": "DatePicker 日期选择器"
+    },
+    "time-picker": {
+      "route": "#time-picker",
+      "selector": "#time-picker-playground",
+      "test": "TimePicker Playground 主入口"
+    },
+    "calendar": {
+      "route": "#calendar",
+      "selector": "#calendar-preview",
+      "test": "Calendar Playground 主入口"
+    },
+    "dialog": {
+      "route": "#dialog",
+      "selector": "#dialog-playground",
+      "test": "Dialog Playground 主入口"
+    },
+    "select": {
+      "route": "#select",
+      "selector": "#select-playground",
+      "test": "Select Playground 主入口"
+    },
+    "toggle": {
+      "route": "#toggle",
+      "selector": "#toggle-preview",
+      "test": "Toggle Playground 主入口"
+    },
+    "layout": {
+      "route": "#layout",
+      "selector": "#layout-containers",
+      "test": "Layout 页面模块"
+    },
+    "edit-form": {
+      "route": "#template-edit-form",
+      "selector": "[data-slot=\"edit-form-block\"]",
+      "test": "EditFormBlock 页面模块"
+    },
+    "detail-page": {
+      "route": "#template-detail",
+      "selector": "[data-slot=\"detail-page-block\"]",
+      "test": "DetailPageBlock 页面模块"
+    }
+  },
+  "baselineVisuals": {
+    "top-bar": {
+      "route": "#top-bar",
+      "selector": "[data-slot=\"top-bar\"]",
+      "test": "顶栏 TopBar"
+    },
+    "website-card": {
+      "route": "#website-standards",
+      "selector": "[data-website-card-container]",
+      "test": "网站卡片容器"
+    },
+    "website-card-container": {
+      "route": "#website-standards",
+      "selector": "[data-website-card-container]",
+      "test": "网站卡片容器"
+    },
+    "website-card-shadow": {
+      "route": "#website-standards",
+      "selector": "[data-website-card-container]",
+      "test": "网站卡片容器跟随全局阴影"
+    },
+    "website-spacing-rhythm": {
+      "route": "#website-standards",
+      "selector": "[data-slot=\"website-spacing-rhythm\"]",
+      "test": "网站间距节奏组件"
+    },
+    "website-rule-panel": {
+      "route": "#website-standards",
+      "selector": "[data-slot=\"website-rule-panel\"]",
+      "test": "网站规则面板组件"
+    },
+    "page-lead": {
+      "route": "#website-standards",
+      "selector": "[data-slot=\"page-lead\"]",
+      "test": "网站 PageLead 组件"
+    },
+    "section-lead": {
+      "route": "#website-standards",
+      "selector": "[data-slot=\"section-lead\"]",
+      "test": "网站 SectionLead 组件"
+    },
+    "page-header": {
+      "route": "#website-standards",
+      "selector": "[data-slot=\"page-header\"]",
+      "test": "网站 PageHeader 组件"
+    },
+    "search-toolbar": {
+      "route": "#website-standards",
+      "selector": "[data-slot=\"search-toolbar\"]",
+      "test": "网站 SearchToolbar 组件"
+    },
+    "confirm-danger-dialog": {
+      "route": "#website-standards",
+      "selector": "[data-slot=\"confirm-danger-dialog\"]",
+      "test": "网站 ConfirmDangerDialog 组件"
+    },
+    "page-shell": {
+      "route": "#website-standards",
+      "selector": "[data-slot=\"page-shell\"]",
+      "test": "网站 PageShell 组件"
+    },
+    "action-row": {
+      "route": "#website-standards",
+      "selector": "[data-slot=\"action-row\"]",
+      "test": "网站 ActionRow 组件"
+    },
+    "page-actions": {
+      "route": "#website-standards",
+      "selector": "[data-slot=\"page-actions\"]",
+      "test": "网站 PageActions 组件"
+    },
+    "component-playground": {
+      "route": "#website-standards",
+      "selector": "[data-slot=\"component-playground\"]",
+      "test": "网站 ComponentPlayground 组件"
+    },
+    "customer-list": {
+      "route": "#template-customer-list",
+      "selector": "#template-customer-list",
+      "test": "客户列表页模板"
+    },
+    "customer-briefing": {
+      "route": "#customer-briefing",
+      "selector": "[data-customer-briefing]",
+      "test": "客户简报报告"
+    },
+    "governance-map": {
+      "route": "#governance-map",
+      "selector": "#governance-map-status",
+      "test": "治理现状看板"
+    },
+    "governance-system-map": {
+      "route": "#governance-map",
+      "selector": "#governance-map-system",
+      "test": "治理工程运行图"
+    }
+  },
   "components": {
     "icon": {
       "componentName": "Icon",
@@ -268,6 +1133,12 @@
       "componentName": "Tag",
       "source": "src/components/ui/tag.tsx",
       "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "visualTests": ["Tag 交互调试台"],
+      "visual": {
+        "route": "#tag",
+        "selector": "#tag-playground",
+        "screenshot": "tag-playground.png"
+      },
       "initial": {
         "variant": "default",
         "color": "none",
@@ -275,86 +1146,6 @@
         "textEn": "Tag"
       },
       "guidanceKey": "variant",
-      "scenarios": [
-        {
-          "id": "default",
-          "zh": "默认",
-          "en": "Default",
-          "intent": "中性标签，不带状态情绪。",
-          "intentEn": "A neutral tag without status semantics.",
-          "values": {
-            "variant": "default",
-            "color": "none",
-            "text": "标签",
-            "textEn": "Tag"
-          }
-        },
-        {
-          "id": "success",
-          "zh": "成功",
-          "en": "Success",
-          "intent": "表示成功 / 已完成 / 生效中的状态。",
-          "intentEn": "Signals a success / done / active state.",
-          "values": {
-            "variant": "success",
-            "color": "none",
-            "text": "已支付",
-            "textEn": "Paid"
-          }
-        },
-        {
-          "id": "warning",
-          "zh": "警告",
-          "en": "Warning",
-          "intent": "表示需要注意 / 待处理的状态。",
-          "intentEn": "Signals an attention / pending state.",
-          "values": {
-            "variant": "warning",
-            "color": "none",
-            "text": "待审核",
-            "textEn": "Pending"
-          }
-        },
-        {
-          "id": "danger",
-          "zh": "危险",
-          "en": "Danger",
-          "intent": "表示失败 / 异常 / 已停用的状态。",
-          "intentEn": "Signals a failed / error / disabled state.",
-          "values": {
-            "variant": "destructive",
-            "color": "none",
-            "text": "已失效",
-            "textEn": "Expired"
-          }
-        },
-        {
-          "id": "outline",
-          "zh": "描边",
-          "en": "Outline",
-          "intent": "弱化的中性标签，描边不抢眼。",
-          "intentEn": "A low-key neutral tag with just an outline.",
-          "values": {
-            "variant": "outline",
-            "color": "none",
-            "text": "草稿",
-            "textEn": "Draft"
-          }
-        },
-        {
-          "id": "category",
-          "zh": "分类打标",
-          "en": "Category",
-          "intent": "分类用多彩 color（颜色=类别不是状态），color 覆盖 variant 配色。",
-          "intentEn": "Use the multicolor color axis for categories (color = category, not status); color overrides variant.",
-          "values": {
-            "variant": "default",
-            "color": "purple",
-            "text": "高意向",
-            "textEn": "High intent"
-          }
-        }
-      ],
       "props": [
         {
           "key": "text",
@@ -527,6 +1318,323 @@
               "constraintEn": "Keep it as a Tag; do not use it as a button."
             }
           ]
+        }
+      ],
+      "stories": [
+        {
+          "id": "default",
+          "name": "默认",
+          "nameEn": "Default",
+          "args": {
+            "variant": "default",
+            "color": "none",
+            "text": "标签",
+            "textEn": "Tag"
+          },
+          "parameters": {
+            "intent": "中性标签，不带状态情绪。",
+            "intentEn": "A neutral tag without status semantics.",
+            "source": "src/components/ui/tag.tsx#default"
+          }
+        },
+        {
+          "id": "success",
+          "name": "成功",
+          "nameEn": "Success",
+          "args": {
+            "variant": "success",
+            "color": "none",
+            "text": "已支付",
+            "textEn": "Paid"
+          },
+          "parameters": {
+            "intent": "表示成功 / 已完成 / 生效中的状态。",
+            "intentEn": "Signals a success / done / active state.",
+            "source": "src/components/ui/tag.tsx#success"
+          }
+        },
+        {
+          "id": "warning",
+          "name": "警告",
+          "nameEn": "Warning",
+          "args": {
+            "variant": "warning",
+            "color": "none",
+            "text": "待审核",
+            "textEn": "Pending"
+          },
+          "parameters": {
+            "intent": "表示需要注意 / 待处理的状态。",
+            "intentEn": "Signals an attention / pending state.",
+            "source": "src/components/ui/tag.tsx#warning"
+          }
+        },
+        {
+          "id": "danger",
+          "name": "危险",
+          "nameEn": "Danger",
+          "args": {
+            "variant": "destructive",
+            "color": "none",
+            "text": "已失效",
+            "textEn": "Expired"
+          },
+          "parameters": {
+            "intent": "表示失败 / 异常 / 已停用的状态。",
+            "intentEn": "Signals a failed / error / disabled state.",
+            "source": "src/components/ui/tag.tsx#danger"
+          }
+        },
+        {
+          "id": "outline",
+          "name": "描边",
+          "nameEn": "Outline",
+          "args": {
+            "variant": "outline",
+            "color": "none",
+            "text": "草稿",
+            "textEn": "Draft"
+          },
+          "parameters": {
+            "intent": "弱化的中性标签，描边不抢眼。",
+            "intentEn": "A low-key neutral tag with just an outline.",
+            "source": "src/components/ui/tag.tsx#outline"
+          }
+        },
+        {
+          "id": "category",
+          "name": "分类打标",
+          "nameEn": "Category",
+          "args": {
+            "variant": "default",
+            "color": "purple",
+            "text": "高意向",
+            "textEn": "High intent"
+          },
+          "parameters": {
+            "intent": "分类用多彩 color（颜色=类别不是状态），color 覆盖 variant 配色。",
+            "intentEn": "Use the multicolor color axis for categories (color = category, not status); color overrides variant.",
+            "source": "src/components/ui/tag.tsx#category"
+          }
+        }
+      ]
+    },
+    "card": {
+      "componentName": "Card",
+      "source": "src/components/ui/card.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "visual": {
+        "route": "#card",
+        "selector": "#card-playground"
+      },
+      "visualTests": ["Card Playground 主入口", "Card 成熟能力矩阵"],
+      "initial": {
+        "variant": "outline",
+        "size": "md",
+        "scenario": "metric"
+      },
+      "props": [
+        {
+          "key": "variant",
+          "zh": "外观",
+          "en": "Variant",
+          "propName": "variant",
+          "type": "segment",
+          "options": [
+            {
+              "value": "outline",
+              "label": "描边",
+              "labelEn": "Outline"
+            },
+            {
+              "value": "subtle",
+              "label": "弱底色",
+              "labelEn": "Subtle"
+            },
+            {
+              "value": "elevated",
+              "label": "浮起",
+              "labelEn": "Elevated"
+            }
+          ]
+        },
+        {
+          "key": "size",
+          "zh": "尺寸",
+          "en": "Size",
+          "propName": "size",
+          "type": "segment",
+          "options": [
+            {
+              "value": "sm",
+              "label": "小",
+              "labelEn": "Small"
+            },
+            {
+              "value": "md",
+              "label": "中",
+              "labelEn": "Medium"
+            },
+            {
+              "value": "lg",
+              "label": "大",
+              "labelEn": "Large"
+            }
+          ]
+        }
+      ],
+      "stories": [
+        {
+          "id": "metric",
+          "name": "数据概览",
+          "nameEn": "Metric",
+          "args": {
+            "variant": "outline",
+            "size": "md",
+            "scenario": "metric"
+          },
+          "parameters": {
+            "intent": "用于承载一个关键指标、说明和趋势变化。",
+            "intentEn": "Use for one key metric, its description, and trend.",
+            "source": "src/components/ui/card.tsx#metric"
+          }
+        },
+        {
+          "id": "info",
+          "name": "信息说明",
+          "nameEn": "Info",
+          "args": {
+            "variant": "subtle",
+            "size": "sm",
+            "scenario": "info"
+          },
+          "parameters": {
+            "intent": "用于展示配置摘要、帮助说明等只读内容。",
+            "intentEn": "Use for read-only content such as configuration summaries or help text.",
+            "source": "src/components/ui/card.tsx#info"
+          }
+        },
+        {
+          "id": "action",
+          "name": "可操作项",
+          "nameEn": "Action",
+          "args": {
+            "variant": "elevated",
+            "size": "lg",
+            "scenario": "action"
+          },
+          "parameters": {
+            "intent": "用于卡片头部带主要局部操作的内容块。",
+            "intentEn": "Use for content blocks with a local action in the header.",
+            "source": "src/components/ui/card.tsx#action"
+          }
+        },
+        {
+          "id": "media",
+          "name": "媒体内容",
+          "nameEn": "Media",
+          "args": {
+            "variant": "outline",
+            "size": "md",
+            "scenario": "media"
+          },
+          "parameters": {
+            "intent": "用于顶部含图片、视频封面等媒体内容的卡片。",
+            "intentEn": "Use for cards with top media such as images or video covers.",
+            "constraint": "媒体作为 Card 的第一个结构子节点放进 CardMedia；不要给 Card 发明 cover 或 image 根属性。",
+            "constraintEn": "Place media as Card's first structural child in CardMedia; do not invent cover or image root props.",
+            "source": "src/components/ui/card.tsx#card-media"
+          }
+        },
+        {
+          "id": "interactive-link",
+          "name": "整卡跳转",
+          "nameEn": "Card link",
+          "args": {
+            "variant": "outline",
+            "size": "md",
+            "scenario": "interactive-link"
+          },
+          "parameters": {
+            "intent": "用于整张卡片跳转到一个详情页面。",
+            "intentEn": "Use when the whole card navigates to a detail page.",
+            "constraint": "通过 render 使用原生 a 语义；内部不要再嵌套交互控件。",
+            "constraintEn": "Use native a semantics through render; do not nest interactive controls.",
+            "source": "src/components/ui/card.tsx#interactive-link"
+          }
+        },
+        {
+          "id": "interactive-button",
+          "name": "整卡操作",
+          "nameEn": "Card button",
+          "args": {
+            "variant": "subtle",
+            "size": "md",
+            "scenario": "interactive-button"
+          },
+          "parameters": {
+            "intent": "用于整张卡片触发一个明确动作。",
+            "intentEn": "Use when the whole card triggers one clear action.",
+            "constraint": "通过 render 使用原生 button 语义；不要给 div 添加 onClick。",
+            "constraintEn": "Use native button semantics through render; do not add onClick to a div.",
+            "source": "src/components/ui/card.tsx#interactive-button"
+          }
+        }
+      ]
+    },
+    "badge": {
+      "componentName": "Badge",
+      "source": "src/components/ui/badge.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "visualTests": ["Badge 交互调试台"],
+      "visual": {
+        "route": "#badge",
+        "selector": "#badge-playground",
+        "screenshot": "badge-playground.png"
+      },
+      "initial": {
+        "scenario": "dot"
+      },
+      "props": [],
+      "stories": [
+        {
+          "id": "dot",
+          "name": "红点",
+          "nameEn": "Dot",
+          "args": {
+            "scenario": "dot"
+          },
+          "parameters": {
+            "intent": "图标或导航上的有更新提示，无需具体数量。",
+            "intentEn": "Signal an update on an icon or navigation item without a specific count.",
+            "source": "src/components/ui/badge.tsx#dot"
+          }
+        },
+        {
+          "id": "count",
+          "name": "未读数",
+          "nameEn": "Count",
+          "args": {
+            "scenario": "count"
+          },
+          "parameters": {
+            "intent": "通知或消息的未读条数。",
+            "intentEn": "Show the unread count for notifications or messages.",
+            "source": "src/components/ui/badge.tsx#count"
+          }
+        },
+        {
+          "id": "overflow",
+          "name": "溢出 99+",
+          "nameEn": "Overflow 99+",
+          "args": {
+            "scenario": "overflow"
+          },
+          "parameters": {
+            "intent": "数量很大时收口，避免角标撑宽。",
+            "intentEn": "Cap large counts so the badge does not grow too wide.",
+            "source": "src/components/ui/badge.tsx#overflow"
+          }
         }
       ]
     },
@@ -737,7 +1845,63 @@
             }
           ]
         }
-      ]
+      ],
+      "stories": [
+        {
+          "id": "basic",
+          "name": "基础链接",
+          "nameEn": "Basic link",
+          "args": {
+            "underline": "hover",
+            "tone": "standard",
+            "size": "default",
+            "icon": "none",
+            "disabled": "false"
+          },
+          "parameters": {
+            "intent": "用于常规页面内跳转和外部导航。",
+            "intentEn": "Use for normal in-page navigation and external links."
+          }
+        },
+        {
+          "id": "underlined",
+          "name": "始终下划线",
+          "nameEn": "Always underlined",
+          "args": {
+            "underline": "always",
+            "tone": "standard",
+            "size": "default",
+            "icon": "none",
+            "disabled": "false"
+          },
+          "parameters": {
+            "intent": "用于正文内联或需要持续提示可点击的文字。",
+            "intentEn": "Use for inline text that must remain visibly clickable."
+          }
+        },
+        {
+          "id": "disabled",
+          "name": "禁用链接",
+          "nameEn": "Disabled link",
+          "args": {
+            "underline": "hover",
+            "tone": "standard",
+            "size": "default",
+            "icon": "none",
+            "disabled": "true"
+          },
+          "parameters": {
+            "intent": "当前无权限或暂时不可用时移出链接交互。",
+            "intentEn": "Remove link interaction when access is unavailable."
+          }
+        }
+      ],
+      "visualTests": ["Link Playground 主入口"],
+      "visual": {
+        "route": "#link",
+        "selector": "#link-playground",
+        "screenshot": "link-playground.png"
+      }
     },
     "buttonGroup": {
       "componentName": "ButtonGroup",
@@ -900,7 +2064,60 @@
             }
           ]
         }
-      ]
+      ],
+      "stories": [
+        {
+          "id": "actions",
+          "name": "操作组",
+          "nameEn": "Action group",
+          "args": {
+            "pattern": "actions",
+            "orientation": "horizontal",
+            "size": "md",
+            "variant": "outline"
+          },
+          "parameters": {
+            "intent": "把同层级的多个操作合并为一组。",
+            "intentEn": "Group related peer actions into one control cluster."
+          }
+        },
+        {
+          "id": "split",
+          "name": "拆分按钮",
+          "nameEn": "Split action",
+          "args": {
+            "pattern": "split",
+            "orientation": "horizontal",
+            "size": "sm",
+            "variant": "outline"
+          },
+          "parameters": {
+            "intent": "保留主操作，并将更多动作放在尾部图标按钮。",
+            "intentEn": "Keep the primary action visible and place more actions behind the trailing icon button."
+          }
+        },
+        {
+          "id": "toolbar-icons",
+          "name": "工具图标组",
+          "nameEn": "Toolbar icon group",
+          "args": {
+            "pattern": "toolbar-icons",
+            "orientation": "horizontal",
+            "size": "sm",
+            "variant": "outline"
+          },
+          "parameters": {
+            "intent": "用于列表、看板、地图等同层级视图切换。",
+            "intentEn": "Use for peer view controls such as list, grid, or map."
+          }
+        }
+      ],
+      "visualTests": ["ButtonGroup Playground 主入口"],
+      "visual": {
+        "route": "#button-group",
+        "selector": "#button-group-playground",
+        "screenshot": "button-group-playground.png"
+      }
     },
     "avatar": {
       "componentName": "Avatar",
@@ -1215,6 +2432,11 @@
       "componentName": "Input",
       "source": "src/components/ui/input.tsx",
       "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "visualTests": ["Input 组件制作台"],
+      "visual": {
+        "route": "#input",
+        "selector": "#input-playground"
+      },
       "initial": {
         "leading": "none",
         "trailing": "none",
@@ -1233,6 +2455,7 @@
         "placeholderToken": "foreground-disabled"
       },
       "guidanceKey": "type",
+      "storyPresentation": "examples",
       "workbench": {
         "inspectSlot": "input-group",
         "nodes": [
@@ -1247,7 +2470,9 @@
             "zh": "前置内容",
             "en": "Leading content",
             "component": "InputAffix / InputAddon",
-            "hiddenWhen": { "leading": "none" }
+            "hiddenWhen": {
+              "leading": "none"
+            }
           },
           {
             "key": "input",
@@ -1260,7 +2485,9 @@
             "zh": "后置内容",
             "en": "Trailing content",
             "component": "InputAffix / InputAction",
-            "hiddenWhen": { "trailing": "none" }
+            "hiddenWhen": {
+              "trailing": "none"
+            }
           },
           {
             "key": "tokens",
@@ -1278,20 +2505,116 @@
           }
         ],
         "stateAssignments": [
-          { "key": "border-normal", "zh": "正常", "en": "Default", "propertyZh": "边框", "propertyEn": "Border", "token": "input", "cssVar": "--input", "preview": { "key": "state", "value": "normal" } },
-          { "key": "border-hover", "zh": "悬停", "en": "Hover", "propertyZh": "边框", "propertyEn": "Border", "token": "primary", "cssVar": "--primary", "preview": { "key": "state", "value": "hover" } },
-          { "key": "border-focus", "zh": "聚焦", "en": "Focus", "propertyZh": "边框", "propertyEn": "Border", "token": "primary", "cssVar": "--primary", "preview": { "key": "state", "value": "focus" } },
-          { "key": "border-disabled", "zh": "禁用", "en": "Disabled", "propertyZh": "边框", "propertyEn": "Border", "token": "input", "cssVar": "--input", "preview": { "key": "state", "value": "disabled" } },
-          { "key": "surface-disabled", "zh": "禁用", "en": "Disabled", "propertyZh": "表面", "propertyEn": "Surface", "token": "muted", "cssVar": "--muted", "preview": { "key": "state", "value": "disabled" } },
-          { "key": "border-invalid", "zh": "错误", "en": "Error", "propertyZh": "边框", "propertyEn": "Border", "token": "destructive", "cssVar": "--destructive", "preview": { "key": "state", "value": "invalid" } }
+          {
+            "key": "border-normal",
+            "zh": "正常",
+            "en": "Default",
+            "propertyZh": "边框",
+            "propertyEn": "Border",
+            "token": "input",
+            "cssVar": "--input",
+            "preview": {
+              "key": "state",
+              "value": "normal"
+            }
+          },
+          {
+            "key": "border-hover",
+            "zh": "悬停",
+            "en": "Hover",
+            "propertyZh": "边框",
+            "propertyEn": "Border",
+            "token": "primary",
+            "cssVar": "--primary",
+            "preview": {
+              "key": "state",
+              "value": "hover"
+            }
+          },
+          {
+            "key": "border-focus",
+            "zh": "聚焦",
+            "en": "Focus",
+            "propertyZh": "边框",
+            "propertyEn": "Border",
+            "token": "primary",
+            "cssVar": "--primary",
+            "preview": {
+              "key": "state",
+              "value": "focus"
+            }
+          },
+          {
+            "key": "border-disabled",
+            "zh": "禁用",
+            "en": "Disabled",
+            "propertyZh": "边框",
+            "propertyEn": "Border",
+            "token": "input",
+            "cssVar": "--input",
+            "preview": {
+              "key": "state",
+              "value": "disabled"
+            }
+          },
+          {
+            "key": "surface-disabled",
+            "zh": "禁用",
+            "en": "Disabled",
+            "propertyZh": "表面",
+            "propertyEn": "Surface",
+            "token": "muted",
+            "cssVar": "--muted",
+            "preview": {
+              "key": "state",
+              "value": "disabled"
+            }
+          },
+          {
+            "key": "border-invalid",
+            "zh": "错误",
+            "en": "Error",
+            "propertyZh": "边框",
+            "propertyEn": "Border",
+            "token": "destructive",
+            "cssVar": "--destructive",
+            "preview": {
+              "key": "state",
+              "value": "invalid"
+            }
+          }
         ],
         "checks": [
-          { "key": "realDom", "zh": "真实组件已渲染", "en": "Real component rendered" },
-          { "key": "structure", "zh": "组合结构合法", "en": "Composition is valid" },
-          { "key": "tokens", "zh": "仅使用语义 Token", "en": "Semantic tokens only" },
-          { "key": "stateSemantics", "zh": "状态映射来自真实组件", "en": "State mappings match the component" },
-          { "key": "accessibility", "zh": "动作具备可访问名称", "en": "Actions have accessible names" },
-          { "key": "code", "zh": "预览与组件草稿同源", "en": "Preview and draft share state" }
+          {
+            "key": "realDom",
+            "zh": "真实组件已渲染",
+            "en": "Real component rendered"
+          },
+          {
+            "key": "structure",
+            "zh": "组合结构合法",
+            "en": "Composition is valid"
+          },
+          {
+            "key": "tokens",
+            "zh": "仅使用语义 Token",
+            "en": "Semantic tokens only"
+          },
+          {
+            "key": "stateSemantics",
+            "zh": "状态映射来自真实组件",
+            "en": "State mappings match the component"
+          },
+          {
+            "key": "accessibility",
+            "zh": "动作具备可访问名称",
+            "en": "Actions have accessible names"
+          },
+          {
+            "key": "code",
+            "zh": "预览与组件草稿同源",
+            "en": "Preview and draft share state"
+          }
         ]
       },
       "props": [
@@ -1302,14 +2625,67 @@
           "propName": "children",
           "type": "segment",
           "owner": "root",
+          "controlGroup": "structure",
           "defaultVisible": true,
           "defaultOrder": 3,
           "options": [
-            { "value": "none", "label": "无", "labelEn": "None", "intent": "输入框左侧不放附加内容。", "intentEn": "Keep the leading side empty.", "constraint": "不渲染前置节点。", "constraintEn": "Render no leading node." },
-            { "value": "search-icon", "label": "搜索图标", "labelEn": "Search icon", "intent": "用放大镜提示这是搜索输入。", "intentEn": "Use a search icon to identify a search input.", "constraint": "仅在 type=search 时使用 InputAffix + SearchIcon。", "constraintEn": "Use InputAffix + SearchIcon only with type=search.", "hiddenWhen": { "type": ["text", "number", "email", "password"] } },
-            { "value": "email-icon", "label": "邮箱图标", "labelEn": "Email icon", "intent": "用邮箱图标提示邮箱地址输入。", "intentEn": "Use a mail icon to identify an email-address input.", "constraint": "仅在 type=email 时使用 InputAffix + MailIcon。", "constraintEn": "Use InputAffix + MailIcon only with type=email.", "hiddenWhen": { "type": ["text", "number", "search", "password"] } },
-            { "value": "text", "label": "符号", "labelEn": "Symbol", "intent": "用于货币等轻量前缀。", "intentEn": "Use for lightweight prefixes such as currency.", "constraint": "使用 InputAffix，不发明 prefix prop。", "constraintEn": "Use InputAffix; do not invent a prefix prop.", "hiddenWhen": { "type": ["search", "email", "password"] } },
-            { "value": "addon", "label": "标签", "labelEn": "Addon", "intent": "用固定标签说明范围或协议。", "intentEn": "Use a fixed label for scope or protocol.", "constraint": "使用 InputAddon，固定内容与输入区保留分隔线。", "constraintEn": "Use InputAddon with its separator.", "hiddenWhen": { "type": ["search", "email", "password"] } }
+            {
+              "value": "none",
+              "label": "无",
+              "labelEn": "None",
+              "intent": "输入框左侧不放附加内容。",
+              "intentEn": "Keep the leading side empty.",
+              "constraint": "不渲染前置节点。",
+              "constraintEn": "Render no leading node."
+            },
+            {
+              "value": "search-icon",
+              "label": "搜索图标",
+              "labelEn": "Search icon",
+              "intent": "用放大镜提示这是搜索输入。",
+              "intentEn": "Use a search icon to identify a search input.",
+              "constraint": "仅在 type=search 时使用 InputAffix + SearchIcon。",
+              "constraintEn": "Use InputAffix + SearchIcon only with type=search.",
+              "hiddenWhen": {
+                "type": ["text", "number", "email", "password"]
+              }
+            },
+            {
+              "value": "email-icon",
+              "label": "邮箱图标",
+              "labelEn": "Email icon",
+              "intent": "用邮箱图标提示邮箱地址输入。",
+              "intentEn": "Use a mail icon to identify an email-address input.",
+              "constraint": "仅在 type=email 时使用 InputAffix + MailIcon。",
+              "constraintEn": "Use InputAffix + MailIcon only with type=email.",
+              "hiddenWhen": {
+                "type": ["text", "number", "search", "password"]
+              }
+            },
+            {
+              "value": "text",
+              "label": "符号",
+              "labelEn": "Symbol",
+              "intent": "用于货币等轻量前缀。",
+              "intentEn": "Use for lightweight prefixes such as currency.",
+              "constraint": "使用 InputAffix，不发明 prefix prop。",
+              "constraintEn": "Use InputAffix; do not invent a prefix prop.",
+              "hiddenWhen": {
+                "type": ["search", "email", "password"]
+              }
+            },
+            {
+              "value": "addon",
+              "label": "标签",
+              "labelEn": "Addon",
+              "intent": "用固定标签说明范围或协议。",
+              "intentEn": "Use a fixed label for scope or protocol.",
+              "constraint": "使用 InputAddon，固定内容与输入区保留分隔线。",
+              "constraintEn": "Use InputAddon with its separator.",
+              "hiddenWhen": {
+                "type": ["search", "email", "password"]
+              }
+            }
           ]
         },
         {
@@ -1319,14 +2695,67 @@
           "propName": "children",
           "type": "segment",
           "owner": "root",
+          "controlGroup": "structure",
           "defaultVisible": true,
           "defaultOrder": 4,
           "options": [
-            { "value": "none", "label": "无", "labelEn": "None", "intent": "输入框右侧不放附加内容。", "intentEn": "Keep the trailing side empty.", "constraint": "不渲染后置节点。", "constraintEn": "Render no trailing node." },
-            { "value": "search-icon", "label": "搜索图标", "labelEn": "Search icon", "intent": "在右侧用放大镜提示搜索。", "intentEn": "Use a search icon as a trailing search cue.", "constraint": "仅在 type=search 时使用 InputAffix side=end；与前置搜索图标互斥。", "constraintEn": "Use InputAffix side=end only with type=search; it is mutually exclusive with the leading search icon.", "hiddenWhen": { "type": ["text", "number", "email", "password"] } },
-            { "value": "text", "label": "符号", "labelEn": "Symbol", "intent": "用于百分比、单位等后缀。", "intentEn": "Use for percentages and unit suffixes.", "constraint": "使用 InputAffix side=end，不改 Input padding。", "constraintEn": "Use InputAffix with side=end; do not override Input padding.", "hiddenWhen": { "type": ["search", "email", "password"] } },
-            { "value": "password-toggle", "label": "显示密码", "labelEn": "Password visibility", "intent": "切换密码明文与掩码显示。", "intentEn": "Toggle password masking and visible text.", "constraint": "仅在 type=password 时使用 InputAction + EyeIcon/EyeOffIcon，并随状态更新 aria-label。", "constraintEn": "Use InputAction + EyeIcon/EyeOffIcon only with type=password and update the aria-label with state.", "hiddenWhen": { "type": ["text", "number", "email", "search"] } },
-            { "value": "primary", "label": "主搜索", "labelEn": "Primary search", "intent": "紧贴搜索输入放置主按钮。", "intentEn": "Place a primary action attached to a search input.", "constraint": "仅在 type=search 时使用 InputAction variant=primary，不在调用处手写按钮底色或圆角。", "constraintEn": "Use InputAction variant=primary only with type=search; do not hand-style the button.", "hiddenWhen": { "type": ["text", "number", "email", "password"] } }
+            {
+              "value": "none",
+              "label": "无",
+              "labelEn": "None",
+              "intent": "输入框右侧不放附加内容。",
+              "intentEn": "Keep the trailing side empty.",
+              "constraint": "不渲染后置节点。",
+              "constraintEn": "Render no trailing node."
+            },
+            {
+              "value": "search-icon",
+              "label": "搜索图标",
+              "labelEn": "Search icon",
+              "intent": "在右侧用放大镜提示搜索。",
+              "intentEn": "Use a search icon as a trailing search cue.",
+              "constraint": "仅在 type=search 时使用 InputAffix side=end；与前置搜索图标互斥。",
+              "constraintEn": "Use InputAffix side=end only with type=search; it is mutually exclusive with the leading search icon.",
+              "hiddenWhen": {
+                "type": ["text", "number", "email", "password"]
+              }
+            },
+            {
+              "value": "text",
+              "label": "符号",
+              "labelEn": "Symbol",
+              "intent": "用于百分比、单位等后缀。",
+              "intentEn": "Use for percentages and unit suffixes.",
+              "constraint": "使用 InputAffix side=end，不改 Input padding。",
+              "constraintEn": "Use InputAffix with side=end; do not override Input padding.",
+              "hiddenWhen": {
+                "type": ["search", "email", "password"]
+              }
+            },
+            {
+              "value": "password-toggle",
+              "label": "显示密码",
+              "labelEn": "Password visibility",
+              "intent": "切换密码明文与掩码显示。",
+              "intentEn": "Toggle password masking and visible text.",
+              "constraint": "仅在 type=password 时使用 InputAction + EyeIcon/EyeOffIcon，并随状态更新 aria-label。",
+              "constraintEn": "Use InputAction + EyeIcon/EyeOffIcon only with type=password and update the aria-label with state.",
+              "hiddenWhen": {
+                "type": ["text", "number", "email", "search"]
+              }
+            },
+            {
+              "value": "primary",
+              "label": "主搜索",
+              "labelEn": "Primary search",
+              "intent": "紧贴搜索输入放置主按钮。",
+              "intentEn": "Place a primary action attached to a search input.",
+              "constraint": "仅在 type=search 时使用 InputAction variant=primary，不在调用处手写按钮底色或圆角。",
+              "constraintEn": "Use InputAction variant=primary only with type=search; do not hand-style the button.",
+              "hiddenWhen": {
+                "type": ["text", "number", "email", "password"]
+              }
+            }
           ]
         },
         {
@@ -1336,10 +2765,27 @@
           "propName": "Field",
           "type": "segment",
           "owner": "root",
+          "controlGroup": "structure",
           "defaultVisible": false,
           "options": [
-            { "value": "false", "label": "无", "labelEn": "None", "intent": "用于工具栏或独立输入。", "intentEn": "Use for toolbars or standalone input.", "constraint": "不额外渲染字段说明。", "constraintEn": "Render no field metadata." },
-            { "value": "true", "label": "字段", "labelEn": "Field", "intent": "用于真实表单字段。", "intentEn": "Use for a real form field.", "constraint": "字段包装单独决定标题、说明和 FieldError；它不改变 Input 的 disabled 或 aria-invalid 状态。", "constraintEn": "The wrapper alone owns labels, helper copy, and FieldError; it does not change the Input disabled or aria-invalid state." }
+            {
+              "value": "false",
+              "label": "无",
+              "labelEn": "None",
+              "intent": "用于工具栏或独立输入。",
+              "intentEn": "Use for toolbars or standalone input.",
+              "constraint": "不额外渲染字段说明。",
+              "constraintEn": "Render no field metadata."
+            },
+            {
+              "value": "true",
+              "label": "字段",
+              "labelEn": "Field",
+              "intent": "用于真实表单字段。",
+              "intentEn": "Use for a real form field.",
+              "constraint": "字段包装单独决定标题、说明和 FieldError；它不改变 Input 的 disabled 或 aria-invalid 状态。",
+              "constraintEn": "The wrapper alone owns labels, helper copy, and FieldError; it does not change the Input disabled or aria-invalid state."
+            }
           ]
         },
         {
@@ -1349,13 +2795,54 @@
           "propName": "state",
           "type": "segment",
           "owner": "root",
+          "controlGroup": "behavior",
           "defaultVisible": false,
           "options": [
-            { "value": "normal", "label": "默认", "labelEn": "Default", "intent": "默认可输入状态。", "intentEn": "Default editable state.", "constraint": "不额外传状态 prop。", "constraintEn": "Pass no state prop." },
-            { "value": "hover", "label": "悬停", "labelEn": "Hover", "intent": "预览鼠标悬停反馈。", "intentEn": "Preview hover feedback.", "constraint": "仅用 data-input-state 在调试台模拟。", "constraintEn": "Simulate only with data-input-state in the playground." },
-            { "value": "focus", "label": "聚焦", "labelEn": "Focus", "intent": "预览键盘聚焦反馈。", "intentEn": "Preview focus feedback.", "constraint": "真实业务由 focus-visible/focus-within 驱动。", "constraintEn": "Business UI uses focus-visible/focus-within." },
-            { "value": "disabled", "label": "禁用", "labelEn": "Disabled", "intent": "当前字段不可编辑。", "intentEn": "The field is not editable.", "constraint": "使用 disabled，不用透明度假装。", "constraintEn": "Use disabled; do not fake it with opacity." },
-            { "value": "invalid", "label": "报错", "labelEn": "Error", "intent": "字段校验失败。", "intentEn": "Field validation failed.", "constraint": "控件使用 aria-invalid；仅字段包装显示 FieldError。", "constraintEn": "Use aria-invalid; render FieldError only with a field wrapper." }
+            {
+              "value": "normal",
+              "label": "默认",
+              "labelEn": "Default",
+              "intent": "默认可输入状态。",
+              "intentEn": "Default editable state.",
+              "constraint": "不额外传状态 prop。",
+              "constraintEn": "Pass no state prop."
+            },
+            {
+              "value": "hover",
+              "label": "悬停",
+              "labelEn": "Hover",
+              "intent": "预览鼠标悬停反馈。",
+              "intentEn": "Preview hover feedback.",
+              "constraint": "仅用 data-input-state 在调试台模拟。",
+              "constraintEn": "Simulate only with data-input-state in the playground."
+            },
+            {
+              "value": "focus",
+              "label": "聚焦",
+              "labelEn": "Focus",
+              "intent": "预览键盘聚焦反馈。",
+              "intentEn": "Preview focus feedback.",
+              "constraint": "真实业务由 focus-visible/focus-within 驱动。",
+              "constraintEn": "Business UI uses focus-visible/focus-within."
+            },
+            {
+              "value": "disabled",
+              "label": "禁用",
+              "labelEn": "Disabled",
+              "intent": "当前字段不可编辑。",
+              "intentEn": "The field is not editable.",
+              "constraint": "使用 disabled，不用透明度假装。",
+              "constraintEn": "Use disabled; do not fake it with opacity."
+            },
+            {
+              "value": "invalid",
+              "label": "报错",
+              "labelEn": "Error",
+              "intent": "字段校验失败。",
+              "intentEn": "Field validation failed.",
+              "constraint": "控件使用 aria-invalid；仅字段包装显示 FieldError。",
+              "constraintEn": "Use aria-invalid; render FieldError only with a field wrapper."
+            }
           ]
         },
         {
@@ -1365,12 +2852,37 @@
           "propName": "size",
           "type": "segment",
           "owner": "root",
+          "controlGroup": "appearance",
           "defaultVisible": true,
           "defaultOrder": 5,
           "options": [
-            { "value": "xs", "label": "超小24", "labelEn": "XS 24", "intent": "用于高密度区域。", "intentEn": "Use in dense interfaces.", "constraint": "只传 size=xs。", "constraintEn": "Pass size=xs only." },
-            { "value": "sm", "label": "默认28", "labelEn": "Default 28", "intent": "常规表单默认尺寸。", "intentEn": "Default form size.", "constraint": "默认可省略 size。", "constraintEn": "Omit size for the default." },
-            { "value": "md", "label": "中32", "labelEn": "Medium 32", "intent": "用于更宽松的表单。", "intentEn": "Use in roomier forms.", "constraint": "只传 size=md。", "constraintEn": "Pass size=md only." }
+            {
+              "value": "xs",
+              "label": "超小24",
+              "labelEn": "XS 24",
+              "intent": "用于高密度区域。",
+              "intentEn": "Use in dense interfaces.",
+              "constraint": "只传 size=xs。",
+              "constraintEn": "Pass size=xs only."
+            },
+            {
+              "value": "sm",
+              "label": "默认28",
+              "labelEn": "Default 28",
+              "intent": "常规表单默认尺寸。",
+              "intentEn": "Default form size.",
+              "constraint": "默认可省略 size。",
+              "constraintEn": "Omit size for the default."
+            },
+            {
+              "value": "md",
+              "label": "中32",
+              "labelEn": "Medium 32",
+              "intent": "用于更宽松的表单。",
+              "intentEn": "Use in roomier forms.",
+              "constraint": "只传 size=md。",
+              "constraintEn": "Pass size=md only."
+            }
           ]
         },
         {
@@ -1380,6 +2892,7 @@
           "propName": "placeholder",
           "type": "text",
           "owner": "input",
+          "controlGroup": "content",
           "defaultVisible": true,
           "defaultOrder": 1
         },
@@ -1390,14 +2903,55 @@
           "propName": "type",
           "type": "segment",
           "owner": "input",
+          "controlGroup": "semantics",
           "defaultVisible": true,
           "defaultOrder": 2,
           "options": [
-            { "value": "text", "label": "文本", "labelEn": "Text", "intent": "录入普通文本。", "intentEn": "Enter plain text.", "constraint": "使用原生 type=text。", "constraintEn": "Use native type=text." },
-            { "value": "number", "label": "数字", "labelEn": "Number", "intent": "录入数字。", "intentEn": "Enter numeric values.", "constraint": "使用原生 type=number；隐藏默认微调箭头，保留键盘步进和校验。", "constraintEn": "Use native type=number; hide browser steppers while keeping keyboard stepping and validation." },
-            { "value": "email", "label": "邮箱", "labelEn": "Email", "intent": "录入邮箱地址。", "intentEn": "Enter an email address.", "constraint": "使用原生 type=email；失焦后把原生格式结果映射为 aria-invalid。仅字段包装开启时用 FieldError 显示格式错误，不显示浏览器浮层。", "constraintEn": "Use native type=email; after blur, map native validity to aria-invalid. Show the inline FieldError only when the field wrapper is enabled, without a browser popup." },
-            { "value": "password", "label": "密码", "labelEn": "Password", "intent": "录入敏感文本。", "intentEn": "Enter sensitive text.", "constraint": "使用原生 type=password。", "constraintEn": "Use native type=password." },
-            { "value": "search", "label": "搜索", "labelEn": "Search", "intent": "录入查询关键词。", "intentEn": "Enter a search query.", "constraint": "使用原生 type=search；搜索图标由结构插槽组合，有关键词时默认提供可访问的清除动作。", "constraintEn": "Use native type=search; compose search icons through structure slots and provide a labelled clear action when a query exists." }
+            {
+              "value": "text",
+              "label": "文本",
+              "labelEn": "Text",
+              "intent": "录入普通文本。",
+              "intentEn": "Enter plain text.",
+              "constraint": "使用原生 type=text。",
+              "constraintEn": "Use native type=text."
+            },
+            {
+              "value": "number",
+              "label": "数字",
+              "labelEn": "Number",
+              "intent": "录入数字。",
+              "intentEn": "Enter numeric values.",
+              "constraint": "使用原生 type=number；隐藏默认微调箭头，保留键盘步进和校验。",
+              "constraintEn": "Use native type=number; hide browser steppers while keeping keyboard stepping and validation."
+            },
+            {
+              "value": "email",
+              "label": "邮箱",
+              "labelEn": "Email",
+              "intent": "录入邮箱地址。",
+              "intentEn": "Enter an email address.",
+              "constraint": "使用原生 type=email；失焦后把原生格式结果映射为 aria-invalid。仅字段包装开启时用 FieldError 显示格式错误，不显示浏览器浮层。",
+              "constraintEn": "Use native type=email; after blur, map native validity to aria-invalid. Show the inline FieldError only when the field wrapper is enabled, without a browser popup."
+            },
+            {
+              "value": "password",
+              "label": "密码",
+              "labelEn": "Password",
+              "intent": "录入敏感文本。",
+              "intentEn": "Enter sensitive text.",
+              "constraint": "使用原生 type=password。",
+              "constraintEn": "Use native type=password."
+            },
+            {
+              "value": "search",
+              "label": "搜索",
+              "labelEn": "Search",
+              "intent": "录入查询关键词。",
+              "intentEn": "Enter a search query.",
+              "constraint": "使用原生 type=search；搜索图标由结构插槽组合，有关键词时默认提供可访问的清除动作。",
+              "constraintEn": "Use native type=search; compose search icons through structure slots and provide a labelled clear action when a query exists."
+            }
           ]
         },
         {
@@ -1407,11 +2961,28 @@
           "propName": "disabled",
           "type": "segment",
           "owner": "input",
+          "controlGroup": "behavior",
           "defaultVisible": true,
           "defaultOrder": 6,
           "options": [
-            { "value": "true", "label": "是", "labelEn": "Yes", "intent": "当前输入不可编辑。", "intentEn": "Prevent editing this input.", "constraint": "使用原生 disabled，不用透明度模拟。", "constraintEn": "Use the native disabled prop; do not simulate it with opacity." },
-            { "value": "false", "label": "否", "labelEn": "No", "intent": "保持输入框可编辑。", "intentEn": "Keep the input editable.", "constraint": "默认可省略 disabled。", "constraintEn": "Omit disabled by default." }
+            {
+              "value": "true",
+              "label": "是",
+              "labelEn": "Yes",
+              "intent": "当前输入不可编辑。",
+              "intentEn": "Prevent editing this input.",
+              "constraint": "使用原生 disabled，不用透明度模拟。",
+              "constraintEn": "Use the native disabled prop; do not simulate it with opacity."
+            },
+            {
+              "value": "false",
+              "label": "否",
+              "labelEn": "No",
+              "intent": "保持输入框可编辑。",
+              "intentEn": "Keep the input editable.",
+              "constraint": "默认可省略 disabled。",
+              "constraintEn": "Omit disabled by default."
+            }
           ]
         },
         {
@@ -1421,11 +2992,28 @@
           "propName": "aria-invalid",
           "type": "segment",
           "owner": "input",
+          "controlGroup": "behavior",
           "defaultVisible": true,
           "defaultOrder": 7,
           "options": [
-            { "value": "true", "label": "是", "labelEn": "Yes", "intent": "标记输入内容未通过校验。", "intentEn": "Mark the input value as invalid.", "constraint": "控件使用 aria-invalid；Field 组合同时使用 data-invalid。", "constraintEn": "Use aria-invalid on the control and data-invalid on a Field wrapper." },
-            { "value": "false", "label": "否", "labelEn": "No", "intent": "当前输入内容没有校验错误。", "intentEn": "The current value has no validation error.", "constraint": "默认不传 aria-invalid。", "constraintEn": "Omit aria-invalid by default." }
+            {
+              "value": "true",
+              "label": "是",
+              "labelEn": "Yes",
+              "intent": "标记输入内容未通过校验。",
+              "intentEn": "Mark the input value as invalid.",
+              "constraint": "控件使用 aria-invalid；Field 组合同时使用 data-invalid。",
+              "constraintEn": "Use aria-invalid on the control and data-invalid on a Field wrapper."
+            },
+            {
+              "value": "false",
+              "label": "否",
+              "labelEn": "No",
+              "intent": "当前输入内容没有校验错误。",
+              "intentEn": "The current value has no validation error.",
+              "constraint": "默认不传 aria-invalid。",
+              "constraintEn": "Omit aria-invalid by default."
+            }
           ]
         },
         {
@@ -1435,7 +3023,10 @@
           "propName": "children",
           "type": "text",
           "owner": "leading",
-          "hiddenWhen": { "leading": ["none", "icon"] }
+          "controlGroup": "structure",
+          "hiddenWhen": {
+            "leading": ["none", "icon"]
+          }
         },
         {
           "key": "trailingText",
@@ -1444,7 +3035,10 @@
           "propName": "children",
           "type": "text",
           "owner": "trailing",
-          "hiddenWhen": { "trailing": ["none", "icon", "action"] }
+          "controlGroup": "structure",
+          "hiddenWhen": {
+            "trailing": ["none", "icon", "action"]
+          }
         },
         {
           "key": "actionLabel",
@@ -1453,7 +3047,10 @@
           "propName": "aria-label",
           "type": "text",
           "owner": "trailing",
-          "hiddenWhen": { "trailing": ["none", "icon", "text"] }
+          "controlGroup": "structure",
+          "hiddenWhen": {
+            "trailing": ["none", "icon", "text"]
+          }
         },
         {
           "key": "surfaceToken",
@@ -1464,10 +3061,38 @@
           "owner": "tokens",
           "group": "tokens",
           "options": [
-            { "value": "surface", "label": "默认表面", "labelEn": "Default surface", "title": "Token: surface", "intent": "标准输入控件的默认表面。", "constraint": "底层映射到 surface，不写色值。" },
-            { "value": "background", "label": "页面融合", "labelEn": "Blend with page", "title": "Token: background", "intent": "让输入区域与页面背景融合。", "constraint": "底层映射到 background，只用于明确的内嵌场景。" },
-            { "value": "muted", "label": "弱化表面", "labelEn": "Muted surface", "title": "Token: muted", "intent": "降低输入控件的视觉强调。", "constraint": "底层映射到 muted，沉淀为 variant 后才能用于业务。" },
-            { "value": "card", "label": "容器表面", "labelEn": "Container surface", "title": "Token: card", "intent": "让控件跟随卡片或容器表面。", "constraint": "底层映射到 card，先确认组件确实属于容器语义。" }
+            {
+              "value": "surface",
+              "label": "默认表面",
+              "labelEn": "Default surface",
+              "title": "Token: surface",
+              "intent": "标准输入控件的默认表面。",
+              "constraint": "底层映射到 surface，不写色值。"
+            },
+            {
+              "value": "background",
+              "label": "页面融合",
+              "labelEn": "Blend with page",
+              "title": "Token: background",
+              "intent": "让输入区域与页面背景融合。",
+              "constraint": "底层映射到 background，只用于明确的内嵌场景。"
+            },
+            {
+              "value": "muted",
+              "label": "弱化表面",
+              "labelEn": "Muted surface",
+              "title": "Token: muted",
+              "intent": "降低输入控件的视觉强调。",
+              "constraint": "底层映射到 muted，沉淀为 variant 后才能用于业务。"
+            },
+            {
+              "value": "card",
+              "label": "容器表面",
+              "labelEn": "Container surface",
+              "title": "Token: card",
+              "intent": "让控件跟随卡片或容器表面。",
+              "constraint": "底层映射到 card，先确认组件确实属于容器语义。"
+            }
           ]
         },
         {
@@ -1479,10 +3104,38 @@
           "owner": "tokens",
           "group": "tokens",
           "options": [
-            { "value": "input", "label": "默认输入边框", "labelEn": "Default input", "title": "Token: input", "intent": "标准表单输入控件的默认边框。", "constraint": "底层映射到 input，是 Input 默认选择。" },
-            { "value": "border", "label": "常规边界", "labelEn": "Regular boundary", "title": "Token: border", "intent": "使用普通结构边界，弱化输入感。", "constraint": "底层映射到 border，仅在弱化输入边界时使用。" },
-            { "value": "border-strong", "label": "强调边界", "labelEn": "Strong boundary", "title": "Token: border-strong", "intent": "让控件边界更容易识别。", "constraint": "底层映射到 border-strong，不代替 hover/focus 状态。" },
-            { "value": "primary", "label": "品牌边界", "labelEn": "Brand boundary", "title": "Token: primary", "intent": "用品牌语义强调控件边界。", "constraint": "底层映射到 primary，应沉淀为明确 variant，不作为默认。" }
+            {
+              "value": "input",
+              "label": "默认输入边框",
+              "labelEn": "Default input",
+              "title": "Token: input",
+              "intent": "标准表单输入控件的默认边框。",
+              "constraint": "底层映射到 input，是 Input 默认选择。"
+            },
+            {
+              "value": "border",
+              "label": "常规边界",
+              "labelEn": "Regular boundary",
+              "title": "Token: border",
+              "intent": "使用普通结构边界，弱化输入感。",
+              "constraint": "底层映射到 border，仅在弱化输入边界时使用。"
+            },
+            {
+              "value": "border-strong",
+              "label": "强调边界",
+              "labelEn": "Strong boundary",
+              "title": "Token: border-strong",
+              "intent": "让控件边界更容易识别。",
+              "constraint": "底层映射到 border-strong，不代替 hover/focus 状态。"
+            },
+            {
+              "value": "primary",
+              "label": "品牌边界",
+              "labelEn": "Brand boundary",
+              "title": "Token: primary",
+              "intent": "用品牌语义强调控件边界。",
+              "constraint": "底层映射到 primary，应沉淀为明确 variant，不作为默认。"
+            }
           ]
         },
         {
@@ -1494,10 +3147,92 @@
           "owner": "tokens",
           "group": "tokens",
           "options": [
-            { "value": "foreground-disabled", "label": "占位与禁用", "labelEn": "Placeholder & disabled", "title": "Token: foreground-disabled", "intent": "标准占位文字和禁用信息层级。", "constraint": "底层映射到 foreground-disabled，是 Input 默认选择。" },
-            { "value": "muted-foreground", "label": "辅助文字", "labelEn": "Helper text", "title": "Token: muted-foreground", "intent": "让占位提示具有更强识别度。", "constraint": "底层映射到 muted-foreground，仅在提示确实需要加强时评估。" },
-            { "value": "foreground-secondary", "label": "次要正文", "labelEn": "Secondary text", "title": "Token: foreground-secondary", "intent": "使用次要正文的信息层级。", "constraint": "底层映射到 foreground-secondary，通常不用于 placeholder，需评审。" }
+            {
+              "value": "foreground-disabled",
+              "label": "占位与禁用",
+              "labelEn": "Placeholder & disabled",
+              "title": "Token: foreground-disabled",
+              "intent": "标准占位文字和禁用信息层级。",
+              "constraint": "底层映射到 foreground-disabled，是 Input 默认选择。"
+            },
+            {
+              "value": "muted-foreground",
+              "label": "辅助文字",
+              "labelEn": "Helper text",
+              "title": "Token: muted-foreground",
+              "intent": "让占位提示具有更强识别度。",
+              "constraint": "底层映射到 muted-foreground，仅在提示确实需要加强时评估。"
+            },
+            {
+              "value": "foreground-secondary",
+              "label": "次要正文",
+              "labelEn": "Secondary text",
+              "title": "Token: foreground-secondary",
+              "intent": "使用次要正文的信息层级。",
+              "constraint": "底层映射到 foreground-secondary，通常不用于 placeholder，需评审。"
+            }
           ]
+        }
+      ],
+      "stories": [
+        {
+          "id": "plain-text",
+          "name": "普通文本",
+          "nameEn": "Plain text",
+          "args": {
+            "type": "text",
+            "field": "false",
+            "state": "normal",
+            "disabled": "false",
+            "invalid": "false",
+            "leading": "none",
+            "trailing": "none"
+          },
+          "parameters": {
+            "intent": "用于常规表单字段和内联编辑。",
+            "intentEn": "Use for regular form fields and inline editing.",
+            "source": "src/components/ui/input.tsx#plain-text"
+          }
+        },
+        {
+          "id": "invalid-email",
+          "name": "邮箱错误",
+          "nameEn": "Invalid email",
+          "args": {
+            "type": "email",
+            "field": "true",
+            "state": "invalid",
+            "disabled": "false",
+            "invalid": "true",
+            "leading": "email-icon",
+            "trailing": "none"
+          },
+          "parameters": {
+            "intent": "邮箱字段校验失败时展示错误语义和辅助信息。",
+            "intentEn": "Show error semantics and supporting feedback when email validation fails.",
+            "source": "src/components/ui/input.tsx#invalid-email"
+          }
+        },
+        {
+          "id": "password-toggle",
+          "name": "密码显隐",
+          "nameEn": "Password visibility toggle",
+          "args": {
+            "type": "password",
+            "field": "true",
+            "state": "normal",
+            "disabled": "false",
+            "invalid": "false",
+            "leading": "none",
+            "trailing": "password-toggle"
+          },
+          "parameters": {
+            "intent": "在账户设置、登录等敏感输入中允许用户切换密码可见性。",
+            "intentEn": "Let users reveal or mask a password in account settings and sign-in flows.",
+            "constraint": "用 InputAction 组合显隐动作，并随状态更新 aria-label；不要改写 Input 类型或样式。",
+            "constraintEn": "Compose the action with InputAction and update its aria-label with state; do not rewrite the Input type or styling.",
+            "source": "src/pages/docs/components/input-playground.tsx#password-toggle"
+          }
         }
       ]
     },
@@ -1869,7 +3604,1665 @@
             }
           ]
         }
+      ],
+      "stories": [
+        {
+          "id": "plain-single",
+          "name": "普通单选",
+          "nameEn": "Plain single select",
+          "args": {
+            "structure": "plain",
+            "variant": "outline",
+            "selection": "single",
+            "search": "none",
+            "clearable": "false",
+            "otherInput": "none",
+            "valueState": "placeholder",
+            "state": "normal",
+            "size": "sm"
+          },
+          "parameters": {
+            "intent": "从一组普通选项中选择一个角色。",
+            "intentEn": "Choose one role from a flat option list.",
+            "constraint": "选项值保持唯一，未选择时使用 placeholder。",
+            "constraintEn": "Keep option values unique and use placeholder before selection.",
+            "source": "src/components/ui/select.tsx#plain-single"
+          }
+        },
+        {
+          "id": "multiple-filter",
+          "name": "多选筛选",
+          "nameEn": "Multiple filter",
+          "args": {
+            "structure": "grouped",
+            "variant": "borderless",
+            "selection": "multiple",
+            "search": "local",
+            "clearable": "true",
+            "otherInput": "none",
+            "valueState": "selected",
+            "state": "normal",
+            "size": "sm"
+          },
+          "parameters": {
+            "intent": "在工具栏中组合本地搜索和多选筛选。",
+            "intentEn": "Combine local search and multiple selection in a toolbar.",
+            "constraint": "使用数组 value，并让清除动作与 trigger 同级。",
+            "constraintEn": "Use an array value and keep the clear action beside the trigger.",
+            "source": "src/components/ui/select.tsx#multiple-filter"
+          }
+        },
+        {
+          "id": "other-required",
+          "name": "其他项必填补充",
+          "nameEn": "Required other-value input",
+          "args": {
+            "structure": "other",
+            "variant": "outline",
+            "selection": "single",
+            "search": "none",
+            "clearable": "false",
+            "otherInput": "required",
+            "valueState": "selected",
+            "state": "open",
+            "size": "sm"
+          },
+          "parameters": {
+            "intent": "预设选项不足时，允许选择“其他”并要求填写具体内容。",
+            "intentEn": "Allow an Other choice with required detail when presets are insufficient.",
+            "constraint": "使用受控 Select + Input 组合；必填校验归 Input 的 aria-invalid 和 FieldError，不发明 Select prop。",
+            "constraintEn": "Compose a controlled Select and Input; required validation belongs to Input aria-invalid and FieldError, not a new Select prop.",
+            "source": "src/pages/docs/components/select-playground.tsx#other-required"
+          }
+        }
+      ]
+    },
+    "table": {
+      "componentName": "Table",
+      "source": "src/components/ui/table.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "customConfigSource": "src/pages/docs/components/table-playground.tsx#tablePlaygroundConfig",
+      "mode": "custom-config",
+      "initial": {
+        "composition": "basic",
+        "surface": "plain",
+        "density": "default",
+        "summary": "off",
+        "selection": "off",
+        "filter": "off",
+        "fixed": "off",
+        "status": "default"
+      },
+      "guidanceKey": "composition",
+      "props": [
+        {
+          "key": "composition",
+          "zh": "结构",
+          "en": "Composition",
+          "propName": "composition",
+          "type": "segment",
+          "options": [
+            { "value": "basic", "label": "基础", "labelEn": "Basic" },
+            {
+              "value": "business",
+              "label": "业务列表",
+              "labelEn": "Business list"
+            }
+          ]
+        },
+        {
+          "key": "surface",
+          "zh": "表面",
+          "en": "Surface",
+          "propName": "variant",
+          "type": "segment",
+          "options": [
+            { "value": "plain", "label": "无容器", "labelEn": "Plain" },
+            { "value": "bordered", "label": "描边", "labelEn": "Bordered" },
+            { "value": "striped", "label": "斑马纹", "labelEn": "Striped" }
+          ]
+        },
+        {
+          "key": "density",
+          "zh": "行高",
+          "en": "Density",
+          "propName": "density",
+          "type": "segment",
+          "hasAll": true,
+          "options": [
+            { "value": "compact", "label": "紧凑28", "labelEn": "Compact 28" },
+            { "value": "default", "label": "舒适36", "labelEn": "Default 36" },
+            {
+              "value": "comfortable",
+              "label": "宽松42",
+              "labelEn": "Comfortable 42"
+            }
+          ]
+        },
+        {
+          "key": "summary",
+          "zh": "汇总",
+          "en": "Summary",
+          "propName": "composition",
+          "type": "segment",
+          "options": [
+            { "value": "off", "label": "无", "labelEn": "Off" },
+            { "value": "on", "label": "表尾汇总", "labelEn": "Footer summary" }
+          ]
+        },
+        {
+          "key": "selection",
+          "zh": "选择",
+          "en": "Selection",
+          "propName": "composition",
+          "type": "segment",
+          "hasAll": true,
+          "options": [
+            { "value": "off", "label": "无", "labelEn": "Off" },
+            { "value": "multiple", "label": "多选", "labelEn": "Multiple" },
+            {
+              "value": "multiple-menu",
+              "label": "多选+菜单",
+              "labelEn": "Multiple + menu"
+            },
+            { "value": "single", "label": "单选", "labelEn": "Single" }
+          ]
+        },
+        {
+          "key": "filter",
+          "zh": "筛选",
+          "en": "Filter",
+          "propName": "composition",
+          "type": "segment",
+          "hiddenWhen": { "composition": "basic" },
+          "options": [
+            { "value": "off", "label": "无", "labelEn": "Off" },
+            { "value": "on", "label": "列筛选", "labelEn": "Column filter" }
+          ]
+        },
+        {
+          "key": "fixed",
+          "zh": "固定列",
+          "en": "Frozen columns",
+          "propName": "composition",
+          "type": "segment",
+          "hiddenWhen": { "composition": "basic" },
+          "options": [
+            { "value": "off", "label": "无", "labelEn": "Off" },
+            {
+              "value": "on",
+              "label": "开启冻结能力",
+              "labelEn": "Enable freeze"
+            }
+          ]
+        },
+        {
+          "key": "status",
+          "zh": "状态",
+          "en": "State",
+          "propName": "composition",
+          "type": "segment",
+          "hasAll": true,
+          "options": [
+            { "value": "default", "label": "正常", "labelEn": "Default" },
+            { "value": "loading", "label": "加载", "labelEn": "Loading" },
+            { "value": "empty", "label": "空", "labelEn": "Empty" }
+          ]
+        }
+      ],
+      "visualTests": ["Table Playground 主入口", "Table 成熟能力矩阵"],
+      "visual": {
+        "route": "#table",
+        "selector": "#table-playground"
+      },
+      "stories": [
+        {
+          "id": "basic",
+          "name": "基础数据表",
+          "nameEn": "Basic data table",
+          "args": {
+            "composition": "basic",
+            "surface": "plain",
+            "density": "default",
+            "summary": "off",
+            "selection": "off",
+            "filter": "off",
+            "fixed": "off",
+            "status": "default"
+          },
+          "parameters": {
+            "intent": "稳定展示结构化明细数据。",
+            "intentEn": "Display structured detail data.",
+            "constraint": "默认使用 plain + default density。",
+            "constraintEn": "Start with plain and default density.",
+            "source": "src/pages/docs/components/table-playground.tsx#TableBasicDemo"
+          }
+        },
+        {
+          "id": "business",
+          "name": "业务资源列表",
+          "nameEn": "Business resource list",
+          "args": {
+            "composition": "business",
+            "surface": "bordered",
+            "density": "compact",
+            "summary": "off",
+            "selection": "multiple",
+            "filter": "on",
+            "fixed": "on",
+            "status": "default"
+          },
+          "parameters": {
+            "intent": "组合分页、排序、筛选、选择和冻结列。",
+            "intentEn": "Compose pagination, sorting, filtering, selection, and frozen columns.",
+            "constraint": "交互能力按真实需求叠加，不扩成表格视觉变体。",
+            "constraintEn": "Add interactions by need instead of turning them into visual variants.",
+            "source": "src/pages/docs/components/table-playground.tsx#TableBusinessDemo"
+          }
+        },
+        {
+          "id": "summary",
+          "name": "斑马纹汇总表",
+          "nameEn": "Striped summary table",
+          "args": {
+            "composition": "basic",
+            "surface": "striped",
+            "density": "comfortable",
+            "summary": "on",
+            "selection": "off",
+            "filter": "off",
+            "fixed": "off",
+            "status": "default"
+          },
+          "parameters": {
+            "intent": "展示需要逐行扫读并带合计的数据。",
+            "intentEn": "Show scannable rows with a stable total.",
+            "constraint": "只有真实合计口径时才使用 TableFooter。",
+            "constraintEn": "Use TableFooter only for a real aggregate.",
+            "source": "src/components/ui/table.tsx#summary"
+          }
+        },
+        {
+          "id": "loading",
+          "name": "加载状态",
+          "nameEn": "Loading state",
+          "args": {
+            "composition": "basic",
+            "surface": "plain",
+            "density": "default",
+            "summary": "off",
+            "selection": "off",
+            "filter": "off",
+            "fixed": "off",
+            "status": "loading"
+          },
+          "parameters": {
+            "intent": "请求中保持表头结构稳定并展示骨架行。",
+            "intentEn": "Keep headers stable and show skeleton rows while loading.",
+            "constraint": "用 Table + Skeleton 组合，不增加 loading prop。",
+            "constraintEn": "Compose Table with Skeleton instead of adding a loading prop.",
+            "source": "src/pages/docs/components/table-playground.tsx#TableLoadingDemo"
+          }
+        },
+        {
+          "id": "empty",
+          "name": "空状态",
+          "nameEn": "Empty state",
+          "args": {
+            "composition": "basic",
+            "surface": "bordered",
+            "density": "default",
+            "summary": "off",
+            "selection": "off",
+            "filter": "off",
+            "fixed": "off",
+            "status": "empty"
+          },
+          "parameters": {
+            "intent": "请求成功但没有数据时保留表头并展示空态。",
+            "intentEn": "Keep headers and show an empty state when no rows are returned.",
+            "constraint": "空态跨越全部数据列，不增加 empty prop。",
+            "constraintEn": "Span all columns and do not add an empty prop.",
+            "source": "src/pages/docs/components/table-playground.tsx#TableEmptyDemo"
+          }
+        }
       ]
     }
-  }
+  },
+  "autoStories": {
+    "calendar": [
+      {
+        "id": "single",
+        "name": "单日期",
+        "nameEn": "Single date",
+        "args": {},
+        "parameters": {
+          "intent": "选择一个日期。",
+          "intentEn": "Choose one date.",
+          "constraint": "明确模式并同步 onSelect。",
+          "constraintEn": "Make the mode explicit and wire onSelect.",
+          "code": "<Calendar mode=\"single\" selected={date} onSelect={setDate} />",
+          "source": "src/components/ui/calendar.tsx#single"
+        }
+      },
+      {
+        "id": "in-popover",
+        "name": "嵌入弹层中使用",
+        "nameEn": "Inside a popover",
+        "args": {},
+        "parameters": {
+          "intent": "把日历放进 Popover。",
+          "intentEn": "Place the calendar in a Popover.",
+          "constraint": "弹层宽度需容纳完整日历。",
+          "constraintEn": "Give the popover enough width.",
+          "code": "<PopoverContent className=\"w-auto p-0\"><Calendar mode=\"single\" /></PopoverContent>",
+          "source": "src/components/ui/calendar.tsx#in-popover"
+        }
+      }
+    ],
+    "collapsible": [
+      {
+        "id": "panel",
+        "name": "折叠面板",
+        "nameEn": "Collapsible panel",
+        "args": {},
+        "parameters": {
+          "intent": "收起次要信息并按需展开。",
+          "intentEn": "Collapse secondary information and reveal it on demand.",
+          "constraint": "触发器要有展开/收起反馈。",
+          "constraintEn": "Give the trigger a clear state cue.",
+          "code": "<Collapsible><CollapsibleTrigger>查看更多</CollapsibleTrigger><CollapsibleContent>详细内容</CollapsibleContent></Collapsible>",
+          "source": "src/components/ui/collapsible.tsx#panel"
+        }
+      },
+      {
+        "id": "list-group",
+        "name": "分组列表收纳",
+        "nameEn": "Grouped list",
+        "args": {},
+        "parameters": {
+          "intent": "在长列表中按分组折叠。",
+          "intentEn": "Collapse groups in long lists.",
+          "constraint": "分组标题本身即触发器。",
+          "constraintEn": "Use the group heading as trigger.",
+          "code": "<Collapsible defaultOpen><CollapsibleTrigger>基础组件</CollapsibleTrigger><CollapsibleContent>Button / Input</CollapsibleContent></Collapsible>",
+          "source": "src/components/ui/collapsible.tsx#list-group"
+        }
+      }
+    ],
+    "command": [
+      {
+        "id": "search",
+        "name": "全站搜索跳转",
+        "nameEn": "Global search",
+        "args": {},
+        "parameters": {
+          "intent": "输入过滤并回车跳转。",
+          "intentEn": "Filter as you type and navigate on enter.",
+          "constraint": "items 提供 id、label、onSelect。",
+          "constraintEn": "Provide id, label, and onSelect.",
+          "code": "<CommandPalette open={open} onOpenChange={setOpen} items={items} />",
+          "source": "src/components/ui/command.tsx#search"
+        }
+      }
+    ],
+    "separator": [
+      {
+        "id": "horizontal",
+        "name": "水平分隔",
+        "nameEn": "Horizontal separator",
+        "args": {},
+        "parameters": {
+          "intent": "区隔上下内容。",
+          "intentEn": "Separate stacked content.",
+          "constraint": "保留上下间距。",
+          "constraintEn": "Keep vertical spacing.",
+          "code": "<Separator />",
+          "source": "src/components/ui/separator.tsx#horizontal"
+        }
+      },
+      {
+        "id": "vertical",
+        "name": "垂直分隔",
+        "nameEn": "Vertical separator",
+        "args": {},
+        "parameters": {
+          "intent": "分隔横向工具项。",
+          "intentEn": "Separate horizontal items.",
+          "constraint": "父容器需要明确高度。",
+          "constraintEn": "Give the parent a definite height.",
+          "code": "<Separator orientation=\"vertical\" />",
+          "source": "src/components/ui/separator.tsx#vertical"
+        }
+      }
+    ],
+    "spinner": [
+      {
+        "id": "inline",
+        "name": "按钮内联 loading",
+        "nameEn": "Inline loading",
+        "args": {},
+        "parameters": {
+          "intent": "按钮内提示处理中。",
+          "intentEn": "Show progress inside a button.",
+          "constraint": "loading 时禁用按钮。",
+          "constraintEn": "Disable while loading.",
+          "code": "<Button disabled><Spinner />提交中…</Button>",
+          "source": "src/components/ui/spinner.tsx#inline"
+        }
+      },
+      {
+        "id": "block",
+        "name": "区块级加载",
+        "nameEn": "Block loading",
+        "args": {},
+        "parameters": {
+          "intent": "区块未就绪时显示加载。",
+          "intentEn": "Show loading while a block is unavailable.",
+          "constraint": "搭配简短说明。",
+          "constraintEn": "Add a short description.",
+          "code": "<Spinner className=\"size-6\" />",
+          "source": "src/components/ui/spinner.tsx#block"
+        }
+      },
+      {
+        "id": "inline-text",
+        "name": "行内刷新",
+        "nameEn": "Inline refresh",
+        "args": {},
+        "parameters": {
+          "intent": "在列表或局部区域刷新时，让用户知道数据仍在更新。",
+          "intentEn": "Indicate that a list or local region is still refreshing.",
+          "constraint": "Spinner 紧邻简短状态文案，不单独占据整个页面。",
+          "constraintEn": "Keep Spinner adjacent to concise status copy rather than occupying an entire page.",
+          "code": "<div role=\"status\" className=\"flex items-center gap-2\">\n  <Spinner />\n  正在刷新列表\n</div>",
+          "source": "src/components/ui/spinner.tsx#inline-text"
+        }
+      }
+    ],
+    "toast": [
+      {
+        "id": "success",
+        "name": "操作成功反馈",
+        "nameEn": "Success feedback",
+        "args": {},
+        "parameters": {
+          "intent": "完成后给出确认。",
+          "intentEn": "Confirm completion.",
+          "constraint": "使用 toast.success。",
+          "constraintEn": "Use toast.success.",
+          "code": "toast.success(\"已保存\")",
+          "source": "src/components/ui/toast.tsx#success"
+        }
+      },
+      {
+        "id": "error",
+        "name": "操作失败提示",
+        "nameEn": "Error feedback",
+        "args": {},
+        "parameters": {
+          "intent": "失败时说明原因。",
+          "intentEn": "Explain failure.",
+          "constraint": "使用 toast.error。",
+          "constraintEn": "Use toast.error.",
+          "code": "toast.error(\"保存失败\")",
+          "source": "src/components/ui/toast.tsx#error"
+        }
+      },
+      {
+        "id": "action",
+        "name": "带撤销操作",
+        "nameEn": "Undo action",
+        "args": {},
+        "parameters": {
+          "intent": "可逆操作提供撤销。",
+          "intentEn": "Offer undo for reversible work.",
+          "constraint": "优先使用 action。",
+          "constraintEn": "Prefer an undo action.",
+          "code": "toast(\"已删除\", { action: { label: \"撤销\", onClick: restore } })",
+          "source": "src/components/ui/toast.tsx#action"
+        }
+      }
+    ],
+    "popover": [
+      {
+        "id": "info",
+        "name": "信息说明卡",
+        "nameEn": "Informational popover",
+        "args": {},
+        "parameters": {
+          "intent": "展示补充说明。",
+          "intentEn": "Show a short explanation.",
+          "constraint": "内容保持简短，使用 size=\"sm\"。",
+          "constraintEn": "Keep content short and use size=\"sm\".",
+          "code": "<Popover><PopoverContent size=\"sm\">说明</PopoverContent></Popover>",
+          "source": "src/components/ui/popover.tsx#info"
+        }
+      },
+      {
+        "id": "quick-edit",
+        "name": "快捷编辑",
+        "nameEn": "Quick edit",
+        "args": {},
+        "parameters": {
+          "intent": "快速修改设置。",
+          "intentEn": "Quickly edit a setting.",
+          "constraint": "表单短小，使用默认 size=\"md\"。",
+          "constraintEn": "Keep the form short and use the default size=\"md\".",
+          "code": "<Popover><PopoverContent size=\"md\"><Input /><Button>保存</Button></PopoverContent></Popover>",
+          "source": "src/components/ui/popover.tsx#quick-edit"
+        }
+      },
+      {
+        "id": "filter",
+        "name": "宽版筛选",
+        "nameEn": "Wide filter",
+        "args": {},
+        "parameters": {
+          "intent": "在不打断当前流程的前提下，组合少量筛选字段。",
+          "intentEn": "Combine a small number of filters without interrupting the current flow.",
+          "constraint": "使用 size=\"lg\" 但保持字段有限；多步骤筛选改用 Sheet。",
+          "constraintEn": "Use size=\"lg\" while keeping fields limited; use a Sheet for multi-step filtering.",
+          "code": "<PopoverContent size=\"lg\"><Input placeholder=\"负责人\" /><Input placeholder=\"标签\" /><Button>应用筛选</Button></PopoverContent>",
+          "source": "src/components/ui/popover.tsx#filter"
+        }
+      }
+    ],
+    "sidebar": [
+      {
+        "id": "nav-groups",
+        "name": "分组导航",
+        "nameEn": "Grouped navigation",
+        "args": {},
+        "parameters": {
+          "intent": "按分组组织模块。",
+          "intentEn": "Organize modules into groups.",
+          "constraint": "每组保持克制。",
+          "constraintEn": "Keep groups concise.",
+          "code": "<SidebarGroup><SidebarGroupLabel>工作台</SidebarGroupLabel></SidebarGroup>",
+          "source": "src/components/ui/sidebar.tsx#nav-groups"
+        }
+      },
+      {
+        "id": "active-item",
+        "name": "当前项高亮",
+        "nameEn": "Active item",
+        "args": {},
+        "parameters": {
+          "intent": "标记当前菜单项。",
+          "intentEn": "Mark the current menu item.",
+          "constraint": "isActive 同步路由。",
+          "constraintEn": "Sync isActive with the route.",
+          "code": "<SidebarMenuButton isActive>项目列表</SidebarMenuButton>",
+          "source": "src/components/ui/sidebar.tsx#active-item"
+        }
+      },
+      {
+        "id": "nested-project-navigation",
+        "name": "项目层级导航",
+        "nameEn": "Nested project navigation",
+        "args": {},
+        "parameters": {
+          "intent": "在项目、成员、设置等存在上下级关系的后台中组织主项和次级入口。",
+          "intentEn": "Organize parent and child entries in back-office areas such as projects, members, and settings.",
+          "constraint": "主项使用 SidebarMenuButton，次级入口使用 SidebarMenuSubButton，并保持当前路由的 isActive 同步。",
+          "constraintEn": "Use SidebarMenuButton for parents, SidebarMenuSubButton for child entries, and keep isActive synchronized with the route.",
+          "code": "<SidebarMenu>\n  <SidebarMenuItem>\n    <SidebarMenuButton isActive><FolderIcon /> 项目</SidebarMenuButton>\n    <SidebarMenuSub>\n      <SidebarMenuSubItem>\n        <SidebarMenuSubButton isActive>项目概览</SidebarMenuSubButton>\n      </SidebarMenuSubItem>\n    </SidebarMenuSub>\n  </SidebarMenuItem>\n</SidebarMenu>",
+          "source": "src/components/ui/sidebar.tsx#nested-project-navigation"
+        }
+      }
+    ],
+    "top-bar": [
+      {
+        "id": "full",
+        "name": "完整顶栏",
+        "nameEn": "Full top bar",
+        "args": {},
+        "parameters": {
+          "intent": "品牌、搜索和工具组成顶栏。",
+          "intentEn": "Compose a bar from brand, search, and tools.",
+          "constraint": "状态由页面受控。",
+          "constraintEn": "Keep state controlled by the page.",
+          "code": "<TopBar><TopBarBrand name=\"纷享销客 CRM\" /><TopBarSearch value={q} onValueChange={setQ} /></TopBar>",
+          "source": "src/components/fx/top-bar.tsx#full"
+        }
+      },
+      {
+        "id": "search-scope",
+        "name": "带范围的搜索",
+        "nameEn": "Scoped search",
+        "args": {},
+        "parameters": {
+          "intent": "用范围缩小搜索域。",
+          "intentEn": "Narrow search with a scope.",
+          "constraint": "scope 相关 props 受控。",
+          "constraintEn": "Keep scope props controlled.",
+          "code": "<TopBarSearch scope={scope} scopes={scopes} onScopeChange={setScope} />",
+          "source": "src/components/fx/top-bar.tsx#search-scope"
+        }
+      }
+    ],
+    "dropdown-menu": [
+      {
+        "id": "normal",
+        "name": "普通",
+        "nameEn": "Default",
+        "group": "type",
+        "args": {},
+        "parameters": {
+          "intent": "常见编辑、复制、删除动作。",
+          "intentEn": "Common edit, copy, and delete actions.",
+          "constraint": "危险操作放末尾。",
+          "constraintEn": "Put destructive actions last.",
+          "code": "<DropdownMenuItem>编辑</DropdownMenuItem><DropdownMenuItem variant=\"destructive\">删除</DropdownMenuItem>",
+          "source": "src/components/ui/dropdown-menu.tsx#normal"
+        }
+      },
+      {
+        "id": "icon",
+        "name": "有图标",
+        "nameEn": "With icons",
+        "group": "type",
+        "args": {},
+        "parameters": {
+          "intent": "菜单项带图标。",
+          "intentEn": "Use icons in menu items.",
+          "constraint": "图标使用保持一致。",
+          "constraintEn": "Keep icon usage consistent.",
+          "code": "<DropdownMenuItem><UserIcon />个人资料</DropdownMenuItem>",
+          "source": "src/components/ui/dropdown-menu.tsx#icon"
+        }
+      },
+      {
+        "id": "group",
+        "name": "文字分组",
+        "nameEn": "Labeled groups",
+        "group": "type",
+        "args": {},
+        "parameters": {
+          "intent": "用 Label 组织类别。",
+          "intentEn": "Organize categories with labels.",
+          "constraint": "Label 放在 Group 内。",
+          "constraintEn": "Place Label inside Group.",
+          "code": "<DropdownMenuGroup><DropdownMenuLabel>账户</DropdownMenuLabel></DropdownMenuGroup>",
+          "source": "src/components/ui/dropdown-menu.tsx#group"
+        }
+      },
+      {
+        "id": "divider",
+        "name": "线分组",
+        "nameEn": "Dividers",
+        "group": "type",
+        "args": {},
+        "parameters": {
+          "intent": "用分隔线划分类别。",
+          "intentEn": "Divide categories with a separator.",
+          "constraint": "只在类别切换处使用。",
+          "constraintEn": "Use only at category boundaries.",
+          "code": "<DropdownMenuSeparator />",
+          "source": "src/components/ui/dropdown-menu.tsx#divider"
+        }
+      },
+      {
+        "id": "submenu",
+        "name": "有子级",
+        "nameEn": "Submenu",
+        "group": "type",
+        "args": {},
+        "parameters": {
+          "intent": "将下级选项放进子菜单。",
+          "intentEn": "Nest child options in a submenu.",
+          "constraint": "最多三层。",
+          "constraintEn": "Keep it to three levels.",
+          "code": "<DropdownMenuSub><DropdownMenuSubTrigger>移动到</DropdownMenuSubTrigger><DropdownMenuSubContent>…</DropdownMenuSubContent></DropdownMenuSub>",
+          "source": "src/components/ui/dropdown-menu.tsx#submenu"
+        }
+      },
+      {
+        "id": "search",
+        "name": "有搜索",
+        "nameEn": "Searchable",
+        "group": "type",
+        "args": {},
+        "parameters": {
+          "intent": "选项较多时提供过滤。",
+          "intentEn": "Filter when there are many options.",
+          "constraint": "无结果显示 empty 状态。",
+          "constraintEn": "Show an empty state for no matches.",
+          "code": "<DropdownMenuContent><Input placeholder=\"搜索\" /></DropdownMenuContent>",
+          "source": "src/components/ui/dropdown-menu.tsx#search"
+        }
+      },
+      {
+        "id": "sticky",
+        "name": "有吸底",
+        "nameEn": "Sticky action",
+        "group": "type",
+        "args": {},
+        "parameters": {
+          "intent": "滚动选项区底部固定操作。",
+          "intentEn": "Keep an action below a scrollable list.",
+          "constraint": "操作放在滚动区外。",
+          "constraintEn": "Keep it outside the scroll region.",
+          "code": "<DropdownMenuContent><div className=\"max-h-48 overflow-y-auto\">…</div><DropdownMenuSeparator /><DropdownMenuItem>新建</DropdownMenuItem></DropdownMenuContent>",
+          "source": "src/components/ui/dropdown-menu.tsx#sticky"
+        }
+      },
+      {
+        "id": "checkbox",
+        "name": "多选",
+        "nameEn": "Checkbox items",
+        "group": "state",
+        "args": {},
+        "parameters": {
+          "intent": "菜单内切换多个开关。",
+          "intentEn": "Toggle multiple options.",
+          "constraint": "使用 CheckboxItem。",
+          "constraintEn": "Use CheckboxItem.",
+          "code": "<DropdownMenuCheckboxItem checked={checked}>姓名</DropdownMenuCheckboxItem>",
+          "source": "src/components/ui/dropdown-menu.tsx#checkbox"
+        }
+      },
+      {
+        "id": "radio",
+        "name": "单选",
+        "nameEn": "Radio items",
+        "group": "state",
+        "args": {},
+        "parameters": {
+          "intent": "菜单内单选一个值。",
+          "intentEn": "Choose one value in a menu.",
+          "constraint": "使用 RadioGroup。",
+          "constraintEn": "Use RadioGroup.",
+          "code": "<DropdownMenuRadioGroup value={sort}>…</DropdownMenuRadioGroup>",
+          "source": "src/components/ui/dropdown-menu.tsx#radio"
+        }
+      },
+      {
+        "id": "disabled",
+        "name": "禁用",
+        "nameEn": "Disabled",
+        "group": "state",
+        "args": {},
+        "parameters": {
+          "intent": "不可用选项使用禁用态。",
+          "intentEn": "Disable unavailable options.",
+          "constraint": "使用 disabled。",
+          "constraintEn": "Use disabled.",
+          "code": "<DropdownMenuItem disabled>归档</DropdownMenuItem>",
+          "source": "src/components/ui/dropdown-menu.tsx#disabled"
+        }
+      }
+    ],
+    "skeleton": [
+      {
+        "id": "text-lines",
+        "name": "文本占位",
+        "nameEn": "Text lines",
+        "args": {
+          "scenario": "text-lines"
+        },
+        "parameters": {
+          "intent": "在文本内容加载完成前，用占位条提示用户内容即将出现。",
+          "intentEn": "Show placeholder lines while text content is loading.",
+          "constraint": "宽度参差体现真实文本的不规则感，行间距与正文一致。",
+          "constraintEn": "Vary widths to reflect natural text rhythm and keep line spacing aligned with body copy.",
+          "code": "<div className=\"flex flex-col gap-2\">\n  <Skeleton className=\"h-4 w-[240px]\" />\n  <Skeleton className=\"h-4 w-[180px]\" />\n</div>",
+          "source": "src/components/ui/skeleton.tsx#text-lines"
+        }
+      },
+      {
+        "id": "card-media",
+        "name": "卡片占位",
+        "nameEn": "Card media",
+        "args": {
+          "scenario": "card-media"
+        },
+        "parameters": {
+          "intent": "在头像、图片等媒体型卡片加载前，组合圆形与矩形占位还原结构。",
+          "intentEn": "Recreate a media card structure before avatars and images load.",
+          "constraint": "圆形用于头像，矩形用于文本行，整体比例尽量贴近真实内容。",
+          "constraintEn": "Use circles for avatars and rectangles for text lines; keep the real content proportions.",
+          "code": "<div className=\"flex items-center gap-4\">\n  <Skeleton className=\"size-12 rounded-full\" />\n  <div className=\"flex flex-col gap-2\">\n    <Skeleton className=\"h-4 w-[160px]\" />\n    <Skeleton className=\"h-4 w-[120px]\" />\n  </div>\n</div>",
+          "source": "src/components/ui/skeleton.tsx#card-media"
+        }
+      },
+      {
+        "id": "table-row",
+        "name": "表格行占位",
+        "nameEn": "Table row placeholder",
+        "args": { "scenario": "table-row" },
+        "parameters": {
+          "intent": "数据表首次加载时保持列结构稳定，避免内容到达后整行跳动。",
+          "intentEn": "Keep table columns stable during initial loading and prevent row layout shifts.",
+          "constraint": "骨架宽度应对应真实列的比例，不用一整条灰块代替整行。",
+          "constraintEn": "Match skeleton widths to actual column proportions instead of using one full-width grey bar.",
+          "code": "<div className=\"flex items-center gap-4\">\n  <Skeleton className=\"h-4 w-8\" />\n  <Skeleton className=\"h-4 flex-1\" />\n  <Skeleton className=\"h-4 w-20\" />\n</div>",
+          "source": "src/components/ui/skeleton.tsx#table-row"
+        }
+      }
+    ],
+    "pagination": [
+      {
+        "id": "basic",
+        "name": "基础分页",
+        "nameEn": "Basic pagination",
+        "args": {
+          "scenario": "basic"
+        },
+        "parameters": {
+          "intent": "列表/表格底部翻页，页码不多时全部平铺。",
+          "intentEn": "Paginate a list or table when the page count is small.",
+          "constraint": "受控：page + onPageChange；total + pageSize 推导页数。",
+          "constraintEn": "Keep page controlled; derive page count from total and pageSize.",
+          "code": "<Pagination page={page} total={48} pageSize={10} onPageChange={setPage} />",
+          "source": "src/components/ui/pagination.tsx#basic"
+        }
+      },
+      {
+        "id": "ellipsis",
+        "name": "大量页码（省略号）",
+        "nameEn": "Many pages",
+        "args": {
+          "scenario": "ellipsis"
+        },
+        "parameters": {
+          "intent": "页数很多时，首尾页常驻、当前页两侧各留 siblingCount 个，其余收省略号。",
+          "intentEn": "Keep first and last pages visible and collapse the middle with siblingCount.",
+          "constraint": "用 siblingCount 控制两侧页码数；不要手动拼省略号。",
+          "constraintEn": "Use siblingCount; do not hand-build ellipsis items.",
+          "code": "<Pagination page={page} total={1930} pageSize={10} siblingCount={1} onPageChange={setPage} />",
+          "source": "src/components/ui/pagination.tsx#ellipsis"
+        }
+      },
+      {
+        "id": "no-total",
+        "name": "不显示总数",
+        "nameEn": "Hide total",
+        "args": {
+          "scenario": "no-total"
+        },
+        "parameters": {
+          "intent": "空间紧凑或总数无意义时，隐藏「共 N 条」。",
+          "intentEn": "Hide the total count when space is tight or the count is not useful.",
+          "constraint": "showTotal={false} 只留页码与翻页箭头。",
+          "constraintEn": "Use showTotal={false} to keep only page controls.",
+          "code": "<Pagination page={page} total={48} pageSize={10} showTotal={false} onPageChange={setPage} />",
+          "source": "src/components/ui/pagination.tsx#no-total"
+        }
+      }
+    ],
+    "nav-menu": [
+      {
+        "id": "rail",
+        "name": "一级导航",
+        "nameEn": "App rail",
+        "args": {},
+        "parameters": {
+          "intent": "在多应用、多模块之间切换的最外层入口。",
+          "intentEn": "Provide the outermost switcher between multiple applications or modules.",
+          "constraint": "选中项使用 active + activeIcon，页面入口使用 boxed，不在调用处重写选中外观。",
+          "constraintEn": "Use active + activeIcon for selected items and boxed for page entries; do not recreate selected styling at the call site.",
+          "code": "<NavRail footer={<NavRailItem boxed icon={<SettingsIcon />} />}>\n  <NavRailItem icon={<BriefcaseIcon />} activeIcon={<BriefcaseFilledIcon />} label=\"CRM\" active />\n</NavRail>",
+          "source": "src/components/fx/nav-menu.tsx#rail"
+        }
+      },
+      {
+        "id": "second",
+        "name": "二级菜单",
+        "nameEn": "Second-level menu",
+        "args": {},
+        "parameters": {
+          "intent": "进入应用后承载页面级功能树，并支持固定或临时展开。",
+          "intentEn": "Carry the page-level feature tree within an application, with pinned or temporary expansion.",
+          "constraint": "收起用 collapsed，分组用 expandable，选中使用 active；收起后的完整文案由组件 Tooltip 补充。",
+          "constraintEn": "Use collapsed for collapse, expandable for groups, and active for selection; the component tooltip supplies collapsed labels.",
+          "code": "<NavMenu collapsed={collapsed}>\n  <NavMenuHeader title=\"CRM\" viewName=\"视图名称\" collapsed={collapsed} />\n  <NavMenuSearch onAdd={() => {}} collapsed={collapsed} />\n  <NavMenuList>...</NavMenuList>\n  <NavMenuFooter collapsed={collapsed} onToggle={() => {}} />\n</NavMenu>",
+          "source": "src/components/fx/nav-menu.tsx#second-level"
+        }
+      },
+      {
+        "id": "no-icon",
+        "name": "无图标版",
+        "nameEn": "No-icon menu",
+        "args": {},
+        "parameters": {
+          "intent": "功能项没有合适图标，或需要更克制的纯文字菜单时使用。",
+          "intentEn": "Use for menu items without a suitable icon or when a quieter text-only menu is appropriate.",
+          "constraint": "不传 icon；收起态由组件生成短标识和 Tooltip，不在页面截断或伪造图标。",
+          "constraintEn": "Omit icon; the component generates the collapsed abbreviation and tooltip instead of page-level truncation or fake icons.",
+          "code": "<NavMenuItem label=\"首页\" active />",
+          "source": "src/components/fx/nav-menu.tsx#no-icon"
+        }
+      },
+      {
+        "id": "back",
+        "name": "后台菜单",
+        "nameEn": "Back-office menu",
+        "args": {},
+        "parameters": {
+          "intent": "用于设置中心和管理后台，组合搜索、分节、跳转入口和内联层级。",
+          "intentEn": "Use in settings centers and administration areas with search, sections, route entries, and inline hierarchy.",
+          "constraint": "顶层项带图标，功能型子项纯文字；分节用 NavMenuGroupLabel，跳转项用 arrow，内联层级用 expandable。",
+          "constraintEn": "Give top-level entries icons and keep functional children text-only; use NavMenuGroupLabel for sections, arrow for route entries, and expandable for inline hierarchy.",
+          "code": "<NavMenu>\n  <NavMenuSearch placeholder=\"搜索\" />\n  <NavMenuList>\n    <NavMenuGroupLabel>系统管理</NavMenuGroupLabel>\n    <NavMenuItem icon={<BuildingIcon />} label=\"企业设置\" arrow />\n  </NavMenuList>\n  <NavMenuFooter />\n</NavMenu>",
+          "source": "src/components/fx/nav-menu.tsx#back-office"
+        }
+      }
+    ],
+    "radio-group": [
+      {
+        "id": "default",
+        "name": "基础单选",
+        "nameEn": "Basic radio group",
+        "args": {
+          "scenario": "default"
+        },
+        "parameters": {
+          "intent": "用于一组选项中只能选择一个的表单字段。",
+          "intentEn": "Use for a form field where exactly one option can be selected.",
+          "constraint": "RadioGroup 负责 value / onValueChange；FieldSet/FieldLegend 表达选项组，RadioGroupItem 必须有稳定 value。",
+          "constraintEn": "RadioGroup owns value / onValueChange; use FieldSet / FieldLegend for the option group and give every item a stable value.",
+          "code": "<FieldSet>\n  <FieldLegend>默认工作台</FieldLegend>\n  <RadioGroup value={value} onValueChange={setValue}>\n    <FieldGroup>\n      <Field orientation=\"horizontal\">\n        <RadioGroupItem id=\"crm\" value=\"crm\" />\n        <FieldContent><FieldLabel htmlFor=\"crm\">CRM</FieldLabel></FieldContent>\n      </Field>\n    </FieldGroup>\n  </RadioGroup>\n</FieldSet>",
+          "source": "src/components/ui/radio-group.tsx#default"
+        }
+      },
+      {
+        "id": "disabled",
+        "name": "含禁用项",
+        "nameEn": "With disabled option",
+        "args": {
+          "scenario": "disabled"
+        },
+        "parameters": {
+          "intent": "用于某些选项当前不可选但仍需展示的场景。",
+          "intentEn": "Show an option that is currently unavailable but still needs to be visible.",
+          "constraint": "禁用写在 RadioGroupItem 上，不在调用处手写透明度或禁用样式。",
+          "constraintEn": "Put disabled on RadioGroupItem; do not fake disabled with page-level opacity styles.",
+          "code": "<RadioGroup defaultValue=\"crm\">\n  <FieldGroup>\n    <Field orientation=\"horizontal\">\n      <RadioGroupItem id=\"crm\" value=\"crm\" />\n      <FieldContent><FieldLabel htmlFor=\"crm\">CRM</FieldLabel></FieldContent>\n    </Field>\n    <Field orientation=\"horizontal\" data-disabled>\n      <RadioGroupItem id=\"disabled\" value=\"disabled\" disabled />\n      <FieldContent><FieldLabel htmlFor=\"disabled\">不可选择</FieldLabel></FieldContent>\n    </Field>\n  </FieldGroup>\n</RadioGroup>",
+          "source": "src/components/ui/radio-group.tsx#disabled"
+        }
+      },
+      {
+        "id": "single-row-selection",
+        "name": "表格单行选择",
+        "nameEn": "Single row selection",
+        "args": {
+          "scenario": "single-row-selection"
+        },
+        "parameters": {
+            "intent": "在资源列表中从多行记录里选择唯一的当前对象。",
+            "intentEn": "Select one current record from a resource list.",
+            "constraint": "Table 外层用一个 RadioGroup 管理选中值；每行 RadioGroupItem 只提供 value 和 aria-label，不手写原生 radio。",
+            "constraintEn": "Use one RadioGroup around the Table; each row RadioGroupItem supplies only value and aria-label, without hand-written native radios.",
+            "code": "<RadioGroup value={selectedId} onValueChange={setSelectedId}>\n  <Table>\n    <TableBody>\n      {customers.map((customer) => (\n        <TableRow key={customer.id}>\n          <TableCell>\n            <RadioGroupItem value={String(customer.id)} aria-label={`选择 ${customer.name}`} />\n          </TableCell>\n          <TableCell>{customer.name}</TableCell>\n        </TableRow>\n      ))}\n    </TableBody>\n  </Table>\n</RadioGroup>",
+            "source": "src/pages/docs/components/table-playground.tsx#single-row-selection"
+        }
+      }
+    ],
+    "dialog": [
+      {
+        "id": "form",
+        "name": "表单弹窗",
+        "nameEn": "Form dialog",
+        "args": {
+          "scenario": "form"
+        },
+        "parameters": {
+          "intent": "在不离开当前页面的情况下完成新建/编辑等结构化录入。",
+          "intentEn": "Complete structured create or edit tasks without leaving the current page.",
+          "constraint": "Footer 操作按钮顺序为「取消在左、主操作在右」，主操作用 default variant。",
+          "constraintEn": "Place Cancel on the left and the primary default action on the right.",
+          "code": "<Dialog>\n  <DialogTrigger render={<Button>新建项目</Button>} />\n  <DialogContent size=\"md\">\n    <DialogHeader>\n      <DialogTitle>新建项目</DialogTitle>\n      <DialogDescription>填写基本信息后即可创建</DialogDescription>\n    </DialogHeader>\n    <div className=\"grid gap-4 py-2\">\n      <Input placeholder=\"项目名称\" />\n    </div>\n    <DialogFooter>\n      <DialogClose render={<Button variant=\"outline\">取消</Button>} />\n      <Button>创建</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>",
+          "source": "src/components/ui/dialog.tsx#form"
+        }
+      },
+      {
+        "id": "confirm",
+        "name": "确认弹窗",
+        "nameEn": "Confirmation dialog",
+        "args": {
+          "scenario": "confirm"
+        },
+        "parameters": {
+          "intent": "对有一定影响但非破坏性的操作进行二次确认。",
+          "intentEn": "Ask for confirmation before a consequential but non-destructive action.",
+          "constraint": "标题用一句话讲清后果，避免堆砌长段说明。",
+          "constraintEn": "State the consequence in one concise title instead of a long block of copy.",
+          "code": "<DialogContent size=\"sm\">\n  <DialogHeader>\n    <DialogTitle>确认发布该版本？</DialogTitle>\n    <DialogDescription>发布后用户将立即看到最新内容。</DialogDescription>\n  </DialogHeader>\n  <DialogFooter>\n    <DialogClose render={<Button variant=\"outline\">再想想</Button>} />\n    <Button>确认发布</Button>\n  </DialogFooter>\n</DialogContent>",
+          "source": "src/components/ui/dialog.tsx#confirm"
+        }
+      },
+      {
+        "id": "review",
+        "name": "宽版审阅弹窗",
+        "nameEn": "Wide review dialog",
+        "args": { "scenario": "review" },
+        "parameters": {
+          "intent": "审阅并补充两列以上信息时，提供更宽的模态工作区。",
+          "intentEn": "Provide a wider modal workspace when reviewing or completing multiple fields.",
+          "constraint": "使用 size=\"lg\"，只为复杂且仍属单一任务的流程扩宽，不把整页塞进 Dialog。",
+          "constraintEn": "Use size=\"lg\" only for complex but still single-task flows; do not put a full page inside a Dialog.",
+          "code": "<DialogContent size=\"lg\">\n  <DialogHeader>\n    <DialogTitle>审阅发布内容</DialogTitle>\n    <DialogDescription>确认发布说明和变更链接后提交审核。</DialogDescription>\n  </DialogHeader>\n  <DialogFooter>\n    <DialogClose render={<Button variant=\"outline\">返回修改</Button>} />\n    <Button>提交审核</Button>\n  </DialogFooter>\n</DialogContent>",
+          "source": "src/components/ui/dialog.tsx#review"
+        }
+      }
+    ],
+    "alert-dialog": [
+      {
+        "id": "destructive",
+        "name": "破坏性操作确认",
+        "nameEn": "Destructive action confirmation",
+        "args": {
+          "scenario": "destructive"
+        },
+        "parameters": {
+          "intent": "删除、清空等不可逆操作前，强制用户二次确认。",
+          "intentEn": "Require explicit confirmation before an irreversible action such as delete or clear.",
+          "constraint": "明确说明不可逆后果，主操作用 destructive variant；关闭动作不应执行删除。",
+          "constraintEn": "State the irreversible consequence, use destructive for the primary action, and never perform deletion on dismissal.",
+          "code": "<AlertDialog>\n  <AlertDialogTrigger render={<Button variant=\"destructive\">删除项目</Button>} />\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>确认删除该项目？</AlertDialogTitle>\n      <AlertDialogDescription>删除后数据无法恢复，请谨慎操作。</AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel render={<Button variant=\"outline\">取消</Button>} />\n      <AlertDialogAction render={<Button variant=\"destructive\">确认删除</Button>} />\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>",
+          "source": "src/components/ui/alert-dialog.tsx#destructive"
+        }
+      },
+      {
+        "id": "leave",
+        "name": "离开未保存提示",
+        "nameEn": "Unsaved changes warning",
+        "args": {
+          "scenario": "leave"
+        },
+        "parameters": {
+          "intent": "用户在有未保存改动时尝试离开页面/关闭弹窗，提醒可能丢失数据。",
+          "intentEn": "Warn users about possible data loss when leaving with unsaved changes.",
+          "constraint": "标题直接说明后果（“未保存的修改将丢失”），不绕弯子。",
+          "constraintEn": "State the consequence directly, such as “Unsaved changes will be lost.”",
+          "code": "<AlertDialogContent>\n  <AlertDialogHeader>\n    <AlertDialogTitle>放弃当前修改？</AlertDialogTitle>\n    <AlertDialogDescription>未保存的修改将会丢失。</AlertDialogDescription>\n  </AlertDialogHeader>\n  <AlertDialogFooter>\n    <AlertDialogCancel render={<Button variant=\"outline\">继续编辑</Button>} />\n    <AlertDialogAction render={<Button variant=\"destructive\">放弃修改</Button>} />\n  </AlertDialogFooter>\n</AlertDialogContent>",
+          "source": "src/components/ui/alert-dialog.tsx#leave"
+        }
+      },
+      {
+        "id": "session-expiry",
+        "name": "会话即将过期",
+        "nameEn": "Session expiry warning",
+        "args": { "scenario": "session-expiry" },
+        "parameters": {
+          "intent": "在会话即将失效且用户必须明确决定是否继续时，阻断当前流程。",
+          "intentEn": "Block the current flow when a session is about to expire and the user must explicitly decide whether to continue.",
+          "constraint": "使用明确的继续/退出动作；不把这种需要决定的反馈降级为 Toast。",
+          "constraintEn": "Use explicit continue and sign-out actions; do not downgrade this decision to a Toast.",
+          "code": "<AlertDialogContent size=\"sm\">\n  <AlertDialogHeader>\n    <AlertDialogTitle>会话即将过期</AlertDialogTitle>\n    <AlertDialogDescription>请继续操作以保持登录状态。</AlertDialogDescription>\n  </AlertDialogHeader>\n  <AlertDialogFooter>\n    <AlertDialogCancel>退出登录</AlertDialogCancel>\n    <AlertDialogAction>继续操作</AlertDialogAction>\n  </AlertDialogFooter>\n</AlertDialogContent>",
+          "source": "src/components/ui/alert-dialog.tsx#session-expiry"
+        }
+      }
+    ],
+    "sheet": [
+      {
+        "id": "right-form",
+        "name": "右侧编辑面板",
+        "nameEn": "Right-side edit panel",
+        "args": {
+          "scenario": "right-form"
+        },
+        "parameters": {
+          "intent": "在不离开当前列表上下文的情况下查看/编辑一条记录的详情。",
+          "intentEn": "View or edit a record without leaving the current list context.",
+          "constraint": "默认从右侧滑出（side=\"right\"），保持和列表的空间关系。",
+          "constraintEn": "Use side=\"right\" by default to preserve the relationship with the list.",
+          "code": "<Sheet>\n  <SheetTrigger render={<Button variant=\"outline\">编辑</Button>} />\n  <SheetContent side=\"right\" size=\"md\">\n    <SheetHeader>\n      <SheetTitle>编辑成员</SheetTitle>\n      <SheetDescription>修改信息后点击保存生效</SheetDescription>\n    </SheetHeader>\n    <div className=\"grid gap-4 px-4\">\n      <Input placeholder=\"姓名\" />\n    </div>\n    <SheetFooter>\n      <Button>保存</Button>\n      <SheetClose render={<Button variant=\"outline\">取消</Button>} />\n    </SheetFooter>\n  </SheetContent>\n</Sheet>",
+          "source": "src/components/ui/sheet.tsx#right-form"
+        }
+      },
+      {
+        "id": "bottom-actions",
+        "name": "底部操作面板",
+        "nameEn": "Bottom action panel",
+        "args": {
+          "scenario": "bottom-actions"
+        },
+        "parameters": {
+          "intent": "移动端常见的底部弹出操作列表，承载一组相关操作。",
+          "intentEn": "Present a related set of actions in a bottom sheet, common on mobile.",
+          "constraint": "用 side=\"bottom\"，操作项保持简短并按重要性排序。",
+          "constraintEn": "Use side=\"bottom\" and keep actions concise and ordered by importance.",
+          "code": "<SheetContent side=\"bottom\">\n  <SheetHeader>\n    <SheetTitle>更多操作</SheetTitle>\n  </SheetHeader>\n  <div className=\"flex flex-col gap-2 px-4 pb-4\">\n    <Button variant=\"outline\">分享</Button>\n    <Button variant=\"outline\">归档</Button>\n    <Button variant=\"destructive\">删除</Button>\n  </div>\n</SheetContent>",
+          "source": "src/components/ui/sheet.tsx#bottom-actions"
+        }
+      },
+      {
+        "id": "right-detail",
+        "name": "宽版高级配置",
+        "nameEn": "Wide advanced settings",
+        "args": { "scenario": "right-detail" },
+        "parameters": {
+          "intent": "在当前上下文中编辑多项高级配置，并保留充足的横向工作空间。",
+          "intentEn": "Edit several advanced settings in context while keeping enough horizontal workspace.",
+          "constraint": "只对右/左侧栏使用 size=\"lg\"；顶部和底部操作面板保持满宽。",
+          "constraintEn": "Use size=\"lg\" only for right/left side sheets; top and bottom action sheets stay full-width.",
+          "code": "<SheetContent side=\"right\" size=\"lg\">\n  <SheetHeader>\n    <SheetTitle>高级配置</SheetTitle>\n    <SheetDescription>为复杂配置保留更宽的右侧工作区。</SheetDescription>\n  </SheetHeader>\n  <SheetFooter>\n    <Button>保存配置</Button>\n    <SheetClose render={<Button variant=\"outline\">取消</Button>} />\n  </SheetFooter>\n</SheetContent>",
+          "source": "src/components/ui/sheet.tsx#right-detail"
+        }
+      }
+    ],
+    "tooltip": [
+      {
+        "id": "icon-button",
+        "name": "纯图标按钮说明",
+        "nameEn": "Icon button description",
+        "args": {
+          "scenario": "icon-button"
+        },
+        "parameters": {
+          "intent": "为没有文字标签的图标按钮补充说明，弥补可访问性缺口。",
+          "intentEn": "Add context to icon-only buttons that have no visible label.",
+          "constraint": "纯图标按钮必须同时提供 aria-label 和 Tooltip，二者互补不互相替代。",
+          "constraintEn": "Provide both aria-label and Tooltip for icon-only buttons; they complement rather than replace each other.",
+          "code": "<Tooltip>\\n  <TooltipTrigger render={<Button variant=\\\"ghost\\\" size=\\\"icon-sm\\\" aria-label=\\\"设置\\\"><SettingsIcon /></Button>} />\\n  <TooltipContent>设置</TooltipContent>\\n</Tooltip>",
+          "source": "src/components/ui/tooltip.tsx#icon-button"
+        }
+      },
+      {
+        "id": "truncated-text",
+        "name": "截断文本补全",
+        "nameEn": "Truncated text",
+        "args": {
+          "scenario": "truncated-text"
+        },
+        "parameters": {
+          "intent": "表格、列表里文字被截断时，悬浮展示完整内容。",
+          "intentEn": "Reveal the full value when text is truncated in a table or list.",
+          "constraint": "只在内容确实被截断时使用，不要给完整可见的文本套 Tooltip。",
+          "constraintEn": "Use only when content is actually truncated; do not wrap fully visible text.",
+          "code": "<Tooltip>\\n  <TooltipTrigger render={<span className=\\\"truncate\\\">{fullName}</span>} />\\n  <TooltipContent>{fullName}</TooltipContent>\\n</Tooltip>",
+          "source": "src/components/ui/tooltip.tsx#truncated-text"
+        }
+      },
+      {
+        "id": "side",
+        "name": "自定义弹出方向",
+        "nameEn": "Custom side",
+        "args": {
+          "scenario": "side"
+        },
+        "parameters": {
+          "intent": "根据触发元素在页面中的位置调整提示弹出方向，避免被遮挡。",
+          "intentEn": "Choose a placement that avoids collision with nearby content.",
+          "constraint": "用 side 属性控制方向，不手写定位偏移。",
+          "constraintEn": "Use the side prop for placement; do not hand-write positional offsets.",
+          "code": "<TooltipContent side=\\\"right\\\">更多说明</TooltipContent>",
+          "source": "src/components/ui/tooltip.tsx#side"
+        }
+      }
+    ],
+    "breadcrumb": [
+      {
+        "id": "basic",
+        "name": "基础路径",
+        "nameEn": "Basic path",
+        "args": {
+          "scenario": "basic"
+        },
+        "parameters": {
+          "intent": "展示当前页面在层级结构中的位置，支持逐级返回。",
+          "intentEn": "Show the current position in a hierarchy and support returning level by level.",
+          "constraint": "最后一级用 BreadcrumbPage 标记当前页，不可点击。",
+          "constraintEn": "Mark the last level with BreadcrumbPage; the current page is not clickable.",
+          "code": "<Breadcrumb>\\n  <BreadcrumbList>\\n    <BreadcrumbItem><BreadcrumbLink href=\\\"#\\\">首页</BreadcrumbLink></BreadcrumbItem>\\n    <BreadcrumbSeparator />\\n    <BreadcrumbItem><BreadcrumbPage>详情</BreadcrumbPage></BreadcrumbItem>\\n  </BreadcrumbList>\\n</Breadcrumb>",
+          "source": "src/components/ui/breadcrumb.tsx#basic"
+        }
+      },
+      {
+        "id": "icon",
+        "name": "带图标",
+        "nameEn": "With icons",
+        "args": {
+          "scenario": "icon"
+        },
+        "parameters": {
+          "intent": "每级前面带图标增强识别，默认不带；图标随字号缩放。",
+          "intentEn": "Add icons before each level when visual recognition benefits from them.",
+          "constraint": "把图标放进 BreadcrumbLink / BreadcrumbPage 的 children，图标在前、文字在后，不手写尺寸。",
+          "constraintEn": "Put icons inside BreadcrumbLink or BreadcrumbPage children, before the label; do not hand-size them.",
+          "code": "<BreadcrumbItem><BreadcrumbLink href=\\\"#\\\"><HomeIcon />首页</BreadcrumbLink></BreadcrumbItem>",
+          "source": "src/components/ui/breadcrumb.tsx#icon"
+        }
+      },
+      {
+        "id": "collapsed",
+        "name": "折叠中间层级",
+        "nameEn": "Collapsed middle levels",
+        "args": {
+          "scenario": "collapsed"
+        },
+        "parameters": {
+          "intent": "层级超过 4 级时收起中间项，保留首尾关键节点。",
+          "intentEn": "Collapse middle levels when the hierarchy exceeds four levels while keeping key endpoints visible.",
+          "constraint": "仅超过 4 级才折叠；用 BreadcrumbEllipsis + DropdownMenu 展示被折叠层级。",
+          "constraintEn": "Collapse only beyond four levels; use BreadcrumbEllipsis with DropdownMenu for hidden levels.",
+          "code": "<BreadcrumbItem><DropdownMenu><DropdownMenuTrigger render={<button aria-label=\\\"展开折叠的层级\\\"><BreadcrumbEllipsis /></button>} /></DropdownMenu></BreadcrumbItem>",
+          "source": "src/components/ui/breadcrumb.tsx#collapsed"
+        }
+      },
+      {
+        "id": "size-lg",
+        "name": "大 lg",
+        "nameEn": "Large lg",
+        "args": {
+          "scenario": "size-lg"
+        },
+        "parameters": {
+          "intent": "标题区、详情页头部等强调路径的场景。",
+          "intentEn": "Use for prominent paths in headers and detail pages.",
+          "constraint": "BreadcrumbList size=\\\"lg\\\"，字号 15。",
+          "constraintEn": "Use BreadcrumbList size=\\\"lg\\\" with the 15px text scale.",
+          "code": "<BreadcrumbList size=\\\"lg\\\">…</BreadcrumbList>",
+          "source": "src/components/ui/breadcrumb.tsx#size-lg"
+        }
+      },
+      {
+        "id": "size-default",
+        "name": "默认 default",
+        "nameEn": "Default",
+        "args": {
+          "scenario": "size-default"
+        },
+        "parameters": {
+          "intent": "常规页面头部路径，业务首选档。",
+          "intentEn": "Default path size for normal page headers.",
+          "constraint": "默认档，字号 13；多数场景可省略 size。",
+          "constraintEn": "Use the default 13px scale; most usages can omit size.",
+          "code": "<BreadcrumbList size=\\\"default\\\">…</BreadcrumbList>",
+          "source": "src/components/ui/breadcrumb.tsx#size-default"
+        }
+      },
+      {
+        "id": "size-sm",
+        "name": "小 sm",
+        "nameEn": "Small sm",
+        "args": {
+          "scenario": "size-sm"
+        },
+        "parameters": {
+          "intent": "弹窗、卡片内等空间紧凑的路径。",
+          "intentEn": "Use in compact spaces such as dialogs and cards.",
+          "constraint": "BreadcrumbList size=\\\"sm\\\"，字号 12。",
+          "constraintEn": "Use BreadcrumbList size=\\\"sm\\\" with the 12px text scale.",
+          "code": "<BreadcrumbList size=\\\"sm\\\">…</BreadcrumbList>",
+          "source": "src/components/ui/breadcrumb.tsx#size-sm"
+        }
+      }
+    ],
+    "field": [
+      {
+        "id": "default",
+        "name": "标准字段",
+        "nameEn": "Standard field",
+        "args": { "scenario": "default" },
+        "parameters": {
+          "intent": "组织标签、输入控件和辅助说明。",
+          "intentEn": "Compose a label, control, and helper copy.",
+          "constraint": "使用 FieldLabel htmlFor 关联控件 id。",
+          "constraintEn": "Use FieldLabel htmlFor to associate the control id.",
+          "code": "<Field>\n  <FieldLabel htmlFor=\"name\">姓名</FieldLabel>\n  <Input id=\"name\" />\n  <FieldDescription>请填写真实姓名。</FieldDescription>\n</Field>",
+          "source": "src/components/ui/field.tsx#default"
+        }
+      },
+      {
+        "id": "invalid",
+        "name": "报错字段",
+        "nameEn": "Invalid field",
+        "args": { "scenario": "invalid" },
+        "parameters": {
+          "intent": "提交校验失败后展示错误反馈。",
+          "intentEn": "Show validation feedback after a failed submit.",
+          "constraint": "Field 使用 data-invalid，控件使用 aria-invalid。",
+          "constraintEn": "Use data-invalid on Field and aria-invalid on the control.",
+          "code": "<Field data-invalid>\n  <FieldLabel htmlFor=\"email\">邮箱</FieldLabel>\n  <Input id=\"email\" aria-invalid />\n  <FieldError>请输入有效邮箱。</FieldError>\n</Field>",
+          "source": "src/components/ui/field.tsx#invalid"
+        }
+      },
+      {
+        "id": "disabled",
+        "name": "禁用字段",
+        "nameEn": "Disabled field",
+        "args": { "scenario": "disabled" },
+        "parameters": {
+          "intent": "字段暂不可编辑。",
+          "intentEn": "Prevent editing when the field is unavailable.",
+          "constraint": "Field 使用 data-disabled，控件使用 disabled。",
+          "constraintEn": "Use data-disabled on Field and disabled on the control.",
+          "code": "<Field data-disabled>\n  <FieldLabel htmlFor=\"name\">姓名</FieldLabel>\n  <Input id=\"name\" disabled />\n</Field>",
+          "source": "src/components/ui/field.tsx#disabled"
+        }
+      },
+      {
+        "id": "horizontal",
+        "name": "水平字段",
+        "nameEn": "Horizontal field",
+        "args": { "scenario": "horizontal" },
+        "parameters": {
+          "intent": "设置页等紧凑场景中横向排列标签和控件。",
+          "intentEn": "Align label and control horizontally in compact settings.",
+          "constraint": "使用 orientation=\"horizontal\"，不要手写 flex 结构替代。",
+          "constraintEn": "Use orientation=\"horizontal\" instead of recreating the flex structure.",
+          "code": "<Field orientation=\"horizontal\">\n  <FieldLabel htmlFor=\"notify\">接收通知</FieldLabel>\n  <Input id=\"notify\" />\n</Field>",
+          "source": "src/components/ui/field.tsx#horizontal"
+        }
+      }
+    ],
+    "label": [
+      {
+        "id": "default",
+        "name": "默认标签",
+        "nameEn": "Default label",
+        "args": { "scenario": "default" },
+        "parameters": {
+          "intent": "为输入控件提供可访问名称。",
+          "intentEn": "Provide an accessible name for an input.",
+          "constraint": "Label 的 htmlFor 必须对应控件 id。",
+          "constraintEn": "Label htmlFor must match the control id.",
+          "code": "<Label htmlFor=\"name\">姓名</Label>\n<Input id=\"name\" />",
+          "source": "src/components/ui/label.tsx#default"
+        }
+      },
+      {
+        "id": "disabled",
+        "name": "禁用字段标签",
+        "nameEn": "Disabled field label",
+        "args": { "scenario": "disabled" },
+        "parameters": {
+          "intent": "控件不可编辑时降低标签视觉权重。",
+          "intentEn": "Reduce label emphasis when the control is disabled.",
+          "constraint": "禁用语义仍由真实控件的 disabled 提供。",
+          "constraintEn": "The real control must still own the disabled semantics.",
+          "code": "<Label htmlFor=\"name\">姓名</Label>\n<Input id=\"name\" disabled />",
+          "source": "src/components/ui/label.tsx#disabled"
+        }
+      },
+      {
+        "id": "long",
+        "name": "长标签",
+        "nameEn": "Long label",
+        "args": { "scenario": "long" },
+        "parameters": {
+          "intent": "标签需要清晰表达字段含义。",
+          "intentEn": "Keep the field meaning explicit.",
+          "constraint": "不要截断标签或用 placeholder 代替可见名称。",
+          "constraintEn": "Do not truncate the label or use placeholder as the visible name.",
+          "code": "<Label htmlFor=\"email\">通知邮箱地址</Label>\n<Input id=\"email\" type=\"email\" />",
+          "source": "src/components/ui/label.tsx#long"
+        }
+      }
+    ],
+    "checkbox": [
+      {
+        "id": "default",
+        "name": "默认复选框",
+        "nameEn": "Default checkbox",
+        "args": { "scenario": "default" },
+        "parameters": {
+          "intent": "单个布尔选项的勾选，常见于条款确认、设置开关项。",
+          "intentEn": "Check a single boolean option such as an agreement or setting.",
+          "constraint": "用 Field + FieldContent 承载选项行，并通过 FieldLabel 的 htmlFor 关联。",
+          "constraintEn": "Use Field + FieldContent for the option row and associate it with FieldLabel htmlFor.",
+          "code": "<Field orientation=\"horizontal\">\n  <Checkbox id=\"agree\" />\n  <FieldContent>\n    <FieldLabel htmlFor=\"agree\">我已阅读并同意服务条款</FieldLabel>\n  </FieldContent>\n</Field>",
+          "source": "src/components/ui/checkbox.tsx#default"
+        }
+      },
+      {
+        "id": "checked",
+        "name": "受控选中态",
+        "nameEn": "Controlled checked state",
+        "args": { "scenario": "checked" },
+        "parameters": {
+          "intent": "需要在外部状态中读取/控制选中值（如批量选择列表项）。",
+          "intentEn": "Control and read the selected value from external state.",
+          "constraint": "用 checked + onCheckedChange 受控，不直接操作 DOM。",
+          "constraintEn": "Use checked + onCheckedChange; do not manipulate the DOM directly.",
+          "code": "<Checkbox checked={checked} onCheckedChange={setChecked} />",
+          "source": "src/components/ui/checkbox.tsx#checked"
+        }
+      },
+      {
+        "id": "disabled",
+        "name": "禁用状态",
+        "nameEn": "Disabled state",
+        "args": { "scenario": "disabled" },
+        "parameters": {
+          "intent": "选项当前不可更改（如权限不足、依赖条件未满足）。",
+          "intentEn": "Prevent changes when the option is unavailable or restricted.",
+          "constraint": "用原生 disabled，不要用样式假装禁用。",
+          "constraintEn": "Use the native disabled prop instead of styling an enabled control.",
+          "code": "<Field orientation=\"horizontal\" data-disabled>\n  <Checkbox id=\"readonly\" disabled />\n  <FieldContent>\n    <FieldLabel htmlFor=\"readonly\">该选项不可编辑</FieldLabel>\n  </FieldContent>\n</Field>",
+          "source": "src/components/ui/checkbox.tsx#disabled"
+        }
+      },
+      {
+        "id": "list",
+        "name": "列表内勾选",
+        "nameEn": "List selection",
+        "args": { "scenario": "list" },
+        "parameters": {
+          "intent": "表格、列表里的批量选择项，通常配合表头的全选复选框。",
+          "intentEn": "Select rows in a table or list, usually with a header select-all checkbox.",
+          "constraint": "列表项的勾选状态要和表头全选状态联动，避免出现状态不一致。",
+          "constraintEn": "Keep row selection synchronized with the header select-all state.",
+          "code": "<TableCell>\n  <Checkbox aria-label=\"选择该行\" />\n</TableCell>",
+          "source": "src/components/ui/checkbox.tsx#list"
+        }
+      }
+    ],
+    "switch": [
+      {
+        "id": "default",
+        "name": "默认开关",
+        "nameEn": "Default switch",
+        "args": { "scenario": "default" },
+        "parameters": {
+          "intent": "立即生效的二元设置项，如通知开关、功能开关。",
+          "intentEn": "Toggle an immediately applied setting such as notifications.",
+          "constraint": "切换后立即生效，不需要额外的提交按钮；选项行使用 Field 组合。",
+          "constraintEn": "Apply immediately without a separate submit button; use Field composition for the option row.",
+          "code": "<Field orientation=\"horizontal\">\n  <Switch id=\"notify\" />\n  <FieldContent>\n    <FieldLabel htmlFor=\"notify\">接收消息通知</FieldLabel>\n  </FieldContent>\n</Field>",
+          "source": "src/components/ui/switch.tsx#default"
+        }
+      },
+      {
+        "id": "checked",
+        "name": "受控状态",
+        "nameEn": "Controlled state",
+        "args": { "scenario": "checked" },
+        "parameters": {
+          "intent": "需要在外部状态中读取/控制开关值。",
+          "intentEn": "Control and read the switch value from external state.",
+          "constraint": "用 checked + onCheckedChange 受控，不直接操作 DOM。",
+          "constraintEn": "Use checked + onCheckedChange; do not manipulate the DOM directly.",
+          "code": "<Switch checked={enabled} onCheckedChange={setEnabled} />",
+          "source": "src/components/ui/switch.tsx#checked"
+        }
+      },
+      {
+        "id": "small",
+        "name": "紧凑尺寸",
+        "nameEn": "Compact size",
+        "args": { "scenario": "small" },
+        "parameters": {
+          "intent": "用于表格行内、紧凑表单等空间有限的场景。",
+          "intentEn": "Use in compact spaces such as table rows and dense forms.",
+          "constraint": "用 size=\"sm\" 切换尺寸，不手写宽高覆盖。",
+          "constraintEn": "Use size=\"sm\" instead of overriding width and height.",
+          "code": "<Switch size=\"sm\" />",
+          "source": "src/components/ui/switch.tsx#small"
+        }
+      },
+      {
+        "id": "disabled",
+        "name": "禁用状态",
+        "nameEn": "Disabled state",
+        "args": { "scenario": "disabled" },
+        "parameters": {
+          "intent": "开关当前不可操作（如权限不足）。",
+          "intentEn": "Prevent changes when the setting is restricted.",
+          "constraint": "用原生 disabled，不要用样式假装禁用。",
+          "constraintEn": "Use the native disabled prop instead of styling an enabled switch.",
+          "code": "<Field orientation=\"horizontal\" data-disabled>\n  <Switch id=\"locked\" disabled />\n  <FieldContent>\n    <FieldLabel htmlFor=\"locked\">该选项不可更改</FieldLabel>\n  </FieldContent>\n</Field>",
+          "source": "src/components/ui/switch.tsx#disabled"
+        }
+      }
+    ],
+    "textarea": [
+      {
+        "id": "default",
+        "name": "默认多行输入",
+        "nameEn": "Default multiline input",
+        "args": { "scenario": "default" },
+        "parameters": {
+          "intent": "录入较长文本，如备注、描述、反馈内容。",
+          "intentEn": "Enter longer text such as notes, descriptions, and feedback.",
+          "constraint": "高度随内容自适应（field-sizing-content），不要手写固定 rows 撑死高度。",
+          "constraintEn": "Let height adapt with field-sizing-content instead of forcing fixed rows.",
+          "code": "<FieldGroup>\n  <Field>\n    <FieldLabel htmlFor=\"bio\">个人简介</FieldLabel>\n    <Textarea id=\"bio\" placeholder=\"简单介绍一下自己\" />\n  </Field>\n</FieldGroup>",
+          "source": "src/components/ui/textarea.tsx#default"
+        }
+      },
+      {
+        "id": "disabled",
+        "name": "禁用状态",
+        "nameEn": "Disabled state",
+        "args": { "scenario": "disabled" },
+        "parameters": {
+          "intent": "字段当前不可编辑（如只读详情）。",
+          "intentEn": "Prevent editing when the field is read-only.",
+          "constraint": "用原生 disabled，不要用样式假装禁用。",
+          "constraintEn": "Use the native disabled prop instead of styling an enabled field.",
+          "code": "<FieldGroup>\n  <Field data-disabled>\n    <FieldLabel htmlFor=\"remark\">备注</FieldLabel>\n    <Textarea id=\"remark\" disabled placeholder=\"不可编辑\" />\n  </Field>\n</FieldGroup>",
+          "source": "src/components/ui/textarea.tsx#disabled"
+        }
+      },
+      {
+        "id": "invalid",
+        "name": "校验失败",
+        "nameEn": "Invalid state",
+        "args": { "scenario": "invalid" },
+        "parameters": {
+          "intent": "提交校验未通过时，提示用户当前字段有误。",
+          "intentEn": "Show an error when submission validation fails.",
+          "constraint": "Field 使用 data-invalid，Textarea 使用 aria-invalid，并用 FieldError 给出错误原因。",
+          "constraintEn": "Use data-invalid on Field, aria-invalid on Textarea, and FieldError for the reason.",
+          "code": "<FieldGroup>\n  <Field data-invalid>\n    <FieldLabel htmlFor=\"remark\">备注</FieldLabel>\n    <Textarea id=\"remark\" aria-invalid placeholder=\"请输入至少 10 个字\" />\n    <FieldError>请输入至少 10 个字。</FieldError>\n  </Field>\n</FieldGroup>",
+          "source": "src/components/ui/textarea.tsx#invalid"
+        }
+      }
+    ],
+    "tabs": [
+      {
+        "id": "default",
+        "name": "默认样式切页",
+        "nameEn": "Default tabs",
+        "args": { "scenario": "default" },
+        "parameters": {
+          "intent": "在同一区域内切换并列的内容分组，如“概览 / 详情”。",
+          "intentEn": "Switch between parallel content groups such as overview and detail.",
+          "constraint": "标签文案要简短并列，数量建议控制在 2-5 个。",
+          "constraintEn": "Keep labels short and parallel; use two to five tabs.",
+          "code": "<Tabs defaultValue=\"overview\">\n  <TabsList size=\"md\">\n    <TabsTrigger value=\"overview\">概览</TabsTrigger>\n    <TabsTrigger value=\"detail\">详情</TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"overview\">概览内容…</TabsContent>\n  <TabsContent value=\"detail\">详情内容…</TabsContent>\n</Tabs>",
+          "source": "src/components/ui/tabs.tsx#default"
+        }
+      },
+      {
+        "id": "line",
+        "name": "下划线样式",
+        "nameEn": "Line variant",
+        "args": { "scenario": "line" },
+        "parameters": {
+          "intent": "在信息密度较高的页面里用更轻量的下划线样式区分标签。",
+          "intentEn": "Use a lighter underline treatment in dense interfaces.",
+          "constraint": "variant=\"line\" 适合嵌入卡片或工具栏，不适合作为页面级主导航。",
+          "constraintEn": "Use variant=\"line\" inside cards or toolbars, not as page-level navigation.",
+          "code": "<Tabs defaultValue=\"all\">\n  <TabsList variant=\"line\" size=\"sm\">\n    <TabsTrigger value=\"all\">全部</TabsTrigger>\n    <TabsTrigger value=\"active\">进行中</TabsTrigger>\n    <TabsTrigger value=\"done\">已完成</TabsTrigger>\n  </TabsList>\n</Tabs>",
+          "source": "src/components/ui/tabs.tsx#line"
+        }
+      },
+      {
+        "id": "vertical",
+        "name": "垂直设置导航",
+        "nameEn": "Vertical settings tabs",
+        "args": { "scenario": "vertical" },
+        "parameters": {
+          "intent": "在设置或详情侧栏中纵向切换少量并列内容。",
+          "intentEn": "Switch a small set of peer settings or detail sections vertically.",
+          "constraint": "使用 orientation=\"vertical\" 并保持 trigger 与 content 一一对应；该设置场景用 activateOnFocus 让方向键直接切换面板。",
+          "constraintEn": "Use vertical orientation with matching triggers and panels; this settings scenario uses activateOnFocus to switch panels with arrow keys.",
+          "code": "<Tabs defaultValue=\"profile\" orientation=\"vertical\">\n  <TabsList variant=\"line\" size=\"lg\" activateOnFocus>\n    <TabsTrigger value=\"profile\">个人资料</TabsTrigger>\n    <TabsTrigger value=\"security\">安全设置</TabsTrigger>\n    <TabsTrigger value=\"notifications\" disabled>通知</TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"profile\">资料内容…</TabsContent>\n  <TabsContent value=\"security\">安全内容…</TabsContent>\n</Tabs>",
+          "source": "src/components/ui/tabs.tsx#vertical"
+        }
+      }
+    ],
+    "toggle": [
+      {
+        "id": "icon",
+        "name": "图标开关",
+        "nameEn": "Icon toggle",
+        "args": { "scenario": "icon" },
+        "parameters": {
+          "intent": "切换某个独立的二元状态，如收藏、静音、加粗。",
+          "intentEn": "Toggle an independent binary state such as favorite, mute, or bold.",
+          "constraint": "图标含义要清晰直观，必要时搭配 aria-label 说明。",
+          "constraintEn": "Use clear icons and add aria-label when the meaning is not obvious.",
+          "code": "<Toggle aria-label=\"加粗\">\n  <BoldIcon />\n</Toggle>",
+          "source": "src/components/ui/toggle.tsx#icon"
+        }
+      },
+      {
+        "id": "outline",
+        "name": "描边样式",
+        "nameEn": "Outline variant",
+        "args": { "scenario": "outline" },
+        "parameters": {
+          "intent": "在工具栏等需要明确边界的场景中使用描边变体。",
+          "intentEn": "Use the outlined variant when toolbar controls need a clear boundary.",
+          "constraint": "同一工具栏内的 Toggle 应保持统一的 variant 与 size。",
+          "constraintEn": "Keep variant and size consistent across a toolbar.",
+          "code": "<Toggle variant=\"outline\" size=\"sm\">\n  <ItalicIcon />\n  斜体\n</Toggle>",
+          "source": "src/components/ui/toggle.tsx#outline"
+        }
+      }
+    ],
+    "toggle-group": [
+      {
+        "id": "single",
+        "name": "单选模式",
+        "nameEn": "Single selection",
+        "args": { "scenario": "single" },
+        "parameters": {
+          "intent": "在多个互斥选项中选择一个，如对齐方式、视图切换。",
+          "intentEn": "Choose one option from mutually exclusive choices such as alignment or view.",
+          "constraint": "type=\"single\" 时建议提供默认选中项，避免初始状态为空。",
+          "constraintEn": "Provide a default value for type=\"single\" so the initial state is clear.",
+          "code": "<ToggleGroup defaultValue={[\"left\"]}>\n  <ToggleGroupItem value=\"left\">左对齐</ToggleGroupItem>\n  <ToggleGroupItem value=\"center\">居中</ToggleGroupItem>\n  <ToggleGroupItem value=\"right\">右对齐</ToggleGroupItem>\n</ToggleGroup>",
+          "source": "src/components/ui/toggle-group.tsx#single"
+        }
+      },
+      {
+        "id": "multiple",
+        "name": "多选模式",
+        "nameEn": "Multiple selection",
+        "args": { "scenario": "multiple" },
+        "parameters": {
+          "intent": "允许同时启用多个互不冲突的格式选项，如加粗+斜体+下划线。",
+          "intentEn": "Enable several non-conflicting formatting options at once.",
+          "constraint": "type=\"multiple\" 适合并行生效的选项，互斥选项请用 single。",
+          "constraintEn": "Use type=\"multiple\" for parallel options; use single for mutually exclusive choices.",
+          "code": "<ToggleGroup multiple variant=\"outline\">\n  <ToggleGroupItem value=\"bold\"><BoldIcon /></ToggleGroupItem>\n  <ToggleGroupItem value=\"italic\"><ItalicIcon /></ToggleGroupItem>\n  <ToggleGroupItem value=\"underline\"><UnderlineIcon /></ToggleGroupItem>\n</ToggleGroup>",
+          "source": "src/components/ui/toggle-group.tsx#multiple"
+        }
+      }
+    ]
+  },
+  "additionalVisualTests": [
+    "Dialog / Sheet 成熟尺寸矩阵",
+    "Popover 成熟尺寸矩阵",
+    "DropdownMenu 真实键盘菜单"
+  ],
+  "storyFormat": "storybook-lite"
 }

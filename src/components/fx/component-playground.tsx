@@ -2,10 +2,21 @@ import { Fragment, type ReactNode, useEffect, useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { WebsiteCardContainer } from "@/components/fx/website-card-container"
 import { CheckCircleIcon, CheckIcon, Code2Icon, ComponentsIcon, CopyIcon, EyeIcon, PaletteIcon, PencilIcon } from "@/lib/icons"
 
 export type ComponentPlaygroundLang = "zh" | "en"
 export type ComponentPlaygroundValues = Record<string, string>
+export type ComponentPlaygroundStory = {
+  id: string
+  values: ComponentPlaygroundValues
+  title?: string
+  titleEn?: string
+  intent?: string
+  intentEn?: string
+  constraint?: string
+  constraintEn?: string
+}
 export type ComponentPlaygroundOption = {
   value: string
   label: string
@@ -18,9 +29,10 @@ export type ComponentPlaygroundOption = {
   constraintEn?: string
   hiddenWhen?: (v: ComponentPlaygroundValues) => boolean
 }
+export type ComponentPlaygroundControlGroup = "content" | "appearance" | "behavior" | "structure" | "semantics"
 export type ComponentPlaygroundPropDef =
-  | { key: string; zh: string; en: string; propName: string; type: "segment"; options: ComponentPlaygroundOption[]; hasAll?: boolean; owner?: string | string[]; group?: "props" | "tokens"; defaultVisible?: boolean; defaultOrder?: number; disabledWhen?: (v: ComponentPlaygroundValues) => boolean; hiddenWhen?: (v: ComponentPlaygroundValues) => boolean }
-  | { key: string; zh: string; en: string; propName: string; type: "text"; bilingual?: boolean; owner?: string | string[]; group?: "props" | "tokens"; defaultVisible?: boolean; defaultOrder?: number; disabledWhen?: (v: ComponentPlaygroundValues) => boolean; hiddenWhen?: (v: ComponentPlaygroundValues) => boolean }
+  | { key: string; zh: string; en: string; propName: string; type: "segment"; options: ComponentPlaygroundOption[]; hasAll?: boolean; owner?: string | string[]; group?: "props" | "tokens"; controlGroup?: ComponentPlaygroundControlGroup; defaultVisible?: boolean; defaultOrder?: number; disabledWhen?: (v: ComponentPlaygroundValues) => boolean; hiddenWhen?: (v: ComponentPlaygroundValues) => boolean }
+  | { key: string; zh: string; en: string; propName: string; type: "text"; bilingual?: boolean; owner?: string | string[]; group?: "props" | "tokens"; controlGroup?: ComponentPlaygroundControlGroup; defaultVisible?: boolean; defaultOrder?: number; disabledWhen?: (v: ComponentPlaygroundValues) => boolean; hiddenWhen?: (v: ComponentPlaygroundValues) => boolean }
 export type ComponentPlaygroundWorkbenchNode = {
   key: string
   zh: string
@@ -60,6 +72,8 @@ export type ComponentPlaygroundWorkbenchConfig = {
 export type ComponentPlaygroundConfig = {
   props: ComponentPlaygroundPropDef[]
   initial: ComponentPlaygroundValues
+  stories?: ComponentPlaygroundStory[]
+  storySource?: string
   guidanceKey?: string
   previewClassName?: string
   previewItemsClassName?: string
@@ -67,6 +81,37 @@ export type ComponentPlaygroundConfig = {
   onValueChange?: (next: ComponentPlaygroundValues, key: string, value: string) => ComponentPlaygroundValues
   renderOne: (v: ComponentPlaygroundValues, lang: ComponentPlaygroundLang) => ReactNode
   genCode: (v: ComponentPlaygroundValues, lang: ComponentPlaygroundLang) => string
+}
+
+/**
+ * Expands a playground value set into deterministic preview stories.
+ *
+ * A prop marked with `hasAll` is only expanded when its current value is
+ * `all`; `all` remains a preview-only control and never reaches generated
+ * component code.
+ */
+export function buildPlaygroundStories(
+  props: ComponentPlaygroundPropDef[],
+  values: ComponentPlaygroundValues,
+): ComponentPlaygroundStory[] {
+  let stories: ComponentPlaygroundValues[] = [values]
+  for (const prop of props) {
+    if (prop.type !== "segment" || !prop.hasAll || values[prop.key] !== "all") continue
+    const next: ComponentPlaygroundValues[] = []
+    for (const story of stories) {
+      for (const option of prop.options.filter((item) => !(item.hiddenWhen?.(story) ?? false))) {
+        next.push({ ...story, [prop.key]: option.value })
+      }
+    }
+    stories = next
+  }
+  return stories.map((story) => ({
+    id: Object.entries(story)
+      .map(([key, value]) => `${key}:${value}`)
+      .join("|")
+      .replace(/[^a-zA-Z0-9:_|.-]+/g, "-") || "default",
+    values: story,
+  }))
 }
 
 function PlaygroundSectionTitle({ dot, children }: { dot: string; children: ReactNode }) {
@@ -85,6 +130,8 @@ function PlaygroundPropLabel({ zh }: { zh: string }) {
     </label>
   )
 }
+
+const controlGroupOrder: ComponentPlaygroundControlGroup[] = ["content", "semantics", "structure", "appearance", "behavior"]
 
 function PgSeg({ active, disabled, isAll, label, title, onClick }: { active: boolean; disabled?: boolean; isAll?: boolean; label: string; title?: string; onClick: () => void }) {
   return (
@@ -150,6 +197,7 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
   const [tab, setTab] = useState("preview")
   const [copied, setCopied] = useState(false)
   const [editing, setEditing] = useState(false)
+  const [activeStoryId, setActiveStoryId] = useState<string | undefined>(config.stories?.[0]?.id)
   const [activeGuidanceKey, setActiveGuidanceKey] = useState(config.guidanceKey ?? config.props.find((p) => p.type === "segment")?.key)
   const [selectedNode, setSelectedNode] = useState(config.workbench?.nodes[0]?.key ?? "")
   const [inspection, setInspection] = useState<{ slot: string; height: string; background: string; borderColor: string } | null>(null)
@@ -157,19 +205,25 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
   const preEditRef = useRef<{ values: ComponentPlaygroundValues; guidanceKey?: string; tab: string } | null>(null)
   const allLabel = lang === "en" ? "All" : "全部"
   const set = (key: string, val: string) => setV((prev) => {
+    setActiveStoryId(undefined)
     setActiveGuidanceKey(key)
     const next = { ...prev, [key]: val }
     return config.onValueChange?.(next, key, val) ?? next
   })
   const guidanceProp = activeGuidanceKey ? config.props.find((p) => p.type === "segment" && p.key === activeGuidanceKey) : undefined
   const guidanceOption = guidanceProp?.type === "segment" ? guidanceProp.options.find((o) => o.value === v[guidanceProp.key]) : undefined
+  const activeStory = activeStoryId ? config.stories?.find((story) => story.id === activeStoryId) : undefined
   const isAllGuidance = guidanceProp?.type === "segment" && guidanceProp.hasAll && v[guidanceProp.key] === "all"
-  const intentText = isAllGuidance
+  const intentText = activeStory
+    ? lang === "en" ? (activeStory.intentEn ?? activeStory.intent) : activeStory.intent
+    : isAllGuidance
     ? lang === "en" ? "Preview all values in this dimension to compare the component states side by side." : "同时预览这一维度下的所有取值，用来横向比较组件状态。"
     : guidanceOption
     ? lang === "en" ? (guidanceOption.intentEn ?? guidanceOption.intent) : guidanceOption.intent
     : lang === "en" ? "Select a concrete variant to see the recommended usage." : "选择具体场景后查看推荐用法。"
-  const constraintText = isAllGuidance
+  const constraintText = activeStory?.constraint
+    ? lang === "en" ? (activeStory.constraintEn ?? activeStory.constraint) : activeStory.constraint
+    : isAllGuidance
     ? lang === "en" ? "“All” is only for matrix preview. Choose one concrete value before copying code; do not pass an all prop." : "“全部”只用于矩阵预览；需要复制代码时先选一个具体取值，不传 all 这类伪属性。"
     : guidanceOption
     ? lang === "en" ? (guidanceOption.constraintEn ?? guidanceOption.constraint) : guidanceOption.constraint
@@ -186,32 +240,25 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
     if (!workbenchActive || !activeNode || !p.owner) return true
     return Array.isArray(p.owner) ? p.owner.includes(activeNode.key) : p.owner === activeNode.key
   }).sort((a, b) => workbenchActive ? 0 : (a.defaultOrder ?? Number.MAX_SAFE_INTEGER) - (b.defaultOrder ?? Number.MAX_SAFE_INTEGER))
+  const hasControlGroups = visibleProps.some((prop) => prop.controlGroup)
+  const orderedVisibleProps = hasControlGroups
+    ? controlGroupOrder.flatMap((group) => visibleProps.filter((prop) => prop.controlGroup === group))
+    : visibleProps
 
   useEffect(() => {
     if (!config.workbench || !activeNode || activeNode.key === selectedNode) return
     setSelectedNode(activeNode.key)
   }, [activeNode, config.workbench, selectedNode])
 
-  let combos: ComponentPlaygroundValues[] = [v]
-  for (const p of config.props) {
-    if (p.type === "segment" && p.hasAll && v[p.key] === "all") {
-      const next: ComponentPlaygroundValues[] = []
-      for (const c of combos) {
-        for (const o of p.options.filter((option) => !(option.hiddenWhen?.(c) ?? false))) {
-          next.push({ ...c, [p.key]: o.value })
-        }
-      }
-      combos = next
-    }
-  }
-  const items = combos.map((c, i) => <Fragment key={i}>{config.renderOne(c, lang)}</Fragment>)
-  const isMatrix = items.length > 1
+  const matrixStories = buildPlaygroundStories(config.props, v)
+  const items = matrixStories.map((story) => <Fragment key={story.id}>{config.renderOne(story.values, lang)}</Fragment>)
+  const isMatrix = matrixStories.length > 1
   const activeTab = isMatrix ? "preview" : tab
   const tabs: { value: string; icon: ReactNode; label: string }[] = [
     { value: "preview", icon: <EyeIcon className="size-4" />, label: lang === "en" ? "Preview" : "预览" },
     ...(isMatrix ? [] : [{ value: "code", icon: <Code2Icon className="size-4" />, label: lang === "en" ? "Code" : "代码" }]),
   ]
-  const code = config.genCode(combos[0], lang)
+  const code = config.genCode(matrixStories[0]?.values ?? v, lang)
   const validations = config.workbench?.validate(v) ?? {}
 
   useEffect(() => {
@@ -275,10 +322,22 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
     setEditing(true)
   }
 
+  const selectStory = (id: string) => {
+    const story = config.stories?.find((item) => item.id === id)
+    if (!story) return
+    setV({ ...config.initial, ...story.values })
+    setActiveStoryId(story.id)
+    setActiveGuidanceKey(config.guidanceKey ?? config.props.find((p) => p.type === "segment")?.key)
+    setTab("preview")
+  }
+
   return (
-    <div
-      data-slot="card"
-      className="overflow-hidden rounded-xl border border-border-container bg-card shadow-l1 [--card-spacing:var(--fx-panel-padding)] [--playground-gap:var(--fx-panel-gap)]"
+    <WebsiteCardContainer
+      padding="none"
+      data-slot="component-playground"
+      data-story-source={config.storySource}
+      data-story-count={config.stories?.length || undefined}
+      className="[--card-spacing:var(--fx-panel-padding)] [--playground-gap:var(--fx-panel-gap)]"
     >
       <div className="overflow-x-auto border-b border-border-subtle bg-card">
         <div className={workbenchActive ? "grid min-w-[1120px] grid-cols-[220px_minmax(360px,1fr)_minmax(320px,0.8fr)] gap-(--playground-gap) p-(--card-spacing)" : "grid min-w-[1080px] grid-cols-[minmax(0,1fr)_minmax(360px,1fr)] gap-(--playground-gap) p-(--card-spacing)"}>
@@ -307,6 +366,16 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
           ) : null}
           <div className="flex flex-col gap-(--playground-gap)">
             <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Interactive props" : "实时属性"}</PlaygroundSectionTitle>
+            {config.stories?.length ? (
+              <div data-slot="component-playground-stories" className="flex flex-col gap-(--fx-control-gap-tight)">
+                <PlaygroundPropLabel zh={lang === "en" ? "Stories" : "场景预设"} />
+                <PgSegmented
+                  value={activeStoryId ?? ""}
+                  onChange={selectStory}
+                  options={config.stories.map((story) => ({ value: story.id, label: lang === "en" ? (story.titleEn ?? story.title ?? story.id) : (story.title ?? story.id) }))}
+                />
+              </div>
+            ) : null}
             {workbenchActive && activeNode ? (
               <div className="flex items-center gap-(--fx-control-gap-tight) text-sm text-muted-foreground">
                 <span className="font-medium text-foreground">{lang === "en" ? activeNode.en : activeNode.zh}</span>
@@ -325,7 +394,7 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
                   />
                 ))}
               </div>
-            ) : visibleProps.map((p) => (
+            ) : orderedVisibleProps.map((p) => (
               <div key={p.key} className="flex flex-col gap-(--fx-control-gap-tight)">
                 <PlaygroundPropLabel zh={lang === "en" ? p.en : p.zh} />
                 {p.type === "text" ? (
@@ -441,6 +510,6 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
           <pre className="font-mono text-sm leading-relaxed text-background/85"><code>{code}</code></pre>
         </div>
       )}
-    </div>
+    </WebsiteCardContainer>
   )
 }

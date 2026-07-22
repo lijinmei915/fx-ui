@@ -38,6 +38,7 @@ import { ComponentPlayground, type ComponentPlaygroundConfig } from "@/component
 
 ```tsx
 const config: ComponentPlaygroundConfig = {
+  storySource: "docs/data/component-playgrounds.manifest.json#components.example",
   props: [
     { key: "text", zh: "内容", en: "Text", propName: "children", type: "text" },
   ],
@@ -55,7 +56,19 @@ const config: ComponentPlaygroundConfig = {
 - 语义 DOM：root、interactive-props、intent、recommended-code、preview、code、`data-slot="component-playground-structure"`、`data-slot="component-playground-state-assignments"`、`data-slot="component-playground-validation"`
 - 原生/数据状态：preview-tab、code-tab、copied、scenario-selected、workbench-editing、workbench-node-selected、state-assignment-previewed
 - 变体：无独立 variant prop；能力由 `ComponentPlaygroundConfig` 驱动
-- 导出项：ComponentPlayground、ComponentPlaygroundConfig 及相关类型
+- 导出项：ComponentPlayground、ComponentPlaygroundConfig、`buildPlaygroundStories` 及相关类型
+
+### Story 归一化
+
+`buildPlaygroundStories(props, values)` 是 Playground 的统一 story 归一化入口。它只展开当前被选择为“全部”的、声明了 `hasAll` 的属性，返回稳定的 `id` 与真实组件值；`all` 只存在于矩阵预览，不会进入生成代码。组件页、视觉测试和 Agent 示例应复用这份 story 结构，不要另写一套矩阵组合逻辑。
+
+组件 manifest 中若声明 `visualTests`，必须同时声明 `visual.route`、`visual.selector` 和 `visual.screenshot`。视觉测试从这些字段读取路由、定位器和基线文件，避免在测试代码里复制页面事实。
+
+```tsx
+import { buildPlaygroundStories } from "@/components/fx/component-playground"
+
+const stories = buildPlaygroundStories(config.props, currentValues)
+```
 
 制作台模式仍由 `ComponentPlaygroundConfig` 驱动：结构事实、属性归属、Token 槽位、状态语义映射和检查项来自 `docs/data/component-playgrounds.manifest.json`；组件页只提供真实组件渲染和检查逻辑。存在 `workbench` 配置不代表默认展开，统一由调试台工具栏的“编辑组件 / 完成编辑”切换。
 
@@ -84,6 +97,12 @@ const config: ComponentPlaygroundConfig = {
 - 不把取值写进标题；标题负责维度，下面的 tab 负责取值。
 - 不写业务场景词，如“表格模式”“详情模式”；业务场景应进入使用意图或场景示例。
 
+### 实时属性分组与场景准入
+
+新建或改造 Playground 时，实时属性按固定顺序分组：**内容 → 语义 → 结构 → 外观 → 行为**。各组只展示组件源码的真实 API 或已声明组合能力：内容是用户可见数据；语义是 type、required、readOnly、aria-* 等原生 HTML 或无障碍能力；结构是 header、leading、trailing、footer 等真实槽位；外观是 variant、size、tone 等视觉 API；行为是 disabled、loading、invalid 等交互/组合态。没有对应能力的组不渲染，禁止用布局宽度、外层间距或页面覆盖类凑控制项。
+
+场景预设不属于实时属性。只有同时满足“改变结构”、“需要联动多个真实 props 或状态”以及“具备已验证的使用意图与约束”时才允许出现；它必须排在所有实时属性组之后，并以 manifest 声明的显式 `order` 升序排列。仅改变一个 prop、可由面板独立配置的 props 组合、或仅覆盖布局的内容不得创建场景预设。这些规则的机器事实见 `docs/data/component-playgrounds.manifest.json#controlPanelContract`，由 `check-playground-contract.mjs` 校验。
+
 ### Tab 选项文案
 
 - Tab 文案写短值名，2-5 个字为主，整组保持同一语法层级。
@@ -101,7 +120,8 @@ const config: ComponentPlaygroundConfig = {
 | --- | --- |
 | `props` | 调试属性列表，支持 segment 和 text |
 | `initial` | 初始值 |
-| `scenarios?` | 可选场景预设 |
+| `storySource?` | 可选 manifest/story 来源指针，同时写入根节点 `data-story-source`，供视觉测试和 Agent 审计 |
+| `stories?` | Storybook-lite 风格的场景预设；每项包含 `id`、`name`、`nameEn`、`args` 和 `parameters` |
 | `guidanceKey?` | 用于展示使用意图的属性 key |
 | `workbench?` | 可选制作台配置：结构节点、状态语义映射、真实 DOM 检查目标和验证项 |
 | `renderOne` | 根据当前值渲染预览 |
@@ -123,6 +143,8 @@ const config: ComponentPlaygroundConfig = {
 ## AI Rules {#ai-rules}
 
 - 每个调试项必须来自组件源码真实 prop，不发明不存在的 prop。
+- 新建或改造 Playground 必须按 controlPanelContract 的五组顺序声明实时属性；场景预设必须通过其准入规则，不能作为重复属性的快捷入口。
+- 场景预设承载组合级切换；如果 stories 之间只由一个配置维度区分，该维度不得再作为实时属性重复展示。
 - `renderOne` 与 `genCode` 必须保持同一组值。
 - 制作台选中结构节点后，只展示归属于该节点的真实 props；节点增删由 manifest 中的结构插槽控制，不发明组件 prop。
 - 默认进入普通调试视图，只展示组件的常用根属性；制作台结构和 Token 必须在用户点击“编辑组件”后才显示。进入编辑时快照普通调试值，编辑期间只修改临时草稿，完成编辑后恢复快照，不能污染普通实时属性。

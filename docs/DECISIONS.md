@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-07-16
+last_verified: 2026-07-22
 teaches: "fx-ui 重要的技术/协作决策记录：选了什么、放弃了什么、为什么"
 use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论"
 ---
@@ -274,12 +274,12 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 
 - **日期**：2026-06-25
 - **状态**：已决定
-- **决定**：文档站每个页面的「slug → 锚点 + 渲染组件」集中在 `src/App.tsx` 的 `pageRegistry` 单一对象。`getPageFromHash`（hash 折叠成 slug）、右栏 `anchors`、主区渲染分发都从它派生；新增页面只改 `pageRegistry` 一处（+ `docsNav` 导航项 + manifest + md）
+- **决定**：文档站每个页面的「slug → 锚点 + 渲染组件」集中在 `src/lib/page-registry-config.tsx` 的 `pageRegistry` 单一对象。`src/App.tsx` 只负责应用状态、站点骨架和消费注册结果；`getPageFromHash`（hash 折叠成 slug）、右栏 `anchors`、主区渲染分发都从注册表派生；新增页面只改 `pageRegistry` 一处（+ `docsNav` 导航项 + manifest + md）。
 - **放弃**：原先并行手写的四套结构——`getPageFromHash` 的 `if` 链、~45 个 `isXxxPage` 布尔、`anchors` 巨型三元、render 巨型三元
 - **原因**：同一份 slug 列表抄了四遍，加一个页面要在四处同时接线（TopBar 接线时漏接即 404/空锚点），是典型「多处无唯一真相」。收成 registry 后单点维护、漏接即编译报错
 - **保留**：`docsNav`/`topNav`（导航树+搜索+索引的真相源，结构不同不并入）；`isComponentsIndexPage`/`isGovernancePage`/`isComponentArea` 等**分组**判定（用于顶栏高亮，非逐页重复）；`#ai-*` 锚点前缀与 slug 不同名，`getPageFromHash` 单独兜一行
-- **影响**：`src/App.tsx` 路由层重构；后续新增/改页面以 `pageRegistry` 为准
-- **相关文件**：`src/App.tsx`
+- **影响**：路由注册从 `src/App.tsx` 抽到 `src/lib/page-registry-config.tsx`；后续新增/改页面以该注册表为准，App 不再承载页面模块导入和注册结构。
+- **相关文件**：`src/lib/page-registry-config.tsx`、`src/lib/page-registry.ts`、`src/App.tsx`
 
 ### DEC-024: 列表页走可组合拆分，不做单体 ListPageBlock
 
@@ -294,7 +294,7 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **必须可改动（核心要求）**：列定义(`columns`)、工具栏配置、头部、行操作都做成**参数化 + 受控**，页面侧只换数据/列/配置，**不写死**。换个列表页 = 换 columns/数据，不复制结构。
 - **放置**：先落 `src/components/recipes/`（轻，只登记 ARCHITECTURE）跑通；稳定后升级到 `src/components/fx/`（对应架构候选 `EntityTable`/`SearchToolbar`，届时补 manifest+文档+check）。
 - **页头处理（已落地 2026-06-26）**：现成 fx `PageHeader` 是「内容页大标题」（`text-xl` + `pb-4`），不适配列表页「紧凑标题栏」（h-12 + `text-lg` + 视图下拉），硬套要覆盖（踩红线 7）。故**单独沉淀 `ListPageHeader` block**（`src/components/recipes/list-page-header.tsx`），三轴变体由 props/slot 决定：① `views?` 不传只剩标题、传了出「客户 ｜ 全部客户 ⌄」视图下拉；② `actions` 插槽 0..N 动态；③ 操作按钮样式（描边/主色）由页面定。**变体轴是用户明确给出的（非猜测），故 N=1 即抽**（用户决定，跳过"等第二页"默认）。`PageHeader` 留作内容页用，不强行复用。
-- **相关文件**：`src/App.tsx`（`CustomerListTemplate` 内容部分待抽）、`src/components/fx/page-header.tsx`、（新）`src/components/recipes/data-table.tsx`、`list-toolbar.tsx`
+  - **相关文件**：`src/pages/templates/customer-list-template.tsx`、`src/App.tsx`（仅负责路由装配）、`src/components/fx/page-header.tsx`、（新）`src/components/recipes/data-table.tsx`、`list-toolbar.tsx`
 
 ### DEC-025: 「生成 + 内置设置面板」处理用户自调，不做可视化搭建器（暂搁置）
 
@@ -374,14 +374,14 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
   1. “边框粗细” = 组件外轮廓线宽（默认 `1px`）
   2. “边框强度” = 外轮廓颜色深浅（如 `border-border-container` / `border-border` / `border-border-strong`）
   3. “结构线 / 分隔线” = 表格内线、区块分隔线，单独治理，不跟组件外框绑定
-- **补充（2026-07-03）**：主题面板里的边框粗细只作用于容器表面（如卡片、调试台）；Button outline、Toggle、Pagination 和表单控件都保持控件自身描边，不跟随容器边框粗细加粗或归零，避免轻量操作失去层级。
+- **补充（2026-07-22）**：不在普通主题面板开放边框粗细。它是固定的结构基线，不是用户偏好；运行时覆写曾让 `Card variant="outline"` 的 1px 描边被归零，破坏组件变体契约。容器需要更强层级时，由组件 `variant` 和语义边框强度决定，不能靠全局宽度覆写。
 - **相关文件**：`docs/TOKENS.md`、`theme/fx-theme.css`、`src/components/fx/component-playground.tsx`
 
 ### DEC-032: 新增组件必须登记主题能力，检查从 manifest 派生
 
 - **日期**：2026-06-29
 - **状态**：已决定
-- **决定**：以后新增基础组件或 fx 组合组件，固定流程为：`npx shadcn add` 拉组件 → 读取源码 API 和 `data-slot` → 在 `docs/data/components.manifest.json` 登记组件事实与主题能力 → 补组件文档与文档页示例 → 运行 `npm run check`。主题能力（如 `borderWidth`、`radius`、`shadow`）以后以 manifest 为事实源，检查脚本从 manifest 派生，不在脚本里硬编码一串组件清单。
+- **决定**：以后新增基础组件或 fx 组合组件，固定流程为：`npx shadcn add` 拉组件 → 读取源码 API 和 `data-slot` → 在 `docs/data/components.manifest.json` 登记组件事实与主题能力 → 补组件文档与文档页示例 → 运行 `npm run check`。主题能力（如语义色、圆角、阴影）以后以 manifest 为事实源，检查脚本从 manifest 派生，不在脚本里硬编码一串组件清单。
 - **放弃**：① 新组件加完只写页面示例，不登记主题能力；② 每新增一个规则就写一个独立检查脚本；③ 依赖人工记忆判断某个组件外框是否应该被主题影响。
 - **原因**：组件是否跟随主题属于长期结构事实，容易在恢复页面或批量重构时被悄悄覆盖。把主题能力收进 manifest，可以让新增组件接入流程稳定，同时避免检查无限膨胀。
 - **影响**：`docs/MAP.md` 的组件新增路线加入“补 manifest 主题能力”；后续扩展 `scripts/check-components-manifest.mjs` 或主题契约检查时，优先读取 manifest 里的能力声明，组件外框靠 `data-slot` 定位，结构线/分隔线不默认跟随组件主题。
@@ -403,14 +403,14 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **决定**：fx-ui 采用主流设计系统分层：**Tailwind 负责表达“怎么调用/怎么排版”，FX token 负责定义“具体值是什么”；企业视觉数值统一映射进 Tailwind 类体系消费**。排版统一收口到 `text-xs / text-sm / text-base / text-lg / text-xl`。
 - **分层口径**：
   1. **布局/结构层**：继续优先用 Tailwind 原生工具类，如 `flex` / `grid` / `gap-*` / `px-*` / `col-span-*` / 响应式断点。
-  2. **视觉语义层**：颜色、字号、圆角、阴影、边框粗细、动效时长，优先收口到 FX token，再映射到 Tailwind 类或语义槽消费。
+  2. **视觉语义层**：颜色、字号、圆角、阴影、动效时长优先收口到 FX token，再映射到 Tailwind 类或语义槽消费；边框粗细是组件受治理的固定结构基线，不作为主题调用面。
   3. **组件层**：组件默认样式只引用语义 token 或已治理过的工具类，不在调用处混入另一套默认视觉刻度。
 - **放弃**：① 同一语义长期同时允许第二套 FX 字号类与 Tailwind `text-*` 双轨并存；② 为了“灵活”在组件调用处临时选 Tailwind 默认视觉值；③ 再造一层“FX 双写法”与 Tailwind 平行存在。
 - **原因**：主流体系（Tailwind theme variables / shadcn semantic tokens）都是“token 作为真相源，utility 作为调用 API”。如果默认视觉刻度双轨并存，后续换肤、缩放、统一治理都会漂；而布局类保留 Tailwind 原生，则能继续保持工程效率和 open-code 的可读性。
 - **补充说明**：像 `13px`、`15px` 这类企业字号，不走“在 Tailwind 默认字号基础上再乘百分比”的长期方案，而是直接定义 token，再映射成 Tailwind 类。现在不再保留 `text-fx-*` 旧口径；长期只保留 `text-xs / text-sm / text-base / text-lg / text-xl`。百分比推导可临时试验，但不作为治理基线。
 - **影响**：
   1. `spacing`、栅格、断点继续沿用 Tailwind 原生体系。
-  2. `color / typography / radius / shadow / border-width / motion` 统一按 FX token 治理。
+  2. `color / typography / radius / shadow / motion` 统一按 FX token 治理；`border-width` 按组件结构基线治理。
   3. 排版调用层统一写 Tailwind `text-*`，具体值由 token 注入。
   4. 主题面板这类“全局主题能力”必须只改 FX token，不以局部类覆盖代替。
 - **相关文件**：`docs/TOKENS.md`、`docs/LAYOUTS.md`、`theme/fx-theme.css`、`src/App.tsx`
@@ -554,7 +554,7 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 
 - **日期**：2026-07-16
 - **状态**：已决定
-- **决定**：文档站中的独立信息块、示例预览、说明区和表格外壳统一使用 fx 组合组件 `WebsiteCardContainer`；它内部复用 shadcn `Card` 的真实 API。完整应用预览可用受控 `padding="none"` 贴合容器边缘，组件自身的 API 预览保留直接使用 shadcn `Card`，保证示例仍能准确说明该基础组件。
+- **决定**：文档站中的独立信息块、示例预览、说明区和表格外壳统一使用 fx 组合组件 `WebsiteCardContainer`；它内部复用 shadcn `Card` 的真实 API。完整应用预览、色板或组件制作台等贴边结构可用受控 `padding="none"`，该值同时清除 Card 根部的默认内边距与间距；组件自身的 API 预览保留直接使用 shadcn `Card`，保证示例仍能准确说明该基础组件。
 - **放弃**：① 页面按需直接写 `Card` 或裸 `div`；② 把 WebsiteCardContainer 仅作为规范页静态示意；③ 在调用处覆盖卡片的圆角、边框、背景或阴影。
 - **原因**：文档站是产品界面，不是基础组件样例的随意拼接场。集中入口能让网站卡片的视觉和结构随同一个组合组件演进，同时不污染基础 Card 的业务语义和真实示例。
 - **影响**：`DocSurfaceCard` 委托 WebsiteCardContainer；组件索引、治理表格、规则代码块、间距节奏和 CRM 完整预览均通过它承载；`check-doc-site-contract` 验证该委托关系。网站卡片的视觉改动只在 WebsiteCardContainer 层完成。
@@ -569,6 +569,54 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **原因**：网站卡片是同一类产品表面，应保持一致的层次感。复用全局 Shadow Level 既让用户能统一关闭或调整阴影，也避免网站风格脱离系统 token。
 - **影响**：网站卡片、文档表面和规则面板都自动获得 L1 阴影；全局 Shadow Level = none 时全部关闭。
 - **相关文件**：`src/components/fx/{website-card-container,doc-surface,website-rule-panel}.tsx`、`theme/fx-theme.css`、`src/App.tsx`、`docs/data/{components,website-standards}.manifest.json`
+
+### DEC-050: 组件质量通过只读 CLI 查询暴露给 Agent
+
+- **日期**：2026-07-18
+- **状态**：已决定
+- **决定**：在现有 `fx search|component|recipe|impact|layer` 查询之外，增加 `fx quality <组件>` 只读入口，直接返回由组件、Playground、视觉测试和文档真相源派生的质量状态、缺口和证据指针。
+- **放弃**：① 让 Agent 直接读取并解释整份质量 JSON；② 在 CLI 里手填一份质量评分；③ 把 `needs-review` 自动降级为“已覆盖”。
+- **原因**：质量矩阵既服务人也服务 Agent，但原始 JSON 不是稳定的交互边界。显式查询可以保持输出契约、来源指针和缺口语义，同时让缺失证据继续可见。
+- **影响**：`fx quality` 只读，不修改源码或 manifest；查询结果必须包含质量真相源，并通过 `check-agent-query-contract` 验证。质量状态仍由 `build:quality` 派生，不能在 CLI 中手改。
+- **相关文件**：`scripts/fx-agent.mjs`、`scripts/check-agent-query-contract.mjs`、`docs/data/component-quality.manifest.json`
+
+### DEC-051: 开源参考站只借鉴治理思想，不复制许可证未核实的实现
+
+- **日期**：2026-07-18
+- **状态**：已决定
+- **决定**：Astryx Components（`https://astryx.atmeta.com/components`）以及其他开源组件站只用于参考信息架构、组件分层、文档导航、主题契约和工程治理方式。许可证、源码归属和可再分发范围未完成核实前，不复制其源码、样式实现、命名体系或资源。
+- **放弃**：把参考站的页面或组件实现直接搬入 fx-ui，或仅凭“页面可访问/声称开源”推断可复制、可再发布。
+- **原因**：fx-ui 的真相源必须保持在本地 shadcn open-code、Base UI、Tailwind token、manifest 和可执行检查中；参考站的组织思想可以吸收，但实现复制会引入许可证、供应链和 API 漂移风险。
+- **影响**：新增分层、Playground、页面模板或治理能力时，先登记本地 source/contract，再通过质量与视觉检查；外部参考只记录为决策依据，不成为运行时依赖或第二真相源。
+- **相关文件**：`docs/ARCHITECTURE.md`、`docs/data/layered-assets.manifest.json`、`docs/data/component-playgrounds.manifest.json`、`scripts/check-layered-assets.mjs`
+
+### DEC-052: Astryx 仓库代码按 MIT 许可单独评估，站点资源仍不默认复用
+
+- **日期**：2026-07-18
+- **状态**：已决定
+- **核验**：Astryx Components 页面链接到 `https://github.com/facebook/astryx`；仓库 `main/LICENSE` 声明 MIT License，版权归 Meta Platforms, Inc.（2026）。站点页脚另链接 Meta Open Source 条款，但页面、图标、字体、截图、品牌资产和第三方依赖不因此自动获得同一许可。
+- **决定**：可以把该仓库的公开工程组织方式作为 MIT 范围内的参考；如未来确需复制具体代码，必须保留 MIT 版权/许可文本，并逐文件核对依赖和资源许可。当前 fx-ui 仍只吸收信息架构、分层、Playground、CLI/Agent 治理和主题契约，不引入 Astryx 运行时、不复制品牌资源，也不建立第二真相源。
+- **放弃**：把网页可见内容、压缩产物、品牌图形或未标明来源的资源当作 MIT 代码直接搬运。
+- **来源**：`https://astryx.atmeta.com/components`、`https://github.com/facebook/astryx`、`https://raw.githubusercontent.com/facebook/astryx/main/LICENSE`、`https://opensource.fb.com/legal/terms`
+- **影响**：外部参考可以进入设计评审和治理决策，但任何落地能力仍必须先登记本地 source/contract，再通过 `build`、`check-all` 和 `test:visual` 验收。
+
+### DEC-053: 质量矩阵区分不适用状态与待取证状态
+
+- **日期**：2026-07-18
+- **状态**：已决定
+- **决定**：组件质量矩阵中的 disabled/loading/error 状态必须保留证据字段。`docs/data/components.manifest.json#stateApplicability` 只允许声明组件根契约明确不拥有的状态（例如 Dialog 的 disabled 属于 Trigger、ButtonGroup 的 loading 属于子 Button）；非交互组件且没有该状态语义时标记 `not-applicable`；其余交互组件没有源码、文档、story 或行为测试证据时标记 `not-declared`，并进入 `needs-review` 缺口，不得按“默认不需要”处理。
+- **原因**：`not-declared` 和“不适用”代表不同工程风险；前者需要补证据，后者只需明确边界。两者混用会让质量矩阵看似全绿但无法指导补齐工作。
+- **相关文件**：`scripts/build-component-quality.mjs`、`docs/data/component-quality.manifest.json`、`scripts/check-agent-query-contract.mjs`
+
+### DEC-054: Playground 将实时属性与场景预设分层治理
+
+- **日期**：2026-07-22
+- **状态**：已决定
+- **决定**：新建或改造 ComponentPlayground 时，实时属性固定按内容、语义、结构、外观、行为排序；缺少能力的分组不显示。场景预设不再作为通用的第一层控制，只有结构变化、多个真实 props/状态联动且具备已验证意图与约束时才允许出现，位置在全部实时属性之后，按 manifest 显式 `order` 升序排列。
+- **放弃**：① 所有 Playground 只要有 stories 就在属性区顶部展示；② 用单个 prop 或可独立调节的 props 组合伪造场景；③ 用页面布局覆盖作为场景。
+- **原因**：实时属性用于探索真实 API，场景用于传达经过验证的组合用法；混在一起会产生重复控制、隐藏 API 层级，并让简单组件的调试台显得比组件本身复杂。
+- **影响**：`component-playgrounds.manifest.json#controlPanelContract` 成为顺序和准入的机器事实，`check-playground-contract.mjs` 校验其完整性。既有 Playground 不批量重排；每个组件在后续改造时按该 contract 审核，Input 是首个待审核样板。
+- **相关文件**：`docs/components/component-playground.md`、`docs/data/component-playgrounds.manifest.json`、`src/components/fx/component-playground.tsx`、`scripts/check-playground-contract.mjs`
 
 ## 相关文件
 

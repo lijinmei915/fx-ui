@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-07-16
+last_verified: 2026-07-27
 teaches: "fx-ui 文档站自身的页面结构、样式边界和改样式流程"
 use_when: "要改 fx-ui 文档网站的顶部导航、侧边栏、内容区、目录、示例区、代码块或文档页展示样式时"
 depends_on: [theme/fx-theme.css, docs/TOKENS.md, docs/LAYOUTS.md, src/App.tsx]
@@ -265,8 +265,8 @@ Primitive -> Semantic -> Component Usage
 - 不要卡片套卡片形成过重层级。
 - 卡片边框使用 `border-border`，背景使用 `bg-card`。
 - 卡片内部的分隔线、控件壳和辅助区域使用 `border-border-subtle`；不要把 `border-border-container` 当作另一套卡片外框，否则文档站会出现两种边框强度。
-- `WebsiteCardContainer` 固定使用 `shadow-l1`；阴影显示与强度只由全局主题的 Shadow Level 控制，页面调用处不得另传 `elevated` 或覆盖 shadow。
-- 只有完整应用预览这类必须贴边的既有 block 才使用容器 API `padding="none"`；不要在调用处用 `p-0` 覆盖内边距。
+- `WebsiteCardContainer` 固定选择 `shadow-l1`；文档站 `ThemePanel` 的全局 Shadow Level 统一覆盖 `--fx-shadow-*` 运行时值，页面调用处不得单独切换、另传 `elevated` 或覆盖 shadow。
+- 只有完整应用预览、色板、组件制作台等必须贴边的既有结构才使用容器 API `padding="none"`；它同时移除容器根部的默认间距。不要在调用处用 `p-0` 或 `gap-0` 覆盖。
 - **卡片内分节用虚线**：卡片**内部**把内容分成几小节时，用虚线分隔 `border-t border-dashed border-border`；**页面级/卡片之间**才用实线 `Separator`。两者区分，避免卡片里实线显得割裂。（Separator 组件自身的演示页除外）
 
 ## 改样式流程

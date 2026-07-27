@@ -17,4 +17,11 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => id.includes("node_modules/recharts") ? "vendor-recharts" : undefined,
+      },
+    },
+  },
 });

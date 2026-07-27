@@ -173,6 +173,15 @@ test("网站 ComponentPlayground 组件", async ({ page }) => {
   await expect(component).toHaveScreenshot("component-playground-baseline.png")
 })
 
+test("Icon 预览", async ({ page }) => {
+  const visual = visualConfig("components", "icon")
+  await page.goto(`/${visual.route}`)
+  const pg = page.locator(visual.selector)
+  await expect(pg).toBeVisible()
+  await expect(pg.locator('[data-story-source="docs/data/component-playgrounds.manifest.json#components.icon"]')).toHaveCount(1)
+  await expect(pg).toHaveScreenshot(visual.screenshot ?? "icon-playground.png")
+})
+
 test("客户列表页模板", async ({ page }) => {
   const visual = visualConfig("baselineVisuals", "customer-list")
   await page.goto(`/${visual.route}`)
@@ -220,7 +229,7 @@ test("Button 交互调试台", async ({ page }) => {
   const pg = page.locator(visual.selector)
   await expect(pg).toBeVisible()
   await expect(pg.locator('[data-story-source="docs/data/component-playgrounds.manifest.json#customPlaygrounds.button"]')).toHaveCount(1)
-  await expect(pg.locator('[data-slot="component-playground-stories"]')).toHaveCount(1)
+  await expect(pg.locator('[data-slot="component-playground-stories"]')).toHaveCount(0)
   await expect(pg.locator(`[data-story-count="${storyCount("customPlaygrounds.button")}"]`)).toHaveCount(1)
   await expect(pg).toHaveScreenshot(visual.screenshot)
 })
@@ -271,6 +280,35 @@ test("Avatar Playground 主入口", async ({ page }) => {
   await expect(page.locator("#avatar-preview")).toHaveCount(0)
   await expect(page.locator("#avatar-usage")).toHaveCount(0)
   await expect(pg.locator('[data-story-source="docs/data/component-playgrounds.manifest.json#components.avatar"]')).toHaveCount(1)
+  await expect(pg.locator('[data-slot="component-playground-stories"]')).toHaveCount(1)
+  await expect(pg.locator(`[data-story-count="${storyCount("components.avatar")}"]`)).toHaveCount(1)
+  await expect(pg.getByText("结构示例", { exact: true })).toHaveCount(1)
+  await expect(pg.getByText("场景预设", { exact: true })).toHaveCount(0)
+
+  const stories = pg.locator('[data-slot="component-playground-stories"]')
+  const contentControl = pg.locator("label").filter({ hasText: "内容" }).locator("..")
+  const positionBelowHeader = () => pg.evaluate((element) => {
+    const top = element.getBoundingClientRect().top + window.scrollY
+    window.scrollTo(0, Math.max(0, top - 96))
+  })
+  const selectTextExample = async (storyName: string) => {
+    const story = stories.getByRole("button", { name: storyName, exact: true })
+    await story.click()
+    await expect(story).toHaveClass(/bg-card/)
+    const text = contentControl.getByRole("button", { name: "文字", exact: true })
+    await text.click()
+    await expect(text).toHaveClass(/bg-card/)
+    await expect(pg.locator('[data-slot="avatar-image"]')).toHaveCount(0)
+  }
+  await selectTextExample("单个头像")
+  await positionBelowHeader()
+  await expect(pg).toHaveScreenshot("avatar-single-playground.png")
+  await selectTextExample("头像组")
+  await positionBelowHeader()
+  await expect(pg).toHaveScreenshot("avatar-group-playground.png")
+  await selectTextExample("群聊拼接")
+  await positionBelowHeader()
+  await expect(pg).toHaveScreenshot("avatar-composite-playground.png")
 })
 
 test("Breadcrumb Playground 主入口", async ({ page }) => {
@@ -476,12 +514,23 @@ test("Textarea Playground 主入口", async ({ page }) => {
 })
 
 test("Separator Playground 主入口", async ({ page }) => {
-  const visual = visualConfig("autoStories", "separator")
+  const visual = visualConfig("components", "separator")
   await page.goto(`/${visual.route}`)
   const pg = page.locator(visual.selector)
   await expect(pg).toBeVisible()
-  await expect(pg.locator('[data-story-source="docs/data/component-playgrounds.manifest.json#autoStories.separator"]')).toHaveCount(1)
-  await expect(pg.locator(`[data-story-count="${storyCount("autoStories.separator")}"]`)).toHaveCount(1)
+  const pageLead = pg.locator(':scope > [data-slot="section-lead"]')
+  await expect(pageLead.getByRole("heading", { name: "调试台", exact: true })).toHaveCount(1)
+  await expect(pageLead.getByText("实时调真实属性，预览随之变化，写法可一键复制。", { exact: true })).toHaveCount(1)
+  await expect(page.locator('a[href="#separator-playground"]')).toHaveCount(1)
+  await expect(page.locator("#separator-overview")).toHaveCount(0)
+  await expect(page.locator("#separator-preview")).toHaveCount(0)
+  await expect(page.locator("#separator-usage")).toHaveCount(0)
+  await expect(page.locator('a[href="#separator-overview"], a[href="#separator-preview"], a[href="#separator-usage"]')).toHaveCount(0)
+  await expect(pg.locator('[data-story-source="docs/data/component-playgrounds.manifest.json#components.separator"]')).toHaveCount(1)
+  await expect(pg.locator('[data-slot="component-playground-stories"]')).toHaveCount(0)
+  const orientationControl = pg.locator("label").filter({ hasText: "方向" }).locator("..")
+  await expect(orientationControl.getByRole("button", { name: "水平", exact: true })).toHaveCount(1)
+  await expect(orientationControl.getByRole("button", { name: "垂直", exact: true })).toHaveCount(1)
   await expect(pg).toHaveScreenshot("separator-playground.png")
 })
 
@@ -622,8 +671,8 @@ test("Link Playground 主入口", async ({ page }) => {
   const pg = page.locator(visual.selector)
   await expect(pg).toBeVisible()
   await expect(pg.locator('[data-story-source="docs/data/component-playgrounds.manifest.json#components.link"]')).toHaveCount(1)
-  await expect(pg.locator('[data-slot="component-playground-stories"]')).toHaveCount(1)
-  await expect(pg.locator(`[data-story-count="${storyCount("components.link")}"]`)).toHaveCount(1)
+  await expect(pg.locator('[data-slot="component-playground-stories"]')).toHaveCount(0)
+  await expect(pg.getByText("场景预设", { exact: true })).toHaveCount(0)
   await expect(pg).toHaveScreenshot(visual.screenshot)
 })
 
@@ -634,6 +683,8 @@ test("ButtonGroup Playground 主入口", async ({ page }) => {
   await expect(pg).toBeVisible()
   await expect(pg.locator('[data-story-source="docs/data/component-playgrounds.manifest.json#components.buttonGroup"]')).toHaveCount(1)
   await expect(pg.locator('[data-slot="component-playground-stories"]')).toHaveCount(1)
+  await expect(pg.getByText("结构示例", { exact: true })).toHaveCount(1)
+  await expect(pg.getByText("组合方式", { exact: true })).toHaveCount(0)
   await expect(pg.locator(`[data-story-count="${storyCount("components.buttonGroup")}"]`)).toHaveCount(1)
   await expect(pg).toHaveScreenshot(visual.screenshot)
 })

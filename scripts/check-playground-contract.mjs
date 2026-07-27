@@ -7,6 +7,7 @@ const manifest = JSON.parse(fs.readFileSync(path.join(root, "docs/data/component
 const componentsManifest = JSON.parse(fs.readFileSync(path.join(root, "docs/data/components.manifest.json"), "utf8"))
 const testPath = path.join(root, "tests/visual.spec.ts")
 const testSource = fs.readFileSync(testPath, "utf8")
+const playgroundSource = fs.readFileSync(path.join(root, "src/components/fx/component-playground.tsx"), "utf8")
 const errors = []
 
 if (manifest.format !== "fx-ui/component-playgrounds") errors.push("invalid playground manifest format")
@@ -24,8 +25,8 @@ if (!controlPanelContract || controlPanelContract.appliesWhen !== "new-or-touche
     if (!controlPanelContract.realTimeGroups?.[group]) errors.push(`controlPanelContract is missing ${group} group guidance`)
   }
   const scenarios = controlPanelContract.scenarioPresets
-  if (scenarios?.placement !== "after-realtime-props" || scenarios?.order !== "explicit-order-ascending") {
-    errors.push("controlPanelContract must constrain scenario placement and explicit ordering")
+  if (scenarios?.placement !== "before-realtime-props" || scenarios?.order !== "explicit-order-ascending" || scenarios?.minimumStories !== 2) {
+    errors.push("controlPanelContract must constrain scenario placement, a two-story minimum, and explicit ordering")
   }
   for (const rule of ["changes-structure", "requires-linked-real-props-or-states", "has-verified-intent-and-constraint"]) {
     if (!scenarios?.showOnlyWhen?.includes(rule)) errors.push(`controlPanelContract scenario admission is missing ${rule}`)
@@ -33,6 +34,11 @@ if (!controlPanelContract || controlPanelContract.appliesWhen !== "new-or-touche
   for (const rule of ["single-prop-duplicate", "independently-configurable-props", "layout-only-override"]) {
     if (!scenarios?.hideWhen?.includes(rule)) errors.push(`controlPanelContract scenario exclusion is missing ${rule}`)
   }
+}
+const storiesMarkupIndex = playgroundSource.indexOf('data-slot="component-playground-stories"')
+const realtimeTitleIndex = playgroundSource.indexOf('"实时属性"')
+if (storiesMarkupIndex < 0 || realtimeTitleIndex < 0 || storiesMarkupIndex > realtimeTitleIndex) {
+  errors.push("ComponentPlayground must render stories before realtime props")
 }
 
 const inputControlGroups = {
@@ -53,6 +59,28 @@ for (const [key, group] of Object.entries(inputControlGroups)) {
   const prop = manifest.components?.input?.props?.find((item) => item.key === key)
   if (prop?.controlGroup !== group) errors.push(`input prop ${key} must declare controlGroup ${group}`)
 }
+const selectControlGroups = {
+  otherInput: "content",
+  semanticState: "semantics",
+  structure: "structure",
+  selection: "structure",
+  variant: "appearance",
+  size: "appearance",
+  search: "behavior",
+  clearable: "behavior",
+  interactionState: "behavior",
+  feedbackState: "behavior",
+}
+for (const [key, group] of Object.entries(selectControlGroups)) {
+  const prop = manifest.components?.select?.props?.find((item) => item.key === key)
+  if (prop?.controlGroup !== group) errors.push(`select prop ${key} must declare controlGroup ${group}`)
+}
+if (manifest.components?.select?.props?.some((item) => item.key === "valueState")) {
+  errors.push("select valueState is scenario data and must not appear as a visible playground control")
+}
+if (manifest.components?.select?.props?.some((item) => item.key === "state")) {
+  errors.push("select must split semanticState, interactionState, and feedbackState instead of a catch-all state control")
+}
 const components = manifest.components ?? {}
 const customPlaygrounds = manifest.customPlaygrounds ?? {}
 const playgroundEntries = {
@@ -71,6 +99,13 @@ for (const [id, component] of Object.entries(playgroundEntries)) {
     }
     if (!Array.isArray(component.stories) || component.stories.length === 0) errors.push(`${id} stories must be a non-empty array when declared`)
     if (!Array.isArray(component.stories)) continue
+    const minimumStories = controlPanelContract.scenarioPresets?.minimumStories ?? 2
+    if (component.stories.length >= minimumStories && !component.storyPresentation) {
+      errors.push(`${id} with ${minimumStories}+ stories must declare storyPresentation`)
+    }
+    if (component.storyPresentation === "examples" && component.stories.length < minimumStories) {
+      errors.push(`${id} structural examples require at least ${minimumStories} stories`)
+    }
     const declaredStoryKeys = new Set([
       ...Object.keys(component.initial ?? {}),
       ...(component.props ?? []).map((prop) => prop.key),
@@ -86,6 +121,7 @@ for (const [id, component] of Object.entries(playgroundEntries)) {
       if (!story.name || !story.nameEn) errors.push(`${id} story ${story.id ?? "?"} must declare bilingual names`)
       if (!story.parameters?.intent || !story.parameters?.intentEn) errors.push(`${id} story ${story.id ?? "?"} must declare bilingual intent`)
     }
+    if (component.stories.length < minimumStories) continue
     for (const prop of (component.props ?? []).filter((item) => item.type === "segment")) {
       const storyValues = component.stories.map((story) => story.args?.[prop.key])
       if (storyValues.some((value) => value === undefined) || new Set(storyValues).size !== component.stories.length) continue
@@ -145,6 +181,14 @@ for (const id of manifest.autoScenarioComponents ?? []) {
 const autoScenarioComponents = manifest.autoScenarioComponents ?? []
 if (new Set(autoScenarioComponents).size !== autoScenarioComponents.length) {
   errors.push("autoScenarioComponents must contain unique component slugs")
+}
+
+for (const [slug, presentation] of Object.entries(manifest.autoStoryPresentation ?? {})) {
+  if (!manifest.autoStories?.[slug]) errors.push(`autoStoryPresentation.${slug} must reference autoStories.${slug}`)
+  if (!["presets", "examples"].includes(presentation)) errors.push(`autoStoryPresentation.${slug} must be presets or examples`)
+  if (manifest.autoStories?.[slug]?.length < (controlPanelContract.scenarioPresets?.minimumStories ?? 2)) {
+    errors.push(`autoStoryPresentation.${slug} requires at least two auto stories`)
+  }
 }
 
 for (const [slug, stories] of Object.entries(manifest.autoStories ?? {})) {

@@ -1,0 +1,264 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/layered-assets",
+  "policy": "Only verified local sources may be exposed as a layer. A pattern or block must point to an existing recipe/source; a page template must point to a declared build-kit archetype.",
+  "layers": ["components", "hooks", "patterns", "blocks", "page-templates"],
+  "components": {
+    "sources": [
+      { "id": "shadcn-ui", "path": "src/components/ui", "contract": "docs/data/components.manifest.json", "status": "ready" },
+      { "id": "fx-components", "path": "src/components/fx", "contract": "docs/data/components.manifest.json", "status": "ready" }
+    ]
+  },
+  "hooks": [
+    {
+      "id": "use-mobile",
+      "name": "useIsMobile",
+      "source": "src/hooks/use-mobile.ts",
+      "intent": ["移动端断点", "responsive", "mobile viewport"],
+      "status": "ready",
+      "evidence": ["src/hooks/use-mobile.ts", "src/components/ui/sidebar.tsx"],
+      "constraints": ["只负责 viewport 判断，不承载页面布局或组件视觉。"]
+    }
+  ],
+  "patterns": [
+    {
+      "id": "email-field-validation",
+      "name": "邮箱字段校验",
+      "source": "docs/data/agent-recipes.manifest.json#email-field-validation",
+      "status": "ready",
+      "kind": "behavior-pattern"
+    },
+    {
+      "id": "search-input-with-clear",
+      "name": "可清除搜索输入",
+      "source": "docs/data/agent-recipes.manifest.json#search-input-with-clear",
+      "status": "ready",
+      "kind": "behavior-pattern"
+    },
+    {
+      "id": "global-search-with-scope",
+      "name": "带范围的全局搜索",
+      "source": "docs/data/agent-recipes.manifest.json#global-search-with-scope",
+      "status": "ready",
+      "kind": "behavior-pattern"
+    },
+    {
+      "id": "date-range-filter",
+      "name": "日期范围筛选",
+      "source": "docs/data/agent-recipes.manifest.json#date-range-filter",
+      "status": "ready",
+      "kind": "behavior-pattern"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "crm-shell-nav",
+      "name": "CRM 双层导航",
+      "source": "src/components/recipes/crm-shell-nav.tsx#CrmShellNav",
+      "status": "ready",
+      "components": ["NavRail", "NavMenu", "NavMenuItem", "NavMenuFooter"],
+      "dataContract": ["railApps", "selected", "open", "pinned", "hovered"],
+      "evidence": [
+        "src/components/recipes/crm-shell-nav.tsx",
+        "src/components/fx/nav-menu.tsx",
+        "src/pages/templates/customer-list-template.tsx"
+      ],
+      "acceptanceCriteria": [
+        "一级应用栏和二级菜单使用现有 NavRail/NavMenu 组合，不在页面调用处重写导航结构。",
+        "折叠、hover 展开、分组展开、选中和固定状态均由现有组合交互提供。",
+        "替换业务时只替换已验证的应用和菜单数据，不覆盖组件视觉。"
+      ]
+    },
+    {
+      "id": "list-page-header",
+      "name": "列表页标题栏",
+      "source": "src/components/recipes/list-page-header.tsx#ListPageHeader",
+      "status": "ready",
+      "components": ["DropdownMenu", "DropdownMenuTrigger", "DropdownMenuContent", "DropdownMenuItem"],
+      "dataContract": ["title", "views", "view", "onViewChange", "actions"],
+      "evidence": [
+        "src/components/recipes/list-page-header.tsx",
+        "src/pages/templates/customer-list-template.tsx",
+        "docs/data/page-build-kit.manifest.json"
+      ],
+      "acceptanceCriteria": [
+        "标题、可选视图切换和操作插槽通过 props/slot 注入，页面不复制标题栏布局。",
+        "未提供 views 或 actions 时不渲染空控件，视图切换保持受控回调。",
+        "组件视觉差异必须通过组件 API 或变体表达，调用处只负责布局和数据。"
+      ]
+    },
+    {
+      "id": "crm-app-shell",
+      "name": "CRM 应用外壳",
+      "source": "src/components/recipes/crm-app-shell.tsx",
+      "status": "ready",
+      "components": ["TopBar", "CrmShellNav", "WebsiteCardContainer"],
+      "dataContract": ["children", "height"],
+      "acceptanceCriteria": [
+        "固定顶栏和双层导航由现有组件提供，页面只注入 children。",
+        "内容承载使用 WebsiteCardContainer，不能在调用页重写容器阴影。"
+      ]
+    },
+    {
+      "id": "data-table",
+      "name": "数据表格区块",
+      "source": "src/components/recipes/data-table.tsx",
+      "status": "ready",
+      "components": ["Table", "Checkbox", "Button"],
+      "dataContract": ["columns", "data", "rowKey", "selectable", "selected", "onSelectedChange", "rowActions"],
+      "acceptanceCriteria": [
+        "列定义必须通过 Column 契约提供，不在页面中复制表头和排序逻辑。",
+        "可选行状态通过 selected/onSelectedChange 受控，支持全选和半选。"
+      ]
+    },
+    {
+      "id": "list-toolbar",
+      "name": "列表工具栏",
+      "source": "src/components/recipes/list-toolbar.tsx",
+      "status": "ready",
+      "components": ["Input", "Select", "Button"],
+      "dataContract": ["search", "scopes", "views", "onSearchChange", "onScopeChange", "onViewChange", "onFilter", "actions"],
+      "acceptanceCriteria": [
+        "搜索、范围、视图和动作均为可选配置，未提供时不渲染空控件。",
+        "页面调用只传入配置和回调，不复制工具栏布局。"
+      ]
+    },
+    {
+      "id": "edit-form-block",
+      "name": "编辑表单区块",
+      "source": "src/components/recipes/edit-form-block.tsx#EditFormBlock",
+      "status": "ready",
+      "components": ["Field", "Input", "Textarea", "Button", "WebsiteCardContainer"],
+      "dataContract": ["fields", "initialValues", "errors", "onValuesChange", "onSubmit", "onCancel", "submitting"],
+      "evidence": [
+        "src/components/recipes/edit-form-block.tsx",
+        "src/pages/templates/edit-form-block-page.tsx"
+      ],
+      "visualEvidence": {
+        "file": "tests/visual.spec.ts",
+        "testName": "EditFormBlock 页面模块"
+      },
+      "acceptanceCriteria": [
+        "字段由 EditFormField schema 驱动，默认值和控件类型不在页面中重复拼装。",
+        "提交校验集中处理 required 字段，并将焦点移动到第一个错误字段。",
+        "submitting 禁用取消和提交，提交按钮展示 Spinner；dirty 状态取消前需要确认。",
+        "页面容器使用 WebsiteCardContainer，页面只注入字段数据和回调。"
+      ]
+    },
+    {
+      "id": "detail-page-block",
+      "name": "详情页区块",
+      "source": "src/components/recipes/detail-page-block.tsx#DetailPageBlock",
+      "status": "ready",
+      "components": ["Breadcrumb", "Tabs", "Table", "Button", "WebsiteCardContainer"],
+      "dataContract": ["breadcrumbs", "title", "subtitle", "status", "actions", "fields", "tabs", "timeline", "relatedRecords", "onEdit"],
+      "evidence": [
+        "src/components/recipes/detail-page-block.tsx",
+        "src/pages/templates/detail-page-block-page.tsx"
+      ],
+      "visualEvidence": {
+        "file": "tests/visual.spec.ts",
+        "testName": "DetailPageBlock 页面模块"
+      },
+      "acceptanceCriteria": [
+        "对象页头、面包屑和动作通过 props/slot 注入，页面不复制结构。",
+        "字段网格、Tabs、活动时间线、关联记录和空态均由 block 统一承载。",
+        "内容区使用 WebsiteCardContainer，调用方只替换对象数据和回调。"
+      ]
+    },
+    {
+      "id": "customer-list-template",
+      "name": "客户列表页模板",
+      "source": "src/pages/templates/customer-list-template.tsx#CustomerListTemplate",
+      "status": "ready",
+      "components": ["CrmAppShell", "ListPageHeader", "ListToolbar", "DataTable", "Pagination"],
+      "evidence": ["src/pages/templates/customer-list-template.tsx", "scripts/gen-list-page.mjs"],
+      "dataContractSource": "docs/data/page-build-kit.manifest.json#list",
+      "dataContract": ["columns", "rows", "views", "scopes", "rowActions"],
+      "visualEvidence": {
+        "file": "tests/visual.spec.ts",
+        "testName": "客户列表页模板"
+      },
+      "acceptanceCriteria": [
+        "页面外壳由 CrmAppShell 提供，内容区只注入列表页数据和受控回调。",
+        "列表必须支持搜索范围、视图切换、可选行和分页状态。",
+        "完成后通过 check:page-build-kit、check:layered-assets 和客户列表视觉回归。"
+      ]
+    },
+    {
+      "id": "customer-briefing-report",
+      "name": "客户简报报告",
+      "source": "src/reports/customer-briefing/CustomerBriefingPage.tsx#CustomerBriefingPage",
+      "status": "ready",
+      "components": ["Card", "Tag", "Table"],
+      "evidence": [
+        "src/reports/customer-briefing/CustomerBriefingPage.tsx",
+        "src/reports/customer-briefing/types.ts",
+        "src/reports/customer-briefing/mock-data.ts"
+      ],
+      "dataContractSource": "src/reports/customer-briefing/types.ts",
+      "dataContract": [
+        "r01_customer_profile",
+        "r02_timeline",
+        "r03_relationship_temperature",
+        "r04_decision_chain",
+        "r05_opportunity_overview",
+        "r06_pain_map",
+        "r07_competitive_overview",
+        "r08_open_questions",
+        "r09_history_financial?",
+        "people_map"
+      ],
+      "visualEvidence": {
+        "file": "tests/visual.spec.ts",
+        "testName": "客户简报报告"
+      },
+      "acceptanceCriteria": [
+        "输入数据必须直接符合 CustomerBriefingData，不在渲染层复制或改名字段。",
+        "R01-R08 区块按固定顺序渲染，R09 缺省时不渲染空区块。",
+        "每个事实枚举使用 Tag 表达语义，表格和列表在空数据时提供明确空态。",
+        "独立 Playwright 视觉用例覆盖首个和末个区块，并核对网站容器、阴影和响应式布局。"
+      ]
+    }
+  ],
+  "pageTemplates": [
+    {
+      "id": "list",
+      "name": "实体列表页",
+      "source": "docs/data/page-build-kit.manifest.json#list",
+      "status": "ready",
+      "generator": "npm run gen:list-page -- --name <实体名称> --slug <slug>"
+    },
+    {
+      "id": "detail",
+      "name": "详情页",
+      "source": "docs/data/page-build-kit.manifest.json#detail",
+      "status": "ready",
+      "generator": "npm run gen:detail-page -- --name <实体名称> --slug <slug>",
+      "evidence": [
+        "src/components/ui/card.tsx",
+        "src/components/ui/breadcrumb.tsx",
+        "src/components/ui/tabs.tsx",
+        "src/components/recipes/crm-app-shell.tsx"
+      ],
+      "visualEvidence": { "file": "tests/visual.spec.ts", "testName": "DetailPageBlock 页面模块" },
+      "constraint": "页面生成器只输出固定 DetailPageBlock 结构，调用方只替换对象数据和动作回调。"
+    },
+    {
+      "id": "form",
+      "name": "编辑表单页",
+      "source": "docs/data/page-build-kit.manifest.json#form",
+      "status": "ready",
+      "generator": "npm run gen:edit-form-page -- --name <实体名称> --slug <slug>",
+      "evidence": [
+        "src/components/recipes/edit-form-block.tsx",
+        "src/components/ui/field.tsx",
+        "src/components/ui/input.tsx",
+        "src/components/ui/button.tsx",
+        "src/components/ui/dialog.tsx"
+      ],
+      "visualEvidence": { "file": "tests/visual.spec.ts", "testName": "EditFormBlock 页面模块" },
+      "constraint": "页面生成器只输出固定 EditFormBlock 结构，调用方只替换字段 schema 和保存回调。"
+    }
+  ]
+}

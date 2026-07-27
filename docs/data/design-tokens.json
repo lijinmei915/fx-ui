@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/design-tokens",
-  "updatedAt": "2026-07-16",
+  "updatedAt": "2026-07-22",
   "truthSource": "theme/fx-theme.css",
   "humanDoc": "docs/TOKENS.md",
   "note": "主项目采用 shadcn 友好的两层 Token 命名空间 + 组件用法：primitive -> semantic -> componentUsage。componentUsage 是组件属性/状态消费语义 Token 的映射事实，不是独立组件 Token。报告 skill 的 Seed -> Map -> Alias -> Component 四层结构可作为独立 HTML 输出参考，但不替代本项目的 shadcn semantic slots。",
@@ -1728,6 +1728,12 @@
       "value": "var(--fx-blue-04)",
       "category": "shadcn-semantic",
       "usage": "链接禁用态（淡化蓝）"
+    },
+    {
+      "name": "--border-chrome",
+      "value": "var(--fx-neutrals-02)",
+      "category": "shadcn-semantic",
+      "usage": ""
     },
     {
       "name": "--border-faint",

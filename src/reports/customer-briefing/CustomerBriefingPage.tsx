@@ -1,5 +1,6 @@
 import { Tag } from "@/components/ui/tag"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { WebsiteCardContainer } from "@/components/fx/website-card-container"
 import { Separator } from "@/components/ui/separator"
 import {
   Table,
@@ -25,7 +26,7 @@ import type { CustomerBriefingData } from "./types"
  */
 export function CustomerBriefingPage({ data }: { data: CustomerBriefingData }) {
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-6 lg:px-8">
+    <div data-customer-briefing className="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-6 lg:px-8">
       <ProfileSection profile={data.r01_customer_profile} />
       <ExecutiveSummarySection summary={data.r08_open_questions.executive_summary} />
       <TimelineSection timeline={data.r02_timeline} />
@@ -97,7 +98,7 @@ function Empty({ children = "暂无数据" }: { children?: React.ReactNode }) {
 
 function ProfileSection({ profile }: { profile: CustomerBriefingData["r01_customer_profile"] }) {
   return (
-    <Card>
+    <WebsiteCardContainer>
       <CardHeader className="flex flex-row items-start justify-between gap-4">
         <div>
           <CardTitle className="text-xl">{profile.customer_name}</CardTitle>
@@ -131,7 +132,7 @@ function ProfileSection({ profile }: { profile: CustomerBriefingData["r01_custom
           </div>
         ) : null}
       </CardContent>
-    </Card>
+    </WebsiteCardContainer>
   )
 }
 
@@ -163,7 +164,7 @@ function ExecutiveSummarySection({
   ]
 
   return (
-    <Card>
+    <WebsiteCardContainer>
       <CardHeader>
         <SectionTitle>结论摘要</SectionTitle>
       </CardHeader>
@@ -171,7 +172,7 @@ function ExecutiveSummarySection({
         <p className="text-base font-medium text-foreground">{summary.one_sentence_conclusion}</p>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {rows.map((row) => (
-            <div key={row.label} className="flex flex-col gap-1 rounded-lg border border-border bg-card p-3">
+            <div key={row.label} className="flex flex-col gap-1 rounded-lg border border-border bg-muted p-3">
               <div className="flex items-center justify-between">
                 <p className="text-xs font-medium text-muted-foreground">{row.label}</p>
                 <ConfidenceBadge confidence={row.item.confidence} />
@@ -193,7 +194,7 @@ function ExecutiveSummarySection({
           </div>
         ) : null}
       </CardContent>
-    </Card>
+    </WebsiteCardContainer>
   )
 }
 
@@ -203,7 +204,7 @@ function ExecutiveSummarySection({
 
 function TimelineSection({ timeline }: { timeline: CustomerBriefingData["r02_timeline"] }) {
   return (
-    <Card>
+    <WebsiteCardContainer>
       <CardHeader>
         <SectionTitle>博弈时间线</SectionTitle>
         <p className="text-xs text-muted-foreground">{timeline.time_range}</p>
@@ -242,7 +243,7 @@ function TimelineSection({ timeline }: { timeline: CustomerBriefingData["r02_tim
           </div>
         ) : null}
       </CardContent>
-    </Card>
+    </WebsiteCardContainer>
   )
 }
 
@@ -256,7 +257,7 @@ function RelationshipSection({
   temperature: CustomerBriefingData["r03_relationship_temperature"]
 }) {
   return (
-    <Card>
+    <WebsiteCardContainer>
       <CardHeader className="flex flex-row items-center justify-between">
         <SectionTitle>关系温度</SectionTitle>
         <Tag variant="secondary">总体温度 {temperature.overall_temperature} · {temperature.trend}</Tag>
@@ -298,7 +299,7 @@ function RelationshipSection({
           </div>
         ) : null}
       </CardContent>
-    </Card>
+    </WebsiteCardContainer>
   )
 }
 
@@ -316,12 +317,12 @@ function DecisionChainSection({
   const { coverage_analysis: coverage } = decisionChain
 
   return (
-    <Card>
+    <WebsiteCardContainer>
       <CardHeader>
         <SectionTitle>决策链与人力地图</SectionTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <div className="rounded-lg border border-border bg-card p-3">
+        <div className="rounded-lg border border-border bg-muted p-3">
           <p className="text-xs text-muted-foreground">EB（预算拍板人）</p>
           <div className="mt-1 flex items-center gap-2">
             <p className="text-sm font-medium text-foreground">{decisionChain.eb.name}</p>
@@ -378,7 +379,7 @@ function DecisionChainSection({
             </ul>
           </div>
 
-          <div className="flex flex-col gap-1.5 rounded-lg border border-border bg-card p-3">
+          <div className="flex flex-col gap-1.5 rounded-lg border border-border bg-muted p-3">
             <p className="text-sm font-medium text-foreground">决策链覆盖分析</p>
             <dl className="flex flex-col gap-1 text-sm">
               <CoverageRow label="覆盖率" value={coverage.coverage_ratio} />
@@ -402,7 +403,7 @@ function DecisionChainSection({
           </div>
         ) : null}
       </CardContent>
-    </Card>
+    </WebsiteCardContainer>
   )
 }
 
@@ -427,7 +428,7 @@ function OpportunitySection({
   const { project_background: background } = overview
 
   return (
-    <Card>
+    <WebsiteCardContainer>
       <CardHeader>
         <SectionTitle>项目背景与商机全貌</SectionTitle>
       </CardHeader>
@@ -437,7 +438,7 @@ function OpportunitySection({
           <p className="text-sm text-muted-foreground">{background.origin}</p>
         </div>
 
-        <div className="rounded-lg border border-border bg-card p-3">
+        <div className="rounded-lg border border-border bg-muted p-3">
           <p className="text-sm font-medium text-foreground">预算与审批</p>
           <dl className="mt-2 grid grid-cols-2 gap-x-6 gap-y-1.5 text-sm sm:grid-cols-4">
             <ProfileField label="预算区间" value={background.budget_and_approval.budget_range} />
@@ -490,7 +491,7 @@ function OpportunitySection({
           </div>
         ) : null}
       </CardContent>
-    </Card>
+    </WebsiteCardContainer>
   )
 }
 
@@ -500,7 +501,7 @@ function OpportunitySection({
 
 function PainMapSection({ painMap }: { painMap: CustomerBriefingData["r06_pain_map"] }) {
   return (
-    <Card>
+    <WebsiteCardContainer>
       <CardHeader>
         <SectionTitle>痛点地图</SectionTitle>
       </CardHeader>
@@ -534,7 +535,7 @@ function PainMapSection({ painMap }: { painMap: CustomerBriefingData["r06_pain_m
           </div>
         ) : null}
       </CardContent>
-    </Card>
+    </WebsiteCardContainer>
   )
 }
 
@@ -574,7 +575,7 @@ function CompetitiveSection({
   competitive: CustomerBriefingData["r07_competitive_overview"]
 }) {
   return (
-    <Card>
+    <WebsiteCardContainer>
       <CardHeader>
         <SectionTitle>竞品全貌</SectionTitle>
       </CardHeader>
@@ -607,7 +608,7 @@ function CompetitiveSection({
           <Empty>暂无竞品信息</Empty>
         )}
       </CardContent>
-    </Card>
+    </WebsiteCardContainer>
   )
 }
 
@@ -621,7 +622,7 @@ function RiskAndActionsSection({
   openQuestions: CustomerBriefingData["r08_open_questions"]
 }) {
   return (
-    <Card>
+    <WebsiteCardContainer>
       <CardHeader>
         <SectionTitle>风险矩阵与行动建议</SectionTitle>
       </CardHeader>
@@ -684,7 +685,7 @@ function RiskAndActionsSection({
           </div>
         ) : null}
       </CardContent>
-    </Card>
+    </WebsiteCardContainer>
   )
 }
 
@@ -700,7 +701,7 @@ function HistoryFinancialSection({
   const { lifecycle_summary: lifecycle } = history
 
   return (
-    <Card>
+    <WebsiteCardContainer>
       <CardHeader className="flex flex-row items-center justify-between">
         <SectionTitle>历史合作与财务健康</SectionTitle>
         <Tag variant="secondary">{lifecycle.lifecycle_stage}</Tag>
@@ -730,6 +731,6 @@ function HistoryFinancialSection({
           </div>
         ) : null}
       </CardContent>
-    </Card>
+    </WebsiteCardContainer>
   )
 }

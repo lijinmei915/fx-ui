@@ -2,10 +2,8 @@ import { AlertCircleIcon, AlertTriangleIcon, FileTextIcon, LightbulbIcon } from 
 
 import { Tag } from "@/components/ui/tag"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card"
+import { CardContent } from "@/components/ui/card"
+import { WebsiteCardContainer } from "@/components/fx/website-card-container"
 
 type AgentAction = {
   label: string
@@ -109,7 +107,7 @@ function AgentSurface({
       ) : null}
 
       {surface.blocks.length > 0 ? (
-        <div data-slot="agent-surface-blocks" className="overflow-hidden rounded-xl border border-border bg-card">
+        <WebsiteCardContainer data-slot="agent-surface-blocks" padding="none">
           <div className="flex flex-col">
             {contentBlocks.map((block, index) => (
               <AgentSurfaceBlockView
@@ -130,11 +128,11 @@ function AgentSurface({
               />
             </div>
           ) : null}
-        </div>
+        </WebsiteCardContainer>
       ) : (
-        <Card data-slot="agent-surface-empty">
+        <WebsiteCardContainer data-slot="agent-surface-empty">
           <CardContent className="text-sm text-muted-foreground">{emptyText}</CardContent>
-        </Card>
+        </WebsiteCardContainer>
       )}
     </section>
   )
@@ -285,7 +283,7 @@ function AgentSurfaceBlockView({
   }
 
   return (
-    <Card data-slot="agent-surface-unsupported">
+    <WebsiteCardContainer data-slot="agent-surface-unsupported">
       <CardContent className="flex items-start gap-3 text-base text-muted-foreground">
         <AlertCircleIcon className="mt-0.5 shrink-0" />
         <div>
@@ -293,7 +291,7 @@ function AgentSurfaceBlockView({
           <p className="mt-1">type="{block.type}" 不在 fx-ui AgentSurface 白名单里，前端不会执行或渲染未知代码。</p>
         </div>
       </CardContent>
-    </Card>
+    </WebsiteCardContainer>
   )
 }
 

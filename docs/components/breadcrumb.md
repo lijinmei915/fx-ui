@@ -97,6 +97,10 @@ import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbP
 | `hover` | 鼠标悬停反馈，来自源码状态样式 |
 | `disabled` | 禁用态，阻止交互并降低视觉权重 |
 
+## 键盘与焦点 {#keyboard-focus}
+
+`BreadcrumbLink` 使用原生链接语义，按 Tab 可进入，Enter 激活；焦点样式由源码的 `focus-visible` 规则提供。折叠路径中的 `DropdownMenuTrigger` 使用原生按钮语义，支持 Enter/Space 打开菜单并由菜单组件管理方向键与 Escape；`BreadcrumbPage` 和分隔符不进入 tab 顺序。
+
 ## 主题变量 Design Token {#design-token}
 
 | Token | 用途 |

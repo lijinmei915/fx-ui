@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-07-22
+last_verified: 2026-07-27
 teaches: "fx-ui 重要的技术/协作决策记录：选了什么、放弃了什么、为什么"
 use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论"
 ---
@@ -608,15 +608,55 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **原因**：`not-declared` 和“不适用”代表不同工程风险；前者需要补证据，后者只需明确边界。两者混用会让质量矩阵看似全绿但无法指导补齐工作。
 - **相关文件**：`scripts/build-component-quality.mjs`、`docs/data/component-quality.manifest.json`、`scripts/check-agent-query-contract.mjs`
 
-### DEC-054: Playground 将实时属性与场景预设分层治理
+### DEC-054: Playground 将场景预设与实时属性分层治理
+
+- **日期**：2026-07-24
+- **状态**：已决定
+- **决定**：新建或改造 ComponentPlayground 时，实时属性固定按内容、语义、结构、外观、行为排序；缺少能力的分组不显示。场景预设只有在结构变化、多个真实 props/状态联动且具备已验证意图与约束时才允许出现；出现时位于实时属性之前，让用户先选完整场景，再微调真实属性，并按 manifest 显式顺序排列。
+- **放弃**：① 所有 Playground 只要有 stories 就在属性区顶部展示；② 用单个 prop 或可独立调节的 props 组合伪造场景；③ 用页面布局覆盖作为场景。
+- **原因**：场景用于先确定完整使用意图，实时属性用于继续探索真实 API；两者分层可以避免重复控制，同时符合“先选场景、再调细节”的操作路径。
+- **影响**：`component-playgrounds.manifest.json#controlPanelContract` 成为顺序和准入的机器事实，`ComponentPlayground` 统一渲染顺序，`check-playground-contract.mjs` 同时校验声明与实际 DOM 顺序。
+- **相关文件**：`docs/components/component-playground.md`、`docs/data/component-playgrounds.manifest.json`、`src/components/fx/component-playground.tsx`、`scripts/check-playground-contract.mjs`
+
+### DEC-055: Web 排版统一采用 12 / 14 / 16 / 18 核心阶梯
 
 - **日期**：2026-07-22
 - **状态**：已决定
-- **决定**：新建或改造 ComponentPlayground 时，实时属性固定按内容、语义、结构、外观、行为排序；缺少能力的分组不显示。场景预设不再作为通用的第一层控制，只有结构变化、多个真实 props/状态联动且具备已验证意图与约束时才允许出现，位置在全部实时属性之后，按 manifest 显式 `order` 升序排列。
-- **放弃**：① 所有 Playground 只要有 stories 就在属性区顶部展示；② 用单个 prop 或可独立调节的 props 组合伪造场景；③ 用页面布局覆盖作为场景。
-- **原因**：实时属性用于探索真实 API，场景用于传达经过验证的组合用法；混在一起会产生重复控制、隐藏 API 层级，并让简单组件的调试台显得比组件本身复杂。
-- **影响**：`component-playgrounds.manifest.json#controlPanelContract` 成为顺序和准入的机器事实，`check-playground-contract.mjs` 校验其完整性。既有 Playground 不批量重排；每个组件在后续改造时按该 contract 审核，Input 是首个待审核样板。
-- **相关文件**：`docs/components/component-playground.md`、`docs/data/component-playgrounds.manifest.json`、`src/components/fx/component-playground.tsx`、`scripts/check-playground-contract.mjs`
+- **决定**：全局正文层级固定为 `text-xs / sm / base / lg = 12 / 14 / 16 / 18px`，`text-xl` 随之为 `20px`。组件尺寸必须复用这条阶梯；例如 Link 与 Breadcrumb 的 `sm / default / lg` 分别对应 `12 / 14 / 16px`。
+- **放弃**：原先的 `12 / 13 / 15 / 18px` 高密度企业刻度，以及组件局部保留旧字号来维持视觉差异的做法。
+- **原因**：12 / 14 / 16 是主流 Web 组件体系更稳定、可预期的正文阶梯，能与 shadcn/Tailwind 调用语义、浏览器默认阅读尺度和第三方组件更好对齐；局部组件不得再形成第二套字号系统。
+- **影响**：正文、菜单、表单、表格、文档站和使用 `text-*` 的所有组件都会随 token 更新；需要同步更新 token 文档、派生 manifest、组件尺寸说明和视觉基线。
+- **相关文件**：`theme/fx-theme.css`、`docs/TOKENS.md`、`docs/data/design-tokens.json`、`src/components/ui/{link,breadcrumb}.tsx`
+
+### DEC-056: 通用 Link 作为受控的原生语义组件例外
+
+- **日期**：2026-07-22
+- **状态**：已决定
+- **决定**：保留项目内 Link，因为 shadcn registry 没有通用文本链接组件。它以原生 `<a>` 实现并继续位于 `src/components/ui/`，但必须在 `components.manifest.json#nativeSemanticComponents` 白名单登记、绑定本决策并通过 `check:components`；公开 API 保持 tone、underline、size、disabled 与原生 anchor props，不新增能力。
+- **放弃**：① 每个页面各自手写链接颜色和状态；② 用 `Button variant="link"` 替代全部导航语义；③ 因单个例外而开放任意手写基础组件。
+- **原因**：文本导航需要真实 anchor 语义、统一 token 和一致的禁用行为；Button 与导航语义不同，而无治理的页面级 `<a>` 会持续复制视觉实现。
+- **影响**：Link 的 disabled 必须同时移除 href、退出 Tab 序并阻止调用方 onClick；架构规则允许的例外只由 manifest 白名单定义，新增例外必须单独决策。
+- **相关文件**：`AGENTS.md`、`docs/{MAP,ARCHITECTURE,CODE_STRUCTURE}.md`、`docs/data/components.manifest.json`、`scripts/check-components-manifest.mjs`、`src/components/ui/link.tsx`
+
+### DEC-057: shadcn open-code 可在基础层补齐主流组件能力
+
+- **日期**：2026-07-22
+- **状态**：已决定
+- **决定**：已有 shadcn 组件缺少主流基础能力时，经用户逐项审核后可继续在 `src/components/ui/` 的原 open-code 中补齐，不强制把新增子能力迁移到 fx 层。扩展组件必须在 manifest 登记 `origin: shadcn-extended`、上游、决策和扩展清单，并由 `check:components` 校验。
+- **放弃**：① 机械限制基础层只能保留上游原样；② 把 AvatarComposite 这类通用身份呈现能力迁成业务组合；③ 以“补全”为由从零手写与 shadcn 无关的新基础组件。
+- **原因**：shadcn 是起点而不是完整设计系统；尺寸、形状、状态、分组等通用能力仍应由基础组件统一承载，避免调用处重复组合或视觉覆盖。
+- **影响**：Avatar 保留 AvatarComposite 等受治理扩展；未来扩展必须先核对上游、公开 API、文档、Playground、manifest 和测试，不能自动同步或盲目覆盖本地源码。
+- **相关文件**：`AGENTS.md`、`docs/{MAP,ARCHITECTURE}.md`、`docs/data/components.manifest.json`、`scripts/check-components-manifest.mjs`、`src/components/ui/avatar.tsx`
+
+### DEC-058: Dev Inspector 只作开发期源码辅助，Playground 保持唯一场景真相源
+
+- **日期**：2026-07-24
+- **状态**：已决定
+- **决定**：保留 `@lijinmei-810/dev-inspector` 仅在 Vite 开发服务中作为组件源码辅助工具，现有 Button 配置作为该工具的稳定入口，不再继续录入文档站组件场景。所有用户可见的组件预览、实时属性、场景预设、代码生成与视觉测试继续唯一通过 `component-playgrounds.manifest.json + ComponentPlayground` 管理。
+- **放弃**：① 把 dev-inspector 扩展为第二个组件文档或调试台；② 在两处维护相同组件的 variants、尺寸和状态；③ 为新组件同时新建 Playground 与 dev-inspector 场景。
+- **原因**：dev-inspector 适合开发期定位组件源码，但它的配置不带现有 Playground 的 manifest、代码、参考用例与视觉验收链路。继续并行扩展会形成两套场景真相源并造成漂移。
+- **影响**：`npm run dev` 仍加载 dev-inspector Vite 插件；组件文档页不增加依赖、不以它生成产物。新组件的文档场景不得录入 `src/dev-inspector.config.tsx`，而应按现有治理流程登记 Playground manifest 并验收。
+- **相关文件**：`vite.config.ts`、`src/dev-inspector.config.tsx`、`docs/data/component-playgrounds.manifest.json`、`src/components/fx/component-playground.tsx`
 
 ## 相关文件
 

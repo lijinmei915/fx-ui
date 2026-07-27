@@ -4,7 +4,7 @@
   "updatedAt": "2026-06-13",
   "truthSource": "docs/AGENT_UI_VISUAL.md",
   "implementedBy": "src/components/fx/agent-surface.tsx",
-  "page": "src/App.tsx",
+  "page": "src/pages/docs/components/agent-surface-page.tsx",
   "note": "Agent UI 视觉规范机器事实表。Agent UI 可以参考 C 端轻卡片体验，但仍使用 fx-ui token、shadcn 基础组件和 fx 组合组件。",
   "positioning": {
     "principle": "视觉气质参考 C 端，底层能力仍用 fx-ui。",

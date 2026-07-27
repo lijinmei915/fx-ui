@@ -43,12 +43,13 @@ for (const path of [manifest.truthSource, manifest.humanDoc, manifest.componentD
   }
 }
 
-const [source, humanDoc, componentDoc, visualDoc, appSource, packageJsonText] = await Promise.all([
+const [source, humanDoc, componentDoc, visualDoc, appSource, agentPageSource, packageJsonText] = await Promise.all([
   readText(manifest.truthSource),
   readText(manifest.humanDoc),
   readText(manifest.componentDoc),
   readText(visualManifest.truthSource),
   readText(visualManifest.page),
+  readText("src/pages/docs/components/agent-surface-page.tsx"),
   readText("package.json"),
 ])
 const packageJson = JSON.parse(packageJsonText)
@@ -126,8 +127,8 @@ assertIncludes(humanDoc, "#agent-surface-playground", "Agent UI human doc playgr
 assertIncludes(componentDoc, "Agent 只能生成 JSON 意图", "AgentSurface component doc JSON intent rule", errors)
 assertIncludes(componentDoc, "#agent-surface-playground", "AgentSurface component doc playground anchor", errors)
 assertIncludes(source, "不支持的 Agent UI 块", "AgentSurface unsupported behavior", errors)
-assertIncludes(appSource, "agent-surface-playground", "AgentSurface page playground section", errors)
-assertIncludes(appSource, "setMockJson", "AgentSurface page playground input state", errors)
+assertIncludes(agentPageSource, "agent-surface-playground", "AgentSurface page playground section", errors)
+assertIncludes(agentPageSource, "setMockJson", "AgentSurface page playground input state", errors)
 
 if (!manifest.playground?.pageAnchor || !manifest.playground?.purpose || !Array.isArray(manifest.playground?.rules)) {
   errors.push("agent-ui manifest must include playground pageAnchor, purpose, and rules")

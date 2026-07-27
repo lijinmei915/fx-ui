@@ -36,12 +36,15 @@ src/components/ui/switch.tsx
 
 ```tsx
 import { Switch } from "@/components/ui/switch"
+import { Field, FieldContent, FieldLabel } from "@/components/ui/field"
 ```
 
 ```tsx
 <Field orientation="horizontal">
   <Switch id="notify" />
-  <FieldLabel htmlFor="notify">接收通知</FieldLabel>
+  <FieldContent>
+    <FieldLabel htmlFor="notify">接收通知</FieldLabel>
+  </FieldContent>
 </Field>
 ```
 
@@ -63,7 +66,9 @@ import { Switch } from "@/components/ui/switch"
 ```tsx
 <Field orientation="horizontal">
   <Switch id="notify" />
-  <FieldLabel htmlFor="notify">接收通知</FieldLabel>
+  <FieldContent>
+    <FieldLabel htmlFor="notify">接收通知</FieldLabel>
+  </FieldContent>
 </Field>
 ```
 
@@ -136,6 +141,8 @@ import { Switch } from "@/components/ui/switch"
 ```tsx
 <Field orientation="horizontal">
   <Switch id="notify" />
-  <FieldLabel htmlFor="notify">接收通知</FieldLabel>
+  <FieldContent>
+    <FieldLabel htmlFor="notify">接收通知</FieldLabel>
+  </FieldContent>
 </Field>
 ```

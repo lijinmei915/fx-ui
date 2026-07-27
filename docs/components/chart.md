@@ -86,6 +86,10 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLe
 | --- | --- |
 | `active` | 当前激活或按下状态 |
 
+## 键盘与焦点 {#keyboard-focus}
+
+ChartContainer 是展示容器，不创建键盘焦点或 tab stop。键盘交互（如图例按钮、筛选控件或自定义操作）必须由图表外部的真实 Button、Checkbox 等控件承担；Recharts 的数据呈现不会被包装成伪交互控件。
+
 ## 主题变量 Design Token {#design-token}
 
 | Token | 用途 |

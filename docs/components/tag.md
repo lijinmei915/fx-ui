@@ -9,6 +9,7 @@ theme: theme/fx-theme.css
 tokens:
   - primary
   - secondary
+  - soft
   - success
   - warning
   - destructive
@@ -46,7 +47,7 @@ import { Tag } from "@/components/ui/tag"
 - 类型：display
 - 语义 DOM：slot="tag"
 - 两条正交轴：`variant`（状态语义）/ `color`（分类打标多彩）
-- 变体：default / secondary / destructive / success / warning / outline
+- 变体：default / secondary / soft / destructive / success / warning / outline
 - 打标色：gray / red / amber / yellow / lime / green / teal / cyan / blue / purple / pink（软色 = 浅底 01/中性 03 + 彩字 07/中性前景 + 描边 03/中性 07）
 - 导出项：Tag、tagVariants
 
@@ -75,7 +76,7 @@ import { Tag } from "@/components/ui/tag"
 
 | Prop | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `variant` | `'default' \| 'secondary' \| 'destructive' \| 'success' \| 'warning' \| 'outline'` | `'default'` | 状态语义配色 |
+| `variant` | `'default' \| 'secondary' \| 'soft' \| 'destructive' \| 'success' \| 'warning' \| 'outline'` | `'default'` | 状态语义配色；`soft` 用于选择器已选项等紧凑中性标签 |
 | `color` | `'none' \| 'gray' \| 'red' \| 'amber' \| 'yellow' \| 'lime' \| 'green' \| 'teal' \| 'cyan' \| 'blue' \| 'purple' \| 'pink'` | `'none'` | 分类打标软色；设置后覆盖 variant 配色，`gray` 用于中性分类标签 |
 | `render` | `ReactElement` | — | 渲染到自定义元素（Base UI render） |
 
@@ -92,6 +93,10 @@ import { Tag } from "@/components/ui/tag"
 | `hover` | 作链接（render 成 a）时的悬停态 |
 | `focus-visible` | 键盘聚焦时的焦点环 |
 | `aria-invalid` | 校验失败时的描边/环（少见） |
+
+## 键盘与焦点 {#keyboard-focus}
+
+Tag 默认渲染为 `span`，本身不是键盘交互控件，因此不创建 tab stop。通过 `render` 渲染为链接时，键盘进入、激活和焦点样式由原生 `a[href]` 负责；不要把 Tag 渲染成伪按钮承载操作。
 
 ## 主题变量 Design Token {#design-token}
 

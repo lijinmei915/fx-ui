@@ -16,7 +16,7 @@
       "acceptance": ["Input has type=email.", "Invalid input exposes aria-invalid.", "FieldError announces the format error inline.", "No call-site border/color override is used."],
       "forbidden": ["Do not add an email-validation Button.", "Do not simulate validation with a custom regex when native validity covers the format.", "Do not replace FieldError with a floating browser popup."],
       "evidence": [
-        { "file": "src/App.tsx", "symbols": ["InputPreview", "emailInvalid", "请输入有效的邮箱地址。"] },
+        { "file": "src/pages/docs/components/input-preview.tsx", "symbols": ["InputPreview", "emailInvalid", "请输入有效的邮箱地址。"] },
         { "file": "docs/components/input.md", "symbols": ["MailIcon", "FieldError"] }
       ]
     },
@@ -33,7 +33,7 @@
       "acceptance": ["Input has type=search.", "SearchIcon is rendered in one structural slot only.", "Clear action has an accessible name.", "The browser WebKit search clear affordance is not duplicated."],
       "forbidden": ["Do not add a search prop to Input.", "Do not absolutely position a search icon or override Input padding.", "Do not configure clear as a separate business capability."],
       "evidence": [
-        { "file": "src/App.tsx", "symbols": ["buildInputPlaygroundCode", "searchClear", "清除搜索"] },
+        { "file": "src/pages/docs/components/input-preview.tsx", "symbols": ["InputPreview", "clearAction", "清除搜索"] },
         { "file": "docs/components/input.md", "symbols": ["type=\"search\"", "InputAction"] }
       ]
     },
@@ -50,7 +50,8 @@
       "acceptance": ["TopBarSearch receives controlled value and onValueChange.", "Scope selection uses scopes + scope + onScopeChange together.", "Icon actions retain accessible labels and tooltips."],
       "forbidden": ["Do not put global scope props on basic Input.", "Do not bury search routing inside TopBar.", "Do not recreate the top bar with raw divs."],
       "evidence": [
-        { "file": "src/App.tsx", "symbols": ["topBarScenarioExamples", "TopBarSearch", "search-scope"] },
+        { "file": "src/pages/docs/components/top-bar-page.tsx", "symbols": ["TopBarPage", "TopBarSearch"] },
+        { "file": "src/pages/docs/components/component-playground-manifest.ts", "symbols": ["standardScenarioExamplesFromManifest"] },
         { "file": "docs/components/top-bar.md", "symbols": ["onScopeChange", "scope?"] }
       ]
     },
@@ -67,7 +68,8 @@
       "acceptance": ["Two DatePicker instances are used for a range.", "Start and end dates are not concatenated into one string value.", "Each picker retains its calendar trigger and accessible error state."],
       "forbidden": ["Do not add a date prop or calendar icon business semantics to base Input.", "Do not invent a range string API on DatePicker.", "Do not override invalid borders at the call site."],
       "evidence": [
-        { "file": "src/App.tsx", "symbols": ["datePickerScenarioExamples", "id: \"range\"", "开始日期"] },
+        { "file": "src/pages/docs/components/date-picker-page.tsx", "symbols": ["datePickerPlaygroundConfig", "开始日期"] },
+        { "file": "docs/data/component-playgrounds.manifest.json", "symbols": ["customPlaygrounds", "datePicker", "id\": \"range\""] },
         { "file": "docs/components/fx-date-picker.md", "symbols": ["日期范围", "aria-invalid"] }
       ]
     }

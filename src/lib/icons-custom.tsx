@@ -4,27 +4,27 @@
 //   2. viewBox 统一 "0 0 24 24"，尺寸交给外层（size-4 等），组件不写死宽高数值。
 //   3. 上传的第三方 SVG 必须先消毒：删 <script>、on* 事件、外链 href/xlink、内联 style 里的写死色值。
 //   4. 命名 PascalCase + Icon 结尾；同步登记进 docs/data/icons.manifest.json（否则 check:icons 不通过）。
-//   5. 线型默认 stroke-width 跟随全局 .tabler-icon 视觉（这里手动写 1.75 对齐）。
+//   5. 线型图标加 .tabler-icon，由 theme 的全局规则统一控制 stroke-width。
 
 import type { SVGProps } from "react"
 
-type IconProps = SVGProps<SVGSVGElement>
+type IconProps = SVGProps<SVGSVGElement> & { title?: string }
 
 // 线型自定义图标模板：stroke=currentColor。
 function lineIcon(path: React.ReactNode) {
-  return function CustomLineIcon({ className, ...props }: IconProps) {
+  return function CustomLineIcon({ className, title, ...props }: IconProps) {
     return (
       <svg
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        strokeWidth={1.75}
         strokeLinecap="round"
         strokeLinejoin="round"
-        className={className}
-        aria-hidden="true"
+        className={["tabler-icon", className].filter(Boolean).join(" ")}
+        aria-hidden={title ? undefined : "true"}
         {...props}
       >
+        {title ? <title>{title}</title> : null}
         {path}
       </svg>
     )
@@ -33,9 +33,10 @@ function lineIcon(path: React.ReactNode) {
 
 // 面型自定义图标模板：fill=currentColor。
 function fillIcon(path: React.ReactNode) {
-  return function CustomFillIcon({ className, ...props }: IconProps) {
+  return function CustomFillIcon({ className, title, ...props }: IconProps) {
     return (
-      <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true" {...props}>
+      <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden={title ? undefined : "true"} {...props}>
+        {title ? <title>{title}</title> : null}
         {path}
       </svg>
     )

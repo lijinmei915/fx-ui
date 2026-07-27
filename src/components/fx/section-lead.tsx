@@ -13,9 +13,9 @@ type SectionLeadProps = {
 
 function SectionLead({ title, description }: SectionLeadProps) {
   return (
-    <div className={sectionLeadSlots.root}>
-      <h2 className={sectionLeadSlots.title}>{title}</h2>
-      {description ? <p className={sectionLeadSlots.description}>{description}</p> : null}
+    <div data-slot="section-lead" className={sectionLeadSlots.root}>
+      <h2 data-slot="section-lead-title" className={sectionLeadSlots.title}>{title}</h2>
+      {description ? <p data-slot="section-lead-description" className={sectionLeadSlots.description}>{description}</p> : null}
     </div>
   )
 }

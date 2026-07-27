@@ -17,7 +17,7 @@ status: complete
 
 操作完成后弹出的轻量、自动消失的反馈，不打断当前流程。基于 sonner（shadcn 官方 toast 方案），命令式调用 `toast()`。
 
-源码来自 shadcn/ui（sonner），进入项目后保持 open-code：已去掉 next-themes、图标改走 `@/lib/icons`（Phosphor）、浮层阴影套公司档 `shadow-l1`、圆角用 `--radius-lg`。公司视觉通过 `theme/fx-theme.css` 的语义 token 注入。
+源码来自 shadcn/ui（sonner），进入项目后保持 open-code：已去掉 next-themes、图标改走 `@/lib/icons`（Tabler）、浮层阴影套公司档 `shadow-l1`、圆角用 `--radius-lg`。公司视觉通过 `theme/fx-theme.css` 的语义 token 注入。
 
 AI 使用 Toast 前必须先以 `src/components/ui/sonner.tsx` 为真实 API。
 
@@ -46,7 +46,7 @@ toast("已删除 1 项", {
 ## 组件总览 {#overview}
 
 - 类型：feedback
-- 语义 DOM：root
+- 语义 DOM：`className="toaster group"`、`toast: "cn-toast shadow-l1"`
 - 原生/数据状态：root
 - 变体：toast / toast.success / toast.error / toast.warning / toast.info / toast.loading
 - 导出项：Toaster（容器，从本文件导出）；toast（命令式 API，从 "sonner" 导入）
@@ -76,7 +76,8 @@ toast.success("已保存")
 
 | 部位 | 说明 |
 | --- | --- |
-| `root` | Toaster 根容器，挂在页面根节点；单条 toast 根类 `.cn-toast` 套 `shadow-l1` |
+| `className="toaster group"` | Toaster 容器的本地 class 配置，挂在页面根节点 |
+| `toast: "cn-toast shadow-l1"` | Sonner 单条 toast 的本地 class 配置，注入公司层级阴影 |
 
 ## 状态标记 {#states}
 

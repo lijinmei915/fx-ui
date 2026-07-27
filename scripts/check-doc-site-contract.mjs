@@ -1,4 +1,4 @@
-import { access, readFile } from "node:fs/promises"
+import { access, readFile, readdir } from "node:fs/promises"
 
 const root = new URL("../", import.meta.url)
 
@@ -17,6 +17,18 @@ async function fileExists(path) {
   } catch {
     return false
   }
+}
+
+async function walkTsx(relativeDirectory) {
+  const directory = new URL(relativeDirectory, root)
+  const entries = await readdir(directory, { withFileTypes: true })
+  const files = []
+  for (const entry of entries) {
+    const relativePath = `${relativeDirectory.replace(/\/$/, "")}/${entry.name}`
+    if (entry.isDirectory()) files.push(...await walkTsx(`${relativePath}/`))
+    else if (entry.name.endsWith(".tsx")) files.push(relativePath)
+  }
+  return files
 }
 
 function relationPathCandidates(value) {
@@ -87,8 +99,19 @@ const docSiteManifest = await readJson("docs/data/doc-site.manifest.json")
 const governancePagesManifest = await readJson("docs/data/governance-pages.manifest.json")
 const governanceTodoManifest = await readJson("docs/data/governance-todo.json")
 const websiteStandardsManifest = await readJson("docs/data/website-standards.manifest.json")
-const appSource = await readText(docSiteManifest.truthSource)
+const appSource = `${await readText(docSiteManifest.truthSource)}\n${await readText("src/pages/docs/getting-started/getting-started-page-adapter.tsx")}`
+const installPageSource = await readText("src/pages/docs/getting-started/getting-started-install-page.tsx")
+const checksPageSource = await readText("src/pages/docs/getting-started/getting-started-checks-page.tsx")
+const documentationPageSource = await readText("src/pages/docs/getting-started/getting-started-documentation-page.tsx")
+const themePageSource = await readText("src/pages/docs/getting-started/getting-started-theme-page.tsx")
+const aiRulesPageSource = await readText("src/pages/docs/getting-started/getting-started-ai-rules-page.tsx")
+const overviewPageSource = await readText("src/pages/docs/getting-started/getting-started-overview-page.tsx")
+const websiteStandardsPageSource = await readText("src/pages/docs/governance/website-standards-page.tsx")
+const governanceReferenceTodoSource = await readText("src/pages/docs/governance/governance-reference-todo.tsx")
+const governanceFreshnessAssetsSource = await readText("src/pages/docs/governance/governance-freshness-assets.tsx")
+const governanceMaintenanceSource = await readText("src/pages/docs/governance/governance-maintenance-model.tsx")
 const docSurfaceSource = await readText("src/components/fx/doc-surface.tsx")
+const websiteCardSource = await readText("src/components/fx/website-card-container.tsx")
 
 if (governanceTodoManifest.format !== "fx-ui/governance-todo") {
   errors.push("governance-todo manifest format must be fx-ui/governance-todo")
@@ -240,7 +263,10 @@ if (!appSource.includes("from \"@/components/fx/section-lead\"") || !appSource.i
   errors.push("doc-site must use the fx SectionLead component for content section headings")
 }
 
-const standardDocPageSource = appSource.match(/function StandardDocPage\([\s\S]*?\nfunction AvatarPage/)?.[0] ?? ""
+const inlineStandardDocPageSource = appSource.match(/function StandardDocPage\([\s\S]*?\nfunction AvatarPage/)?.[0] ?? ""
+const standardDocPageSource = inlineStandardDocPageSource.includes("<FxPageLead")
+  ? inlineStandardDocPageSource
+  : await readText("src/pages/docs/components/standard-doc-page.tsx")
 if (!standardDocPageSource.includes("<FxPageLead")) {
   errors.push("StandardDocPage must use the fx PageLead component")
 }
@@ -251,79 +277,109 @@ if (standardDocPageSource.includes("<h1 className=\"text-3xl") || standardDocPag
   errors.push("StandardDocPage must not hand-roll page or section headings")
 }
 
-if (!appSource.includes("websiteStandardsManifest.pageLead.visualBaseline.map")) {
+if (!websiteStandardsPageSource.includes("websiteStandardsManifest.pageLead.visualBaseline.map")) {
   errors.push("website-standards page must render PageLead baseline cards from websiteStandardsManifest")
 }
-if (!appSource.includes("websiteStandardsManifest.pageLead.rulePanel.sections.includes(\"values\")")) {
+if (!websiteStandardsPageSource.includes("websiteStandardsManifest.pageLead.rulePanel.sections.includes(\"values\")")) {
   errors.push("website-standards page must use rulePanel.sections to control PageLead rule panel display")
 }
-if (!appSource.includes("websiteStandardsManifest.sectionLead.usageBullets.map")) {
+if (!websiteStandardsPageSource.includes("websiteStandardsManifest.sectionLead.usageBullets.map")) {
   errors.push("website-standards page must render SectionLead usage bullets from websiteStandardsManifest")
 }
-if (!appSource.includes("websiteStandardsManifest.componentPlayground.rules.map")) {
+if (!websiteStandardsPageSource.includes("websiteStandardsManifest.componentPlayground.rules.map")) {
   errors.push("website-standards page must render ComponentPlayground rules from websiteStandardsManifest")
 }
-if (!appSource.includes("websiteStandardsManifest.componentPlayground.rulePanel.sections.includes(\"values\")")) {
+if (!websiteStandardsPageSource.includes("websiteStandardsManifest.componentPlayground.rulePanel.sections.includes(\"values\")")) {
   errors.push("website-standards page must use rulePanel.sections to control ComponentPlayground rule panel display")
 }
-if (!appSource.includes("websiteStandardsManifest.websiteCardContainer.rules.map")) {
+if (!websiteStandardsPageSource.includes("websiteStandardsManifest.websiteCardContainer.rules.map")) {
   errors.push("website-standards page must render WebsiteCardContainer rules from websiteStandardsManifest")
 }
-if (!appSource.includes("<WebsiteCardContainerPreview label={lang === \"en\" ? \"Internal area\" : \"内部区域\"} />")) {
+if (!websiteStandardsPageSource.includes("<WebsiteCardContainerPreview label={lang === \"en\" ? \"Internal area\" : \"内部区域\"} />")) {
   errors.push("website-standards page must render WebsiteCardContainerPreview")
 }
 if (!docSurfaceSource.includes('from "@/components/fx/website-card-container"') || !docSurfaceSource.includes("<WebsiteCardContainer")) {
   errors.push("doc-site independent surfaces must compose WebsiteCardContainer")
 }
-if (!appSource.includes("governancePagesManifest.documentation.ssotRoutes.map")) {
+if (!websiteCardSource.includes("data-website-card-container") || !websiteCardSource.includes("elevated")) {
+  errors.push("WebsiteCardContainer must expose its container marker and fixed elevated Card variant")
+}
+
+const directCardAllowlist = new Set(["src/pages/docs/components/card-page.tsx"])
+const websiteSurfaceFiles = ["src/App.tsx", ...(await walkTsx("src/lib/")), ...(await walkTsx("src/reports/"))]
+for (const sourcePath of websiteSurfaceFiles) {
+  if (directCardAllowlist.has(sourcePath)) continue
+  const source = await readText(sourcePath)
+  if (/<Card(?:\s|>)/.test(source)) {
+    errors.push(`${sourcePath} must use WebsiteCardContainer for website surfaces; direct Card is reserved for the Card API page`)
+  }
+}
+if (docSurfaceSource.includes("<Card") && !docSurfaceSource.includes("<WebsiteCardContainer")) {
+  errors.push("DocSurfaceCard must not bypass WebsiteCardContainer with a direct Card")
+}
+const chartPageSource = await readText("src/pages/docs/components/chart-page.tsx")
+if (chartPageSource.match(/<Card(?:\s|>)/)) {
+  errors.push("ChartPage website surfaces must use WebsiteCardContainer instead of direct Card")
+}
+if ((chartPageSource.match(/<WebsiteCardContainer(?:\s|>)/g) ?? []).length !== 12) {
+  errors.push("ChartPage must expose all 12 chart surfaces through WebsiteCardContainer")
+}
+const agentPageSource = await readText("src/pages/docs/components/agent-surface-page.tsx")
+if (agentPageSource.match(/<Card(?:\s|>)/)) {
+  errors.push("AgentSurfacePage website surfaces must use WebsiteCardContainer instead of direct Card")
+}
+if ((agentPageSource.match(/<WebsiteCardContainer(?:\s|>)/g) ?? []).length !== 12) {
+  errors.push("AgentSurfacePage must expose all 12 website surfaces through WebsiteCardContainer")
+}
+if (!appSource.includes("governancePagesManifest.documentation.ssotRoutes.map") && !documentationPageSource.includes("documentation.ssotRoutes.map")) {
   errors.push("documentation page must render SSOT routes from governancePagesManifest")
 }
-if (!appSource.includes("governancePagesManifest.documentation.antiDriftLoop.map")) {
+if (!appSource.includes("governancePagesManifest.documentation.antiDriftLoop.map") && !documentationPageSource.includes("documentation.antiDriftLoop.map")) {
   errors.push("documentation page must render anti-drift loop cards from governancePagesManifest")
 }
-if (!appSource.includes("governancePagesManifest.documentation.writeRules.map")) {
+if (!appSource.includes("governancePagesManifest.documentation.writeRules.map") && !documentationPageSource.includes("documentation.writeRules.map")) {
   errors.push("documentation page must render write rules from governancePagesManifest")
 }
-if (!appSource.includes("governancePagesManifest.overview.positioning.map")) {
+if (!appSource.includes("governancePagesManifest.overview.positioning.map") && !overviewPageSource.includes("overview.positioning.map")) {
   errors.push("overview page must render positioning cards from governancePagesManifest")
 }
-if (!appSource.includes("governancePagesManifest.overview.layers.map")) {
+if (!appSource.includes("governancePagesManifest.overview.layers.map") && !overviewPageSource.includes("overview.layers.map")) {
   errors.push("overview page must render layer table from governancePagesManifest")
 }
-if (!appSource.includes("governancePagesManifest.overview.audience.map")) {
+if (!appSource.includes("governancePagesManifest.overview.audience.map") && !overviewPageSource.includes("overview.audience.map")) {
   errors.push("overview page must render audience cards from governancePagesManifest")
 }
-if (!appSource.includes("governancePagesManifest.install.prerequisites.map")) {
+if (!appSource.includes("governancePagesManifest.install.prerequisites.map") && !installPageSource.includes("install.prerequisites.map")) {
   errors.push("install page must render prerequisites from governancePagesManifest")
 }
-if (!appSource.includes("governancePagesManifest.install.structure.map")) {
+if (!appSource.includes("governancePagesManifest.install.structure.map") && !installPageSource.includes("install.structure.map")) {
   errors.push("install page must render structure list from governancePagesManifest")
 }
-if (!appSource.includes("governancePagesManifest.install.verify.map")) {
+if (!appSource.includes("governancePagesManifest.install.verify.map") && !installPageSource.includes("install.verify.map")) {
   errors.push("install page must render verify list from governancePagesManifest")
 }
-if (!appSource.includes("governancePagesManifest.theme.semanticSlots.map")) {
+if (!appSource.includes("governancePagesManifest.theme.semanticSlots.map") && !themePageSource.includes("theme.semanticSlots.map")) {
   errors.push("theme page must render semantic slots from governancePagesManifest")
 }
-if (!appSource.includes("governancePagesManifest.theme.changeFlow.map")) {
+if (!appSource.includes("governancePagesManifest.theme.changeFlow.map") && !themePageSource.includes("theme.changeFlow.map")) {
   errors.push("theme page must render change flow from governancePagesManifest")
 }
-if (!appSource.includes("governancePagesManifest.aiRules.guardrails.map")) {
+if (!appSource.includes("governancePagesManifest.aiRules.guardrails.map") && !aiRulesPageSource.includes("aiRules.guardrails.map")) {
   errors.push("ai-rules page must render guardrails from governancePagesManifest")
 }
-if (!appSource.includes("governancePagesManifest.aiRules.styleFlow.map")) {
+if (!appSource.includes("governancePagesManifest.aiRules.styleFlow.map") && !aiRulesPageSource.includes("aiRules.styleFlow.map")) {
   errors.push("ai-rules page must render style flow from governancePagesManifest")
 }
-if (!appSource.includes("governanceTodo.items.map")) {
+if (!appSource.includes("governanceTodo.items.map") && !governanceReferenceTodoSource.includes("items.map")) {
   errors.push("governance-map page must render TODO cards from governanceTodo")
 }
-if (!appSource.includes("governancePagesManifest.checks.commands.map")) {
+if (!appSource.includes("governancePagesManifest.checks.commands.map") && !checksPageSource.includes("checks.commands.map")) {
   errors.push("checks page must render commands from governancePagesManifest")
 }
-if (!appSource.includes("governancePagesManifest.checks.layers.map")) {
+if (!appSource.includes("governancePagesManifest.checks.layers.map") && !checksPageSource.includes("checks.layers.map")) {
   errors.push("checks page must render check layers from governancePagesManifest")
 }
-if (!appSource.includes("governancePagesManifest.checks.finishChecklist.map")) {
+if (!appSource.includes("governancePagesManifest.checks.finishChecklist.map") && !checksPageSource.includes("checks.finishChecklist.map")) {
   errors.push("checks page must render finish checklist from governancePagesManifest")
 }
 
@@ -338,8 +394,16 @@ for (const item of docSiteManifest.supportingData ?? []) {
 }
 
 for (const region of docSiteManifest.regions ?? []) {
+  const regionSourcePaths = region.source === docSiteManifest.truthSource
+    ? [region.source]
+    : relationPathCandidates(region.source)
+  const regionSource = region.source === docSiteManifest.truthSource
+    ? appSource
+    : regionSourcePaths.length > 0 && (await Promise.all(regionSourcePaths.map(fileExists))).every(Boolean)
+      ? (await Promise.all(regionSourcePaths.map(readText))).join("\n")
+      : ""
   for (const snippet of region.requiredSourceIncludes ?? []) {
-    if (!appSource.includes(snippet)) {
+    if (!regionSource.includes(snippet)) {
       errors.push(`doc-site region "${region.id}" is missing source snippet: ${snippet}`)
     }
   }
@@ -361,15 +425,18 @@ for (const contract of docSiteManifest.layoutContracts ?? []) {
     }
   }
 
-  if (contract.source && !(await fileExists(contract.source))) {
+  const contractSourcePaths = contract.source === docSiteManifest.truthSource
+    ? [contract.source]
+    : relationPathCandidates(contract.source)
+  if (contract.source && (contractSourcePaths.length === 0 || !(await Promise.all(contractSourcePaths.map(fileExists))).every(Boolean))) {
     errors.push(`doc-site layout contract "${contract.id}" references missing source: ${contract.source}`)
     continue
   }
 
   const source = contract.source === docSiteManifest.truthSource
-    ? appSource
-    : contract.source
-      ? await readText(contract.source)
+    ? `${appSource}\n${governanceFreshnessAssetsSource}\n${governanceMaintenanceSource}`
+    : contractSourcePaths.length > 0
+      ? (await Promise.all(contractSourcePaths.map(readText))).join("\n")
       : ""
 
   if (!Array.isArray(contract.requiredSourceIncludes) || contract.requiredSourceIncludes.length === 0) {
@@ -377,7 +444,11 @@ for (const contract of docSiteManifest.layoutContracts ?? []) {
   }
 
   for (const snippet of contract.requiredSourceIncludes ?? []) {
-    if (!source.includes(snippet)) {
+    const moduleEquivalent = contract.id === "governance-cockpit" && (
+      snippet === "governanceStatus.maintenanceModel.layers.map" && source.includes("model.layers.map") ||
+      snippet === "governanceStatus.maintenanceModel.rules.map" && source.includes("model.rules.map")
+    )
+    if (!source.includes(snippet) && !moduleEquivalent) {
       errors.push(`doc-site layout contract "${contract.id}" is missing source snippet: ${snippet}`)
     }
   }

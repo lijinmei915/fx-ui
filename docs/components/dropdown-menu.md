@@ -57,7 +57,8 @@ import { DropdownMenu, DropdownMenuPortal, DropdownMenuTrigger, DropdownMenuCont
 - 类型：overlay
 - 语义 DOM：data-slot="dropdown-menu"、data-slot="dropdown-menu-portal"、data-slot="dropdown-menu-trigger"、data-slot="dropdown-menu-content"、data-slot="dropdown-menu-group"、data-slot="dropdown-menu-label"、data-slot="dropdown-menu-item"、data-slot="dropdown-menu-sub"、data-slot="dropdown-menu-sub-trigger"、data-slot="dropdown-menu-sub-content"、data-slot="dropdown-menu-checkbox-item"、data-slot="dropdown-menu-checkbox-item-indicator"、data-slot="dropdown-menu-radio-group"、data-slot="dropdown-menu-radio-item"、data-slot="dropdown-menu-radio-item-indicator"、data-slot="dropdown-menu-separator"、data-slot="dropdown-menu-shortcut"
 - 原生/数据状态：disabled、data-open、data-closed
-- 变体：无独立 variant prop
+- 变体：`DropdownMenuItem variant="default | destructive"`
+- 尺寸：菜单密度固定，不暴露 size 轴
 - 导出项：DropdownMenu、DropdownMenuPortal、DropdownMenuTrigger、DropdownMenuContent、DropdownMenuGroup、DropdownMenuLabel、DropdownMenuItem、DropdownMenuCheckboxItem、DropdownMenuRadioGroup、DropdownMenuRadioItem、DropdownMenuSeparator、DropdownMenuShortcut、DropdownMenuSub、DropdownMenuSubTrigger、DropdownMenuSubContent
 
 ## 场景示例 {#examples}
@@ -88,6 +89,16 @@ import { DropdownMenu, DropdownMenuPortal, DropdownMenuTrigger, DropdownMenuCont
 ## API {#api}
 
 该组件以源码导出的子组件和原生 props 为准。使用前读取 `src/components/ui/dropdown-menu.tsx`，不要凭空发明 API。
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `DropdownMenu.open / defaultOpen / onOpenChange` | Base UI Root props | — | 受控或非受控管理开关状态 |
+| `DropdownMenuTrigger.render` | `ReactElement` | — | 把 Button 等真实交互元素作为触发器 |
+| `DropdownMenuContent.side / align / sideOffset` | Positioner props | `bottom / start / 4` | 控制菜单方向、对齐和偏移 |
+| `DropdownMenuItem.variant` | `"default" \| "destructive"` | `"default"` | 破坏性操作使用 destructive，且放在菜单末尾 |
+| `DropdownMenuItem.selected / disabled` | `boolean` | `false` | 当前项标记与禁用语义 |
+| `DropdownMenuCheckboxItem / RadioGroup / RadioItem` | 组件 | — | 多选和单选菜单项，保留原生键盘语义 |
+| `DropdownMenuSub / SubTrigger / SubContent` | 组件 | — | 二级菜单组合，层级最多三层 |
 
 
 ## Semantic DOM {#semantic-dom}
@@ -143,6 +154,7 @@ import { DropdownMenu, DropdownMenuPortal, DropdownMenuTrigger, DropdownMenuCont
 - 浮层内容使用源码提供的 Content / Portal / Positioner，不要手写 z-index。
 - 需要标题的弹层必须提供 Title；视觉隐藏时使用 `sr-only`，不要省略可访问名称。
 - 菜单项放进 `DropdownMenuGroup`，分隔用 `DropdownMenuSeparator`，不要用普通 div。
+- 菜单密度由组件统一管理；不要在调用处为菜单或菜单项补 `size` / 高度 className。
 - 使用 DropdownMenu 前必须以 src/components/ui/dropdown-menu.tsx 为真实 API。
 - 不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。
 - className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。

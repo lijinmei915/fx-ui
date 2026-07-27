@@ -52,8 +52,13 @@ if (listPlan.status !== "ready" || listPlan.archetype?.id !== "list" || !listPla
 }
 
 const formPlan = JSON.parse(execFileSync(process.execPath, ["scripts/fx-agent.mjs", "plan", "新建客户表单", "--json"], { cwd: root, encoding: "utf8" }))
-if (formPlan.status !== "blocked" || formPlan.archetype?.id !== "form") {
-  throw new Error("Unverified form intent must stop at the needs-block boundary")
+if (formPlan.status !== "ready" || formPlan.archetype?.id !== "form" || !formPlan.archetype.generator.includes("gen:edit-form-page")) {
+  throw new Error("Verified form intent must resolve to the governed EditFormBlock generator")
+}
+
+const detailPlan = JSON.parse(execFileSync(process.execPath, ["scripts/fx-agent.mjs", "plan", "详情 对象 信息页", "--json"], { cwd: root, encoding: "utf8" }))
+if (detailPlan.status !== "ready" || detailPlan.archetype?.id !== "detail" || !detailPlan.archetype.generator.includes("gen:detail-page")) {
+  throw new Error("Verified detail intent must resolve to the governed DetailPageBlock generator")
 }
 
 const componentImpact = JSON.parse(execFileSync(process.execPath, ["scripts/fx-agent.mjs", "impact", "component", "Input", "--json"], { cwd: root, encoding: "utf8" }))
@@ -69,6 +74,41 @@ if (tokenImpact.truthSource?.file !== "theme/fx-theme.css" || !tokenImpact.decla
 const emailRecipe = JSON.parse(execFileSync(process.execPath, ["scripts/fx-agent.mjs", "recipe", "邮箱字段校验", "--json"], { cwd: root, encoding: "utf8" }))
 if (emailRecipe.recipe?.id !== "email-field-validation" || !emailRecipe.recipe.components.includes("Field") || !emailRecipe.requiredChecks?.includes("npm run check:agent-recipes")) {
   throw new Error("Recipe query must return the declared email validation composition and its validation path")
+}
+
+const buttonGroupQuality = JSON.parse(execFileSync(process.execPath, ["scripts/fx-agent.mjs", "quality", "ButtonGroup", "--json"], { cwd: root, encoding: "utf8" }))
+if (buttonGroupQuality.target?.kind !== "component-quality" || buttonGroupQuality.target?.name !== "ButtonGroup" || !buttonGroupQuality.evidence?.visual?.manifest || !buttonGroupQuality.truthSources?.includes("docs/data/component-playgrounds.manifest.json")) {
+  throw new Error("Quality query must expose derived evidence and its manifest truth sources")
+}
+
+const componentLayer = JSON.parse(execFileSync(process.execPath, ["scripts/fx-agent.mjs", "layer", "components", "--json"], { cwd: root, encoding: "utf8" }))
+if (componentLayer.layer !== "components" || componentLayer.matches?.length !== 2 || componentLayer.matches.some((item) => item.reusable !== true)) {
+  throw new Error("Layer query must expose both ready component source roots")
+}
+
+const hookLayer = JSON.parse(execFileSync(process.execPath, ["scripts/fx-agent.mjs", "layer", "hooks", "use-mobile", "--json"], { cwd: root, encoding: "utf8" }))
+if (hookLayer.layer !== "hooks" || hookLayer.matches?.[0]?.source !== "src/hooks/use-mobile.ts" || hookLayer.matches[0].reusable !== true) {
+  throw new Error("Layer query must expose the verified behavior hook source")
+}
+
+const patternLayer = JSON.parse(execFileSync(process.execPath, ["scripts/fx-agent.mjs", "layer", "patterns", "email-field-validation", "--json"], { cwd: root, encoding: "utf8" }))
+if (patternLayer.layer !== "patterns" || patternLayer.matches?.[0]?.source !== "docs/data/agent-recipes.manifest.json#email-field-validation" || patternLayer.matches[0].reusable !== true) {
+  throw new Error("Layer query must expose the proven pattern recipe")
+}
+
+const blockLayer = JSON.parse(execFileSync(process.execPath, ["scripts/fx-agent.mjs", "layer", "blocks", "crm-shell-nav", "--json"], { cwd: root, encoding: "utf8" }))
+if (blockLayer.layer !== "blocks" || blockLayer.matches?.[0]?.source !== "src/components/recipes/crm-shell-nav.tsx#CrmShellNav" || blockLayer.matches[0].reusable !== true) {
+  throw new Error("Layer query must expose the verified block source")
+}
+
+const templateLayer = JSON.parse(execFileSync(process.execPath, ["scripts/fx-agent.mjs", "layer", "page-templates", "detail", "--json"], { cwd: root, encoding: "utf8" }))
+if (templateLayer.matches?.[0]?.status !== "ready" || templateLayer.matches[0].reusable !== true) {
+  throw new Error("Layer query must expose the verified detail page template")
+}
+
+const theme = JSON.parse(execFileSync(process.execPath, ["scripts/fx-agent.mjs", "theme", "show", "--json"], { cwd: root, encoding: "utf8" }))
+if (theme.status !== "single-light-mode" || JSON.stringify(theme.supportedModes) !== JSON.stringify(["light"]) || !theme.protectedStructuralSources?.length) {
+  throw new Error("Theme query must expose the current single-light boundary and protected structural sources")
 }
 
 console.log("agent query contract check passed")

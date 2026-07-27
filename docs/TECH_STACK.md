@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-07
+last_verified: 2026-07-27
 teaches: "fx-ui 实际采用的技术栈、版本边界，以及 AI 生成代码前要遵守的版本约束"
 use_when: "生成代码、加依赖、或讨论技术选型前，先确认这里标的是不是已确定"
 ---
@@ -20,7 +20,7 @@ use_when: "生成代码、加依赖、或讨论技术选型前，先确认这里
 | 组件库 | shadcn/ui | CLI `shadcn ^4.10.0` | 已确定 | open-code 模式，组件源码进 `src/components/ui/` |
 | 组件底层原语 | Base UI (`@base-ui/react`) | `^1.5.0` | 已确定 | 不是 Radix——Button 等组件基于 Base UI，见 `docs/DECISIONS.md` DEC-001、`docs/LESSONS.md` LES-002 |
 | 构建 / 包管理 | Vite + npm | Vite `^8.0.16` | 已确定 | `npm run build` 实际是 `tsc -b && vite build` |
-| 图标 | lucide-react | `^1.17.0` | 已确定 | |
+| 图标 | @tabler/icons-react | `^3.44.0` | 已确定 | 统一从 `@/lib/icons` 导入，线性默认、选中态使用 `*Filled` 变体 |
 | 工具库 | class-variance-authority / clsx / tailwind-merge | `^0.7.1` / `^2.1.1` / `^3.6.0` | 已确定 | shadcn 组件标配的变体/类名合并方案 |
 | 部署 | `候选` | — | 候选 | 尚未确定，不要假设具体平台 |
 

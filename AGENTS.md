@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-07-16
+last_verified: 2026-07-27
 teaches: "AI 在 fx-ui 项目里的行为红线：不手写组件、只注入 token、保护 token 真相源"
 use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token 时"
 ---
@@ -19,8 +19,9 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 
 > 🧭 **动手前先查 `docs/MAP.md` 产物路由表**：任意产物（组件/block/token/图标/页面路由/视觉基线/规则/检查）住哪、怎么新增登记、谁来 check，那张表一站式分流——**别靠猜、别一通找**。不在表里的新种类，先去表里加一行再动手。
 
-1. **不要手写组件。** 一律用 `npx shadcn@latest add <组件名>` 拉现成的。
+1. **不要手写组件。** 一律用 `npx shadcn@latest add <组件名>` 拉现成的。只有 shadcn 确实没有等价能力、且已在 `docs/data/components.manifest.json#nativeSemanticComponents` 白名单登记并绑定 DEC 的原生语义组件例外；例外不构成新增任意自定义组件的许可。
    - 反例：用 CSS/JSX 手搓一个 Button —— 这是错的，shadcn 有现成的。
+   - 已拉取的 shadcn open-code 若缺少主流基础能力，可在用户审核后于原组件补齐；必须登记 `origin: shadcn-extended`、上游、DEC 和 `extensions`，不得借“补全”另造无关组件。
 2. **不要封装黑盒。** shadcn 组件以 open-code 进 `src/components/ui/`，源码可见可改。
 3. **不要从零写页面。** 页面用 shadcn Blocks / v0 / 内部 blocks 现成区块起步。
 4. **不要乱改 token 真相源。** `theme/fx-theme.css` 是公司视觉的 SSOT，改它 = 全局换肤，必须先向用户说明再动。

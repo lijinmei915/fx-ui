@@ -21,7 +21,7 @@ const linkVariants = cva(
         always: "not-data-disabled:underline",
       },
       size: {
-        sm: "text-sm",
+        sm: "text-xs",
         default: "text-sm",
         lg: "text-base",
       },
@@ -42,10 +42,12 @@ function Link({
   disabled,
   tabIndex,
   href,
+  onClick,
   ...props
 }: React.ComponentProps<"a"> & VariantProps<typeof linkVariants> & { disabled?: boolean }) {
   return (
     <a
+      {...props}
       data-component="Link"
       data-slot="link"
       data-tone={tone}
@@ -56,8 +58,13 @@ function Link({
       // 禁用时去掉 href 阻止跳转（保留 cursor-not-allowed 提示），并移出 tab 序
       href={disabled ? undefined : href}
       tabIndex={disabled ? -1 : tabIndex}
+      onClick={disabled
+        ? (event) => {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+        : onClick}
       className={cn(linkVariants({ tone, underline, size, className }))}
-      {...props}
     />
   )
 }

@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-07-16
+last_verified: 2026-07-27
 teaches: "fx-ui 仓库地图：任意产物住哪、怎么新增登记、谁来检查——按产物种类一站式分流"
 use_when: "要新增或查找任何产物（组件/block/token/图标/页面路由/视觉基线/规则/检查）前，先来这里定位，别靠猜"
 ---
@@ -15,10 +15,14 @@ use_when: "要新增或查找任何产物（组件/block/token/图标/页面路�
 
 | 产物种类 | 家（真相源） | 新增 / 登记步骤 | 谁 check |
 |----------|--------------|-----------------|----------|
-| 基础组件 | `src/components/ui/` | `npx shadcn add` 拉 → 读 `src/components/ui/<x>.tsx` 源码 API / `data-slot` → 补 `docs/data/components.manifest.json`（含主题能力）→ `docs/components/<x>.md` → 文档页示例 + 导航/`pageRegistry` → `npm run check` | `check:components` |
+| 基础组件 | `src/components/ui/` | `npx shadcn add` 拉 → 读 `src/components/ui/<x>.tsx` 源码 API / `data-slot` → 补 `docs/data/components.manifest.json`（含主题能力）→ `docs/components/<x>.md` → 文档页示例 + 导航/`pageRegistry` → `npm run check`；已有 shadcn 缺主流基础能力时登记 `shadcn-extended` + upstream/DEC/extensions；无等价能力时仅允许 `nativeSemanticComponents` 白名单例外 | `check:components` |
 | 组合组件（fx） | `src/components/fx/` | 由现成 ui 组件组合 → 读源码 API / `data-slot` → 补 manifest（含主题能力）→ md → 文档页示例 + 导航/`pageRegistry` → `npm run check` | `check:components` |
+| 组件质量矩阵 | `docs/data/component-quality.manifest.json`（由组件、Playground、文档和视觉测试真相源派生） | 运行 `npm run build:quality` 重建；不得手填评分；缺失证据保留为 needs-review | `check:component-quality` |
+| 分层资产（Components / Hooks / Patterns / Blocks / Page templates） | `docs/data/layered-assets.manifest.json`（只登记已有源码和已验证 recipe/build-kit） | 新增资产先确认真实 source/contract，再登记唯一 id、状态和约束 | `check:layered-assets` |
 | Block（区块；文件夹历史名 recipes/） | `src/components/recipes/` | 复用既有区块只换数据 → 在 `docs/ARCHITECTURE.md`「页面 Block 层」登记 | （暂无脚本，人工核） |
-| 页面 / 路由 | `pageRegistry`（`src/App.tsx`，唯一真相源，见 DEC-023） | **先按 `docs/PAGES.md` 装配流程拼**；派生 Build Kit 只登记已验证的 block/generator；再加 registry 一行（满宽页加 `fullBleed`）+ `docsNav` 导航项 | `check:doc-site` + `check:page-build-kit` |
+| 页面 / 路由 | `pageRegistry`（`src/lib/page-registry-config.tsx`，唯一真相源；App 只消费注册表，见 DEC-023） | **先按 `docs/PAGES.md` 装配流程拼**；派生 Build Kit 只登记已验证的 block/generator；再加 registry 一行（满宽页加 `fullBleed`）+ `docsNav` 导航项（统一维护于 `src/lib/site-navigation.ts`） | `check:doc-site` + `check:page-build-kit` |
+| 文档页面模块 | `src/pages/docs/<domain>/` | 按 `components` / `foundations` / `getting-started` / `governance` / `tokens` 归位；页面专属 Playground、预览和适配器与页面同域；跨域运行时留在 `src/lib/` | `check:doc-site` + `check:toc-anchors` + `test:visual` |
+| Getting Started 页面域 | `src/pages/docs/getting-started/` | 安装命令、主题接入代码和页面适配器按领域集中维护；`App.tsx` 只注入 manifest 数据和治理看板渲染器 | `npm run build` + `check:doc-site` + `check:doc-structure` |
 | 列表页（脚手架） | 生成到 `src/pages/<slug>-list.tsx` | 跑 `npm run gen:list-page -- --name 订单 --slug order` 生成骨架 → 按打印的 3 行接进 App.tsx → 只填 columns/数据。**不要手写**：`src/pages/` 里像列表页却无 `@generated fx-ui:list-page` 标记的会被 `check-list-page-source` 拦 | `check:all`（含来源检查）+ `test:visual` |
 | Token（颜色/圆角/间距…） | `theme/fx-theme.css` | ①改 css ②`docs/TOKENS.md` ③`docs/data/design-tokens.json` 的映射事实 ④`build:tokens` 同步派生 Agent/Theme contract ⑤才改组件映射（顺序不能反） | `check:tokens` + `check:theme` + `check:agent-tokens` |
 | 图标 | `src/lib/icons.ts`（Tabler 映射）/ `src/lib/icons-custom.tsx`（自定义 SVG） | 加一行映射或自定义组件 → `docs/data/icons.manifest.json` | `check:icons` |

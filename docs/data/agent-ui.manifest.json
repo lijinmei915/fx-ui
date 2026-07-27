@@ -96,7 +96,7 @@
   },
   "playground": {
     "pageAnchor": "#agent-surface-playground",
-    "source": "src/App.tsx",
+    "source": "src/pages/docs/components/agent-surface-page.tsx",
     "purpose": "粘贴或编辑 mock Agent JSON，并实时渲染真实 AgentSurface 组件。",
     "rules": [
       "只接受受控 JSON。",

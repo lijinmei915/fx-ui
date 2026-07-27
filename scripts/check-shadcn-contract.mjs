@@ -6,6 +6,10 @@ async function read(path) {
   return readFile(new URL(path, root), "utf8")
 }
 
+async function readJson(path) {
+  return JSON.parse(await read(path))
+}
+
 function extractVariantKeys(source, groupName) {
   const groupStart = source.indexOf(`${groupName}: {`)
   if (groupStart === -1) {
@@ -80,28 +84,33 @@ function extractStringProp(block, prop) {
   return block.match(new RegExp(`${prop}:\\s*"([^"]*)"`))?.[1] ?? ""
 }
 
-const [buttonSource, appSource, buttonDocs] = await Promise.all([
+const [buttonSource, appSource, buttonPlaygroundModuleSource, buttonDocs, playgroundManifest] = await Promise.all([
   read("src/components/ui/button.tsx"),
   read("src/App.tsx"),
+  read("src/pages/docs/components/button-playground.tsx"),
   read("docs/components/button.md"),
+  readJson("docs/data/component-playgrounds.manifest.json"),
 ])
 
 const errors = []
 const variants = extractVariantKeys(buttonSource, "variant")
 const sizes = extractVariantKeys(buttonSource, "size")
+const buttonPlaygroundSource = `${appSource}\n${buttonPlaygroundModuleSource}\n${JSON.stringify(playgroundManifest.customPlaygrounds?.button ?? {})}`
+const normalizedButtonPlaygroundSource = buttonPlaygroundSource.replace(/\s/g, "")
 
-assertIncludes(
-  appSource,
-  variants.map((variant) => (variant === "default" ? 'variant: "default"' : `variant="${variant}"`)),
-  "Button playground",
-  errors
-)
+for (const variant of variants) {
+  const jsxUsage = variant === "default" ? 'variant: "default"' : `variant="${variant}"`
+  const manifestOption = `"value":"${variant}"`
+  if (!buttonPlaygroundSource.includes(jsxUsage) && !normalizedButtonPlaygroundSource.includes(manifestOption)) {
+    errors.push(`Button playground is missing "${jsxUsage}"`)
+  }
+}
 // 常规文字尺寸档必须在调试台里可切换；工具栏 / 图标专用尺寸属于 API 表和 Markdown 契约，不强制塞进调试台。
 assertIncludes(
-  appSource,
+  normalizedButtonPlaygroundSource,
   sizes
     .filter((size) => !size.startsWith("icon") && !size.startsWith("toolbar") && size !== "default")
-    .map((size) => `value: "${size}"`),
+    .map((size) => `"value":"${size}"`),
   "Button playground",
   errors
 )
@@ -114,9 +123,9 @@ const requiredStateContracts = [
   ["Button source", buttonSource, "aria-expanded"],
   ["Button source", buttonSource, "disabled:"],
   ["Button source", buttonSource, "aria-invalid"],
-  ["Button playground", appSource, "disabledWhen"],
-  ["Button playground", appSource, "<Spinner"],
-  ["Button playground", appSource, "禁用"],
+  ["Button playground", buttonPlaygroundSource, "disabledWhen"],
+  ["Button playground", buttonPlaygroundSource, "<Spinner"],
+  ["Button playground", buttonPlaygroundSource, "禁用"],
   ["Button Markdown", buttonDocs, "disabled"],
   ["Button Markdown", buttonDocs, "Spinner"],
   ["Button Markdown", buttonDocs, "aria-invalid"],

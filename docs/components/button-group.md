@@ -87,6 +87,10 @@ import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText, buttonGroupVariants
 | --- | --- |
 | `focus-visible` | 键盘焦点态，必须保留可访问焦点环 |
 
+## 键盘与焦点 {#keyboard-focus}
+
+ButtonGroup 只提供 `role="group"` 和相邻控件的布局，不接管键盘事件。Tab 顺序、Enter/Space 激活和焦点环由组内真实 Button、Input、Select 等子控件提供；组容器本身不应成为额外 tab stop。
+
 ## 主题变量 Design Token {#design-token}
 
 | Token | 用途 |

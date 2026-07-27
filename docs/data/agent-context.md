@@ -21,8 +21,8 @@ Read AGENTS.md first for mandatory governance. This file is a compact lookup ind
 ## Current Facts
 
 - Components: 54 (36 ui, 18 fx)
-- Semantic tokens: 86
-- Ready page archetypes: list
+- Semantic tokens: 87
+- Ready page archetypes: list, detail, form
 - Proven recipes: 4
 - Token policy: choose semantic tokens or declared component state mappings; never pick primitive palette values.
 - Page policy: use a ready generator/block as-is; needs-block means stop and create the block through governance.
@@ -31,3 +31,7 @@ Read AGENTS.md first for mandatory governance. This file is a compact lookup ind
 
 - **实体列表页**: `npm run gen:list-page -- --name <实体名称> --slug <slug>`
   Frame: CrmAppShell -> ListPageHeader -> ListToolbar -> DataTable -> Pagination
+- **详情页**: `npm run gen:detail-page -- --name <实体名称> --slug <slug>`
+  Frame: CrmAppShell -> DetailPageBlock
+- **编辑表单页**: `npm run gen:edit-form-page -- --name <实体名称> --slug <slug>`
+  Frame: CrmAppShell -> EditFormBlock

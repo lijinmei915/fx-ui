@@ -10,6 +10,7 @@ export type ComponentPlaygroundValues = Record<string, string>
 export type ComponentPlaygroundStory = {
   id: string
   values: ComponentPlaygroundValues
+  matchKeys?: string[]
   title?: string
   titleEn?: string
   intent?: string
@@ -73,6 +74,7 @@ export type ComponentPlaygroundConfig = {
   props: ComponentPlaygroundPropDef[]
   initial: ComponentPlaygroundValues
   stories?: ComponentPlaygroundStory[]
+  storyPresentation?: "presets" | "examples"
   storySource?: string
   guidanceKey?: string
   previewClassName?: string
@@ -205,14 +207,19 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
   const preEditRef = useRef<{ values: ComponentPlaygroundValues; guidanceKey?: string; tab: string } | null>(null)
   const allLabel = lang === "en" ? "All" : "全部"
   const set = (key: string, val: string) => setV((prev) => {
-    setActiveStoryId(undefined)
     setActiveGuidanceKey(key)
     const next = { ...prev, [key]: val }
-    return config.onValueChange?.(next, key, val) ?? next
+    const resolved = config.onValueChange?.(next, key, val) ?? next
+    const activeStory = activeStoryId ? config.stories?.find((story) => story.id === activeStoryId) : undefined
+    const keepsStory = activeStory?.matchKeys?.every((matchKey) => activeStory.values[matchKey] === resolved[matchKey]) ?? false
+    if (!keepsStory) setActiveStoryId(undefined)
+    return resolved
   })
   const guidanceProp = activeGuidanceKey ? config.props.find((p) => p.type === "segment" && p.key === activeGuidanceKey) : undefined
   const guidanceOption = guidanceProp?.type === "segment" ? guidanceProp.options.find((o) => o.value === v[guidanceProp.key]) : undefined
   const activeStory = activeStoryId ? config.stories?.find((story) => story.id === activeStoryId) : undefined
+  const showStories = (config.stories?.length ?? 0) > 1
+  const storyPresentation = config.storyPresentation ?? "presets"
   const isAllGuidance = guidanceProp?.type === "segment" && guidanceProp.hasAll && v[guidanceProp.key] === "all"
   const intentText = activeStory
     ? lang === "en" ? (activeStory.intentEn ?? activeStory.intent) : activeStory.intent
@@ -340,7 +347,7 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
       className="[--card-spacing:var(--fx-panel-padding)] [--playground-gap:var(--fx-panel-gap)]"
     >
       <div className="overflow-x-auto border-b border-border-subtle bg-card">
-        <div className={workbenchActive ? "grid min-w-[1120px] grid-cols-[220px_minmax(360px,1fr)_minmax(320px,0.8fr)] gap-(--playground-gap) p-(--card-spacing)" : "grid min-w-[1080px] grid-cols-[minmax(0,1fr)_minmax(360px,1fr)] gap-(--playground-gap) p-(--card-spacing)"}>
+        <div className={workbenchActive ? "grid min-w-[1120px] grid-cols-[220px_minmax(360px,1fr)_minmax(320px,0.8fr)] gap-(--playground-gap) p-(--card-spacing)" : "grid grid-cols-[repeat(2,minmax(min-content,1fr))] gap-(--playground-gap) p-(--card-spacing) max-[900px]:grid-cols-1"}>
           {workbenchActive ? (
             <div data-slot="component-playground-structure" className="flex flex-col gap-(--fx-control-gap)">
               <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Structure" : "组件结构"}</PlaygroundSectionTitle>
@@ -365,17 +372,17 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
             </div>
           ) : null}
           <div className="flex flex-col gap-(--playground-gap)">
-            <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Interactive props" : "实时属性"}</PlaygroundSectionTitle>
-            {config.stories?.length ? (
+            {showStories ? (
               <div data-slot="component-playground-stories" className="flex flex-col gap-(--fx-control-gap-tight)">
-                <PlaygroundPropLabel zh={lang === "en" ? "Stories" : "场景预设"} />
+                <PlaygroundPropLabel zh={lang === "en" ? (storyPresentation === "examples" ? "Examples" : "Presets") : (storyPresentation === "examples" ? "结构示例" : "场景预设")} />
                 <PgSegmented
                   value={activeStoryId ?? ""}
                   onChange={selectStory}
-                  options={config.stories.map((story) => ({ value: story.id, label: lang === "en" ? (story.titleEn ?? story.title ?? story.id) : (story.title ?? story.id) }))}
+                  options={config.stories!.map((story) => ({ value: story.id, label: lang === "en" ? (story.titleEn ?? story.title ?? story.id) : (story.title ?? story.id) }))}
                 />
               </div>
             ) : null}
+            <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Interactive props" : "实时属性"}</PlaygroundSectionTitle>
             {workbenchActive && activeNode ? (
               <div className="flex items-center gap-(--fx-control-gap-tight) text-sm text-muted-foreground">
                 <span className="font-medium text-foreground">{lang === "en" ? activeNode.en : activeNode.zh}</span>
@@ -418,7 +425,7 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
               </div>
             ))}
           </div>
-          <div className="border-l border-border-subtle pl-(--card-spacing)">
+          <div className="border-l border-border-subtle pl-(--card-spacing) max-[900px]:border-l-0 max-[900px]:border-t max-[900px]:pl-0 max-[900px]:pt-(--card-spacing)">
             <div className="flex flex-col gap-(--playground-gap)">
               <div>
                 <div className="mb-1">

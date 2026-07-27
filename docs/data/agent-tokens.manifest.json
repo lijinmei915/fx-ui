@@ -580,6 +580,19 @@
       "consumers": []
     },
     {
+      "id": "semantic.border-chrome",
+      "cssVar": "--border-chrome",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-neutrals-02",
+        "--fx-neutral-dark",
+        "--fx-brand-vivid",
+        "--fx-brand"
+      ],
+      "consumers": []
+    },
+    {
       "id": "semantic.border-faint",
       "cssVar": "--border-faint",
       "category": "shadcn-semantic",
@@ -1847,6 +1860,12 @@
         "cssVar": "--link-disabled",
         "category": "shadcn-semantic",
         "usage": "链接禁用态（淡化蓝）"
+      },
+      {
+        "id": "semantic.border-chrome",
+        "cssVar": "--border-chrome",
+        "category": "shadcn-semantic",
+        "usage": ""
       },
       {
         "id": "semantic.border-faint",

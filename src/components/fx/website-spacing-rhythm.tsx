@@ -2,7 +2,7 @@ import { CardContent } from "@/components/ui/card";
 import { WebsiteCardContainer } from "@/components/fx/website-card-container";
 
 const websiteSpacingRhythmSlots = {
-  root: "rounded-xl border border-border bg-card shadow-l1",
+  root: "rounded-xl border border-border-container bg-card shadow-l1",
   viewport: "rounded-xl border border-border-subtle bg-background p-4 md:p-6",
   page: "grid gap-6 md:grid-cols-[0.95fr_1.05fr_1fr]",
   column: "flex min-w-0 flex-col",

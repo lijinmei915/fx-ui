@@ -4,6 +4,7 @@ import { SearchIcon, Trash2Icon } from "@/lib/icons"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 
+// Development-only source aid. Component scenarios remain owned by ComponentPlayground manifests.
 export const devInspectorConfig: DevInspectorConfigOverrides = {
   componentPreviews: [
     {

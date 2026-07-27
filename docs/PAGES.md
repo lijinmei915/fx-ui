@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-07-16
+last_verified: 2026-07-27
 teaches: "fx-ui 页面装配 playbook：怎么拼出一个页面才不出错（拼装现成 block，不现拼）"
 use_when: "要生成 / 改造任意页面（列表页、表单页、详情页、看板…）前，先按这套流程走"
 ---
@@ -19,11 +19,11 @@ use_when: "要生成 / 改造任意页面（列表页、表单页、详情页、
 npm run gen:list-page -- --name 订单 --slug order
 ```
 
-它生成 `src/pages/<slug>-list.tsx`（已拼好 `CrmAppShell + ListPageHeader + ListToolbar + DataTable + Pagination`），并打印要在 `src/App.tsx` 接的 3 行（import + `pageRegistry` + `docsNav`）。接好后**只改 `columns`/`rows`**，跑 `check:all` + `test:visual`。其它页型暂无生成器 → 走下面的通用 6 步。
+它生成 `src/pages/<slug>-list.tsx`（已拼好 `CrmAppShell + ListPageHeader + ListToolbar + DataTable + Pagination`），并打印要在 `src/lib/page-registry-config.tsx` 接的 registry 行，以及在 `src/lib/site-navigation.ts` 接的 `docsNav` 项。接好后**只改 `columns`/`rows`**，跑 `check:all` + `test:visual`。其它页型暂无生成器 → 走下面的通用 6 步。
 
 > **强制**：`src/pages/` 里手写列表页（用了 `ListToolbar` + `DataTable` 却没 `@generated fx-ui:list-page` 标记）会被 `scripts/check-list-page-source.mjs` 拦下——列表页只能由生成器产出。
 
-Agent 先查询受控 Build Kit，再执行已登记的生成器；当前只有列表页处于 `ready`，详情页/表单页会明确返回 `needs-block`，不得降级为临时拼装。
+Agent 先查询受控 Build Kit，再执行已登记的生成器；列表页、编辑表单页和详情页均处于 `ready`，不得绕过生成器临时拼装页面。
 
 ```bash
 npm run fx -- build list --json
@@ -37,7 +37,7 @@ npm run fx -- build list --json
 2. **选区块（block）**：从 `src/components/recipes/`（文件夹历史名）挑同场景的成形区块，**整段搬运**（导航用 `CrmShellNav`）。有同类区块就别从零拼。
 3. **选组件**：区块里的元素只用现有 ui/fx 组件（`Table`/`Tag`/`Progress`/`Pagination`/`Avatar`…），用 **props/variant** 表达差异，**不在调用处用 className 覆盖组件外观**（红线 7）。
 4. **填数据**：只换数据 props，结构照搬，一个范例里没有的 className 都别加（红线 6/7）。
-5. **登记路由**：`pageRegistry`（`src/App.tsx`，DEC-023）加一行 + `docsNav` 导航项；整页外壳类加 `fullBleed`。详见 `docs/MAP.md`「页面/路由」。
+5. **登记路由**：`pageRegistry`（`src/lib/page-registry-config.tsx`，DEC-023）加一行 + `docsNav` 导航项；整页外壳类加 `fullBleed`。详见 `docs/MAP.md`「页面/路由」。
 6. **双检查收尾**：`bash scripts/check-all.sh` 全绿 **且** `npm run test:visual` 看截图无多余缝隙/圆角/漂移，才算完成。
 
 ## 决策树
@@ -75,7 +75,9 @@ block 既不能僵（不能变），也不能堆成 ProTable 那种 config 怪�
 | `DataTable` | `src/components/recipes/data-table.tsx` | 薄表格：勾选(全选/半选) + 行操作，中间列由 `columns` 驱动；受控、不引 TanStack |
 | `ListToolbar` | `src/components/recipes/list-toolbar.tsx` | 列表页工具栏：筛选 + 复合搜索 + 视图切换 + 右侧动作，全受控配置化 |
 | `ListPageHeader` | `src/components/recipes/list-page-header.tsx` | 列表页标题栏：标题 + 可选视图下拉(`views?`) + 操作插槽(`actions` 0..N) |
-| 客户列表页模板 | `src/App.tsx` `CustomerListTemplate` | 列表页范例 = `CrmAppShell` + `ListPageHeader` + `ListToolbar` + `DataTable` + `Pagination`，只换 columns/数据 |
+| `EditFormBlock` | `src/components/recipes/edit-form-block.tsx` | schema 驱动编辑表单：字段默认值、必填校验、错误聚焦、提交 loading、脏状态取消 |
+| `DetailPageBlock` | `src/components/recipes/detail-page-block.tsx` | 对象详情页：身份头、字段网格、Tabs、活动时间线、关联记录和空态 |
+| 客户列表页模板 | `src/pages/templates/customer-list-template.tsx` `CustomerListTemplate` | 列表页范例 = `CrmAppShell` + `ListPageHeader` + `ListToolbar` + `DataTable` + `Pagination`，只换 columns/数据 |
 
 `DataTable.Column` 的 `dataType` 管数据排版：`number / currency / percentage` 默认右对齐并使用等宽数字；`date / identifier` 左对齐、不换行且使用等宽数字；`status` 居中。普通 `text` 不必声明。名称或说明需要截断时，在真实列内容中显式使用 `truncate`，不要让表格 block 猜测。
 

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "format": "fx-ui/component-playgrounds",
-  "updatedAt": "2026-07-18",
+  "updatedAt": "2026-07-24",
   "truthSource": "docs/data/component-playgrounds.manifest.json",
   "humanDoc": "docs/components/component-playground.md",
   "note": "Playground 与组件文档的结构化真相源。每个组件使用 Storybook-lite stories（id/name/args/parameters）；页面、视觉测试和 Agent 只引用这些 story，不再维护重复场景数据。",
@@ -16,7 +16,8 @@
       "semantics": "改变原生 HTML 或无障碍语义的能力，例如 type、required、readOnly、aria-*"
     },
     "scenarioPresets": {
-      "placement": "after-realtime-props",
+      "placement": "before-realtime-props",
+      "minimumStories": 2,
       "showOnlyWhen": ["changes-structure", "requires-linked-real-props-or-states", "has-verified-intent-and-constraint"],
       "hideWhen": ["single-prop-duplicate", "independently-configurable-props", "layout-only-override"],
       "order": "explicit-order-ascending"
@@ -30,8 +31,6 @@
       "customConfigSource": "src/pages/docs/components/button-playground.tsx#buttonPlaygroundConfig",
       "mode": "custom-config",
       "initial": {
-        "scenario": "single",
-        "actionCount": "4",
         "variant": "default",
         "tone": "default",
         "size": "sm",
@@ -43,42 +42,12 @@
       },
       "props": [
         {
-          "key": "actionCount",
-          "zh": "数量",
-          "en": "Count",
-          "propName": "actionCount",
-          "type": "segment",
-          "hiddenWhen": {
-            "scenario": "single"
-          },
-          "options": [
-            {
-              "value": "2",
-              "label": "2个",
-              "labelEn": "2 actions"
-            },
-            {
-              "value": "3",
-              "label": "3个",
-              "labelEn": "3 actions"
-            },
-            {
-              "value": "4",
-              "label": "4个",
-              "labelEn": "4 actions"
-            }
-          ]
-        },
-        {
           "key": "text",
           "zh": "内容",
           "en": "Text",
           "propName": "children",
           "type": "text",
           "bilingual": true,
-          "hiddenWhen": {
-            "scenario": "action-row"
-          },
           "disabledWhen": {
             "icon": "only"
           }
@@ -90,9 +59,6 @@
           "propName": "variant",
           "type": "segment",
           "hasAll": true,
-          "hiddenWhen": {
-            "scenario": "action-row"
-          },
           "options": [
             {
               "value": "default",
@@ -133,9 +99,6 @@
           "propName": "tone",
           "type": "segment",
           "hasAll": true,
-          "hiddenWhen": {
-            "scenario": "action-row"
-          },
           "disabledWhen": {
             "variant": [
               "default",
@@ -175,9 +138,6 @@
           "propName": "size",
           "type": "segment",
           "hasAll": true,
-          "hiddenWhen": {
-            "scenario": "action-row"
-          },
           "options": [
             {
               "value": "xs",
@@ -208,9 +168,6 @@
           "propName": "iconLayout",
           "type": "segment",
           "hasAll": true,
-          "hiddenWhen": {
-            "scenario": "action-row"
-          },
           "options": [
             {
               "value": "none",
@@ -240,9 +197,6 @@
           "en": "Loading",
           "propName": "loading",
           "type": "segment",
-          "hiddenWhen": {
-            "scenario": "action-row"
-          },
           "options": [
             {
               "value": "true",
@@ -264,9 +218,6 @@
           "propName": "disabled",
           "type": "segment",
           "hasAll": true,
-          "hiddenWhen": {
-            "scenario": "action-row"
-          },
           "disabledWhen": {
             "loading": "true"
           },
@@ -296,8 +247,6 @@
           "name": "单按钮",
           "nameEn": "Single",
           "args": {
-            "scenario": "single",
-            "actionCount": "4",
             "variant": "default",
             "tone": "default",
             "size": "sm",
@@ -311,28 +260,6 @@
             "intent": "调试一个 Button 的类型、尺寸、图标、禁用和加载状态。",
             "intentEn": "Tune one Button's variant, size, icon, disabled, and loading states.",
             "source": "src/components/ui/button.tsx#single"
-          }
-        },
-        {
-          "id": "action-row",
-          "name": "按钮排列",
-          "nameEn": "Action row",
-          "args": {
-            "scenario": "action-row",
-            "actionCount": "4",
-            "variant": "default",
-            "tone": "default",
-            "size": "sm",
-            "icon": "none",
-            "disabled": "false",
-            "loading": "false",
-            "text": "主要操作",
-            "textEn": "Primary action"
-          },
-          "parameters": {
-            "intent": "用于页面头部、列表工具栏和操作区的按钮排布。",
-            "intentEn": "Arrange actions for page headers, list toolbars, and action areas.",
-            "source": "src/components/ui/button.tsx#action-row"
           }
         }
       ]
@@ -351,6 +278,7 @@
         "invalid": "false",
         "value": "selected"
       },
+      "storyPresentation": "presets",
       "props": [
         {
           "key": "scenario",
@@ -479,6 +407,7 @@
         "step": "30",
         "size": "sm"
       },
+      "storyPresentation": "presets",
       "guidanceKey": "mode",
       "props": [
         {
@@ -494,8 +423,8 @@
         },
         {
           "key": "valueState",
-          "zh": "值状态",
-          "en": "Value state",
+          "zh": "当前值",
+          "en": "Current value",
           "propName": "value",
           "type": "segment",
           "options": [
@@ -605,7 +534,6 @@
     "avatar",
     "breadcrumb",
     "dropdown-menu",
-    "separator",
     "spinner",
     "collapsible",
     "tabs",
@@ -675,11 +603,6 @@
       "route": "#textarea",
       "selector": "#textarea-playground",
       "test": "Textarea Playground 主入口"
-    },
-    "separator": {
-      "route": "#separator",
-      "selector": "#separator-playground",
-      "test": "Separator Playground 主入口"
     },
     "spinner": {
       "route": "#spinner",
@@ -903,106 +826,28 @@
   },
   "components": {
     "icon": {
-      "componentName": "Icon",
+      "componentName": "Icon preview",
       "source": "src/lib/icons.ts",
       "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "visualTests": ["Icon 预览"],
+      "visual": {
+        "route": "#icon",
+        "selector": "#icon-playground",
+        "screenshot": "icon-playground.png"
+      },
       "initial": {
-        "style": "line",
-        "background": "false",
-        "composition": "false",
         "size": "20",
         "color": "foreground"
       },
-      "guidanceKey": "style",
+      "guidanceKey": "size",
       "props": [
-        {
-          "key": "style",
-          "zh": "样式",
-          "en": "Style",
-          "propName": "style",
-          "type": "segment",
-          "options": [
-            {
-              "value": "line",
-              "label": "线性",
-              "labelEn": "Line",
-              "intent": "默认图标形态，用于绝大多数界面对象和操作。",
-              "intentEn": "Default icon form for most interface objects and actions.",
-              "constraint": "线宽由全局 .tabler-icon 控制，不逐个传 stroke。",
-              "constraintEn": "Stroke width is controlled globally by .tabler-icon; do not pass stroke per icon."
-            },
-            {
-              "value": "filled",
-              "label": "面型",
-              "labelEn": "Filled",
-              "intent": "用于选中、激活或需要更强识别的状态。",
-              "intentEn": "Use for selected, active, or more recognizable states.",
-              "constraint": "只使用 @/lib/icons 暴露的 Filled 变体；没有面型时回退线性。",
-              "constraintEn": "Use Filled variants exposed by @/lib/icons; fall back to line when unavailable."
-            }
-          ]
-        },
-        {
-          "key": "background",
-          "zh": "背景",
-          "en": "Background",
-          "propName": "background",
-          "type": "segment",
-          "options": [
-            {
-              "value": "false",
-              "label": "否",
-              "labelEn": "No",
-              "intent": "图标直接跟随文字色，用于绝大多数内容和操作。",
-              "intentEn": "The icon directly follows text color; use for most content and actions.",
-              "constraint": "无背景时颜色使用 text-* 语义类。",
-              "constraintEn": "Without a background, use text-* semantic color classes."
-            },
-            {
-              "value": "true",
-              "label": "是",
-              "labelEn": "Yes",
-              "intent": "用于入口、状态徽标等需要色块承托的场景。",
-              "intentEn": "Use for entries or status badges that need a colored support shape.",
-              "constraint": "背景用 bg-primary，图标用 text-primary-foreground 反白；背景尺寸随图标尺寸缩放。",
-              "constraintEn": "Use bg-primary with text-primary-foreground; scale the support shape with icon size."
-            }
-          ]
-        },
-        {
-          "key": "composition",
-          "zh": "文字组合",
-          "en": "Text combo",
-          "propName": "composition",
-          "type": "segment",
-          "options": [
-            {
-              "value": "false",
-              "label": "否",
-              "labelEn": "No",
-              "intent": "单独展示图标，适合工具栏、状态点和图标库预览。",
-              "intentEn": "Show the icon alone for toolbars, status marks, or icon previews.",
-              "constraint": "纯图标操作在真实组件里必须补 aria-label。",
-              "constraintEn": "Icon-only actions in real components must include aria-label."
-            },
-            {
-              "value": "true",
-              "label": "是",
-              "labelEn": "Yes",
-              "intent": "图标和文字共同表达含义，用于菜单项、提示和行内说明。",
-              "intentEn": "Pair icon and text for menu items, hints, or inline descriptions.",
-              "constraint": "图标与文字保持同一语义色；按钮内图标仍交给 Button 的 data-icon 规则。",
-              "constraintEn": "Keep icon and text in the same semantic color; inside Button, still use data-icon."
-            }
-          ]
-        },
         {
           "key": "size",
           "zh": "尺寸",
           "en": "Size",
           "propName": "className",
           "type": "segment",
-          "hasAll": true,
+          "controlGroup": "appearance",
           "options": [
             {
               "value": "12",
@@ -1057,10 +902,7 @@
           "en": "Color",
           "propName": "className",
           "type": "segment",
-          "hasAll": true,
-          "disabledWhen": {
-            "background": "true"
-          },
+          "controlGroup": "appearance",
           "options": [
             {
               "value": "foreground",
@@ -1129,6 +971,51 @@
         }
       ]
     },
+    "separator": {
+      "componentName": "Separator",
+      "source": "src/components/ui/separator.tsx",
+      "playgroundComponent": "src/pages/docs/components/separator-playground.tsx",
+      "visualTests": ["Separator Playground 主入口"],
+      "visual": {
+        "route": "#separator",
+        "selector": "#separator-playground",
+        "screenshot": "separator-playground.png"
+      },
+      "initial": {
+        "orientation": "horizontal"
+      },
+      "guidanceKey": "orientation",
+      "props": [
+        {
+          "key": "orientation",
+          "zh": "方向",
+          "en": "Orientation",
+          "propName": "orientation",
+          "type": "segment",
+          "controlGroup": "structure",
+          "options": [
+            {
+              "value": "horizontal",
+              "label": "水平",
+              "labelEn": "Horizontal",
+              "intent": "区隔上下内容。",
+              "intentEn": "Separate stacked content.",
+              "constraint": "沿用默认值时不需要显式传 orientation，并保留上下间距。",
+              "constraintEn": "Rely on the default without passing orientation, and keep vertical spacing."
+            },
+            {
+              "value": "vertical",
+              "label": "垂直",
+              "labelEn": "Vertical",
+              "intent": "分隔横向工具项。",
+              "intentEn": "Separate horizontal utility items.",
+              "constraint": "使用 orientation=\"vertical\"，并让父容器提供明确高度。",
+              "constraintEn": "Use orientation=\"vertical\" and give the parent a definite height."
+            }
+          ]
+        }
+      ]
+    },
     "tag": {
       "componentName": "Tag",
       "source": "src/components/ui/tag.tsx",
@@ -1145,6 +1032,7 @@
         "text": "标签",
         "textEn": "Tag"
       },
+      "storyPresentation": "presets",
       "guidanceKey": "variant",
       "props": [
         {
@@ -1178,6 +1066,14 @@
               "intentEn": "Use for low-emphasis neutral helper tags.",
               "constraint": "只用于弱化信息，不承载关键状态。",
               "constraintEn": "Use for subdued information, not critical states."
+            },
+            {
+              "value": "soft",
+              "label": "soft",
+              "intent": "用于选择器已选项、筛选条件等紧凑中性标签。",
+              "intentEn": "Use for compact neutral tags such as selected values and filters.",
+              "constraint": "只表达紧凑中性外观，不表达业务状态。",
+              "constraintEn": "Expresses a compact neutral appearance only, not a business status."
             },
             {
               "value": "success",
@@ -1433,6 +1329,7 @@
         "size": "md",
         "scenario": "metric"
       },
+      "storyPresentation": "presets",
       "props": [
         {
           "key": "variant",
@@ -1595,6 +1492,7 @@
       "initial": {
         "scenario": "dot"
       },
+      "storyPresentation": "presets",
       "props": [],
       "stories": [
         {
@@ -1649,7 +1547,6 @@
         "icon": "none",
         "disabled": "false"
       },
-      "guidanceKey": "underline",
       "props": [
         {
           "key": "underline",
@@ -1657,6 +1554,7 @@
           "en": "Type",
           "propName": "underline",
           "type": "segment",
+          "controlGroup": "appearance",
           "hasAll": true,
           "options": [
             {
@@ -1685,6 +1583,7 @@
           "en": "Tone",
           "propName": "tone",
           "type": "segment",
+          "controlGroup": "appearance",
           "hasAll": true,
           "options": [
             {
@@ -1749,6 +1648,7 @@
           "en": "Size",
           "propName": "size",
           "type": "segment",
+          "controlGroup": "appearance",
           "hasAll": true,
           "options": [
             {
@@ -1786,6 +1686,7 @@
           "en": "Icon",
           "propName": "children",
           "type": "segment",
+          "controlGroup": "structure",
           "hasAll": true,
           "options": [
             {
@@ -1823,6 +1724,7 @@
           "en": "Disabled",
           "propName": "disabled",
           "type": "segment",
+          "controlGroup": "behavior",
           "hasAll": true,
           "options": [
             {
@@ -1846,56 +1748,6 @@
           ]
         }
       ],
-      "stories": [
-        {
-          "id": "basic",
-          "name": "基础链接",
-          "nameEn": "Basic link",
-          "args": {
-            "underline": "hover",
-            "tone": "standard",
-            "size": "default",
-            "icon": "none",
-            "disabled": "false"
-          },
-          "parameters": {
-            "intent": "用于常规页面内跳转和外部导航。",
-            "intentEn": "Use for normal in-page navigation and external links."
-          }
-        },
-        {
-          "id": "underlined",
-          "name": "始终下划线",
-          "nameEn": "Always underlined",
-          "args": {
-            "underline": "always",
-            "tone": "standard",
-            "size": "default",
-            "icon": "none",
-            "disabled": "false"
-          },
-          "parameters": {
-            "intent": "用于正文内联或需要持续提示可点击的文字。",
-            "intentEn": "Use for inline text that must remain visibly clickable."
-          }
-        },
-        {
-          "id": "disabled",
-          "name": "禁用链接",
-          "nameEn": "Disabled link",
-          "args": {
-            "underline": "hover",
-            "tone": "standard",
-            "size": "default",
-            "icon": "none",
-            "disabled": "true"
-          },
-          "parameters": {
-            "intent": "当前无权限或暂时不可用时移出链接交互。",
-            "intentEn": "Remove link interaction when access is unavailable."
-          }
-        }
-      ],
       "visualTests": ["Link Playground 主入口"],
       "visual": {
         "route": "#link",
@@ -1913,44 +1765,8 @@
         "size": "md",
         "variant": "outline"
       },
-      "guidanceKey": "pattern",
+      "storyPresentation": "examples",
       "props": [
-        {
-          "key": "pattern",
-          "zh": "组合方式",
-          "en": "ButtonGroup pattern",
-          "propName": "composition",
-          "type": "segment",
-          "options": [
-            {
-              "value": "actions",
-              "label": "操作组",
-              "labelEn": "Actions",
-              "intent": "把强相关、同层级的多个操作按钮合并为一组，弱化彼此边界。",
-              "intentEn": "Group strongly related peer actions together and soften the boundaries between them.",
-              "constraint": "只用按钮组和按钮组件；组内按钮变体保持一致，不混入互斥选择或危险操作。",
-              "constraintEn": "Use ButtonGroup + Button only; keep inner Button variants consistent and do not mix selection or destructive actions into the group."
-            },
-            {
-              "value": "split",
-              "label": "拆分按钮",
-              "labelEn": "Split",
-              "intent": "保留一个主操作，把更多动作收进右侧图标按钮。",
-              "intentEn": "Keep one main action visible and place more actions behind the trailing icon button.",
-              "constraint": "主操作在前，右侧图标按钮仍然使用按钮组件；更多动作配下拉菜单，不发明拆分按钮专属 API。",
-              "constraintEn": "Place the main action first; the trailing icon control is still a Button. Pair extra actions with DropdownMenu and do not invent split-specific APIs."
-            },
-            {
-              "value": "toolbar-icons",
-              "label": "工具图标组",
-              "labelEn": "Toolbar icons",
-              "intent": "用于视图切换、地图、分栏等同层级工具按钮，保持连续分组。",
-              "intentEn": "Use for peer toolbar controls such as list, grid, map, or split view switching.",
-              "constraint": "图标按钮必须有 aria-label；工具图标组不使用主按钮类型，不在组内混入文字主操作。",
-              "constraintEn": "Icon buttons must have aria-label. Toolbar icon groups do not use the primary button variant or mix primary text actions into the group."
-            }
-          ]
-        },
         {
           "key": "orientation",
           "zh": "方向",
@@ -1958,9 +1774,7 @@
           "propName": "orientation",
           "type": "segment",
           "hasAll": true,
-          "hiddenWhen": {
-            "pattern": ["split", "toolbar-icons"]
-          },
+          "hiddenWhen": { "pattern": "split" },
           "options": [
             {
               "value": "horizontal",
@@ -2057,10 +1871,7 @@
               "intent": "强调一整组操作时使用，但应确保不会出现多个抢焦点的主操作组。",
               "intentEn": "Use when the whole group needs emphasis, but avoid multiple competing primary groups.",
               "constraint": "一个区域内谨慎使用高强调按钮组。",
-              "constraintEn": "Use emphasized grouped buttons sparingly within the same area.",
-              "hiddenWhen": {
-                "pattern": "toolbar-icons"
-              }
+              "constraintEn": "Use emphasized grouped buttons sparingly within the same area."
             }
           ]
         }
@@ -2095,21 +1906,6 @@
             "intent": "保留主操作，并将更多动作放在尾部图标按钮。",
             "intentEn": "Keep the primary action visible and place more actions behind the trailing icon button."
           }
-        },
-        {
-          "id": "toolbar-icons",
-          "name": "工具图标组",
-          "nameEn": "Toolbar icon group",
-          "args": {
-            "pattern": "toolbar-icons",
-            "orientation": "horizontal",
-            "size": "sm",
-            "variant": "outline"
-          },
-          "parameters": {
-            "intent": "用于列表、看板、地图等同层级视图切换。",
-            "intentEn": "Use for peer view controls such as list, grid, or map."
-          }
         }
       ],
       "visualTests": ["ButtonGroup Playground 主入口"],
@@ -2132,51 +1928,57 @@
         "status": "none",
         "count": "4"
       },
-      "guidanceKey": "quantity",
-      "props": [
+      "guidanceKey": "style",
+      "storyPresentation": "examples",
+      "stories": [
         {
-          "key": "quantity",
-          "zh": "数量",
-          "en": "Quantity",
-          "propName": "Avatar / AvatarGroup / AvatarComposite",
-          "type": "segment",
-          "hasAll": true,
-          "options": [
-            {
-              "value": "single",
-              "label": "单人",
-              "labelEn": "Single",
-              "intent": "展示单个用户或实体身份，优先渲染真实图片。",
-              "intentEn": "Show one user or entity identity, preferring the real image.",
-              "constraint": "始终提供兜底内容，图片失败时回退到文字或图标（AvatarFallback）。",
-              "constraintEn": "Always provide AvatarFallback so failed images fall back to text or icon."
-            },
-            {
-              "value": "group",
-              "label": "群组",
-              "labelEn": "Group",
-              "intent": "展示协作者、成员列表等多个独立身份。",
-              "intentEn": "Show multiple independent identities such as collaborators or members.",
-              "constraint": "固定展示前 3 个，超出折叠为 +N；折叠项 hover/focus 展示剩余成员（AvatarGroup + AvatarGroupCount + Tooltip）。",
-              "constraintEn": "Show the first 3, collapse the rest into +N, and reveal remaining members on hover/focus."
-            },
-            {
-              "value": "chat",
-              "label": "群聊",
-              "labelEn": "Chat",
-              "intent": "展示会话、群聊或多人实体头像。",
-              "intentEn": "Show a conversation, group chat, or multi-person entity avatar.",
-              "constraint": "用拼接头像按人数自动排布成员：2 人中线左右，3 人上中 + 下二，4 人田字；不在调用处手写宫格（AvatarComposite max）。",
-              "constraintEn": "Use AvatarComposite + max to arrange members: 2 centered side-by-side, 3 top-center plus two below, 4 in a 2x2 grid; do not hand-write the grid at the call site."
-            }
-          ]
+          "id": "single",
+          "name": "单个头像",
+          "nameEn": "Single avatar",
+          "args": { "quantity": "single" },
+          "parameters": {
+            "intent": "展示一个用户或实体身份，并始终提供图片失败兜底。",
+            "intentEn": "Show one user or entity identity with a required image fallback.",
+            "constraint": "使用 Avatar + AvatarImage + AvatarFallback；人物默认圆形。",
+            "constraintEn": "Use Avatar + AvatarImage + AvatarFallback; people use the circle shape by default.",
+            "source": "src/components/ui/avatar.tsx#Avatar"
+          }
         },
         {
+          "id": "group",
+          "name": "头像组",
+          "nameEn": "Avatar group",
+          "args": { "quantity": "group" },
+          "parameters": {
+            "intent": "展示协作者或成员列表中的多个独立身份。",
+            "intentEn": "Show multiple independent identities in collaborator or member lists.",
+            "constraint": "使用 AvatarGroup；超出成员通过具备按钮语义的 AvatarGroupCount + Tooltip 查看。",
+            "constraintEn": "Use AvatarGroup; expose overflow through a button-rendered AvatarGroupCount with Tooltip.",
+            "source": "src/components/ui/avatar.tsx#AvatarGroup"
+          }
+        },
+        {
+          "id": "composite",
+          "name": "群聊拼接",
+          "nameEn": "Composite chat avatar",
+          "args": { "quantity": "chat", "size": "default", "count": "4" },
+          "parameters": {
+            "intent": "把 2 至 4 个成员身份拼成一个会话或群聊头像。",
+            "intentEn": "Compose 2 to 4 member identities into one conversation or group-chat avatar.",
+            "constraint": "使用 AvatarComposite，整体尺寸只用 default / lg / xl，不在调用处重写宫格。",
+            "constraintEn": "Use AvatarComposite at default / lg / xl sizes; do not rebuild its grid at the call site.",
+            "source": "src/components/ui/avatar.tsx#AvatarComposite"
+          }
+        }
+      ],
+      "props": [
+        {
           "key": "count",
-          "zh": "群组数量",
+          "zh": "拼接数量",
           "en": "Count",
-          "propName": "AvatarGroup.max / AvatarComposite.max",
+          "propName": "AvatarComposite.max",
           "type": "segment",
+          "controlGroup": "structure",
           "hasAll": true,
           "hiddenWhen": {
             "quantity": ["single", "group"]
@@ -2188,8 +1990,8 @@
               "labelEn": "2",
               "intent": "展示最小多人关系。",
               "intentEn": "Show the smallest multi-person relationship.",
-              "constraint": "头像组用最大显示数量控制露出几个；群组拼接按人数布局（max）。",
-              "constraintEn": "Use max for AvatarGroup; composite avatars layout by member count."
+              "constraint": "拼接头像按 2 人结构布局（AvatarComposite.max）。",
+              "constraintEn": "Layout the composite avatar with its two-person structure (AvatarComposite.max)."
             },
             {
               "value": "3",
@@ -2206,8 +2008,8 @@
               "labelEn": "4",
               "intent": "展示多人关系的默认上限。",
               "intentEn": "Show the default upper bound for multiple identities.",
-              "constraint": "头像组超过最大数量自动显示 +N；拼接头像最多取前 4（max）。",
-              "constraintEn": "AvatarGroup collapses beyond max into +N; composite avatars use at most the first 4."
+              "constraint": "拼接头像最多取前 4 个成员（AvatarComposite.max）。",
+              "constraintEn": "Composite avatars use at most the first four members (AvatarComposite.max)."
             }
           ]
         },
@@ -2217,6 +2019,7 @@
           "en": "Appearance",
           "propName": "shape",
           "type": "segment",
+          "controlGroup": "appearance",
           "hasAll": true,
           "hiddenWhen": {
             "quantity": ["group", "chat"]
@@ -2244,10 +2047,11 @@
         },
         {
           "key": "style",
-          "zh": "样式",
-          "en": "Style",
+          "zh": "内容",
+          "en": "Content",
           "propName": "AvatarImage / AvatarFallback",
           "type": "segment",
+          "controlGroup": "content",
           "hasAll": true,
           "options": [
             {
@@ -2285,6 +2089,7 @@
           "en": "Color",
           "propName": "AvatarFallback.colorful",
           "type": "segment",
+          "controlGroup": "appearance",
           "hasAll": true,
           "options": [
             {
@@ -2313,6 +2118,7 @@
           "en": "Size",
           "propName": "size",
           "type": "segment",
+          "controlGroup": "appearance",
           "hasAll": true,
           "options": [
             {
@@ -2322,7 +2128,10 @@
               "intent": "用于表格、徽标旁等极紧凑位置。",
               "intentEn": "Use for very compact spots such as tables or next to badges.",
               "constraint": "状态点会跟随头像尺寸自动缩放；不要额外覆盖内部尺寸（size-*）。",
-              "constraintEn": "The badge scales automatically; do not add manual size-* overrides inside."
+              "constraintEn": "The badge scales automatically; do not add manual size-* overrides inside.",
+              "hiddenWhen": {
+                "quantity": ["chat"]
+              }
             },
             {
               "value": "sm",
@@ -2331,7 +2140,10 @@
               "intent": "用于紧凑列表、菜单项或小型元信息。",
               "intentEn": "Use for compact lists, menu items, or small metadata.",
               "constraint": "保持文本不低于组件内置最小字号。",
-              "constraintEn": "Keep text at or above the component's built-in minimum size."
+              "constraintEn": "Keep text at or above the component's built-in minimum size.",
+              "hiddenWhen": {
+                "quantity": ["chat"]
+              }
             },
             {
               "value": "default",
@@ -2349,10 +2161,7 @@
               "intent": "用于更强调的成员信息、个人卡片或弹层头部。",
               "intentEn": "Use for more prominent member info, profile cards, or overlay headers.",
               "constraint": "不要和同一列表里的 default 混排。",
-              "constraintEn": "Do not mix with default avatars in the same list.",
-              "hiddenWhen": {
-                "quantity": ["group", "chat"]
-              }
+              "constraintEn": "Do not mix with default avatars in the same list."
             },
             {
               "value": "xl",
@@ -2361,10 +2170,7 @@
               "intent": "用于个人资料页、详情头部等更高识别权重的位置。",
               "intentEn": "Use for profile pages or detail headers with higher identity emphasis.",
               "constraint": "只用于低密度区域，避免挤压表格或工具栏。",
-              "constraintEn": "Use only in low-density areas; avoid tables or toolbars.",
-              "hiddenWhen": {
-                "quantity": ["group", "chat"]
-              }
+              "constraintEn": "Use only in low-density areas; avoid tables or toolbars."
             }
           ]
         },
@@ -2374,6 +2180,7 @@
           "en": "Status",
           "propName": "AvatarBadge.status",
           "type": "segment",
+          "controlGroup": "behavior",
           "hasAll": true,
           "hiddenWhen": {
             "quantity": ["group", "chat"]
@@ -3248,22 +3055,26 @@
         "clearable": "false",
         "otherInput": "none",
         "valueState": "placeholder",
-        "state": "normal",
+        "semanticState": "normal",
+        "interactionState": "normal",
+        "feedbackState": "ready",
         "size": "sm"
       },
+      "storyPresentation": "presets",
       "guidanceKey": "structure",
       "props": [
         {
           "key": "structure",
-          "zh": "选项结构",
-          "en": "Option structure",
+          "zh": "选项配置",
+          "en": "Option configuration",
           "propName": "children",
+          "controlGroup": "structure",
           "type": "segment",
           "options": [
             {
               "value": "plain",
-              "label": "普通",
-              "labelEn": "Plain",
+              "label": "基础",
+              "labelEn": "Basic",
               "intent": "选项数量少、无需分类时使用单层选项。",
               "intentEn": "Use a flat option list when choices are few and need no category.",
               "constraint": "SelectItem 直接放在 SelectContent 内，value 在选项集合内唯一。",
@@ -3280,8 +3091,8 @@
             },
             {
               "value": "disabled",
-              "label": "禁用项",
-              "labelEn": "Disabled option",
+              "label": "含禁用项",
+              "labelEn": "With disabled option",
               "intent": "保留不可选项的可见性，例如无权限或已停用。",
               "intentEn": "Keep unavailable options visible, such as permission-limited or inactive choices.",
               "constraint": "禁用单项用 SelectItem disabled，不用普通文本假装。",
@@ -3289,7 +3100,7 @@
             },
             {
               "value": "description",
-              "label": "描述项",
+              "label": "带描述",
               "labelEn": "With description",
               "intent": "选项需要补充部门、说明或范围时使用。",
               "intentEn": "Use when options need secondary text such as department, description, or scope.",
@@ -3298,8 +3109,11 @@
             },
             {
               "value": "other",
-              "label": "其他",
-              "labelEn": "Other",
+              "label": "含其他项",
+              "labelEn": "With Other",
+              "hiddenWhen": {
+                "selection": "multiple"
+              },
               "intent": "预设选项之外允许用户补充一个自定义值。",
               "intentEn": "Allow the user to provide a custom value beyond predefined options.",
               "constraint": "使用 Select + Input 的受控组合；其他输入不是 Select 原生 prop。",
@@ -3309,9 +3123,10 @@
         },
         {
           "key": "variant",
-          "zh": "样式",
-          "en": "Variant",
+          "zh": "外观",
+          "en": "Appearance",
           "propName": "variant",
+          "controlGroup": "appearance",
           "type": "segment",
           "options": [
             {
@@ -3329,8 +3144,8 @@
               "labelEn": "Borderless",
               "intent": "用于表格筛选、工具栏或容器内已有边界的紧凑场景。",
               "intentEn": "Use in dense table filters, toolbars, or containers that already provide a boundary.",
-              "constraint": "使用 SelectTrigger variant=\"borderless\"，不在调用处覆盖 border。",
-              "constraintEn": "Use SelectTrigger variant=\"borderless\"; do not override borders at call sites."
+              "constraint": "使用 SelectTrigger variant=\"borderless\"，未选择时用“全部角色”表达筛选范围；hover/open 仅显示浅底色，键盘 focus 用焦点环，报错态仍显示错误边界。",
+              "constraintEn": "Use SelectTrigger variant=\"borderless\" and show 'All roles' before selection; hover/open use only a subtle background, keyboard focus uses a focus ring, and invalid state still shows an error boundary."
             }
           ]
         },
@@ -3339,6 +3154,10 @@
           "zh": "选择数量",
           "en": "Selection",
           "propName": "multiple",
+          "controlGroup": "structure",
+          "hiddenWhen": {
+            "structure": "other"
+          },
           "type": "segment",
           "options": [
             {
@@ -3356,8 +3175,8 @@
               "labelEn": "Multiple",
               "intent": "用于筛选条件中选择多个枚举值。",
               "intentEn": "Use for selecting multiple enum values in filters.",
-              "constraint": "使用 Select multiple 和数组 value；已选值用 SelectMultiValue 展示，超出 maxVisible 折叠为 +n。",
-              "constraintEn": "Use Select multiple with array values and SelectMultiValue; values beyond maxVisible collapse into +n."
+              "constraint": "使用 Select multiple 和数组 value；已选值用可删除的 SelectMultiValue 展示，选项用 SelectItemIndicator 显示 Checkbox。筛选器使用默认 overflow=collapse，超出 maxVisible 后折叠为 +n。",
+              "constraintEn": "Use Select multiple with array values, removable SelectMultiValue tags, and SelectItemIndicator checkboxes. Filters use the default overflow=collapse to fold values beyond maxVisible into +n."
             }
           ]
         },
@@ -3366,6 +3185,7 @@
           "zh": "搜索",
           "en": "Search",
           "propName": "composition",
+          "controlGroup": "behavior",
           "type": "segment",
           "options": [
             {
@@ -3379,8 +3199,8 @@
             },
             {
               "value": "local",
-              "label": "本地搜索",
-              "labelEn": "Local search",
+              "label": "有",
+              "labelEn": "Yes",
               "intent": "选项较多但数据已在前端时使用本地过滤。",
               "intentEn": "Use local filtering when options are already available on the client.",
               "constraint": "搜索输入作为 SelectContent 内的组合；远程搜索、人员选择沉淀为 fx 组合组件。",
@@ -3393,11 +3213,12 @@
           "zh": "清除",
           "en": "Clear",
           "propName": "composition",
+          "controlGroup": "behavior",
           "type": "segment",
           "options": [
             {
               "value": "false",
-              "label": "否",
+              "label": "无",
               "labelEn": "No",
               "intent": "必填或不允许回到空值时使用。",
               "intentEn": "Use when a value is required or cannot return to empty.",
@@ -3406,39 +3227,12 @@
             },
             {
               "value": "true",
-              "label": "是",
+              "label": "有",
               "labelEn": "Yes",
               "intent": "允许用户撤销已选值，回到 placeholder。",
               "intentEn": "Allow users to remove the selected value and return to the placeholder.",
-              "constraint": "清除用受控 value + SelectControl + SelectClear，清除按钮与 trigger 保持同级。",
-              "constraintEn": "Use controlled value, SelectControl, and SelectClear with the clear action as a trigger sibling."
-            }
-          ]
-        },
-        {
-          "key": "valueState",
-          "zh": "值状态",
-          "en": "Value state",
-          "propName": "value",
-          "type": "segment",
-          "options": [
-            {
-              "value": "placeholder",
-              "label": "占位",
-              "labelEn": "Placeholder",
-              "intent": "尚未选择时显示提示文案。",
-              "intentEn": "Show a prompt before the user has selected a value.",
-              "constraint": "占位文案放 SelectValue placeholder，不新增空值 SelectItem。",
-              "constraintEn": "Put placeholder text on SelectValue; do not add an empty SelectItem."
-            },
-            {
-              "value": "selected",
-              "label": "已选",
-              "labelEn": "Selected",
-              "intent": "已经存在选中值时展示当前选择。",
-              "intentEn": "Show the current value after selection exists.",
-              "constraint": "用 defaultValue / value 表达选中值，业务代码不要手写选中文案。",
-              "constraintEn": "Use defaultValue or value for selection; do not hard-code selected display text."
+              "constraint": "清除用受控 value + SelectControl + SelectClear；有值时总清除常驻箭头左侧并与 trigger 保持同级，多选标签内 X 只删除单项。",
+              "constraintEn": "Use controlled value, SelectControl, and SelectClear; keep the clear-all action visible to the left of the arrow when a value exists and as a trigger sibling, while tag X buttons remove only one item."
             }
           ]
         },
@@ -3447,6 +3241,15 @@
           "zh": "其他输入",
           "en": "Other input",
           "propName": "composition",
+          "controlGroup": "content",
+          "hiddenWhen": {
+            "structure": [
+              "plain",
+              "grouped",
+              "disabled",
+              "description"
+            ]
+          },
           "type": "segment",
           "options": [
             {
@@ -3479,10 +3282,48 @@
           ]
         },
         {
-          "key": "state",
+          "key": "semanticState",
+          "zh": "控件状态",
+          "en": "Control state",
+          "propName": "disabled / aria-invalid",
+          "controlGroup": "semantics",
+          "type": "segment",
+          "options": [
+            {
+              "value": "normal",
+              "label": "默认",
+              "labelEn": "Default",
+              "intent": "默认可交互状态。",
+              "intentEn": "Default interactive state.",
+              "constraint": "不传 disabled 或 aria-invalid。",
+              "constraintEn": "Pass neither disabled nor aria-invalid."
+            },
+            {
+              "value": "invalid",
+              "label": "报错",
+              "labelEn": "Invalid",
+              "intent": "字段校验失败，需要用户重新选择。",
+              "intentEn": "Validation failed and the user must choose again.",
+              "constraint": "在 SelectTrigger 上设置 aria-invalid，清空旧值回到 placeholder，并用 FieldError 承载“请选择一个选项”。",
+              "constraintEn": "Set aria-invalid on SelectTrigger, clear the stale value back to the placeholder, and show 'Choose an option' with FieldError."
+            },
+            {
+              "value": "disabled",
+              "label": "禁用",
+              "labelEn": "Disabled",
+              "intent": "当前不可选择。",
+              "intentEn": "Selection is currently unavailable.",
+              "constraint": "使用 Select 的 disabled，不用 opacity 或 pointer-events 假装禁用。",
+              "constraintEn": "Use Select disabled; do not fake disabled state with opacity or pointer-events."
+            }
+          ]
+        },
+        {
+          "key": "interactionState",
           "zh": "交互状态",
-          "en": "State",
-          "propName": "state",
+          "en": "Interaction state",
+          "propName": "native interaction preview",
+          "controlGroup": "behavior",
           "type": "segment",
           "options": [
             {
@@ -3520,10 +3361,29 @@
               "intentEn": "The popup is open and options are visible.",
               "constraint": "打开态由 Select 自身状态驱动；不要用固定展示的 div 替代浮层。",
               "constraintEn": "Open state is owned by Select; do not replace the popup with a static div."
+            }
+          ]
+        },
+        {
+          "key": "feedbackState",
+          "zh": "选项状态",
+          "en": "Options state",
+          "propName": "composition",
+          "controlGroup": "behavior",
+          "type": "segment",
+          "options": [
+            {
+              "value": "ready",
+              "label": "正常",
+              "labelEn": "Normal",
+              "intent": "选项已可浏览和选择。",
+              "intentEn": "Options are ready to browse and select.",
+              "constraint": "正常渲染选项，不附加业务反馈。",
+              "constraintEn": "Render options normally without business feedback."
             },
             {
               "value": "searching",
-              "label": "输入搜索",
+              "label": "搜索中",
               "labelEn": "Searching",
               "intent": "用户正在搜索选项。",
               "intentEn": "The user is searching options.",
@@ -3547,24 +3407,6 @@
               "intentEn": "Options are still loading.",
               "constraint": "用 Spinner + 文案组合；远程数据逻辑由上层组合组件持有。",
               "constraintEn": "Compose Spinner + text; remote data logic belongs to an upper-level component."
-            },
-            {
-              "value": "invalid",
-              "label": "报错",
-              "labelEn": "Error",
-              "intent": "字段校验失败，需要用户重新选择。",
-              "intentEn": "Validation failed and the user must choose again.",
-              "constraint": "在 SelectTrigger 上设置 aria-invalid，并用 FieldError 承载错误文案。",
-              "constraintEn": "Set aria-invalid on SelectTrigger and show the message with FieldError."
-            },
-            {
-              "value": "disabled",
-              "label": "禁用",
-              "labelEn": "Disabled",
-              "intent": "当前不可选择。",
-              "intentEn": "Selection is currently unavailable.",
-              "constraint": "使用 Select 的 disabled，不用 opacity 或 pointer-events 假装禁用。",
-              "constraintEn": "Use Select disabled; do not fake disabled state with opacity or pointer-events."
             }
           ]
         },
@@ -3573,6 +3415,7 @@
           "zh": "尺寸",
           "en": "Size",
           "propName": "size",
+          "controlGroup": "appearance",
           "type": "segment",
           "options": [
             {
@@ -3608,8 +3451,9 @@
       "stories": [
         {
           "id": "plain-single",
-          "name": "普通单选",
-          "nameEn": "Plain single select",
+          "matchKeys": ["selection"],
+          "name": "单选",
+          "nameEn": "Single",
           "args": {
             "structure": "plain",
             "variant": "outline",
@@ -3618,7 +3462,9 @@
             "clearable": "false",
             "otherInput": "none",
             "valueState": "placeholder",
-            "state": "normal",
+            "semanticState": "normal",
+            "interactionState": "normal",
+            "feedbackState": "ready",
             "size": "sm"
           },
           "parameters": {
@@ -3631,8 +3477,9 @@
         },
         {
           "id": "multiple-filter",
-          "name": "多选筛选",
-          "nameEn": "Multiple filter",
+          "matchKeys": ["selection"],
+          "name": "多选",
+          "nameEn": "Multiple",
           "args": {
             "structure": "grouped",
             "variant": "borderless",
@@ -3641,38 +3488,17 @@
             "clearable": "true",
             "otherInput": "none",
             "valueState": "selected",
-            "state": "normal",
+            "semanticState": "normal",
+            "interactionState": "normal",
+            "feedbackState": "ready",
             "size": "sm"
           },
           "parameters": {
             "intent": "在工具栏中组合本地搜索和多选筛选。",
             "intentEn": "Combine local search and multiple selection in a toolbar.",
-            "constraint": "使用数组 value，并让清除动作与 trigger 同级。",
-            "constraintEn": "Use an array value and keep the clear action beside the trigger.",
+            "constraint": "使用数组 value；该预设展示无边框多选（variant=borderless），有边框多选用实时属性组合“多选 + 有边框”；清除动作与 trigger 同级。",
+            "constraintEn": "Use an array value; this preset demonstrates borderless multiple selection (variant=borderless), while bordered multiple selection is composed with the live properties; keep the clear action beside the trigger.",
             "source": "src/components/ui/select.tsx#multiple-filter"
-          }
-        },
-        {
-          "id": "other-required",
-          "name": "其他项必填补充",
-          "nameEn": "Required other-value input",
-          "args": {
-            "structure": "other",
-            "variant": "outline",
-            "selection": "single",
-            "search": "none",
-            "clearable": "false",
-            "otherInput": "required",
-            "valueState": "selected",
-            "state": "open",
-            "size": "sm"
-          },
-          "parameters": {
-            "intent": "预设选项不足时，允许选择“其他”并要求填写具体内容。",
-            "intentEn": "Allow an Other choice with required detail when presets are insufficient.",
-            "constraint": "使用受控 Select + Input 组合；必填校验归 Input 的 aria-invalid 和 FieldError，不发明 Select prop。",
-            "constraintEn": "Compose a controlled Select and Input; required validation belongs to Input aria-invalid and FieldError, not a new Select prop.",
-            "source": "src/pages/docs/components/select-playground.tsx#other-required"
           }
         }
       ]
@@ -3693,6 +3519,7 @@
         "fixed": "off",
         "status": "default"
       },
+      "storyPresentation": "presets",
       "guidanceKey": "composition",
       "props": [
         {
@@ -4003,36 +3830,6 @@
           "constraintEn": "Provide id, label, and onSelect.",
           "code": "<CommandPalette open={open} onOpenChange={setOpen} items={items} />",
           "source": "src/components/ui/command.tsx#search"
-        }
-      }
-    ],
-    "separator": [
-      {
-        "id": "horizontal",
-        "name": "水平分隔",
-        "nameEn": "Horizontal separator",
-        "args": {},
-        "parameters": {
-          "intent": "区隔上下内容。",
-          "intentEn": "Separate stacked content.",
-          "constraint": "保留上下间距。",
-          "constraintEn": "Keep vertical spacing.",
-          "code": "<Separator />",
-          "source": "src/components/ui/separator.tsx#horizontal"
-        }
-      },
-      {
-        "id": "vertical",
-        "name": "垂直分隔",
-        "nameEn": "Vertical separator",
-        "args": {},
-        "parameters": {
-          "intent": "分隔横向工具项。",
-          "intentEn": "Separate horizontal items.",
-          "constraint": "父容器需要明确高度。",
-          "constraintEn": "Give the parent a definite height.",
-          "code": "<Separator orientation=\"vertical\" />",
-          "source": "src/components/ui/separator.tsx#vertical"
         }
       }
     ],
@@ -4853,8 +4650,8 @@
         "parameters": {
           "intent": "标题区、详情页头部等强调路径的场景。",
           "intentEn": "Use for prominent paths in headers and detail pages.",
-          "constraint": "BreadcrumbList size=\\\"lg\\\"，字号 15。",
-          "constraintEn": "Use BreadcrumbList size=\\\"lg\\\" with the 15px text scale.",
+          "constraint": "BreadcrumbList size=\\\"lg\\\"，字号 16。",
+          "constraintEn": "Use BreadcrumbList size=\\\"lg\\\" with the 16px text scale.",
           "code": "<BreadcrumbList size=\\\"lg\\\">…</BreadcrumbList>",
           "source": "src/components/ui/breadcrumb.tsx#size-lg"
         }
@@ -4869,8 +4666,8 @@
         "parameters": {
           "intent": "常规页面头部路径，业务首选档。",
           "intentEn": "Default path size for normal page headers.",
-          "constraint": "默认档，字号 13；多数场景可省略 size。",
-          "constraintEn": "Use the default 13px scale; most usages can omit size.",
+          "constraint": "默认档，字号 14；多数场景可省略 size。",
+          "constraintEn": "Use the default 14px scale; most usages can omit size.",
           "code": "<BreadcrumbList size=\\\"default\\\">…</BreadcrumbList>",
           "source": "src/components/ui/breadcrumb.tsx#size-default"
         }

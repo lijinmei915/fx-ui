@@ -94,37 +94,6 @@ import { Button } from "@/components/ui/button"
 <Button variant="outline">Button</Button>
 ```
 
-## 按钮排列 {#arrangement}
-
-页面头部、列表工具栏和操作区常见的是**独立按钮排列**：一个主操作，其余为次级或图标操作，按钮之间保留正常间距。这类布局使用 fx 组合组件 `ActionRow`，不直接手写容器；需要视觉贴合成一个连续控件时，才使用 ButtonGroup。
-
-```tsx
-import { ActionRow } from "@/components/fx/page-actions"
-
-<ActionRow
-  primary={
-    <Button>
-      <PlusIcon data-icon="inline-start" />
-      新建
-    </Button>
-  }
-  secondary={[
-    <Button key="smart-form" variant="outline">智能表单</Button>,
-    <Button key="import" variant="outline">导入</Button>,
-  ]}
-  more={
-    <Button variant="outline" size="icon-sm" aria-label="更多操作">
-      <MoreHorizontalIcon />
-    </Button>
-  }
-/>
-```
-
-- 使用意图：页面级或列表级操作区，用一个主按钮建立行动焦点，其余按钮承接辅助动作。
-- 约束：ActionRow 只管理排列关系，不改变 Button 的 variant、size、tone 或交互态；只有动作需要贴合成连续控件时，才使用 ButtonGroup。
-- 一个操作区通常只保留一个 `variant="default"` 主按钮，避免多个主按钮抢焦点。
-- 数量：2 个用 `primary + secondary[1]`，3 个用 `primary + secondary[2]`，4 个时把低频动作放进 `more`。
-
 ## 调试台规则 {#playground-rules}
 
 Button 网页不再单独维护「组件总览」和「场景示例」决策表；交互调试台已经同时展示预览、使用意图、约束和推荐写法，避免同一套规则在页面里重复两遍。
@@ -206,7 +175,7 @@ Button 支持 `@base-ui/react/button` 的原生 button props，并额外支持�
 
 - 需要主操作时使用 `<Button>保存</Button>`，不要手写 `bg-[#FF8000]`。
 - 需要危险操作时使用 `variant="destructive"`。
-- 需要跳转但仍要 Button 外观时，优先使用 `render={<a href="..." />}`，不要在 Button 里套 `<a>`。
+- 需要跳转但仍要 Button 外观时，使用 `nativeButton={false}` 加 `render={<a href="..." />}`，不要在 Button 里套 `<a>`。
 - 图标按钮必须有 `aria-label`。
 - 图标放在按钮内时，图标使用 `data-icon`，不要直接写 `size-4`。
 - `className` 只用于布局、宽度或间距，不用于覆盖组件颜色。
@@ -301,5 +270,5 @@ Button 只有一个组件，靠 4 个**互相独立**的轴组合，任意搭配
 推荐：
 
 ```tsx
-<Button render={<a href="/docs" />}>打开文档</Button>
+<Button nativeButton={false} render={<a href="/docs" />}>打开文档</Button>
 ```

@@ -384,7 +384,8 @@
   --link-active: var(--fx-blue-10);
   --link-disabled: var(--fx-blue-04);
 
-  /* 边框三档（走中性轴）：弱 04 / 默认 05 / 强 08；input 07 为可交互元素边框 */
+  /* 边框层级：站点骨架 02 / faint 03 / 弱 04 / 默认 05 / 强 08；input 07 为可交互元素边框 */
+  --border-chrome: var(--fx-neutrals-02);
   --border-faint: var(--fx-neutrals-03);
   --border-container: color-mix(in oklch, var(--fx-neutrals-04), white 45%);
   --border-subtle: var(--fx-neutrals-04);
@@ -484,6 +485,7 @@
   --accent-foreground: var(--foreground);
 
   /* 边框/输入：白色 alpha，叠在任意暗面上自适应 */
+  --border-chrome: oklch(1 0 0 / 0.04);
   --border-faint: oklch(1 0 0 / 0.06);
   --border-container: oklch(1 0 0 / 0.07);
   --border-subtle: oklch(1 0 0 / 0.10);
@@ -542,6 +544,7 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-border-chrome: var(--border-chrome);
   --color-border-faint: var(--border-faint);
   --color-border-container: var(--border-container);
   --color-border-subtle: var(--border-subtle);
@@ -614,9 +617,9 @@
      Tailwind 的 text-* 始终映射到一层 fx 运行时变量，主题面板改的是 --fx-text-*，
      避免被编译成固定像素后无法实时响应。 */
   --fx-text-xs: 12px;  --fx-text-xs--line-height: 18px;
-  --fx-text-sm: 12px;  --fx-text-sm--line-height: 18px;
-  --fx-text-base: 13px;  --fx-text-base--line-height: 18px;
-  --fx-text-lg: 15px;  --fx-text-lg--line-height: 22px;
+  --fx-text-sm: 14px;  --fx-text-sm--line-height: 20px;
+  --fx-text-base: 16px;  --fx-text-base--line-height: 24px;
+  --fx-text-lg: 18px;  --fx-text-lg--line-height: 28px;
   --fx-text-xl: 18px;  --fx-text-xl--line-height: 28px;
   --fx-text-2xl: 24px; --fx-text-2xl--line-height: 32px;
   --fx-text-3xl: 30px; --fx-text-3xl--line-height: 36px;
@@ -805,21 +808,6 @@
   --fx-shadow-l2: 0px 4px 12px -4px var(--fx-shadow-color), 0px 8px 20px -2px var(--fx-shadow-color-soft), 0px 12px 28px 0px var(--fx-shadow-color-faint);
   --fx-shadow-l3: 0px 6px 16px -8px var(--fx-shadow-color), 0px 9px 28px 0px var(--fx-shadow-color-soft), 0px 12px 48px 16px var(--fx-shadow-color-faint);
   --fx-shadow-l1-up: 0px -2px 6px -2px var(--fx-shadow-color), 0px -4px 10px -4px var(--fx-shadow-color-soft);
-}
-
-/* 运行时主题预览层：由主题配置面板写入 data-theme-* 和 CSS 变量。
-   “边框粗细”只作用于容器表面；Button outline / Toggle / Pagination / 表单控件保持控件自身描边，避免轻量操作被加重或归零。 */
-[data-theme-border="none"] :where([data-slot="card"]):not(.fx-theme-panel-static *) {
-  border-width: 0 !important;
-}
-[data-theme-border="thin"] :where([data-slot="card"]):not(.fx-theme-panel-static *) {
-  border-width: 1px;
-}
-[data-theme-border="medium"] :where([data-slot="card"]):not(.fx-theme-panel-static *) {
-  border-width: 2px;
-}
-[data-theme-border="thick"] :where([data-slot="card"]):not(.fx-theme-panel-static *) {
-  border-width: 3px;
 }
 
 [data-theme-motion] :where([class*="transition"], [class*="duration-"]):not(.fx-theme-panel-static *) {

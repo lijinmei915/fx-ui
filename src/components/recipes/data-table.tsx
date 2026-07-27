@@ -73,8 +73,8 @@ function DataTable<T>({
   }
   return (
     <Table>
-      <TableHeader className="sticky top-0 z-10 bg-card">
-        <TableRow className="hover:bg-transparent">
+      <TableHeader sticky>
+        <TableRow>
           {selectable && (
             <TableHead className="w-10 pl-1">
               <Checkbox checked={allChecked} indeterminate={someChecked && !allChecked} onCheckedChange={toggleAll} aria-label="全选" />

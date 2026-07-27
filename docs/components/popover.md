@@ -49,7 +49,8 @@ import { Popover, PopoverContent, PopoverDescription, PopoverHeader, PopoverTitl
 - 语义 DOM：data-slot="popover"、data-slot="popover-trigger"、data-slot="popover-content"、data-slot="popover-header"、data-slot="popover-title"、data-slot="popover-description"
 - 原生/数据状态：data-open、data-closed
 - 变体：无独立 variant prop
-- 导出项：Popover、PopoverContent、PopoverDescription、PopoverHeader、PopoverTitle、PopoverTrigger
+- 尺寸：`PopoverContent size="sm | md | lg"`，默认 `md`
+- 导出项：Popover、PopoverContent、PopoverDescription、PopoverHeader、PopoverTitle、PopoverTrigger、popoverContentVariants
 
 ## 场景示例 {#examples}
 
@@ -61,7 +62,7 @@ import { Popover, PopoverContent, PopoverDescription, PopoverHeader, PopoverTitl
 ```tsx
 <Popover>
   <PopoverTrigger render={<Button variant="outline" />}>筛选</PopoverTrigger>
-  <PopoverContent>轻量内容</PopoverContent>
+  <PopoverContent size="md">轻量内容</PopoverContent>
 </Popover>
 ```
 
@@ -74,6 +75,14 @@ import { Popover, PopoverContent, PopoverDescription, PopoverHeader, PopoverTitl
 ## API {#api}
 
 该组件以源码导出的子组件和原生 props 为准。使用前读取 `src/components/ui/popover.tsx`，不要凭空发明 API。
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `Popover.open / defaultOpen / onOpenChange` | Base UI Root props | — | 受控或非受控管理开关状态 |
+| `PopoverTrigger.render` | `ReactElement` | — | 把 Button 等真实交互元素作为触发器 |
+| `PopoverContent.size` | `"sm" \| "md" \| "lg"` | `"md"` | 控制浮层宽度，不在调用处覆盖 `w-*` |
+| `PopoverContent.side / align / sideOffset` | Positioner props | `bottom / center / 4` | 控制弹出方向、对齐和偏移 |
+| `PopoverHeader / PopoverTitle / PopoverDescription` | 组件 | — | 信息型浮层的标题与说明结构 |
 
 
 ## Semantic DOM {#semantic-dom}
@@ -93,6 +102,7 @@ import { Popover, PopoverContent, PopoverDescription, PopoverHeader, PopoverTitl
 | --- | --- |
 | `data-open` | 浮层或折叠内容打开态 |
 | `data-closed` | 浮层或折叠内容关闭态 |
+| `data-size` | PopoverContent 的 sm / md / lg 受治理尺寸 |
 
 ## 主题变量 Design Token {#design-token}
 
@@ -113,6 +123,7 @@ import { Popover, PopoverContent, PopoverDescription, PopoverHeader, PopoverTitl
 - 浮层内容使用源码提供的 Content / Portal / Positioner，不要手写 z-index。
 - 需要标题的弹层必须提供 Title；视觉隐藏时使用 `sr-only`，不要省略可访问名称。
 - Popover 可放轻量表单或说明；复杂流程用 Dialog/Sheet。
+- 宽度只通过 `PopoverContent.size` 选择；不要在页面里写 `w-*` 覆盖。
 - 使用 Popover 前必须以 src/components/ui/popover.tsx 为真实 API。
 - 不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。
 - className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。

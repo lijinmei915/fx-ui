@@ -34,20 +34,25 @@ src/components/ui/radio-group.tsx
 
 ```tsx
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
+import { Field, FieldContent, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "@/components/ui/field"
 ```
 
 ```tsx
-<RadioGroup value={value} onValueChange={setValue}>
-  <div className="flex items-center gap-2">
-    <RadioGroupItem id="crm" value="crm" />
-    <Label htmlFor="crm">CRM</Label>
-  </div>
-  <div className="flex items-center gap-2">
-    <RadioGroupItem id="bi" value="bi" />
-    <Label htmlFor="bi">BI</Label>
-  </div>
-</RadioGroup>
+<FieldSet>
+  <FieldLegend>默认工作台</FieldLegend>
+  <RadioGroup value={value} onValueChange={setValue}>
+    <FieldGroup>
+      <Field orientation="horizontal">
+        <RadioGroupItem id="crm" value="crm" />
+        <FieldContent><FieldLabel htmlFor="crm">CRM</FieldLabel></FieldContent>
+      </Field>
+      <Field orientation="horizontal">
+        <RadioGroupItem id="bi" value="bi" />
+        <FieldContent><FieldLabel htmlFor="bi">BI</FieldLabel></FieldContent>
+      </Field>
+    </FieldGroup>
+  </RadioGroup>
+</FieldSet>
 ```
 
 ## 组件总览 {#overview}
@@ -114,7 +119,7 @@ import { Label } from "@/components/ui/label"
 ## AI Rules {#ai-rules}
 
 - 表单单选或表格单选列使用 `RadioGroup / RadioGroupItem`。
-- 每个 `RadioGroupItem` 必须提供唯一 `value`，并用 `Label` 或 `aria-label` 说明含义。
+- 每个 `RadioGroupItem` 必须提供唯一 `value`，并用 `FieldLabel` 或 `aria-label` 说明含义。
 - 禁用态使用源码支持的 `disabled`，不要靠 opacity 伪装。
 - 使用 RadioGroup 前必须以 src/components/ui/radio-group.tsx 为真实 API。
 - 不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。
@@ -125,4 +130,4 @@ import { Label } from "@/components/ui/label"
 | Do | Don't |
 | --- | --- |
 | 表格单选列使用 `RadioGroupItem`。 | 在业务代码里手写 `input[type=radio]` 并覆盖样式。 |
-| 使用 `Label` 或 `aria-label` 说明选项含义。 | 只展示无语义的圆点。 |
+| 使用 `FieldLabel` 或 `aria-label` 说明选项含义。 | 只展示无语义的圆点。 |

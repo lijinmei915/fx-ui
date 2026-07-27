@@ -22,7 +22,7 @@ status: complete
 
 展示用户、团队或实体身份，必须提供 fallback。
 
-源码来自 shadcn/ui，进入项目后保持 open-code。公司视觉通过 `theme/fx-theme.css` 的语义 token 注入，不通过重新封装、硬编码颜色或手写状态样式实现。
+源码来自 shadcn/ui，进入项目后保持 open-code。当前 Avatar 以 `shadcn-extended` 受治理：Base UI 原生图片加载与 fallback 语义保持不变，shadcn 缺少的尺寸、形状、状态、分组与拼接能力继续在同一基础组件中补齐，不拆成黑盒或业务层组件。公司视觉通过 `theme/fx-theme.css` 的语义 token 注入。
 
 AI 使用 Avatar 前必须先以 `src/components/ui/avatar.tsx` 为真实 API；本文档记录的是当前仓库源码能力，不是凭记忆推断的组件能力。
 
@@ -49,9 +49,9 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
 
 - 类型：display
 - 语义 DOM：data-slot="avatar"、data-slot="avatar-image"、data-slot="avatar-fallback"、data-slot="avatar-badge"、data-slot="avatar-group"、data-slot="avatar-group-count"、data-slot="avatar-composite"、data-slot="avatar-composite-cell"
-- 原生/数据状态：root
-- 能力：`size`（xs/sm/default/lg/xl = 20/24/32/40/48）、`shape`（circle/square）、`AvatarFallback colorful`（按内容 hash 取色板色）、`AvatarBadge status`（在线状态点：online 绿/away 黄/busy 红/offline 灰）、`AvatarGroup max`（超出自动折叠 +N）、`AvatarComposite max`（群聊拼接头像）
-- 导出项：Avatar、AvatarImage、AvatarFallback、AvatarGroup、AvatarGroupCount、AvatarComposite、AvatarBadge
+- 原生/数据状态：`imageLoadingStatus`（idle/loading/loaded/error）
+- 能力：`size`（xs/sm/default/lg/xl = 20/24/32/40/48）、`shape`（circle/square）、`AvatarFallback colorful`（按内容 hash 取色板色）、`AvatarBadge status`（online/away/busy/offline）、`AvatarGroup max`（超出自动折叠 +N）、`AvatarComposite max`（2/3/4 人拼接）
+- 导出项：Avatar、AvatarImage、AvatarFallback、AvatarGroup、AvatarGroupCount、AvatarComposite、AvatarBadge、avatarInitials
 
 ## 场景示例 {#examples}
 
@@ -80,20 +80,25 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
 | 属性 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |
 | `Avatar.size` | `"xs" \| "sm" \| "default" \| "lg" \| "xl"` | `"default"` | 尺寸档 20/24/32/40/48，子元素随档联动 |
-| `Avatar.shape` | `"circle" \| "square"` | `"circle"` | 形状；square 用 `rounded-lg` token 圆角。无 logo 时按实体类型用类型图标兜底：企业 Building / 项目 Folder / 群组 Users / 应用 Apps（彩底白图标反白）；也可用名称前缀简称（企业取前 1-2 字，区别于人名取末字）|
+| `Avatar.shape` | `"circle" \| "square"` | `"circle"` | 人物用 circle；企业、项目、群组、应用等实体可用 square，圆角随尺寸档联动 |
+| `Avatar.render` | `AvatarPrimitive.Root.Props["render"]` | — | 保留 Avatar 视觉并渲染为链接或按钮；组件内置 pointer 与 focus-visible 视觉 |
+| `AvatarImage.onLoadingStatusChange` | `(status) => void` | — | 监听 Base UI 图片加载状态：idle/loading/loaded/error |
+| `AvatarFallback.delay` | `number` | — | 图片加载时延迟显示 fallback，避免快速加载产生闪烁 |
+| `AvatarFallback.render` | `AvatarPrimitive.Fallback.Props["render"]` | — | 使用 Base UI 原生 render 能力替换 fallback 标签 |
 | `AvatarFallback.colorful` | `boolean` | `false` | 兜底文字按内容 hash 取色板色，实底（08 阶）+ 白字反白（参考 Gmail，08 比满饱和 09 柔半阶） |
 | `AvatarBadge.status` | `"online" \| "away" \| "busy" \| "offline"` | — | 右下角 presence 状态点：在线绿 / 离开黄 / 忙红 / 离线灰（参考 Slack/Teams）|
 | `AvatarGroup.max` | `number` | — | 最多展示几个，超出折叠为 `+N` |
+| `AvatarGroupCount.render` | `useRender.ComponentProps<"div">["render"]` | — | 需要 hover/focus 触发 Tooltip 时渲染为 button，获得正确键盘语义 |
 | `AvatarComposite.max` | `2 \| 3 \| 4` | `4` | 群聊拼接头像最多展示几个成员；2 中线左右、3 上中 + 下二、4 田字 |
-| `AvatarComposite.size` | `"xs" \| "sm" \| "default" \| "lg" \| "xl"` | `"default"` | 拼接头像整体尺寸档 20/24/32/40/48 |
+| `AvatarComposite.size` | `"default" \| "lg" \| "xl"` | `"default"` | 拼接头像整体尺寸档 32/40/48；20/24 无法可靠辨认多个成员，不开放 |
 | `avatarInitials(name)` | `(string) => string` | — | 工具函数，从姓名取缩写（见下方取值逻辑） |
 
 ### 可点击头像 {#clickable}
 
-头像作为入口（跳个人主页 / 用户卡片）时，用 `render` 把它渲染成 `<a>`/`<button>`，并加 `cursor-pointer` + `focus-visible` 焦点环；不要给 Avatar 绑裸 `onClick` 当按钮（缺少语义与键盘可达性）。
+头像作为入口（跳个人主页 / 用户卡片）时，用 `render` 把它渲染成 `<a>`/`<button>`；组件会提供 pointer 与 focus-visible 视觉。不要给 Avatar 绑裸 `onClick` 当按钮。
 
 ```tsx
-<Avatar render={<a href="/u/zhang" />} className="cursor-pointer transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring">
+<Avatar render={<a href="/u/zhang" />}>
   <AvatarImage src="/avatars/01.png" alt="张三" />
   <AvatarFallback>张</AvatarFallback>
 </Avatar>
@@ -110,7 +115,7 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
       <Avatar key={member.name}>…</Avatar>
     ))}
     <Tooltip>
-      <TooltipTrigger render={<AvatarGroupCount>+3</AvatarGroupCount>} />
+      <TooltipTrigger render={<AvatarGroupCount render={<button type="button" />} aria-label="剩余成员：王五、赵六、孙七">+3</AvatarGroupCount>} />
       <TooltipContent>王五、赵六、孙七</TooltipContent>
     </Tooltip>
   </AvatarGroup>
@@ -155,25 +160,27 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
 | `data-slot="avatar-badge"` | 源码中的语义定位，供样式选择器、测试和 AI 定位使用 |
 | `data-slot="avatar-group"` | 源码中的语义定位，供样式选择器、测试和 AI 定位使用 |
 | `data-slot="avatar-group-count"` | 源码中的语义定位，供样式选择器、测试和 AI 定位使用 |
+| `data-slot="avatar-composite"` | 群聊拼接头像容器，标记 default/lg/xl 尺寸与 2/3/4 成员数量 |
+| `data-slot="avatar-composite-cell"` | 拼接头像中的单个成员单元 |
 
 ## 状态标记 {#states}
 
 | 状态 | 说明 |
 | --- | --- |
-| `root` | 无额外交互状态，按根节点语义理解 |
+| `imageLoadingStatus` | Base UI 图片加载状态：idle / loading / loaded / error；由 AvatarImage 和 AvatarFallback 共同消费 |
 
 ## 主题变量 Design Token {#design-token}
 
 | Token | 用途 |
 | --- | --- |
-| `--primary` | 品牌强调色、选中态或主语义强调 |
-| `--primary-foreground` | 主色背景上的文字和图标 |
-| `--background` | 页面或控件的基础背景 |
-| `--foreground` | 主要文字和图标 |
-| `--muted` | 弱化背景、hover 背景或低强调区域 |
-| `--muted-foreground` | 辅助说明、placeholder 或弱化文字 |
-| `--border` | 边框、分隔线和描边结构 |
-| `--ring` | focus-visible 焦点环 |
+| `--fx-brand-08` / `--fx-green-08` / `--fx-amber-08` | 彩色 fallback 的品牌、绿色与琥珀色实底 |
+| `--fx-red-08` / `--fx-blue-08` / `--fx-purple-08` | 彩色 fallback 的红、蓝与紫色实底 |
+| `--fx-neutrals-01` | 彩色 fallback 上的反白文字与图标 |
+| `--primary` / `--primary-foreground` | 默认 Badge 强调色及其前景色 |
+| `--background` | 头像组描边和拼接单元间隔背景 |
+| `--muted` / `--muted-foreground` | 默认 fallback 与折叠计数的弱化表面和文字 |
+| `--success` / `--warning` / `--destructive` | online / away / busy presence 状态色 |
+| `--ring` | 链接、按钮和折叠计数的 focus-visible 焦点环 |
 
 完整 token 规则见 `docs/TOKENS.md`。
 
@@ -183,6 +190,8 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
 - 状态语义优先用现有 variant 或组合组件，不手写颜色。
 - `AvatarFallback` 必须存在，图片失败或用户无头像时仍有可读身份；兜底内容三选一：文字缩写（`avatarInitials`）、彩色文字（`colorful`）、或通用图标（匿名/无名用户，`colorful` + 面型 `UserFilledIcon`，实底白图标反白）。
 - 尺寸用 `size` prop（xs/sm/default/lg/xl），不手写 `size-*` 覆盖；人物用 `circle`、企业/项目/群组用 `shape="square"`。
+- `AvatarComposite` 是 shadcn Avatar 的基础能力补全，继续位于 `src/components/ui/avatar.tsx`；只使用 default/lg/xl，禁止在 20/24 尺寸里重拼多人宫格。
+- `AvatarGroupCount` 触发 Tooltip 时必须通过 `render={<button type="button" />}` 获得按钮语义，不使用可聚焦的 div。
 - 无头像图时用 `AvatarFallback colorful` 自动上色，不逐个写死背景色。
 - 使用 Avatar 前必须以 src/components/ui/avatar.tsx 为真实 API。
 - 不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。

@@ -8,7 +8,20 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
-const src = fs.readFileSync(path.join(root, "src/App.tsx"), "utf8")
+function collectPageModuleSources(directory) {
+  if (!fs.existsSync(directory)) return []
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const sourcePath = path.join(directory, entry.name)
+    if (entry.isDirectory()) return collectPageModuleSources(sourcePath)
+    return entry.name.endsWith("-page.tsx") ? [fs.readFileSync(sourcePath, "utf8")] : []
+  })
+}
+
+const pageModuleSources = [
+  ...collectPageModuleSources(path.join(root, "src/lib")),
+  ...collectPageModuleSources(path.join(root, "src/pages/docs")),
+]
+const src = [fs.readFileSync(path.join(root, "src/App.tsx"), "utf8"), ...pageModuleSources].join("\n")
 const lines = src.split("\n")
 const errors = []
 

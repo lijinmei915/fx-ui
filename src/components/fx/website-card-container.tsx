@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 const websiteCardContainerSlots = {
-  root: "rounded-xl border border-border bg-card shadow-l1",
+  root: "rounded-xl border border-border-container bg-card shadow-l1",
   stack: "grid gap-4",
   headerBlock: "h-14 rounded-lg bg-muted",
   innerPanel: "rounded-lg border border-border-subtle bg-background p-4",
@@ -14,12 +14,19 @@ const websiteCardContainerSlots = {
   label: "text-sm font-medium text-muted-foreground",
 } as const;
 
+const websiteCardContainerTones = {
+  default: "",
+  accent: "border-primary bg-accent",
+  muted: "bg-muted",
+} as const;
+
 type WebsiteCardContainerProps = Omit<
   ComponentProps<typeof Card>,
-  "elevated" | "className"
+  "variant" | "className"
 > & {
   className?: string;
   padding?: "default" | "none";
+  tone?: keyof typeof websiteCardContainerTones;
 };
 
 type WebsiteCardContainerPreviewProps = {
@@ -29,13 +36,16 @@ type WebsiteCardContainerPreviewProps = {
 function WebsiteCardContainer({
   className,
   padding = "default",
+  tone = "default",
   ...props
 }: WebsiteCardContainerProps) {
   return (
     <Card
       data-website-card-container
-      elevated
-      className={cn(padding === "none" && "py-0", className)}
+      variant="elevated"
+      // Website cards always use the site elevation token. Layout callers may
+      // adjust size and placement, but cannot accidentally remove the shared shadow.
+      className={cn(websiteCardContainerTones[tone], padding === "none" && "gap-0 py-0", className)}
       {...props}
     />
   );
@@ -81,6 +91,7 @@ export {
   WebsiteCardContainer,
   WebsiteCardContainerPreview,
   websiteCardContainerSlots,
+  websiteCardContainerTones,
   type WebsiteCardContainerProps,
   type WebsiteCardContainerPreviewProps,
 };

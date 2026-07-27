@@ -38,7 +38,7 @@ import { Separator } from "@/components/ui/separator"
 ## 组件总览 {#overview}
 
 - 类型：layout
-- 语义 DOM：data-slot="separator"
+- 语义 DOM：`data-slot="separator"`、`role="separator"`、`aria-orientation`
 - 原生/数据状态：root
 - 变体：无独立 variant prop
 - 导出项：Separator
@@ -62,14 +62,20 @@ import { Separator } from "@/components/ui/separator"
 
 ## API {#api}
 
-该组件以源码导出的子组件和原生 props 为准。使用前读取 `src/components/ui/separator.tsx`，不要凭空发明 API。
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | 分隔方向；垂直方向需要父容器提供明确高度。 |
 
+当前项目使用 Base UI Separator。它默认带有可访问分隔语义，不提供 Radix Separator 的 `decorative` prop。
 
 ## Semantic DOM {#semantic-dom}
 
 | 部位 | 说明 |
 | --- | --- |
 | `data-slot="separator"` | 源码中的语义定位，供样式选择器、测试和 AI 定位使用 |
+| `role="separator"` | Base UI 提供的可访问分隔语义 |
+| `aria-orientation` | 向辅助技术声明 `horizontal` 或 `vertical` |
+| `data-orientation` | 标记当前方向，并驱动横向或纵向尺寸样式 |
 
 ## 状态标记 {#states}
 
@@ -90,6 +96,7 @@ import { Separator } from "@/components/ui/separator"
 - 布局组件只负责分隔、间距或结构，不承载业务语义。
 - 不要用普通 div 或 hr 复刻已有布局组件。
 - 分隔内容用 Separator，不要手写 `<hr>` 或 `border-t` div。
+- 当前 Base UI Separator 不提供 `decorative` prop，不要沿用 Radix API。
 - 使用 Separator 前必须以 src/components/ui/separator.tsx 为真实 API。
 - 不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。
 - className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。

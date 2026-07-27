@@ -30,7 +30,8 @@ function ConfirmDangerDialog({
   cancelText = "取消",
 }: ConfirmDangerDialogProps) {
   return (
-    <AlertDialog>
+    <div data-slot="confirm-danger-dialog">
+      <AlertDialog>
       <AlertDialogTrigger render={trigger} />
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -45,7 +46,8 @@ function ConfirmDangerDialog({
           <AlertDialogAction variant="destructive">{confirmText}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
-    </AlertDialog>
+      </AlertDialog>
+    </div>
   )
 }
 

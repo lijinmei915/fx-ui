@@ -2,22 +2,16 @@
 
 import * as React from "react"
 import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar"
+import { mergeProps } from "@base-ui/react/merge-props"
+import { useRender } from "@base-ui/react/use-render"
 
 import { cn } from "@/lib/utils"
 
 // 文字头像彩色背景（反白）：按内容 hash 取一个色系，实底(08 阶) + 白字(neutrals-01)。
 // 参考 Gmail/Google 头像的中饱和实底白字；用 08 而非满饱和 09，柔半阶又保证白字对比。
 const AVATAR_TONES = ["brand", "green", "amber", "red", "blue", "purple"] as const
-const AvatarHasImageContext = React.createContext(false)
-
-function hasAvatarImage(children: React.ReactNode): boolean {
-  return React.Children.toArray(children).some((child) => {
-    if (!React.isValidElement(child)) return false
-    if (child.type === AvatarImage) return true
-    const props = child.props as { children?: React.ReactNode }
-    return hasAvatarImage(props.children)
-  })
-}
+type AvatarSize = "xs" | "sm" | "default" | "lg" | "xl"
+type AvatarCompositeSize = Extract<AvatarSize, "default" | "lg" | "xl">
 
 function avatarTone(seed: string) {
   let h = 0
@@ -44,30 +38,25 @@ function Avatar({
   className,
   size = "default",
   shape = "circle",
-  children,
   ...props
 }: AvatarPrimitive.Root.Props & {
-  size?: "xs" | "sm" | "default" | "lg" | "xl"
+  size?: AvatarSize
   shape?: "circle" | "square"
 }) {
-  const hasImage = hasAvatarImage(children)
   return (
-    <AvatarHasImageContext.Provider value={hasImage}>
-      <AvatarPrimitive.Root
-        data-slot="avatar"
-        data-size={size}
-        data-shape={shape}
-        className={cn(
-          "group/avatar relative flex size-8 shrink-0 select-none rounded-full",
-          "data-[size=xs]:size-5 data-[size=sm]:size-6 data-[size=lg]:size-10 data-[size=xl]:size-12",
-          "data-[shape=square]:rounded-md data-[shape=square]:data-[size=xs]:rounded data-[shape=square]:data-[size=sm]:rounded-[5px] data-[shape=square]:data-[size=lg]:rounded-lg data-[shape=square]:data-[size=xl]:rounded-[10px]",
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </AvatarPrimitive.Root>
-    </AvatarHasImageContext.Provider>
+    <AvatarPrimitive.Root
+      data-slot="avatar"
+      data-size={size}
+      data-shape={shape}
+      className={cn(
+        "group/avatar relative flex size-8 shrink-0 select-none rounded-full",
+        "data-[size=xs]:size-5 data-[size=sm]:size-6 data-[size=lg]:size-10 data-[size=xl]:size-12",
+        "data-[shape=square]:rounded-md data-[shape=square]:data-[size=xs]:rounded-xs data-[shape=square]:data-[size=sm]:rounded-sm data-[shape=square]:data-[size=lg]:rounded-lg data-[shape=square]:data-[size=xl]:rounded-lg",
+        "[&:is(a,button)]:cursor-pointer [&:is(a,button)]:outline-none [&:is(a,button)]:focus-visible:ring-2 [&:is(a,button)]:focus-visible:ring-ring",
+        className
+      )}
+      {...props}
+    />
   )
 }
 
@@ -91,34 +80,18 @@ function AvatarFallback({
   style,
   ...props
 }: AvatarPrimitive.Fallback.Props & { colorful?: boolean }) {
-  const hasImage = React.useContext(AvatarHasImageContext)
   const seed = typeof children === "string" ? children : ""
   const tone = avatarTone(seed)
   const toneStyle = colorful
     ? { backgroundColor: `var(--fx-${tone}-08)`, color: "var(--fx-neutrals-01)", ...style }
     : style
   const fallbackClassName = cn(
-    "flex size-full items-center justify-center rounded-[inherit] text-[11px] leading-none",
+    "flex size-full items-center justify-center rounded-[inherit] text-xs leading-none",
     colorful ? "" : "bg-muted text-muted-foreground",
-    "group-data-[size=xs]/avatar:text-[8px] group-data-[size=sm]/avatar:text-[10px] group-data-[size=lg]/avatar:text-[13px] group-data-[size=xl]/avatar:text-[15px]",
+    "group-data-[size=xs]/avatar:text-[8px] group-data-[size=sm]/avatar:text-[10px] group-data-[size=lg]/avatar:text-sm group-data-[size=xl]/avatar:text-base",
     "[&>svg]:size-[18px] group-data-[size=xs]/avatar:[&>svg]:size-3 group-data-[size=sm]/avatar:[&>svg]:size-3.5 group-data-[size=lg]/avatar:[&>svg]:size-5 group-data-[size=xl]/avatar:[&>svg]:size-[22px]",
     className
   )
-
-  if (!hasImage) {
-    const { render: _render, ...spanProps } = props
-    const spanStyle = typeof toneStyle === "function" ? undefined : toneStyle
-    return (
-      <span
-        data-slot="avatar-fallback"
-        style={spanStyle}
-        className={fallbackClassName}
-        {...spanProps}
-      >
-        {children}
-      </span>
-    )
-  }
 
   return (
     <AvatarPrimitive.Fallback
@@ -188,23 +161,26 @@ function AvatarGroup({
   )
 }
 
-const AvatarGroupCount = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentProps<"div">
->(({ className, ...props }, ref) => {
-  return (
-    <div
-      ref={ref}
-      data-slot="avatar-group-count"
-      className={cn(
-        "relative flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground ring-2 ring-background group-has-data-[size=xs]/avatar-group:size-5 group-has-data-[size=xs]/avatar-group:text-[10px] group-has-data-[size=sm]/avatar-group:size-6 group-has-data-[size=sm]/avatar-group:text-xs group-has-data-[size=lg]/avatar-group:size-10 group-has-data-[size=lg]/avatar-group:text-sm group-has-data-[size=xl]/avatar-group:size-12 group-has-data-[size=xl]/avatar-group:text-base [&>svg]:size-4 group-has-data-[size=lg]/avatar-group:[&>svg]:size-5 group-has-data-[size=sm]/avatar-group:[&>svg]:size-3",
-        className
-      )}
-      {...props}
-    />
-  )
-})
-AvatarGroupCount.displayName = "AvatarGroupCount"
+function AvatarGroupCount({
+  className,
+  render,
+  ...props
+}: useRender.ComponentProps<"div">) {
+  return useRender({
+    defaultTagName: "div",
+    props: mergeProps<"div">(
+      {
+        className: cn(
+          "relative flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground ring-2 ring-background select-none [&:is(button)]:cursor-pointer [&:is(button)]:outline-none [&:is(button)]:focus-visible:ring-2 [&:is(button)]:focus-visible:ring-ring group-has-data-[size=xs]/avatar-group:size-5 group-has-data-[size=xs]/avatar-group:text-[10px] group-has-data-[size=sm]/avatar-group:size-6 group-has-data-[size=sm]/avatar-group:text-xs group-has-data-[size=lg]/avatar-group:size-10 group-has-data-[size=lg]/avatar-group:text-sm group-has-data-[size=xl]/avatar-group:size-12 group-has-data-[size=xl]/avatar-group:text-base [&>svg]:size-4 group-has-data-[size=lg]/avatar-group:[&>svg]:size-5 group-has-data-[size=sm]/avatar-group:[&>svg]:size-3",
+          className
+        ),
+      },
+      props
+    ),
+    render,
+    state: { slot: "avatar-group-count" },
+  })
+}
 
 function AvatarComposite({
   className,
@@ -214,7 +190,7 @@ function AvatarComposite({
   ...props
 }: React.ComponentProps<"div"> & {
   max?: 2 | 3 | 4
-  size?: "xs" | "sm" | "default" | "lg" | "xl"
+  size?: AvatarCompositeSize
 }) {
   const items = React.Children.toArray(children).slice(0, max)
   const count = items.length
@@ -264,7 +240,9 @@ function AvatarComposite({
       data-count={count}
       className={cn(
         "relative shrink-0 overflow-hidden rounded-md bg-muted",
-        "size-8 data-[size=xs]:size-5 data-[size=sm]:size-6 data-[size=lg]:size-10 data-[size=xl]:size-12",
+        "size-8 data-[size=lg]:size-10 data-[size=xl]:size-12",
+        "[&_[data-slot=avatar-fallback]]:whitespace-nowrap [&_[data-slot=avatar-fallback]]:text-[8px] data-[size=lg]:[&_[data-slot=avatar-fallback]]:text-[10px] data-[size=xl]:[&_[data-slot=avatar-fallback]]:text-xs",
+        "[&_[data-slot=avatar-fallback]>svg]:size-2 data-[size=lg]:[&_[data-slot=avatar-fallback]>svg]:size-2.5 data-[size=xl]:[&_[data-slot=avatar-fallback]>svg]:size-3",
         className
       )}
       {...props}
@@ -276,9 +254,10 @@ function AvatarComposite({
           style={cellStyle(index)}
           className="absolute min-h-0 min-w-0 overflow-hidden bg-background"
         >
-          {React.isValidElement<{ className?: string; shape?: "square" }>(child)
+          {React.isValidElement<{ className?: string; shape?: "square"; size?: AvatarSize }>(child)
             ? React.cloneElement(child, {
                 shape: "square",
+                size,
                 className: cn(
                   "size-full",
                   child.props.className,

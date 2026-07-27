@@ -280,8 +280,8 @@
       },
       {
         "title": "阴影",
-        "value": "固定 shadow-l1 / 跟随 Shadow Level",
-        "logic": "所有 WebsiteCardContainer 统一使用 shadow-l1；全局主题的 Shadow Level 设为 none 时阴影同时关闭，low、medium、high 则统一调整强度。"
+        "value": "固定 shadow-l1 / 跟随全局 Shadow Level",
+        "logic": "所有 WebsiteCardContainer 统一选择 shadow-l1；文档站 ThemePanel 的全局 Shadow Level 统一覆盖 --fx-shadow-color* 与 shadow-l1/l2/l3 值，页面调用处不得单独切换或覆盖 shadow。"
       }
     ],
     "visualBaseline": [

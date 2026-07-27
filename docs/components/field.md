@@ -155,6 +155,10 @@ Field 由多个 open-code 子组件组成。
 | `data-slot="field-legend"` | 原生 legend |
 | `data-slot="field-separator"` | 字段组分隔线 |
 
+## 键盘与焦点 {#keyboard-focus}
+
+Field 是表单结构容器，不额外创建 tab stop，也不接管键盘事件。Tab 顺序、焦点环和 Enter/Space 行为由 Field 内的 Input、Select、Checkbox、Switch 等真实控件提供；`FieldLabel htmlFor` 保留原生标签激活与聚焦关联。
+
 ## 主题变量 Design Token {#design-token}
 
 | Token | 用途 |

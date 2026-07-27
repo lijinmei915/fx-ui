@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/component-quality",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-27",
   "truthSources": [
     "docs/data/components.manifest.json",
     "docs/data/component-playgrounds.manifest.json",
@@ -159,8 +159,8 @@
       "visual": {
         "spec": "tests/visual.spec.ts",
         "manifest": "docs/data/component-playgrounds.manifest.json#autoVisuals.alert-dialog",
-        "referenced": true,
-        "status": "covered"
+        "referenced": false,
+        "status": "needs-review"
       },
       "playground": {
         "manifest": "autoStories.alert-dialog",
@@ -170,8 +170,10 @@
         "path": "docs/components/alert-dialog.md",
         "status": "complete"
       },
-      "status": "covered",
-      "gaps": []
+      "status": "needs-review",
+      "gaps": [
+        "visual"
+      ]
     },
     {
       "name": "Avatar",
@@ -185,20 +187,24 @@
       "behavior": {
         "spec": "tests/component-behavior.spec.ts",
         "test": "behavior: Avatar keyboard focus",
-        "status": "not-applicable"
+        "status": "covered"
       },
       "keyboard": {
         "status": "evidenced",
         "evidence": "playwright-behavior-test"
       },
       "focus": {
-        "status": "evidenced",
+        "status": "not-applicable",
         "evidence": "playwright-behavior-test",
         "states": []
       },
-      "interaction": "non-interactive",
+      "interaction": "interactive",
       "states": [
-        "root"
+        "imageLoadingStatus",
+        "idle",
+        "loading",
+        "loaded",
+        "error"
       ],
       "capabilityCoverage": {
         "structure": {
@@ -216,41 +222,64 @@
           ]
         },
         "sizes": {
-          "status": "needs-review",
-          "evidence": "size-capability-not-audited",
-          "values": []
+          "status": "covered",
+          "evidence": "components-manifest-sizes",
+          "values": [
+            "xs",
+            "sm",
+            "default",
+            "lg",
+            "xl"
+          ]
         },
         "visualVariants": {
-          "status": "needs-review",
-          "evidence": "variant-capability-not-audited",
-          "values": []
+          "status": "covered",
+          "evidence": "components-manifest-variants",
+          "values": [
+            "circle",
+            "square",
+            "neutral",
+            "colorful"
+          ]
         },
         "interactionStates": {
-          "status": "not-applicable",
-          "evidence": "non-interactive-component",
+          "status": "needs-review",
+          "evidence": "interaction-state-capability-not-audited",
           "values": [
-            "root"
+            "imageLoadingStatus",
+            "idle",
+            "loading",
+            "loaded",
+            "error"
           ]
         },
         "businessCompositions": {
-          "status": "needs-review",
-          "evidence": "fewer-than-three-composition-stories",
-          "values": []
+          "status": "covered",
+          "evidence": "playground-stories",
+          "values": [
+            "single",
+            "group",
+            "composite"
+          ]
         },
         "accessibility": {
-          "status": "not-applicable",
-          "evidence": "non-interactive-component"
+          "status": "needs-review",
+          "evidence": "accessibility-capability-not-fully-evidenced"
         },
         "realScenarios": {
-          "status": "needs-review",
-          "evidence": "real-scenario-evidence-incomplete",
-          "values": []
+          "status": "covered",
+          "evidence": "playground-story-intent-and-source",
+          "values": [
+            "single",
+            "group",
+            "composite"
+          ]
         }
       },
       "stateCoverage": {
         "disabled": {
-          "status": "not-applicable",
-          "evidence": "non-interactive-component",
+          "status": "not-declared",
+          "evidence": "no-state-evidence-declared",
           "sources": {
             "source": false,
             "doc": false,
@@ -259,47 +288,63 @@
           }
         },
         "loading": {
-          "status": "not-applicable",
-          "evidence": "non-interactive-component",
+          "status": "evidenced",
+          "evidence": "source+doc",
           "sources": {
-            "source": false,
-            "doc": false,
+            "source": true,
+            "doc": true,
             "story": false,
             "behavior": false
           }
         },
         "error": {
-          "status": "not-applicable",
-          "evidence": "non-interactive-component",
+          "status": "evidenced",
+          "evidence": "source+doc",
           "sources": {
-            "source": false,
-            "doc": false,
+            "source": true,
+            "doc": true,
             "story": false,
             "behavior": false
           }
         }
       },
       "tokens": [
+        "--fx-brand-08",
+        "--fx-green-08",
+        "--fx-amber-08",
+        "--fx-red-08",
+        "--fx-blue-08",
+        "--fx-purple-08",
+        "--fx-neutrals-01",
         "--primary",
         "--primary-foreground",
         "--background",
-        "--foreground",
         "--muted",
         "--muted-foreground",
-        "--border",
+        "--success",
+        "--warning",
+        "--destructive",
         "--ring"
       ],
       "tokenUsage": {
         "status": "declared",
         "evidence": "components-manifest-tokenRefs",
         "refs": [
+          "--fx-brand-08",
+          "--fx-green-08",
+          "--fx-amber-08",
+          "--fx-red-08",
+          "--fx-blue-08",
+          "--fx-purple-08",
+          "--fx-neutrals-01",
           "--primary",
           "--primary-foreground",
           "--background",
-          "--foreground",
           "--muted",
           "--muted-foreground",
-          "--border",
+          "--success",
+          "--warning",
+          "--destructive",
           "--ring"
         ]
       },
@@ -319,10 +364,9 @@
       },
       "status": "needs-review",
       "gaps": [
-        "capability:sizes",
-        "capability:visualVariants",
-        "capability:businessCompositions",
-        "capability:realScenarios"
+        "state:disabled",
+        "capability:interactionStates",
+        "capability:accessibility"
       ]
     },
     {
@@ -340,12 +384,12 @@
         "status": "not-applicable"
       },
       "keyboard": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test"
+        "status": "not-applicable",
+        "evidence": "no-keyboard-surface"
       },
       "focus": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test",
+        "status": "not-applicable",
+        "evidence": "no-focus-surface",
         "states": []
       },
       "interaction": "non-interactive",
@@ -484,7 +528,7 @@
         "status": "covered"
       },
       "keyboard": {
-        "status": "evidenced",
+        "status": "not-applicable",
         "evidence": "playwright-behavior-test"
       },
       "focus": {
@@ -519,6 +563,7 @@
           "values": [
             "default",
             "secondary",
+            "soft",
             "destructive",
             "success",
             "warning",
@@ -547,8 +592,8 @@
           ]
         },
         "accessibility": {
-          "status": "covered",
-          "evidence": "keyboard-focus-behavior-evidence"
+          "status": "needs-review",
+          "evidence": "accessibility-capability-not-fully-evidenced"
         },
         "realScenarios": {
           "status": "covered",
@@ -631,7 +676,8 @@
       },
       "status": "needs-review",
       "gaps": [
-        "capability:sizes"
+        "capability:sizes",
+        "capability:accessibility"
       ]
     },
     {
@@ -649,11 +695,11 @@
         "status": "covered"
       },
       "keyboard": {
-        "status": "evidenced",
+        "status": "not-applicable",
         "evidence": "playwright-behavior-test"
       },
       "focus": {
-        "status": "evidenced",
+        "status": "not-applicable",
         "evidence": "playwright-behavior-test",
         "states": []
       },
@@ -706,8 +752,8 @@
           ]
         },
         "accessibility": {
-          "status": "covered",
-          "evidence": "keyboard-focus-behavior-evidence"
+          "status": "needs-review",
+          "evidence": "accessibility-capability-not-fully-evidenced"
         },
         "realScenarios": {
           "status": "covered",
@@ -771,8 +817,8 @@
       "visual": {
         "spec": "tests/visual.spec.ts",
         "manifest": "docs/data/component-playgrounds.manifest.json#autoVisuals.breadcrumb",
-        "referenced": true,
-        "status": "covered"
+        "referenced": false,
+        "status": "needs-review"
       },
       "playground": {
         "manifest": "autoStories.breadcrumb",
@@ -784,8 +830,10 @@
       },
       "status": "needs-review",
       "gaps": [
+        "visual",
         "capability:sizes",
-        "capability:visualVariants"
+        "capability:visualVariants",
+        "capability:accessibility"
       ]
     },
     {
@@ -860,37 +908,29 @@
           ]
         },
         "businessCompositions": {
-          "status": "covered",
-          "evidence": "playground-stories",
-          "values": [
-            "basic",
-            "underlined",
-            "disabled"
-          ]
+          "status": "not-applicable",
+          "evidence": "component-business-compositions-not-applicable",
+          "values": []
         },
         "accessibility": {
           "status": "covered",
           "evidence": "keyboard-focus-behavior-evidence"
         },
         "realScenarios": {
-          "status": "needs-review",
-          "evidence": "real-scenario-evidence-incomplete",
-          "values": [
-            "basic",
-            "underlined",
-            "disabled"
-          ]
+          "status": "covered",
+          "evidence": "components-manifest-real-scenarios-complete",
+          "values": []
         }
       },
       "stateCoverage": {
         "disabled": {
           "status": "evidenced",
-          "evidence": "source+doc+story",
+          "evidence": "source+doc+behavior",
           "sources": {
             "source": true,
             "doc": true,
-            "story": true,
-            "behavior": false
+            "story": false,
+            "behavior": true
           }
         },
         "loading": {
@@ -966,10 +1006,8 @@
         "path": "docs/components/link.md",
         "status": "complete"
       },
-      "status": "needs-review",
-      "gaps": [
-        "capability:realScenarios"
-      ]
+      "status": "covered",
+      "gaps": []
     },
     {
       "name": "ButtonGroup",
@@ -986,7 +1024,7 @@
         "status": "covered"
       },
       "keyboard": {
-        "status": "evidenced",
+        "status": "not-applicable",
         "evidence": "playwright-behavior-test"
       },
       "focus": {
@@ -1029,25 +1067,23 @@
           ]
         },
         "businessCompositions": {
-          "status": "covered",
-          "evidence": "playground-stories",
+          "status": "needs-review",
+          "evidence": "fewer-than-three-composition-stories",
           "values": [
             "actions",
-            "split",
-            "toolbar-icons"
+            "split"
           ]
         },
         "accessibility": {
-          "status": "covered",
-          "evidence": "keyboard-focus-behavior-evidence"
+          "status": "needs-review",
+          "evidence": "accessibility-capability-not-fully-evidenced"
         },
         "realScenarios": {
           "status": "needs-review",
           "evidence": "real-scenario-evidence-incomplete",
           "values": [
             "actions",
-            "split",
-            "toolbar-icons"
+            "split"
           ]
         }
       },
@@ -1115,6 +1151,8 @@
       "gaps": [
         "capability:sizes",
         "capability:visualVariants",
+        "capability:businessCompositions",
+        "capability:accessibility",
         "capability:realScenarios"
       ]
     },
@@ -1206,8 +1244,7 @@
           "status": "needs-review",
           "evidence": "fewer-than-three-composition-stories",
           "values": [
-            "single",
-            "action-row"
+            "single"
           ]
         },
         "accessibility": {
@@ -1218,8 +1255,7 @@
           "status": "needs-review",
           "evidence": "real-scenario-evidence-incomplete",
           "values": [
-            "single",
-            "action-row"
+            "single"
           ]
         }
       },
@@ -1326,7 +1362,7 @@
         "evidence": "playwright-behavior-test"
       },
       "focus": {
-        "status": "evidenced",
+        "status": "not-applicable",
         "evidence": "playwright-behavior-test",
         "states": []
       },
@@ -1370,8 +1406,8 @@
           ]
         },
         "accessibility": {
-          "status": "covered",
-          "evidence": "keyboard-focus-behavior-evidence"
+          "status": "needs-review",
+          "evidence": "accessibility-capability-not-fully-evidenced"
         },
         "realScenarios": {
           "status": "needs-review",
@@ -1447,8 +1483,8 @@
       "visual": {
         "spec": "tests/visual.spec.ts",
         "manifest": "docs/data/component-playgrounds.manifest.json#pageVisuals.calendar",
-        "referenced": true,
-        "status": "covered"
+        "referenced": false,
+        "status": "needs-review"
       },
       "playground": {
         "manifest": "pageVisuals.calendar",
@@ -1460,9 +1496,11 @@
       },
       "status": "needs-review",
       "gaps": [
+        "visual",
         "capability:sizes",
         "capability:visualVariants",
         "capability:businessCompositions",
+        "capability:accessibility",
         "capability:realScenarios"
       ]
     },
@@ -1668,11 +1706,11 @@
         "status": "covered"
       },
       "keyboard": {
-        "status": "evidenced",
+        "status": "not-applicable",
         "evidence": "playwright-behavior-test"
       },
       "focus": {
-        "status": "evidenced",
+        "status": "not-applicable",
         "evidence": "playwright-behavior-test",
         "states": []
       },
@@ -1711,8 +1749,8 @@
           "values": []
         },
         "accessibility": {
-          "status": "covered",
-          "evidence": "keyboard-focus-behavior-evidence"
+          "status": "needs-review",
+          "evidence": "accessibility-capability-not-fully-evidenced"
         },
         "realScenarios": {
           "status": "needs-review",
@@ -1775,8 +1813,8 @@
       "visual": {
         "spec": "tests/visual.spec.ts",
         "manifest": "docs/data/component-playgrounds.manifest.json#pageVisuals.chart",
-        "referenced": true,
-        "status": "covered"
+        "referenced": false,
+        "status": "needs-review"
       },
       "playground": {
         "manifest": "pageVisuals.chart",
@@ -1788,9 +1826,11 @@
       },
       "status": "needs-review",
       "gaps": [
+        "visual",
         "capability:sizes",
         "capability:visualVariants",
         "capability:businessCompositions",
+        "capability:accessibility",
         "capability:realScenarios"
       ]
     },
@@ -1937,8 +1977,8 @@
       "visual": {
         "spec": "tests/visual.spec.ts",
         "manifest": "docs/data/component-playgrounds.manifest.json#autoVisuals.checkbox",
-        "referenced": true,
-        "status": "covered"
+        "referenced": false,
+        "status": "needs-review"
       },
       "playground": {
         "manifest": "autoStories.checkbox",
@@ -1948,8 +1988,10 @@
         "path": "docs/components/checkbox.md",
         "status": "complete"
       },
-      "status": "covered",
-      "gaps": []
+      "status": "needs-review",
+      "gaps": [
+        "visual"
+      ]
     },
     {
       "name": "RadioGroup",
@@ -2120,12 +2162,12 @@
         "status": "not-applicable"
       },
       "keyboard": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test"
+        "status": "not-applicable",
+        "evidence": "no-keyboard-surface"
       },
       "focus": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test",
+        "status": "not-applicable",
+        "evidence": "no-focus-surface",
         "states": []
       },
       "interaction": "non-interactive",
@@ -2395,8 +2437,8 @@
       "visual": {
         "spec": "tests/visual.spec.ts",
         "manifest": "docs/data/component-playgrounds.manifest.json#pageVisuals.dialog",
-        "referenced": true,
-        "status": "covered"
+        "referenced": false,
+        "status": "needs-review"
       },
       "playground": {
         "manifest": "pageVisuals.dialog",
@@ -2406,8 +2448,10 @@
         "path": "docs/components/dialog.md",
         "status": "complete"
       },
-      "status": "covered",
-      "gaps": []
+      "status": "needs-review",
+      "gaps": [
+        "visual"
+      ]
     },
     {
       "name": "DropdownMenu",
@@ -2428,7 +2472,7 @@
         "evidence": "playwright-behavior-test"
       },
       "focus": {
-        "status": "evidenced",
+        "status": "not-applicable",
         "evidence": "playwright-behavior-test",
         "states": []
       },
@@ -2501,8 +2545,8 @@
           ]
         },
         "accessibility": {
-          "status": "covered",
-          "evidence": "keyboard-focus-behavior-evidence"
+          "status": "needs-review",
+          "evidence": "accessibility-capability-not-fully-evidenced"
         },
         "realScenarios": {
           "status": "covered",
@@ -2595,8 +2639,10 @@
         "path": "docs/components/dropdown-menu.md",
         "status": "complete"
       },
-      "status": "covered",
-      "gaps": []
+      "status": "needs-review",
+      "gaps": [
+        "capability:accessibility"
+      ]
     },
     {
       "name": "Field",
@@ -2613,11 +2659,11 @@
         "status": "covered"
       },
       "keyboard": {
-        "status": "evidenced",
+        "status": "not-applicable",
         "evidence": "playwright-behavior-test"
       },
       "focus": {
-        "status": "evidenced",
+        "status": "not-applicable",
         "evidence": "playwright-behavior-test",
         "states": []
       },
@@ -2674,8 +2720,8 @@
           ]
         },
         "accessibility": {
-          "status": "covered",
-          "evidence": "keyboard-focus-behavior-evidence"
+          "status": "needs-review",
+          "evidence": "accessibility-capability-not-fully-evidenced"
         },
         "realScenarios": {
           "status": "covered",
@@ -2754,8 +2800,10 @@
         "path": "docs/components/field.md",
         "status": "complete"
       },
-      "status": "covered",
-      "gaps": []
+      "status": "needs-review",
+      "gaps": [
+        "capability:accessibility"
+      ]
     },
     {
       "name": "Input",
@@ -2937,11 +2985,11 @@
         "status": "covered"
       },
       "keyboard": {
-        "status": "evidenced",
+        "status": "not-applicable",
         "evidence": "playwright-behavior-test"
       },
       "focus": {
-        "status": "evidenced",
+        "status": "not-applicable",
         "evidence": "playwright-behavior-test",
         "states": []
       },
@@ -2984,8 +3032,8 @@
           ]
         },
         "accessibility": {
-          "status": "covered",
-          "evidence": "keyboard-focus-behavior-evidence"
+          "status": "needs-review",
+          "evidence": "accessibility-capability-not-fully-evidenced"
         },
         "realScenarios": {
           "status": "covered",
@@ -3055,8 +3103,10 @@
         "path": "docs/components/label.md",
         "status": "complete"
       },
-      "status": "covered",
-      "gaps": []
+      "status": "needs-review",
+      "gaps": [
+        "capability:accessibility"
+      ]
     },
     {
       "name": "Popover",
@@ -3264,8 +3314,11 @@
             "data-slot=\"select-content\"",
             "data-slot=\"select-label\"",
             "data-slot=\"select-multi-value\"",
+            "data-overflow",
+            "data-slot=\"select-multi-value-remove\"",
             "data-slot=\"select-overflow-count\"",
             "data-slot=\"select-item\"",
+            "data-slot=\"select-item-indicator\"",
             "data-slot=\"select-clear\"",
             "data-slot=\"select-separator\"",
             "data-slot=\"select-scroll-up-button\"",
@@ -3305,12 +3358,11 @@
           ]
         },
         "businessCompositions": {
-          "status": "covered",
-          "evidence": "playground-stories",
+          "status": "needs-review",
+          "evidence": "fewer-than-three-composition-stories",
           "values": [
             "plain-single",
-            "multiple-filter",
-            "other-required"
+            "multiple-filter"
           ]
         },
         "accessibility": {
@@ -3318,12 +3370,11 @@
           "evidence": "keyboard-focus-behavior-evidence"
         },
         "realScenarios": {
-          "status": "covered",
-          "evidence": "playground-story-intent-and-source",
+          "status": "needs-review",
+          "evidence": "real-scenario-evidence-incomplete",
           "values": [
             "plain-single",
-            "multiple-filter",
-            "other-required"
+            "multiple-filter"
           ]
         }
       },
@@ -3361,12 +3412,11 @@
       },
       "tokens": [
         "--foreground",
+        "--background",
         "--popover",
         "--popover-foreground",
         "--muted",
         "--muted-foreground",
-        "--accent",
-        "--accent-foreground",
         "--destructive",
         "--border",
         "--input",
@@ -3378,12 +3428,11 @@
         "evidence": "components-manifest-tokenRefs",
         "refs": [
           "--foreground",
+          "--background",
           "--popover",
           "--popover-foreground",
           "--muted",
           "--muted-foreground",
-          "--accent",
-          "--accent-foreground",
           "--destructive",
           "--border",
           "--input",
@@ -3394,8 +3443,8 @@
       "visual": {
         "spec": "tests/visual.spec.ts",
         "manifest": "docs/data/component-playgrounds.manifest.json#pageVisuals.select",
-        "referenced": true,
-        "status": "covered"
+        "referenced": false,
+        "status": "needs-review"
       },
       "playground": {
         "manifest": "components.select",
@@ -3405,8 +3454,12 @@
         "path": "docs/components/select.md",
         "status": "complete"
       },
-      "status": "covered",
-      "gaps": []
+      "status": "needs-review",
+      "gaps": [
+        "visual",
+        "capability:businessCompositions",
+        "capability:realScenarios"
+      ]
     },
     {
       "name": "Separator",
@@ -3423,12 +3476,12 @@
         "status": "not-applicable"
       },
       "keyboard": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test"
+        "status": "not-applicable",
+        "evidence": "no-keyboard-surface"
       },
       "focus": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test",
+        "status": "not-applicable",
+        "evidence": "no-focus-surface",
         "states": []
       },
       "interaction": "non-interactive",
@@ -3440,17 +3493,20 @@
           "status": "covered",
           "evidence": "components-manifest-semanticDom",
           "values": [
-            "data-slot=\"separator\""
+            "data-slot=\"separator\"",
+            "role=\"separator\"",
+            "aria-orientation",
+            "data-orientation"
           ]
         },
         "sizes": {
-          "status": "needs-review",
-          "evidence": "size-capability-not-audited",
+          "status": "not-applicable",
+          "evidence": "component-size-not-applicable",
           "values": []
         },
         "visualVariants": {
-          "status": "needs-review",
-          "evidence": "variant-capability-not-audited",
+          "status": "not-applicable",
+          "evidence": "component-visual-variant-not-applicable",
           "values": []
         },
         "interactionStates": {
@@ -3461,24 +3517,18 @@
           ]
         },
         "businessCompositions": {
-          "status": "needs-review",
-          "evidence": "fewer-than-three-composition-stories",
-          "values": [
-            "horizontal",
-            "vertical"
-          ]
+          "status": "not-applicable",
+          "evidence": "component-business-compositions-not-applicable",
+          "values": []
         },
         "accessibility": {
           "status": "not-applicable",
           "evidence": "non-interactive-component"
         },
         "realScenarios": {
-          "status": "needs-review",
-          "evidence": "real-scenario-evidence-incomplete",
-          "values": [
-            "horizontal",
-            "vertical"
-          ]
+          "status": "covered",
+          "evidence": "components-manifest-real-scenarios-complete",
+          "values": []
         }
       },
       "stateCoverage": {
@@ -3525,25 +3575,20 @@
       },
       "visual": {
         "spec": "tests/visual.spec.ts",
-        "manifest": "docs/data/component-playgrounds.manifest.json#autoVisuals.separator",
+        "manifest": "docs/data/component-playgrounds.manifest.json#components.separator",
         "referenced": true,
         "status": "covered"
       },
       "playground": {
-        "manifest": "autoStories.separator",
-        "status": "stories"
+        "manifest": "components.separator",
+        "status": "interactive"
       },
       "docs": {
         "path": "docs/components/separator.md",
         "status": "complete"
       },
-      "status": "needs-review",
-      "gaps": [
-        "capability:sizes",
-        "capability:visualVariants",
-        "capability:businessCompositions",
-        "capability:realScenarios"
-      ]
+      "status": "covered",
+      "gaps": []
     },
     {
       "name": "Pagination",
@@ -3670,8 +3715,8 @@
       "visual": {
         "spec": "tests/visual.spec.ts",
         "manifest": "docs/data/component-playgrounds.manifest.json#autoVisuals.pagination",
-        "referenced": true,
-        "status": "covered"
+        "referenced": false,
+        "status": "needs-review"
       },
       "playground": {
         "manifest": "autoStories.pagination",
@@ -3683,6 +3728,7 @@
       },
       "status": "needs-review",
       "gaps": [
+        "visual",
         "capability:sizes",
         "capability:visualVariants",
         "capability:interactionStates"
@@ -3977,8 +4023,8 @@
       "visual": {
         "spec": "tests/visual.spec.ts",
         "manifest": "docs/data/component-playgrounds.manifest.json#autoVisuals.sheet",
-        "referenced": true,
-        "status": "covered"
+        "referenced": false,
+        "status": "needs-review"
       },
       "playground": {
         "manifest": "autoStories.sheet",
@@ -3988,8 +4034,10 @@
         "path": "docs/components/sheet.md",
         "status": "complete"
       },
-      "status": "covered",
-      "gaps": []
+      "status": "needs-review",
+      "gaps": [
+        "visual"
+      ]
     },
     {
       "name": "Sidebar",
@@ -4203,12 +4251,12 @@
         "status": "not-applicable"
       },
       "keyboard": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test"
+        "status": "not-applicable",
+        "evidence": "no-keyboard-surface"
       },
       "focus": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test",
+        "status": "not-applicable",
+        "evidence": "no-focus-surface",
         "states": []
       },
       "interaction": "non-interactive",
@@ -4309,8 +4357,8 @@
       "visual": {
         "spec": "tests/visual.spec.ts",
         "manifest": "docs/data/component-playgrounds.manifest.json#autoVisuals.skeleton",
-        "referenced": true,
-        "status": "covered"
+        "referenced": false,
+        "status": "needs-review"
       },
       "playground": {
         "manifest": "autoStories.skeleton",
@@ -4320,8 +4368,10 @@
         "path": "docs/components/skeleton.md",
         "status": "complete"
       },
-      "status": "covered",
-      "gaps": []
+      "status": "needs-review",
+      "gaps": [
+        "visual"
+      ]
     },
     {
       "name": "Spinner",
@@ -4338,12 +4388,12 @@
         "status": "not-applicable"
       },
       "keyboard": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test"
+        "status": "not-applicable",
+        "evidence": "no-keyboard-surface"
       },
       "focus": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test",
+        "status": "not-applicable",
+        "evidence": "no-focus-surface",
         "states": []
       },
       "interaction": "non-interactive",
@@ -4475,12 +4525,12 @@
         "status": "not-applicable"
       },
       "keyboard": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test"
+        "status": "not-applicable",
+        "evidence": "no-keyboard-surface"
       },
       "focus": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test",
+        "status": "not-applicable",
+        "evidence": "no-focus-surface",
         "states": []
       },
       "interaction": "non-interactive",
@@ -4756,8 +4806,8 @@
       "visual": {
         "spec": "tests/visual.spec.ts",
         "manifest": "docs/data/component-playgrounds.manifest.json#autoVisuals.switch",
-        "referenced": true,
-        "status": "covered"
+        "referenced": false,
+        "status": "needs-review"
       },
       "playground": {
         "manifest": "autoStories.switch",
@@ -4767,8 +4817,10 @@
         "path": "docs/components/switch.md",
         "status": "complete"
       },
-      "status": "covered",
-      "gaps": []
+      "status": "needs-review",
+      "gaps": [
+        "visual"
+      ]
     },
     {
       "name": "Table",
@@ -5264,8 +5316,8 @@
       "visual": {
         "spec": "tests/visual.spec.ts",
         "manifest": "docs/data/component-playgrounds.manifest.json#autoVisuals.textarea",
-        "referenced": true,
-        "status": "covered"
+        "referenced": false,
+        "status": "needs-review"
       },
       "playground": {
         "manifest": "autoStories.textarea",
@@ -5275,8 +5327,10 @@
         "path": "docs/components/textarea.md",
         "status": "complete"
       },
-      "status": "covered",
-      "gaps": []
+      "status": "needs-review",
+      "gaps": [
+        "visual"
+      ]
     },
     {
       "name": "ToggleGroup",
@@ -5565,8 +5619,8 @@
       "visual": {
         "spec": "tests/visual.spec.ts",
         "manifest": "docs/data/component-playgrounds.manifest.json#pageVisuals.toggle",
-        "referenced": true,
-        "status": "covered"
+        "referenced": false,
+        "status": "needs-review"
       },
       "playground": {
         "manifest": "pageVisuals.toggle",
@@ -5578,6 +5632,7 @@
       },
       "status": "needs-review",
       "gaps": [
+        "visual",
         "capability:businessCompositions",
         "capability:realScenarios"
       ]
@@ -5709,8 +5764,8 @@
       "visual": {
         "spec": "tests/visual.spec.ts",
         "manifest": "docs/data/component-playgrounds.manifest.json#autoVisuals.tooltip",
-        "referenced": true,
-        "status": "covered"
+        "referenced": false,
+        "status": "needs-review"
       },
       "playground": {
         "manifest": "autoStories.tooltip",
@@ -5720,8 +5775,10 @@
         "path": "docs/components/tooltip.md",
         "status": "complete"
       },
-      "status": "covered",
-      "gaps": []
+      "status": "needs-review",
+      "gaps": [
+        "visual"
+      ]
     },
     {
       "name": "AgentSurface",
@@ -5860,8 +5917,8 @@
       "visual": {
         "spec": "tests/visual.spec.ts",
         "manifest": "docs/data/component-playgrounds.manifest.json#pageVisuals.agent-surface",
-        "referenced": true,
-        "status": "covered"
+        "referenced": false,
+        "status": "needs-review"
       },
       "playground": {
         "manifest": "pageVisuals.agent-surface",
@@ -5873,6 +5930,7 @@
       },
       "status": "needs-review",
       "gaps": [
+        "visual",
         "capability:sizes",
         "capability:visualVariants",
         "capability:interactionStates",
@@ -5895,12 +5953,12 @@
         "status": "not-applicable"
       },
       "keyboard": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test"
+        "status": "not-applicable",
+        "evidence": "no-keyboard-surface"
       },
       "focus": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test",
+        "status": "not-applicable",
+        "evidence": "no-focus-surface",
         "states": []
       },
       "interaction": "non-interactive",
@@ -6028,12 +6086,12 @@
         "status": "not-applicable"
       },
       "keyboard": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test"
+        "status": "not-applicable",
+        "evidence": "no-keyboard-surface"
       },
       "focus": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test",
+        "status": "not-applicable",
+        "evidence": "no-focus-surface",
         "states": []
       },
       "interaction": "non-interactive",
@@ -6167,12 +6225,12 @@
         "status": "not-applicable"
       },
       "keyboard": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test"
+        "status": "not-applicable",
+        "evidence": "no-keyboard-surface"
       },
       "focus": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test",
+        "status": "not-applicable",
+        "evidence": "no-focus-surface",
         "states": []
       },
       "interaction": "non-interactive",
@@ -6583,12 +6641,12 @@
         "status": "not-applicable"
       },
       "keyboard": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test"
+        "status": "not-applicable",
+        "evidence": "no-keyboard-surface"
       },
       "focus": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test",
+        "status": "not-applicable",
+        "evidence": "no-focus-surface",
         "states": []
       },
       "interaction": "non-interactive",
@@ -6877,12 +6935,12 @@
         "status": "not-applicable"
       },
       "keyboard": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test"
+        "status": "not-applicable",
+        "evidence": "no-keyboard-surface"
       },
       "focus": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test",
+        "status": "not-applicable",
+        "evidence": "no-focus-surface",
         "states": []
       },
       "interaction": "non-interactive",
@@ -7014,12 +7072,12 @@
         "status": "not-applicable"
       },
       "keyboard": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test"
+        "status": "not-applicable",
+        "evidence": "no-keyboard-surface"
       },
       "focus": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test",
+        "status": "not-applicable",
+        "evidence": "no-focus-surface",
         "states": []
       },
       "interaction": "non-interactive",
@@ -7147,12 +7205,12 @@
         "status": "not-applicable"
       },
       "keyboard": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test"
+        "status": "not-applicable",
+        "evidence": "no-keyboard-surface"
       },
       "focus": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test",
+        "status": "not-applicable",
+        "evidence": "no-focus-surface",
         "states": []
       },
       "interaction": "non-interactive",
@@ -7282,7 +7340,7 @@
         "evidence": "playwright-behavior-test"
       },
       "focus": {
-        "status": "evidenced",
+        "status": "not-applicable",
         "evidence": "playwright-behavior-test",
         "states": []
       },
@@ -7342,8 +7400,8 @@
           ]
         },
         "accessibility": {
-          "status": "covered",
-          "evidence": "keyboard-focus-behavior-evidence"
+          "status": "needs-review",
+          "evidence": "accessibility-capability-not-fully-evidenced"
         },
         "realScenarios": {
           "status": "covered",
@@ -7415,8 +7473,8 @@
       "visual": {
         "spec": "tests/visual.spec.ts",
         "manifest": "docs/data/component-playgrounds.manifest.json#pageVisuals.nav-menu",
-        "referenced": true,
-        "status": "covered"
+        "referenced": false,
+        "status": "needs-review"
       },
       "playground": {
         "manifest": "pageVisuals.nav-menu",
@@ -7426,8 +7484,11 @@
         "path": "docs/components/fx-nav-menu.md",
         "status": "complete"
       },
-      "status": "covered",
-      "gaps": []
+      "status": "needs-review",
+      "gaps": [
+        "visual",
+        "capability:accessibility"
+      ]
     },
     {
       "name": "TopBar",
@@ -7938,12 +7999,12 @@
         "status": "not-applicable"
       },
       "keyboard": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test"
+        "status": "not-applicable",
+        "evidence": "no-keyboard-surface"
       },
       "focus": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test",
+        "status": "not-applicable",
+        "evidence": "no-focus-surface",
         "states": []
       },
       "interaction": "non-interactive",
@@ -8089,12 +8150,12 @@
         "status": "not-applicable"
       },
       "keyboard": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test"
+        "status": "not-applicable",
+        "evidence": "no-keyboard-surface"
       },
       "focus": {
-        "status": "evidenced",
-        "evidence": "playwright-behavior-test",
+        "status": "not-applicable",
+        "evidence": "no-focus-surface",
         "states": []
       },
       "interaction": "non-interactive",

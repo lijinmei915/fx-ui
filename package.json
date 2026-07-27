@@ -16,12 +16,17 @@
     "check:agent-examples": "node scripts/check-agent-examples.mjs",
     "check:agent-recipes": "node scripts/check-agent-recipes.mjs",
     "check:page-build-kit": "node scripts/check-page-build-kit.mjs",
+    "check:layered-assets": "node scripts/check-layered-assets.mjs",
     "check:doc-site": "node scripts/check-doc-site-contract.mjs",
     "check:components": "node scripts/check-components-manifest.mjs",
+    "check:component-quality": "node scripts/build-component-quality.mjs --check",
+    "check:playground": "node scripts/check-playground-contract.mjs",
     "check:icons": "node scripts/check-icons.mjs",
+    "build:icons": "node scripts/build-icons-manifest.mjs",
     "check:agent-ui": "node scripts/check-agent-ui-contract.mjs",
     "check:all": "bash scripts/check-all.sh",
     "build:tokens": "node scripts/build-design-tokens.mjs && node scripts/build-agent-token-contract.mjs",
+    "build:quality": "node scripts/build-component-quality.mjs",
     "tokens": "node scripts/token-agent.mjs",
     "build:agent": "node scripts/build-agent-components.mjs && node scripts/build-agent-context.mjs",
     "fx": "node scripts/fx-agent.mjs",
@@ -30,7 +35,9 @@
     "preview": "vite preview",
     "test:visual": "playwright test",
     "test:visual:update": "playwright test --update-snapshots",
-    "gen:list-page": "node scripts/gen-list-page.mjs"
+    "gen:list-page": "node scripts/gen-list-page.mjs",
+    "gen:edit-form-page": "node scripts/gen-edit-form-page.mjs",
+    "gen:detail-page": "node scripts/gen-detail-page.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",

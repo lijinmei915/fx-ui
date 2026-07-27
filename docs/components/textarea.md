@@ -35,13 +35,16 @@ src/components/ui/textarea.tsx
 
 ```tsx
 import { Textarea } from "@/components/ui/textarea"
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 ```
 
 ```tsx
-<Field>
-  <FieldLabel htmlFor="remark">备注</FieldLabel>
-  <Textarea id="remark" placeholder="请输入备注" />
-</Field>
+<FieldGroup>
+  <Field>
+    <FieldLabel htmlFor="remark">备注</FieldLabel>
+    <Textarea id="remark" placeholder="请输入备注" />
+  </Field>
+</FieldGroup>
 ```
 
 ## 组件总览 {#overview}
@@ -60,10 +63,12 @@ import { Textarea } from "@/components/ui/textarea"
 - 规则：优先使用源码已有子组件、props、状态和 token，不复制内部 JSX 到业务页面里重写。
 
 ```tsx
-<Field>
-  <FieldLabel htmlFor="remark">备注</FieldLabel>
-  <Textarea id="remark" placeholder="请输入备注" />
-</Field>
+<FieldGroup>
+  <Field>
+    <FieldLabel htmlFor="remark">备注</FieldLabel>
+    <Textarea id="remark" placeholder="请输入备注" />
+  </Field>
+</FieldGroup>
 ```
 
 ### 不适合场景
@@ -129,8 +134,10 @@ import { Textarea } from "@/components/ui/textarea"
 推荐：
 
 ```tsx
-<Field>
-  <FieldLabel htmlFor="remark">备注</FieldLabel>
-  <Textarea id="remark" placeholder="请输入备注" />
-</Field>
+<FieldGroup>
+  <Field>
+    <FieldLabel htmlFor="remark">备注</FieldLabel>
+    <Textarea id="remark" placeholder="请输入备注" />
+  </Field>
+</FieldGroup>
 ```

@@ -84,6 +84,10 @@ import { Label } from "@/components/ui/label"
 | --- | --- |
 | `disabled` | 禁用态，阻止交互并降低视觉权重 |
 
+## 键盘与焦点 {#keyboard-focus}
+
+Label 是原生 `label`，本身不进入 tab 顺序。它通过 `htmlFor` 将点击和辅助技术名称关联到真实控件；控件的键盘操作与焦点环由对应 Input、Select、Checkbox 或其他表单组件负责。
+
 ## 主题变量 Design Token {#design-token}
 
 | Token | 用途 |

@@ -42,7 +42,7 @@ import { Spinner } from "@/components/ui/spinner"
 ## 组件总览 {#overview}
 
 - 类型：feedback
-- 语义 DOM：root
+- 语义 DOM：`role="status"`、`aria-label="Loading"`
 - 原生/数据状态：root
 - 变体：无独立 variant prop
 - 导出项：Spinner
@@ -76,7 +76,8 @@ import { Spinner } from "@/components/ui/spinner"
 
 | 部位 | 说明 |
 | --- | --- |
-| `root` | 组件根节点；源码没有更细 data-slot 时按根节点理解 |
+| `role="status"` | 向辅助技术声明当前节点是加载状态 |
+| `aria-label="Loading"` | 为图标加载指示器提供可访问名称 |
 
 ## 状态标记 {#states}
 

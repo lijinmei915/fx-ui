@@ -29,7 +29,7 @@ status: complete
 
 用于页面内跳转或外部导航的文字链接，支持两种类型（基础 / 下划线）、六种语义色与三档尺寸。
 
-源码来自项目内 open-code 实现，公司视觉通过 `theme/fx-theme.css` 的语义 token 注入，不通过重新封装、硬编码颜色或手写状态样式实现。
+shadcn registry 没有通用文本 Link；本组件因此作为 `native-semantic` 白名单例外，以原生 `<a>` 保留浏览器导航语义。它仍是项目内可审查的 open-code，公司视觉只通过 `theme/fx-theme.css` 的语义 token 注入。
 
 AI 使用 Link 前必须先以 `src/components/ui/link.tsx` 为真实 API；本文档记录的是当前仓库源码能力，不是凭记忆推断的组件能力。
 
@@ -86,7 +86,7 @@ import { Link } from "@/components/ui/link"
 | `tone` | `"standard" \| "default" \| "primary" \| "success" \| "warning" \| "danger"` | `"standard"` | 语义色档，对应链接的语义场景 |
 | `underline` | `"hover" \| "always"` | `"hover"` | 类型：基础链接（悬停出下划线）或下划线链接（常驻下划线） |
 | `size` | `"sm" \| "default" \| "lg"` | `"default"` | 尺寸档（12 / 14 / 16px），图标随字号缩放 |
-| `disabled` | `boolean` | `false` | 禁用态，去 href 阻止跳转、cursor-not-allowed 禁止光标、降透明度 |
+| `disabled` | `boolean` | `false` | 禁用态，去 href、移出 Tab 序，并阻止调用方 `onClick` 执行 |
 
 图标用 `data-icon="inline-start"` / `inline-end"` 标位，前后置均可（如复制、外链图标），尺寸随字号缩放。
 
@@ -103,7 +103,7 @@ import { Link } from "@/components/ui/link"
 | `hover` | 悬停时变色，并按 underline 设置显示下划线 |
 | `active` | 按下时使用更深的语义色 |
 | `focus-visible` | 键盘聚焦时显示焦点环 |
-| `disabled` | 禁用态，去 href 阻止跳转、悬停显示禁止光标、降透明度 |
+| `disabled` | 禁用态，去 href、移出 Tab 序、阻止点击处理器执行，并显示禁止光标与降透明度 |
 
 ## 主题变量 Design Token {#design-token}
 
@@ -124,6 +124,7 @@ import { Link } from "@/components/ui/link"
 - 导航类文字跳转用 Link，不要手写 `<a>` 再贴一堆颜色类。
 - 强操作（提交、删除按钮）不用 Link 伪装，改用 Button。
 - 使用 Link 前必须以 src/components/ui/link.tsx 为真实 API。
+- Link 是 manifest 明确登记的原生语义例外，不代表可以手写其他基础组件。
 - 不要手写颜色、下划线和状态样式；优先使用源码已有 prop、状态和 token。
 - className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。
 

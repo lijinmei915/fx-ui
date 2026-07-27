@@ -9,15 +9,9 @@
     {
       "id": "top-nav",
       "label": "顶部导航",
-      "source": "src/App.tsx",
+      "source": "src/lib/site-navigation.ts",
       "requiredSourceIncludes": [
-        "const topNav: SiteNavItem[] = [",
-        "fx-ui",
-        "v1.2.0",
-        "#components",
-        "governanceQuickLinks",
-        "uiText[lang].search",
-        "setLang(lang === \"zh\" ? \"en\" : \"zh\")"
+        "export const topNav: SiteNavItem[] = ["
       ],
       "requiredCapabilities": [
         "brand",
@@ -30,25 +24,18 @@
     {
       "id": "left-nav",
       "label": "左侧导航",
-      "source": "src/App.tsx",
+      "source": "src/lib/site-navigation.ts",
       "requiredSourceIncludes": [
-        "const docsNav = [",
-        "基础",
+        "export const docsNav: SiteNavSection[] = [",
+        "设计令牌",
         "开始使用",
-        "主题",
         "foundationNavSections",
         "pageNavSections",
         "布局系统",
         "页面",
         "维护",
-        "现状",
         "网站规范",
-        "function GettingStartedPage",
-        "installCommandsCode",
-        "documentation-ssot",
-        "checks-commands",
-        "sidebarSections.map",
-        "bg-primary/10 px-(--fx-control-px-md) text-[length:var(--fx-menu-text)]"
+        "export const governanceNavSections = docsNav.filter"
       ],
       "requiredCapabilities": [
         "group-title",
@@ -59,12 +46,12 @@
     {
       "id": "main-content",
       "label": "中间内容区",
-      "source": "src/App.tsx",
+      "source": "src/App.tsx + src/lib/page-registry-config.tsx",
       "requiredSourceIncludes": [
         "<main ref={mainRef}",
         "viewMode === \"markdown\"",
-        "leadText",
-        "PageStepActions",
+        "<MarkdownPage",
+        "DocumentPageStepActions",
         "ComponentsIndexPage",
         "governance-map",
         "TokensPage",
@@ -80,10 +67,9 @@
     {
       "id": "right-toc",
       "label": "右侧目录",
-      "source": "src/App.tsx",
+      "source": "src/lib/right-rail.tsx",
       "requiredSourceIncludes": [
         "function RightRail",
-        "uiText[lang].toc",
         "anchors.map"
       ],
       "requiredCapabilities": [
@@ -99,11 +85,20 @@
       "source": "src/App.tsx",
       "intent": "长说明不提前折行，主内容区保持可读宽度，文章内部不横向溢出。",
       "requiredSourceIncludes": [
-        "leadText: \"max-w-5xl text-lg text-muted-foreground\"",
-        "componentLead: \"max-w-5xl break-words text-lg\"",
-        "2xl:grid-cols-[minmax(0,1080px)_220px]",
-        "className=\"w-full min-w-0 break-words\"",
-        "style={{ maxWidth: \"calc(100vw - 3rem)\" }}"
+      "2xl:grid-cols-[minmax(0,1080px)_220px]",
+      "className=\"w-full min-w-0 break-words\"",
+      "style={{ maxWidth: \"calc(100vw - 3rem)\" }}"
+      ]
+    },
+    {
+      "id": "docs-spacing-token-map",
+      "label": "文档间距 token 映射",
+      "source": "src/lib/docs-spacing.ts",
+      "intent": "文档页的节奏类名集中在独立映射中，页面模块只消费，不在 App 内重复声明。",
+      "requiredSourceIncludes": [
+        "pageStack: \"flex flex-col gap-10\"",
+        "sectionStack: \"flex flex-col gap-5\"",
+        "componentLead: \"max-w-5xl break-words text-lg\""
       ]
     },
     {
@@ -123,14 +118,14 @@
     {
       "id": "website-standards-page-actions-demo",
       "label": "网站规范页动作示例复用真实组件",
-      "source": "src/App.tsx",
+      "source": "src/pages/docs/governance/website-standards-page.tsx",
       "intent": "网站规范页里的 PageActions 示例必须直接复用真实 PageActions 组件，避免手拼壳子后和真实能力漂移。",
       "requiredSourceIncludes": [
         "<SectionLead title=\"PageActions\" description=\"页面级动作只放在标题右侧：复制、更多、上一页、下一页。\" />",
-        "<PageActions",
+        "<DocumentPageActions",
         "doc={websiteStandardsDoc}",
         "demo",
-        "navActions={<PageStepActions demo",
+        "navActions={<DocumentPageStepActions demo",
         "viewMode=\"page\"",
         "onViewModeChange={() => {}}"
       ]
@@ -138,7 +133,7 @@
     {
       "id": "right-rail-toc",
       "label": "右侧目录",
-      "source": "src/App.tsx",
+      "source": "src/lib/right-rail.tsx",
       "intent": "右侧目录只展示当前页面锚点；active 只用文字权重和颜色表达，不再放突兀圆点。",
       "requiredSourceIncludes": [
         "function RightRail",
@@ -152,32 +147,28 @@
     {
       "id": "components-index",
       "label": "组件索引页",
-      "source": "src/App.tsx",
+      "source": "src/pages/docs/components/components-index-page.tsx + src/lib/site-navigation.ts + src/lib/page-registry-config.tsx",
       "intent": "点击顶部组件入口时先进入组件单，组件单分基础组件、业务组合和 Agent 界面，来源于同一份导航结构。",
       "requiredSourceIncludes": [
-        "const componentsIndexAnchors = [",
+        "export const componentsIndexAnchors = [",
         "href: \"#components-ui\"",
         "href: \"#components-fx\"",
         "href: \"#components-agent-ui\"",
-        "function ComponentsIndexPage",
-        "const componentIndexSections = docsNav.filter",
+        "<ComponentsIndexPage actions={a} lang={l} sections={componentIndexSections} />",
+        "export const componentIndexSections = docsNav.filter",
         "[\"通用\", \"数据录入\", \"数据展示\", \"导航\", \"反馈\", \"业务组合组件\", \"Agent 界面\"].includes(section.title)"
       ]
     },
     {
       "id": "governance-cockpit",
       "label": "工程驾驶舱",
-      "source": "src/App.tsx",
+      "source": "src/pages/docs/governance/graph-cockpit.tsx",
       "intent": "现状页优先回答开发者下一步该看哪里、跑什么检查；数字只作为证据，不能只有计数器。",
       "requiredSourceIncludes": [
-        "function GraphCockpit",
-        "function StepBadge",
-        "function CountBadge",
-        "function StatusBadge",
-        "const actionCards = governanceStatus.actionFlows.map",
-        "const taskRoutes = governanceStatus.taskRoutes.map",
-        "governanceStatus.maintenanceModel.layers.map",
-        "governanceStatus.maintenanceModel.rules.map",
+        "export function GraphCockpit",
+        "from \"@/pages/docs/governance/governance-graph-primitives\"",
+        "const actionCards: LocalizedActionFlow[] = actionFlows.map",
+        "const taskRoutes: LocalizedTaskRoute[] = routes.map",
         "linkLabel: lang === \"en\" ? flow.linkLabelEn : flow.linkLabel",
         "任务路由",
         "证据详情",
@@ -191,22 +182,20 @@
         "min-h-24 w-full items-start",
         "whitespace-normal break-words",
         "<StepBadge index={index} />",
-        "<CountBadge>{projectGraphCockpit.relationGroupCount}</CountBadge>",
-        "<StatusBadge status={asset.status} />",
+        "<CountBadge>{metrics.relationGroupCount}</CountBadge>",
         "这个面板真正用来干嘛",
         "project-graph.v0.3",
-        "projectGraphCockpit.relationCount",
-        "projectGraphCockpit.groups.map",
-        "<GraphCockpit lang={lang} />"
+        "metrics.relationCount",
+        "metrics.groups.map"
       ]
     },
     {
       "id": "section-description-fullwidth",
-      "label": "章节说明独占整行",
-      "source": "src/App.tsx",
-      "intent": "标题行右侧有控件（如浅色/深色切换）时，说明文字独占整行放在标题行下方，不塞进左侧子容器被控件挤窄、换行后右侧留白。",
+      "label": "章节标题说明成组",
+      "source": "src/pages/docs/tokens/color-palette-with-tabs.tsx",
+      "intent": "标题行右侧有控件（如浅色/深色切换）时，标题与说明保持成组，避免控件高度把说明推离标题，造成额外垂直留白。",
       "requiredSourceIncludes": [
-        "标题行 + 深浅 tab（说明独占整行，见下方）"
+        "Keep the description with its heading so the mode control cannot stretch the text rhythm."
       ]
     }
   ],
@@ -214,7 +203,7 @@
     {
       "id": "website-standards-page-lead",
       "label": "网站规范页 PageLead 示例",
-      "source": "src/App.tsx",
+      "source": "src/pages/docs/governance/website-standards-page.tsx",
       "intent": "PageLead 示例必须直接复用真实 FxPageLead、PageActions 和 WebsiteRulePopover 组件，并展示固定的 crumb、title、lead、actions 结构。",
       "scopeStart": "<SectionLead title=\"PageLead\" description=\"用于文档页顶部，固定承载面包屑、标题、说明和右侧页面动作。\" />",
       "scopeEnd": "onViewModeChange={() => {}}",
@@ -227,10 +216,10 @@
         "crumb=\"维护 / 网站规范\"",
         "title=\"页面标题区\"",
         "lead=\"这里展示页面标题区的真实组件形态。标题下只保留一句说明，不再额外加线。\"",
-        "<PageActions",
+        "<DocumentPageActions",
         "doc={websiteStandardsDoc}",
         "demo",
-        "navActions={<PageStepActions demo previous={null} next={null} lang={lang} />}",
+        "navActions={<DocumentPageStepActions demo previous={null} next={null} lang={lang} />}",
         "viewMode=\"page\"",
         "onViewModeChange={() => {}}"
       ],
@@ -242,7 +231,7 @@
     {
       "id": "website-standards-section-lead",
       "label": "网站规范页 SectionLead 示例",
-      "source": "src/App.tsx",
+      "source": "src/pages/docs/governance/website-standards-page.tsx",
       "intent": "SectionLead 示例卡片只放真实 SectionLead 组件；规则说明和取值逻辑必须放进查看规则，并从 website-standards manifest 与真实插槽读取。",
       "scopeStart": "<SectionLead title=\"SectionLead\" description=\"用于内容区小标题；标题和说明固定 4px 间距。\" />",
       "scopeEnd": "<SectionLead title=\"小标题\" description=\"说明固定 14px，内容紧跟说明下方。\" />",
@@ -262,27 +251,27 @@
     {
       "id": "website-standards-page-actions",
       "label": "网站规范页 PageActions 示例",
-      "source": "src/App.tsx",
+      "source": "src/pages/docs/governance/website-standards-page.tsx",
       "intent": "规范页示例必须直接复用真实组件能力，不允许在示例区块里手拼一个缩水版。",
       "scopeStart": "<SectionLead title=\"PageActions\" description=\"页面级动作只放在标题右侧：复制、更多、上一页、下一页。\" />",
       "scopeEnd": "</section>",
       "requiredSourceIncludes": [
-        "<PageActions",
+        "<DocumentPageActions",
         "doc={websiteStandardsDoc}",
         "demo",
-        "navActions={<PageStepActions demo",
+        "navActions={<DocumentPageStepActions demo",
         "viewMode=\"page\"",
         "onViewModeChange={() => {}}"
       ],
       "forbiddenSourceIncludes": [
-        "<PageActionsShell",
+        "<DocumentPageActionsShell",
         "<CopyPageAction"
       ]
     },
     {
       "id": "website-standards-spacing-rhythm",
       "label": "网站规范页间距节奏示意",
-      "source": "src/App.tsx",
+      "source": "src/pages/docs/governance/website-standards-page.tsx",
       "intent": "间距节奏示意必须复用 WebsiteSpacingRhythm 组件；取值逻辑放进查看规则，并从 website-standards manifest 与真实插槽读取。",
       "scopeStart": "<section id=\"website-standards-spacing\"",
       "scopeEnd": "<section id=\"website-standards-boundaries\"",
@@ -304,7 +293,7 @@
     {
       "id": "website-standards-card-container",
       "label": "网站规范页卡片容器",
-      "source": "src/App.tsx",
+      "source": "src/pages/docs/governance/website-standards-page.tsx",
       "intent": "文档站独立信息卡必须经由 WebsiteCardContainer；规范页预览复用 WebsiteCardContainerPreview，取值逻辑从 website-standards manifest 与真实插槽读取。",
       "scopeStart": "<section id=\"website-standards-boundaries\"",
       "scopeEnd": "</section>",

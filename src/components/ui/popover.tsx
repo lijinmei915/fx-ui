@@ -1,5 +1,6 @@
 import * as React from "react"
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover"
+import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
@@ -11,14 +12,31 @@ function PopoverTrigger({ ...props }: PopoverPrimitive.Trigger.Props) {
   return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />
 }
 
+const popoverContentVariants = cva(
+  "z-50 flex origin-(--transform-origin) flex-col gap-(--fx-panel-gap) rounded-lg bg-popover p-(--fx-panel-padding) text-base text-popover-foreground shadow-l1 ring-1 ring-foreground/10 outline-hidden duration-100 data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+  {
+    variants: {
+      size: {
+        sm: "w-56",
+        md: "w-72",
+        lg: "w-96",
+      },
+    },
+    defaultVariants: {
+      size: "md",
+    },
+  }
+)
+
 function PopoverContent({
   className,
+  size = "md",
   align = "center",
   alignOffset = 0,
   side = "bottom",
   sideOffset = 4,
   ...props
-}: PopoverPrimitive.Popup.Props &
+}: PopoverPrimitive.Popup.Props & VariantProps<typeof popoverContentVariants> &
   Pick<
     PopoverPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
@@ -34,10 +52,8 @@ function PopoverContent({
       >
         <PopoverPrimitive.Popup
           data-slot="popover-content"
-          className={cn(
-            "z-50 flex w-72 origin-(--transform-origin) flex-col gap-(--fx-panel-gap) rounded-lg bg-popover p-(--fx-panel-padding) text-base text-popover-foreground shadow-l1 ring-1 ring-foreground/10 outline-hidden duration-100 data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
-            className
-          )}
+          data-size={size}
+          className={cn(popoverContentVariants({ size }), className)}
           {...props}
         />
       </PopoverPrimitive.Positioner>
@@ -85,4 +101,5 @@ export {
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger,
+  popoverContentVariants,
 }

@@ -43,7 +43,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 
 - 类型：action
 - 语义 DOM：data-slot="toggle-group"、data-slot="toggle-group-item"
-- 原生/数据状态：focus-visible
+- 原生/数据状态：focus-visible、disabled
 - 变体：无独立 variant prop
 - 导出项：ToggleGroup、ToggleGroupItem
 
@@ -84,6 +84,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 | 状态 | 说明 |
 | --- | --- |
 | `focus-visible` | 键盘焦点态，必须保留可访问焦点环 |
+| `disabled` | 通过 ToggleGroup 的原生 `disabled` 属性禁用整个组；不要只用透明度伪装 |
 
 ## 主题变量 Design Token {#design-token}
 

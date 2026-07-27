@@ -9,9 +9,12 @@ theme: theme/fx-theme.css
 tokens:
   - background
   - foreground
+  - foreground-disabled
   - muted
+  - muted-hover
   - muted-foreground
   - border
+  - border-subtle
   - input
   - ring
 status: complete
@@ -50,8 +53,11 @@ import { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants } from "@/co
 
 - 类型：navigation
 - 语义 DOM：data-slot="tabs"、data-slot="tabs-list"、data-slot="tabs-trigger"、data-slot="tabs-content"
-- 原生/数据状态：hover、active、focus-visible、disabled、data-active
-- 变体：default、line
+- 原生/数据状态：hover、active、focus-visible、disabled、data-active、data-orientation
+- 变体：`TabsList variant="default | line"`
+- 尺寸：`TabsList size="sm | md | lg"`，默认 `md`
+- 方向：`Tabs orientation="horizontal | vertical"`，方向键漫游由 Base UI 管理
+- 激活：`TabsList activateOnFocus` 可让方向键焦点同步切换面板；默认仍由 Enter / Space 确认
 - 导出项：Tabs、TabsList、TabsTrigger、TabsContent、tabsListVariants
 
 ## 场景示例 {#examples}
@@ -75,15 +81,23 @@ import { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants } from "@/co
 - 不用 Tabs 承载它职责之外的语义。
 - 不通过 `className` 硬覆盖组件内部颜色、圆角、边框、阴影和状态样式。
 - 不发明源码里没有的 prop、variant、size 或状态。
+- 不用 Button 列表模拟 Tabs，也不手写方向键、选中态和面板关联。
 
 ## API {#api}
 
 该组件以源码导出的子组件和原生 props 为准。使用前读取 `src/components/ui/tabs.tsx`，不要凭空发明 API。
 
 
-| 属性 | 说明 | 类型 |
-| --- | --- | --- |
-| `variant` | 源码存在的视觉/语义变体 | `default` \| `line` |
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `Tabs.value / defaultValue / onValueChange` | Base UI Root props | — | 受控或非受控激活值 |
+| `Tabs.orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | 布局方向和对应方向键逻辑 |
+| `TabsList.variant` | `"default" \| "line"` | `"default"` | 分段式表面或轻量指示线 |
+| `TabsList.size` | `"sm" \| "md" \| "lg"` | `"md"` | 标签栏高度、触发器字号与内边距 |
+| `TabsList.activateOnFocus` | `boolean` | `false` | 方向键焦点移动时是否同步激活面板 |
+| `TabsList.loopFocus` | `boolean` | `true` | 键盘漫游是否首尾循环 |
+| `TabsTrigger.value / disabled` | `string / boolean` | — | 触发器值和禁用语义 |
+| `TabsContent.value` | `string` | — | 与 Trigger 一一对应的面板值 |
 
 ## Semantic DOM {#semantic-dom}
 
@@ -103,6 +117,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants } from "@/co
 | `focus-visible` | 键盘焦点态，必须保留可访问焦点环 |
 | `disabled` | 禁用态，阻止交互并降低视觉权重 |
 | `data-active` | 当前/激活项 |
+| `data-orientation` | horizontal / vertical 方向语义，决定布局和方向键 |
 
 ## 主题变量 Design Token {#design-token}
 
@@ -110,9 +125,12 @@ import { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants } from "@/co
 | --- | --- |
 | `--background` | 页面或控件的基础背景 |
 | `--foreground` | 主要文字和图标 |
+| `--foreground-disabled` | 禁用标签文字 |
 | `--muted` | 弱化背景、hover 背景或低强调区域 |
+| `--muted-hover` | default 变体未激活标签的 hover 表面 |
 | `--muted-foreground` | 辅助说明、placeholder 或弱化文字 |
 | `--border` | 边框、分隔线和描边结构 |
+| `--border-subtle` | default 激活标签的弱边框 |
 | `--input` | 表单控件边框、背景和 disabled 语义 |
 | `--ring` | focus-visible 焦点环 |
 
@@ -124,6 +142,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants } from "@/co
 - 当前项使用源码支持的 active/current 语义，不要只改颜色。
 - 层级关系用组件结构表达，不用缩进和文字伪造。
 - `TabsTrigger` 必须放在 `TabsList` 里，不要直接渲染在 `Tabs` 下。
+- 同一组 Tabs 的 variant 和 size 只在 TabsList 声明一次，不逐个覆盖 Trigger。
+- 垂直 Tabs 使用 orientation="vertical"，依赖 Base UI 的上下方向键；水平 Tabs 使用左右方向键。需要方向键立即切换面板时，显式使用 `activateOnFocus`。
 - 使用 Tabs 前必须以 src/components/ui/tabs.tsx 为真实 API。
 - 不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。
 - className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。

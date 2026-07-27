@@ -96,6 +96,7 @@ export type ComponentPlaygroundManifestStory = {
   name: string
   nameEn: string
   args: Record<string, string>
+  matchKeys?: string[]
   parameters: {
     intent: string
     intentEn: string
@@ -125,6 +126,7 @@ export type ComponentPlaygroundsManifest = {
   note: string
   autoScenarioComponents?: string[]
   autoStories?: Record<string, ComponentPlaygroundAutoStory[]>
+  autoStoryPresentation?: Record<string, "presets" | "examples">
   autoVisuals?: Record<string, ComponentPlaygroundManifestVisual>
   pageVisuals?: Record<string, ComponentPlaygroundManifestVisual>
   baselineVisuals?: Record<string, ComponentPlaygroundManifestVisual>
@@ -178,6 +180,7 @@ export function componentPlaygroundStoriesFromManifest(
     constraint: story.parameters.constraint,
     constraintEn: story.parameters.constraintEn,
     values: story.args,
+    matchKeys: story.matchKeys,
   }))
 }
 

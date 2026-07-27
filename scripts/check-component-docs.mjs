@@ -1,18 +1,32 @@
 #!/usr/bin/env node
 // 校验组件文档页的 API 属性表「有属性、且每个属性带类型」。
 // 组件页和 token 页的核心区别：组件必须讲清可配置 prop 及其 type（见 docs/DOC_SITE_DESIGN.md「组件文档页结构」）。
-// 规则：src/App.tsx 里每个 const xxxPropRows = [...]（含 Button 的 propRows）——
+// 规则：App 装配文件和页面模块里的每个 const xxxPropRows = [...]——
 //   ① 非空；② prop 条数 == type 条数（不能有属性名却没类型）。
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
-const src = fs.readFileSync(path.join(root, "src/App.tsx"), "utf8")
+function collectSourceFiles(directory) {
+  if (!fs.existsSync(directory)) return []
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const sourcePath = path.join(directory, entry.name)
+    if (entry.isDirectory()) return collectSourceFiles(sourcePath)
+    return /\.(ts|tsx)$/.test(entry.name) ? [sourcePath] : []
+  })
+}
+
+const sourceFiles = [
+  path.join(root, "src/App.tsx"),
+  ...collectSourceFiles(path.join(root, "src/lib")),
+  ...collectSourceFiles(path.join(root, "src/pages/docs")),
+]
+const src = sourceFiles.map((file) => fs.readFileSync(file, "utf8")).join("\n")
 const errors = []
 
 // 抓 const ...propRows = [ ... ];，允许格式化后数组结尾变成 `}]` / `}];`。
-const blocks = [...src.matchAll(/const\s+(\w*[Pp]ropRows)\s*(?::[^=]+)?=\s*\[([\s\S]*?)\]\s*;/g)]
+const blocks = [...src.matchAll(/(?:const|export\s+const)\s+(\w*[Pp]ropRows)\s*(?::[^=]+)?=\s*\[([\s\S]*?)\]\s*;?/g)]
 let checked = 0
 for (const [, name, body] of blocks) {
   const props = (body.match(/\bprop:/g) || []).length

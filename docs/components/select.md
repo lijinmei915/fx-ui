@@ -39,7 +39,7 @@ src/components/ui/select.tsx
 ## 使用方式 {#usage}
 
 ```tsx
-import { Select, SelectClear, SelectContent, SelectControl, SelectGroup, SelectItem, SelectLabel, SelectMultiValue, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Select, SelectClear, SelectContent, SelectControl, SelectGroup, SelectItem, SelectItemIndicator, SelectLabel, SelectMultiValue, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select"
 ```
 
 ```tsx
@@ -59,12 +59,12 @@ import { Select, SelectClear, SelectContent, SelectControl, SelectGroup, SelectI
 ## 组件总览 {#overview}
 
 - 类型：form
-- 语义 DOM：data-slot="select-group"、data-slot="select-control"、data-slot="select-value"、data-slot="select-trigger"、data-slot="select-content"、data-slot="select-label"、data-slot="select-multi-value"、data-slot="select-overflow-count"、data-slot="select-item"、data-slot="select-clear"、data-slot="select-separator"、data-slot="select-scroll-up-button"、data-slot="select-scroll-down-button"
+- 语义 DOM：data-slot="select-group"、data-slot="select-control"、data-slot="select-value"、data-slot="select-trigger"、data-slot="select-content"、data-slot="select-label"、data-slot="select-multi-value"、data-overflow、data-slot="select-multi-value-remove"、data-slot="select-overflow-count"、data-slot="select-item"、data-slot="select-item-indicator"、data-slot="select-clear"、data-slot="select-separator"、data-slot="select-scroll-up-button"、data-slot="select-scroll-down-button"
 - 原生/数据状态：hover、focus-visible、disabled、aria-invalid、data-popup-open、data-open、data-closed、data-highlighted、data-selected
 - 变体：`outline`（有边框，默认）、`borderless`（无边框）
 - 尺寸：`xs`=24px、`sm`=28px（默认）、`md`=32px
 - 选择数量：单选默认；多选使用 `multiple`，value / defaultValue 为数组
-- 导出项：Select、SelectClear、SelectContent、SelectControl、SelectGroup、SelectItem、SelectLabel、SelectMultiValue、SelectScrollDownButton、SelectScrollUpButton、SelectSeparator、SelectTrigger、SelectValue
+- 导出项：Select、SelectClear、SelectContent、SelectControl、SelectGroup、SelectItem、SelectItemIndicator、SelectLabel、SelectMultiValue、SelectScrollDownButton、SelectScrollUpButton、SelectSeparator、SelectTrigger、SelectValue
 
 ## 能力边界 {#boundary}
 
@@ -72,10 +72,10 @@ import { Select, SelectClear, SelectContent, SelectControl, SelectGroup, SelectI
 
 - **基础 Select**：单选 / 多选、普通 / 分组 / 禁用项 / 描述项、placeholder / selected、hover / focus / open / invalid / disabled、空结果和加载反馈。
 - **受控组合**：清除选择用受控 `value` + `SelectClear` 表达，不新增 `allowClear` prop，也不在 `SelectTrigger` 内嵌套 button。
-- **多选展示**：`Select multiple` 使用数组值；已选值在 `SelectValue` 内使用 `SelectMultiValue`，超过 `maxVisible` 后折叠为 `+n`，不把自由标签输入塞进 Select。
-- **清除热区**：`SelectClear` 与触发器同级放在 `SelectControl` 中；主内容区 hover/focus 时显示清除按钮，尾部下拉箭头始终保留。
+- **多选展示**：`Select multiple` 使用数组值；已选值和折叠计数都在 `SelectValue` 内使用 `Tag variant="soft"` 的外观，但作为控件值统一使用 `font-normal`，不继承真实 Tag 的语义字重。`overflow="collapse"`（默认）把 `maxVisible` 作为上限：只显示放得下的完整标签，空间不足时从末项折叠为 `+n`；`overflow="scroll"` 保持单行并横向滚动全部标签。多选值区的首项内边距与标签间距统一使用 `--fx-control-gap-tight`（4px）。多选项用 `SelectItemIndicator` 展示 Checkbox 反馈，但选择状态仍由 Select 统一管理。
+- **清除热区**：`SelectClear` 与触发器同级放在 `SelectControl` 中；有值且渲染清除动作时，按钮常驻在下拉箭头左侧，`SelectTrigger clearable` 始终预留稳定的 suffix 空间。标签内 X 只删除单项，总清除 X 清空全部选择。
 - **其他输入**：基础 Select 不支持自由输入；如果业务需要“其他”，使用受控 `value` + `SelectItem value="other"` + `SelectContent` 内的 `Input` 组合。必填校验落在输入框 `aria-invalid` 和字段错误文案上，不新增 `allowOther` / `otherRequired` prop。
-- **下拉面板**：对齐 Figma Select 浮层，使用 `bg-popover`、`rounded-md`、下拉层级 `shadow-l1` 和 8px 上下留白；不添加边框或装饰性三角。默认 `alignItemWithTrigger=false`，从触发器下方展开。选项最小高度 32px、水平内边距 8px、常规字重；hover/focus 使用 `bg-muted`，选中项只使用 `text-primary` 强调。
+- **下拉面板**：对齐 Figma Select 浮层，使用 `bg-popover`、`rounded-md`、下拉层级 `shadow-l1` 和四周 4px 内边距；不添加边框或装饰性三角。默认 `alignItemWithTrigger=false`，从触发器下方展开。选项最小高度 32px、水平内边距 8px、常规字重；hover/focus 使用 `bg-background`，选中项只使用 `text-primary` 强调。
 - **字号联动**：`SelectContent size` 与 `SelectTrigger size` 使用同一档，确保选择框文字和下拉选项文字等大；两者默认均为 `sm`。
 - **展开反馈**：Select Trigger 原生 `data-popup-open` 驱动触发器使用 `border-primary`，尾部箭头旋转向上；关闭后恢复默认输入边框，不新增业务状态 prop。
 - **本地搜索**：数据已在前端时，搜索输入作为 `SelectContent` 内组合；搜索后的空结果用明确文案。
@@ -128,21 +128,25 @@ import { Select, SelectClear, SelectContent, SelectControl, SelectGroup, SelectI
 
 | 属性 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
+| `items` | `Select item data[]` | - | 可选的数据集合，用于让 SelectValue 根据 value 解析显示内容 |
 | `value / defaultValue` | `string \| string[] \| null` | - | 受控 / 非受控的当前选中值；多选时为数组 |
-| `onValueChange` | `(value: string) => void` | - | 选中值变化时的回调 |
+| `onValueChange` | `(value: string \| string[] \| null) => void` | - | 选中值变化时的回调；返回类型随单选 / 多选模式变化 |
 | `multiple` | `boolean` | `false` | 开启多选，value / defaultValue 使用数组 |
 | `disabled` | `boolean` | `false` | 禁用整个选择器 |
 | `variant`（SelectTrigger） | `"outline" \| "borderless"` | `"outline"` | 触发器样式：有边框 / 无边框 |
 | `size`（SelectTrigger） | `"xs" \| "sm" \| "md"` | `"sm"` | 触发器尺寸：24 / 28 / 32 |
 | `size`（SelectContent） | `"xs" \| "sm" \| "md"` | `"sm"` | 下拉选项字号尺寸，应与 SelectTrigger 传相同值 |
-| `clearable`（SelectTrigger） | `boolean` | `false` | 为清除图标预留 suffix 空间，需配合 `SelectClear` 同级使用 |
+| `clearable`（SelectTrigger） | `boolean` | `false` | 为常驻的总清除动作预留箭头左侧 suffix 空间；需配合 `SelectClear` 同级使用 |
 | `value`（SelectItem） | `string` | - | 选项取值，需要在选项集合内唯一 |
 | `disabled`（SelectItem） | `boolean` | `false` | 禁用单个选项 |
 | 其他输入组合 | 受控 `value` + `Input` | - | 选择 `value="other"` 后渲染输入框；必填/选填由业务校验控制 |
 | `side / align / alignItemWithTrigger`（SelectContent） | `SelectContent props` | `bottom / center / false` | 控制浮层位置、对齐和是否将已选项对齐触发器；默认从触发器下方展开 |
 | `SelectClear` | `button` | `type="button"` | 清除当前选择的 suffix 动作，作为 `SelectTrigger` 的同级绝对定位按钮 |
-| `SelectControl` | `div` | - | 触发器与清除动作的定位、hover 和 focus 热区容器 |
-| `SelectMultiValue` | `{ items, maxVisible? }` | `maxVisible=2` | 多选已选值展示；显示前 N 项，剩余值折叠为 `+n` |
+| `SelectControl` | `div` | - | 触发器与清除动作的定位容器 |
+| `SelectSeparator` | 子组件 | - | 分隔不同 SelectGroup，不用普通边框元素代替 |
+| `SelectScrollUpButton / SelectScrollDownButton` | 子组件 | 内置 | 长列表滚动时由 SelectContent 内部提供边缘滚动反馈 |
+| `SelectMultiValue` | `{ items, maxVisible?, overflow?, onRemove?, getRemoveLabel? }` | `maxVisible=2, overflow="collapse"` | 多选已选值展示；`collapse` 将 maxVisible 作为完整标签数量上限并响应容器宽度折叠为 `+n`，`scroll` 保持单行横向滚动全部标签 |
+| `SelectItemIndicator` | `SelectPrimitive.ItemIndicator.Props` | — | 多选项的 Checkbox 选中反馈；不建立独立选择状态 |
 
 ## Semantic DOM {#semantic-dom}
 
@@ -154,9 +158,11 @@ import { Select, SelectClear, SelectContent, SelectControl, SelectGroup, SelectI
 | `data-slot="select-trigger"` | 源码中的语义定位，供样式选择器、测试和 AI 定位使用 |
 | `data-slot="select-content"` | 源码中的语义定位，供样式选择器、测试和 AI 定位使用 |
 | `data-slot="select-label"` | 源码中的语义定位，供样式选择器、测试和 AI 定位使用 |
-| `data-slot="select-multi-value"` | 多选已选值容器，保持单行并承载折叠计数 |
+| `data-slot="select-multi-value"` | 多选已选值容器；`data-overflow="collapse"` 承载折叠计数，`data-overflow="scroll"` 支持横向滚动 |
+| `data-slot="select-multi-value-remove"` | 删除单个已选标签的动作按钮 |
 | `data-slot="select-overflow-count"` | 多选超出 `maxVisible` 后显示的 `+n` 标签 |
 | `data-slot="select-item"` | 源码中的语义定位，供样式选择器、测试和 AI 定位使用 |
+| `data-slot="select-item-indicator"` | 多选项内由 Select 选中状态驱动的 Checkbox 反馈 |
 | `data-slot="select-clear"` | 清除选择的 suffix 动作按钮 |
 | `data-slot="select-separator"` | 源码中的语义定位，供样式选择器、测试和 AI 定位使用 |
 | `data-slot="select-scroll-up-button"` | 源码中的语义定位，供样式选择器、测试和 AI 定位使用 |
@@ -183,12 +189,11 @@ import { Select, SelectClear, SelectContent, SelectControl, SelectGroup, SelectI
 | Token | 用途 |
 | --- | --- |
 | `--foreground` | 主要文字和图标 |
+| `--background` | 无填充选项的 hover / 键盘高亮背景 |
 | `--popover` | 浮层背景 |
 | `--popover-foreground` | 浮层文字和图标 |
-| `--muted` | 弱化背景、hover 背景或低强调区域 |
+| `--muted` | 弱化背景或低强调区域 |
 | `--muted-foreground` | 辅助说明、placeholder 或弱化文字 |
-| `--accent` | 菜单项 hover/focus 背景 |
-| `--accent-foreground` | 菜单项 hover/focus 文字 |
 | `--destructive` | 危险、错误或不可逆操作语义 |
 | `--border` | 边框、分隔线和描边结构 |
 | `--input` | 表单控件边框、背景和 disabled 语义 |
@@ -209,7 +214,7 @@ import { Select, SelectClear, SelectContent, SelectControl, SelectGroup, SelectI
 - 本地搜索可以作为 `SelectContent` 内组合；远程搜索、人员选择、客户选择必须沉淀为 fx 组合组件。
 - 清除选择用受控 `value` + `SelectTrigger clearable` + `SelectClear`，不要发明 `allowClear`、`showSearch`、`remoteSearch` 等源码没有的 prop。
 - 其他输入用受控 `value` + `SelectItem value="other"` + `Input` 组合；不要发明 `allowOther`、`otherRequired` 这类源码没有的 prop。
-- 无边框场景用 `SelectTrigger variant="borderless"`，不要在调用处用 className 覆盖 border / bg。
+- 无边框场景用 `SelectTrigger variant="borderless"`，hover/open 仅显示浅底色，键盘焦点使用焦点环；报错态仍显示错误边框。不要在调用处用 className 覆盖 border / bg。
 - 空结果和加载态必须有明确反馈，不要展示空白下拉层。
 - 未选择态用 `SelectValue` 的 placeholder，不写空字符串选项。
 - 尺寸只用 `SelectTrigger size`：`xs` 24px、`sm` 28px（默认）、`md` 32px。
@@ -257,27 +262,24 @@ import { Select, SelectClear, SelectContent, SelectControl, SelectGroup, SelectI
 推荐：
 
 ```tsx
-import { Tag } from "@/components/ui/tag"
+const [value, setValue] = useState<string[]>(["active", "done"])
 
-<Select multiple defaultValue={["active", "done"]}>
-  <SelectTrigger size="xs">
+<Select multiple value={value} onValueChange={setValue}>
+  <SelectTrigger size="xs" render={<div />} nativeButton={false}>
     <SelectValue placeholder="筛选状态">
       {(value: string[]) =>
         value?.length ? (
-          <span className="flex min-w-0 flex-1 items-center gap-1 overflow-hidden">
-            {value.map((item) => (
-              <Tag key={item} variant="outline">
-                {item === "active" ? "进行中" : "已完成"}
-              </Tag>
-            ))}
-          </span>
+          <SelectMultiValue
+            items={value.map((item) => ({ value: item, label: item === "active" ? "进行中" : "已完成" }))}
+            onRemove={(item) => setValue(value.filter((current) => current !== item))}
+          />
         ) : "筛选状态"
       }
     </SelectValue>
   </SelectTrigger>
   <SelectContent>
-    <SelectItem value="active">进行中</SelectItem>
-    <SelectItem value="done">已完成</SelectItem>
+    <SelectItem value="active"><SelectItemIndicator />进行中</SelectItem>
+    <SelectItem value="done"><SelectItemIndicator />已完成</SelectItem>
   </SelectContent>
 </Select>
 ```

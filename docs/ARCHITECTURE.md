@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-26
+last_verified: 2026-07-27
 teaches: "fx-ui 的三层生产体系：基础组件、公司组合组件、页面 Blocks（目录细节见 CODE_STRUCTURE，布局规范见 LAYOUTS）"
 use_when: "AI 要判断某个能力归哪一层、三层之间如何分工时"
 ---
@@ -27,7 +27,9 @@ fx-ui 的目标不是重新手写一套 UI 组件库，而是建立一套公司�
 
 目录建议：`src/components/ui/`
 
-这一层只放 shadcn/ui 拉下来的 open-code 组件。
+这一层以 shadcn/ui 拉下来的 open-code 组件为主体。shadcn 没有等价能力时，只允许 `components.manifest.json#nativeSemanticComponents` 白名单登记、绑定架构决策且能由机器检查的原生语义组件例外；当前只有 Link。
+
+已有 shadcn 组件缺少主流基础能力时，可以在用户逐项审核后继续补齐在同一个 open-code 组件中，不因上游能力不全被迫拆到 fx 层；这类组件必须以 `origin: shadcn-extended` 登记 upstream、DEC 和扩展清单。只有跨组件的业务模式才进入 fx 层。
 
 - 通过 `npx shadcn@latest add <component>` 获取
 - 不手写 Button / Input / Dialog / Table 等基础控件
@@ -85,12 +87,12 @@ shadcn 组件进入 `src/components/ui/` 后，就视为 fx-ui 的本地源码�
 - `DataTable`（`src/components/recipes/data-table.tsx`）：薄表格区块 = 表格 + 勾选(全选/半选) + 行操作；中间列由 `columns`（每列 `cell` render）驱动，受控，不引 TanStack。
 - `ListToolbar`（`src/components/recipes/list-toolbar.tsx`）：列表页工具栏 = 筛选 + 复合搜索(scope+input) + 视图切换 + 右侧额外动作，全受控配置化。
 - `ListPageHeader`（`src/components/recipes/list-page-header.tsx`）：列表页紧凑标题栏 = 标题 + 可选视图下拉(`views?`) + 操作插槽(`actions`，0..N 动态)。三轴变体由 props/slot 决定。
+- `EditFormBlock`（`src/components/recipes/edit-form-block.tsx`）：schema 驱动的编辑表单区块 = Field + Input/Textarea + Button；内置必填校验、错误聚焦、提交 loading 和脏状态取消。
+- `DetailPageBlock`（`src/components/recipes/detail-page-block.tsx`）：对象详情区块 = 身份头、字段网格、Tabs、活动时间线、关联记录和空态；页面只注入对象数据与动作。
 
 候选 Blocks：
 
 - `ListPageBlock`：列表页，含筛选、表格、分页、批量操作
-- `EditFormBlock`：新建/编辑表单页
-- `DetailPageBlock`：详情页
 - `DashboardBlock`：数据看板页
 - `AuthBlock`：登录/注册页
 - `SettingsBlock`：设置页
@@ -115,10 +117,13 @@ shadcn 组件进入 `src/components/ui/` 后，就视为 fx-ui 的本地源码�
 
 | 目录 / 文件 | 职责 | 备注 |
 |-------------|------|------|
-| `src/components/ui/` | shadcn 原子组件，CLI 拉取 | 不手写，open-code 可读可改 |
+| `src/components/ui/` | shadcn 原子组件，CLI 拉取 | open-code 可读可改；仅含 manifest 白名单的原生语义例外 |
 | `src/components/fx/` | 公司组合组件 | 必须由 shadcn 组件组合而成，不做黑盒 |
-| `src/blocks/` | 公司页面模板 | 从真实页面里抽出来，不预先设计 |
-| `src/layouts/` | 页面壳、侧边栏、主内容布局 | |
+| `src/components/recipes/` | 已验证的 Block（历史目录名） | 由真实页面提炼，整段复用、只换数据 |
+| `src/pages/docs/<domain>/` | 文档页及页面专属预览 | 按 components / foundations / getting-started / governance / tokens 归位 |
+| `src/pages/templates/` | 已验证完整页面模板 | 列表、编辑表单、详情页等页面级范例 |
+| `src/app/` | 文档站壳、导航搜索与 hash 路由适配 | `App.tsx` 只保留运行时状态和页面组合 |
+| `src/lib/` | 跨领域运行时、注册表和文档工具 | 不再承载具体页面模块 |
 | `src/components/fx/agent-surface.tsx` | Agent UI 渲染面 | 受控 JSON -> 本地 React 组件 |
 | `docs/AGENT_UI.md` | Agent UI 生成式界面协议 | 定义 block、action 和安全红线 |
 | `docs/data/agent-ui.manifest.json` | Agent UI 机器事实表 | 给 AI 和检查脚本读取 |

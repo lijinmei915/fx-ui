@@ -55,7 +55,8 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 - 语义 DOM：data-slot="dialog"、data-slot="dialog-trigger"、data-slot="dialog-portal"、data-slot="dialog-close"、data-slot="dialog-overlay"、data-slot="dialog-content"、data-slot="dialog-header"、data-slot="dialog-footer"、data-slot="dialog-title"、data-slot="dialog-description"
 - 原生/数据状态：hover、data-open、data-closed
 - 变体：无独立 variant prop
-- 导出项：Dialog、DialogClose、DialogContent、DialogDescription、DialogFooter、DialogHeader、DialogOverlay、DialogPortal、DialogTitle、DialogTrigger
+- 尺寸：`DialogContent size="sm | md | lg"`，默认 `md`
+- 导出项：Dialog、DialogClose、DialogContent、DialogDescription、DialogFooter、DialogHeader、DialogOverlay、DialogPortal、DialogTitle、DialogTrigger、dialogContentVariants
 
 ## 场景示例 {#examples}
 
@@ -67,7 +68,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 ```tsx
 <Dialog>
   <DialogTrigger render={<Button />}>打开</DialogTrigger>
-  <DialogContent>
+  <DialogContent size="md">
     <DialogHeader>
       <DialogTitle>编辑信息</DialogTitle>
       <DialogDescription>修改后请保存。</DialogDescription>
@@ -85,6 +86,15 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 ## API {#api}
 
 该组件以源码导出的子组件和原生 props 为准。使用前读取 `src/components/ui/dialog.tsx`，不要凭空发明 API。
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `Dialog.open / defaultOpen / onOpenChange` | Base UI Root props | — | 受控或非受控管理开关状态 |
+| `DialogTrigger.render` | `ReactElement` | — | 把 Button 等真实交互元素作为触发器 |
+| `DialogContent.size` | `"sm" \| "md" \| "lg"` | `"md"` | 控制主体最大宽度，不在调用处用 className 覆盖 |
+| `DialogContent.showCloseButton` | `boolean` | `true` | 是否显示右上角关闭按钮 |
+| `DialogClose.render` | `ReactElement` | — | 包裹取消/关闭操作并恢复触发器焦点 |
+| `DialogTitle / DialogDescription` | 组件 | — | 对话框标题与说明的无障碍语义 |
 
 
 ## Semantic DOM {#semantic-dom}
@@ -109,6 +119,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 | `hover` | 鼠标悬停反馈，来自源码状态样式 |
 | `data-open` | 浮层或折叠内容打开态 |
 | `data-closed` | 浮层或折叠内容关闭态 |
+| `data-size` | DialogContent 的 `sm` / `md` / `lg` 受治理尺寸 |
 
 ## 主题变量 Design Token {#design-token}
 
@@ -130,6 +141,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 - 危险确认使用 AlertDialog 或 ConfirmDangerDialog，不要用普通 Dialog 代替。
 - 加载态优先用 Skeleton 或 Spinner 组合，不要手写 animate-pulse 占位块。
 - 必须提供 `DialogTitle`；只想视觉隐藏时使用 `className="sr-only"`。
+- 宽度只通过 `DialogContent.size` 选择；不要在页面里用 `max-w-*` 覆盖。
 - 使用 Dialog 前必须以 src/components/ui/dialog.tsx 为真实 API。
 - 不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。
 - className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。

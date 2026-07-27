@@ -17,16 +17,39 @@
     {
       "id": "detail",
       "name": "详情页",
-      "status": "needs-block",
+      "status": "ready",
       "intent": ["详情", "对象", "信息页"],
-      "constraint": "当前没有经过验证的 DetailPageBlock；先沉淀 block，不能临时拼页面。"
+      "generator": "npm run gen:detail-page -- --name <实体名称> --slug <slug>",
+      "source": "scripts/gen-detail-page.mjs",
+      "frame": ["CrmAppShell", "DetailPageBlock"],
+      "dataContract": ["breadcrumbs", "title", "subtitle", "status", "actions", "fields", "tabs", "timeline", "relatedRecords", "onEdit"],
+      "constraints": ["生成后只填对象数据和动作回调。", "路由登记 pageRegistry 与 docsNav。", "完成后运行 check:all 与 test:visual。"],
+      "evidence": [
+        "src/components/ui/card.tsx",
+        "src/components/ui/breadcrumb.tsx",
+        "src/components/ui/tabs.tsx",
+        "src/components/recipes/crm-app-shell.tsx"
+      ],
+      "visualEvidence": { "file": "tests/visual.spec.ts", "testName": "DetailPageBlock 页面模块" }
     },
     {
       "id": "form",
       "name": "编辑表单页",
-      "status": "needs-block",
+      "status": "ready",
       "intent": ["表单", "新建", "编辑"],
-      "constraint": "当前没有经过验证的 EditFormBlock；先沉淀 block，不能临时拼页面。"
+      "generator": "npm run gen:edit-form-page -- --name <实体名称> --slug <slug>",
+      "source": "scripts/gen-edit-form-page.mjs",
+      "frame": ["CrmAppShell", "EditFormBlock"],
+      "dataContract": ["fields", "initialValues", "errors", "onValuesChange", "onSubmit", "onCancel", "submitting"],
+      "constraints": ["生成后只填 fields 和 onSubmit。", "路由登记 pageRegistry 与 docsNav。", "完成后运行 check:all 与 test:visual。"],
+      "evidence": [
+        "src/components/recipes/edit-form-block.tsx",
+        "src/components/ui/field.tsx",
+        "src/components/ui/input.tsx",
+        "src/components/ui/button.tsx",
+        "src/components/ui/dialog.tsx"
+      ],
+      "visualEvidence": { "file": "tests/visual.spec.ts", "testName": "EditFormBlock 页面模块" }
     }
   ]
 }

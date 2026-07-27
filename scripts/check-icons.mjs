@@ -54,6 +54,13 @@ for (const icon of manifest.icons ?? []) {
   }
 }
 
+for (const name of exportedNames) {
+  if (!seen.has(name)) errors.push(`icon "${name}" 已从 @/lib/icons 导出但未登记进注册表`)
+}
+for (const name of seen) {
+  if (!exportedNames.has(name)) errors.push(`icon "${name}" 已登记但未从 @/lib/icons 导出`)
+}
+
 // 自定义图标必须用 currentColor（颜色跟随 token），且不得写死十六进制色值。
 if (/fill="#|stroke="#|fill:\s*#|stroke:\s*#/.test(customSource)) {
   errors.push("src/lib/icons-custom.tsx 含写死色值（#xxxxxx）——自定义图标必须用 currentColor")

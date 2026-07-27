@@ -16,6 +16,8 @@ const tagVariants = cva(
         default: "bg-primary text-primary-foreground [a]:hover:bg-primary-hover",
         secondary:
           "bg-secondary text-secondary-foreground [a]:hover:bg-secondary-hover",
+        soft:
+          "rounded-sm border-border bg-secondary text-secondary-foreground [a]:hover:bg-secondary-hover",
         destructive:
           "bg-destructive-light text-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive-light-hover",
         success:

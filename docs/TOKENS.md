@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-07-16
+last_verified: 2026-07-27
 teaches: "公司设计 token 的基础架构、真实值和全局视觉使用规则"
 use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadcn 组件样式或判断视觉是否符合公司规范时"
 ---
@@ -54,7 +54,7 @@ fx-ui 采用主流设计系统分层：**Tailwind 是表达层，FX token 是视
 | `typography` | **FX token → Tailwind 字号类** | 对外主推荐 `text-sm/base/lg/xl`；底层仍由企业字号 token 驱动，不靠 Tailwind 默认字号再乘百分比硬凑 |
 | `radius` | **FX token → Tailwind 圆角类** | 组件圆角走 `--radius` 派生档，不另立一套默认刻度 |
 | `shadow` | **FX token → Tailwind 阴影类** | 统一 `shadow-l1/l2/l3`，不用 Tailwind 默认 `shadow-sm/md/lg` |
-| `border-width` | **FX token / 主题能力** | 容器表面描边规格跟随主题；控件描边保持组件自身语义，不在调用处临时另选一套 |
+| `border-width` | **FX 结构基线** | 默认 `1px`，由组件和 token 规范固定；不作为普通主题面板的运行时覆写项 |
 | `motion` | **FX token / 约定档位** | 动效时长跟随主题或规范档位，不在单页随意发明时长 |
 
 一句话收口：**Tailwind 管形式，FX 管数值；FX 的值映射进 Tailwind 里用。**
@@ -147,6 +147,8 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | 全局背景 | `--fx-neutrals-02` | `bg-background` |
 | 卡片背景 | `--fx-neutrals-01` | `bg-card` |
 | 弱背景 | `--fx-neutrals-03` | `bg-muted` |
+| 站点骨架最低存在感线 | `--fx-neutrals-02` | `border-border-chrome`；为需要几乎隐去的结构边界预留 |
+| 站点骨架分割线 | `--fx-neutrals-03` | `border-border-faint`；顶栏下线与侧栏右线 |
 | 容器外框 | 浅色：`--fx-neutrals-04` 向白混 45%<br>暗色：`oklch(1 0 0 / 0.07)` | `border-border-container` |
 | 弱边框 / 分割线 | `--fx-neutrals-04` | `border-border-subtle` |
 | 默认边框 | `--fx-neutrals-05` | `border-border` |
@@ -154,7 +156,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | 输入框边框 | `--fx-neutrals-07` | `border-input` |
 
 - 组件默认边框规格：当前主题默认按 **`1px`** 理解，这是主流 Web UI 的常规基线。
-- 主题面板里的边框粗细只作用于容器表面（如卡片、调试台）；Button outline、Toggle、Pagination 和表单控件继续使用控件自身描边，不跟随容器边框粗细加粗或归零。
+- 边框粗细不是普通主题面板能力：它是组件默认的结构基线，运行时不允许将容器描边加粗或归零；需要差异时通过组件变体和边框强度表达。
 - 容器外框：优先讨论“要不要外框”和“外框颜色深浅”，不默认通过加粗来表达。
 - 分隔线 / 结构线：单独治理，不纳入“组件边框粗细”的口径。
 - 强调边框：只有选中、焦点、错误或其他高强调场景，才考虑 `2px` 或更强语义色。
@@ -187,10 +189,11 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 | 主推荐类 | 当前映射 | 字号/行高 | 场景 |
 |------|------|------|------|
-| `text-xl` | `18 / 28` | 页面/详情标题 | 大标题、页头标题 |
-| `text-lg` | `15 / 22` | 模块/卡片/组件标题 | 区块标题、卡片标题 |
-| `text-base` | `13 / 18` | 默认正文、菜单、列表、表单 | 主体文案 |
-| `text-sm` | `12 / 18` | 提示信息、说明文字 | 辅助文案 |
+| `text-xl` | `20 / 30` | 页面/详情标题 | 大标题、页头标题 |
+| `text-lg` | `18 / 28` | 模块/卡片/组件标题 | 区块标题、卡片标题 |
+| `text-base` | `16 / 24` | 默认正文、菜单、列表、表单 | 主体文案 |
+| `text-sm` | `14 / 20` | 标签、按钮、菜单项、辅助文案 | 短文本与辅助信息 |
+| `text-xs` | `12 / 18` | 最小辅助信息、紧凑场景 | 不承载正文 |
 
 **实现方式**：
 - 新代码统一使用 `text-xs / text-sm / text-base / text-lg / text-xl`。
@@ -198,14 +201,15 @@ shadcn/ui 和业务页面真正使用的语义槽。
 - 主题面板继续只改底层 token，不改组件调用代码。
 - Web 字号底线是 **12px**：任何正文、标签、角标、头像缩写、示意图文字都不得低于 12px；需要弱化时用颜色、字重、透明层级或空间关系，不用更小字号。
 
-**字号 + 行高**（默认正文 = 13）：
+**字号 + 行高**（默认正文 = 16）：
 
 | 工具类 | 字号/行高 | 字重 | 层级/场景 |
 |------|-----|------|------|
-| `text-xl` | 18 / 28 | bold | 详情页标题 |
-| `text-lg` | 15 / 22 | regular·bold | 模块/卡片/组件标题 |
-| `text-base` | 13 / 18 | regular·bold | **默认正文** — 菜单、列表、表单、大面积文案 |
-| `text-sm` / `text-xs` | 12 / 18 | regular | 提示信息、说明文字、最小辅助信息 |
+| `text-xl` | 20 / 30 | bold | 详情页标题 |
+| `text-lg` | 18 / 28 | regular·bold | 模块/卡片/组件标题 |
+| `text-base` | 16 / 24 | regular·bold | **默认正文** — 菜单、列表、表单、大面积文案 |
+| `text-sm` | 14 / 20 | regular·medium | 字段标签、按钮、菜单项、辅助信息 |
+| `text-xs` | 12 / 18 | regular | 最小辅助信息、紧凑场景 |
 
 **行高随主题字号映射一并调整**（上表"字号/行高"列即定义）。正文/说明**不要手写 `leading-7`/`leading-8`** 把行距抬到 2.0+——那样换行太散，不符合主流正文行高（约 1.5）。
 
@@ -435,7 +439,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 ## 图标（颜色 + 尺寸）
 
-图标用 lucide-react（线性单色，`currentColor` 跟随），分三类用色，颜色全部来自色板/文字层级，不另造图标专用色：
+图标用 Tabler（线性/面型均默认 `currentColor` 跟随），分三类用色，颜色全部来自色板/文字层级，不另造图标专用色：
 
 **1. 单色图标 — 跟随文字四级层级**
 
@@ -462,7 +466,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 - **内置**：在 `src/lib/icons.ts` 用 `IconX as XIcon` 映射稳定别名。
 - **第三方库**：同样在 `icons.ts` 映射出口，调用方不感知来源；注册表 `source` 记 `thirdparty:<库名>`。
 - **上传自定义**：SVG 组件放 `src/lib/icons-custom.tsx`（`currentColor` + `viewBox 0 0 24 24`），从 `icons.ts` re-export；上传第三方 SVG 必须先消毒（删 `<script>`/`on*`/外链/写死色值，强制 currentColor）。
-- 调用方禁止裸 `<svg>` / `<img src=*.svg>`；新增图标须同步登记，否则 `npm run check:icons` 不通过。
+- 调用方禁止裸 `<svg>` / `<img src=*.svg>`；新增映射后运行 `npm run build:icons`，`npm run check:icons` 会同时拦截未登记导出与失效登记。
 
 > 兼容别名：`--fx-icon-dark`=neutrals-20、`--fx-icon-gray`=neutrals-11、`--fx-icon-light`=neutrals-01，供 shadcn 组件的 `text-icon` / `text-icon-muted` 使用。
 

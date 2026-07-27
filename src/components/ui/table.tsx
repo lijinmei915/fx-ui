@@ -1,23 +1,56 @@
 import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 import { ChevronUpIcon, ChevronDownIcon, ChevronsUpDownIcon, MoreVerticalIcon, FilterIcon } from "@/lib/icons"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
+const tableContainerVariants = cva(
+  "group/table-container relative w-full overflow-x-auto",
+  {
+    variants: {
+      variant: {
+        plain: "",
+        bordered: "overflow-hidden rounded-xl border border-border-subtle bg-card",
+        striped:
+          "[&_tbody_tr:nth-child(even)]:bg-muted [&_tbody_tr:nth-child(even):hover]:bg-muted-hover",
+      },
+    },
+    defaultVariants: {
+      variant: "plain",
+    },
+  }
+)
+
+const tableRowVariants = cva(
+  "border-b border-border-subtle transition-colors",
+  {
+    variants: {
+      variant: {
+        default: "hover:bg-muted-hover has-aria-expanded:bg-muted-hover data-[state=selected]:bg-muted-active",
+        static: "",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+)
+
+type TableProps = React.ComponentProps<"table"> &
+  VariantProps<typeof tableContainerVariants> & {
+    density?: "compact" | "default" | "comfortable"
+    maxHeight?: number | string
+  }
+
 function Table({
   className,
+  variant = "plain",
   density = "default",
-  bordered = false,
   maxHeight,
   ...props
-}: React.ComponentProps<"table"> & {
-  density?: "compact" | "default" | "comfortable"
-  bordered?: boolean
-  // 配合 TableHeader sticky 用：给定最大高度，组件自带稳定纵向滚动容器
-  // （overscroll-contain 阻断 macOS 橡皮筋回弹，scrolling:auto 关惯性，滚动跟手不抖）
-  maxHeight?: number | string
-}) {
+}: TableProps) {
   const [scrolledX, setScrolledX] = React.useState(false)
   const containerStyle: React.CSSProperties | undefined =
     maxHeight != null ? { maxHeight: typeof maxHeight === "number" ? `${maxHeight}px` : maxHeight } : undefined
@@ -28,19 +61,19 @@ function Table({
   return (
     <div
       data-slot="table-container"
+      data-variant={variant}
       data-density={density}
       data-scrolled-x={scrolledX ? "true" : undefined}
-      // 默认无边框（贴公司列表页）；bordered 时套圆角描边卡片
       className={cn(
-        "group/table-container relative w-full overflow-x-auto",
-        maxHeight != null && "scrollbar-thin overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:auto]",
-        bordered && "overflow-hidden rounded-xl border border-border-subtle bg-card"
+        tableContainerVariants({ variant }),
+        maxHeight != null && "scrollbar-thin overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:auto]"
       )}
       onScroll={handleScroll}
       style={containerStyle}
     >
       <table
         data-slot="table"
+        data-variant={variant}
         data-density={density}
         className={cn("group/table w-full caption-bottom text-sm", className)}
         {...props}
@@ -59,7 +92,7 @@ function TableHeader({
       data-slot="table-header"
       className={cn(
         // 表头白底，靠「中等字重 + 下边线」和表体区分（更接近主流默认表格观感）
-        "[&_tr]:border-b [&_tr]:border-border",
+        "[&_tr]:border-b [&_tr]:border-border [&_tr]:hover:bg-transparent",
         // 吸顶：滚动时表头固定。需配合外层容器固定高度 + overflow-y-auto
         sticky && "sticky top-0 z-10 bg-card [&_th]:bg-card",
         className
@@ -92,14 +125,15 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
   )
 }
 
-function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
+type TableRowProps = React.ComponentProps<"tr"> &
+  VariantProps<typeof tableRowVariants>
+
+function TableRow({ className, variant = "default", ...props }: TableRowProps) {
   return (
     <tr
       data-slot="table-row"
-      className={cn(
-        "border-b border-border-subtle transition-colors hover:bg-muted has-aria-expanded:bg-muted data-[state=selected]:bg-muted",
-        className
-      )}
+      data-variant={variant}
+      className={cn(tableRowVariants({ variant }), className)}
       {...props}
     />
   )
@@ -175,7 +209,8 @@ function TableHead({
     <th
       data-slot="table-head"
       data-sorted={sorted || undefined}
-        className={cn(
+      aria-sort={sortable ? (sorted === "asc" ? "ascending" : sorted === "desc" ? "descending" : "none") : undefined}
+      className={cn(
         "group/th relative h-(--fx-table-row-height-default) min-w-[96px] px-(--fx-control-px-xs) align-middle whitespace-nowrap font-medium text-foreground/88 group-data-[density=compact]/table:h-(--fx-table-row-height-compact) group-data-[density=comfortable]/table:h-(--fx-table-row-height-comfortable)",
         selectionCellClass,
         selectionHeadInnerClass,
@@ -193,7 +228,7 @@ function TableHead({
           <button
             type="button"
             onClick={onSort}
-            className="inline-flex items-center gap-(--fx-control-gap-tight) font-medium outline-none select-none hover:text-foreground data-[sorted]:text-foreground [&_svg]:size-3.5 [&_svg]:shrink-0"
+            className="inline-flex items-center gap-(--fx-control-gap-tight) rounded-sm font-medium outline-none select-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 data-[sorted]:text-foreground [&_svg]:size-3.5 [&_svg]:shrink-0"
           >
             {children}
             {sorted === "asc" ? (
@@ -211,7 +246,7 @@ function TableHead({
           <Popover>
             <PopoverTrigger
               aria-label="列筛选"
-              className="ml-0.5 inline-flex size-(--fx-control-xs-height) items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:bg-muted hover:text-foreground focus-visible:opacity-100 group-hover/th:opacity-100 data-popup-open:opacity-100 data-popup-open:bg-muted data-[filtered=true]:text-primary data-[filtered=true]:opacity-100 [&_svg]:size-3.5"
+              className="ml-0.5 inline-flex size-(--fx-control-xs-height) items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:bg-muted-hover hover:text-foreground focus-visible:opacity-100 focus-visible:ring-3 focus-visible:ring-ring/50 group-hover/th:opacity-100 data-popup-open:opacity-100 data-popup-open:bg-muted data-[filtered=true]:text-primary data-[filtered=true]:opacity-100 [&_svg]:size-3.5"
               data-filtered={filtered ? "true" : undefined}
             >
               <FilterIcon />
@@ -224,7 +259,7 @@ function TableHead({
         {menuActions && menuActions.length > 0 && (
           <DropdownMenu>
             <DropdownMenuTrigger
-              className="ml-0.5 inline-flex size-(--fx-control-xs-height) items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:bg-muted hover:text-foreground focus-visible:opacity-100 group-hover/th:opacity-100 data-popup-open:opacity-100 data-popup-open:bg-muted [&_svg]:size-3.5"
+              className="ml-0.5 inline-flex size-(--fx-control-xs-height) items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:bg-muted-hover hover:text-foreground focus-visible:opacity-100 focus-visible:ring-3 focus-visible:ring-ring/50 group-hover/th:opacity-100 data-popup-open:opacity-100 data-popup-open:bg-muted [&_svg]:size-3.5"
               aria-label="列操作"
             >
               <MoreVerticalIcon />
@@ -294,4 +329,8 @@ export {
   TableRow,
   TableCell,
   TableCaption,
+  tableContainerVariants,
+  tableRowVariants,
+  type TableProps,
+  type TableRowProps,
 }

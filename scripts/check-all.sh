@@ -33,7 +33,9 @@ run_check "Agent 示例来源检查"      node scripts/check-agent-examples.mjs
 run_check "Agent 场景配方检查"      node scripts/check-agent-recipes.mjs
 run_check "Agent 快速上下文检查"    node scripts/build-agent-context.mjs --check
 run_check "页面 Build Kit 检查"     node scripts/check-page-build-kit.mjs
+run_check "分层资产契约检查"      node scripts/check-layered-assets.mjs
 run_check "浮层阴影 token 检查"    node scripts/check-shadow-tokens.mjs
+run_check "网站卡片容器检查"      node scripts/check-website-card-contract.mjs
 run_check "目录锚点关联检查"      node scripts/check-toc-anchors.mjs
 run_check "组件文档 API 检查"     node scripts/check-component-docs.mjs
 run_check "交互态 token 检查"     node scripts/check-interaction-tokens.mjs
@@ -42,6 +44,8 @@ run_check "列表页来源检查"        node scripts/check-list-page-source.mjs
 run_check "导入约定检查"          node scripts/check-imports.mjs
 run_check "文档站骨架契约检查"    node scripts/check-doc-site-contract.mjs
 run_check "组件 manifest 检查"    node scripts/check-components-manifest.mjs
+run_check "组件质量矩阵检查"    node scripts/build-component-quality.mjs --check
+run_check "Playground 来源契约检查" node scripts/check-playground-contract.mjs
 run_check "图标注册表检查"        node scripts/check-icons.mjs
 run_check "Agent UI 协议检查"     node scripts/check-agent-ui-contract.mjs
 run_check "文档路由登记检查"      bash scripts/check-docs-routing.sh

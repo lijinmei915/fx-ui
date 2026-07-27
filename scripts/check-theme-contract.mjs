@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url"
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 const json = process.argv.includes("--json")
 const contract = JSON.parse(fs.readFileSync(path.join(root, "docs/data/agent-tokens.manifest.json"), "utf8"))
+const registry = JSON.parse(fs.readFileSync(path.join(root, "registry/fx-theme.json"), "utf8"))
 const theme = contract.themeContract
 const checks = []
 
@@ -23,6 +24,7 @@ const protectedIds = new Set(protectedTokens.map((token) => token.id))
 add("FX_THEME_CONTRACT_SHAPE", "Theme contract shape", theme?.status === "single-light-mode" && theme?.truthSource === "theme/fx-theme.css" && theme?.supportedModes?.length === 1 && theme.supportedModes[0] === "light" && theme.protectedStructuralSources?.length === 2, "Theme contract declares the current single light-mode and protected structural boundary.", "Run npm run build:tokens and review theme/fx-theme.css / docs/TOKENS.md.")
 add("FX_THEME_TOKEN_SCOPE", "Theme token scope", replaceable.length > 0 && protectedTokens.length > 0 && [...replaceableIds, ...protectedIds].every((id) => semanticIds.has(id)) && ![...replaceableIds].some((id) => protectedIds.has(id)), "Replaceable and protected token sets are disjoint semantic-token subsets.", "Run npm run build:tokens; then fix token categories or the Theme Contract derivation.")
 add("FX_THEME_INTERACTION_STATES", "Theme interaction state groups", (theme?.requiredInteractionGroups ?? []).every((group) => semanticIds.has(group.semanticRoleTokenId) && Object.keys(group.states ?? {}).length > 0), "Every declared interaction group has a semantic default token and state ladder.", "Update interactionLadder in docs/data/design-tokens.json after changing theme states.")
+add("FX_THEME_REGISTRY_SCOPE", "Theme registry scope", JSON.stringify(Object.keys(registry.cssVars ?? {}).sort()) === JSON.stringify((theme?.supportedModes ?? []).slice().sort()), "The distributable registry exposes exactly the modes declared by the Theme Contract.", "Remove undeclared modes from registry/fx-theme.json or update the Theme Contract through the token SSOT flow.")
 
 for (const [code, executable, args, fix] of [
   ["FX_TOKEN_SOURCE_DRIFT", "bash", ["scripts/check-tokens-sync.sh"], "Sync docs/data/design-tokens.json and docs/TOKENS.md from theme/fx-theme.css."],

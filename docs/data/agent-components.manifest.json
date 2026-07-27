@@ -136,7 +136,10 @@
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
       "variants": [],
-      "sizes": []
+      "sizes": [
+        "sm",
+        "default"
+      ]
     },
     {
       "name": "Avatar",
@@ -146,7 +149,11 @@
       "doc": "docs/components/avatar.md",
       "apiSource": "src/components/ui/avatar.tsx",
       "nativeStates": [
-        "root"
+        "imageLoadingStatus",
+        "idle",
+        "loading",
+        "loaded",
+        "error"
       ],
       "semanticDom": [
         "data-slot=\"avatar\"",
@@ -159,33 +166,50 @@
         "data-slot=\"avatar-composite-cell\""
       ],
       "tokenRefs": [
+        "--fx-brand-08",
+        "--fx-green-08",
+        "--fx-amber-08",
+        "--fx-red-08",
+        "--fx-blue-08",
+        "--fx-purple-08",
+        "--fx-neutrals-01",
         "--primary",
         "--primary-foreground",
         "--background",
-        "--foreground",
         "--muted",
         "--muted-foreground",
-        "--border",
+        "--success",
+        "--warning",
+        "--destructive",
         "--ring"
       ],
       "usageRules": [
         "使用 Avatar 前必须以 src/components/ui/avatar.tsx 为真实 API。",
+        "Avatar 是 @shadcn/avatar 的受治理扩展；补齐能力必须登记 extensions，不得据此手写无上游基础的其他组件。",
+        "始终提供 AvatarFallback；图片加载状态沿用 Base UI imageLoadingStatus，不绕开原语义实现。",
+        "AvatarComposite 是补齐的基础身份组件能力，保留在 ui 层，尺寸只允许 default/lg/xl。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
-      "variants": [],
-      "sizes": [],
+      "variants": [
+        "circle",
+        "square",
+        "neutral",
+        "colorful"
+      ],
+      "sizes": [
+        "xs",
+        "sm",
+        "default",
+        "lg",
+        "xl"
+      ],
       "playgroundControls": {
         "notComponentApi": true,
         "props": [
           {
-            "key": "quantity",
-            "propName": "Avatar / AvatarGroup / AvatarComposite",
-            "type": "segment"
-          },
-          {
             "key": "count",
-            "propName": "AvatarGroup.max / AvatarComposite.max",
+            "propName": "AvatarComposite.max",
             "type": "segment"
           },
           {
@@ -243,7 +267,11 @@
         "className 只用于布局或外部间距，不用于覆盖组件自身基础视觉。"
       ],
       "variants": [],
-      "sizes": []
+      "sizes": [],
+      "playgroundControls": {
+        "notComponentApi": true,
+        "props": []
+      }
     },
     {
       "name": "Breadcrumb",
@@ -336,11 +364,10 @@
         "icon-lg"
       ],
       "examples": {
-        "sourceFile": "src/App.tsx",
+        "sourceFile": "src/pages/docs/components/button-page.tsx",
         "pageSymbol": "ButtonPage",
         "anchors": [
           "#playground",
-          "#usage",
           "#props"
         ]
       }
@@ -353,7 +380,8 @@
       "doc": "docs/components/button-group.md",
       "apiSource": "src/components/ui/button-group.tsx",
       "nativeStates": [
-        "focus-visible"
+        "focus-visible",
+        "disabled"
       ],
       "semanticDom": [
         "data-slot=\"button-group\"",
@@ -416,10 +444,14 @@
       "doc": "docs/components/card.md",
       "apiSource": "src/components/ui/card.tsx",
       "nativeStates": [
-        "root"
+        "hover",
+        "active",
+        "focus-visible",
+        "disabled"
       ],
       "semanticDom": [
         "data-slot=\"card\"",
+        "data-slot=\"card-media\"",
         "data-slot=\"card-header\"",
         "data-slot=\"card-title\"",
         "data-slot=\"card-description\"",
@@ -432,17 +464,51 @@
         "--card",
         "--card-foreground",
         "--muted",
+        "--muted-hover",
+        "--muted-active",
         "--muted-foreground",
-        "--border",
+        "--border-container",
+        "--border-strong",
+        "--border-subtle",
+        "--surface-disabled",
+        "--foreground-disabled",
         "--ring"
       ],
       "usageRules": [
         "使用 Card 前必须以 src/components/ui/card.tsx 为真实 API。",
+        "整卡交互通过 Base UI render 渲染为 a 或 button，不给 div 添加伪交互语义。",
+        "outline 变体使用 --border-strong，确保白色画布上仍有清晰外框。",
+        "elevated 变体使用 --border-container，依靠 L1 阴影建立层级，不与 outline 竞争描边强度。",
+        "媒体内容使用 CardMedia 作为 Card 的首个结构子节点；媒体元素自行提供替代文本、比例与裁切策略。",
+        "loading、empty 和业务状态分别组合 Skeleton、Empty、Tag 或 Alert，不扩成 Card 布尔属性。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
-      "variants": [],
-      "sizes": []
+      "variants": [
+        "outline",
+        "subtle",
+        "elevated"
+      ],
+      "sizes": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "playgroundControls": {
+        "notComponentApi": true,
+        "props": [
+          {
+            "key": "variant",
+            "propName": "variant",
+            "type": "segment"
+          },
+          {
+            "key": "size",
+            "propName": "size",
+            "type": "segment"
+          }
+        ]
+      }
     },
     {
       "name": "Chart",
@@ -684,15 +750,15 @@
       "variants": [],
       "sizes": [],
       "examples": {
-        "sourceFile": "src/App.tsx",
+        "sourceFile": "src/pages/docs/components/date-picker-page.tsx",
         "pageSymbol": "DatePickerPage",
         "pageSlug": "date-picker",
-        "scenarios": "datePickerScenarioExamples",
+        "playground": "datePickerPlaygroundConfig",
         "usageCode": "<DatePicker defaultValue={new Date(2026, 6, 15)} clearable />",
         "anchors": [
-          "#date-picker-preview",
-          "#date-picker-usage",
-          "#date-picker-props"
+          "#date-picker-playground",
+          "#date-picker-props",
+          "#date-picker-do-dont"
         ]
       }
     },
@@ -706,7 +772,8 @@
       "nativeStates": [
         "hover",
         "data-open",
-        "data-closed"
+        "data-closed",
+        "data-size"
       ],
       "semanticDom": [
         "data-slot=\"dialog\"",
@@ -731,11 +798,16 @@
       ],
       "usageRules": [
         "使用 Dialog 前必须以 src/components/ui/dialog.tsx 为真实 API。",
+        "DialogContent 的 size 控制 sm/md/lg 主体宽度，showCloseButton 控制关闭按钮；标题语义始终必须保留。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
       "variants": [],
-      "sizes": []
+      "sizes": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "DropdownMenu",
@@ -782,10 +854,14 @@
       ],
       "usageRules": [
         "使用 DropdownMenu 前必须以 src/components/ui/dropdown-menu.tsx 为真实 API。",
+        "DropdownMenuItem 的 default/destructive 表达操作语义；菜单密度固定，不暴露 size 轴。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
-      "variants": [],
+      "variants": [
+        "default",
+        "destructive"
+      ],
       "sizes": []
     },
     {
@@ -878,14 +954,17 @@
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
       "variants": [],
-      "sizes": [],
+      "sizes": [
+        "xs",
+        "sm",
+        "md"
+      ],
       "examples": {
-        "sourceFile": "src/App.tsx",
+        "sourceFile": "src/pages/docs/components/input-page.tsx",
         "pageSymbol": "InputPage",
-        "playground": "inputPlaygroundConfig",
-        "importCode": "inputImportCodeForPlayground",
+        "playground": "playground",
         "anchors": [
-          "#input-usage",
+          "#input-playground",
           "#input-props",
           "#input-do-dont"
         ]
@@ -1002,6 +1081,7 @@
       "category": "fx",
       "role": "页面骨架（Layout/Header/Sider/Content/Footer，参考 Semi）",
       "source": "src/components/fx/layout.tsx",
+      "doc": "docs/components/fx-layout.md",
       "apiSource": "src/components/fx/layout.tsx",
       "nativeStates": [
         "root"
@@ -1112,6 +1192,7 @@
       "category": "fx",
       "role": "导航菜单：一级应用栏(NavRail) + 单面板二级菜单，1:1 还原设计稿",
       "source": "src/components/fx/nav-menu.tsx",
+      "doc": "docs/components/fx-nav-menu.md",
       "apiSource": "src/components/fx/nav-menu.tsx",
       "nativeStates": [
         "default",
@@ -1145,7 +1226,10 @@
         "选中态：二级 bg-accent(浅品牌底)、一级 bg-card 白底左圆角 + 主色加粗；不要手写颜色和状态样式。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
-      "variants": [],
+      "variants": [
+        "rail",
+        "strip"
+      ],
       "sizes": []
     },
     {
@@ -1306,7 +1390,8 @@
       "apiSource": "src/components/ui/popover.tsx",
       "nativeStates": [
         "data-open",
-        "data-closed"
+        "data-closed",
+        "data-size"
       ],
       "semanticDom": [
         "data-slot=\"popover\"",
@@ -1326,11 +1411,16 @@
       ],
       "usageRules": [
         "使用 Popover 前必须以 src/components/ui/popover.tsx 为真实 API。",
+        "PopoverContent 的 size 控制 sm/md/lg 宽度，定位继续通过 side/align 处理。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
       "variants": [],
-      "sizes": []
+      "sizes": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "RadioGroup",
@@ -1444,8 +1534,11 @@
         "data-slot=\"select-content\"",
         "data-slot=\"select-label\"",
         "data-slot=\"select-multi-value\"",
+        "data-overflow",
+        "data-slot=\"select-multi-value-remove\"",
         "data-slot=\"select-overflow-count\"",
         "data-slot=\"select-item\"",
+        "data-slot=\"select-item-indicator\"",
         "data-slot=\"select-clear\"",
         "data-slot=\"select-separator\"",
         "data-slot=\"select-scroll-up-button\"",
@@ -1453,12 +1546,11 @@
       ],
       "tokenRefs": [
         "--foreground",
+        "--background",
         "--popover",
         "--popover-foreground",
         "--muted",
         "--muted-foreground",
-        "--accent",
-        "--accent-foreground",
         "--destructive",
         "--border",
         "--input",
@@ -1469,22 +1561,26 @@
         "使用 Select 前必须以 src/components/ui/select.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。",
-        "多选已选值使用 SelectMultiValue；超出 maxVisible 后折叠为 +n。",
-        "SelectClear 与 SelectTrigger 同级放在 SelectControl 中，箭头热区始终保留。",
+        "多选已选值使用 SelectMultiValue；onRemove 提供单项删除。overflow=collapse（默认）将 maxVisible 作为完整标签数量上限，并随容器宽度从末项折叠为 +n；折叠计数沿用已选值的 Tag soft 外观。overflow=scroll 保持单行横向滚动全部标签。多选值作为控件文字使用 regular 字重，不改变 Tag 的语义字重。",
+        "多选下拉项使用 SelectItemIndicator 展示 Checkbox 反馈，选中状态仍由 SelectItem 统一驱动。",
+        "SelectClear 与 SelectTrigger 同级放在 SelectControl 中；有值且渲染清除动作时，总清除常驻在箭头左侧，clearable 始终预留稳定的 suffix 空间；标签内 X 只删除单项。",
         "其他输入使用受控 value + SelectItem value=\"other\" + Input 组合，不新增 Select prop。"
       ],
-      "variants": [],
+      "variants": [
+        "outline",
+        "borderless"
+      ],
       "sizes": [
         "xs",
         "sm",
         "md"
       ],
       "examples": {
-        "sourceFile": "src/App.tsx",
+        "sourceFile": "src/pages/docs/components/select-page.tsx",
         "pageSymbol": "SelectPage",
-        "playground": "selectPlaygroundConfig",
+        "playground": "playground",
         "anchors": [
-          "#select-usage",
+          "#select-playground",
           "#select-props",
           "#select-do-dont"
         ]
@@ -1518,18 +1614,23 @@
             "type": "segment"
           },
           {
-            "key": "valueState",
-            "propName": "value",
-            "type": "segment"
-          },
-          {
             "key": "otherInput",
             "propName": "composition",
             "type": "segment"
           },
           {
-            "key": "state",
-            "propName": "state",
+            "key": "semanticState",
+            "propName": "disabled / aria-invalid",
+            "type": "segment"
+          },
+          {
+            "key": "interactionState",
+            "propName": "native interaction preview",
+            "type": "segment"
+          },
+          {
+            "key": "feedbackState",
+            "propName": "composition",
             "type": "segment"
           },
           {
@@ -1551,7 +1652,10 @@
         "root"
       ],
       "semanticDom": [
-        "data-slot=\"separator\""
+        "data-slot=\"separator\"",
+        "role=\"separator\"",
+        "aria-orientation",
+        "data-orientation"
       ],
       "tokenRefs": [
         "--border"
@@ -1559,10 +1663,21 @@
       "usageRules": [
         "使用 Separator 前必须以 src/components/ui/separator.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
-        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。",
+        "当前 Base UI Separator 不提供 decorative prop；默认保留 role=separator 与 aria-orientation。"
       ],
       "variants": [],
-      "sizes": []
+      "sizes": [],
+      "playgroundControls": {
+        "notComponentApi": true,
+        "props": [
+          {
+            "key": "orientation",
+            "propName": "orientation",
+            "type": "segment"
+          }
+        ]
+      }
     },
     {
       "name": "Sheet",
@@ -1572,7 +1687,10 @@
       "doc": "docs/components/sheet.md",
       "apiSource": "src/components/ui/sheet.tsx",
       "nativeStates": [
-        "root"
+        "data-side",
+        "data-size",
+        "data-starting-style",
+        "data-ending-style"
       ],
       "semanticDom": [
         "data-slot=\"sheet\"",
@@ -1596,11 +1714,16 @@
       ],
       "usageRules": [
         "使用 Sheet 前必须以 src/components/ui/sheet.tsx 为真实 API。",
+        "SheetContent 的 side 控制 top/right/bottom/left，size 控制 sm/md/lg 的左右侧栏宽度；顶部和底部保持满宽。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
       "variants": [],
-      "sizes": []
+      "sizes": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "Sidebar",
@@ -1681,7 +1804,8 @@
         "root"
       ],
       "semanticDom": [
-        "data-slot=\"skeleton\""
+        "data-slot=\"skeleton\"",
+        "animate-pulse"
       ],
       "tokenRefs": [
         "--muted"
@@ -1705,7 +1829,8 @@
         "root"
       ],
       "semanticDom": [
-        "root"
+        "role=\"status\"",
+        "aria-label=\"Loading\""
       ],
       "tokenRefs": [
         "--foreground",
@@ -1753,7 +1878,10 @@
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
       "variants": [],
-      "sizes": []
+      "sizes": [
+        "sm",
+        "default"
+      ]
     },
     {
       "name": "Table",
@@ -1764,7 +1892,11 @@
       "apiSource": "src/components/ui/table.tsx",
       "nativeStates": [
         "hover",
-        "aria-expanded"
+        "focus-visible",
+        "aria-expanded",
+        "aria-sort",
+        "data-state=selected",
+        "data-filtered"
       ],
       "semanticDom": [
         "data-slot=\"table-container\"",
@@ -1779,17 +1911,78 @@
       ],
       "tokenRefs": [
         "--foreground",
+        "--card",
         "--muted",
+        "--muted-hover",
+        "--muted-active",
         "--muted-foreground",
-        "--border"
+        "--border",
+        "--border-subtle",
+        "--ring"
       ],
       "usageRules": [
         "使用 Table 前必须以 src/components/ui/table.tsx 为真实 API。",
+        "density 是表格尺寸轴，variant 只控制 plain、bordered、striped 三种表面，不承载业务状态。",
+        "排序、筛选、冻结列和选择使用现有 TableHead/TableRow 能力；分页、loading、empty 通过 Pagination、Skeleton、Empty 组合。",
+        "表头由 TableHeader 自动关闭行 hover；Skeleton 和空态占位行使用 TableRow variant=static，不在调用处覆盖背景。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
-      "variants": [],
-      "sizes": []
+      "variants": [
+        "plain",
+        "bordered",
+        "striped"
+      ],
+      "sizes": [
+        "compact",
+        "default",
+        "comfortable"
+      ],
+      "playgroundControls": {
+        "notComponentApi": true,
+        "props": [
+          {
+            "key": "composition",
+            "propName": "composition",
+            "type": "segment"
+          },
+          {
+            "key": "surface",
+            "propName": "variant",
+            "type": "segment"
+          },
+          {
+            "key": "density",
+            "propName": "density",
+            "type": "segment"
+          },
+          {
+            "key": "summary",
+            "propName": "composition",
+            "type": "segment"
+          },
+          {
+            "key": "selection",
+            "propName": "composition",
+            "type": "segment"
+          },
+          {
+            "key": "filter",
+            "propName": "composition",
+            "type": "segment"
+          },
+          {
+            "key": "fixed",
+            "propName": "composition",
+            "type": "segment"
+          },
+          {
+            "key": "status",
+            "propName": "composition",
+            "type": "segment"
+          }
+        ]
+      }
     },
     {
       "name": "Tabs",
@@ -1803,7 +1996,8 @@
         "active",
         "focus-visible",
         "disabled",
-        "data-active"
+        "data-active",
+        "data-orientation"
       ],
       "semanticDom": [
         "data-slot=\"tabs\"",
@@ -1815,13 +2009,18 @@
         "--background",
         "--foreground",
         "--muted",
+        "--muted-hover",
         "--muted-foreground",
+        "--foreground-disabled",
         "--border",
+        "--border-subtle",
         "--input",
         "--ring"
       ],
       "usageRules": [
         "使用 Tabs 前必须以 src/components/ui/tabs.tsx 为真实 API。",
+        "TabsList 的 variant 控制 default/line 视觉，size 控制 sm/md/lg 尺寸；方向由 Tabs orientation 控制，activateOnFocus 决定方向键是否同步激活面板。",
+        "TabsTrigger 必须位于 TabsList，value 与 TabsContent 一一对应；依赖 Base UI 方向键漫游，不手写键盘逻辑。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
@@ -1829,7 +2028,11 @@
         "default",
         "line"
       ],
-      "sizes": []
+      "sizes": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "Tag",
@@ -1863,6 +2066,7 @@
       "variants": [
         "default",
         "secondary",
+        "soft",
         "destructive",
         "success",
         "warning",
@@ -1975,7 +2179,8 @@
         "root"
       ],
       "semanticDom": [
-        "root"
+        "className=\"toaster group\"",
+        "toast: \"cn-toast shadow-l1\""
       ],
       "tokenRefs": [
         "--popover",
@@ -1987,7 +2192,14 @@
         "全局只挂一个 Toaster；业务代码直接调用 toast()，不重复挂载。",
         "浮层阴影用公司档 shadow-l1，不要改用 Tailwind 内置阴影。"
       ],
-      "variants": [],
+      "variants": [
+        "default",
+        "success",
+        "error",
+        "warning",
+        "info",
+        "loading"
+      ],
       "sizes": []
     },
     {
@@ -2124,10 +2336,10 @@
       "variants": [],
       "sizes": [],
       "examples": {
-        "sourceFile": "src/App.tsx",
+        "sourceFile": "src/pages/docs/components/top-bar-page.tsx",
         "pageSymbol": "TopBarPage",
         "pageSlug": "top-bar",
-        "scenarios": "topBarScenarioExamples",
+        "scenarios": "scenarioExamples",
         "anchors": [
           "#top-bar-preview",
           "#top-bar-usage",
@@ -2156,7 +2368,7 @@
       "tokenRefs": [
         "--card",
         "--background",
-        "--border",
+        "--border-container",
         "--border-subtle",
         "--muted",
         "--muted-foreground",
@@ -2165,13 +2377,18 @@
       "usageRules": [
         "使用 WebsiteCardContainer 前必须以 src/components/fx/website-card-container.tsx 为真实 API。",
         "文档站的独立信息块、示例预览和说明区域统一使用 WebsiteCardContainer；它内部复用 shadcn Card 的真实 API。",
-        "WebsiteCardContainer 固定使用 shadow-l1；全局主题的 Shadow Level 统一控制其显示与强度，页面调用处不得传入 elevated。",
-        "padding 默认为 default；仅完整应用预览等必须贴合容器边缘的既有 block 可传 padding=\"none\"，不得以 className 覆盖内边距。",
+        "WebsiteCardContainer 固定选择 shadow-l1；文档站 ThemePanel 的全局 Shadow Level 统一控制 --fx-shadow-* 运行时值，页面调用处不得传入 elevated 或覆盖 shadow。",
+        "padding 默认为 default；完整应用预览、色板或组件制作台等必须贴合容器边缘的既有结构可传 padding=\"none\"，该值同时移除根部默认间距，不得以 className 覆盖内边距或间距。",
+        "tone 仅允许 default、accent、muted；网站容器的语气差异必须通过 tone 表达，不在调用处覆盖背景或边框。",
         "组件自身的 API 预览可直接使用 shadcn Card，确保示例仍是被说明组件的真实用法。",
         "页面调用处不得重新手写卡片容器或卡片表面规则；需要调整网站卡片视觉时改 WebsiteCardContainer。",
         "查看规则里的取值逻辑必须同时展示 manifest 规则和组件插槽视觉取值。"
       ],
-      "variants": [],
+      "variants": [
+        "default",
+        "accent",
+        "muted"
+      ],
       "sizes": []
     },
     {
@@ -2204,7 +2421,7 @@
       "usageRules": [
         "使用 WebsiteRulePanel 前必须以 src/components/fx/website-rule-panel.tsx 为真实 API。",
         "WebsiteRulePopover 负责网站规范页查看规则的触发按钮、箭头状态、弹窗定位和宽度；页面调用处不得重建 Collapsible 外壳。",
-        "WebsiteRulePanel 的浮层表面统一由 WebsiteCardContainer 承载；阴影跟随网站容器和全局 Shadow Level。规则正文、视觉取值和来源必须从对应真相源映射进入。",
+        "WebsiteRulePanel 的浮层表面统一由 WebsiteCardContainer 承载；阴影跟随网站容器的 shadow-l1 选择和 ThemePanel 全局 Shadow Level。规则正文、视觉取值和来源必须从对应真相源映射进入。",
         "WebsiteRuleValueList 负责查看规则里的取值逻辑列表；取值必须从真实组件插槽 class 或 manifest 映射进入。",
         "WebsiteRuleValueList 面向前台读者展示时必须把 Tailwind 取值翻译成可理解的视觉描述，不直接裸露 w-[min(...)]、shrink-0 等原始 class。",
         "不要在调用处重建卡片外壳、来源区或标题区；需要调整框架时改 WebsiteRulePanel。"

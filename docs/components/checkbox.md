@@ -35,13 +35,18 @@ src/components/ui/checkbox.tsx
 
 ```tsx
 import { Checkbox } from "@/components/ui/checkbox"
+import { Field, FieldContent, FieldGroup, FieldLabel } from "@/components/ui/field"
 ```
 
 ```tsx
-<Field orientation="horizontal">
-  <Checkbox id="agree" />
-  <FieldLabel htmlFor="agree">我已阅读并同意</FieldLabel>
-</Field>
+<FieldGroup>
+  <Field orientation="horizontal">
+    <Checkbox id="agree" />
+    <FieldContent>
+      <FieldLabel htmlFor="agree">我已阅读并同意</FieldLabel>
+    </FieldContent>
+  </Field>
+</FieldGroup>
 ```
 
 ## 组件总览 {#overview}
@@ -62,7 +67,9 @@ import { Checkbox } from "@/components/ui/checkbox"
 ```tsx
 <Field orientation="horizontal">
   <Checkbox id="agree" />
-  <FieldLabel htmlFor="agree">我已阅读并同意</FieldLabel>
+  <FieldContent>
+    <FieldLabel htmlFor="agree">我已阅读并同意</FieldLabel>
+  </FieldContent>
 </Field>
 ```
 
@@ -133,6 +140,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 ```tsx
 <Field orientation="horizontal">
   <Checkbox id="agree" />
-  <FieldLabel htmlFor="agree">我已阅读并同意</FieldLabel>
+  <FieldContent>
+    <FieldLabel htmlFor="agree">我已阅读并同意</FieldLabel>
+  </FieldContent>
 </Field>
 ```

@@ -1,4 +1,5 @@
 import * as React from "react"
+import type { DateRange } from "react-day-picker"
 
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -19,12 +20,12 @@ const datePickerIconClassName = {
 } as const
 
 type DatePickerSize = keyof typeof datePickerSizeClassName
+type DatePickerRangeValue = DateRange
 
-type DatePickerProps = {
-  value?: Date
-  defaultValue?: Date
-  onValueChange?: (value: Date | undefined) => void
+type DatePickerCommonProps = {
   placeholder?: string
+  startPlaceholder?: string
+  endPlaceholder?: string
   size?: DatePickerSize
   disabled?: boolean
   clearable?: boolean
@@ -32,6 +33,21 @@ type DatePickerProps = {
   className?: string
   "data-state"?: "hover" | "focus" | "open"
 }
+
+type DatePickerProps = DatePickerCommonProps & (
+  | {
+      range?: false
+      value?: Date
+      defaultValue?: Date
+      onValueChange?: (value: Date | undefined) => void
+    }
+  | {
+      range: true
+      value?: DateRange
+      defaultValue?: DateRange
+      onValueChange?: (value: DateRange | undefined) => void
+    }
+)
 
 function formatDate(value: Date) {
   return new Intl.DateTimeFormat("zh-CN", {
@@ -42,10 +58,13 @@ function formatDate(value: Date) {
 }
 
 function DatePicker({
+  range = false,
   value,
   defaultValue,
   onValueChange,
   placeholder = "请选择日期",
+  startPlaceholder = "开始日期",
+  endPlaceholder = "结束日期",
   size = "sm",
   disabled,
   clearable,
@@ -53,16 +72,25 @@ function DatePicker({
   "aria-invalid": invalid,
   "data-state": dataState,
 }: DatePickerProps) {
-  const [innerValue, setInnerValue] = React.useState<Date | undefined>(defaultValue)
+  const defaultSingleValue = defaultValue instanceof Date ? defaultValue : undefined
+  const defaultRangeValue = defaultValue && !(defaultValue instanceof Date) ? defaultValue : undefined
+  const [innerValue, setInnerValue] = React.useState<Date | undefined>(defaultSingleValue)
+  const [innerRangeValue, setInnerRangeValue] = React.useState<DateRange | undefined>(defaultRangeValue)
   const [open, setOpen] = React.useState(dataState === "open")
-  const selectedValue = value ?? innerValue
+  const selectedValue = value instanceof Date ? value : innerValue
+  const selectedRangeValue = value && !(value instanceof Date) ? value : innerRangeValue
   const resolvedOpen = dataState === "open" ? true : open
 
   const setValue = (next: Date | undefined) => {
     if (value === undefined) {
       setInnerValue(next)
     }
-    onValueChange?.(next)
+    if (!range) (onValueChange as ((value: Date | undefined) => void) | undefined)?.(next)
+  }
+
+  const setRangeValue = (next: DateRange | undefined) => {
+    if (value === undefined) setInnerRangeValue(next)
+    if (range) (onValueChange as ((value: DateRange | undefined) => void) | undefined)?.(next)
   }
 
   return (
@@ -93,39 +121,57 @@ function DatePicker({
             data-slot="date-picker-value"
             className={cn(
               "min-w-0 flex-1 truncate",
-              selectedValue ? "text-foreground" : "text-foreground-disabled"
+              range
+                ? selectedRangeValue?.from || selectedRangeValue?.to ? "text-foreground" : "text-foreground-disabled"
+                : selectedValue ? "text-foreground" : "text-foreground-disabled"
             )}
           >
-            {selectedValue ? formatDate(selectedValue) : placeholder}
+            {range ? (
+              <span className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-(--fx-control-gap)">
+                <span className="truncate">{selectedRangeValue?.from ? formatDate(selectedRangeValue.from) : startPlaceholder}</span>
+                <span className="text-muted-foreground">-</span>
+                <span className="truncate">{selectedRangeValue?.to ? formatDate(selectedRangeValue.to) : endPlaceholder}</span>
+              </span>
+            ) : selectedValue ? formatDate(selectedValue) : placeholder}
           </span>
         </PopoverTrigger>
-        {clearable && selectedValue && !disabled ? (
+        {clearable && (range ? selectedRangeValue?.from || selectedRangeValue?.to : selectedValue) && !disabled ? (
           <Button
             type="button"
             variant="ghost"
             size="icon-xs"
             aria-label="清除日期"
             data-slot="date-picker-clear"
-            onClick={() => setValue(undefined)}
+            onClick={() => range ? setRangeValue(undefined) : setValue(undefined)}
           >
             <XIcon />
           </Button>
         ) : null}
       </div>
-      <PopoverContent align="start" className="w-auto p-0">
-        <Calendar
-          mode="single"
-          selected={selectedValue}
-          onSelect={(next) => {
-            setValue(next)
-            if (next) {
-              setOpen(false)
-            }
-          }}
-        />
+      <PopoverContent align="start" sideOffset={8} className="w-auto p-0">
+        {range ? (
+          <Calendar
+            mode="range"
+            selected={selectedRangeValue}
+            defaultMonth={selectedRangeValue?.from}
+            onSelect={(next) => {
+              setRangeValue(next)
+              if (next?.from && next.to) setOpen(false)
+            }}
+          />
+        ) : (
+          <Calendar
+            mode="single"
+            selected={selectedValue}
+            onSelect={(next) => {
+              setValue(next)
+              if (next) setOpen(false)
+            }}
+          />
+        )}
       </PopoverContent>
     </Popover>
   )
 }
 
-export { DatePicker, type DatePickerProps }
+export { DatePicker, type DatePickerProps, type DatePickerRangeValue }

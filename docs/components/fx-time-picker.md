@@ -45,11 +45,14 @@ import { TimePicker } from "@/components/fx/time-picker"
 ## 组件总览 {#overview}
 
 - 类型：fx
-- 语义 DOM：`data-slot="time-picker"`、`data-slot="time-picker-value"`、`data-slot="time-picker-clear"`、`data-slot="time-picker-list"`
+- 语义 DOM：`data-slot="time-picker"`、`data-slot="time-picker-value"`、`data-slot="time-picker-clear"`、`data-slot="time-picker-list"`、`data-slot="time-picker-wheel"`
 - 原生/数据状态：hover、focus-visible、open、disabled、aria-invalid
 - 尺寸：`xs`=24px、`sm`=28px（默认）、`md`=32px
 - 呈现方式：`popover`（默认）/ `native`
-- 导出项：TimePicker、TimePickerProps
+- 弹层选择形式：`list`（默认）/ `wheel`
+- 时间格式：`HH:mm`（默认）/ `HH:mm:ss`
+- 选择范围：单时间（默认）/ `range` 单触发器范围选择
+- 导出项：TimePicker、TimePickerProps、TimePickerRangeValue
 
 ## 场景示例 {#examples}
 
@@ -62,11 +65,10 @@ import { TimePicker } from "@/components/fx/time-picker"
 ### 时间范围
 
 ```tsx
-<div className="flex items-center gap-2">
-  <TimePicker placeholder="开始时间" />
-  <span className="text-muted-foreground">至</span>
-  <TimePicker placeholder="结束时间" />
-</div>
+<TimePicker
+  range
+  defaultValue={{ start: "09:30", end: "18:00" }}
+/>
 ```
 
 ### 字段错误
@@ -83,10 +85,16 @@ import { TimePicker } from "@/components/fx/time-picker"
 
 | 属性 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
-| `value / defaultValue` | `string` | - | 受控 / 非受控的时间值，格式为 `HH:mm` |
-| `onValueChange` | `(value: string) => void` | - | 时间变化回调 |
+| `range` | `boolean` | `false` | 使用单触发器、单弹层选择开始和结束时间 |
+| `value / defaultValue` | `string \| { start?: string; end?: string }` | - | 单时间传字符串；`range` 模式传结构化范围值 |
+| `onValueChange` | `(value: string \| TimePickerRangeValue) => void` | - | 根据 `range` 判别返回单时间或范围值 |
 | `mode` | `"popover" \| "native"` | `"popover"` | 弹层时间列表或原生 time input |
+| `picker` | `"list" \| "wheel"` | `"list"` | 弹层内使用时间列表或滚轮选择 |
+| `format` | `"HH:mm" \| "HH:mm:ss"` | `"HH:mm"` | 时间显示格式 |
 | `step` | `15 \| 30 \| 60` | `30` | 分钟步进 |
+| `minuteStep` | `1 \| 5 \| 10 \| 15 \| 30` | `1` | 滚轮模式的分钟步进 |
+| `secondStep` | `1 \| 5 \| 10 \| 15 \| 30` | `1` | 滚轮模式的秒步进 |
+| `needConfirm` | `boolean` | `true` | 滚轮模式是否需要确定 / 取消 |
 | `size` | `"xs" \| "sm" \| "md"` | `"sm"` | 触发器尺寸：24 / 28 / 32 |
 | `clearable` | `boolean` | `false` | 有值时是否展示清除入口 |
 | `disabled` | `boolean` | `false` | 禁用时间选择 |
@@ -100,6 +108,7 @@ import { TimePicker } from "@/components/fx/time-picker"
 | `data-slot="time-picker-value"` | 弹层模式下展示当前时间或占位文本 |
 | `data-slot="time-picker-clear"` | 清除当前时间值的入口 |
 | `data-slot="time-picker-list"` | 弹层内的时间选项列表 |
+| `data-slot="time-picker-wheel"` | 滚轮模式弹层内的时分秒选择器 |
 | `aria-invalid` | 校验失败语义，同时驱动错误边框 |
 | `disabled` | 禁用语义，阻止交互 |
 
@@ -121,7 +130,7 @@ import { TimePicker } from "@/components/fx/time-picker"
 ## AI Rules {#ai-rules}
 
 - 时间选择用 `TimePicker`，不要把普通 `Select` 临时改造成时间控件。
-- 范围选择用两个 `TimePicker` 组合，不把开始/结束时间塞进一个字符串值。
+- 范围选择用一个 `TimePicker range`，开始和结束时间使用结构化对象值，不拼接字符串。
 - 错误态用 `Field + aria-invalid + FieldError`。
 - 尺寸用 `size`，步进用 `step`，不要在页面里覆盖高度、边框、圆角或时间列表。
 - 使用 TimePicker 前必须以 `src/components/fx/time-picker.tsx` 为真实 API。
@@ -146,4 +155,6 @@ import { TimePicker } from "@/components/fx/time-picker"
 
 ```tsx
 <TimePicker defaultValue="09:00" step={30} />
+
+<TimePicker picker="wheel" format="HH:mm:ss" defaultValue="17:10:33" />
 ```

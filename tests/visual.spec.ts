@@ -912,8 +912,8 @@ test("DatePicker Playground 主入口", async ({ page }) => {
   const pg = page.locator(visual.selector)
   await expect(pg).toBeVisible()
   await expect(pg.locator('[data-story-source="docs/data/component-playgrounds.manifest.json#customPlaygrounds.datePicker"]')).toHaveCount(1)
-  await expect(pg.locator('[data-slot="component-playground-stories"]')).toHaveCount(1)
-  await expect(pg.locator(`[data-story-count="${storyCount("customPlaygrounds.datePicker")}"]`)).toHaveCount(1)
+  await expect(pg.locator('[data-slot="component-playground-stories"]')).toHaveCount(0)
+  await expect(pg.locator('[data-story-count]')).toHaveCount(0)
   await expect(pg).toHaveScreenshot(visual.screenshot)
 })
 
@@ -935,7 +935,7 @@ test("TimePicker Playground 主入口", async ({ page }) => {
   const pg = page.locator(visual.selector)
   await expect(pg).toBeVisible()
   await expect(pg.locator('[data-story-source="docs/data/component-playgrounds.manifest.json#customPlaygrounds.timePicker"]')).toHaveCount(1)
-  await expect(pg.locator(`[data-story-count="${storyCount("customPlaygrounds.timePicker")}"]`)).toHaveCount(1)
+  await expect(pg.locator('[data-story-count]')).toHaveCount(0)
   await expect(pg).toHaveScreenshot("time-picker-playground.png")
 })
 

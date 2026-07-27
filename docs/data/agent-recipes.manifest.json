@@ -61,15 +61,15 @@
       "intent": ["日期范围", "日期筛选", "date range", "开始结束日期"],
       "status": "ready",
       "components": ["DatePicker"],
-      "parts": ["DatePicker x2"],
+      "parts": ["DatePicker range"],
       "tokenRefs": ["--input", "--popover", "--destructive"],
-      "composition": "DatePicker(start) + separator + DatePicker(end)",
-      "behavior": ["Keep start and end as separate date values.", "Each picker may be controlled or uncontrolled using the DatePicker API.", "Validation uses Field + aria-invalid + FieldError when needed."],
-      "acceptance": ["Two DatePicker instances are used for a range.", "Start and end dates are not concatenated into one string value.", "Each picker retains its calendar trigger and accessible error state."],
-      "forbidden": ["Do not add a date prop or calendar icon business semantics to base Input.", "Do not invent a range string API on DatePicker.", "Do not override invalid borders at the call site."],
+      "composition": "DatePicker range with a structured DateRange value",
+      "behavior": ["Keep start and end as structured DateRange fields.", "The range picker may be controlled or uncontrolled using the DatePicker API.", "Validation uses Field + aria-invalid + FieldError when needed."],
+      "acceptance": ["One DatePicker range instance is used for a range.", "Start and end dates are not concatenated into one string value.", "The picker retains one calendar trigger and accessible error state."],
+      "forbidden": ["Do not add a date prop or calendar icon business semantics to base Input.", "Do not compose two adjacent DatePicker inputs for one range.", "Do not override invalid borders at the call site."],
       "evidence": [
-        { "file": "src/pages/docs/components/date-picker-page.tsx", "symbols": ["datePickerPlaygroundConfig", "开始日期"] },
-        { "file": "docs/data/component-playgrounds.manifest.json", "symbols": ["customPlaygrounds", "datePicker", "id\": \"range\""] },
+        { "file": "src/pages/docs/components/date-picker-page.tsx", "symbols": ["datePickerPlaygroundConfig", "DatePicker {...props} range"] },
+        { "file": "docs/data/component-playgrounds.manifest.json", "symbols": ["customPlaygrounds", "datePicker", "\"value\": \"range\""] },
         { "file": "docs/components/fx-date-picker.md", "symbols": ["日期范围", "aria-invalid"] }
       ]
     }

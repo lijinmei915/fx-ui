@@ -7693,7 +7693,8 @@
             "data-slot=\"time-picker\"",
             "data-slot=\"time-picker-value\"",
             "data-slot=\"time-picker-clear\"",
-            "data-slot=\"time-picker-list\""
+            "data-slot=\"time-picker-list\"",
+            "data-slot=\"time-picker-wheel\""
           ]
         },
         "sizes": {
@@ -7721,10 +7722,7 @@
         "businessCompositions": {
           "status": "needs-review",
           "evidence": "fewer-than-three-composition-stories",
-          "values": [
-            "basic",
-            "range"
-          ]
+          "values": []
         },
         "accessibility": {
           "status": "covered",
@@ -7733,10 +7731,7 @@
         "realScenarios": {
           "status": "needs-review",
           "evidence": "real-scenario-evidence-incomplete",
-          "values": [
-            "basic",
-            "range"
-          ]
+          "values": []
         }
       },
       "stateCoverage": {
@@ -7888,10 +7883,7 @@
         "businessCompositions": {
           "status": "needs-review",
           "evidence": "fewer-than-three-composition-stories",
-          "values": [
-            "single",
-            "range"
-          ]
+          "values": []
         },
         "accessibility": {
           "status": "covered",
@@ -7900,20 +7892,17 @@
         "realScenarios": {
           "status": "needs-review",
           "evidence": "real-scenario-evidence-incomplete",
-          "values": [
-            "single",
-            "range"
-          ]
+          "values": []
         }
       },
       "stateCoverage": {
         "disabled": {
           "status": "evidenced",
-          "evidence": "source+doc+story",
+          "evidence": "source+doc",
           "sources": {
             "source": true,
             "doc": true,
-            "story": true,
+            "story": false,
             "behavior": false
           }
         },

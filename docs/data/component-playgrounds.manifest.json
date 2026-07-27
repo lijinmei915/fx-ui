@@ -273,22 +273,63 @@
       "initial": {
         "scenario": "single",
         "size": "sm",
-        "clearable": "true",
-        "disabled": "false",
-        "invalid": "false",
-        "value": "selected"
+        "valueState": "selected",
+        "state": "normal"
       },
-      "storyPresentation": "presets",
+      "guidanceKey": "scenario",
       "props": [
         {
           "key": "scenario",
-          "zh": "模式",
-          "en": "Mode",
-          "propName": "usageMode",
+          "zh": "选择范围",
+          "en": "Selection",
+          "propName": "range",
           "type": "segment",
           "options": [
-            { "value": "single", "label": "单日期", "labelEn": "Single date" },
-            { "value": "range", "label": "日期范围", "labelEn": "Date range" }
+            {
+              "value": "single",
+              "label": "单日期",
+              "labelEn": "Single date",
+              "intent": "选择一个日期点。",
+              "intentEn": "Select one calendar date.",
+              "constraint": "使用单个 Date 值。",
+              "constraintEn": "Use a single Date value."
+            },
+            {
+              "value": "range",
+              "label": "日期范围",
+              "labelEn": "Date range",
+              "intent": "在一个控件中选择开始和结束日期。",
+              "intentEn": "Select a start and end date in one control.",
+              "constraint": "使用 DatePicker range 和结构化 DateRange，不并排两个输入框。",
+              "constraintEn": "Use DatePicker range with a structured DateRange, not two adjacent inputs."
+            }
+          ]
+        },
+        {
+          "key": "valueState",
+          "zh": "值状态",
+          "en": "Value state",
+          "propName": "value",
+          "type": "segment",
+          "options": [
+            { "value": "placeholder", "label": "占位", "labelEn": "Placeholder" },
+            { "value": "selected", "label": "已选", "labelEn": "Selected" },
+            { "value": "clearable", "label": "可清除", "labelEn": "Clearable" }
+          ]
+        },
+        {
+          "key": "state",
+          "zh": "交互状态",
+          "en": "State",
+          "propName": "state",
+          "type": "segment",
+          "options": [
+            { "value": "normal", "label": "默认", "labelEn": "Default" },
+            { "value": "hover", "label": "悬停", "labelEn": "Hover" },
+            { "value": "focus", "label": "聚焦", "labelEn": "Focus" },
+            { "value": "open", "label": "展开", "labelEn": "Open" },
+            { "value": "invalid", "label": "报错", "labelEn": "Error" },
+            { "value": "disabled", "label": "禁用", "labelEn": "Disabled" }
           ]
         },
         {
@@ -298,53 +339,9 @@
           "propName": "size",
           "type": "segment",
           "options": [
-            { "value": "xs", "label": "小", "labelEn": "XS" },
-            { "value": "sm", "label": "标准", "labelEn": "SM" },
-            { "value": "md", "label": "大", "labelEn": "MD" }
-          ]
-        },
-        {
-          "key": "clearable",
-          "zh": "可清除",
-          "en": "Clearable",
-          "propName": "clearable",
-          "type": "segment",
-          "options": [
-            { "value": "true", "label": "是", "labelEn": "Yes" },
-            { "value": "false", "label": "否", "labelEn": "No" }
-          ]
-        },
-        {
-          "key": "disabled",
-          "zh": "禁用",
-          "en": "Disabled",
-          "propName": "disabled",
-          "type": "segment",
-          "options": [
-            { "value": "true", "label": "是", "labelEn": "Yes" },
-            { "value": "false", "label": "否", "labelEn": "No" }
-          ]
-        },
-        {
-          "key": "invalid",
-          "zh": "错误态",
-          "en": "Invalid",
-          "propName": "aria-invalid",
-          "type": "segment",
-          "options": [
-            { "value": "true", "label": "是", "labelEn": "Yes" },
-            { "value": "false", "label": "否", "labelEn": "No" }
-          ]
-        },
-        {
-          "key": "value",
-          "zh": "值状态",
-          "en": "Value",
-          "propName": "defaultValue",
-          "type": "segment",
-          "options": [
-            { "value": "selected", "label": "已有日期", "labelEn": "Selected" },
-            { "value": "empty", "label": "未选择", "labelEn": "Empty" }
+            { "value": "xs", "label": "超小24", "labelEn": "XS 24" },
+            { "value": "sm", "label": "默认28", "labelEn": "Default 28" },
+            { "value": "md", "label": "中32", "labelEn": "Medium 32" }
           ]
         }
       ],
@@ -353,45 +350,7 @@
         "route": "#date-picker",
         "selector": "#date-picker-playground",
         "screenshot": "date-picker-playground.png"
-      },
-      "stories": [
-        {
-          "id": "single",
-          "name": "单日期",
-          "nameEn": "Single date",
-          "args": {
-            "scenario": "single",
-            "size": "sm",
-            "clearable": "true",
-            "disabled": "false",
-            "invalid": "false",
-            "value": "selected"
-          },
-          "parameters": {
-            "intent": "在表单或筛选中选择一个日期。",
-            "intentEn": "Select one date in forms or filters.",
-            "source": "src/components/fx/date-picker.tsx#single"
-          }
-        },
-        {
-          "id": "range",
-          "name": "日期范围",
-          "nameEn": "Date range",
-          "args": {
-            "scenario": "range",
-            "size": "sm",
-            "clearable": "true",
-            "disabled": "false",
-            "invalid": "false",
-            "value": "empty"
-          },
-          "parameters": {
-            "intent": "组合两个 DatePicker 选择开始和结束日期。",
-            "intentEn": "Compose two DatePickers for a start and end date.",
-            "source": "src/components/fx/date-picker.tsx#range"
-          }
-        }
-      ]
+      }
     },
     "timePicker": {
       "componentName": "TimePicker",
@@ -401,30 +360,52 @@
       "mode": "custom-config",
       "initial": {
         "capability": "basic",
-        "mode": "popover",
+        "picker": "wheel",
+        "format": "HH:mm",
         "valueState": "placeholder",
         "state": "normal",
         "step": "30",
         "size": "sm"
       },
-      "storyPresentation": "presets",
-      "guidanceKey": "mode",
+      "guidanceKey": "picker",
       "props": [
         {
-          "key": "mode",
-          "zh": "呈现方式",
-          "en": "Mode",
-          "propName": "mode",
+          "key": "capability",
+          "zh": "选择范围",
+          "en": "Selection",
+          "propName": "range",
           "type": "segment",
           "options": [
-            { "value": "popover", "label": "弹层", "labelEn": "Popover" },
-            { "value": "native", "label": "原生", "labelEn": "Native" }
+            { "value": "basic", "label": "单个时间", "labelEn": "Single time" },
+            { "value": "range", "label": "时间范围", "labelEn": "Time range" }
+          ]
+        },
+        {
+          "key": "picker",
+          "zh": "时间方式",
+          "en": "Time selection",
+          "propName": "picker",
+          "type": "segment",
+          "options": [
+            { "value": "wheel", "label": "任意时间", "labelEn": "Any time" },
+            { "value": "list", "label": "固定间隔", "labelEn": "Fixed interval" }
+          ]
+        },
+        {
+          "key": "format",
+          "zh": "时间格式",
+          "en": "Format",
+          "propName": "format",
+          "type": "segment",
+          "options": [
+            { "value": "HH:mm", "label": "时:分", "labelEn": "Hours:minutes" },
+            { "value": "HH:mm:ss", "label": "时:分:秒", "labelEn": "Hours:minutes:seconds" }
           ]
         },
         {
           "key": "valueState",
-          "zh": "当前值",
-          "en": "Current value",
+          "zh": "值状态",
+          "en": "Value state",
           "propName": "value",
           "type": "segment",
           "options": [
@@ -454,8 +435,8 @@
         },
         {
           "key": "step",
-          "zh": "步进",
-          "en": "Step",
+          "zh": "固定间隔",
+          "en": "Interval",
           "propName": "step",
           "type": "segment",
           "options": [
@@ -475,44 +456,6 @@
             { "value": "sm", "label": "默认28", "labelEn": "Default 28" },
             { "value": "md", "label": "中32", "labelEn": "Medium 32" }
           ]
-        }
-      ],
-      "stories": [
-        {
-          "id": "basic",
-          "name": "基础时间",
-          "nameEn": "Basic time",
-          "args": {
-            "capability": "basic",
-            "mode": "popover",
-            "valueState": "placeholder",
-            "state": "normal",
-            "step": "30",
-            "size": "sm"
-          },
-          "parameters": {
-            "intent": "在表单中选择单个时间点。",
-            "intentEn": "Select a single time in a form.",
-            "source": "src/components/fx/time-picker.tsx#basic"
-          }
-        },
-        {
-          "id": "range",
-          "name": "时间范围",
-          "nameEn": "Time range",
-          "args": {
-            "capability": "range",
-            "mode": "popover",
-            "valueState": "placeholder",
-            "state": "normal",
-            "step": "30",
-            "size": "sm"
-          },
-          "parameters": {
-            "intent": "组合两个时间选择器表达开始和结束时间。",
-            "intentEn": "Compose two time pickers for a start and end time.",
-            "source": "src/components/fx/time-picker.tsx#range"
-          }
         }
       ]
     }

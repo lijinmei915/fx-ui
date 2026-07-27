@@ -1663,7 +1663,7 @@
       "source": "src/components/fx/time-picker.tsx",
       "docStatus": "complete",
       "doc": "docs/components/fx-time-picker.md",
-      "role": "时间点选择器：HH:mm 时间选择、时间范围组合、原生/弹层模式",
+      "role": "时间选择器：单时间与单触发器时间范围、固定间隔与任意时间",
       "category": "fx",
       "nativeStates": [
         "default",
@@ -1677,7 +1677,8 @@
         "data-slot=\"time-picker\"",
         "data-slot=\"time-picker-value\"",
         "data-slot=\"time-picker-clear\"",
-        "data-slot=\"time-picker-list\""
+        "data-slot=\"time-picker-list\"",
+        "data-slot=\"time-picker-wheel\""
       ],
       "tokenRefs": [
         "--foreground",
@@ -1692,7 +1693,7 @@
       "usageRules": [
         "使用 TimePicker 前必须以 src/components/fx/time-picker.tsx 为真实 API。",
         "TimePicker 是时间语义组件，不把普通 Select 临时改造成时间控件。",
-        "范围选择用两个 TimePicker 组合，不把开始/结束时间塞进一个字符串值。",
+        "范围选择用一个 TimePicker range，开始和结束时间使用结构化对象值。",
         "错误态用 Field + aria-invalid + FieldError。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ]
@@ -1702,7 +1703,7 @@
       "source": "src/components/fx/date-picker.tsx",
       "docStatus": "complete",
       "doc": "docs/components/fx-date-picker.md",
-      "role": "单日期选择器：日历弹层、受控/非受控日期、清除与字段错误状态",
+      "role": "日期选择器：单日期与单触发器日期范围、清除与字段错误状态",
       "category": "fx",
       "nativeStates": [
         "default",
@@ -1732,7 +1733,7 @@
       "usageRules": [
         "使用 DatePicker 前必须以 src/components/fx/date-picker.tsx 为真实 API。",
         "DatePicker 是日期语义组件，不给基础 Input 添加日期 prop 或日历图标业务语义。",
-        "日期范围用两个 DatePicker 组合，不把开始/结束日期塞进一个字符串值。",
+        "日期范围使用一个 DatePicker range，开始和结束日期使用结构化 DateRange。",
         "错误态用 Field + aria-invalid + FieldError。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ]

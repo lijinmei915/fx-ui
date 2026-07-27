@@ -1,7 +1,7 @@
 import { DatePicker } from "@/components/fx/date-picker"
 import { ComponentPlayground, type ComponentPlaygroundConfig } from "@/components/fx/component-playground"
 import componentPlaygroundsManifestRaw from "../../../../docs/data/component-playgrounds.manifest.json?raw"
-import { componentPlaygroundPropsFromManifest, componentPlaygroundStoriesFromManifest, type ComponentPlaygroundsManifest } from "@/pages/docs/components/component-playground-manifest"
+import { componentPlaygroundPropsFromManifest, type ComponentPlaygroundsManifest } from "@/pages/docs/components/component-playground-manifest"
 import { StandardDocPage, type StandardDocLang } from "@/pages/docs/components/standard-doc-page"
 
 type PropRow = { prop: string; type: string; defaultValue: string; desc: string }
@@ -12,27 +12,31 @@ const componentPlaygroundsManifest = JSON.parse(componentPlaygroundsManifestRaw)
 const datePickerManifest = componentPlaygroundsManifest.customPlaygrounds!.datePicker
 
 function datePickerValue(value: string) {
-  return value === "selected" ? new Date(2026, 6, 15) : undefined
+  return value === "selected" || value === "clearable" ? new Date(2026, 6, 15) : undefined
 }
 
 function renderDatePickerPlayground(values: Record<string, string>) {
   const props = {
     size: values.size as "xs" | "sm" | "md",
-    clearable: values.clearable === "true",
-    disabled: values.disabled === "true",
-    "aria-invalid": values.invalid === "true",
-    defaultValue: datePickerValue(values.value),
+    clearable: values.valueState === "clearable",
+    disabled: values.state === "disabled",
+    "aria-invalid": values.state === "invalid",
+    "data-state": (values.state === "hover" || values.state === "focus" || values.state === "open" ? values.state : undefined) as "hover" | "focus" | "open" | undefined,
   } as const
   if (values.scenario === "range") {
-    return <div className="flex flex-wrap items-center gap-2"><DatePicker {...props} placeholder="开始日期" /><span className="text-muted-foreground">至</span><DatePicker {...props} defaultValue={undefined} placeholder="结束日期" /></div>
+    const date = datePickerValue(values.valueState)
+    return <DatePicker {...props} range defaultValue={date ? { from: date, to: new Date(2026, 6, 21) } : undefined} className="w-[360px]" />
   }
-  return <DatePicker {...props} />
+  return <DatePicker {...props} defaultValue={datePickerValue(values.valueState)} />
 }
 
 function genDatePickerCode(values: Record<string, string>) {
-  const attrs = [`size="${values.size}"`, `clearable={${values.clearable === "true"}}`, `disabled={${values.disabled === "true"}}`, `aria-invalid={${values.invalid === "true"}}`]
-  if (values.value === "selected") attrs.push("defaultValue={new Date(2026, 6, 15)}")
-  if (values.scenario === "range") return `import { DatePicker } from "@/components/fx/date-picker"\n\n<div className="flex items-center gap-2">\n  <DatePicker ${attrs.join(" ")} placeholder="开始日期" />\n  <span>至</span>\n  <DatePicker ${attrs.filter((attr) => !attr.startsWith("defaultValue")).join(" ")} placeholder="结束日期" />\n</div>`
+  const attrs = [`size="${values.size}"`]
+  if (values.valueState === "clearable") attrs.push("clearable")
+  if (values.state === "disabled") attrs.push("disabled")
+  if (values.state === "invalid") attrs.push("aria-invalid")
+  if (values.valueState === "selected" || values.valueState === "clearable") attrs.push(values.scenario === "range" ? "defaultValue={{ from: new Date(2026, 6, 15), to: new Date(2026, 6, 21) }}" : "defaultValue={new Date(2026, 6, 15)}")
+  if (values.scenario === "range") return `import { DatePicker } from "@/components/fx/date-picker"\n\n<DatePicker range ${attrs.join(" ")} />`
   return `import { DatePicker } from "@/components/fx/date-picker"\n\n<DatePicker ${attrs.join(" ")} />`
 }
 
@@ -40,7 +44,6 @@ export const datePickerPlaygroundConfig: ComponentPlaygroundConfig = {
   storySource: "docs/data/component-playgrounds.manifest.json#customPlaygrounds.datePicker",
   props: componentPlaygroundPropsFromManifest(datePickerManifest),
   initial: datePickerManifest.initial,
-  stories: componentPlaygroundStoriesFromManifest(datePickerManifest),
   guidanceKey: datePickerManifest.guidanceKey,
   renderOne: renderDatePickerPlayground,
   genCode: genDatePickerCode,
@@ -54,8 +57,9 @@ export const datePickerAnchors = [
 ]
 
 export const datePickerPropRows = [
-  { prop: "value / defaultValue", type: "Date", defaultValue: "—", desc: "受控 / 非受控日期值。" },
-  { prop: "onValueChange", type: "(value: Date | undefined) => void", defaultValue: "—", desc: "选择或清除日期时的回调。" },
+  { prop: "value / defaultValue", type: "Date | DateRange", defaultValue: "—", desc: "单日期使用 Date，范围模式使用结构化 DateRange。" },
+  { prop: "onValueChange", type: "(value: Date | DateRange | undefined) => void", defaultValue: "—", desc: "根据 range 返回单日期或日期范围。" },
+  { prop: "range", type: "boolean", defaultValue: "false", desc: "使用单触发器、单弹层选择开始和结束日期。" },
   { prop: "placeholder", type: "string", defaultValue: "请选择日期", desc: "未选值时显示的提示。" },
   { prop: "size", type: "xs | sm | md", defaultValue: "sm", desc: "触发器尺寸：24 / 28 / 32。" },
   { prop: "clearable", type: "boolean", defaultValue: "false", desc: "有值时展示清除入口。" },
@@ -74,7 +78,7 @@ export const datePickerSemanticDomRows = [
 
 export const datePickerDoDontRows = [
   { do: "选择日期时使用 DatePicker。", dont: "在基础 Input 里临时加日历图标或 date prop。" },
-  { do: "日期范围由两个 DatePicker 组合。", dont: "把开始和结束日期拼成一个字符串值。" },
+  { do: "日期范围使用 DatePicker range 和结构化 DateRange。", dont: "并排两个输入框或拼接开始、结束日期字符串。" },
   { do: "错误态使用 Field + aria-invalid + FieldError。", dont: "在调用处覆盖日期选择器边框颜色。" },
 ]
 
@@ -95,7 +99,7 @@ export function DatePickerPage({
     <StandardDocPage
       slug="date-picker"
       title="DatePicker 日期选择器"
-      lead="用于从日历中选择单个日期；属于 fx 组合组件，由 Popover 和 Calendar 组成，不向基础 Input 增加日期业务语义。"
+      lead="用于从日历中选择单个日期或日期范围；属于 fx 组合组件，由 Popover 和 Calendar 组成，不向基础 Input 增加日期业务语义。"
       playground={<ComponentPlayground config={datePickerPlaygroundConfig} lang={lang} />}
       hideOverview
       hideScenarioExamples

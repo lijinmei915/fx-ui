@@ -3,7 +3,7 @@ category: Components
 group: 业务组合
 title: DatePicker
 subtitle: 日期选择器
-description: 公司组合组件，用于从日历中选择单个日期。
+description: 公司组合组件，用于从日历中选择单个日期或日期范围。
 source: src/components/fx/date-picker.tsx
 theme: theme/fx-theme.css
 tokens:
@@ -20,7 +20,7 @@ status: complete
 
 # DatePicker 日期选择器
 
-用于从日历中选择单个日期。它是 fx 组合组件：由 `Popover` 和 `Calendar` 组成，视觉上像输入控件，但不向基础 `Input` 增加日期或日历图标的业务语义。
+用于从日历中选择单个日期或日期范围。它是 fx 组合组件：由 `Popover` 和 `Calendar` 组成，视觉上像输入控件，但不向基础 `Input` 增加日期或日历图标的业务语义。
 
 ## 来源 {#source}
 
@@ -41,17 +41,18 @@ import { DatePicker } from "@/components/fx/date-picker"
 ## 组件总览 {#overview}
 
 - 类型：fx
-- 选择模式：单日期；范围选择由两个 `DatePicker` 组合
+- 选择模式：单日期；`range` 单触发器范围选择
 - 原生/数据状态：hover、focus-visible、open、disabled、aria-invalid
 - 尺寸：`xs`=24px、`sm`=28px（默认）、`md`=32px
-- 导出项：DatePicker、DatePickerProps
+- 导出项：DatePicker、DatePickerProps、DatePickerRangeValue
 
 ## API {#api}
 
 | 属性 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
-| `value / defaultValue` | `Date` | - | 受控 / 非受控日期值 |
-| `onValueChange` | `(value: Date \| undefined) => void` | - | 日期变化或清除回调 |
+| `range` | `boolean` | `false` | 使用单触发器、单弹层选择开始和结束日期 |
+| `value / defaultValue` | `Date \| DateRange` | - | 单日期使用 `Date`；范围模式使用结构化 `DateRange` |
+| `onValueChange` | `(value: Date \| DateRange \| undefined) => void` | - | 根据 `range` 返回单日期或日期范围 |
 | `placeholder` | `string` | `"请选择日期"` | 未选择日期时的提示 |
 | `size` | `"xs" \| "sm" \| "md"` | `"sm"` | 触发器尺寸：24 / 28 / 32 |
 | `clearable` | `boolean` | `false` | 有值时展示清除入口 |
@@ -73,6 +74,6 @@ import { DatePicker } from "@/components/fx/date-picker"
 ## AI Rules {#ai-rules}
 
 - 选择日期使用 `DatePicker`，不要给基础 `Input` 临时加日历图标或日期 prop。
-- 日期范围使用两个 `DatePicker` 组合，不把开始/结束日期塞进一个字符串值。
+- 日期范围使用一个 `DatePicker range`，开始和结束日期使用结构化 `DateRange`。
 - 错误态用 `Field + aria-invalid + FieldError`。
 - 尺寸用 `size`，不要在页面里覆盖高度、边框、圆角或弹层样式。

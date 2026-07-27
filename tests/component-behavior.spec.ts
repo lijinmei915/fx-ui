@@ -516,6 +516,59 @@ test("state: Select loading error disabled", async ({ page }) => {
   ).toBeDisabled();
 });
 
+test("state: TimePicker wheel supports seconds and confirm", async ({ page }) => {
+  await page.goto("/#time-picker");
+  const playground = page.locator("#time-picker-playground");
+  await playground.getByRole("button", { name: "任意时间", exact: true }).click();
+  await playground.getByRole("button", { name: "时:分:秒", exact: true }).click();
+  await playground.getByRole("button", { name: "请选择时间", exact: true }).click();
+
+  const lists = page.getByRole("listbox");
+  const listCount = await lists.count();
+  expect(listCount).toBe(3);
+  await lists.nth(0).getByRole("option", { name: "17", exact: true }).click();
+  await lists.nth(1).getByRole("option", { name: "10", exact: true }).click();
+  await lists.nth(2).getByRole("option", { name: "33", exact: true }).click();
+  await page.getByRole("button", { name: "确定", exact: true }).click();
+  await expect(playground.locator('[data-slot="time-picker-value"]')).toHaveText("17:10:33");
+});
+
+test("state: DatePicker range uses one trigger and one calendar popover", async ({ page }) => {
+  await page.goto("/#date-picker");
+  const playground = page.locator("#date-picker-playground");
+  await playground.getByRole("button", { name: "日期范围", exact: true }).click();
+
+  await expect(playground.locator('[data-slot="date-picker"]')).toHaveCount(1);
+  const trigger = playground.locator('[data-slot="date-picker-trigger"]');
+  await expect(trigger).toHaveCount(1);
+  await trigger.click();
+  await expect(page.locator('[data-slot="calendar"]')).toHaveCount(1);
+});
+
+test("state: TimePicker range uses one trigger and one dual-wheel popover", async ({ page }) => {
+  await page.goto("/#time-picker");
+  const playground = page.locator("#time-picker-playground");
+  await playground.getByRole("button", { name: "时间范围", exact: true }).click();
+
+  const trigger = playground.locator('[data-slot="time-picker"]');
+  await expect(trigger).toHaveCount(1);
+  await trigger.click();
+
+  const lists = page.getByRole("listbox");
+  await expect(lists).toHaveCount(4);
+  await lists.nth(0).getByRole("option", { name: "09", exact: true }).click();
+  await lists.nth(1).getByRole("option", { name: "30", exact: true }).click();
+  await lists.nth(2).getByRole("option", { name: "18", exact: true }).click();
+  await lists.nth(3).getByRole("option", { name: "00", exact: true }).click();
+  await page.getByRole("button", { name: "确定", exact: true }).click();
+  await expect(playground.locator('[data-slot="time-picker-value"]')).toHaveText(/09:30.*18:00/);
+
+  await playground.getByRole("button", { name: "固定间隔", exact: true }).click();
+  await trigger.click();
+  await expect(page.getByRole("button", { name: "取消", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "确定", exact: true })).toBeVisible();
+});
+
 test("state: Select clear-all stays visible while open", async ({ page }) => {
   await page.goto("/#select");
   const playground = page.locator("#select-playground");

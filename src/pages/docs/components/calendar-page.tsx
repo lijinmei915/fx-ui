@@ -20,8 +20,7 @@ export const calendarAnchors = [
 export const calendarPropRows = [
   { prop: "mode", type: "\"single\" | \"multiple\" | \"range\"", defaultValue: "—", desc: "选择模式：单日 / 多日 / 区间，决定 selected 的数据形状。" },
   { prop: "selected / onSelect", type: "Date | Date[] | DateRange", defaultValue: "—", desc: "受控选中值与变更回调，需配合 mode 使用。" },
-  { prop: "captionLayout", type: "\"label\" | \"dropdown\"", defaultValue: "\"label\"", desc: "月份标题展示方式：纯文本或可切换的下拉选择。" },
-  { prop: "buttonVariant", type: "ButtonProps[\"variant\"]", defaultValue: "\"ghost\"", desc: "上一月/下一月导航按钮的视觉样式。" },
+  { prop: "buttonVariant", type: "ButtonProps[\"variant\"]", defaultValue: "\"ghost\"", desc: "上一年 / 上一月 / 下一月 / 下一年导航按钮的视觉样式。" },
   { prop: "showOutsideDays", type: "boolean", defaultValue: "true", desc: "是否显示当月之外的相邻月份日期。" },
 ]
 

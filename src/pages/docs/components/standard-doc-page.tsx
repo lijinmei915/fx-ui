@@ -10,7 +10,7 @@ import { WebsiteCardContainer } from "@/components/fx/website-card-container"
 import { PageLead as FxPageLead } from "@/components/fx/page-lead"
 import { SectionLead } from "@/components/fx/section-lead"
 import { docsSpacing } from "@/lib/docs-spacing"
-import { getDisplayTitle, PageTitleMetaContext } from "@/lib/page-title-meta"
+import { getDisplayTitle, getTitleMeta, PageTitleMetaContext } from "@/lib/page-title-meta"
 import { StandardScenarioPlayground, type StandardScenarioExample } from "@/pages/docs/components/standard-scenario-playground"
 
 export type StandardDocLang = "zh" | "en"
@@ -156,8 +156,9 @@ export function StandardDocPage({
   storyPresentation?: "presets" | "examples"
   playgroundDescription?: ReactNode
 }) {
-  const titleMeta = useContext(PageTitleMetaContext)
-  const displayTitle = getDisplayTitle(title, lang === "en" ? undefined : titleMeta)
+  const pageTitleMeta = useContext(PageTitleMetaContext)
+  const displayTitle = getDisplayTitle(title, pageTitleMeta)
+  const titleMeta = getTitleMeta(pageTitleMeta)
   // An explicit Playground is already the executable overview. Keep the
   // manifest route for pages whose Playground is generated automatically.
   const playgroundPrimary = Boolean(playground) || autoScenarioSlugs.includes(slug)

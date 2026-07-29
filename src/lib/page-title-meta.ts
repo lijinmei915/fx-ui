@@ -1,8 +1,18 @@
 import { createContext } from "react"
 
-export const PageTitleMetaContext = createContext<string | undefined>(undefined)
+export type PageTitleMeta = {
+  titleZh: string
+  titleEn: string
+  lang: "zh" | "en"
+}
 
-export function getDisplayTitle(title: string, titleMeta?: string) {
+export const PageTitleMetaContext = createContext<PageTitleMeta | undefined>(undefined)
+
+export function getDisplayTitle(title: string, titleMeta?: PageTitleMeta) {
   if (!titleMeta) return title
-  return title === titleMeta ? title : title.replace(new RegExp(`^${titleMeta.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s+`), "")
+  return titleMeta.lang === "zh" ? titleMeta.titleZh : titleMeta.titleEn
+}
+
+export function getTitleMeta(titleMeta?: PageTitleMeta) {
+  return titleMeta?.lang === "zh" ? titleMeta.titleEn : undefined
 }

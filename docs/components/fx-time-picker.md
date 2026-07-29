@@ -96,7 +96,11 @@ import { TimePicker } from "@/components/fx/time-picker"
 | `secondStep` | `1 \| 5 \| 10 \| 15 \| 30` | `1` | 滚轮模式的秒步进 |
 | `needConfirm` | `boolean` | `true` | 滚轮模式是否需要确定 / 取消 |
 | `size` | `"xs" \| "sm" \| "md"` | `"sm"` | 触发器尺寸：24 / 28 / 32 |
-| `clearable` | `boolean` | `false` | 有值时是否展示清除入口 |
+| `clearable` | `boolean` | `false` | 有值时在悬停、聚焦或展开时展示清除入口 |
+| `variant` | `"outlined" \| "borderless"` | `"outlined"` | 控件外观变体 |
+| `open / onOpenChange` | `boolean` / `(open: boolean) => void` | - | 受控弹层状态 |
+| `showNow` | `boolean` | `false` | 提供“此刻”快捷入口 |
+| `disabledTime` | `(time) => boolean` | - | 按时、分、秒禁用时间选项 |
 | `disabled` | `boolean` | `false` | 禁用时间选择 |
 | `aria-invalid` | `boolean` | `false` | 标记校验失败 |
 

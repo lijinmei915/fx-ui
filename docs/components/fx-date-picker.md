@@ -42,6 +42,7 @@ import { DatePicker } from "@/components/fx/date-picker"
 
 - 类型：fx
 - 选择模式：单日期；`range` 单触发器范围选择
+- 日历导航：上一年 / 上一月 / 下一月 / 下一年箭头，可直接跨年跳转（当前年前后各 100 年）
 - 原生/数据状态：hover、focus-visible、open、disabled、aria-invalid
 - 尺寸：`xs`=24px、`sm`=28px（默认）、`md`=32px
 - 导出项：DatePicker、DatePickerProps、DatePickerRangeValue
@@ -50,12 +51,21 @@ import { DatePicker } from "@/components/fx/date-picker"
 
 | 属性 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
-| `range` | `boolean` | `false` | 使用单触发器、单弹层选择开始和结束日期 |
+| `range` | `boolean` | `false` | 使用单触发器、单弹层选择开始和结束日期；完成范围后保持展开，支持重新选择 |
 | `value / defaultValue` | `Date \| DateRange` | - | 单日期使用 `Date`；范围模式使用结构化 `DateRange` |
 | `onValueChange` | `(value: Date \| DateRange \| undefined) => void` | - | 根据 `range` 返回单日期或日期范围 |
 | `placeholder` | `string` | `"请选择日期"` | 未选择日期时的提示 |
+| `format` | `Intl.DateTimeFormatOptions` | - | 覆盖日期显示格式选项 |
+| `minDate / maxDate` | `Date` | - | 限制可选择的日期范围 |
+| `disabledDate` | `(date: Date) => boolean` | - | 按业务规则禁用日期 |
+| `presets` | `Array<{ label: ReactNode; value: Date \| DateRange }>` | - | 在弹层顶部提供快捷日期预设 |
+| `variant` | `"outlined" \| "borderless"` | `"outlined"` | 控件外观变体 |
+| `open / onOpenChange` | `boolean` / `(open: boolean) => void` | - | 受控弹层状态 |
+| `showToday` | `boolean` | `false` | 提供“今天”快捷入口 |
+| `picker` | `"date" \| "week" \| "month" \| "quarter" \| "year"` | `"date"` | 选择日期粒度；周、月、季度、年模式返回对应周期起始日，周默认展示 `YYYY-周序号周` |
+| `multiple` | `boolean` | `false` | 使用日历多选模式，值为 `Date[]` |
 | `size` | `"xs" \| "sm" \| "md"` | `"sm"` | 触发器尺寸：24 / 28 / 32 |
-| `clearable` | `boolean` | `false` | 有值时展示清除入口 |
+| `clearable` | `boolean` | `false` | 有值时在悬停控件后展示清除入口 |
 | `disabled` | `boolean` | `false` | 禁用日期选择 |
 | `aria-invalid` | `boolean` | `false` | 标记校验失败 |
 

@@ -49,7 +49,9 @@ import { Calendar, CalendarDayButton } from "@/components/ui/calendar"
 
 - 类型：form
 - 语义 DOM：data-slot="calendar"
-- 原生/数据状态：hover、disabled
+- 本地化：默认使用 `zh-CN`，标题按紧凑的“2026年7月”展示，字号为 14px；需要其它语言时传入 `react-day-picker` 的 `locale`，沿用对应本地格式。
+- 原生/数据状态：hover、today、disabled；today 使用主题色线框提示定位，选中时仍由选中态使用实心主题色
+- 导航：上一年 / 上一月 / 下一月 / 下一年四个 16px 箭头；同侧单、双箭头间距 8px，并在 28px 标题轨道内垂直居中；不使用年月下拉
 - 变体：无独立 variant prop
 - 导出项：Calendar、CalendarDayButton
 
@@ -86,6 +88,7 @@ import { Calendar, CalendarDayButton } from "@/components/ui/calendar"
 | 状态 | 说明 |
 | --- | --- |
 | `hover` | 鼠标悬停反馈，来自源码状态样式 |
+| `today` | 当前日期使用主题色线框；与选中态叠加时保留选中态的实心主题色 |
 | `disabled` | 禁用态，阻止交互并降低视觉权重 |
 
 ## 主题变量 Design Token {#design-token}
@@ -112,6 +115,7 @@ import { Calendar, CalendarDayButton } from "@/components/ui/calendar"
 - 校验失败用字段级 `data-invalid` 和控件级 `aria-invalid`，不要手写红色边框。
 - 禁用态使用源码支持的 `disabled` / `data-disabled`，不要靠 opacity 伪装。
 - 日期按钮样式来自 buttonVariants，不要手写日期单元格颜色。
+- 年月导航使用 Calendar 内建的单、双箭头，不在调用处自行拼接下拉或导航按钮。
 - 使用 Calendar 前必须以 src/components/ui/calendar.tsx 为真实 API。
 - 不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。
 - className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。

@@ -7,7 +7,7 @@
   "note": "Playground 与组件文档的结构化真相源。每个组件使用 Storybook-lite stories（id/name/args/parameters）；页面、视觉测试和 Agent 只引用这些 story，不再维护重复场景数据。",
   "controlPanelContract": {
     "appliesWhen": "new-or-touched-playground",
-    "realTimeGroupOrder": ["content", "semantics", "structure", "appearance", "behavior"],
+    "realTimeGroupOrder": ["content", "structure", "appearance", "behavior", "semantics"],
     "realTimeGroups": {
       "content": "可见内容或可编辑数据",
       "appearance": "源码定义的视觉 API，例如 variant、size、tone",
@@ -273,7 +273,6 @@
       "initial": {
         "scenario": "single",
         "size": "sm",
-        "valueState": "selected",
         "state": "normal"
       },
       "guidanceKey": "scenario",
@@ -306,18 +305,6 @@
           ]
         },
         {
-          "key": "valueState",
-          "zh": "值状态",
-          "en": "Value state",
-          "propName": "value",
-          "type": "segment",
-          "options": [
-            { "value": "placeholder", "label": "占位", "labelEn": "Placeholder" },
-            { "value": "selected", "label": "已选", "labelEn": "Selected" },
-            { "value": "clearable", "label": "可清除", "labelEn": "Clearable" }
-          ]
-        },
-        {
           "key": "state",
           "zh": "交互状态",
           "en": "State",
@@ -327,9 +314,33 @@
             { "value": "normal", "label": "默认", "labelEn": "Default" },
             { "value": "hover", "label": "悬停", "labelEn": "Hover" },
             { "value": "focus", "label": "聚焦", "labelEn": "Focus" },
-            { "value": "open", "label": "展开", "labelEn": "Open" },
             { "value": "invalid", "label": "报错", "labelEn": "Error" },
             { "value": "disabled", "label": "禁用", "labelEn": "Disabled" }
+          ]
+        },
+        {
+          "key": "picker",
+          "zh": "日期粒度",
+          "en": "Date granularity",
+          "propName": "picker",
+          "type": "segment",
+          "options": [
+            { "value": "date", "label": "日", "labelEn": "Day" },
+            { "value": "week", "label": "周", "labelEn": "Week" },
+            { "value": "month", "label": "月", "labelEn": "Month" },
+            { "value": "quarter", "label": "季度", "labelEn": "Quarter" },
+            { "value": "year", "label": "年", "labelEn": "Year" }
+          ]
+        },
+        {
+          "key": "multiple",
+          "zh": "多选",
+          "en": "Multiple",
+          "propName": "multiple",
+          "type": "segment",
+          "options": [
+            { "value": "false", "label": "单选", "labelEn": "Single" },
+            { "value": "true", "label": "多选", "labelEn": "Multiple" }
           ]
         },
         {
@@ -352,6 +363,88 @@
         "screenshot": "date-picker-playground.png"
       }
     },
+    "dateTimePicker": {
+      "componentName": "DateTimePicker",
+      "source": "src/components/fx/time-picker.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "customConfigSource": "src/pages/docs/components/date-time-picker-page.tsx#dateTimePickerPlaygroundConfig",
+      "mode": "custom-config",
+      "initial": {
+        "scenario": "single",
+        "format": "HH:mm:ss",
+        "size": "sm",
+        "state": "normal"
+      },
+      "guidanceKey": "scenario",
+      "props": [
+        {
+          "key": "scenario",
+          "zh": "选择范围",
+          "en": "Selection",
+          "propName": "range",
+          "type": "segment",
+          "options": [
+            {
+              "value": "single",
+              "label": "单个日期时间",
+              "labelEn": "Single datetime",
+              "intent": "在一个弹层中选择一个日期和时间。",
+              "constraint": "使用单个带时间的 Date 值。"
+            },
+            {
+              "value": "range",
+              "label": "日期时间范围",
+              "labelEn": "Datetime range",
+              "intent": "先选择开始日期时间并确认，再选择结束日期时间并确认。",
+              "constraint": "使用 DateTimePicker range 和结构化 DateRange；范围模式分两步确认，不能在同一面板同时编辑两侧。"
+            }
+          ]
+        },
+        {
+          "key": "format",
+          "zh": "时间格式",
+          "en": "Format",
+          "propName": "format",
+          "type": "segment",
+          "options": [
+            { "value": "HH:mm", "label": "时:分", "labelEn": "Hours:minutes" },
+            { "value": "HH:mm:ss", "label": "时:分:秒", "labelEn": "Hours:minutes:seconds" }
+          ]
+        },
+        {
+          "key": "state",
+          "zh": "交互状态",
+          "en": "State",
+          "propName": "state",
+          "type": "segment",
+          "options": [
+            { "value": "normal", "label": "默认", "labelEn": "Default" },
+            { "value": "hover", "label": "悬停", "labelEn": "Hover" },
+            { "value": "focus", "label": "聚焦", "labelEn": "Focus" },
+            { "value": "invalid", "label": "报错", "labelEn": "Error" },
+            { "value": "disabled", "label": "禁用", "labelEn": "Disabled" }
+          ]
+        },
+        {
+          "key": "size",
+          "zh": "尺寸",
+          "en": "Size",
+          "propName": "size",
+          "type": "segment",
+          "options": [
+            { "value": "xs", "label": "超小24", "labelEn": "XS 24" },
+            { "value": "sm", "label": "默认28", "labelEn": "Default 28" },
+            { "value": "md", "label": "中32", "labelEn": "Medium 32" }
+          ]
+        }
+      ],
+      "visualTests": ["DateTimePicker Playground 主入口"],
+      "visual": {
+        "route": "#date-time-picker",
+        "selector": "#date-time-picker-playground",
+        "screenshot": "date-time-picker-playground.png"
+      }
+    },
     "timePicker": {
       "componentName": "TimePicker",
       "source": "src/components/fx/time-picker.tsx",
@@ -362,7 +455,6 @@
         "capability": "basic",
         "picker": "wheel",
         "format": "HH:mm",
-        "valueState": "placeholder",
         "state": "normal",
         "step": "30",
         "size": "sm"
@@ -403,22 +495,6 @@
           ]
         },
         {
-          "key": "valueState",
-          "zh": "值状态",
-          "en": "Value state",
-          "propName": "value",
-          "type": "segment",
-          "options": [
-            {
-              "value": "placeholder",
-              "label": "占位",
-              "labelEn": "Placeholder"
-            },
-            { "value": "selected", "label": "已选", "labelEn": "Selected" },
-            { "value": "clearable", "label": "可清除", "labelEn": "Clearable" }
-          ]
-        },
-        {
           "key": "state",
           "zh": "交互状态",
           "en": "State",
@@ -428,7 +504,6 @@
             { "value": "normal", "label": "默认", "labelEn": "Default" },
             { "value": "hover", "label": "悬停", "labelEn": "Hover" },
             { "value": "focus", "label": "聚焦", "labelEn": "Focus" },
-            { "value": "open", "label": "展开", "labelEn": "Open" },
             { "value": "invalid", "label": "报错", "labelEn": "Error" },
             { "value": "disabled", "label": "禁用", "labelEn": "Disabled" }
           ]
@@ -2997,13 +3072,9 @@
         "search": "none",
         "clearable": "false",
         "otherInput": "none",
-        "valueState": "placeholder",
         "semanticState": "normal",
-        "interactionState": "normal",
-        "feedbackState": "ready",
         "size": "sm"
       },
-      "storyPresentation": "presets",
       "guidanceKey": "structure",
       "props": [
         {
@@ -3094,10 +3165,12 @@
         },
         {
           "key": "selection",
-          "zh": "选择数量",
-          "en": "Selection",
+          "zh": "类型",
+          "en": "Type",
           "propName": "multiple",
           "controlGroup": "structure",
+          "defaultVisible": true,
+          "defaultOrder": 1,
           "hiddenWhen": {
             "structure": "other"
           },
@@ -3118,8 +3191,8 @@
               "labelEn": "Multiple",
               "intent": "用于筛选条件中选择多个枚举值。",
               "intentEn": "Use for selecting multiple enum values in filters.",
-              "constraint": "使用 Select multiple 和数组 value；已选值用可删除的 SelectMultiValue 展示，选项用 SelectItemIndicator 显示 Checkbox。筛选器使用默认 overflow=collapse，超出 maxVisible 后折叠为 +n。",
-              "constraintEn": "Use Select multiple with array values, removable SelectMultiValue tags, and SelectItemIndicator checkboxes. Filters use the default overflow=collapse to fold values beyond maxVisible into +n."
+              "constraint": "使用 Select multiple 和数组 value；默认使用有边框外观。已选值用可删除的 SelectMultiValue 展示，标签尺寸自动跟随 SelectTrigger 的 size；选项用 SelectItemIndicator 显示 Checkbox。筛选器使用默认 overflow=collapse，仅在容器空间不足时折叠为 +n。",
+              "constraintEn": "Use Select multiple with array values and the bordered appearance by default. Removable SelectMultiValue tags automatically follow the SelectTrigger size, and SelectItemIndicator provides checkboxes. Filters use overflow=collapse and fold values into +n only when the container runs out of space."
             }
           ]
         },
@@ -3174,7 +3247,7 @@
               "labelEn": "Yes",
               "intent": "允许用户撤销已选值，回到 placeholder。",
               "intentEn": "Allow users to remove the selected value and return to the placeholder.",
-              "constraint": "清除用受控 value + SelectControl + SelectClear；有值时总清除常驻箭头左侧并与 trigger 保持同级，多选标签内 X 只删除单项。",
+              "constraint": "清除用受控 value + SelectControl + SelectClear；有值时总清除在悬停或聚焦控件后显示于箭头左侧并与 trigger 保持同级，多选标签内 X 只删除单项。",
               "constraintEn": "Use controlled value, SelectControl, and SelectClear; keep the clear-all action visible to the left of the arrow when a value exists and as a trigger sibling, while tag X buttons remove only one item."
             }
           ]
@@ -3226,8 +3299,8 @@
         },
         {
           "key": "semanticState",
-          "zh": "控件状态",
-          "en": "Control state",
+          "zh": "状态",
+          "en": "State",
           "propName": "disabled / aria-invalid",
           "controlGroup": "semantics",
           "type": "segment",
@@ -3258,98 +3331,6 @@
               "intentEn": "Selection is currently unavailable.",
               "constraint": "使用 Select 的 disabled，不用 opacity 或 pointer-events 假装禁用。",
               "constraintEn": "Use Select disabled; do not fake disabled state with opacity or pointer-events."
-            }
-          ]
-        },
-        {
-          "key": "interactionState",
-          "zh": "交互状态",
-          "en": "Interaction state",
-          "propName": "native interaction preview",
-          "controlGroup": "behavior",
-          "type": "segment",
-          "options": [
-            {
-              "value": "normal",
-              "label": "默认",
-              "labelEn": "Default",
-              "intent": "默认可交互状态。",
-              "intentEn": "Default interactive state.",
-              "constraint": "不额外传状态 prop。",
-              "constraintEn": "Pass no extra state prop."
-            },
-            {
-              "value": "hover",
-              "label": "悬停",
-              "labelEn": "Hover",
-              "intent": "鼠标经过时提示可点击。",
-              "intentEn": "Indicate clickability on hover.",
-              "constraint": "悬停是原生交互态；调试台只用 data-state 预览，不作为业务 API。",
-              "constraintEn": "Hover is native interaction; data-state is only for playground preview, not business API."
-            },
-            {
-              "value": "focus",
-              "label": "聚焦",
-              "labelEn": "Focus",
-              "intent": "键盘焦点或点击聚焦时显示边框反馈。",
-              "intentEn": "Show border feedback on keyboard or click focus.",
-              "constraint": "聚焦由 focus-visible 驱动，不在调用处覆盖边框。",
-              "constraintEn": "Focus is driven by focus-visible; do not override borders at call sites."
-            },
-            {
-              "value": "open",
-              "label": "展开",
-              "labelEn": "Open",
-              "intent": "下拉浮层打开，用户正在查看选项。",
-              "intentEn": "The popup is open and options are visible.",
-              "constraint": "打开态由 Select 自身状态驱动；不要用固定展示的 div 替代浮层。",
-              "constraintEn": "Open state is owned by Select; do not replace the popup with a static div."
-            }
-          ]
-        },
-        {
-          "key": "feedbackState",
-          "zh": "选项状态",
-          "en": "Options state",
-          "propName": "composition",
-          "controlGroup": "behavior",
-          "type": "segment",
-          "options": [
-            {
-              "value": "ready",
-              "label": "正常",
-              "labelEn": "Normal",
-              "intent": "选项已可浏览和选择。",
-              "intentEn": "Options are ready to browse and select.",
-              "constraint": "正常渲染选项，不附加业务反馈。",
-              "constraintEn": "Render options normally without business feedback."
-            },
-            {
-              "value": "searching",
-              "label": "搜索中",
-              "labelEn": "Searching",
-              "intent": "用户正在搜索选项。",
-              "intentEn": "The user is searching options.",
-              "constraint": "仅在搜索=本地搜索时展示；远程搜索不塞进基础 Select。",
-              "constraintEn": "Only show this with local search; do not put remote search into base Select."
-            },
-            {
-              "value": "empty",
-              "label": "空结果",
-              "labelEn": "Empty",
-              "intent": "搜索后没有可选结果。",
-              "intentEn": "No options match the search.",
-              "constraint": "用空状态文案反馈，不渲染空白浮层。",
-              "constraintEn": "Show empty copy instead of a blank popup."
-            },
-            {
-              "value": "loading",
-              "label": "加载",
-              "labelEn": "Loading",
-              "intent": "选项仍在加载中。",
-              "intentEn": "Options are still loading.",
-              "constraint": "用 Spinner + 文案组合；远程数据逻辑由上层组合组件持有。",
-              "constraintEn": "Compose Spinner + text; remote data logic belongs to an upper-level component."
             }
           ]
         },
@@ -3389,60 +3370,6 @@
               "constraintEn": "Pass size=\"md\" only; do not override height."
             }
           ]
-        }
-      ],
-      "stories": [
-        {
-          "id": "plain-single",
-          "matchKeys": ["selection"],
-          "name": "单选",
-          "nameEn": "Single",
-          "args": {
-            "structure": "plain",
-            "variant": "outline",
-            "selection": "single",
-            "search": "none",
-            "clearable": "false",
-            "otherInput": "none",
-            "valueState": "placeholder",
-            "semanticState": "normal",
-            "interactionState": "normal",
-            "feedbackState": "ready",
-            "size": "sm"
-          },
-          "parameters": {
-            "intent": "从一组普通选项中选择一个角色。",
-            "intentEn": "Choose one role from a flat option list.",
-            "constraint": "选项值保持唯一，未选择时使用 placeholder。",
-            "constraintEn": "Keep option values unique and use placeholder before selection.",
-            "source": "src/components/ui/select.tsx#plain-single"
-          }
-        },
-        {
-          "id": "multiple-filter",
-          "matchKeys": ["selection"],
-          "name": "多选",
-          "nameEn": "Multiple",
-          "args": {
-            "structure": "grouped",
-            "variant": "borderless",
-            "selection": "multiple",
-            "search": "local",
-            "clearable": "true",
-            "otherInput": "none",
-            "valueState": "selected",
-            "semanticState": "normal",
-            "interactionState": "normal",
-            "feedbackState": "ready",
-            "size": "sm"
-          },
-          "parameters": {
-            "intent": "在工具栏中组合本地搜索和多选筛选。",
-            "intentEn": "Combine local search and multiple selection in a toolbar.",
-            "constraint": "使用数组 value；该预设展示无边框多选（variant=borderless），有边框多选用实时属性组合“多选 + 有边框”；清除动作与 trigger 同级。",
-            "constraintEn": "Use an array value; this preset demonstrates borderless multiple selection (variant=borderless), while bordered multiple selection is composed with the live properties; keep the clear action beside the trigger.",
-            "source": "src/components/ui/select.tsx#multiple-filter"
-          }
         }
       ]
     },

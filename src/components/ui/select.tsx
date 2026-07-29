@@ -15,7 +15,7 @@ function SelectControl({
   return (
     <div
       data-slot="select-control"
-      className={cn("relative", className)}
+      className={cn("group/select-control relative", className)}
       {...props}
     />
   )
@@ -49,9 +49,15 @@ type SelectMultiValueItem = {
 
 type SelectMultiValueOverflow = "collapse" | "scroll"
 
+const selectMultiValueTagClassName =
+  "max-w-full min-w-0 font-normal group-data-[size=xs]/select-trigger:h-4 group-data-[size=xs]/select-trigger:gap-0.5 group-data-[size=xs]/select-trigger:px-1 group-data-[size=xs]/select-trigger:text-xs group-data-[size=sm]/select-trigger:h-5 group-data-[size=sm]/select-trigger:px-1.5 group-data-[size=sm]/select-trigger:text-sm group-data-[size=md]/select-trigger:h-[calc(var(--fx-control-md-height)-8px)] group-data-[size=md]/select-trigger:px-2 group-data-[size=md]/select-trigger:text-base group-data-[size=xs]/date-picker:h-4 group-data-[size=xs]/date-picker:gap-0.5 group-data-[size=xs]/date-picker:px-1 group-data-[size=xs]/date-picker:text-xs group-data-[size=sm]/date-picker:h-5 group-data-[size=sm]/date-picker:px-1.5 group-data-[size=sm]/date-picker:text-sm group-data-[size=md]/date-picker:h-[calc(var(--fx-control-md-height)-8px)] group-data-[size=md]/date-picker:px-2 group-data-[size=md]/date-picker:text-base"
+
+const selectMultiValueRemoveClassName =
+  "-mr-1 inline-flex items-center justify-center rounded-sm text-muted-foreground outline-none hover:text-foreground focus-visible:text-foreground group-data-[size=xs]/select-trigger:size-3.5 group-data-[size=sm]/select-trigger:size-4 group-data-[size=md]/select-trigger:size-5 group-data-[size=xs]/select-trigger:[&_svg]:size-2.5! group-data-[size=sm]/select-trigger:[&_svg]:size-3! group-data-[size=md]/select-trigger:[&_svg]:size-3.5! group-data-[size=xs]/date-picker:size-3.5 group-data-[size=sm]/date-picker:size-4 group-data-[size=md]/date-picker:size-5 group-data-[size=xs]/date-picker:[&_svg]:size-2.5! group-data-[size=sm]/date-picker:[&_svg]:size-3! group-data-[size=md]/date-picker:[&_svg]:size-3.5!"
+
 function SelectMultiValue({
   items,
-  maxVisible = 2,
+  maxVisible = items.length,
   overflow = "collapse",
   onRemove,
   getRemoveLabel = (item) => `移除 ${typeof item.label === "string" ? item.label : item.value}`,
@@ -70,6 +76,8 @@ function SelectMultiValue({
   const [layoutVersion, setLayoutVersion] = React.useState(0)
   const multiValueRef = React.useRef<HTMLSpanElement>(null)
   const lastAvailableWidthRef = React.useRef(0)
+  const isResettingLayoutRef = React.useRef(false)
+  const measureFrameRef = React.useRef(0)
   const visibleItems = overflow === "scroll" ? items : items.slice(0, visibleCount)
   const overflowCount = Math.max(0, items.length - visibleItems.length)
 
@@ -91,15 +99,53 @@ function SelectMultiValue({
     return () => observer.disconnect()
   }, [maxVisibleItems, overflow])
 
+  React.useEffect(() => {
+    const node = multiValueRef.current
+    const trigger = node?.closest('[data-slot="select-trigger"]')
+    if (!trigger || overflow !== "collapse" || typeof MutationObserver === "undefined") return
+
+    let frame = 0
+    const observer = new MutationObserver(() => {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(() => {
+        if (visibleCount < maxVisibleItems) {
+          isResettingLayoutRef.current = true
+          setVisibleCount(maxVisibleItems)
+          return
+        }
+        setLayoutVersion((version) => version + 1)
+      })
+    })
+    observer.observe(trigger, { attributes: true, attributeFilter: ["data-size"] })
+    return () => {
+      cancelAnimationFrame(frame)
+      observer.disconnect()
+    }
+  }, [maxVisibleItems, overflow, visibleCount])
+
   React.useLayoutEffect(() => {
     const node = multiValueRef.current
     if (!node || overflow !== "collapse") return
+    if (isResettingLayoutRef.current) {
+      isResettingLayoutRef.current = false
+      cancelAnimationFrame(measureFrameRef.current)
+      measureFrameRef.current = requestAnimationFrame(() => {
+        setLayoutVersion((version) => version + 1)
+      })
+      return
+    }
 
     setVisibleCount((current) => {
-      if (node.scrollWidth > node.clientWidth && current > 0) return current - 1
+      const lastItem = node.lastElementChild
+      const nodeRect = node.getBoundingClientRect()
+      const lastItemRect = lastItem?.getBoundingClientRect()
+      const clipsLastItem = Boolean(lastItemRect && lastItemRect.right > nodeRect.right + 0.5)
+      if ((node.scrollWidth > node.clientWidth || clipsLastItem) && current > 0) return current - 1
       return current
     })
   }, [itemKey, layoutVersion, overflow, visibleCount])
+
+  React.useEffect(() => () => cancelAnimationFrame(measureFrameRef.current), [])
 
   return (
     <span
@@ -115,14 +161,14 @@ function SelectMultiValue({
       )}
     >
       {visibleItems.map((item) => (
-        <Tag key={item.value} variant="soft" className="max-w-full min-w-0 font-normal">
+        <Tag key={item.value} variant="soft" className={selectMultiValueTagClassName}>
           <span className="min-w-0 truncate">{item.label}</span>
           {onRemove && !item.disabled ? (
             <button
               type="button"
               data-slot="select-multi-value-remove"
               aria-label={getRemoveLabel(item)}
-              className="-mr-1 inline-flex size-4 items-center justify-center rounded-sm text-muted-foreground outline-none hover:text-foreground focus-visible:text-foreground"
+              className={selectMultiValueRemoveClassName}
               onPointerDown={(event) => {
                 event.preventDefault()
                 event.stopPropagation()
@@ -139,7 +185,7 @@ function SelectMultiValue({
         </Tag>
       ))}
       {overflowCount > 0 ? (
-        <Tag data-slot="select-overflow-count" variant="soft" className="shrink-0 font-normal">
+        <Tag data-slot="select-overflow-count" variant="soft" className={cn("shrink-0", selectMultiValueTagClassName)}>
           +{overflowCount}
         </Tag>
       ) : null}
@@ -207,7 +253,7 @@ function SelectTrigger({
       data-variant={variant}
       data-clearable={clearable ? true : undefined}
       className={cn(
-        "flex w-fit items-center justify-between gap-(--fx-control-gap-tight) border pr-(--fx-control-px-xs) pl-(--fx-control-px-sm) text-foreground whitespace-nowrap transition-colors outline-none select-none focus-visible:border-primary disabled:cursor-not-allowed disabled:bg-muted disabled:text-foreground-disabled disabled:opacity-100 aria-invalid:border-destructive data-[state=hover]:border-primary data-[state=focus]:border-primary data-popup-open:border-primary data-popup-open:bg-surface data-placeholder:text-foreground-disabled data-[clearable=true]:[&_[data-slot=select-value]]:pr-5 has-[&_[data-slot=select-multi-value]]:pl-(--fx-control-gap-tight) *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-(--fx-control-gap-tight) dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "group/select-trigger flex w-fit items-center justify-between gap-2 border px-2 text-foreground whitespace-nowrap transition-colors outline-none select-none focus-visible:border-primary disabled:cursor-not-allowed disabled:border-border-subtle disabled:bg-surface-disabled disabled:text-foreground-disabled disabled:opacity-100 aria-invalid:border-destructive data-[state=hover]:border-primary data-[state=focus]:border-primary data-popup-open:border-primary data-popup-open:bg-surface data-placeholder:text-foreground-disabled data-[clearable=true]:[&_[data-slot=select-value]]:pr-5 has-[&_[data-slot=select-multi-value]]:pl-(--fx-control-gap-tight) *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 disabled:[&_svg]:text-foreground-disabled [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         selectTriggerSizeClassName[size],
         selectTriggerVariantClassName[variant],
         className
@@ -234,7 +280,7 @@ function SelectClear({
       type={type}
       data-slot="select-clear"
       className={cn(
-        "absolute top-1/2 right-7 z-10 flex size-4 -translate-y-1/2 items-center justify-center rounded-sm text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:text-foreground disabled:pointer-events-none disabled:text-foreground-disabled [&_svg]:size-3.5",
+        "pointer-events-none invisible absolute top-1/2 right-7 z-10 flex size-4 -translate-y-1/2 items-center justify-center rounded-sm text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:pointer-events-auto focus-visible:visible focus-visible:text-foreground disabled:pointer-events-none disabled:text-foreground-disabled group-hover/select-control:pointer-events-auto group-hover/select-control:visible group-focus-within/select-control:pointer-events-auto group-focus-within/select-control:visible group-data-[state=hover]/select-control:pointer-events-auto group-data-[state=hover]/select-control:visible group-data-[state=focus]/select-control:pointer-events-auto group-data-[state=focus]/select-control:visible [&_svg]:size-3.5",
         className
       )}
       {...props}

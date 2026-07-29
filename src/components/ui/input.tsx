@@ -68,7 +68,7 @@ function InputAddon({
       data-slot="input-addon"
       data-side={side}
       className={cn(
-        "flex h-full shrink-0 items-center gap-(--fx-control-gap-tight) bg-surface px-(--fx-control-px-sm) text-sm text-foreground [&_svg]:size-4",
+        "flex h-full shrink-0 items-center gap-2 bg-surface px-2 text-sm text-foreground [&_svg]:size-4",
         "data-[side=start]:border-r data-[side=end]:border-l",
         "border-input group-data-[size=xs]/input-group:px-(--fx-control-px-xs) group-data-[size=xs]/input-group:text-xs group-data-[size=xs]/input-group:[&_svg]:size-3.5 group-data-[size=sm]/input-group:text-sm",
         className
@@ -88,7 +88,7 @@ function InputAffix({
       data-slot="input-affix"
       data-side={side}
       className={cn(
-        "flex h-full min-w-4 shrink-0 items-center justify-center px-(--fx-control-px-sm) text-sm text-foreground-disabled data-[side=start]:pr-0 data-[side=end]:pl-0 [&_svg]:size-4",
+        "flex h-full min-w-4 shrink-0 items-center justify-center px-2 text-sm text-foreground-disabled data-[side=start]:pr-0 data-[side=end]:pl-0 [&_svg]:size-4",
         "group-data-[size=xs]/input-group:px-(--fx-control-px-xs) group-data-[size=xs]/input-group:text-xs group-data-[size=xs]/input-group:[&_svg]:size-3.5 group-data-[size=sm]/input-group:text-sm",
         className
       )}
@@ -109,7 +109,7 @@ function InputAction({
       data-slot="input-action"
       data-variant={variant}
       className={cn(
-        "flex h-full shrink-0 items-center justify-center px-(--fx-control-px-sm) text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:text-foreground disabled:pointer-events-none disabled:text-foreground-disabled [&_svg]:size-4",
+        "flex h-full shrink-0 items-center justify-center px-2 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:text-foreground disabled:pointer-events-none disabled:text-foreground-disabled data-[clear=true]:pointer-events-none data-[clear=true]:invisible group-hover/input-group:data-[clear=true]:pointer-events-auto group-hover/input-group:data-[clear=true]:visible group-focus-within/input-group:data-[clear=true]:pointer-events-auto group-focus-within/input-group:data-[clear=true]:visible group-data-[input-state=hover]/input-group:data-[clear=true]:pointer-events-auto group-data-[input-state=hover]/input-group:data-[clear=true]:visible group-data-[input-state=focus]/input-group:data-[clear=true]:pointer-events-auto group-data-[input-state=focus]/input-group:data-[clear=true]:visible [&_svg]:size-4",
         "data-[variant=primary]:bg-primary data-[variant=primary]:text-primary-foreground data-[variant=primary]:hover:bg-primary-hover data-[variant=primary]:focus-visible:bg-primary-hover data-[variant=primary]:disabled:bg-primary-disabled data-[variant=primary]:disabled:text-primary-foreground",
         "group-data-[size=xs]/input-group:px-(--fx-control-px-xs) group-data-[size=xs]/input-group:[&_svg]:size-3.5",
         className

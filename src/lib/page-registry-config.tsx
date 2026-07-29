@@ -6,6 +6,7 @@ import { CardContent } from "@/components/ui/card"
 import { standardScenarioExamplesFromManifest, type ComponentPlaygroundsManifest } from "@/pages/docs/components/component-playground-manifest"
 import { finalizePageRegistry, type PageEntry } from "@/lib/page-registry"
 import { DatePickerPage, datePickerAnchors, datePickerDoDontRows, datePickerPropRows, datePickerSemanticDomRows } from "@/pages/docs/components/date-picker-page"
+import { DateTimePickerPage, dateTimePickerAnchors, dateTimePickerDoDontRows, dateTimePickerPropRows, dateTimePickerSemanticDomRows } from "@/pages/docs/components/date-time-picker-page"
 import { TimePickerPage, timePickerAnchors, timePickerDoDontRows, timePickerPlaygroundConfig, timePickerPropRows, timePickerSemanticDomRows, timePickerImportCodeForPlayground } from "@/pages/docs/components/time-picker-page"
 import { selectPlaygroundConfig as manifestSelectPlaygroundConfig } from "@/pages/docs/components/select-playground"
 import { inputPlaygroundConfig as manifestInputPlaygroundConfig } from "@/pages/docs/components/input-playground"
@@ -112,6 +113,7 @@ export function createPageRegistry(
     select: { anchors: selectAnchors, render: (a, l) => <SelectDocPage actions={a} lang={l} playground={<ComponentPlayground config={manifestSelectPlaygroundConfig} lang={l} />} propRows={selectPropRows} semanticDomRows={selectSemanticDomRows} doDontRows={selectDoDontRows} /> },
     "time-picker": { anchors: timePickerAnchors, render: (a, l) => <TimePickerPage actions={a} lang={l} playgroundConfig={timePickerPlaygroundConfig} importCode={timePickerImportCodeForPlayground} propRows={timePickerPropRows} semanticDomRows={timePickerSemanticDomRows} doDontRows={timePickerDoDontRows} /> },
     "date-picker": { anchors: datePickerAnchors, render: (a, l) => <DatePickerPage actions={a} lang={l} propRows={datePickerPropRows} semanticDomRows={datePickerSemanticDomRows} doDontRows={datePickerDoDontRows} /> },
+    "date-time-picker": { anchors: dateTimePickerAnchors, render: (a, l) => <DateTimePickerPage actions={a} lang={l} propRows={dateTimePickerPropRows} semanticDomRows={dateTimePickerSemanticDomRows} doDontRows={dateTimePickerDoDontRows} /> },
     checkbox: { anchors: checkboxAnchors, render: (a, l) => <CheckboxDocPage actions={a} lang={l} scenarioExamples={standardScenarioExamplesFromManifest(componentPlaygroundsManifest, "checkbox")} propRows={checkboxPropRows} semanticDomRows={checkboxSemanticDomRows} doDontRows={checkboxDoDontRows} /> },
     "radio-group": { anchors: radioGroupAnchors, render: (a, l) => <RadioGroupPage actions={a} lang={l} autoScenarioSlugs={componentPlaygroundsManifest.autoScenarioComponents ?? []} /> },
     switch: { anchors: switchAnchors, render: (a, l) => <SwitchDocPage actions={a} lang={l} scenarioExamples={standardScenarioExamplesFromManifest(componentPlaygroundsManifest, "switch")} propRows={switchPropRows} semanticDomRows={switchSemanticDomRows} doDontRows={switchDoDontRows} /> },

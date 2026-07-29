@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/component-quality",
-  "updatedAt": "2026-07-27",
+  "updatedAt": "2026-07-29",
   "truthSources": [
     "docs/data/components.manifest.json",
     "docs/data/component-playgrounds.manifest.json",
@@ -3360,10 +3360,7 @@
         "businessCompositions": {
           "status": "needs-review",
           "evidence": "fewer-than-three-composition-stories",
-          "values": [
-            "plain-single",
-            "multiple-filter"
-          ]
+          "values": []
         },
         "accessibility": {
           "status": "covered",
@@ -3372,41 +3369,38 @@
         "realScenarios": {
           "status": "needs-review",
           "evidence": "real-scenario-evidence-incomplete",
-          "values": [
-            "plain-single",
-            "multiple-filter"
-          ]
+          "values": []
         }
       },
       "stateCoverage": {
         "disabled": {
           "status": "evidenced",
-          "evidence": "source+doc+behavior",
+          "evidence": "source+doc",
           "sources": {
             "source": true,
             "doc": true,
             "story": false,
-            "behavior": true
+            "behavior": false
           }
         },
         "loading": {
-          "status": "evidenced",
-          "evidence": "behavior",
+          "status": "not-declared",
+          "evidence": "no-state-evidence-declared",
           "sources": {
             "source": false,
             "doc": false,
             "story": false,
-            "behavior": true
+            "behavior": false
           }
         },
         "error": {
           "status": "evidenced",
-          "evidence": "source+behavior",
+          "evidence": "source",
           "sources": {
             "source": true,
             "doc": false,
             "story": false,
-            "behavior": true
+            "behavior": false
           }
         }
       },
@@ -3456,6 +3450,7 @@
       },
       "status": "needs-review",
       "gaps": [
+        "state:loading",
         "visual",
         "capability:businessCompositions",
         "capability:realScenarios"
@@ -6852,7 +6847,7 @@
           "evidence": "manifest-state-not-applicable",
           "sources": {
             "source": true,
-            "doc": true,
+            "doc": false,
             "story": false,
             "behavior": false
           }
@@ -7963,6 +7958,170 @@
       },
       "docs": {
         "path": "docs/components/fx-date-picker.md",
+        "status": "complete"
+      },
+      "status": "needs-review",
+      "gaps": [
+        "capability:sizes",
+        "capability:visualVariants",
+        "capability:businessCompositions",
+        "capability:realScenarios"
+      ]
+    },
+    {
+      "name": "DateTimePicker",
+      "layer": "fx",
+      "source": "src/components/fx/time-picker.tsx",
+      "api": {
+        "source": "src/components/fx/time-picker.tsx",
+        "status": "verified",
+        "evidence": "source-export-symbol"
+      },
+      "behavior": {
+        "spec": "tests/component-behavior.spec.ts",
+        "test": "behavior: DateTimePicker keyboard focus",
+        "status": "covered"
+      },
+      "keyboard": {
+        "status": "evidenced",
+        "evidence": "playwright-behavior-test"
+      },
+      "focus": {
+        "status": "evidenced",
+        "evidence": "playwright-behavior-test",
+        "states": [
+          "focus-visible"
+        ]
+      },
+      "interaction": "interactive",
+      "states": [
+        "default",
+        "hover",
+        "focus-visible",
+        "open",
+        "disabled",
+        "aria-invalid"
+      ],
+      "capabilityCoverage": {
+        "structure": {
+          "status": "covered",
+          "evidence": "components-manifest-semanticDom",
+          "values": [
+            "data-slot=\"date-time-picker\"",
+            "data-slot=\"date-time-picker-trigger\"",
+            "data-slot=\"date-time-picker-value\"",
+            "data-slot=\"date-time-picker-clear\"",
+            "data-slot=\"date-time-picker-content\"",
+            "data-slot=\"date-time-picker-panel\"",
+            "data-slot=\"date-time-picker-time-panel\"",
+            "data-slot=\"calendar\""
+          ]
+        },
+        "sizes": {
+          "status": "needs-review",
+          "evidence": "size-capability-not-audited",
+          "values": []
+        },
+        "visualVariants": {
+          "status": "needs-review",
+          "evidence": "variant-capability-not-audited",
+          "values": []
+        },
+        "interactionStates": {
+          "status": "covered",
+          "evidence": "components-manifest-nativeStates",
+          "values": [
+            "default",
+            "hover",
+            "focus-visible",
+            "open",
+            "disabled",
+            "aria-invalid"
+          ]
+        },
+        "businessCompositions": {
+          "status": "needs-review",
+          "evidence": "fewer-than-three-composition-stories",
+          "values": []
+        },
+        "accessibility": {
+          "status": "covered",
+          "evidence": "keyboard-focus-behavior-evidence"
+        },
+        "realScenarios": {
+          "status": "needs-review",
+          "evidence": "real-scenario-evidence-incomplete",
+          "values": []
+        }
+      },
+      "stateCoverage": {
+        "disabled": {
+          "status": "evidenced",
+          "evidence": "source+doc",
+          "sources": {
+            "source": true,
+            "doc": true,
+            "story": false,
+            "behavior": false
+          }
+        },
+        "loading": {
+          "status": "not-applicable",
+          "evidence": "manifest-state-not-applicable",
+          "sources": {
+            "source": false,
+            "doc": false,
+            "story": false,
+            "behavior": false
+          }
+        },
+        "error": {
+          "status": "evidenced",
+          "evidence": "source",
+          "sources": {
+            "source": true,
+            "doc": false,
+            "story": false,
+            "behavior": false
+          }
+        }
+      },
+      "tokens": [
+        "--foreground",
+        "--muted",
+        "--muted-foreground",
+        "--input",
+        "--popover",
+        "--border",
+        "--ring",
+        "--destructive"
+      ],
+      "tokenUsage": {
+        "status": "declared",
+        "evidence": "components-manifest-tokenRefs",
+        "refs": [
+          "--foreground",
+          "--muted",
+          "--muted-foreground",
+          "--input",
+          "--popover",
+          "--border",
+          "--ring",
+          "--destructive"
+        ]
+      },
+      "visual": {
+        "spec": "tests/visual.spec.ts",
+        "manifest": "docs/data/component-playgrounds.manifest.json#pageVisuals.time-picker",
+        "referenced": true,
+        "status": "covered"
+      },
+      "playground": {
+        "manifest": "customPlaygrounds.timePicker",
+        "status": "interactive"
+      },
+      "docs": {
+        "path": "docs/components/fx-date-time-picker.md",
         "status": "complete"
       },
       "status": "needs-review",

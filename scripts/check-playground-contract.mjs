@@ -14,7 +14,7 @@ if (manifest.format !== "fx-ui/component-playgrounds") errors.push("invalid play
 if (manifest.schemaVersion !== 2 || manifest.storyFormat !== "storybook-lite") errors.push("playground manifest must use schemaVersion 2 and storyFormat storybook-lite")
 if (manifest.autoScenarios !== undefined) errors.push("autoScenarios is deprecated; use autoStories")
 const controlPanelContract = manifest.controlPanelContract
-const expectedControlGroupOrder = ["content", "semantics", "structure", "appearance", "behavior"]
+const expectedControlGroupOrder = ["content", "structure", "appearance", "behavior", "semantics"]
 if (!controlPanelContract || controlPanelContract.appliesWhen !== "new-or-touched-playground") {
   errors.push("controlPanelContract must declare new-or-touched-playground scope")
 } else {
@@ -68,8 +68,7 @@ const selectControlGroups = {
   size: "appearance",
   search: "behavior",
   clearable: "behavior",
-  interactionState: "behavior",
-  feedbackState: "behavior",
+  semanticState: "semantics",
 }
 for (const [key, group] of Object.entries(selectControlGroups)) {
   const prop = manifest.components?.select?.props?.find((item) => item.key === key)
@@ -79,7 +78,7 @@ if (manifest.components?.select?.props?.some((item) => item.key === "valueState"
   errors.push("select valueState is scenario data and must not appear as a visible playground control")
 }
 if (manifest.components?.select?.props?.some((item) => item.key === "state")) {
-  errors.push("select must split semanticState, interactionState, and feedbackState instead of a catch-all state control")
+  errors.push("select must use semanticState for default, invalid, and disabled instead of a catch-all state control")
 }
 const components = manifest.components ?? {}
 const customPlaygrounds = manifest.customPlaygrounds ?? {}

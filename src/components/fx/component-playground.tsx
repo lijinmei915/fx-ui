@@ -133,7 +133,7 @@ function PlaygroundPropLabel({ zh }: { zh: string }) {
   )
 }
 
-const controlGroupOrder: ComponentPlaygroundControlGroup[] = ["content", "semantics", "structure", "appearance", "behavior"]
+const controlGroupOrder: ComponentPlaygroundControlGroup[] = ["content", "structure", "appearance", "behavior", "semantics"]
 
 function PgSeg({ active, disabled, isAll, label, title, onClick }: { active: boolean; disabled?: boolean; isAll?: boolean; label: string; title?: string; onClick: () => void }) {
   return (
@@ -258,7 +258,11 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
   }, [activeNode, config.workbench, selectedNode])
 
   const matrixStories = buildPlaygroundStories(config.props, v)
-  const items = matrixStories.map((story) => <Fragment key={story.id}>{config.renderOne(story.values, lang)}</Fragment>)
+  const items = matrixStories.map((story) => (
+    <Fragment key={matrixStories.length === 1 ? "single-preview" : story.id}>
+      {config.renderOne(story.values, lang)}
+    </Fragment>
+  ))
   const isMatrix = matrixStories.length > 1
   const activeTab = isMatrix ? "preview" : tab
   const tabs: { value: string; icon: ReactNode; label: string }[] = [

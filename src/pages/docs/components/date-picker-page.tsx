@@ -11,31 +11,29 @@ type DoDontRow = { do: string; dont: string }
 const componentPlaygroundsManifest = JSON.parse(componentPlaygroundsManifestRaw) as ComponentPlaygroundsManifest
 const datePickerManifest = componentPlaygroundsManifest.customPlaygrounds!.datePicker
 
-function datePickerValue(value: string) {
-  return value === "selected" || value === "clearable" ? new Date(2026, 6, 15) : undefined
-}
-
 function renderDatePickerPlayground(values: Record<string, string>) {
   const props = {
     size: values.size as "xs" | "sm" | "md",
-    clearable: values.valueState === "clearable",
+    clearable: true,
     disabled: values.state === "disabled",
     "aria-invalid": values.state === "invalid",
-    "data-state": (values.state === "hover" || values.state === "focus" || values.state === "open" ? values.state : undefined) as "hover" | "focus" | "open" | undefined,
+    "data-state": values.state === "hover" || values.state === "focus" ? values.state : undefined,
   } as const
-  if (values.scenario === "range") {
-    const date = datePickerValue(values.valueState)
-    return <DatePicker {...props} range defaultValue={date ? { from: date, to: new Date(2026, 6, 21) } : undefined} className="w-[360px]" />
+  if (values.multiple === "true") {
+    return <DatePicker {...props} picker="date" multiple className="w-[280px]" />
   }
-  return <DatePicker {...props} defaultValue={datePickerValue(values.valueState)} />
+  if (values.scenario === "range") {
+    return <DatePicker {...props} range picker="date" className="w-[280px]" />
+  }
+  return <DatePicker {...props} picker={(values.picker ?? "date") as "date" | "week" | "month" | "quarter" | "year"} className="w-[280px]" />
 }
 
 function genDatePickerCode(values: Record<string, string>) {
-  const attrs = [`size="${values.size}"`]
-  if (values.valueState === "clearable") attrs.push("clearable")
+  const attrs = [`size="${values.size}"`, "clearable"]
+  if (values.picker && values.picker !== "date") attrs.push(`picker="${values.picker}"`)
+  if (values.multiple === "true") attrs.push("multiple")
   if (values.state === "disabled") attrs.push("disabled")
   if (values.state === "invalid") attrs.push("aria-invalid")
-  if (values.valueState === "selected" || values.valueState === "clearable") attrs.push(values.scenario === "range" ? "defaultValue={{ from: new Date(2026, 6, 15), to: new Date(2026, 6, 21) }}" : "defaultValue={new Date(2026, 6, 15)}")
   if (values.scenario === "range") return `import { DatePicker } from "@/components/fx/date-picker"\n\n<DatePicker range ${attrs.join(" ")} />`
   return `import { DatePicker } from "@/components/fx/date-picker"\n\n<DatePicker ${attrs.join(" ")} />`
 }
@@ -59,10 +57,19 @@ export const datePickerAnchors = [
 export const datePickerPropRows = [
   { prop: "value / defaultValue", type: "Date | DateRange", defaultValue: "—", desc: "单日期使用 Date，范围模式使用结构化 DateRange。" },
   { prop: "onValueChange", type: "(value: Date | DateRange | undefined) => void", defaultValue: "—", desc: "根据 range 返回单日期或日期范围。" },
-  { prop: "range", type: "boolean", defaultValue: "false", desc: "使用单触发器、单弹层选择开始和结束日期。" },
+  { prop: "range", type: "boolean", defaultValue: "false", desc: "使用单触发器、单弹层选择开始和结束日期；完成范围后保持展开，支持重新选择。" },
   { prop: "placeholder", type: "string", defaultValue: "请选择日期", desc: "未选值时显示的提示。" },
   { prop: "size", type: "xs | sm | md", defaultValue: "sm", desc: "触发器尺寸：24 / 28 / 32。" },
-  { prop: "clearable", type: "boolean", defaultValue: "false", desc: "有值时展示清除入口。" },
+  { prop: "clearable", type: "boolean", defaultValue: "false", desc: "有值时在悬停控件后展示清除入口。" },
+  { prop: "format", type: "Intl.DateTimeFormatOptions", defaultValue: "—", desc: "覆盖日期显示格式选项。" },
+  { prop: "minDate / maxDate", type: "Date", defaultValue: "—", desc: "限制可选择日期范围。" },
+  { prop: "disabledDate", type: "(date: Date) => boolean", defaultValue: "—", desc: "按业务规则禁用日期。" },
+  { prop: "presets", type: "Array<{ label; value }>", defaultValue: "—", desc: "在弹层顶部提供快捷日期预设。" },
+  { prop: "variant", type: "outlined | borderless", defaultValue: "outlined", desc: "控件外观变体。" },
+  { prop: "open / onOpenChange", type: "boolean / (open) => void", defaultValue: "—", desc: "受控弹层状态。" },
+  { prop: "showToday", type: "boolean", defaultValue: "false", desc: "提供“今天”快捷入口。" },
+  { prop: "picker", type: "date | week | month | quarter | year", defaultValue: "date", desc: "选择日期粒度；周、月、季度、年模式返回对应周期起始日，周默认展示年份和周序号。" },
+  { prop: "multiple", type: "boolean", defaultValue: "false", desc: "使用日历多选模式，值为 Date[]。" },
   { prop: "disabled", type: "boolean", defaultValue: "false", desc: "禁止打开日历或修改日期。" },
   { prop: "aria-invalid", type: "boolean", defaultValue: "false", desc: "标记字段校验失败。" },
 ]

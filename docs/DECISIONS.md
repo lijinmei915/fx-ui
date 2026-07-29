@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-07-27
+last_verified: 2026-07-29
 teaches: "fx-ui 重要的技术/协作决策记录：选了什么、放弃了什么、为什么"
 use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论"
 ---
@@ -612,7 +612,7 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 
 - **日期**：2026-07-24
 - **状态**：已决定
-- **决定**：新建或改造 ComponentPlayground 时，实时属性固定按内容、语义、结构、外观、行为排序；缺少能力的分组不显示。场景预设只有在结构变化、多个真实 props/状态联动且具备已验证意图与约束时才允许出现；出现时位于实时属性之前，让用户先选完整场景，再微调真实属性，并按 manifest 显式顺序排列。
+- **决定**：新建或改造 ComponentPlayground 时，实时属性固定按内容、结构、外观、行为、语义排序；缺少能力的分组不显示。场景预设只有在结构变化、多个真实 props/状态联动且具备已验证意图与约束时才允许出现；出现时位于实时属性之前，让用户先选完整场景，再微调真实属性，并按 manifest 显式顺序排列。
 - **放弃**：① 所有 Playground 只要有 stories 就在属性区顶部展示；② 用单个 prop 或可独立调节的 props 组合伪造场景；③ 用页面布局覆盖作为场景。
 - **原因**：场景用于先确定完整使用意图，实时属性用于继续探索真实 API；两者分层可以避免重复控制，同时符合“先选场景、再调细节”的操作路径。
 - **影响**：`component-playgrounds.manifest.json#controlPanelContract` 成为顺序和准入的机器事实，`ComponentPlayground` 统一渲染顺序，`check-playground-contract.mjs` 同时校验声明与实际 DOM 顺序。
@@ -657,6 +657,16 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **原因**：dev-inspector 适合开发期定位组件源码，但它的配置不带现有 Playground 的 manifest、代码、参考用例与视觉验收链路。继续并行扩展会形成两套场景真相源并造成漂移。
 - **影响**：`npm run dev` 仍加载 dev-inspector Vite 插件；组件文档页不增加依赖、不以它生成产物。新组件的文档场景不得录入 `src/dev-inspector.config.tsx`，而应按现有治理流程登记 Playground manifest 并验收。
 - **相关文件**：`vite.config.ts`、`src/dev-inspector.config.tsx`、`docs/data/component-playgrounds.manifest.json`、`src/components/fx/component-playground.tsx`
+
+### DEC-059: Calendar 用单、双箭头完成月年导航
+
+- **日期**：2026-07-28
+- **状态**：已决定
+- **决定**：Calendar 在 shadcn open-code 内补齐上一年 / 上一月 / 下一月 / 下一年四个导航按钮。单箭头按月切换，双箭头按年切换，并受 `startMonth` / `endMonth` 限制；日期和日期时间选择器复用该能力，不使用年月下拉。
+- **放弃**：① 使用月份、年份下拉；② 在 DatePicker / DateTimePicker 调用处各自手写导航；③ 仅保留月份单箭头而让跨年回退为下拉。
+- **原因**：用户明确要求紧凑箭头导航；它同时保留连续浏览月份和快速跨年的操作，并避免将同一导航结构复制到多个日期组合组件中。
+- **影响**：Calendar 标记为 `shadcn-extended`，在 manifest 登记上游、决策和扩展能力；日期相关组件保留 100 年导航边界。
+- **相关文件**：`src/components/ui/calendar.tsx`、`src/components/fx/{date-picker,time-picker}.tsx`、`docs/data/components.manifest.json`
 
 ## 相关文件
 

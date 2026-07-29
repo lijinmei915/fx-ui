@@ -112,6 +112,9 @@ const governanceFreshnessAssetsSource = await readText("src/pages/docs/governanc
 const governanceMaintenanceSource = await readText("src/pages/docs/governance/governance-maintenance-model.tsx")
 const docSurfaceSource = await readText("src/components/fx/doc-surface.tsx")
 const websiteCardSource = await readText("src/components/fx/website-card-container.tsx")
+const pageLeadSource = await readText("src/components/fx/page-lead.tsx")
+const pageTitleMetaSource = await readText("src/lib/page-title-meta.ts")
+const utilityPagesSource = await readText("src/lib/utility-pages.tsx")
 
 if (governanceTodoManifest.format !== "fx-ui/governance-todo") {
   errors.push("governance-todo manifest format must be fx-ui/governance-todo")
@@ -269,6 +272,18 @@ const standardDocPageSource = inlineStandardDocPageSource.includes("<FxPageLead"
   : await readText("src/pages/docs/components/standard-doc-page.tsx")
 if (!standardDocPageSource.includes("<FxPageLead")) {
   errors.push("StandardDocPage must use the fx PageLead component")
+}
+if (!appSource.includes("titleZh: currentNavItem.label, titleEn: currentNavItem.labelEn, lang")) {
+  errors.push("component page headings must provide structured Chinese and English titles from navigation")
+}
+if (!pageTitleMetaSource.includes("titleZh: string") || !pageTitleMetaSource.includes("titleEn: string")) {
+  errors.push("PageTitleMetaContext must declare structured Chinese and English titles")
+}
+if (!pageLeadSource.includes("const resolvedTitle = getDisplayTitle(title, contextTitleMeta)") || !pageLeadSource.includes("const resolvedTitleMeta = titleMeta ?? getTitleMeta(contextTitleMeta)")) {
+  errors.push("PageLead must resolve component headings through the shared title context")
+}
+if (!utilityPagesSource.includes("<PageLead") || !appSource.includes("<PageTitleMetaContext.Provider value={isComponentArea")) {
+  errors.push("registered component placeholders must use the shared PageLead heading contract")
 }
 if (!standardDocPageSource.includes("<SectionLead")) {
   errors.push("StandardDocPage overview and content headings must use SectionLead")

@@ -696,7 +696,7 @@ test("Input 组件制作台", async ({ page }) => {
   await expect(workbench.locator('[data-story-source="docs/data/component-playgrounds.manifest.json#components.input"]')).toHaveCount(1)
   await expect(workbench.locator('[data-slot="component-playground-stories"]')).toHaveCount(0)
   await expect(workbench.getByRole("treeitem")).toHaveCount(0)
-  await expect(workbench.locator("label")).toHaveText(["占位文字", "输入类型", "前置内容", "后置内容", "尺寸", "禁用", "报错"])
+  await expect(workbench.locator("label")).toHaveText(["占位文字", "前置内容", "后置内容", "尺寸", "禁用", "报错", "输入类型"])
   await expect(workbench.getByText("交互状态", { exact: true })).toHaveCount(0)
   await expect(workbench).toContainText("录入普通文本。")
   const leadingControl = workbench.locator("label").filter({ hasText: "前置内容" }).locator("..")
@@ -866,7 +866,7 @@ test("Input 组件制作台", async ({ page }) => {
   await expect(preview.locator('[data-slot="input-addon"]')).toHaveCount(0)
   await expect(workbench.getByPlaceholder("请输入", { exact: true })).toBeVisible()
   await expect(preview.locator('[data-slot="input"]')).not.toHaveAttribute("aria-invalid", "true")
-  await expect(workbench.locator("label")).toHaveText(["占位文字", "输入类型", "前置内容", "后置内容", "尺寸", "禁用", "报错"])
+  await expect(workbench.locator("label")).toHaveText(["占位文字", "前置内容", "后置内容", "尺寸", "禁用", "报错", "输入类型"])
 })
 
 test("Chart 页面按需加载", async ({ page }) => {
@@ -927,6 +927,37 @@ test("DatePicker 日期选择器", async ({ page }) => {
   await trigger.click()
   await expect(page.locator('[data-slot="calendar"]')).toBeVisible()
   await expect(picker).toHaveScreenshot("date-picker.png")
+})
+
+test("DateTimePicker Playground 主入口", async ({ page }) => {
+  const visual = visualConfig("customPlaygrounds", "dateTimePicker")
+  await page.goto(`/${visual.route}`)
+  const pg = page.locator(visual.selector)
+  await expect(pg).toBeVisible()
+  await expect(pg.locator('[data-story-source="docs/data/component-playgrounds.manifest.json#customPlaygrounds.dateTimePicker"]')).toHaveCount(1)
+  await expect(pg).toHaveScreenshot(visual.screenshot)
+
+  await pg.locator('[data-slot="date-time-picker-trigger"]').click()
+  const content = page.locator('[data-slot="date-time-picker-content"]')
+  await expect(content).toBeVisible()
+  await expect(content).toHaveScreenshot("date-time-picker-panel.png")
+
+  await page.goto(`/${visual.route}`)
+  const rangePg = page.locator(visual.selector)
+  await expect(rangePg).toBeVisible()
+  const rangeScenario = rangePg.getByRole("button", { name: "日期时间范围", exact: true })
+  await rangeScenario.click()
+  const rangePicker = rangePg.locator('[data-slot="date-time-picker"]')
+  await expect(rangePicker).toHaveScreenshot("date-time-picker-range-preview.png")
+
+  await rangePg.locator('[data-slot="date-time-picker-trigger"]').click()
+  const rangeContent = page.locator('[data-slot="date-time-picker-content"]')
+  await expect(rangeContent).toBeVisible()
+  await expect(rangeContent).toHaveScreenshot("date-time-picker-range-panel.png")
+
+  await page.setViewportSize({ width: 390, height: 844 })
+  await expect(rangeContent).toBeVisible()
+  await expect(rangeContent).toHaveScreenshot("date-time-picker-range-panel-mobile.png")
 })
 
 test("TimePicker Playground 主入口", async ({ page }) => {

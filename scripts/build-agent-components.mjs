@@ -37,6 +37,14 @@ const exampleSources = {
     usageCode: "<DatePicker defaultValue={new Date(2026, 6, 15)} clearable />",
     anchors: ["#date-picker-playground", "#date-picker-props", "#date-picker-do-dont"],
   },
+  DateTimePicker: {
+    sourceFile: "src/pages/docs/components/date-time-picker-page.tsx",
+    pageSymbol: "DateTimePickerPage",
+    pageSlug: "date-time-picker",
+    playground: "dateTimePickerPlaygroundConfig",
+    usageCode: "<DateTimePicker defaultValue={new Date(2026, 6, 15, 9, 30)} clearable />",
+    anchors: ["#date-time-picker-playground", "#date-time-picker-props", "#date-time-picker-do-dont"],
+  },
   TopBar: {
     sourceFile: "src/pages/docs/components/top-bar-page.tsx",
     pageSymbol: "TopBarPage",

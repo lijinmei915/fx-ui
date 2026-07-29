@@ -26,10 +26,10 @@ export const selectPropRows = [
   { prop: "variant", type: "\"outline\" | \"borderless\"", defaultValue: "outline", desc: "触发器样式：有边框 / 无边框" },
   { prop: "size", type: "\"xs\" | \"sm\" | \"md\"", defaultValue: "sm", desc: "SelectTrigger 的尺寸：xs=24px、sm=28px（默认）、md=32px" },
   { prop: "size（SelectContent）", type: "\"xs\" | \"sm\" | \"md\"", defaultValue: "sm", desc: "下拉选项字号尺寸，应与 SelectTrigger 传相同值" },
-  { prop: "clearable（SelectTrigger）", type: "boolean", defaultValue: "false", desc: "为常驻的同级 SelectClear 预留箭头左侧总清除热区；不负责清除状态" },
+  { prop: "clearable（SelectTrigger）", type: "boolean", defaultValue: "false", desc: "为悬停或聚焦时显示的同级 SelectClear 预留箭头左侧热区；不负责清除状态" },
   { prop: "value（SelectItem）", type: "string", defaultValue: "—", desc: "选项的取值，需要在选项集合内唯一" },
   { prop: "disabled（SelectItem）", type: "boolean", defaultValue: "false", desc: "禁用单个选项" },
-  { prop: "SelectControl / SelectClear", type: "组合子组件", defaultValue: "—", desc: "组织触发器与总清除动作；有值时清除按钮常驻箭头左侧，必须与 SelectTrigger 同级" },
+  { prop: "SelectControl / SelectClear", type: "组合子组件", defaultValue: "—", desc: "组织触发器与总清除动作；有值时在悬停或聚焦后显示于箭头左侧，必须与 SelectTrigger 同级" },
   { prop: "SelectSeparator", type: "子组件", defaultValue: "—", desc: "分隔不同 SelectGroup，不用普通边框元素代替" },
   { prop: "SelectScrollUpButton / SelectScrollDownButton", type: "子组件", defaultValue: "内置", desc: "长列表滚动时由 SelectContent 内部提供边缘滚动反馈" },
   { prop: "其他输入", type: "受控 value + Input 组合", defaultValue: "—", desc: "选择 value=\"other\" 后在 SelectContent 内渲染 Input；必填校验由输入框 aria-invalid 承载" },
@@ -75,7 +75,7 @@ export function SelectPage({ actions, lang, playground, propRows, semanticDomRow
   return (
     <div className={docsSpacing.pageStack}>
       <section id="select" className="flex flex-col gap-2"><PageLead crumb={lang === "en" ? "Components / Select" : "组件 / 选择器"} title="Select 选择器" lead="从一组选项中选择一个或多个值，用于表单字段、筛选条件等场景。" actions={actions} /></section>
-      <section id="select-playground" className={docsSpacing.sectionStack}><SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Tune content, semantics, structure, appearance, interaction, and feedback through real Select props and verified compositions." : "通过真实 Select 属性与已验证组合，依次调试内容、语义、结构、外观、交互和反馈。"} />{playground}</section>
+      <section id="select-playground" className={docsSpacing.sectionStack}><SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Tune content, structure, appearance, behavior, and semantics through real Select props and verified compositions." : "通过真实 Select 属性与已验证组合，依次调试内容、结构、外观、行为和语义。"} />{playground}</section>
       <section id="select-props" className={docsSpacing.sectionStack}><h2 className="text-xl font-bold tracking-tight">API 属性</h2><DocSurfaceTableCard><Table className="min-w-[640px]"><TableHeader><TableRow><TableHead className="pl-4">属性</TableHead><TableHead>类型</TableHead><TableHead>默认值</TableHead><TableHead className="pr-4">描述</TableHead></TableRow></TableHeader><TableBody>{propRows.map((row) => <TableRow key={row.prop}><TableCell className="pl-4 font-medium">{row.prop}</TableCell><TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.type}</code></TableCell><TableCell><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.defaultValue}</code></TableCell><TableCell className="pr-4 text-muted-foreground">{row.desc}</TableCell></TableRow>)}</TableBody></Table></DocSurfaceTableCard></section>
       <section id="select-semantic-dom" className={docsSpacing.sectionStack}><SectionLead title="语义 DOM" description="Select 源码来自 shadcn/ui，保持 open-code。这里记录 AI 和工程师应该理解的语义部位。" /><DocSurfaceTableCard><Table className="min-w-[640px]"><TableHeader><TableRow><TableHead className="pl-4">部位</TableHead><TableHead className="pr-4">说明</TableHead></TableRow></TableHeader><TableBody>{semanticDomRows.map((row) => <TableRow key={row.part}><TableCell className="pl-4 font-medium"><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{row.part}</code></TableCell><TableCell className="pr-4 text-muted-foreground">{row.desc}</TableCell></TableRow>)}</TableBody></Table></DocSurfaceTableCard></section>
       <section id="select-do-dont" className={docsSpacing.sectionStack}><SectionLead title="正误示例" description="工程师和 AI 生成代码最容易犯的错误，照着做即可。" /><DocDoDont rows={doDontRows} /></section>

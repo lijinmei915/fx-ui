@@ -72,8 +72,8 @@ import { Select, SelectClear, SelectContent, SelectControl, SelectGroup, SelectI
 
 - **基础 Select**：单选 / 多选、普通 / 分组 / 禁用项 / 描述项、placeholder / selected、hover / focus / open / invalid / disabled、空结果和加载反馈。
 - **受控组合**：清除选择用受控 `value` + `SelectClear` 表达，不新增 `allowClear` prop，也不在 `SelectTrigger` 内嵌套 button。
-- **多选展示**：`Select multiple` 使用数组值；已选值和折叠计数都在 `SelectValue` 内使用 `Tag variant="soft"` 的外观，但作为控件值统一使用 `font-normal`，不继承真实 Tag 的语义字重。`overflow="collapse"`（默认）把 `maxVisible` 作为上限：只显示放得下的完整标签，空间不足时从末项折叠为 `+n`；`overflow="scroll"` 保持单行并横向滚动全部标签。多选值区的首项内边距与标签间距统一使用 `--fx-control-gap-tight`（4px）。多选项用 `SelectItemIndicator` 展示 Checkbox 反馈，但选择状态仍由 Select 统一管理。
-- **清除热区**：`SelectClear` 与触发器同级放在 `SelectControl` 中；有值且渲染清除动作时，按钮常驻在下拉箭头左侧，`SelectTrigger clearable` 始终预留稳定的 suffix 空间。标签内 X 只删除单项，总清除 X 清空全部选择。
+- **多选展示**：`Select multiple` 使用数组值，默认沿用有边框外观；已选值和折叠计数都在 `SelectValue` 内使用 `Tag variant="soft"` 的外观，但作为控件值统一使用 `font-normal`，不继承真实 Tag 的语义字重。标签高度、字号、内边距和删除热区会从 `SelectTrigger data-size` 自动跟随 `xs / sm / md`，无需重复传 size。`overflow="collapse"`（默认）优先展示容器能容纳的全部标签，空间不足时才从末项折叠为 `+n`；需要业务数量上限时再显式传 `maxVisible`。`overflow="scroll"` 保持单行并横向滚动全部标签。多选值区的首项内边距与标签间距统一使用 `--fx-control-gap-tight`（4px）。多选项用 `SelectItemIndicator` 展示 Checkbox 反馈，但选择状态仍由 Select 统一管理。
+- **清除热区**：`SelectClear` 与触发器同级放在 `SelectControl` 中；有值时按钮在悬停或键盘聚焦控件后显示，位于下拉箭头左侧。`SelectTrigger clearable` 始终预留稳定的 suffix 空间。标签内 X 只删除单项，总清除 X 清空全部选择。
 - **其他输入**：基础 Select 不支持自由输入；如果业务需要“其他”，使用受控 `value` + `SelectItem value="other"` + `SelectContent` 内的 `Input` 组合。必填校验落在输入框 `aria-invalid` 和字段错误文案上，不新增 `allowOther` / `otherRequired` prop。
 - **下拉面板**：对齐 Figma Select 浮层，使用 `bg-popover`、`rounded-md`、下拉层级 `shadow-l1` 和四周 4px 内边距；不添加边框或装饰性三角。默认 `alignItemWithTrigger=false`，从触发器下方展开。选项最小高度 32px、水平内边距 8px、常规字重；hover/focus 使用 `bg-background`，选中项只使用 `text-primary` 强调。
 - **字号联动**：`SelectContent size` 与 `SelectTrigger size` 使用同一档，确保选择框文字和下拉选项文字等大；两者默认均为 `sm`。
@@ -136,7 +136,7 @@ import { Select, SelectClear, SelectContent, SelectControl, SelectGroup, SelectI
 | `variant`（SelectTrigger） | `"outline" \| "borderless"` | `"outline"` | 触发器样式：有边框 / 无边框 |
 | `size`（SelectTrigger） | `"xs" \| "sm" \| "md"` | `"sm"` | 触发器尺寸：24 / 28 / 32 |
 | `size`（SelectContent） | `"xs" \| "sm" \| "md"` | `"sm"` | 下拉选项字号尺寸，应与 SelectTrigger 传相同值 |
-| `clearable`（SelectTrigger） | `boolean` | `false` | 为常驻的总清除动作预留箭头左侧 suffix 空间；需配合 `SelectClear` 同级使用 |
+| `clearable`（SelectTrigger） | `boolean` | `false` | 为悬停或聚焦时显示的总清除动作预留箭头左侧 suffix 空间；需配合 `SelectClear` 同级使用 |
 | `value`（SelectItem） | `string` | - | 选项取值，需要在选项集合内唯一 |
 | `disabled`（SelectItem） | `boolean` | `false` | 禁用单个选项 |
 | 其他输入组合 | 受控 `value` + `Input` | - | 选择 `value="other"` 后渲染输入框；必填/选填由业务校验控制 |
@@ -145,7 +145,7 @@ import { Select, SelectClear, SelectContent, SelectControl, SelectGroup, SelectI
 | `SelectControl` | `div` | - | 触发器与清除动作的定位容器 |
 | `SelectSeparator` | 子组件 | - | 分隔不同 SelectGroup，不用普通边框元素代替 |
 | `SelectScrollUpButton / SelectScrollDownButton` | 子组件 | 内置 | 长列表滚动时由 SelectContent 内部提供边缘滚动反馈 |
-| `SelectMultiValue` | `{ items, maxVisible?, overflow?, onRemove?, getRemoveLabel? }` | `maxVisible=2, overflow="collapse"` | 多选已选值展示；`collapse` 将 maxVisible 作为完整标签数量上限并响应容器宽度折叠为 `+n`，`scroll` 保持单行横向滚动全部标签 |
+| `SelectMultiValue` | `{ items, maxVisible?, overflow?, onRemove?, getRemoveLabel? }` | `maxVisible=items.length, overflow="collapse"` | 多选已选值展示；标签自动跟随所在 SelectTrigger 的 `data-size`，`collapse` 默认按容器宽度折叠为 `+n`，显式 maxVisible 可增加数量上限，`scroll` 保持单行横向滚动全部标签 |
 | `SelectItemIndicator` | `SelectPrimitive.ItemIndicator.Props` | — | 多选项的 Checkbox 选中反馈；不建立独立选择状态 |
 
 ## Semantic DOM {#semantic-dom}

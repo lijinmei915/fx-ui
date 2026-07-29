@@ -20,7 +20,7 @@ Read AGENTS.md first for mandatory governance. This file is a compact lookup ind
 
 ## Current Facts
 
-- Components: 54 (36 ui, 18 fx)
+- Components: 55 (36 ui, 19 fx)
 - Semantic tokens: 87
 - Ready page archetypes: list, detail, form
 - Proven recipes: 4

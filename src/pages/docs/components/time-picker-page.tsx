@@ -6,7 +6,7 @@ import { PageLead as FxPageLead } from "@/components/fx/page-lead"
 import { SectionLead } from "@/components/fx/section-lead"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { docsSpacing } from "@/lib/docs-spacing"
-import { getDisplayTitle, PageTitleMetaContext } from "@/lib/page-title-meta"
+import { getDisplayTitle, getTitleMeta, PageTitleMetaContext } from "@/lib/page-title-meta"
 import { CopyCodeBlock, type StandardDocLang } from "@/pages/docs/components/standard-doc-page"
 import { useContext, type ReactNode } from "react"
 import { TimePickerPreview } from "@/pages/docs/components/time-picker-preview"
@@ -36,7 +36,11 @@ export const timePickerPropRows = [
   { prop: "format", type: "\"HH:mm\" | \"HH:mm:ss\"", defaultValue: "HH:mm", desc: "时间显示格式" },
   { prop: "step", type: "15 | 30 | 60", defaultValue: "30", desc: "分钟步进" },
   { prop: "size", type: "\"xs\" | \"sm\" | \"md\"", defaultValue: "sm", desc: "尺寸：xs=24px、sm=28px、md=32px" },
-  { prop: "clearable", type: "boolean", defaultValue: "false", desc: "有值时是否展示清除入口" },
+  { prop: "clearable", type: "boolean", defaultValue: "false", desc: "有值时在悬停、聚焦或展开时展示清除入口" },
+  { prop: "disabledTime", type: "(time) => boolean", defaultValue: "—", desc: "按时、分、秒禁用时间选项。" },
+  { prop: "variant", type: "outlined | borderless", defaultValue: "outlined", desc: "控件外观变体。" },
+  { prop: "open / onOpenChange", type: "boolean / (open) => void", defaultValue: "—", desc: "受控弹层状态。" },
+  { prop: "showNow", type: "boolean", defaultValue: "false", desc: "提供“此刻”快捷入口。" },
   { prop: "disabled", type: "boolean", defaultValue: "false", desc: "禁用时间选择" },
   { prop: "aria-invalid", type: "boolean", defaultValue: "false", desc: "标记校验失败" },
 ]
@@ -68,16 +72,8 @@ const timePickerFormatOptions = [
   { value: "HH:mm", label: "时:分", labelEn: "Hours:minutes", intent: "常规时间点不需要秒时使用。", constraint: "默认格式为 HH:mm。" },
   { value: "HH:mm:ss", label: "时:分:秒", labelEn: "Hours:minutes:seconds", intent: "需要精确到秒的时间点使用。", constraint: "滚轮模式会显示第三列秒。" },
 ]
-const timePickerValueStateOptions = [
-  { value: "placeholder", label: "占位", labelEn: "Placeholder", intent: "尚未选择时提示用户选择时间。", constraint: "占位由组件 placeholder 承载，不写假值。" },
-  { value: "selected", label: "已选", labelEn: "Selected", intent: "展示已有时间值。", constraint: "用 value / defaultValue 表达时间值，格式使用 HH:mm。" },
-  { value: "clearable", label: "可清除", labelEn: "Clearable", intent: "已选后允许快速清空。", constraint: "只在有值且非禁用时展示清除入口。" },
-]
 const timePickerStateOptions = [
   { value: "normal", label: "默认", labelEn: "Default", intent: "默认可选择状态。", constraint: "不额外传状态 prop。" },
-  { value: "hover", label: "悬停", labelEn: "Hover", intent: "鼠标经过时提示可点击。", constraint: "悬停是原生交互态；调试台只用 data-state 预览。" },
-  { value: "focus", label: "聚焦", labelEn: "Focus", intent: "键盘焦点时显示边框反馈。", constraint: "由 focus-visible 驱动，不在调用处覆盖边框。" },
-  { value: "open", label: "展开", labelEn: "Open", intent: "弹层打开，用户正在选择时间。", constraint: "只适用于弹层模式；原生模式由浏览器接管。" },
   { value: "invalid", label: "报错", labelEn: "Error", intent: "时间未填或不合法。", constraint: "Field 设置 data-invalid，TimePicker 设置 aria-invalid，错误文案放 FieldError。" },
   { value: "disabled", label: "禁用", labelEn: "Disabled", intent: "当前不可选择。", constraint: "使用 disabled，不用 opacity 或 pointer-events 假装禁用。" },
 ]
@@ -102,16 +98,13 @@ function buildTimePickerPlaygroundCode(values: Record<string, string>) {
   const formatProp = values.picker === "wheel" && values.format === "HH:mm:ss" ? ` format="HH:mm:ss"` : ""
   const sizeProp = values.size === "sm" ? "" : ` size="${values.size}"`
   const stepProp = values.step === "30" ? "" : ` step={${values.step}}`
-  const hasValue = values.valueState === "selected" || values.valueState === "clearable"
-  const valueProp = hasValue ? ` defaultValue="09:30"` : ""
-  const clearableProp = values.valueState === "clearable" ? " clearable" : ""
+  const clearableProp = " clearable"
   const disabledProp = values.state === "disabled" ? " disabled" : ""
   const invalidProp = values.state === "invalid" ? " aria-invalid" : ""
   if (values.capability === "range") {
-    const rangeValueProp = hasValue ? ` defaultValue={{ start: "09:30", end: "18:00" }}` : ""
-    return `<TimePicker range${modeProp}${pickerProp}${formatProp}${sizeProp}${stepProp}${rangeValueProp}${clearableProp}${disabledProp}${invalidProp} />`
+    return `<TimePicker range${modeProp}${pickerProp}${formatProp}${sizeProp}${stepProp}${clearableProp}${disabledProp}${invalidProp} />`
   }
-  return `<TimePicker${modeProp}${pickerProp}${formatProp}${sizeProp}${stepProp}${valueProp}${clearableProp}${disabledProp}${invalidProp} />`
+  return `<TimePicker${modeProp}${pickerProp}${formatProp}${sizeProp}${stepProp}${clearableProp}${disabledProp}${invalidProp} />`
 }
 
 export const timePickerPlaygroundConfig: ComponentPlaygroundConfig = {
@@ -120,12 +113,11 @@ export const timePickerPlaygroundConfig: ComponentPlaygroundConfig = {
     { key: "capability", zh: "选择范围", en: "Selection", propName: "capability", type: "segment", options: timePickerCapabilityOptions },
     { key: "picker", zh: "时间方式", en: "Time selection", propName: "picker", type: "segment", options: timePickerPickerOptions },
     { key: "format", zh: "时间格式", en: "Format", propName: "format", type: "segment", options: timePickerFormatOptions, disabledWhen: (v) => v.picker === "list" },
-    { key: "valueState", zh: "值状态", en: "Value state", propName: "value", type: "segment", options: timePickerValueStateOptions },
     { key: "state", zh: "交互状态", en: "State", propName: "state", type: "segment", options: timePickerStateOptions },
     { key: "step", zh: "固定间隔", en: "Interval", propName: "step", type: "segment", options: timePickerStepOptions, disabledWhen: (v) => v.picker === "wheel" },
     { key: "size", zh: "尺寸", en: "Size", propName: "size", type: "segment", options: timePickerSizeOptions },
   ],
-  initial: { capability: "basic", picker: "wheel", format: "HH:mm", valueState: "placeholder", state: "normal", step: "30", size: "sm" },
+  initial: { capability: "basic", picker: "wheel", format: "HH:mm", state: "normal", step: "30", size: "sm" },
   guidanceKey: "mode",
   renderOne: (values: Record<string, string>) => <TimePickerPreview values={values} />,
   genCode: (values: Record<string, string>) => `${timePickerImportCodeForPlayground}\n\n${buildTimePickerPlaygroundCode(values)}`,
@@ -148,8 +140,9 @@ export function TimePickerPage({
   semanticDomRows: SemanticDomRow[]
   doDontRows: DoDontRow[]
 }) {
-  const titleMeta = useContext(PageTitleMetaContext)
-  const displayTitle = getDisplayTitle("TimePicker 时间选择器", lang === "en" ? undefined : titleMeta)
+  const pageTitleMeta = useContext(PageTitleMetaContext)
+  const displayTitle = getDisplayTitle("TimePicker 时间选择器", pageTitleMeta)
+  const titleMeta = getTitleMeta(pageTitleMeta)
   const usageCode = `<Field data-invalid={error ? true : undefined}>\n  <FieldLabel>提醒时间</FieldLabel>\n  <TimePicker value={time} onValueChange={setTime} aria-invalid={error ? true : undefined} />\n  {error ? <FieldError>请选择时间</FieldError> : null}\n</Field>`
 
   return <div className={docsSpacing.pageStack}>

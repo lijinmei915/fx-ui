@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
+import { componentIndexSections } from "../src/lib/site-navigation";
 
 type VisualConfig = { route: string; selector: string };
 type QualityEntry = {
@@ -59,6 +60,18 @@ test("navigation: direct hash resolves the registered documentation page", async
 
   await expect(page).toHaveURL(/#tokens-colors$/);
   await expect(page.getByRole("heading", { name: "颜色", exact: true })).toBeVisible();
+});
+
+test("component page headings use the shared Chinese and English title pair", async ({
+  page,
+}) => {
+  const componentItems = componentIndexSections.flatMap((section) => section.items);
+
+  for (const item of componentItems) {
+    await page.goto(`/${item.href}`);
+    await expect(page.locator('[data-slot="page-lead-title"]')).toHaveText(item.label);
+    await expect(page.locator('[data-slot="page-lead-title-meta"]')).toHaveText(item.labelEn);
+  }
 });
 
 test("navigation: command palette search selects a hash route", async ({ page }) => {
@@ -468,7 +481,7 @@ test("state: Tabs vertical keyboard navigation keeps disabled tabs inactive", as
   await expect(profile).toHaveAttribute("aria-selected", "true");
 });
 
-test("state: Select loading error disabled", async ({ page }) => {
+test("state: Select search, error, and disabled", async ({ page }) => {
   await page.goto("/#select");
   let playground = page.locator("#select-playground");
   await expect(
@@ -489,19 +502,9 @@ test("state: Select loading error disabled", async ({ page }) => {
 
   await page.reload();
   playground = page.locator("#select-playground");
-  const feedbackControl = playground
-    .locator("label")
-    .filter({ hasText: "选项状态" })
-    .locator("..");
-  await feedbackControl.getByRole("button", { name: "加载", exact: true }).click();
-  await playground.locator('[data-slot="select-trigger"]').click();
-  await expect(page.getByText("正在加载", { exact: true })).toBeVisible();
-
-  await page.reload();
-  playground = page.locator("#select-playground");
   const semanticControl = playground
     .locator("label")
-    .filter({ hasText: "控件状态" })
+    .filter({ hasText: "状态" })
     .locator("..");
   await semanticControl.getByRole("button", { name: "报错", exact: true }).click();
   await expect(
@@ -533,6 +536,46 @@ test("state: TimePicker wheel supports seconds and confirm", async ({ page }) =>
   await expect(playground.locator('[data-slot="time-picker-value"]')).toHaveText("17:10:33");
 });
 
+test("state: TimePicker trigger uses 8px horizontal spacing", async ({ page }) => {
+  await page.goto("/#time-picker");
+  const trigger = page.locator('#time-picker-playground [data-slot="time-picker"]');
+
+  await expect(trigger).toHaveCount(1);
+  await expect(trigger).toHaveCSS("padding-left", "8px");
+  await expect(trigger).toHaveCSS("padding-right", "8px");
+  await expect(trigger).toHaveCSS("gap", "8px");
+});
+
+test("state: data entry controls use 8px control spacing", async ({ page }) => {
+  await page.goto("/#input");
+  const input = page.locator('#input-playground [data-slot="input-workbench-preview"] [data-slot="input"]');
+  await expect(input).toHaveCount(1);
+  await expect(input).toHaveCSS("padding-left", "8px");
+  await expect(input).toHaveCSS("padding-right", "8px");
+
+  await page.goto("/#select");
+  const select = page.locator('#select-playground [data-slot="select-trigger"]');
+  await expect(select).toHaveCount(1);
+  await expect(select).toHaveCSS("padding-left", "8px");
+  await expect(select).toHaveCSS("padding-right", "8px");
+  await expect(select).toHaveCSS("gap", "8px");
+
+  await page.goto("/#date-picker");
+  const datePicker = page.locator('#date-picker-playground [data-slot="date-picker"]');
+  const dateTrigger = page.locator('#date-picker-playground [data-slot="date-picker-trigger"]');
+  await expect(datePicker).toHaveCount(1);
+  await expect(datePicker).toHaveCSS("padding-left", "8px");
+  await expect(datePicker).toHaveCSS("padding-right", "8px");
+  await expect(datePicker).toHaveCSS("gap", "8px");
+  await expect(dateTrigger).toHaveCSS("gap", "8px");
+
+  await page.goto("/#textarea");
+  const textarea = page.locator('#textarea-playground [data-slot="textarea"]');
+  await expect(textarea).toHaveCount(1);
+  await expect(textarea).toHaveCSS("padding-left", "8px");
+  await expect(textarea).toHaveCSS("padding-right", "8px");
+});
+
 test("state: DatePicker range uses one trigger and one calendar popover", async ({ page }) => {
   await page.goto("/#date-picker");
   const playground = page.locator("#date-picker-playground");
@@ -543,6 +586,180 @@ test("state: DatePicker range uses one trigger and one calendar popover", async 
   await expect(trigger).toHaveCount(1);
   await trigger.click();
   await expect(page.locator('[data-slot="calendar"]')).toHaveCount(1);
+});
+
+test("state: DatePicker range stays open while replacing an existing range", async ({ page }) => {
+  await page.goto("/#date-picker");
+  const playground = page.locator("#date-picker-playground");
+  await playground.getByRole("button", { name: "日期范围", exact: true }).click();
+
+  const trigger = playground.locator('[data-slot="date-picker-trigger"]');
+  await trigger.click();
+  const calendar = page.locator('[data-slot="calendar"]');
+  const replacementDate = calendar.locator('[data-day="2026/7/25"]');
+  await expect(replacementDate).toHaveCount(1);
+  await calendar.locator('[data-day="2026/7/15"]').click();
+  await calendar.locator('[data-day="2026/7/21"]').click();
+  await expect(playground.locator('[data-slot="date-picker-value"]')).toContainText("2026/07/15");
+  await expect(playground.locator('[data-slot="date-picker-value"]')).toContainText("2026/07/21");
+  await replacementDate.click();
+  await expect(calendar).toBeVisible();
+  await expect(playground.locator('[data-slot="date-picker-value"]')).toContainText("2026/07/25");
+  await expect(playground.locator('[data-slot="date-picker-value"]')).toContainText("结束日期");
+});
+
+test("state: Calendar defaults to Chinese locale", async ({ page }) => {
+  await page.goto("/#date-picker");
+  const playground = page.locator("#date-picker-playground");
+  await playground.locator('[data-slot="date-picker-trigger"]').click();
+
+  const calendar = page.locator('[data-slot="calendar"]');
+  await expect(calendar.getByRole("status")).toHaveText("2026年7月");
+  await expect(calendar.getByRole("status")).toHaveCSS("font-size", "14px");
+  await expect(calendar.getByRole("grid", { name: "七月 2026", exact: true })).toHaveCount(1);
+  const today = calendar.locator('[data-today="true"]');
+  await expect(today).toHaveCount(1);
+  expect(await today.getAttribute("class")).toContain("border-primary");
+});
+
+test("state: date controls reveal their clear action on hover", async ({ page }) => {
+  await page.goto("/#date-picker");
+  const datePlayground = page.locator("#date-picker-playground");
+  const datePicker = datePlayground.locator('[data-slot="date-picker"]');
+  const dateClear = datePicker.locator('[data-slot="date-picker-clear"]');
+  await datePicker.locator('[data-slot="date-picker-trigger"]').click();
+  await page.getByRole("button", { name: "2026年7月15日 星期三", exact: true }).click();
+  await expect(dateClear).toBeHidden();
+  await datePicker.hover();
+  await expect(dateClear).toBeVisible();
+
+  await page.goto("/#date-time-picker");
+  const dateTimePlayground = page.locator("#date-time-picker-playground");
+  const dateTimePicker = dateTimePlayground.locator('[data-slot="date-time-picker"]');
+  const dateTimeClear = dateTimePicker.locator('[data-slot="date-time-picker-clear"]');
+  await dateTimePicker.locator('[data-slot="date-time-picker-trigger"]').click();
+  await page.getByRole("button", { name: "2026年7月15日 星期三", exact: true }).click();
+  await expect(dateTimeClear).toBeHidden();
+  await dateTimePicker.hover();
+  await expect(dateTimeClear).toBeVisible();
+});
+
+test("state: DateTimePicker keeps its trigger in sync while selecting", async ({ page }) => {
+  await page.goto("/#date-time-picker");
+  const playground = page.locator("#date-time-picker-playground");
+  const trigger = playground.locator('[data-slot="date-time-picker-trigger"]');
+  await expect(trigger).toHaveCount(1);
+  await trigger.click();
+
+  await expect(page.locator('[data-slot="date-time-picker-panel"]')).toHaveCount(1);
+  await expect(page.locator('[data-slot="calendar"]')).toHaveCount(1);
+  const timePanel = page.locator('[data-slot="date-time-picker-time-panel"]');
+  await expect(timePanel).toHaveCount(1);
+  await page.waitForTimeout(120);
+  const panelsAreAligned = await timePanel.evaluate((node) => {
+    const calendarNode = node.parentElement?.querySelector('[data-slot="calendar"]');
+    if (!calendarNode) return false;
+    const timePanelRect = node.getBoundingClientRect();
+    const calendarRect = calendarNode.getBoundingClientRect();
+    return Math.abs(calendarRect.height - timePanelRect.height) <= 16;
+  });
+  expect(panelsAreAligned).toBe(true);
+  const wheelsFillPanel = await timePanel.evaluate((node) => {
+    const panelRect = node.getBoundingClientRect();
+    const listboxes = [...node.querySelectorAll('[role="listbox"]')];
+    return listboxes.length === 3 && listboxes.every((listbox) => {
+      const listboxRect = listbox.getBoundingClientRect();
+      return Math.abs(panelRect.bottom - listboxRect.bottom - 8) < 1;
+    });
+  });
+  expect(wheelsFillPanel).toBe(true);
+  await page.getByRole("button", { name: "2026年7月15日 星期三", exact: true }).click();
+  const lists = page.getByRole("listbox");
+  await expect(lists).toHaveCount(3);
+  await lists.nth(0).getByRole("option", { name: "17", exact: true }).click();
+  await lists.nth(1).getByRole("option", { name: "10", exact: true }).click();
+  await lists.nth(2).getByRole("option", { name: "33", exact: true }).click();
+  await expect(playground.locator('[data-slot="date-time-picker-value"]')).toHaveText(/2026\/07\/15 17:10:33/);
+  await page.getByRole("button", { name: "确定", exact: true }).click();
+  await expect(playground.locator('[data-slot="date-time-picker-value"]')).toHaveText(/2026\/07\/15 17:10:33/);
+});
+
+test("state: DateTimePicker cancel restores the value from before the panel opened", async ({ page }) => {
+  await page.goto("/#date-time-picker");
+  const playground = page.locator("#date-time-picker-playground");
+  const trigger = playground.locator('[data-slot="date-time-picker-trigger"]');
+  await trigger.click();
+
+  await page.getByRole("button", { name: "2026年7月15日 星期三", exact: true }).click();
+  await page.getByRole("button", { name: "确定", exact: true }).click();
+  await trigger.click();
+  await page.getByRole("listbox").nth(0).getByRole("option", { name: "17", exact: true }).click();
+  await expect(playground.locator('[data-slot="date-time-picker-value"]')).toHaveText(/17:00:00/);
+  await page.getByRole("button", { name: "取消", exact: true }).click();
+  await expect(playground.locator('[data-slot="date-time-picker-value"]')).toHaveText(/00:00:00/);
+});
+
+test("state: DateTimePicker uses four arrow buttons for calendar navigation", async ({ page }) => {
+  await page.goto("/#date-time-picker");
+  const playground = page.locator("#date-time-picker-playground");
+  const trigger = playground.locator('[data-slot="date-time-picker-trigger"]');
+  await expect(trigger).toHaveCount(1);
+  await trigger.click();
+
+  const calendar = page.locator('[data-slot="calendar"]');
+  await expect(calendar.getByRole("button", { name: "上一年", exact: true })).toHaveCount(1);
+  await expect(calendar.getByRole("button", { name: "上一月", exact: true })).toHaveCount(1);
+  await expect(calendar.getByRole("button", { name: "下一月", exact: true })).toHaveCount(1);
+  await expect(calendar.getByRole("button", { name: "下一年", exact: true })).toHaveCount(1);
+  const navigation = calendar.locator("nav");
+  await expect(navigation).toHaveCount(1);
+  await expect(navigation).toHaveCSS("height", "28px");
+  const navigationAligned = await navigation.evaluate((node) => {
+    const caption = node.parentElement?.querySelector(".rdp-month_caption");
+    if (!caption) return false;
+    const navRect = node.getBoundingClientRect();
+    const captionRect = caption.getBoundingClientRect();
+    return Math.abs(navRect.top + navRect.height / 2 - (captionRect.top + captionRect.height / 2)) < 0.1;
+  });
+  expect(navigationAligned).toBe(true);
+  const navigationButtons = calendar.locator('[data-variant="plain"]');
+  await expect(navigationButtons).toHaveCount(4);
+  for (const index of [0, 1, 2, 3]) {
+    await expect(navigationButtons.nth(index)).toHaveCSS("width", "16px");
+    await expect(navigationButtons.nth(index)).toHaveCSS("height", "16px");
+    await expect(navigationButtons.nth(index)).toHaveCSS("gap", "0px");
+  }
+  await expect(calendar.getByRole("combobox")).toHaveCount(0);
+
+  await calendar.getByRole("button", { name: "下一月", exact: true }).click();
+  await expect(calendar.getByRole("grid", { name: "八月 2026", exact: true })).toHaveCount(1);
+  await calendar.getByRole("button", { name: "下一年", exact: true }).click();
+  await expect(calendar.getByRole("grid", { name: "八月 2027", exact: true })).toHaveCount(1);
+});
+
+test("state: DateTimePicker range edits start and end in sequence", async ({ page }) => {
+  await page.goto("/#date-time-picker");
+  const playground = page.locator("#date-time-picker-playground");
+  await playground.getByRole("button", { name: "日期时间范围", exact: true }).click();
+
+  const trigger = playground.locator('[data-slot="date-time-picker-trigger"]');
+  await expect(trigger).toHaveCount(1);
+  await trigger.click();
+  await expect(page.locator('[data-slot="calendar"]')).toHaveCount(1);
+  await expect(page.locator('[data-slot="date-time-picker-panel"]')).toHaveCount(1);
+  const lists = page.getByRole("listbox");
+  await expect(lists).toHaveCount(3);
+  await page.getByRole("button", { name: "2026年7月15日 星期三", exact: true }).click();
+  await lists.nth(0).getByRole("option", { name: "10", exact: true }).click();
+  await page.getByRole("button", { name: "确定", exact: true }).click();
+  await expect(page.locator('[data-slot="date-time-picker-panel"]')).toBeVisible();
+  await expect(playground.locator('[data-slot="date-time-picker-value"]')).toContainText("2026/07/15 10:00:00");
+  await expect(playground.locator('[data-slot="date-time-picker-value"]')).toContainText("结束日期时间");
+  await page.getByRole("button", { name: "2026年7月21日 星期二", exact: true }).click();
+  await lists.nth(0).getByRole("option", { name: "18", exact: true }).click();
+  await page.getByRole("button", { name: "确定", exact: true }).click();
+  await expect(page.locator('[data-slot="date-time-picker-panel"]')).toHaveCount(0);
+  await expect(playground.locator('[data-slot="date-time-picker-value"]')).toHaveText(/2026\/07\/15 10:00:00.*2026\/07\/21 18:00:00/);
 });
 
 test("state: TimePicker range uses one trigger and one dual-wheel popover", async ({ page }) => {
@@ -569,27 +786,115 @@ test("state: TimePicker range uses one trigger and one dual-wheel popover", asyn
   await expect(page.getByRole("button", { name: "确定", exact: true })).toBeVisible();
 });
 
-test("state: Select clear-all stays visible while open", async ({ page }) => {
+test("state: Select clear-all appears on hover or focus", async ({ page }) => {
   await page.goto("/#select");
   const playground = page.locator("#select-playground");
-  const singlePreset = playground.getByRole("button", { name: "单选", exact: true }).first();
-  await singlePreset.click();
-  const appearanceControl = playground
-    .locator("label")
-    .filter({ hasText: "外观" })
-    .locator("..");
-  await appearanceControl.getByRole("button", { name: "无边框", exact: true }).click();
-  await expect(singlePreset).toHaveClass(/bg-card/);
+  const typeControl = playground.locator("label").filter({ hasText: "类型" }).locator("..");
+  await typeControl.getByRole("button", { name: "多选", exact: true }).click();
+  const clearControl = playground.locator("label").filter({ hasText: "清除" }).locator("..");
+  await clearControl.getByRole("button", { name: "有", exact: true }).click();
+  await expect(playground.locator('[data-slot="component-playground-stories"]')).toHaveCount(0);
 
-  await playground.getByRole("button", { name: "多选", exact: true }).first().click();
+  const trigger = playground.locator('[data-slot="select-trigger"]');
+  await trigger.click();
+  await page.getByRole("option", { name: "管理员", exact: true }).click();
 
   const clearAll = playground.getByRole("button", {
     name: "清除选择",
     exact: true,
   });
+  const selectControl = playground.locator('[data-slot="select-control"]');
+  await expect(clearAll).toBeHidden();
+  await selectControl.hover();
   await expect(clearAll).toBeVisible();
   await playground.locator('[data-slot="select-trigger"]').click();
   await expect(clearAll).toBeVisible();
+});
+
+test("state: Select multiple defaults to outline and scales value tags", async ({ page }) => {
+  await page.goto("/#select");
+  const playground = page.locator("#select-playground");
+  const typeControl = playground.locator("label").filter({ hasText: "类型" }).locator("..");
+  await typeControl.getByRole("button", { name: "多选", exact: true }).click();
+
+  const trigger = playground.locator('[data-slot="select-trigger"]');
+  await expect(trigger).toHaveAttribute("data-variant", "outline");
+  const sizeControl = playground.locator("label").filter({ hasText: "尺寸" }).locator("..");
+  await sizeControl.getByRole("button", { name: "超小24", exact: true }).click();
+  await trigger.click();
+  await page.getByRole("option", { name: "管理员", exact: true }).click();
+  await page.getByRole("option", { name: "成员", exact: true }).click();
+  await page.getByRole("option", { name: "审计员", exact: true }).click();
+  await page.getByRole("option", { name: "访客", exact: true }).click();
+  await page.keyboard.press("Escape");
+  await page.waitForTimeout(100);
+  const valueTags = trigger.locator('[data-slot="tag"]');
+  await expect(valueTags).toHaveCount(4);
+  await expect(valueTags).toHaveText(["管理员", "成员", "审计员", "访客"]);
+  await expect(trigger.locator('[data-slot="select-overflow-count"]')).toHaveCount(0);
+  await expect(valueTags.first()).toHaveCSS("height", "16px");
+  await expect(valueTags.first()).toHaveCSS("font-size", "12px");
+  await expect(valueTags.first().locator("svg")).toHaveCSS("width", "10px");
+  await sizeControl.getByRole("button", { name: "默认28", exact: true }).click();
+  await page.waitForTimeout(100);
+  await expect(valueTags).toHaveCount(3);
+  await expect(valueTags).toHaveText(["管理员", "成员", "审计员"]);
+  await expect(trigger.locator('[data-slot="select-overflow-count"]')).toHaveText("+1");
+  await expect(valueTags.first()).toHaveCSS("height", "20px");
+  await expect(valueTags.first().locator("svg")).toHaveCSS("width", "12px");
+  await sizeControl.getByRole("button", { name: "中32", exact: true }).click();
+  await expect(valueTags).toHaveCount(2);
+  await expect(valueTags).toHaveText(["管理员", "成员"]);
+  await expect(trigger.locator('[data-slot="select-overflow-count"]')).toHaveText("+2");
+  await expect(valueTags.first()).toHaveCSS("height", "24px");
+  await expect(valueTags.first()).toHaveCSS("font-size", "14px");
+  await expect(valueTags.first().locator("svg")).toHaveCSS("width", "14px");
+  const mdVerticalGap = await trigger.evaluate((node) => {
+    const tag = node.querySelector('[data-slot="tag"]');
+    if (!tag) return null;
+    const triggerRect = node.getBoundingClientRect();
+    const tagRect = tag.getBoundingClientRect();
+    return {
+      top: tagRect.top - triggerRect.top,
+      bottom: triggerRect.bottom - tagRect.bottom,
+    };
+  });
+  expect(mdVerticalGap?.top).toBeCloseTo(4, 1);
+  expect(mdVerticalGap?.bottom).toBeCloseTo(4, 1);
+  await playground.evaluate((node) => node.style.setProperty("--fx-control-md-height", "30px"));
+  await expect(trigger).toHaveCSS("height", "30px");
+  await expect(valueTags.first()).toHaveCSS("height", "22px");
+  const compactMdVerticalGap = await trigger.evaluate((node) => {
+    const tag = node.querySelector('[data-slot="tag"]');
+    if (!tag) return null;
+    const triggerRect = node.getBoundingClientRect();
+    const tagRect = tag.getBoundingClientRect();
+    return {
+      top: tagRect.top - triggerRect.top,
+      bottom: triggerRect.bottom - tagRect.bottom,
+    };
+  });
+  expect(compactMdVerticalGap?.top).toBeCloseTo(4, 1);
+  expect(compactMdVerticalGap?.bottom).toBeCloseTo(4, 1);
+  await sizeControl.getByRole("button", { name: "超小24", exact: true }).click();
+  await sizeControl.getByRole("button", { name: "中32", exact: true }).click();
+  await page.waitForTimeout(100);
+  const compactOverflowBoundary = await trigger.locator('[data-slot="select-multi-value"]').evaluate((node) => {
+    const lastItem = node.lastElementChild;
+    if (!lastItem) return null;
+    return {
+      containerRight: node.getBoundingClientRect().right,
+      lastItemRight: lastItem.getBoundingClientRect().right,
+    };
+  });
+  expect(compactOverflowBoundary).not.toBeNull();
+  expect(compactOverflowBoundary!.lastItemRight).toBeLessThanOrEqual(compactOverflowBoundary!.containerRight + 0.5);
+  await playground.evaluate((node) => node.style.removeProperty("--fx-control-md-height"));
+  await sizeControl.getByRole("button", { name: "超小24", exact: true }).click();
+  await page.waitForTimeout(100);
+  await expect(valueTags).toHaveCount(3);
+  await expect(valueTags).toHaveText(["管理员", "成员", "审计员"]);
+  await expect(trigger.locator('[data-slot="select-overflow-count"]')).toHaveText("+1");
 });
 
 test("state: Field invalid disabled", async ({ page }) => {

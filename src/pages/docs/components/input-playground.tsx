@@ -30,7 +30,7 @@ function buildInputPlaygroundCode(values: Record<string, string>) {
     values.leading === "email-icon" ? `  <InputAffix side="start"><MailIcon /></InputAffix>\n` :
     values.leading === "text" ? `  <InputAffix side="start">${values.leadingText}</InputAffix>\n` :
     values.leading === "addon" ? `  <InputAddon side="start">${values.leadingText}</InputAddon>\n` : "";
-  const clearAction = searchClear ? `\n  {query ? <InputAction aria-label="清除搜索" onClick={() => setQuery("")}><XIcon /></InputAction> : null}` : "";
+  const clearAction = searchClear ? `\n  {query ? <InputAction data-clear aria-label="清除搜索" onClick={() => setQuery("")}><XIcon /></InputAction> : null}` : "";
   const trailing = values.trailing === "search-icon" ? `\n  <InputAffix side="end"><SearchIcon /></InputAffix>${clearAction}` :
     values.trailing === "text" ? `\n  <InputAffix side="end">${values.trailingText}</InputAffix>` :
     passwordToggle ? `\n  <InputAction aria-label={showPassword ? "隐藏密码" : "显示密码"} onClick={() => setShowPassword((visible) => !visible)}>{showPassword ? <EyeOffIcon /> : <EyeIcon />}</InputAction>` :
@@ -96,7 +96,7 @@ export const inputPlaygroundConfig: ComponentPlaygroundConfig = {
         structure: { passed: true, detail: `前置 ${values.leading} / 后置 ${values.trailing}`, detailEn: `Leading ${values.leading} / trailing ${values.trailing}` },
         tokens: { passed: [values.surfaceToken, values.borderToken, values.placeholderToken].every((token) => semanticTokens.has(token)), detail: "三个槽位均映射到语义 Token。", detailEn: "All three slots map to semantic tokens." },
         stateSemantics: { passed: stateAssignments.every((assignment) => semanticTokens.has(assignment.token)), detail: `${stateAssignments.length} 条状态映射来自 Input 源码契约。`, detailEn: `${stateAssignments.length} state mappings come from the Input source contract.` },
-        accessibility: { passed: true, detail: values.type === "search" ? "搜索输入在存在关键词时自动显示清除按钮，并带有 aria-label。" : values.trailing === "password-toggle" ? "密码显隐按钮会同步更新 aria-label。" : "当前没有图标动作节点。", detailEn: values.type === "search" ? "Search inputs automatically render a labelled clear action when a query exists." : values.trailing === "password-toggle" ? "The password visibility action updates its aria-label with state." : "No icon action node." },
+        accessibility: { passed: true, detail: values.type === "search" ? "搜索输入在存在关键词且悬停或聚焦时显示带 aria-label 的清除按钮。" : values.trailing === "password-toggle" ? "密码显隐按钮会同步更新 aria-label。" : "当前没有图标动作节点。", detailEn: values.type === "search" ? "Search inputs reveal a labelled clear action on hover or focus when a query exists." : values.trailing === "password-toggle" ? "The password visibility action updates its aria-label with state." : "No icon action node." },
         code: { passed: true, detail: "结构 JSON 同时驱动预览和组件草稿。", detailEn: "The same structure state drives preview and component draft." },
       };
     },

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { PageLead } from "@/components/fx/page-lead"
 import { WebsiteCardContainer } from "@/components/fx/website-card-container"
 import { docsSpacing } from "@/lib/docs-spacing"
 
@@ -58,17 +59,16 @@ export function PlaceholderPage({
 
   return (
     <section className="flex flex-col gap-10">
-      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <div>
-          <p className="mb-3 text-sm text-muted-foreground">{lang === "en" ? "Placeholder" : "空页面占位"} / {hash || "#components"}</p>
-          <h1 className="text-3xl font-bold leading-tight tracking-tight">{title}</h1>
-        </div>
-        {actions}
-      </div>
+      <PageLead
+        crumb={`${lang === "en" ? "Placeholder" : "空页面占位"} / ${hash || "#components"}`}
+        title={title}
+        lead={lang === "en" ? "This route is registered, but its component documentation has not been added yet." : "这个路由已登记，但对应的组件文档尚未补充。"}
+        actions={actions}
+      />
       <WebsiteCardContainer>
         <CardHeader><CardTitle className="text-base">{lang === "en" ? "Content not filled yet" : "内容暂未填充"}</CardTitle></CardHeader>
         <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-          <p>{lang === "en" ? "This menu item already has its own route. The page can later be filled from shadcn Blocks, component docs, or internal layout guidelines." : "这个菜单项已经有独立路由。后续可以从 shadcn Blocks、组件文档或公司内部布局规范里补内容。"}</p>
+          <p>{lang === "en" ? "This menu item can later be filled from shadcn Blocks, component docs, or internal layout guidelines." : "这个菜单项后续可以从 shadcn Blocks、组件文档或公司内部布局规范里补充。"}</p>
           <code className="w-fit rounded-lg bg-muted px-3 py-2 text-xs text-foreground">{hash}</code>
         </CardContent>
       </WebsiteCardContainer>

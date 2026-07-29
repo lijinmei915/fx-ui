@@ -1,6 +1,6 @@
 import { useContext, type ReactNode } from "react";
 import { PageLead as FxPageLead } from "@/components/fx/page-lead";
-import { getDisplayTitle, PageTitleMetaContext } from "@/lib/page-title-meta";
+import { getDisplayTitle, getTitleMeta, PageTitleMetaContext } from "@/lib/page-title-meta";
 
 export function DocumentPageLead({
   crumb,
@@ -16,11 +16,11 @@ export function DocumentPageLead({
   actions: ReactNode;
 }) {
   const contextTitleMeta = useContext(PageTitleMetaContext);
-  const resolvedTitleMeta = titleMeta ?? contextTitleMeta;
+  const resolvedTitleMeta = titleMeta ?? getTitleMeta(contextTitleMeta);
   return (
     <FxPageLead
       crumb={crumb}
-      title={getDisplayTitle(title, resolvedTitleMeta)}
+      title={getDisplayTitle(title, contextTitleMeta)}
       titleMeta={resolvedTitleMeta}
       lead={lead}
       actions={actions}

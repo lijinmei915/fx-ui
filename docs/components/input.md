@@ -83,7 +83,7 @@ AI 选择 Input 时按这个顺序判断：
 4. 再判断状态。禁用是 `data-disabled + disabled`，校验失败是 `data-invalid + aria-invalid`。
 5. 最后才考虑布局宽度。`className` 可以放宽度和外部间距，不覆盖 Input 自身颜色、圆角、边框、内边距。
 
-Input 默认显示普通调用调试台，提供能直接落到真实调用的占位文字、输入类型、前置/后置内容、尺寸、`disabled` 和 `aria-invalid`。前后内容是 `InputGroup + InputAffix/InputAddon/InputAction` 的受控组合，不是 `prefix`、`suffix` 等伪 prop；搜索输入用原生 `type="search"` 表达语义，默认组合前置 `SearchIcon`，也可改为后置但两者互斥；有关键词时默认显示后置 `XIcon` 清除动作，不作为独立配置，按需可追加 `variant="primary"` 的主搜索按钮。为避免重复的清除入口，基础 Input 隐藏浏览器 `type="search"` 的 WebKit 原生清除按钮。输入类型会收窄可选结构：数字保留货币/单位等符号和标签；邮箱默认使用前置 `MailIcon`，调试台会在失焦后把原生格式结果映射为 `aria-invalid` 错误样式，并以内联 `FieldError` 显示“请输入有效的邮箱地址。”，不显示浏览器浮层；密码默认使用后置 `InputAction`，通过 `EyeIcon` / `EyeOffIcon` 切换显示状态并同步可访问名称。邮箱和密码均不展示搜索组合，切换类型时会清除不兼容的前后内容。范围选择、全局检索、远程建议和结果面板属于 `TopBarSearch`、`SearchToolbar` 或 `Command`，不作为基础 Input 的 prop。日期选择属于 `Calendar + Popover` 的独立组件组合，不作为 Input 的图标前缀。hover/focus、字段包装和 Token 仍只在“编辑组件”里。点击工具栏“编辑组件”后进入制作台，并按“先拼结构，再编辑节点，最后验证 Token 与行为”的顺序拆分。制作台使用临时草稿，结构、状态、文案和 Token 调整只在编辑期间生效；完成编辑后恢复进入编辑前的普通实时属性：
+Input 默认显示普通调用调试台，提供能直接落到真实调用的占位文字、输入类型、前置/后置内容、尺寸、`disabled` 和 `aria-invalid`。前后内容是 `InputGroup + InputAffix/InputAddon/InputAction` 的受控组合，不是 `prefix`、`suffix` 等伪 prop；搜索输入用原生 `type="search"` 表达语义，默认组合前置 `SearchIcon`，也可改为后置但两者互斥；有关键词时在悬停或聚焦控件后显示后置 `XIcon` 清除动作，不作为独立配置，按需可追加 `variant="primary"` 的主搜索按钮。为避免重复的清除入口，基础 Input 隐藏浏览器 `type="search"` 的 WebKit 原生清除按钮。输入类型会收窄可选结构：数字保留货币/单位等符号和标签；邮箱默认使用前置 `MailIcon`，调试台会在失焦后把原生格式结果映射为 `aria-invalid` 错误样式，并以内联 `FieldError` 显示“请输入有效的邮箱地址。”，不显示浏览器浮层；密码默认使用后置 `InputAction`，通过 `EyeIcon` / `EyeOffIcon` 切换显示状态并同步可访问名称。邮箱和密码均不展示搜索组合，切换类型时会清除不兼容的前后内容。范围选择、全局检索、远程建议和结果面板属于 `TopBarSearch`、`SearchToolbar` 或 `Command`，不作为基础 Input 的 prop。日期选择属于 `Calendar + Popover` 的独立组件组合，不作为 Input 的图标前缀。hover/focus、字段包装和 Token 仍只在“编辑组件”里。点击工具栏“编辑组件”后进入制作台，并按“先拼结构，再编辑节点，最后验证 Token 与行为”的顺序拆分。制作台使用临时草稿，结构、状态、文案和 Token 调整只在编辑期间生效；完成编辑后恢复进入编辑前的普通实时属性：
 
 1. **结构插槽**：前置与后置独立选择无、搜索图标、符号、标签或动作；搜索只有前置搜索图标、默认的有值清除和可选主搜索，邮箱只有前置邮箱图标，密码只有后置显隐动作，结构树只展示真实存在的节点。
 2. **节点属性**：选中 Input、InputAffix、InputAddon、InputAction 后，只编辑源码真实 props 与内容。
@@ -108,7 +108,7 @@ Token 编辑属于组件作者模式。预览区局部重映射 `--surface`、`-
 
 ### 当前规格
 
-默认尺寸为 `sm`，高度 `28px`。默认输入文字使用 `14px / 20px / 400`；placeholder 同为 `400`，颜色走 `text-foreground-disabled`。输入框边框为 `1px`；悬停与聚焦边框使用主题色 `border-primary`，错误态使用 `border-destructive`，不额外添加聚焦环。输入内容与控件外侧统一保留 `--fx-control-px-xs`（8px）；`InputAffix` 内容槽位最小为 `16px`，图标和单字符符号在槽位内居中，贴近输入内容的一侧统一使用 `--fx-control-gap-tight`（4px），左、右镜像一致。`InputAddon` 与输入区共享 `surface`，只用与外框同源的 `input` 竖分隔线划出固定内容，不单独着色或起圆角。`type="number"` 隐藏浏览器默认微调箭头，但保留键盘上下键、`min` / `max` / `step` 和原生数值校验。
+默认尺寸为 `sm`，高度 `28px`。默认输入文字使用 `14px / 20px / 400`；placeholder 同为 `400`，颜色走 `text-foreground-disabled`。输入框边框为 `1px`；悬停与聚焦边框使用主题色 `border-primary`，错误态使用 `border-destructive`，不额外添加聚焦环。输入内容与控件外侧统一保留 `8px`；`InputAffix` 内容槽位最小为 `16px`，贴近输入内容的一侧也统一保留 `8px`，左、右镜像一致。`InputAddon` 与输入区共享 `surface`，只用与外框同源的 `input` 竖分隔线划出固定内容，不单独着色或起圆角。`type="number"` 隐藏浏览器默认微调箭头，但保留键盘上下键、`min` / `max` / `step` 和原生数值校验。
 
 ## API {#api}
 

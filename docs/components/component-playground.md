@@ -99,9 +99,9 @@ const stories = buildPlaygroundStories(config.props, currentValues)
 
 ### 实时属性分组与场景准入
 
-新建或改造 Playground 时，实时属性按固定顺序分组：**内容 → 语义 → 结构 → 外观 → 行为**。各组只展示组件源码的真实 API 或已声明组合能力：内容是用户可见数据；语义是 type、required、readOnly、aria-* 等原生 HTML 或无障碍能力；结构是 header、leading、trailing、footer 等真实槽位；外观是 variant、size、tone 等视觉 API；行为是 disabled、loading、invalid 等交互/组合态。没有对应能力的组不渲染，禁止用布局宽度、外层间距或页面覆盖类凑控制项。
+新建或改造 Playground 时，实时属性按固定顺序分组：**内容 → 结构 → 外观 → 行为 → 语义**。各组只展示组件源码的真实 API 或已声明组合能力：内容是用户可见数据；结构是 header、leading、trailing、footer 等真实槽位；外观是 variant、size、tone 等视觉 API；行为是 loading 等交互/组合态；语义是 type、required、readOnly、aria-* 等原生 HTML 或无障碍能力。没有对应能力的组不渲染，禁止用布局宽度、外层间距或页面覆盖类凑控制项。
 
-结构示例与场景预设都不属于实时属性，且都要求至少两条可切换 story。`examples` 只展示不同的真实组件结构，不得伪称业务场景；`presets` 必须同时满足“改变结构”、“需要联动多个真实 props 或状态”以及“具备已验证的使用意图与约束”。两者都排在实时属性之前，让用户先选完整场景，再按内容、语义、结构、外观、行为微调。仅改变一个 prop、可由面板独立配置的 props 组合、或仅覆盖布局的内容不得创建 story。这些规则的机器事实见 `docs/data/component-playgrounds.manifest.json#controlPanelContract`，由 `check-playground-contract.mjs` 校验。
+结构示例与场景预设都不属于实时属性，且都要求至少两条可切换 story。`examples` 只展示不同的真实组件结构，不得伪称业务场景；`presets` 必须同时满足“改变结构”、“需要联动多个真实 props 或状态”以及“具备已验证的使用意图与约束”。两者都排在实时属性之前，让用户先选完整场景，再按内容、结构、外观、行为、语义微调。仅改变一个 prop、可由面板独立配置的 props 组合、或仅覆盖布局的内容不得创建 story。这些规则的机器事实见 `docs/data/component-playgrounds.manifest.json#controlPanelContract`，由 `check-playground-contract.mjs` 校验。
 
 ### Tab 选项文案
 

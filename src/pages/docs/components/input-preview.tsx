@@ -67,7 +67,7 @@ export function InputPreview({ values }: { values: InputPreviewValues }) {
     values.leading === "email-icon" ? <InputAffix side="start"><MailIcon /></InputAffix> :
     values.leading === "text" ? <InputAffix side="start">{values.leadingText}</InputAffix> :
     values.leading === "addon" ? <InputAddon side="start">{values.leadingText}</InputAddon> : null;
-  const clearAction = values.type === "search" && searchQuery ? <InputAction aria-label="清除搜索" disabled={disabled} onClick={() => setSearchQuery("")}><XIcon /></InputAction> : null;
+  const clearAction = values.type === "search" && searchQuery ? <InputAction data-clear aria-label="清除搜索" disabled={disabled} onClick={() => setSearchQuery("")}><XIcon /></InputAction> : null;
   const trailing = values.trailing === "search-icon" ? <><InputAffix side="end"><SearchIcon /></InputAffix>{clearAction}</> :
     values.trailing === "text" ? <InputAffix side="end">{values.trailingText}</InputAffix> :
     values.trailing === "password-toggle" ? <InputAction aria-label={showPassword ? "隐藏密码" : "显示密码"} disabled={disabled} onClick={() => setShowPassword((visible) => !visible)}>{showPassword ? <EyeOffIcon /> : <EyeIcon />}</InputAction> :
@@ -86,7 +86,7 @@ export function InputPreview({ values }: { values: InputPreviewValues }) {
       data-surface-token={values.surfaceToken}
       data-border-token={values.borderToken}
       data-placeholder-token={values.placeholderToken}
-      className="w-[320px]"
+      className="w-[280px]"
       style={tokenStyle}
     >
       {values.field === "true" ? (
@@ -98,4 +98,3 @@ export function InputPreview({ values }: { values: InputPreviewValues }) {
       ) : control}
     </div>);
 }
-

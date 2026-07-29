@@ -348,16 +348,16 @@ function App() {
 
               {viewMode === "markdown" && currentDoc ?
               <MarkdownPage doc={currentDoc} actions={pageActions} lead={uiText[lang].markdownLead} /> :
-              pageEntry ?
-              <PageTitleMetaContext.Provider value={lang === "en" ? undefined : currentNavItem?.labelEn}>
-                {pageEntry.render(pageActions, lang, page, currentNavItem?.labelEn)}
-              </PageTitleMetaContext.Provider> :
-
+              <PageTitleMetaContext.Provider value={isComponentArea && currentNavItem ? { titleZh: currentNavItem.label, titleEn: currentNavItem.labelEn, lang } : undefined}>
+              {pageEntry ?
+                pageEntry.render(pageActions, lang, page, currentNavItem?.labelEn)
+              :
               <PlaceholderPage
                 actions={pageActions}
                 hash={activeHash}
                 item={placeholderItem}
-                lang={lang} />
+                lang={lang} />}
+              </PageTitleMetaContext.Provider>
 
               }
             </article>

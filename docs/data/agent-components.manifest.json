@@ -430,6 +430,8 @@
       ],
       "usageRules": [
         "使用 Calendar 前必须以 src/components/ui/calendar.tsx 为真实 API。",
+        "默认使用 zh-CN，标题按紧凑的“2026年7月”展示，字号为 14px；需要其它语言时传入 react-day-picker 的 locale，沿用对应本地格式。",
+        "年月导航使用上一年 / 上一月 / 下一月 / 下一年四个 16px 箭头；同侧单、双箭头间距 8px，并在 28px 标题轨道内垂直居中，不使用年月下拉。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
@@ -743,7 +745,8 @@
       "usageRules": [
         "使用 DatePicker 前必须以 src/components/fx/date-picker.tsx 为真实 API。",
         "DatePicker 是日期语义组件，不给基础 Input 添加日期 prop 或日历图标业务语义。",
-        "日期范围使用一个 DatePicker range，开始和结束日期使用结构化 DateRange。",
+        "日期范围使用一个 DatePicker range，开始和结束日期使用结构化 DateRange；完成范围后保持弹层展开，支持重新选择。",
+        "日历使用上一年 / 上一月 / 下一月 / 下一年箭头导航，可直接跨年跳转。",
         "错误态用 Field + aria-invalid + FieldError。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
@@ -759,6 +762,66 @@
           "#date-picker-playground",
           "#date-picker-props",
           "#date-picker-do-dont"
+        ]
+      }
+    },
+    {
+      "name": "DateTimePicker",
+      "layer": "fx",
+      "category": "fx",
+      "role": "日期时间选择器：单值与单触发器范围，在同一弹层完成日期和时间选择",
+      "source": "src/components/fx/time-picker.tsx",
+      "doc": "docs/components/fx-date-time-picker.md",
+      "apiSource": "src/components/fx/time-picker.tsx",
+      "nativeStates": [
+        "default",
+        "hover",
+        "focus-visible",
+        "open",
+        "disabled",
+        "aria-invalid"
+      ],
+      "semanticDom": [
+        "data-slot=\"date-time-picker\"",
+        "data-slot=\"date-time-picker-trigger\"",
+        "data-slot=\"date-time-picker-value\"",
+        "data-slot=\"date-time-picker-clear\"",
+        "data-slot=\"date-time-picker-content\"",
+        "data-slot=\"date-time-picker-panel\"",
+        "data-slot=\"date-time-picker-time-panel\"",
+        "data-slot=\"calendar\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--muted",
+        "--muted-foreground",
+        "--input",
+        "--popover",
+        "--border",
+        "--ring",
+        "--destructive"
+      ],
+      "usageRules": [
+        "使用 DateTimePicker 前必须以 src/components/fx/time-picker.tsx 为真实 API。",
+        "需要在一个弹层内选择日期和时间时使用 DateTimePicker，不并排 DatePicker 与 TimePicker 后手工拼接值。",
+        "范围选择使用一个 DateTimePicker range，开始和结束值使用结构化 DateRange。",
+        "桌面端时间滚轮面板与 Calendar 等高，滚轮内容独立滚动。",
+        "日历使用上一年 / 上一月 / 下一月 / 下一年箭头导航，可直接跨年跳转。",
+        "错误态用 Field + aria-invalid + FieldError。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ],
+      "variants": [],
+      "sizes": [],
+      "examples": {
+        "sourceFile": "src/pages/docs/components/date-time-picker-page.tsx",
+        "pageSymbol": "DateTimePickerPage",
+        "pageSlug": "date-time-picker",
+        "playground": "dateTimePickerPlaygroundConfig",
+        "usageCode": "<DateTimePicker defaultValue={new Date(2026, 6, 15, 9, 30)} clearable />",
+        "anchors": [
+          "#date-time-picker-playground",
+          "#date-time-picker-props",
+          "#date-time-picker-do-dont"
         ]
       }
     },
@@ -940,7 +1003,7 @@
       "usageRules": [
         "使用 Input 前必须以 src/components/ui/input.tsx 为真实 API。",
         "Input 默认显示普通调试台；点击编辑组件后才进入制作台，顺序固定为：前后结构插槽 → 选中真实节点编辑属性 → Field 包装/状态/尺寸 → 语义 Token 槽位 → DOM/行为/代码同源验证；制作台只修改临时草稿，点击完成编辑后恢复进入编辑前的普通实时属性。",
-        "实时属性只暴露 InputAffix / InputAddon / InputAction 等结构零件及其位置；能由结构推导的业务语义不新增平行能力或伪 prop。搜索语义使用原生 type=search，SearchIcon 可前置或后置但不能同时出现；有值时默认提供后置清除动作，可选主搜索仍由后置 InputAction 拼出；范围下拉 + 全局搜索使用 TopBarSearch。",
+        "实时属性只暴露 InputAffix / InputAddon / InputAction 等结构零件及其位置；能由结构推导的业务语义不新增平行能力或伪 prop。搜索语义使用原生 type=search，SearchIcon 可前置或后置但不能同时出现；有值时在悬停或聚焦控件后提供后置清除动作，可选主搜索仍由后置 InputAction 拼出；范围下拉 + 全局搜索使用 TopBarSearch。",
         "组合槽位按输入类型收窄：number 保留符号/标签/单位；email 默认使用前置 MailIcon，调试台在失焦后将原生格式结果映射为 aria-invalid；只有明确开启 Field 包装时才用 FieldError 显示“请输入有效的邮箱地址。”，不显示浏览器浮层；password 默认使用后置可访问的密码显隐 InputAction；search 默认使用前置 SearchIcon，允许改为后置 SearchIcon，且有值时自动提供清除、可选主搜索。切换类型时清除不兼容的前后内容。",
         "制作台 Token 面板只开放 --surface / --input / --foreground-disabled 三个槽位；选项显示用途语义，底层 value 保持真实语义 Token，非默认映射生成组件作者草稿，不能作为页面调用处样式覆盖。",
         "悬停和聚焦边框使用主题色 primary，错误态使用 destructive，不额外添加聚焦环。",
@@ -1321,6 +1384,7 @@
         "使用 PageLead 前必须以 src/components/fx/page-lead.tsx 为真实 API。",
         "PageLead 用于文档站、官网或内容页顶部介绍区；业务后台页面标题区优先使用 PageHeader。",
         "PageLead 的视觉取值固定：面包屑 text-sm、标题 text-3xl、说明 text-base、动作区顶对齐，并随界面字号基准联动。",
+        "组件文档中文界面固定显示中文主标题 + 英文 titleMeta；标题名称从导航上下文解析，页面不得手写中英文混排标题字符串。",
         "PageLead 的 crumb 必须等于左侧导航分组 / 当前页名称，最后一段自动视为当前页。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
@@ -1563,7 +1627,7 @@
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。",
         "多选已选值使用 SelectMultiValue；onRemove 提供单项删除。overflow=collapse（默认）将 maxVisible 作为完整标签数量上限，并随容器宽度从末项折叠为 +n；折叠计数沿用已选值的 Tag soft 外观。overflow=scroll 保持单行横向滚动全部标签。多选值作为控件文字使用 regular 字重，不改变 Tag 的语义字重。",
         "多选下拉项使用 SelectItemIndicator 展示 Checkbox 反馈，选中状态仍由 SelectItem 统一驱动。",
-        "SelectClear 与 SelectTrigger 同级放在 SelectControl 中；有值且渲染清除动作时，总清除常驻在箭头左侧，clearable 始终预留稳定的 suffix 空间；标签内 X 只删除单项。",
+        "SelectClear 与 SelectTrigger 同级放在 SelectControl 中；有值时总清除在悬停或键盘聚焦控件后显示于箭头左侧，clearable 始终预留稳定的 suffix 空间；标签内 X 只删除单项。",
         "其他输入使用受控 value + SelectItem value=\"other\" + Input 组合，不新增 Select prop。"
       ],
       "variants": [
@@ -1621,16 +1685,6 @@
           {
             "key": "semanticState",
             "propName": "disabled / aria-invalid",
-            "type": "segment"
-          },
-          {
-            "key": "interactionState",
-            "propName": "native interaction preview",
-            "type": "segment"
-          },
-          {
-            "key": "feedbackState",
-            "propName": "composition",
             "type": "segment"
           },
           {

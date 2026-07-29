@@ -1,22 +1,24 @@
 "use client"
 
 import * as React from "react"
+import { zhCN } from "date-fns/locale"
 import {
   DayPicker,
+  formatCaption,
   getDefaultClassNames,
+  useDayPicker,
   type DayButton,
   type Locale,
 } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
-import { ChevronLeftIcon, ChevronRightIcon, ChevronDownIcon } from "@/lib/icons"
+import { ChevronLeftIcon, ChevronRightIcon, ChevronDownIcon, ChevronsLeftIcon, ChevronsRightIcon } from "@/lib/icons"
 
 function Calendar({
   className,
   classNames,
   showOutsideDays = true,
-  captionLayout = "label",
   buttonVariant = "ghost",
   locale,
   formatters,
@@ -26,6 +28,7 @@ function Calendar({
   buttonVariant?: React.ComponentProps<typeof Button>["variant"]
 }) {
   const defaultClassNames = getDefaultClassNames()
+  const resolvedLocale = locale ?? zhCN
 
   return (
     <DayPicker
@@ -36,11 +39,14 @@ function Calendar({
         String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
         className
       )}
-      captionLayout={captionLayout}
-      locale={locale}
+      locale={resolvedLocale}
       formatters={{
+        formatCaption: (date, options, dateLib) =>
+          resolvedLocale.code === zhCN.code
+            ? `${date.getFullYear()}年${date.getMonth() + 1}月`
+            : formatCaption(date, options, dateLib),
         formatMonthDropdown: (date) =>
-          date.toLocaleString(locale?.code, { month: "short" }),
+          date.toLocaleString(resolvedLocale.code, { month: "short" }),
         ...formatters,
       }}
       classNames={{
@@ -82,9 +88,7 @@ function Calendar({
         ),
         caption_label: cn(
           "font-medium select-none",
-          captionLayout === "label"
-            ? "text-base"
-            : "flex items-center gap-1 rounded-(--cell-radius) text-base [&>svg]:size-3.5 [&>svg]:text-muted-foreground",
+          "text-sm",
           defaultClassNames.caption_label
         ),
         weekdays: cn("flex", defaultClassNames.weekdays),
@@ -109,16 +113,16 @@ function Calendar({
           defaultClassNames.day
         ),
         range_start: cn(
-          "relative isolate z-0 rounded-l-(--cell-radius) bg-muted after:absolute after:inset-y-0 after:right-0 after:w-4 after:bg-muted",
+          "relative isolate z-0 rounded-l-(--cell-radius) bg-primary-light after:absolute after:inset-y-0 after:right-0 after:w-4 after:bg-primary-light",
           defaultClassNames.range_start
         ),
         range_middle: cn("rounded-none", defaultClassNames.range_middle),
         range_end: cn(
-          "relative isolate z-0 rounded-r-(--cell-radius) bg-muted after:absolute after:inset-y-0 after:left-0 after:w-4 after:bg-muted",
+          "relative isolate z-0 rounded-r-(--cell-radius) bg-primary-light after:absolute after:inset-y-0 after:left-0 after:w-4 after:bg-primary-light",
           defaultClassNames.range_end
         ),
         today: cn(
-          "rounded-(--cell-radius) bg-muted text-foreground data-[selected=true]:rounded-none",
+          "rounded-(--cell-radius) border border-primary bg-transparent text-primary data-[selected=true]:border-transparent data-[selected=true]:bg-primary data-[selected=true]:text-primary-foreground",
           defaultClassNames.today
         ),
         outside: cn(
@@ -133,6 +137,7 @@ function Calendar({
         ...classNames,
       }}
       components={{
+        Nav: CalendarNavigation,
         Root: ({ className, rootRef, ...props }) => {
           return (
             <div
@@ -161,7 +166,7 @@ function Calendar({
           )
         },
         DayButton: ({ ...props }) => (
-          <CalendarDayButton locale={locale} {...props} />
+          <CalendarDayButton locale={resolvedLocale} {...props} />
         ),
         WeekNumber: ({ children, ...props }) => {
           return (
@@ -175,7 +180,44 @@ function Calendar({
         ...components,
       }}
       {...props}
+      captionLayout="label"
     />
+  )
+}
+
+function CalendarNavigation({ className, ...props }: React.ComponentProps<"nav">) {
+  const { months, previousMonth, nextMonth, goToMonth, dayPickerProps } = useDayPicker()
+  const currentMonth = months[0]?.date
+
+  const getYearMonth = (offset: number) => currentMonth
+    ? new Date(currentMonth.getFullYear() + offset, currentMonth.getMonth(), 1)
+    : undefined
+  const previousYear = getYearMonth(-1)
+  const nextYear = getYearMonth(1)
+  const startMonth = dayPickerProps.startMonth
+  const endMonth = dayPickerProps.endMonth
+  const canGoPreviousYear = Boolean(previousYear && (!startMonth || previousYear >= startMonth))
+  const canGoNextYear = Boolean(nextYear && (!endMonth || nextYear <= endMonth))
+
+  return (
+    <nav {...props} className={cn("flex h-(--cell-size) items-center justify-between", className)}>
+      <div className="flex items-center gap-2">
+        <Button type="button" variant="plain" size="icon-md" className="size-4 gap-0 p-0" aria-label="上一年" disabled={!canGoPreviousYear} onClick={() => previousYear && goToMonth(previousYear)}>
+          <ChevronsLeftIcon data-icon="icon-only" />
+        </Button>
+        <Button type="button" variant="plain" size="icon-md" className="size-4 gap-0 p-0" aria-label="上一月" disabled={!previousMonth} onClick={() => previousMonth && goToMonth(previousMonth)}>
+          <ChevronLeftIcon data-icon="icon-only" />
+        </Button>
+      </div>
+      <div className="flex items-center gap-2">
+        <Button type="button" variant="plain" size="icon-md" className="size-4 gap-0 p-0" aria-label="下一月" disabled={!nextMonth} onClick={() => nextMonth && goToMonth(nextMonth)}>
+          <ChevronRightIcon data-icon="icon-only" />
+        </Button>
+        <Button type="button" variant="plain" size="icon-md" className="size-4 gap-0 p-0" aria-label="下一年" disabled={!canGoNextYear} onClick={() => nextYear && goToMonth(nextYear)}>
+          <ChevronsRightIcon data-icon="icon-only" />
+        </Button>
+      </div>
+    </nav>
   )
 }
 
@@ -208,7 +250,7 @@ function CalendarDayButton({
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
       className={cn(
-        "relative isolate z-10 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 border-0 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 data-[range-end=true]:rounded-(--cell-radius) data-[range-end=true]:rounded-r-(--cell-radius) data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground data-[range-middle=true]:rounded-none data-[range-middle=true]:bg-muted data-[range-middle=true]:text-foreground data-[range-start=true]:rounded-(--cell-radius) data-[range-start=true]:rounded-l-(--cell-radius) data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground dark:hover:text-foreground [&>span]:text-sm [&>span]:opacity-70",
+        "relative isolate z-10 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 border-0 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 data-[range-end=true]:rounded-(--cell-radius) data-[range-end=true]:rounded-r-(--cell-radius) data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground data-[range-middle=true]:rounded-none data-[range-middle=true]:bg-primary-light data-[range-middle=true]:text-foreground data-[range-start=true]:rounded-(--cell-radius) data-[range-start=true]:rounded-l-(--cell-radius) data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground dark:hover:text-foreground [&>span]:text-sm [&>span]:opacity-70",
         defaultClassNames.day,
         className
       )}

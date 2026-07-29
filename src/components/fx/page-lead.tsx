@@ -1,5 +1,6 @@
-import { Fragment, type ReactNode } from "react"
+import { Fragment, type ReactNode, useContext } from "react"
 
+import { getDisplayTitle, getTitleMeta, PageTitleMetaContext } from "@/lib/page-title-meta"
 import { cn } from "@/lib/utils"
 
 type PageLeadProps = {
@@ -23,6 +24,9 @@ const pageLeadSlots = {
 }
 
 function PageLead({ crumb, title, titleMeta, lead, actions }: PageLeadProps) {
+  const contextTitleMeta = useContext(PageTitleMetaContext)
+  const resolvedTitle = getDisplayTitle(title, contextTitleMeta)
+  const resolvedTitleMeta = titleMeta ?? getTitleMeta(contextTitleMeta)
   const crumbParts = crumb.split(" / ")
 
   return (
@@ -37,8 +41,8 @@ function PageLead({ crumb, title, titleMeta, lead, actions }: PageLeadProps) {
           ))}
         </nav>
         <div className={pageLeadSlots.titleRow}>
-          <h1 data-slot="page-lead-title" className={pageLeadSlots.title}>{title}</h1>
-          {titleMeta ? <span data-slot="page-lead-title-meta" className={pageLeadSlots.titleMeta}>{titleMeta}</span> : null}
+          <h1 data-slot="page-lead-title" className={pageLeadSlots.title}>{resolvedTitle}</h1>
+          {resolvedTitleMeta ? <span data-slot="page-lead-title-meta" className={pageLeadSlots.titleMeta}>{resolvedTitleMeta}</span> : null}
         </div>
       </div>
       <div data-slot="page-lead-actions" className={pageLeadSlots.actions}>{actions}</div>

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "format": "fx-ui/component-playgrounds",
-  "updatedAt": "2026-07-24",
+  "updatedAt": "2026-07-29",
   "truthSource": "docs/data/component-playgrounds.manifest.json",
   "humanDoc": "docs/components/component-playground.md",
   "note": "Playground 与组件文档的结构化真相源。每个组件使用 Storybook-lite stories（id/name/args/parameters）；页面、视觉测试和 Agent 只引用这些 story，不再维护重复场景数据。",
@@ -24,6 +24,413 @@
     }
   },
   "customPlaygrounds": {
+    "colorPicker": {
+      "componentName": "ColorPicker",
+      "source": "src/components/fx/color-picker.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "customConfigSource": "src/pages/docs/components/color-picker-page.tsx#colorPickerPlaygroundConfig",
+      "mode": "custom-config",
+      "initial": { "showPreviewSwatch": "true", "showEyedropper": "true", "showAlpha": "true", "format": "HEX", "showRecent": "true", "showPresets": "true", "triggerContent": "value" },
+      "guidanceKey": "format",
+      "props": [
+        { "key": "showPreviewSwatch", "zh": "预览色块", "en": "Preview swatch", "propName": "showPreviewSwatch", "type": "segment", "group": "structure", "options": [{ "value": "true", "label": "显示", "labelEn": "Show" }, { "value": "false", "label": "隐藏", "labelEn": "Hide" }] },
+        { "key": "showEyedropper", "zh": "吸色器", "en": "Eyedropper", "propName": "showEyedropper", "type": "segment", "group": "structure", "options": [{ "value": "true", "label": "显示", "labelEn": "Show" }, { "value": "false", "label": "隐藏", "labelEn": "Hide" }] },
+        { "key": "showAlpha", "zh": "透明度", "en": "Alpha", "propName": "showAlpha", "type": "segment", "group": "structure", "options": [{ "value": "true", "label": "开启", "labelEn": "On" }, { "value": "false", "label": "关闭", "labelEn": "Off" }] },
+        { "key": "format", "zh": "颜色格式", "en": "Color format", "propName": "defaultFormat", "type": "segment", "group": "content", "options": [{ "value": "HEX", "label": "HEX" }, { "value": "RGB", "label": "RGB" }, { "value": "HSL", "label": "HSL" }, { "value": "CSS", "label": "CSS" }] },
+        { "key": "showRecent", "zh": "最近使用", "en": "Recent colors", "propName": "recentColors", "type": "segment", "group": "content", "options": [{ "value": "true", "label": "有数据", "labelEn": "With data" }, { "value": "false", "label": "无数据", "labelEn": "Empty" }] },
+        { "key": "showPresets", "zh": "预设颜色", "en": "Preset colors", "propName": "presetColors", "type": "segment", "group": "content", "options": [{ "value": "true", "label": "有数据", "labelEn": "With data" }, { "value": "false", "label": "无数据", "labelEn": "Empty" }] },
+        { "key": "triggerContent", "zh": "触发器内容", "en": "Trigger content", "propName": "triggerContent", "type": "segment", "group": "content", "options": [{ "value": "value", "label": "色值", "labelEn": "Value" }, { "value": "name", "label": "色名", "labelEn": "Name" }, { "value": "label", "label": "标签", "labelEn": "Label" }] }
+      ],
+      "visualTests": ["ColorPicker Playground 主入口"],
+      "visual": { "route": "#color-picker", "selector": "#color-picker-playground", "screenshot": "color-picker-playground.png" }
+    },
+    "iconPicker": {
+      "componentName": "IconPicker",
+      "source": "src/components/fx/icon-picker.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "customConfigSource": "src/pages/docs/components/icon-picker-page.tsx#iconPickerPlaygroundConfig",
+      "mode": "custom-config",
+      "initial": { "mode": "select", "allowUpload": "false" },
+      "guidanceKey": "mode",
+      "props": [
+        {
+          "key": "mode",
+          "zh": "实时状态",
+          "en": "Runtime state",
+          "propName": "runtime",
+          "type": "segment",
+          "options": [
+            { "value": "select", "label": "选择", "labelEn": "Select", "intent": "浏览并选择图标。", "intentEn": "Browse and select an icon.", "constraint": "由图标数据生成，不暴露视觉 mode。", "constraintEn": "Derived from icon data, not a visual mode prop." },
+            { "value": "search", "label": "检索", "labelEn": "Search", "intent": "按名称、ID 或关键词实时过滤。", "intentEn": "Filter by name, ID, or keywords.", "constraint": "使用 query/defaultQuery。", "constraintEn": "Use query/defaultQuery." },
+            { "value": "empty", "label": "无结果", "labelEn": "No results", "intent": "搜索词没有匹配项。", "intentEn": "No icons match the query.", "constraint": "由过滤结果为空生成。", "constraintEn": "Derived from an empty filtered result." },
+            { "value": "loading", "label": "加载中", "labelEn": "Loading", "intent": "等待图标数据。", "intentEn": "Wait for icon data.", "constraint": "使用 loading。", "constraintEn": "Use loading." },
+            { "value": "error", "label": "加载失败", "labelEn": "Error", "intent": "数据请求失败并提供重试。", "intentEn": "Data loading failed with retry.", "constraint": "使用 error + onRetry。", "constraintEn": "Use error + onRetry." },
+            { "value": "upload", "label": "上传", "labelEn": "Upload", "intent": "选择自定义图片文件。", "intentEn": "Choose a custom image file.", "constraint": "使用 allowUpload + onUpload。", "constraintEn": "Use allowUpload + onUpload." }
+          ]
+        },
+        {
+          "key": "allowUpload",
+          "zh": "上传能力",
+          "en": "Upload",
+          "propName": "allowUpload",
+          "type": "segment",
+          "options": [
+            { "value": "false", "label": "关闭", "labelEn": "Off" },
+            { "value": "true", "label": "开启", "labelEn": "On" }
+          ]
+        }
+      ],
+      "visualTests": ["IconPicker Playground 主入口"],
+      "visual": { "route": "#icon-picker", "selector": "#icon-picker-playground", "screenshot": "icon-picker-playground.png" }
+    },
+    "transfer": {
+      "componentName": "Transfer",
+      "source": "src/components/fx/transfer.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "customConfigSource": "src/pages/docs/components/transfer-page.tsx#transferPlaygroundConfig",
+      "mode": "custom-config",
+      "initial": { "showSearch": "false", "oneWay": "false", "disabled": "false", "loading": "false", "status": "none" },
+      "guidanceKey": "showSearch",
+      "props": [
+        {
+          "key": "showSearch",
+          "zh": "检索",
+          "en": "Search",
+          "propName": "showSearch",
+          "type": "segment",
+          "group": "structure",
+          "options": [
+            { "value": "false", "label": "关闭", "labelEn": "Off", "intent": "只展示可选项和移动命令。", "intentEn": "Show items and move actions only.", "constraint": "使用 showSearch=false。", "constraintEn": "Use showSearch=false." },
+            { "value": "true", "label": "开启", "labelEn": "On", "intent": "在两侧实时筛选列表。", "intentEn": "Filter both lists in real time.", "constraint": "使用 showSearch + onSearch。", "constraintEn": "Use showSearch + onSearch." }
+          ]
+        },
+        {
+          "key": "oneWay",
+          "zh": "单向移动",
+          "en": "One way",
+          "propName": "oneWay",
+          "type": "segment",
+          "group": "behavior",
+          "options": [{ "value": "false", "label": "双向", "labelEn": "Both" }, { "value": "true", "label": "单向", "labelEn": "One way" }]
+        },
+        {
+          "key": "disabled",
+          "zh": "禁用",
+          "en": "Disabled",
+          "propName": "disabled",
+          "type": "segment",
+          "group": "behavior",
+          "options": [{ "value": "false", "label": "否", "labelEn": "No" }, { "value": "true", "label": "是", "labelEn": "Yes" }]
+        },
+        {
+          "key": "loading",
+          "zh": "加载",
+          "en": "Loading",
+          "propName": "loading",
+          "type": "segment",
+          "group": "behavior",
+          "options": [{ "value": "false", "label": "否", "labelEn": "No" }, { "value": "true", "label": "是", "labelEn": "Yes" }]
+        },
+        {
+          "key": "status",
+          "zh": "校验状态",
+          "en": "Validation status",
+          "propName": "status",
+          "type": "segment",
+          "group": "behavior",
+          "options": [{ "value": "none", "label": "默认", "labelEn": "Default" }, { "value": "warning", "label": "警告", "labelEn": "Warning" }, { "value": "error", "label": "错误", "labelEn": "Error" }]
+        }
+      ],
+      "visualTests": ["Transfer Playground 主入口"],
+      "visual": { "route": "#transfer", "selector": "#transfer-playground", "screenshot": "transfer-playground.png" }
+    },
+    "conditionBuilder": {
+      "componentName": "ConditionBuilder",
+      "source": "src/components/fx/condition-builder.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "customConfigSource": "src/pages/docs/components/condition-builder-page.tsx#conditionBuilderPlaygroundConfig",
+      "mode": "custom-config",
+      "initial": { "structure": "single-group", "disabled": "false", "readOnly": "false" },
+      "guidanceKey": "structure",
+      "props": [
+        {
+          "key": "structure",
+          "zh": "条件结构",
+          "en": "Condition structure",
+          "propName": "value.groups",
+          "type": "segment",
+          "group": "structure",
+          "options": [
+            { "value": "single-group", "label": "单组 AND", "labelEn": "Single AND group", "intent": "在同一组内组合多个同时成立的条件。", "intentEn": "Combine conditions that must all match.", "constraint": "一个 group 内保存多条 rules。", "constraintEn": "Store multiple rules in one group." },
+            { "value": "or-groups", "label": "多组 OR", "labelEn": "OR groups", "intent": "任一条件组成立即可匹配。", "intentEn": "Match when any condition group is true.", "constraint": "多个 groups 之间固定按 OR 连接。", "constraintEn": "Connect multiple groups with OR." }
+          ]
+        },
+        {
+          "key": "disabled",
+          "zh": "禁用",
+          "en": "Disabled",
+          "propName": "disabled",
+          "type": "segment",
+          "group": "behavior",
+          "options": [{ "value": "false", "label": "否", "labelEn": "No" }, { "value": "true", "label": "是", "labelEn": "Yes" }]
+        },
+        {
+          "key": "readOnly",
+          "zh": "只读",
+          "en": "Read only",
+          "propName": "readOnly",
+          "type": "segment",
+          "group": "behavior",
+          "options": [{ "value": "false", "label": "否", "labelEn": "No" }, { "value": "true", "label": "是", "labelEn": "Yes" }]
+        }
+      ],
+      "visualTests": ["ConditionBuilder Playground 主入口"],
+      "visual": { "route": "#condition-builder", "selector": "#condition-builder-playground", "screenshot": "condition-builder-playground.png" }
+    },
+    "peoplePicker": {
+      "componentName": "PeoplePicker",
+      "source": "src/components/fx/people-picker.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "customConfigSource": "src/pages/docs/components/people-picker-page.tsx#peoplePickerPlaygroundConfig",
+      "mode": "custom-config",
+      "initial": { "scene": "recent", "size": "normal", "includeDescendants": "false" },
+      "guidanceKey": "scene",
+      "props": [
+        {
+          "key": "scene",
+          "zh": "场景",
+          "en": "Scene",
+          "propName": "defaultTab",
+          "type": "segment",
+          "group": "behavior",
+          "options": [
+            { "value": "departments", "label": "部门", "labelEn": "Departments", "intent": "按组织架构浏览和下钻部门。", "intentEn": "Browse and drill into the organization tree.", "constraint": "使用 activeTab/defaultTab=departments。", "constraintEn": "Use activeTab/defaultTab=departments." },
+            { "value": "people", "label": "人员", "labelEn": "People", "intent": "检索和多选同事。", "intentEn": "Search and select colleagues.", "constraint": "使用 activeTab/defaultTab=people。", "constraintEn": "Use activeTab/defaultTab=people." },
+            { "value": "recent", "label": "最近", "labelEn": "Recent", "intent": "优先访问最近使用的对象。", "intentEn": "Access recently used entities.", "constraint": "使用 activeTab/defaultTab=recent。", "constraintEn": "Use activeTab/defaultTab=recent." }
+          ]
+        },
+        {
+          "key": "size",
+          "zh": "尺寸",
+          "en": "Size",
+          "propName": "size",
+          "type": "segment",
+          "group": "appearance",
+          "options": [
+            { "value": "normal", "label": "Normal", "labelEn": "Normal" },
+            { "value": "medium", "label": "Medium", "labelEn": "Medium" }
+          ]
+        },
+        {
+          "key": "includeDescendants",
+          "zh": "包含子部门",
+          "en": "Include descendants",
+          "propName": "defaultIncludeDescendants",
+          "type": "segment",
+          "group": "behavior",
+          "options": [
+            { "value": "false", "label": "关闭", "labelEn": "Off" },
+            { "value": "true", "label": "开启", "labelEn": "On" }
+          ]
+        }
+      ],
+      "visualTests": ["PeoplePicker Playground 主入口"],
+      "visual": { "route": "#people-picker", "selector": "#people-picker-playground", "screenshot": "people-picker-playground.png" }
+    },
+    "slider": {
+      "componentName": "Slider",
+      "source": "src/components/ui/slider.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "customConfigSource": "src/pages/docs/components/slider-playground.tsx#sliderPlaygroundConfig",
+      "mode": "custom-config",
+      "visual": {
+        "route": "#slider",
+        "selector": "#slider-playground"
+      },
+      "visualTests": ["Slider Playground 主入口"],
+      "initial": {
+        "type": "single",
+        "value": "20",
+        "min": "0",
+        "max": "100",
+        "step": "1",
+        "orientation": "horizontal",
+        "disabled": "false"
+      },
+      "guidanceKey": "type",
+      "storyPresentation": "examples",
+      "stories": [
+        {
+          "id": "single",
+          "name": "单游标",
+          "nameEn": "Single value",
+          "args": { "type": "single", "value": "20" },
+          "parameters": {
+            "intent": "在连续或离散区间选择一个值。",
+            "intentEn": "Choose one value from a continuous or discrete range.",
+            "constraint": "传 number；为滑块提供可访问名称。",
+            "constraintEn": "Pass a number and provide an accessible name.",
+            "source": "src/components/ui/slider.tsx#Slider"
+          }
+        },
+        {
+          "id": "range",
+          "name": "双游标",
+          "nameEn": "Range value",
+          "args": { "type": "range", "value": "20,80" },
+          "parameters": {
+            "intent": "选择一个起止范围。",
+            "intentEn": "Choose a start and end range.",
+            "constraint": "传包含两个值的 number[]；不要新增 range 布尔属性。",
+            "constraintEn": "Pass a two-value number[]; do not add a range boolean prop.",
+            "source": "src/components/ui/slider.tsx#Slider"
+          }
+        }
+      ],
+      "props": [
+        {
+          "key": "value",
+          "zh": "当前值",
+          "en": "Value",
+          "propName": "value / defaultValue",
+          "type": "text",
+          "controlGroup": "content"
+        },
+        {
+          "key": "min",
+          "zh": "最小值",
+          "en": "Minimum",
+          "propName": "min",
+          "type": "text",
+          "controlGroup": "content"
+        },
+        {
+          "key": "max",
+          "zh": "最大值",
+          "en": "Maximum",
+          "propName": "max",
+          "type": "text",
+          "controlGroup": "content"
+        },
+        {
+          "key": "step",
+          "zh": "步进",
+          "en": "Step",
+          "propName": "step",
+          "type": "text",
+          "controlGroup": "content"
+        },
+        {
+          "key": "type",
+          "zh": "数值类型",
+          "en": "Value shape",
+          "propName": "value / defaultValue",
+          "type": "segment",
+          "controlGroup": "structure",
+          "options": [
+            { "value": "single", "label": "单值", "labelEn": "Single", "intent": "使用一个游标选择单值。", "constraint": "传 number。" },
+            { "value": "range", "label": "范围", "labelEn": "Range", "intent": "使用两个游标选择范围。", "constraint": "传 number[]。" }
+          ]
+        },
+        {
+          "key": "orientation",
+          "zh": "方向",
+          "en": "Orientation",
+          "propName": "orientation",
+          "type": "segment",
+          "controlGroup": "structure",
+          "options": [
+            { "value": "horizontal", "label": "水平", "labelEn": "Horizontal" },
+            { "value": "vertical", "label": "垂直", "labelEn": "Vertical", "intent": "用于纵向数值轴。", "constraint": "调用处只提供明确高度，不覆盖组件视觉。" }
+          ]
+        },
+        {
+          "key": "disabled",
+          "zh": "禁用",
+          "en": "Disabled",
+          "propName": "disabled",
+          "type": "segment",
+          "controlGroup": "behavior",
+          "options": [
+            { "value": "false", "label": "否", "labelEn": "No" },
+            { "value": "true", "label": "是", "labelEn": "Yes", "intent": "当前值不可修改。", "constraint": "使用 disabled，不在调用处降低透明度。" }
+          ]
+        }
+      ]
+    },
+    "switch": {
+      "componentName": "Switch",
+      "source": "src/components/ui/switch.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "customConfigSource": "src/pages/docs/components/switch-playground.tsx#switchPlaygroundConfig",
+      "mode": "custom-config",
+      "visual": {
+        "route": "#switch",
+        "selector": "#switch-playground"
+      },
+      "visualTests": ["Switch Playground 主入口"],
+      "initial": {
+        "type": "default",
+        "checked": "off",
+        "state": "default",
+        "size": "small"
+      },
+      "guidanceKey": "state",
+      "props": [
+        {
+          "key": "type",
+          "zh": "类型",
+          "en": "Type",
+          "propName": "checkedChildren / unCheckedChildren",
+          "type": "segment",
+          "controlGroup": "appearance",
+          "options": [
+            { "value": "default", "label": "默认", "labelEn": "Default" },
+            { "value": "text", "label": "文字", "labelEn": "Text", "intent": "用极短文字补充开关值。", "constraint": "仅使用 checkedChildren / unCheckedChildren，不放长句。" },
+            { "value": "icon", "label": "图标", "labelEn": "Icon", "intent": "用 8px 图标强化开关值。", "constraint": "图标从 @/lib/icons 导入；micro 尺寸不支持图标型。", "hiddenWhen": { "size": "micro" } }
+          ]
+        },
+        {
+          "key": "checked",
+          "zh": "值",
+          "en": "Value",
+          "propName": "checked / defaultChecked",
+          "type": "segment",
+          "controlGroup": "behavior",
+          "options": [
+            { "value": "off", "label": "关", "labelEn": "Off" },
+            { "value": "on", "label": "开", "labelEn": "On" }
+          ]
+        },
+        {
+          "key": "state",
+          "zh": "状态",
+          "en": "State",
+          "propName": "disabled / loading",
+          "type": "segment",
+          "controlGroup": "behavior",
+          "options": [
+            { "value": "default", "label": "默认", "labelEn": "Default", "intent": "当前可操作。", "constraint": "通过真实点击查看交互，不单列 hover 或 focus 伪状态。" },
+            { "value": "loading", "label": "加载", "labelEn": "Loading", "intent": "切换操作正在提交。", "constraint": "loading 设置 aria-busy，并保留当前值后阻止重复操作。" },
+            { "value": "disabled", "label": "禁用", "labelEn": "Disabled", "intent": "当前设置不允许更改。", "constraint": "使用 disabled，不在调用处降低透明度。" }
+          ]
+        },
+        {
+          "key": "size",
+          "zh": "尺寸",
+          "en": "Size",
+          "propName": "size",
+          "type": "segment",
+          "controlGroup": "appearance",
+          "options": [
+            { "value": "micro", "label": "微型12", "labelEn": "Micro 12", "hiddenWhen": { "type": "icon" } },
+            { "value": "mini", "label": "迷你16", "labelEn": "Mini 16" },
+            { "value": "small", "label": "小22", "labelEn": "Small 22" },
+            { "value": "medium", "label": "中32", "labelEn": "Medium 32" }
+          ]
+        }
+      ]
+    },
     "button": {
       "componentName": "Button",
       "source": "src/components/ui/button.tsx",
@@ -63,32 +470,56 @@
             {
               "value": "default",
               "label": "实心",
-              "labelEn": "Solid"
+              "labelEn": "Solid",
+              "intent": "页面中的最高优先级主操作。",
+              "intentEn": "The highest-priority primary action on a page.",
+              "constraint": "同一视图通常只保留一个主操作；使用 Button 的 default variant。",
+              "constraintEn": "Usually keep one primary action per view; use Button's default variant."
             },
             {
               "value": "secondary",
               "label": "次级",
-              "labelEn": "Secondary"
+              "labelEn": "Secondary",
+              "intent": "与主操作并列但优先级较低的操作。",
+              "intentEn": "A lower-priority action placed alongside the primary action.",
+              "constraint": "适合次级操作，不要用它替代主操作或承载危险动作。",
+              "constraintEn": "Use for secondary actions; do not replace the primary or destructive action with it."
             },
             {
               "value": "outline",
               "label": "描边",
-              "labelEn": "Outline"
+              "labelEn": "Outline",
+              "intent": "需要清晰边界但不抢主色注意力的操作。",
+              "intentEn": "An action that needs a clear boundary without competing with the primary color.",
+              "constraint": "用于白色表面上的独立操作；优先使用组件内置 outline，不在调用处补边框。",
+              "constraintEn": "Use on white surfaces; rely on the built-in outline variant instead of adding a local border."
             },
             {
               "value": "ghost",
               "label": "幽灵",
-              "labelEn": "Ghost"
+              "labelEn": "Ghost",
+              "intent": "工具栏或紧凑区域中的低强调操作。",
+              "intentEn": "A low-emphasis action in a toolbar or compact area.",
+              "constraint": "默认无底色，仅依靠 hover 提示可操作性；不要用于需要强边界的主操作。",
+              "constraintEn": "Has no base surface and relies on hover feedback; do not use for actions needing a strong boundary."
             },
             {
               "value": "plain",
               "label": "纯文字",
-              "labelEn": "Plain"
+              "labelEn": "Plain",
+              "intent": "正文流中的轻量文字操作。",
+              "intentEn": "A lightweight text action within body content.",
+              "constraint": "不提供按钮底色和边框；需要明确热区时改用 ghost 或 outline。",
+              "constraintEn": "Provides no button surface or border; use ghost or outline when a clear hit area is needed."
             },
             {
               "value": "destructive",
               "label": "危险",
-              "labelEn": "Danger"
+              "labelEn": "Danger",
+              "intent": "删除、撤销等不可逆或高风险操作。",
+              "intentEn": "An irreversible or high-risk action such as delete or revoke.",
+              "constraint": "只用于明确的危险动作；文案必须直接说明后果，必要时配合确认。",
+              "constraintEn": "Reserve for explicit destructive actions; state the consequence and confirm when needed."
             }
           ]
         },
@@ -112,22 +543,38 @@
             {
               "value": "default",
               "label": "默认",
-              "labelEn": "Default"
+              "labelEn": "Default",
+              "intent": "不额外强调语义的中性色。",
+              "intentEn": "A neutral tone without additional semantic emphasis.",
+              "constraint": "仅 plain variant 使用 tone；其他 variant 的语义由 variant 决定。",
+              "constraintEn": "Tone applies only to the plain variant; other variants derive semantics from variant."
             },
             {
               "value": "primary",
               "label": "主色",
-              "labelEn": "Primary"
+              "labelEn": "Primary",
+              "intent": "需要品牌色文字强调的轻量操作。",
+              "intentEn": "A lightweight action that needs brand-colored text emphasis.",
+              "constraint": "仅与 plain variant 组合，不把 tone 当作独立视觉变体。",
+              "constraintEn": "Combine only with plain; do not treat tone as an independent visual variant."
             },
             {
               "value": "info",
               "label": "信息",
-              "labelEn": "Info"
+              "labelEn": "Info",
+              "intent": "需要信息色文字提示的轻量操作。",
+              "intentEn": "A lightweight action with informational text emphasis.",
+              "constraint": "仅与 plain variant 组合，并保持信息语义而非装饰。",
+              "constraintEn": "Combine only with plain and preserve informational semantics."
             },
             {
               "value": "danger",
               "label": "危险",
-              "labelEn": "Danger"
+              "labelEn": "Danger",
+              "intent": "需要危险色文字提示但不使用实心危险按钮的操作。",
+              "intentEn": "A destructive-text action without a solid destructive button surface.",
+              "constraint": "仅与 plain variant 组合；不可逆操作仍应考虑确认流程。",
+              "constraintEn": "Combine only with plain; consider confirmation for irreversible actions."
             }
           ]
         },
@@ -263,6 +710,321 @@
           }
         }
       ]
+    },
+    "checkbox": {
+      "componentName": "Checkbox",
+      "source": "src/components/ui/checkbox.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "customConfigSource": "src/pages/docs/components/checkbox-playground.tsx#checkboxPlaygroundConfig",
+      "mode": "custom-config",
+      "initial": {
+        "type": "single",
+        "size": "default",
+        "layout": "horizontal",
+        "state": "normal"
+      },
+      "guidanceKey": "type",
+      "props": [
+        {
+          "key": "type",
+          "zh": "类型",
+          "en": "Type",
+          "propName": "composition",
+          "type": "segment",
+          "controlGroup": "structure",
+          "options": [
+            {
+              "value": "single",
+              "label": "单项确认",
+              "labelEn": "Single confirmation",
+              "intent": "确认单个布尔值，例如同意条款。",
+              "intentEn": "Confirm one boolean value, such as accepting terms.",
+              "constraint": "使用 Checkbox + FieldLabel 关联，不把标签做成无语义文本。",
+              "constraintEn": "Associate Checkbox with FieldLabel; do not use unlabelled text."
+            },
+            {
+              "value": "group",
+              "label": "复选组",
+              "labelEn": "Checkbox group",
+              "intent": "在一组独立选项中选择多个值。",
+              "intentEn": "Choose multiple independent values from a group.",
+              "constraint": "先由调用处维护受控值；真实表单字段需要统一字段名或整组校验时再组合 FieldSet + FieldLegend，不新增 Checkbox.Group 黑盒 API。",
+              "constraintEn": "Keep controlled values at the call site. Add FieldSet and FieldLegend only when a real form field needs a shared label or group validation; do not add a Checkbox.Group black-box API."
+            },
+            {
+              "value": "check-all",
+              "label": "全选联动",
+              "labelEn": "Select all",
+              "intent": "父级全选控制子项，部分选中时显示半选。",
+              "intentEn": "A parent controls children and becomes indeterminate for partial selection.",
+              "constraint": "checked 和 indeterminate 必须由同一组子项值派生。",
+              "constraintEn": "Derive checked and indeterminate from the same child value set."
+            }
+          ]
+        },
+        {
+          "key": "size",
+          "zh": "尺寸",
+          "en": "Size",
+          "propName": "size",
+          "type": "segment",
+          "controlGroup": "appearance",
+          "options": [
+            {
+              "value": "sm",
+              "label": "小12",
+              "labelEn": "Small 12",
+              "intent": "12px 多选框搭配 12px / 18px 文字。",
+              "intentEn": "A 12px checkbox with 12px / 18px text.",
+              "constraint": "只用于紧凑信息密度，不缩放点击热区。",
+              "constraintEn": "Use only for compact density; do not shrink the hit target."
+            },
+            {
+              "value": "default",
+              "label": "默认14",
+              "labelEn": "Default 14",
+              "intent": "14px 多选框搭配 14px / 20px 文字。",
+              "intentEn": "A 14px checkbox with 14px / 20px text.",
+              "constraint": "控件与标签间距固定为 4px。",
+              "constraintEn": "Keep a fixed 4px gap between control and label."
+            },
+            {
+              "value": "lg",
+              "label": "大16",
+              "labelEn": "Large 16",
+              "intent": "16px 多选框搭配 16px / 24px 文字。",
+              "intentEn": "A 16px checkbox with 16px / 24px text.",
+              "constraint": "控件与标签间距固定为 4px。",
+              "constraintEn": "Keep a fixed 4px gap between control and label."
+            }
+          ]
+        },
+        {
+          "key": "layout",
+          "zh": "组布局",
+          "en": "Group layout",
+          "propName": "layout",
+          "type": "segment",
+          "controlGroup": "appearance",
+          "hiddenWhen": { "type": ["single"] },
+          "options": [
+            {
+              "value": "vertical",
+              "label": "纵向",
+              "labelEn": "Vertical",
+              "intent": "纵向排列多个独立选项。",
+              "intentEn": "Stack independent options vertically.",
+              "constraint": "选项间距固定为 8px。",
+              "constraintEn": "Keep an 8px gap between options."
+            },
+            {
+              "value": "horizontal",
+              "label": "横向",
+              "labelEn": "Horizontal",
+              "intent": "横向排列内容宽度自适应的选项。",
+              "intentEn": "Lay out content-sized options horizontally.",
+              "constraint": "横向间距为 16px，换行后的行距为 8px。",
+              "constraintEn": "Use a 16px horizontal gap and 8px row gap after wrapping."
+            }
+          ]
+        },
+        {
+          "key": "state",
+          "zh": "状态",
+          "en": "State",
+          "propName": "checked / indeterminate / disabled",
+          "type": "segment",
+          "controlGroup": "behavior",
+          "options": [
+            {
+              "value": "normal",
+              "label": "默认",
+              "labelEn": "Default",
+              "intent": "展示可操作的默认状态。",
+              "intentEn": "Show the default interactive state.",
+              "constraint": "hover 和 focus-visible 由真实浏览器交互展示，不设为业务属性。",
+              "constraintEn": "Show hover and focus-visible through real browser interaction, not business props."
+            },
+            {
+              "value": "checked",
+              "label": "已选",
+              "labelEn": "Checked",
+              "intent": "展示或初始化已选值。",
+              "intentEn": "Show or initialize a selected value.",
+              "constraint": "受控状态使用 checked + onCheckedChange。",
+              "constraintEn": "Use checked + onCheckedChange for controlled state."
+            },
+            {
+              "value": "indeterminate",
+              "label": "半选",
+              "labelEn": "Indeterminate",
+              "hiddenWhen": { "type": ["group"] },
+              "intent": "表示子项只选中一部分。",
+              "intentEn": "Indicate that only part of the child set is selected.",
+              "constraint": "仅用于父级全选或派生状态，不作为独立业务值保存。",
+              "constraintEn": "Use only for parent select-all or derived state, never as independent business data."
+            },
+            {
+              "value": "disabled",
+              "label": "禁用",
+              "labelEn": "Disabled",
+              "intent": "选项当前不可修改。",
+              "intentEn": "The option cannot currently be changed.",
+              "constraint": "使用原生 disabled，不用透明度伪装禁用。",
+              "constraintEn": "Use native disabled instead of opacity to fake a disabled state."
+            },
+            {
+              "value": "disabled-checked",
+              "label": "已选禁用",
+              "labelEn": "Checked disabled",
+              "intent": "展示不可修改的已选值。",
+              "intentEn": "Show a selected value that cannot be changed.",
+              "constraint": "禁用态使用中性填充和禁用图标，不保留半透明主色。",
+              "constraintEn": "Use neutral fill and disabled icon color, not a faded primary color."
+            }
+          ]
+        }
+      ],
+      "visualTests": ["Checkbox Playground 主入口"],
+      "visual": {
+        "route": "#checkbox",
+        "selector": "#checkbox-playground",
+        "screenshot": "checkbox-playground.png"
+      },
+      "note": "Checkbox 只使用实时属性；类型、尺寸、组布局和基础状态可独立调节，不提供场景预设。错误态属于 Field 表单组合，由表单场景展示。Hover 与 focus-visible 通过真实交互展示。"
+    },
+    "radioGroup": {
+      "componentName": "RadioGroup",
+      "source": "src/components/ui/radio-group.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "customConfigSource": "src/pages/docs/components/radio-group-playground.tsx#radioGroupPlaygroundConfig",
+      "mode": "custom-config",
+      "initial": {
+        "size": "default",
+        "layout": "vertical",
+        "state": "normal"
+      },
+      "guidanceKey": "size",
+      "props": [
+        {
+          "key": "size",
+          "zh": "尺寸",
+          "en": "Size",
+          "propName": "size",
+          "type": "segment",
+          "controlGroup": "appearance",
+          "options": [
+            {
+              "value": "sm",
+              "label": "小12",
+              "labelEn": "Small 12",
+              "intent": "12px 单选框搭配 12px / 18px 文字。",
+              "intentEn": "A 12px radio with 12px / 18px text.",
+              "constraint": "控件与标签间距固定为 4px，不缩放点击热区。",
+              "constraintEn": "Keep a fixed 4px control-label gap and do not shrink the hit target."
+            },
+            {
+              "value": "default",
+              "label": "默认14",
+              "labelEn": "Default 14",
+              "intent": "14px 单选框搭配 14px / 20px 文字。",
+              "intentEn": "A 14px radio with 14px / 20px text.",
+              "constraint": "控件与标签间距固定为 4px。",
+              "constraintEn": "Keep a fixed 4px control-label gap."
+            },
+            {
+              "value": "lg",
+              "label": "大16",
+              "labelEn": "Large 16",
+              "intent": "16px 单选框搭配 16px / 24px 文字。",
+              "intentEn": "A 16px radio with 16px / 24px text.",
+              "constraint": "控件与标签间距固定为 4px。",
+              "constraintEn": "Keep a fixed 4px control-label gap."
+            }
+          ]
+        },
+        {
+          "key": "layout",
+          "zh": "组布局",
+          "en": "Group layout",
+          "propName": "orientation",
+          "type": "segment",
+          "controlGroup": "appearance",
+          "options": [
+            {
+              "value": "vertical",
+              "label": "纵向",
+              "labelEn": "Vertical",
+              "intent": "纵向排列多个独立选项。",
+              "intentEn": "Stack independent options vertically.",
+              "constraint": "选项间距固定为 8px。",
+              "constraintEn": "Keep an 8px gap between options."
+            },
+            {
+              "value": "horizontal",
+              "label": "横向",
+              "labelEn": "Horizontal",
+              "intent": "横向排列内容宽度自适应的选项。",
+              "intentEn": "Lay out content-sized options horizontally.",
+              "constraint": "横向间距为 16px，换行后的行距为 8px。",
+              "constraintEn": "Use a 16px horizontal gap and 8px row gap after wrapping."
+            }
+          ]
+        },
+        {
+          "key": "state",
+          "zh": "状态",
+          "en": "State",
+          "propName": "checked / disabled",
+          "type": "segment",
+          "controlGroup": "behavior",
+          "options": [
+            {
+              "value": "normal",
+              "label": "默认",
+              "labelEn": "Default",
+              "intent": "展示可操作的默认状态。",
+              "intentEn": "Show the default interactive state.",
+              "constraint": "通过真实操作展示选中、hover 和 focus-visible，不单列伪状态。",
+              "constraintEn": "Show checked, hover, and focus-visible through real interaction, not synthetic states."
+            },
+            {
+              "value": "checked",
+              "label": "已选",
+              "labelEn": "Checked",
+              "intent": "展示或初始化一个已选的单选值。",
+              "intentEn": "Show or initialize a selected radio value.",
+              "constraint": "受控状态使用 RadioGroup 的 value + onValueChange。",
+              "constraintEn": "Use RadioGroup value + onValueChange for controlled state."
+            },
+            {
+              "value": "disabled",
+              "label": "禁用",
+              "labelEn": "Disabled",
+              "intent": "选项当前不可修改且未预选。",
+              "intentEn": "Options cannot be changed and none is preselected.",
+              "constraint": "使用原生 disabled，不用透明度伪装禁用。",
+              "constraintEn": "Use native disabled instead of opacity to fake a disabled state."
+            },
+            {
+              "value": "disabled-checked",
+              "label": "已选禁用",
+              "labelEn": "Checked disabled",
+              "intent": "展示不可修改的已选单选值。",
+              "intentEn": "Show a selected radio value that cannot be changed.",
+              "constraint": "禁用态使用中性填充、边框与圆点，不保留半透明主色。",
+              "constraintEn": "Use neutral fill, border, and dot rather than a faded primary color."
+            }
+          ]
+        }
+      ],
+      "visualTests": ["RadioGroup Playground 主入口"],
+      "visual": {
+        "route": "#radio-group",
+        "selector": "#radio-group-playground",
+        "screenshot": "radio-group-playground.png"
+      },
+      "note": "单选框只使用实时属性；尺寸、组布局和基础状态可独立调节，不提供场景预设。列表单选属于 Table 的“选择”组合能力。错误态属于 Field 表单组合，由表单场景展示。Hover 与 focus-visible 通过真实交互展示。"
     },
     "datePicker": {
       "componentName": "DatePicker",
@@ -541,7 +1303,6 @@
     "label",
     "select",
     "time-picker",
-    "radio-group",
     "pagination",
     "badge",
     "tooltip",
@@ -612,11 +1373,6 @@
       "selector": "#checkbox-playground",
       "test": "Checkbox Playground 主入口"
     },
-    "switch": {
-      "route": "#switch",
-      "selector": "#switch-playground",
-      "test": "Switch Playground 主入口"
-    },
     "textarea": {
       "route": "#textarea",
       "selector": "#textarea-playground",
@@ -662,11 +1418,6 @@
       "selector": "#toast-playground",
       "test": "Toast Playground 主入口"
     },
-    "radio-group": {
-      "route": "#radio-group",
-      "selector": "#radio-group-playground",
-      "test": "RadioGroup Playground 主入口"
-    },
     "dropdown-menu": {
       "route": "#dropdown-menu",
       "selector": "#dropdown-menu-playground",
@@ -674,6 +1425,11 @@
     }
   },
   "pageVisuals": {
+    "signature": {
+      "route": "#signature",
+      "selector": "#signature-playground",
+      "test": "Signature Playground 主入口"
+    },
     "table": {
       "route": "#table",
       "selector": "#table-playground",
@@ -718,6 +1474,11 @@
       "route": "#dialog",
       "selector": "#dialog-playground",
       "test": "Dialog Playground 主入口"
+    },
+    "combobox": {
+      "route": "#combobox",
+      "selector": "#combobox-playground",
+      "test": "Combobox Playground 主入口"
     },
     "select": {
       "route": "#select",
@@ -825,6 +1586,31 @@
       "route": "#template-customer-list",
       "selector": "#template-customer-list",
       "test": "客户列表页模板"
+    },
+    "customer-list-calibration": {
+      "route": "#customer-list-calibration",
+      "selector": "#customer-list-calibration-playground",
+      "test": "客户列表视觉校准台"
+    },
+    "page-builder": {
+      "route": "#page-builder",
+      "selector": "#page-builder-workspace",
+      "test": "页面搭建器客户列表 MVP"
+    },
+    "page-builder-blank": {
+      "route": "#page-builder",
+      "selector": "#page-builder-workspace",
+      "test": "页面搭建器空白页"
+    },
+    "component-builder": {
+      "route": "#page-builder",
+      "selector": "#page-builder-workspace",
+      "test": "组件搭建器 MVP"
+    },
+    "business-component-builder": {
+      "route": "#page-builder",
+      "selector": "#page-builder-workspace",
+      "test": "业务组件属性契约搭建器"
     },
     "customer-briefing": {
       "route": "#customer-briefing",
@@ -3061,6 +3847,113 @@
         }
       ]
     },
+    "combobox": {
+      "componentName": "Combobox",
+      "source": "src/components/ui/combobox.tsx",
+      "playgroundComponent": "src/components/fx/component-playground.tsx",
+      "initial": {
+        "selection": "single",
+        "dataState": "normal",
+        "clearable": "true",
+        "semanticState": "normal"
+      },
+      "guidanceKey": "selection",
+      "props": [
+        {
+          "key": "selection",
+          "zh": "选择类型",
+          "en": "Selection",
+          "propName": "multiple",
+          "type": "segment",
+          "controlGroup": "structure",
+          "defaultVisible": true,
+          "defaultOrder": 1,
+          "options": [
+            {
+              "value": "single",
+              "label": "单选",
+              "labelEn": "Single",
+              "intent": "输入关键词后从候选项中选择一个值。",
+              "intentEn": "Filter candidates by typing and choose one value.",
+              "constraint": "使用标量 value；少量无需搜索的固定选项优先使用 Select。",
+              "constraintEn": "Use a scalar value; prefer Select for a small fixed set that needs no search."
+            },
+            {
+              "value": "multiple",
+              "label": "多选",
+              "labelEn": "Multiple",
+              "intent": "搜索并选择多个候选值，已选值以可删除 Chip 展示。",
+              "intentEn": "Search and choose multiple values displayed as removable chips.",
+              "constraint": "使用 multiple、数组 value 和 ComboboxChips 组合，不把数组塞进单选输入。",
+              "constraintEn": "Use multiple, an array value, and ComboboxChips; do not pass an array to the single-value input."
+            }
+          ]
+        },
+        {
+          "key": "dataState",
+          "zh": "候选数据",
+          "en": "Candidate data",
+          "propName": "items",
+          "type": "segment",
+          "controlGroup": "content",
+          "defaultVisible": true,
+          "defaultOrder": 2,
+          "options": [
+            {
+              "value": "normal",
+              "label": "有数据",
+              "labelEn": "With data",
+              "intent": "输入时实时过滤本地候选项。",
+              "intentEn": "Filter local candidates as the user types.",
+              "constraint": "候选项通过 items 传入，每项 value 保持稳定唯一。",
+              "constraintEn": "Pass candidates through items and keep each value stable and unique."
+            },
+            {
+              "value": "empty",
+              "label": "空数据",
+              "labelEn": "Empty",
+              "intent": "没有候选项或搜索无匹配时提供明确反馈。",
+              "intentEn": "Provide clear feedback when there are no candidates or matches.",
+              "constraint": "使用 ComboboxEmpty，不手写第二套浮层空态。",
+              "constraintEn": "Use ComboboxEmpty instead of a separate custom popup empty state."
+            }
+          ]
+        },
+        {
+          "key": "clearable",
+          "zh": "清除",
+          "en": "Clear",
+          "propName": "showClear",
+          "type": "segment",
+          "controlGroup": "behavior",
+          "hiddenWhen": { "selection": "multiple" },
+          "options": [
+            { "value": "false", "label": "关闭", "labelEn": "Off", "intent": "保留当前单选值。", "constraint": "不传 showClear。" },
+            { "value": "true", "label": "开启", "labelEn": "On", "intent": "允许清空单选值并回到搜索输入。", "constraint": "使用 ComboboxInput showClear。" }
+          ]
+        },
+        {
+          "key": "semanticState",
+          "zh": "状态",
+          "en": "State",
+          "propName": "disabled",
+          "type": "segment",
+          "controlGroup": "semantics",
+          "defaultVisible": true,
+          "defaultOrder": 3,
+          "options": [
+            { "value": "normal", "label": "默认", "labelEn": "Default", "intent": "允许搜索、展开和选择。", "constraint": "不传 disabled。" },
+            { "value": "disabled", "label": "禁用", "labelEn": "Disabled", "intent": "保留当前值但禁止修改。", "constraint": "使用根组件 disabled，不用透明度伪装。" }
+          ]
+        }
+      ],
+      "visualTests": ["Combobox Playground 主入口"],
+      "visual": {
+        "route": "#combobox",
+        "selector": "#combobox-playground",
+        "screenshot": "combobox-playground.png"
+      }
+    },
     "select": {
       "componentName": "Select",
       "source": "src/components/ui/select.tsx",
@@ -3369,6 +4262,136 @@
               "constraint": "SelectTrigger 与 SelectContent 都传 size=\"md\"，不覆盖高度或字号。",
               "constraintEn": "Pass size=\"md\" only; do not override height."
             }
+          ]
+        }
+      ]
+    },
+    "signature": {
+      "componentName": "Signature",
+      "source": "src/components/ui/signature.tsx",
+      "playgroundComponent": "src/pages/docs/components/signature-page.tsx",
+      "customConfigSource": "src/pages/docs/components/signature-page.tsx#signaturePlaygroundConfig",
+      "mode": "custom-config",
+      "initial": { "height": "70", "disabled": "false" },
+      "props": [
+        {
+          "key": "height",
+          "zh": "高度",
+          "en": "Height",
+          "propName": "height",
+          "type": "text",
+          "controlGroup": "structure",
+          "defaultVisible": true,
+          "defaultOrder": 1
+        },
+        {
+          "key": "disabled",
+          "zh": "状态",
+          "en": "State",
+          "propName": "disabled",
+          "type": "segment",
+          "controlGroup": "behavior",
+          "defaultVisible": true,
+          "defaultOrder": 2,
+          "options": [
+            { "value": "false", "label": "可输入", "labelEn": "Enabled" },
+            { "value": "true", "label": "禁用", "labelEn": "Disabled" }
+          ]
+        }
+      ]
+    },
+    "upload": {
+      "componentName": "Upload",
+      "source": "src/components/ui/upload.tsx",
+      "playgroundComponent": "src/pages/docs/components/upload-page.tsx",
+      "customConfigSource": "src/pages/docs/components/upload-page.tsx#uploadPlaygroundConfig",
+      "mode": "custom-config",
+      "visual": {
+        "route": "#upload",
+        "selector": "#upload-playground",
+        "screenshot": "upload-playground.png"
+      },
+      "visualTests": ["Upload Playground 主入口"],
+      "initial": {
+        "variant": "button",
+        "listType": "text",
+        "status": "uploading",
+        "showFileList": "false",
+        "disabled": "false"
+      },
+      "props": [
+        {
+          "key": "variant",
+          "zh": "上传形式",
+          "en": "Variant",
+          "propName": "variant",
+          "type": "segment",
+          "controlGroup": "appearance",
+          "defaultVisible": true,
+          "defaultOrder": 1,
+          "options": [
+            { "value": "button", "label": "按钮", "labelEn": "Button" },
+            { "value": "dropzone", "label": "拖拽", "labelEn": "Dropzone" },
+            { "value": "picture-card", "label": "照片墙", "labelEn": "Picture card" },
+            { "value": "link", "label": "表单链接", "labelEn": "Form link" }
+          ]
+        },
+        {
+          "key": "listType",
+          "zh": "列表形式",
+          "en": "List type",
+          "propName": "listType",
+          "type": "segment",
+          "controlGroup": "structure",
+          "defaultVisible": true,
+          "defaultOrder": 2,
+          "options": [
+            { "value": "text", "label": "附件", "labelEn": "Text" },
+            { "value": "picture", "label": "图文", "labelEn": "Picture" }
+          ]
+        },
+        {
+          "key": "status",
+          "zh": "文件状态",
+          "en": "File status",
+          "propName": "value[].status",
+          "type": "segment",
+          "controlGroup": "content",
+          "defaultVisible": true,
+          "defaultOrder": 3,
+          "options": [
+            { "value": "idle", "label": "待上传", "labelEn": "Idle" },
+            { "value": "uploading", "label": "进行中", "labelEn": "Uploading" },
+            { "value": "success", "label": "成功", "labelEn": "Success" },
+            { "value": "error", "label": "失败", "labelEn": "Error" }
+          ]
+        },
+        {
+          "key": "showFileList",
+          "zh": "回填",
+          "en": "File list",
+          "propName": "showFileList",
+          "type": "segment",
+          "controlGroup": "structure",
+          "defaultVisible": true,
+          "defaultOrder": 4,
+          "options": [
+            { "value": "true", "label": "显示", "labelEn": "Shown" },
+            { "value": "false", "label": "隐藏", "labelEn": "Hidden" }
+          ]
+        },
+        {
+          "key": "disabled",
+          "zh": "状态",
+          "en": "State",
+          "propName": "disabled",
+          "type": "segment",
+          "controlGroup": "behavior",
+          "defaultVisible": true,
+          "defaultOrder": 5,
+          "options": [
+            { "value": "false", "label": "可用", "labelEn": "Enabled" },
+            { "value": "true", "label": "禁用", "labelEn": "Disabled" }
           ]
         }
       ]
@@ -4664,7 +5687,7 @@
     "checkbox": [
       {
         "id": "default",
-        "name": "默认复选框",
+        "name": "默认多选框",
         "nameEn": "Default checkbox",
         "args": { "scenario": "default" },
         "parameters": {
@@ -4702,78 +5725,6 @@
           "constraintEn": "Use the native disabled prop instead of styling an enabled control.",
           "code": "<Field orientation=\"horizontal\" data-disabled>\n  <Checkbox id=\"readonly\" disabled />\n  <FieldContent>\n    <FieldLabel htmlFor=\"readonly\">该选项不可编辑</FieldLabel>\n  </FieldContent>\n</Field>",
           "source": "src/components/ui/checkbox.tsx#disabled"
-        }
-      },
-      {
-        "id": "list",
-        "name": "列表内勾选",
-        "nameEn": "List selection",
-        "args": { "scenario": "list" },
-        "parameters": {
-          "intent": "表格、列表里的批量选择项，通常配合表头的全选复选框。",
-          "intentEn": "Select rows in a table or list, usually with a header select-all checkbox.",
-          "constraint": "列表项的勾选状态要和表头全选状态联动，避免出现状态不一致。",
-          "constraintEn": "Keep row selection synchronized with the header select-all state.",
-          "code": "<TableCell>\n  <Checkbox aria-label=\"选择该行\" />\n</TableCell>",
-          "source": "src/components/ui/checkbox.tsx#list"
-        }
-      }
-    ],
-    "switch": [
-      {
-        "id": "default",
-        "name": "默认开关",
-        "nameEn": "Default switch",
-        "args": { "scenario": "default" },
-        "parameters": {
-          "intent": "立即生效的二元设置项，如通知开关、功能开关。",
-          "intentEn": "Toggle an immediately applied setting such as notifications.",
-          "constraint": "切换后立即生效，不需要额外的提交按钮；选项行使用 Field 组合。",
-          "constraintEn": "Apply immediately without a separate submit button; use Field composition for the option row.",
-          "code": "<Field orientation=\"horizontal\">\n  <Switch id=\"notify\" />\n  <FieldContent>\n    <FieldLabel htmlFor=\"notify\">接收消息通知</FieldLabel>\n  </FieldContent>\n</Field>",
-          "source": "src/components/ui/switch.tsx#default"
-        }
-      },
-      {
-        "id": "checked",
-        "name": "受控状态",
-        "nameEn": "Controlled state",
-        "args": { "scenario": "checked" },
-        "parameters": {
-          "intent": "需要在外部状态中读取/控制开关值。",
-          "intentEn": "Control and read the switch value from external state.",
-          "constraint": "用 checked + onCheckedChange 受控，不直接操作 DOM。",
-          "constraintEn": "Use checked + onCheckedChange; do not manipulate the DOM directly.",
-          "code": "<Switch checked={enabled} onCheckedChange={setEnabled} />",
-          "source": "src/components/ui/switch.tsx#checked"
-        }
-      },
-      {
-        "id": "small",
-        "name": "紧凑尺寸",
-        "nameEn": "Compact size",
-        "args": { "scenario": "small" },
-        "parameters": {
-          "intent": "用于表格行内、紧凑表单等空间有限的场景。",
-          "intentEn": "Use in compact spaces such as table rows and dense forms.",
-          "constraint": "用 size=\"sm\" 切换尺寸，不手写宽高覆盖。",
-          "constraintEn": "Use size=\"sm\" instead of overriding width and height.",
-          "code": "<Switch size=\"sm\" />",
-          "source": "src/components/ui/switch.tsx#small"
-        }
-      },
-      {
-        "id": "disabled",
-        "name": "禁用状态",
-        "nameEn": "Disabled state",
-        "args": { "scenario": "disabled" },
-        "parameters": {
-          "intent": "开关当前不可操作（如权限不足）。",
-          "intentEn": "Prevent changes when the setting is restricted.",
-          "constraint": "用原生 disabled，不要用样式假装禁用。",
-          "constraintEn": "Use the native disabled prop instead of styling an enabled switch.",
-          "code": "<Field orientation=\"horizontal\" data-disabled>\n  <Switch id=\"locked\" disabled />\n  <FieldContent>\n    <FieldLabel htmlFor=\"locked\">该选项不可更改</FieldLabel>\n  </FieldContent>\n</Field>",
-          "source": "src/components/ui/switch.tsx#disabled"
         }
       }
     ],

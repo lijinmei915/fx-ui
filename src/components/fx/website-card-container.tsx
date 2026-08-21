@@ -18,6 +18,12 @@ const websiteCardContainerTones = {
   default: "",
   accent: "border-primary bg-accent",
   muted: "bg-muted",
+  page: "bg-background",
+} as const;
+
+const websiteCardContainerShapes = {
+  default: "",
+  square: "rounded-none",
 } as const;
 
 type WebsiteCardContainerProps = Omit<
@@ -26,6 +32,7 @@ type WebsiteCardContainerProps = Omit<
 > & {
   className?: string;
   padding?: "default" | "none";
+  shape?: keyof typeof websiteCardContainerShapes;
   tone?: keyof typeof websiteCardContainerTones;
 };
 
@@ -36,16 +43,18 @@ type WebsiteCardContainerPreviewProps = {
 function WebsiteCardContainer({
   className,
   padding = "default",
+  shape = "default",
   tone = "default",
   ...props
 }: WebsiteCardContainerProps) {
   return (
     <Card
       data-website-card-container
+      data-shape={shape}
       variant="elevated"
       // Website cards always use the site elevation token. Layout callers may
       // adjust size and placement, but cannot accidentally remove the shared shadow.
-      className={cn(websiteCardContainerTones[tone], padding === "none" && "gap-0 py-0", className)}
+      className={cn(websiteCardContainerTones[tone], websiteCardContainerShapes[shape], padding === "none" && "gap-0 py-0", className)}
       {...props}
     />
   );
@@ -91,6 +100,7 @@ export {
   WebsiteCardContainer,
   WebsiteCardContainerPreview,
   websiteCardContainerSlots,
+  websiteCardContainerShapes,
   websiteCardContainerTones,
   type WebsiteCardContainerProps,
   type WebsiteCardContainerPreviewProps,

@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-07-27
+last_verified: 2026-08-21
 teaches: "fx-ui 的三层生产体系：基础组件、公司组合组件、页面 Blocks（目录细节见 CODE_STRUCTURE，布局规范见 LAYOUTS）"
 use_when: "AI 要判断某个能力归哪一层、三层之间如何分工时"
 ---
@@ -83,12 +83,15 @@ shadcn 组件进入 `src/components/ui/` 后，就视为 fx-ui 的本地源码�
 已落地 Block：
 
 - `CrmShellNav`（`src/components/recipes/crm-shell-nav.tsx`）：CRM 应用外壳导航 = NavRail 一级应用栏 + NavMenu 二级菜单的规范组合，全套折叠/固定/hover/选中交互。
-- `CrmAppShell`（`src/components/recipes/crm-app-shell.tsx`）：CRM 整页外壳 = TopBar 顶栏 + CrmShellNav 双层导航 + 内容卡插槽（灰底浮卡布局）。页面只往 children 塞内容，外壳 chrome 全复用。「客户列表页」模板即基于它。
-- `DataTable`（`src/components/recipes/data-table.tsx`）：薄表格区块 = 表格 + 勾选(全选/半选) + 行操作；中间列由 `columns`（每列 `cell` render）驱动，受控，不引 TanStack。
+- `CrmAppShell`（`src/components/recipes/crm-app-shell.tsx`）：CRM 整页外壳 = TopBar 顶栏 + CrmShellNav 双层导航 + 内容卡插槽（无圆角的灰底应用画布）。普通页面只往 children 塞内容并默认显示完整 chrome；搭建器可通过 `topBar`、`navigation` 与 `renderChrome` 声明式控制既有 chrome 区块，不复制其结构。`frame` 仅开放已校准的 `inset` / `continuous` 工作区层级。「客户列表页」模板即基于它。
+- `DataTable`（`src/components/recipes/data-table.tsx`）：薄表格区块 = 表格 + 勾选(全选/半选) + 行操作；中间列由 `columns`（每列 `cell` render）驱动，受控，不引 TanStack；`density` 透传基础 Table 的已验证行高档。
 - `ListToolbar`（`src/components/recipes/list-toolbar.tsx`）：列表页工具栏 = 筛选 + 复合搜索(scope+input) + 视图切换 + 右侧额外动作，全受控配置化。
 - `ListPageHeader`（`src/components/recipes/list-page-header.tsx`）：列表页紧凑标题栏 = 标题 + 可选视图下拉(`views?`) + 操作插槽(`actions`，0..N 动态)。三轴变体由 props/slot 决定。
 - `EditFormBlock`（`src/components/recipes/edit-form-block.tsx`）：schema 驱动的编辑表单区块 = Field + Input/Textarea + Button；内置必填校验、错误聚焦、提交 loading 和脏状态取消。
 - `DetailPageBlock`（`src/components/recipes/detail-page-block.tsx`）：对象详情区块 = 身份头、字段网格、Tabs、活动时间线、关联记录和空态；页面只注入对象数据与动作。
+- `PageBuilder`（`src/components/recipes/page-builder.tsx`）：受控页面/区块搭建工作台 = 已登记预设、Block slot、受限属性和真实预览；只消费 `docs/data/page-builder.manifest.json`，不接受任意 JSX/CSS。
+- `ComponentBuilder`（`src/components/recipes/component-builder.tsx`）：受控基础组件评审台 = 外部 Agent 候选契约 + 已登记真实组件预览适配器 + 状态验收 + 真实 API/Props 校正 + 治理检查 + 确认门。它不承担 Figma 式绘制，也不直接执行 Agent 或覆盖源码；返工任务回到 MCP/CLI，检查通过并由用户确认后才进入 Playground 与入库审核。
+- `BusinessComponentBuilder`（`src/components/recipes/business-component-builder.tsx`）：受控业务组件组合工作台 = 空白画布 + 组件/图层切换 + 拖放插入 + 画布多选成组 + Token 约束 Auto Layout + 真实实例属性 + 业务 Props 绑定 + 个人/业务发布目标。可编辑属性从 `component-playgrounds.manifest.json` 的真实 Playground contract 派生，搭建器只声明经过评审的键；实例值和公开 Prop 默认值共同进入草稿、撤销历史与发布产物，不复制选项或发明组件 API。
 
 候选 Blocks：
 
@@ -115,22 +118,22 @@ shadcn 组件进入 `src/components/ui/` 后，就视为 fx-ui 的本地源码�
 
 ## 模块职责
 
-| 目录 / 文件 | 职责 | 备注 |
-|-------------|------|------|
-| `src/components/ui/` | shadcn 原子组件，CLI 拉取 | open-code 可读可改；仅含 manifest 白名单的原生语义例外 |
-| `src/components/fx/` | 公司组合组件 | 必须由 shadcn 组件组合而成，不做黑盒 |
-| `src/components/recipes/` | 已验证的 Block（历史目录名） | 由真实页面提炼，整段复用、只换数据 |
-| `src/pages/docs/<domain>/` | 文档页及页面专属预览 | 按 components / foundations / getting-started / governance / tokens 归位 |
-| `src/pages/templates/` | 已验证完整页面模板 | 列表、编辑表单、详情页等页面级范例 |
-| `src/app/` | 文档站壳、导航搜索与 hash 路由适配 | `App.tsx` 只保留运行时状态和页面组合 |
-| `src/lib/` | 跨领域运行时、注册表和文档工具 | 不再承载具体页面模块 |
-| `src/components/fx/agent-surface.tsx` | Agent UI 渲染面 | 受控 JSON -> 本地 React 组件 |
-| `docs/AGENT_UI.md` | Agent UI 生成式界面协议 | 定义 block、action 和安全红线 |
-| `docs/data/agent-ui.manifest.json` | Agent UI 机器事实表 | 给 AI 和检查脚本读取 |
-| `theme/fx-theme.css` | 公司 token 真相源 | 改它 = 全局换肤 |
-| `registry/fx-theme.json` | shadcn 官方 `registry:theme` 分发格式 | 对外分发主题用 |
-| `docs/components/` | 组件文档资产 | 给人和 AI 共同消费 |
-| `docs/LAYOUTS.md` | 布局规范 | 来自真实页面沉淀 |
+| 目录 / 文件                           | 职责                                  | 备注                                                                     |
+| ------------------------------------- | ------------------------------------- | ------------------------------------------------------------------------ |
+| `src/components/ui/`                  | shadcn 原子组件，CLI 拉取             | open-code 可读可改；仅含 manifest 白名单的原生语义例外                   |
+| `src/components/fx/`                  | 公司组合组件                          | 必须由 shadcn 组件组合而成，不做黑盒                                     |
+| `src/components/recipes/`             | 已验证的 Block（历史目录名）          | 由真实页面提炼，整段复用、只换数据                                       |
+| `src/pages/docs/<domain>/`            | 文档页及页面专属预览                  | 按 components / foundations / getting-started / governance / tokens 归位 |
+| `src/pages/templates/`                | 已验证完整页面模板                    | 列表、编辑表单、详情页等页面级范例                                       |
+| `src/app/`                            | 文档站壳、导航搜索与 hash 路由适配    | `App.tsx` 只保留运行时状态和页面组合                                     |
+| `src/lib/`                            | 跨领域运行时、注册表和文档工具        | 不再承载具体页面模块                                                     |
+| `src/components/fx/agent-surface.tsx` | Agent UI 渲染面                       | 受控 JSON -> 本地 React 组件                                             |
+| `docs/AGENT_UI.md`                    | Agent UI 生成式界面协议               | 定义 block、action 和安全红线                                            |
+| `docs/data/agent-ui.manifest.json`    | Agent UI 机器事实表                   | 给 AI 和检查脚本读取                                                     |
+| `theme/fx-theme.css`                  | 公司 token 真相源                     | 改它 = 全局换肤                                                          |
+| `registry/fx-theme.json`              | shadcn 官方 `registry:theme` 分发格式 | 对外分发主题用                                                           |
+| `docs/components/`                    | 组件文档资产                          | 给人和 AI 共同消费                                                       |
+| `docs/LAYOUTS.md`                     | 布局规范                              | 来自真实页面沉淀                                                         |
 
 ## 目录边界
 
@@ -159,9 +162,9 @@ shadcn 组件进入 `src/components/ui/` 后，就视为 fx-ui 的本地源码�
 
 ## 相关文件
 
-| 文件 | 关系 |
-|------|------|
-| `PRODUCT.md` | 产品定位决定架构方向 |
-| `PROJECT.md` | 当前进度（本文件只记长期方向，不记当前做到哪） |
-| `docs/LAYOUTS.md` | 三层体系第三层的具体布局规范产出 |
-| `docs/TOKENS.md` | token 真相源的具体取值表 |
+| 文件              | 关系                                           |
+| ----------------- | ---------------------------------------------- |
+| `PRODUCT.md`      | 产品定位决定架构方向                           |
+| `PROJECT.md`      | 当前进度（本文件只记长期方向，不记当前做到哪） |
+| `docs/LAYOUTS.md` | 三层体系第三层的具体布局规范产出               |
+| `docs/TOKENS.md`  | token 真相源的具体取值表                       |

@@ -5,8 +5,18 @@
   "layers": ["components", "hooks", "patterns", "blocks", "page-templates"],
   "components": {
     "sources": [
-      { "id": "shadcn-ui", "path": "src/components/ui", "contract": "docs/data/components.manifest.json", "status": "ready" },
-      { "id": "fx-components", "path": "src/components/fx", "contract": "docs/data/components.manifest.json", "status": "ready" }
+      {
+        "id": "shadcn-ui",
+        "path": "src/components/ui",
+        "contract": "docs/data/components.manifest.json",
+        "status": "ready"
+      },
+      {
+        "id": "fx-components",
+        "path": "src/components/fx",
+        "contract": "docs/data/components.manifest.json",
+        "status": "ready"
+      }
     ]
   },
   "hooks": [
@@ -74,7 +84,12 @@
       "name": "列表页标题栏",
       "source": "src/components/recipes/list-page-header.tsx#ListPageHeader",
       "status": "ready",
-      "components": ["DropdownMenu", "DropdownMenuTrigger", "DropdownMenuContent", "DropdownMenuItem"],
+      "components": [
+        "DropdownMenu",
+        "DropdownMenuTrigger",
+        "DropdownMenuContent",
+        "DropdownMenuItem"
+      ],
       "dataContract": ["title", "views", "view", "onViewChange", "actions"],
       "evidence": [
         "src/components/recipes/list-page-header.tsx",
@@ -93,10 +108,19 @@
       "source": "src/components/recipes/crm-app-shell.tsx",
       "status": "ready",
       "components": ["TopBar", "CrmShellNav", "WebsiteCardContainer"],
-      "dataContract": ["children", "height"],
+      "dataContract": [
+        "children",
+        "height",
+        "frame",
+        "topBar",
+        "navigation",
+        "renderChrome"
+      ],
       "acceptanceCriteria": [
-        "固定顶栏和双层导航由现有组件提供，页面只注入 children。",
-        "内容承载使用 WebsiteCardContainer，不能在调用页重写容器阴影。"
+        "顶栏和双层导航由现有组件提供；默认完整渲染，搭建器可通过声明式 chrome slots 控制显示与直接操作。",
+        "内容承载使用 WebsiteCardContainer，不能在调用页重写容器阴影。",
+        "完整应用画布外壳使用 WebsiteCardContainer square shape，整体不添加圆角。",
+        "外层页面画布使用 WebsiteCardContainer page tone 消费 --background；inset 工作区保持 --card 表面。"
       ]
     },
     {
@@ -105,7 +129,15 @@
       "source": "src/components/recipes/data-table.tsx",
       "status": "ready",
       "components": ["Table", "Checkbox", "Button"],
-      "dataContract": ["columns", "data", "rowKey", "selectable", "selected", "onSelectedChange", "rowActions"],
+      "dataContract": [
+        "columns",
+        "data",
+        "rowKey",
+        "selectable",
+        "selected",
+        "onSelectedChange",
+        "rowActions"
+      ],
       "acceptanceCriteria": [
         "列定义必须通过 Column 契约提供，不在页面中复制表头和排序逻辑。",
         "可选行状态通过 selected/onSelectedChange 受控，支持全选和半选。"
@@ -117,7 +149,16 @@
       "source": "src/components/recipes/list-toolbar.tsx",
       "status": "ready",
       "components": ["Input", "Select", "Button"],
-      "dataContract": ["search", "scopes", "views", "onSearchChange", "onScopeChange", "onViewChange", "onFilter", "actions"],
+      "dataContract": [
+        "search",
+        "scopes",
+        "views",
+        "onSearchChange",
+        "onScopeChange",
+        "onViewChange",
+        "onFilter",
+        "actions"
+      ],
       "acceptanceCriteria": [
         "搜索、范围、视图和动作均为可选配置，未提供时不渲染空控件。",
         "页面调用只传入配置和回调，不复制工具栏布局。"
@@ -128,8 +169,22 @@
       "name": "编辑表单区块",
       "source": "src/components/recipes/edit-form-block.tsx#EditFormBlock",
       "status": "ready",
-      "components": ["Field", "Input", "Textarea", "Button", "WebsiteCardContainer"],
-      "dataContract": ["fields", "initialValues", "errors", "onValuesChange", "onSubmit", "onCancel", "submitting"],
+      "components": [
+        "Field",
+        "Input",
+        "Textarea",
+        "Button",
+        "WebsiteCardContainer"
+      ],
+      "dataContract": [
+        "fields",
+        "initialValues",
+        "errors",
+        "onValuesChange",
+        "onSubmit",
+        "onCancel",
+        "submitting"
+      ],
       "evidence": [
         "src/components/recipes/edit-form-block.tsx",
         "src/pages/templates/edit-form-block-page.tsx"
@@ -150,8 +205,25 @@
       "name": "详情页区块",
       "source": "src/components/recipes/detail-page-block.tsx#DetailPageBlock",
       "status": "ready",
-      "components": ["Breadcrumb", "Tabs", "Table", "Button", "WebsiteCardContainer"],
-      "dataContract": ["breadcrumbs", "title", "subtitle", "status", "actions", "fields", "tabs", "timeline", "relatedRecords", "onEdit"],
+      "components": [
+        "Breadcrumb",
+        "Tabs",
+        "Table",
+        "Button",
+        "WebsiteCardContainer"
+      ],
+      "dataContract": [
+        "breadcrumbs",
+        "title",
+        "subtitle",
+        "status",
+        "actions",
+        "fields",
+        "tabs",
+        "timeline",
+        "relatedRecords",
+        "onEdit"
+      ],
       "evidence": [
         "src/components/recipes/detail-page-block.tsx",
         "src/pages/templates/detail-page-block-page.tsx"
@@ -171,8 +243,17 @@
       "name": "客户列表页模板",
       "source": "src/pages/templates/customer-list-template.tsx#CustomerListTemplate",
       "status": "ready",
-      "components": ["CrmAppShell", "ListPageHeader", "ListToolbar", "DataTable", "Pagination"],
-      "evidence": ["src/pages/templates/customer-list-template.tsx", "scripts/gen-list-page.mjs"],
+      "components": [
+        "CrmAppShell",
+        "ListPageHeader",
+        "ListToolbar",
+        "DataTable",
+        "Pagination"
+      ],
+      "evidence": [
+        "src/pages/templates/customer-list-template.tsx",
+        "scripts/gen-list-page.mjs"
+      ],
       "dataContractSource": "docs/data/page-build-kit.manifest.json#list",
       "dataContract": ["columns", "rows", "views", "scopes", "rowActions"],
       "visualEvidence": {
@@ -182,7 +263,152 @@
       "acceptanceCriteria": [
         "页面外壳由 CrmAppShell 提供，内容区只注入列表页数据和受控回调。",
         "列表必须支持搜索范围、视图切换、可选行和分页状态。",
+        "搭建模式下的区块 hover、focus 和选中态使用内容上层的 primary 2px 内描边，顶边使用独立上层标记避免被相邻区块遮挡，不改变区块尺寸或真实页面视觉。",
         "完成后通过 check:page-build-kit、check:layered-assets 和客户列表视觉回归。"
+      ]
+    },
+    {
+      "id": "page-builder",
+      "name": "受控页面搭建器",
+      "source": "src/components/recipes/page-builder.tsx#PageBuilder",
+      "status": "ready",
+      "components": [
+        "Card",
+        "Button",
+        "Input",
+        "Select",
+        "ToggleGroup",
+        "Separator",
+        "ComponentPlayground"
+      ],
+      "dataContractSource": "docs/data/page-builder.manifest.json",
+      "dataContract": [
+        "template",
+        "slots",
+        "properties",
+        "presets",
+        "value",
+        "onValueChange",
+        "renderPreview"
+      ],
+      "evidence": [
+        "src/components/recipes/page-builder.tsx",
+        "src/components/recipes/component-builder.tsx",
+        "src/pages/docs/governance/page-builder-page.tsx",
+        "docs/data/page-builder.manifest.json"
+      ],
+      "visualEvidence": {
+        "file": "tests/visual.spec.ts",
+        "testName": "页面搭建器客户列表 MVP"
+      },
+      "acceptanceCriteria": [
+        "运行时只渲染 manifest 声明的模板、slot 和 Block，不执行 JSX 或 CSS 输入。",
+        "未知或重复 slot、非法 enum 属性会被归一化；必需 slot 始终存在。",
+        "区块排序通过可访问的上移、下移操作完成，删除操作尊重 required 约束。",
+        "预览设备切换位于搭建器顶栏中部，预览画布不再保留重复的标题工具行。",
+        "搭建器顶栏使用 --card 白色表面和 --border-subtle 底部细分割线，页面预览画布才使用 --background 全局页面背景。"
+      ]
+    },
+    {
+      "id": "component-builder",
+      "name": "受控基础组件评审台",
+      "source": "src/components/recipes/component-builder.tsx#ComponentBuilder",
+      "status": "ready",
+      "components": [
+        "Button",
+        "Checkbox",
+        "Field",
+        "Input",
+        "ScrollArea",
+        "Select",
+        "Separator",
+        "Spinner",
+        "Tag",
+        "Alert",
+        "Textarea"
+      ],
+      "dataContractSource": "docs/data/page-builder.manifest.json#component",
+      "dataContract": [
+        "external Agent candidate contract",
+        "governed preview adapter",
+        "real API controls",
+        "runtime property review",
+        "governance checks",
+        "revision task",
+        "candidate approval",
+        "undo",
+        "redo"
+      ],
+      "evidence": [
+        "src/components/recipes/component-builder.tsx",
+        "docs/data/page-builder.manifest.json"
+      ],
+      "visualEvidence": {
+        "file": "tests/visual.spec.ts",
+        "testName": "组件搭建器 MVP"
+      },
+      "acceptanceCriteria": [
+        "基础组件评审消费 MCP/CLI 提交的外部 Agent 候选，不提供 Figma 式空白图层绘制。",
+        "候选只通过登记的本地安全适配器预览，并只开放真实组件已有 API 与 token 档。",
+        "默认、禁用、加载与图标等状态使用真实组件契约渲染；Loading 明确为 disabled + Spinner 组合态。",
+        "修改要求只生成结构化返工任务，未配置连接器时不伪称已发送或执行。",
+        "治理检查通过且用户确认前不写组件源码、Playground 或 registry；确认后只进入审核队列。"
+      ]
+    },
+    {
+      "id": "business-component-builder",
+      "name": "受控业务组件组合搭建器",
+      "source": "src/components/recipes/business-component-builder.tsx#BusinessComponentBuilder",
+      "status": "ready",
+      "components": [
+        "Button",
+        "Input",
+        "Checkbox",
+        "Switch",
+        "Tag",
+        "Avatar",
+        "Separator",
+        "Select",
+        "Tabs",
+        "ToggleGroup",
+        "ScrollArea",
+        "Alert",
+        "Empty"
+      ],
+      "dataContractSource": "docs/data/page-builder.manifest.json",
+      "dataContract": [
+        "blank composition",
+        "allowed components",
+        "drag insertion",
+        "canvas selection",
+        "layer tree",
+        "auto layout",
+        "groups",
+        "spacing scale",
+        "real instance property contracts",
+        "public prop bindings",
+        "full manifest component search",
+        "publish targets",
+        "composition operations"
+      ],
+      "evidence": [
+        "src/components/recipes/business-component-builder.tsx",
+        "docs/data/page-builder.manifest.json"
+      ],
+      "visualEvidence": {
+        "file": "tests/visual.spec.ts",
+        "testName": "业务组件属性契约搭建器"
+      },
+      "acceptanceCriteria": [
+        "画布初始为空，只能搜索并加入 manifest 白名单中的真实组件。",
+        "组件库空态不展开全量清单；搜索覆盖 ui/fx manifest 全量并只展示匹配结果，已适配项以无业务数据的默认实例插入，未适配匹配项统一汇总且不可插入。",
+        "组件可点击或拖放插入；画布可 Shift 多选成组、解组和删除，图层树可定位与排序。",
+        "整体和组合布局只开放登记的方向、间隔与外边距档，不接受像素值或 token 覆盖。",
+        "选中组件只显示由真实 Playground contract 引用且经白名单评审的实例属性，不在搭建器复制属性选项。",
+        "每个可插入组件必须声明默认实例；无 Playground contract 的固定实例不得虚构可编辑属性。",
+        "实例属性可公开为具名业务 Props；实例值、公开名和默认值进入撤销历史、草稿和发布产物。",
+        "个人组件保存到个人库；业务组件进入审核，不绕过公共组件治理。",
+        "手动编辑与 Agent 提案共用受控操作和撤销重做历史。"
       ]
     },
     {
@@ -241,7 +467,10 @@
         "src/components/ui/tabs.tsx",
         "src/components/recipes/crm-app-shell.tsx"
       ],
-      "visualEvidence": { "file": "tests/visual.spec.ts", "testName": "DetailPageBlock 页面模块" },
+      "visualEvidence": {
+        "file": "tests/visual.spec.ts",
+        "testName": "DetailPageBlock 页面模块"
+      },
       "constraint": "页面生成器只输出固定 DetailPageBlock 结构，调用方只替换对象数据和动作回调。"
     },
     {
@@ -257,7 +486,10 @@
         "src/components/ui/button.tsx",
         "src/components/ui/dialog.tsx"
       ],
-      "visualEvidence": { "file": "tests/visual.spec.ts", "testName": "EditFormBlock 页面模块" },
+      "visualEvidence": {
+        "file": "tests/visual.spec.ts",
+        "testName": "EditFormBlock 页面模块"
+      },
       "constraint": "页面生成器只输出固定 EditFormBlock 结构，调用方只替换字段 schema 和保存回调。"
     }
   ]

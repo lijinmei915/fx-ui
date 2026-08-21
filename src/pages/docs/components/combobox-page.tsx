@@ -1,0 +1,14 @@
+import { ComponentPlayground } from "@/components/fx/component-playground"
+import { comboboxPlaygroundConfig } from "@/pages/docs/components/combobox-playground"
+import { StandardDocPage, type StandardDocLang } from "@/pages/docs/components/standard-doc-page"
+
+export const comboboxAnchors = [
+  { label: "调试台", labelEn: "Playground", href: "#combobox-playground" },
+  { label: "API", href: "#combobox-props" },
+  { label: "语义 DOM", labelEn: "Semantic DOM", href: "#combobox-semantic-dom" },
+  { label: "正误示例", labelEn: "Do / Don’t", href: "#combobox-do-dont" },
+]
+
+export function ComboboxPage({ actions, lang }: { actions: React.ReactNode; lang: StandardDocLang }) {
+  return <StandardDocPage slug="combobox" title="Combobox 组合框" lead="输入关键词实时过滤候选项，并完成单选或多选。适合候选较多、需要先搜索再选择的场景。" playground={<ComponentPlayground config={comboboxPlaygroundConfig} lang={lang} />} hideOverview hideScenarioExamples hideUsage overview={null} scenarioExamples={[]} renderScenarioPreview={() => null} importCode={'import { Combobox, ComboboxInput, ComboboxContent, ComboboxList, ComboboxItem } from "@/components/ui/combobox"'} usageCode={'<Combobox items={items} value={value} onValueChange={setValue}>...</Combobox>'} propRows={[{ prop: "items", type: "Item[]", defaultValue: "—", desc: "候选数据；输入变化时由 Base UI 按标签过滤。" }, { prop: "value / defaultValue", type: "Item | Item[] | null", defaultValue: "null", desc: "单选值或 multiple 模式下的数组值。" }, { prop: "onValueChange", type: "(value, eventDetails) => void", defaultValue: "—", desc: "选择、清除或删除 Chip 后回传完整值。" }, { prop: "multiple", type: "boolean", defaultValue: "false", desc: "开启多选；使用 ComboboxChips、ComboboxChip 和 ComboboxChipsInput 展示与编辑。" }, { prop: "disabled", type: "boolean", defaultValue: "false", desc: "禁用输入、展开和选择。" }, { prop: "open / defaultOpen / onOpenChange", type: "boolean / callback", defaultValue: "—", desc: "受控或非受控浮层打开状态。" }, { prop: "showTrigger / showClear（ComboboxInput）", type: "boolean", defaultValue: "true / false", desc: "控制展开按钮与清除按钮。" }, { prop: "variant（ComboboxList）", type: '"menu" | "panel"', defaultValue: '"menu"', desc: "菜单浮层或 fx 组合组件使用的内联面板列表。" }, { prop: "density / indicator（ComboboxItem）", type: '"menu" | "list" / "check" | "none"', defaultValue: '"menu" / "check"', desc: "候选项密度和选中反馈。" }]} semanticDomRows={[{ part: 'data-slot="combobox-input"', desc: "单选搜索输入。" }, { part: 'data-slot="combobox-chips" / "combobox-chip-input"', desc: "多选值容器与搜索输入。" }, { part: 'data-slot="combobox-content"', desc: "浮层内容。" }, { part: 'data-slot="combobox-list"', desc: "候选列表；variant 支持 menu 与 panel。" }, { part: 'data-slot="combobox-item"', desc: "候选项；density 支持 menu 与 list。" }, { part: 'data-slot="combobox-empty"', desc: "搜索无匹配项或候选数据为空。" }]} doDontRows={[{ do: "候选较多且需要输入过滤时使用 Combobox。", dont: "少量固定选项仍用搜索控件增加操作成本。" }, { do: "用 items、value 与 onValueChange 管理数据。", dont: "查询 DOM 文本推断选择结果。" }, { do: "人员、组织等业务复杂选择器在 fx 层组合。", dont: "把业务属性塞进基础 Combobox。" }]} actions={actions} lang={lang} />
+}

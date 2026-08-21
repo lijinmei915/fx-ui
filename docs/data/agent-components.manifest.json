@@ -96,6 +96,40 @@
       "sizes": []
     },
     {
+      "name": "Alert",
+      "layer": "ui",
+      "category": "feedback",
+      "source": "src/components/ui/alert.tsx",
+      "doc": "docs/components/alert.md",
+      "apiSource": "src/components/ui/alert.tsx",
+      "nativeStates": [
+        "default",
+        "destructive"
+      ],
+      "semanticDom": [
+        "data-slot=\"alert\"",
+        "data-slot=\"alert-title\"",
+        "data-slot=\"alert-description\"",
+        "data-slot=\"alert-action\""
+      ],
+      "tokenRefs": [
+        "--card",
+        "--card-foreground",
+        "--destructive",
+        "--muted-foreground"
+      ],
+      "usageRules": [
+        "使用 Alert 前必须以 src/components/ui/alert.tsx 为真实 API。",
+        "错误或危险信息使用 destructive variant，不在调用处覆盖错误色。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ],
+      "variants": [
+        "default",
+        "destructive"
+      ],
+      "sizes": []
+    },
+    {
       "name": "AlertDialog",
       "layer": "ui",
       "category": "feedback",
@@ -550,9 +584,11 @@
       "apiSource": "src/components/ui/checkbox.tsx",
       "nativeStates": [
         "focus-visible",
+        "hover",
         "disabled",
         "aria-invalid",
-        "data-checked"
+        "data-checked",
+        "indeterminate"
       ],
       "semanticDom": [
         "data-slot=\"checkbox\"",
@@ -562,8 +598,11 @@
         "--primary",
         "--primary-foreground",
         "--foreground",
+        "--foreground-disabled",
         "--destructive",
         "--border",
+        "--border-subtle",
+        "--muted",
         "--input",
         "--ring"
       ],
@@ -573,7 +612,11 @@
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
       "variants": [],
-      "sizes": []
+      "sizes": [
+        "sm",
+        "default",
+        "lg"
+      ]
     },
     {
       "name": "Collapsible",
@@ -601,6 +644,116 @@
       ],
       "variants": [],
       "sizes": []
+    },
+    {
+      "name": "ColorPicker",
+      "layer": "fx",
+      "category": "fx",
+      "role": "颜色选择、格式转换、吸色与颜色复用",
+      "source": "src/components/fx/color-picker.tsx",
+      "doc": "docs/components/fx-color-picker.md",
+      "apiSource": "src/components/fx/color-picker.tsx",
+      "nativeStates": [
+        "open",
+        "editing",
+        "selected",
+        "disabled"
+      ],
+      "semanticDom": [
+        "data-slot=\"color-picker\"",
+        "data-slot=\"color-picker-preview\"",
+        "data-slot=\"color-picker-swatch\"",
+        "data-slot=\"color-picker-recent\"",
+        "data-slot=\"color-picker-presets\"",
+        "data-slot=\"color-picker-footer\""
+      ],
+      "tokenRefs": [
+        "--popover",
+        "--popover-foreground",
+        "--surface",
+        "--border",
+        "--muted-foreground",
+        "--primary",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 ColorPicker 前必须以 src/components/fx/color-picker.tsx 为真实 API。",
+        "预览、吸色器、透明度、格式、最近色、预设色和触发器内容由真实 props 或数据驱动。",
+        "动态用户颜色允许内联 backgroundColor；面板外观必须使用 fx-ui token。",
+        "className 只用于触发器布局，不覆盖颜色、圆角、边框或内部间距。"
+      ],
+      "variants": [],
+      "sizes": []
+    },
+    {
+      "name": "Combobox",
+      "layer": "ui",
+      "category": "form",
+      "source": "src/components/ui/combobox.tsx",
+      "doc": "docs/components/combobox.md",
+      "apiSource": "src/components/ui/combobox.tsx",
+      "nativeStates": [
+        "open",
+        "closed",
+        "highlighted",
+        "selected",
+        "disabled",
+        "empty"
+      ],
+      "semanticDom": [
+        "data-slot=\"combobox-input\"",
+        "data-slot=\"combobox-content\"",
+        "data-slot=\"combobox-list\"",
+        "data-slot=\"combobox-item\"",
+        "data-slot=\"combobox-empty\""
+      ],
+      "tokenRefs": [
+        "--surface",
+        "--foreground",
+        "--popover",
+        "--popover-foreground",
+        "--muted-foreground",
+        "--accent",
+        "--border",
+        "--input",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 Combobox 前必须以 src/components/ui/combobox.tsx 为真实 API。",
+        "人员、组织等业务模型必须在 fx 组合层实现，不向基础 Combobox 添加业务 props。",
+        "panel/list/indicator 扩展只用于稳定内联面板、48px 行与独立选择反馈。",
+        "className 只用于布局、宽度或外部间距，不覆盖组件自身视觉。"
+      ],
+      "variants": [
+        "menu",
+        "panel"
+      ],
+      "sizes": [],
+      "playgroundControls": {
+        "notComponentApi": true,
+        "props": [
+          {
+            "key": "selection",
+            "propName": "multiple",
+            "type": "segment"
+          },
+          {
+            "key": "dataState",
+            "propName": "items",
+            "type": "segment"
+          },
+          {
+            "key": "clearable",
+            "propName": "showClear",
+            "type": "segment"
+          },
+          {
+            "key": "semanticState",
+            "propName": "disabled",
+            "type": "segment"
+          }
+        ]
+      }
     },
     {
       "name": "Command",
@@ -666,8 +819,13 @@
       ],
       "usageRules": [
         "使用 ComponentPlayground 前必须以 src/components/fx/component-playground.tsx 为真实 API。",
-        "ComponentPlayground 只用于文档站组件示例调试，不替代业务表单或真实配置面板。",
+        "ComponentPlayground 用于文档站组件示例调试和受治理的组件搭建模式，不替代业务表单或任意样式配置面板。",
+        "所有 ComponentPlayground 统一使用 Card size=lg 的 16px 内容内距，不在单个组件页覆盖。",
+        "预览与代码 Tab 共用 18px 图标、12px 左右内距和 8px 图文间距，不在单个组件页分别覆盖。",
+        "value + onValueChange 可选受控 API 用于搭建器共享撤销、重做和 Agent 操作历史；未传时保持原有内部状态。",
         "每个调试项必须来自组件源码真实 prop，不发明不存在的 prop。",
+        "leadingControls 只承载无法由 segment/text 表达的真实组件或导出选择能力，并统一显示在实时属性内。",
+        "前置实时属性的分段选项必须复用 PlaygroundSegmentedControl，不在页面里另配 ToggleGroup 外观。",
         "任意维度选中全部时只展示矩阵预览，不展示代码 tab 和复制按钮；复制代码前必须选回具体取值。",
         "renderOne 与 genCode 必须保持同一组值，避免预览和复制代码不一致。",
         "制作台模式的结构节点、属性归属、语义 Token 槽位、状态语义映射和检查项必须来自 component-playgrounds manifest。",
@@ -679,6 +837,52 @@
         "状态语义映射展示的色板名称必须从 design-tokens manifest 自动派生；不展示 oklch/rgb 原始值，色板名称不得成为可编辑配置或第二真相源。",
         "生效确认必须读取真实 data-slot 与计算样式，并同时检查结构、语义 Token、可访问性和代码同源。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ],
+      "variants": [],
+      "sizes": []
+    },
+    {
+      "name": "ConditionBuilder",
+      "layer": "fx",
+      "category": "fx",
+      "role": "用组内 AND 与组间 OR 构造结构化列表筛选",
+      "source": "src/components/fx/condition-builder.tsx",
+      "doc": "docs/components/fx-condition-builder.md",
+      "apiSource": "src/components/fx/condition-builder.tsx",
+      "nativeStates": [
+        "empty",
+        "editing",
+        "single-group",
+        "or-groups",
+        "multi-value",
+        "exposed",
+        "disabled",
+        "read-only"
+      ],
+      "semanticDom": [
+        "data-slot=\"condition-builder\"",
+        "data-slot=\"condition-group\"",
+        "data-slot=\"condition-rule\"",
+        "data-slot=\"condition-builder-or\"",
+        "data-slot=\"condition-group-actions\"",
+        "data-slot=\"condition-builder-actions\""
+      ],
+      "tokenRefs": [
+        "--surface",
+        "--input",
+        "--border",
+        "--foreground",
+        "--muted-foreground",
+        "--info",
+        "--destructive",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 ConditionBuilder 前必须以 src/components/fx/condition-builder.tsx 为真实 API。",
+        "fields 是字段值类型、操作符和候选项的唯一配置源；字段变化时重置不兼容的操作符和值。",
+        "条件组之间固定按 OR 连接，组内规则固定按 AND 连接；组和规则必须使用稳定 id。",
+        "使用 value/defaultValue + onValueChange 接入业务筛选，不从 DOM 推断值。",
+        "className 只用于根节点布局，不覆盖组件颜色、圆角、边框或内部间距。"
       ],
       "variants": [],
       "sizes": []
@@ -928,6 +1132,42 @@
       "sizes": []
     },
     {
+      "name": "Empty",
+      "layer": "ui",
+      "category": "feedback",
+      "source": "src/components/ui/empty.tsx",
+      "doc": "docs/components/empty.md",
+      "apiSource": "src/components/ui/empty.tsx",
+      "nativeStates": [
+        "default",
+        "icon"
+      ],
+      "semanticDom": [
+        "data-slot=\"empty\"",
+        "data-slot=\"empty-header\"",
+        "data-slot=\"empty-icon\"",
+        "data-slot=\"empty-title\"",
+        "data-slot=\"empty-description\"",
+        "data-slot=\"empty-content\""
+      ],
+      "tokenRefs": [
+        "--muted",
+        "--muted-foreground",
+        "--foreground",
+        "--primary"
+      ],
+      "usageRules": [
+        "使用 Empty 前必须以 src/components/ui/empty.tsx 为真实 API。",
+        "请求成功但没有数据时使用 Empty；加载中使用 Skeleton 或 Spinner。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ],
+      "variants": [
+        "default",
+        "icon"
+      ],
+      "sizes": []
+    },
+    {
       "name": "Field",
       "layer": "ui",
       "category": "form",
@@ -967,6 +1207,50 @@
         "horizontal",
         "responsive"
       ],
+      "sizes": []
+    },
+    {
+      "name": "IconPicker",
+      "layer": "fx",
+      "category": "fx",
+      "role": "图标检索、键盘选择、随机分配与可选上传",
+      "source": "src/components/fx/icon-picker.tsx",
+      "doc": "docs/components/fx-icon-picker.md",
+      "apiSource": "src/components/fx/icon-picker.tsx",
+      "nativeStates": [
+        "select",
+        "search",
+        "search-empty",
+        "loading",
+        "error",
+        "upload",
+        "disabled"
+      ],
+      "semanticDom": [
+        "data-slot=\"icon-picker\"",
+        "data-slot=\"icon-picker-grid\"",
+        "data-slot=\"icon-picker-loading\"",
+        "data-slot=\"icon-picker-error\"",
+        "data-slot=\"icon-picker-empty\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--popover",
+        "--popover-foreground",
+        "--border",
+        "--muted",
+        "--muted-foreground",
+        "--primary",
+        "--destructive",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 IconPicker 前必须以 src/components/fx/icon-picker.tsx 为真实 API。",
+        "图标对象统一从 @/lib/icons 传入，不手写 SVG，不引入第二个图标库。",
+        "Figma 的模式由 query、过滤结果、loading、error 与上传 Tab 等真实运行态生成，不暴露纯视觉 mode prop。",
+        "className 只用于根节点宽度或外部布局，不覆盖组件颜色、圆角、边框或内部间距。"
+      ],
+      "variants": [],
       "sizes": []
     },
     {
@@ -1316,12 +1600,13 @@
       "tokenRefs": [
         "--foreground",
         "--muted-foreground",
-        "--secondary"
+        "--surface",
+        "--border"
       ],
       "usageRules": [
         "使用 PageActions 前必须以 src/components/fx/page-actions.tsx 为真实 API。",
         "PageActions 只放文档站页面级工具，不承载组件示例内部操作或业务操作。",
-        "PageActions 主按钮放最高频动作；下拉只放同页次级动作；页间导航独立在右侧。",
+        "PageActions 主按钮放最高频动作；复制、更多和页间导航使用 outline 白色表面；下拉只放同页次级动作；页间导航独立在右侧。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
@@ -1446,6 +1731,51 @@
       "sizes": []
     },
     {
+      "name": "PeoplePicker",
+      "layer": "fx",
+      "category": "fx",
+      "role": "人员、部门、组织、合伙人与用户组的检索、多选和下钻",
+      "source": "src/components/fx/people-picker.tsx",
+      "doc": "docs/components/fx-people-picker.md",
+      "apiSource": "src/components/fx/people-picker.tsx",
+      "nativeStates": [
+        "search",
+        "selected",
+        "highlighted",
+        "disabled",
+        "drill-down",
+        "favorite"
+      ],
+      "semanticDom": [
+        "data-slot=\"people-picker\"",
+        "data-slot=\"people-picker-search\"",
+        "data-slot=\"people-picker-toolbar\"",
+        "data-slot=\"people-picker-footer\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--popover",
+        "--popover-foreground",
+        "--border",
+        "--muted",
+        "--muted-foreground",
+        "--primary",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 PeoplePicker 前必须以 src/components/fx/people-picker.tsx 为真实 API。",
+        "Figma 场景映射为 activeTab/defaultTab，搜索、选择、收藏和下钻由真实数据与交互生成。",
+        "人员头像使用 Avatar，所有功能图标统一从 @/lib/icons 导入。",
+        "远程搜索、权限、组织树加载和持久化由调用方处理。",
+        "className 只用于根节点定位与外部布局，不覆盖组件视觉。"
+      ],
+      "variants": [],
+      "sizes": [
+        "normal",
+        "medium"
+      ]
+    },
+    {
       "name": "Popover",
       "layer": "ui",
       "category": "overlay",
@@ -1475,7 +1805,7 @@
       ],
       "usageRules": [
         "使用 Popover 前必须以 src/components/ui/popover.tsx 为真实 API。",
-        "PopoverContent 的 size 控制 sm/md/lg 宽度，定位继续通过 side/align 处理。",
+        "PopoverContent 的 size 控制 sm/md/lg/picker 宽度，picker 仅用于受治理的紧凑选择面板，定位继续通过 side/align 处理。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
@@ -1483,7 +1813,8 @@
       "sizes": [
         "sm",
         "md",
-        "lg"
+        "lg",
+        "picker"
       ]
     },
     {
@@ -1495,6 +1826,7 @@
       "apiSource": "src/components/ui/radio-group.tsx",
       "nativeStates": [
         "focus-visible",
+        "hover",
         "disabled",
         "aria-invalid",
         "data-checked"
@@ -1507,8 +1839,11 @@
       "tokenRefs": [
         "--primary",
         "--primary-foreground",
+        "--foreground-disabled",
         "--destructive",
         "--border",
+        "--border-subtle",
+        "--muted",
         "--input",
         "--ring"
       ],
@@ -1518,6 +1853,43 @@
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],
       "variants": [],
+      "sizes": [
+        "sm",
+        "default",
+        "lg"
+      ]
+    },
+    {
+      "name": "ScrollArea",
+      "layer": "ui",
+      "category": "display",
+      "source": "src/components/ui/scroll-area.tsx",
+      "doc": "docs/components/scroll-area.md",
+      "apiSource": "src/components/ui/scroll-area.tsx",
+      "nativeStates": [
+        "focus-visible",
+        "vertical",
+        "horizontal"
+      ],
+      "semanticDom": [
+        "data-slot=\"scroll-area\"",
+        "data-slot=\"scroll-area-viewport\"",
+        "data-slot=\"scroll-area-scrollbar\"",
+        "data-slot=\"scroll-area-thumb\""
+      ],
+      "tokenRefs": [
+        "--ring",
+        "--border"
+      ],
+      "usageRules": [
+        "使用 ScrollArea 前必须以 src/components/ui/scroll-area.tsx 为真实 API。",
+        "根节点必须有稳定宽高；横向滚动显式渲染 orientation=horizontal 的 ScrollBar。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ],
+      "variants": [
+        "vertical",
+        "horizontal"
+      ],
       "sizes": []
     },
     {
@@ -1848,6 +2220,54 @@
       ]
     },
     {
+      "name": "Signature",
+      "layer": "ui",
+      "category": "form",
+      "source": "src/components/ui/signature.tsx",
+      "doc": "docs/components/signature.md",
+      "apiSource": "src/components/ui/signature.tsx",
+      "nativeStates": [
+        "focus-visible",
+        "disabled",
+        "data-filled"
+      ],
+      "semanticDom": [
+        "data-slot=\"signature\"",
+        "data-slot=\"signature-canvas\"",
+        "data-slot=\"signature-clear\""
+      ],
+      "tokenRefs": [
+        "--foreground",
+        "--surface",
+        "--input",
+        "--ring",
+        "--radius"
+      ],
+      "usageRules": [
+        "使用 Signature 前必须以 src/components/ui/signature.tsx 为真实 API。",
+        "Figma 的填充 on/off 是 data-filled 运行时状态，不是调用方视觉 variant。",
+        "签名值统一使用 PNG data URL；清空通过组件内置 Button 或 value=null，不直接操作 canvas。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ],
+      "variants": [],
+      "sizes": [],
+      "playgroundControls": {
+        "notComponentApi": true,
+        "props": [
+          {
+            "key": "height",
+            "propName": "height",
+            "type": "text"
+          },
+          {
+            "key": "disabled",
+            "propName": "disabled",
+            "type": "segment"
+          }
+        ]
+      }
+    },
+    {
       "name": "Skeleton",
       "layer": "ui",
       "category": "feedback",
@@ -1868,6 +2288,44 @@
         "使用 Skeleton 前必须以 src/components/ui/skeleton.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ],
+      "variants": [],
+      "sizes": []
+    },
+    {
+      "name": "Slider",
+      "layer": "ui",
+      "category": "form",
+      "source": "src/components/ui/slider.tsx",
+      "doc": "docs/components/slider.md",
+      "apiSource": "src/components/ui/slider.tsx",
+      "nativeStates": [
+        "data-orientation",
+        "data-disabled",
+        "data-dragging",
+        "focus-visible"
+      ],
+      "semanticDom": [
+        "data-slot=\"slider\"",
+        "data-slot=\"slider-track\"",
+        "data-slot=\"slider-range\"",
+        "data-slot=\"slider-thumb\"",
+        "role=\"group\"",
+        "input[type=\"range\"]"
+      ],
+      "tokenRefs": [
+        "--primary",
+        "--fx-primary-disabled",
+        "--muted",
+        "--background",
+        "--border-subtle",
+        "--ring"
+      ],
+      "usageRules": [
+        "使用 Slider 前必须以 src/components/ui/slider.tsx 为真实 API。",
+        "单值和范围只通过 number | number[] 表达，不新增重复类型 prop。",
+        "marks 和 input 属于组合结构，不是 Slider 根属性。",
+        "className 只用于宽度、高度或外部间距，不用于覆盖轨道与游标视觉。"
       ],
       "variants": [],
       "sizes": []
@@ -1910,16 +2368,21 @@
         "disabled",
         "aria-invalid",
         "data-checked",
-        "data-unchecked"
+        "data-unchecked",
+        "aria-busy"
       ],
       "semanticDom": [
         "data-slot=\"switch\"",
-        "data-slot=\"switch-thumb\""
+        "data-slot=\"switch-thumb\"",
+        "data-slot=\"switch-content\""
       ],
       "tokenRefs": [
         "--primary",
+        "--fx-primary-disabled",
         "--primary-foreground",
         "--background",
+        "--surface-disabled",
+        "--foreground-disabled",
         "--foreground",
         "--destructive",
         "--border",
@@ -1933,8 +2396,10 @@
       ],
       "variants": [],
       "sizes": [
-        "sm",
-        "default"
+        "micro",
+        "mini",
+        "small",
+        "medium"
       ]
     },
     {
@@ -1966,9 +2431,10 @@
       "tokenRefs": [
         "--foreground",
         "--card",
+        "--accent",
+        "--accent-hover",
         "--muted",
         "--muted-hover",
-        "--muted-active",
         "--muted-foreground",
         "--border",
         "--border-subtle",
@@ -2403,6 +2869,143 @@
       }
     },
     {
+      "name": "Transfer",
+      "layer": "fx",
+      "category": "fx",
+      "role": "受控双栏选择与批量移动",
+      "source": "src/components/fx/transfer.tsx",
+      "doc": "docs/components/fx-transfer.md",
+      "apiSource": "src/components/fx/transfer.tsx",
+      "nativeStates": [
+        "default",
+        "search",
+        "selected",
+        "one-way",
+        "disabled",
+        "loading",
+        "error",
+        "warning"
+      ],
+      "semanticDom": [
+        "data-slot=\"transfer\"",
+        "data-slot=\"transfer-list\"",
+        "data-slot=\"transfer-actions\"",
+        "data-slot=\"transfer-item\"",
+        "data-slot=\"transfer-loading\"",
+        "data-slot=\"transfer-empty\""
+      ],
+      "tokenRefs": [
+        "--surface",
+        "--border",
+        "--foreground",
+        "--muted",
+        "--muted-foreground",
+        "--accent",
+        "--primary",
+        "--ring",
+        "--destructive",
+        "--warning"
+      ],
+      "usageRules": [
+        "使用 Transfer 前必须以 src/components/fx/transfer.tsx 为真实 API。",
+        "最终值使用 targetKeys + onChange；列表暂选使用 selectedKeys + onSelectChange。",
+        "搜索、单向、禁用、加载和校验状态必须使用真实 prop，不新增截图专用 mode。",
+        "复杂表格或树形数据应沉淀为独立已验证组合，不扩张当前 Transfer API。",
+        "className 只用于根节点布局，不覆盖组件颜色、圆角、边框或内部间距。"
+      ],
+      "variants": [],
+      "sizes": []
+    },
+    {
+      "name": "Upload",
+      "layer": "ui",
+      "category": "form",
+      "source": "src/components/ui/upload.tsx",
+      "doc": "docs/components/upload.md",
+      "apiSource": "src/components/ui/upload.tsx",
+      "nativeStates": [
+        "hover",
+        "focus-visible",
+        "disabled",
+        "data-dragging",
+        "data-status"
+      ],
+      "semanticDom": [
+        "data-slot=\"upload\"",
+        "data-slot=\"upload-input\"",
+        "data-slot=\"upload-trigger\"",
+        "data-slot=\"upload-dropzone\"",
+        "data-slot=\"upload-picture-trigger\"",
+        "data-slot=\"upload-list\"",
+        "data-slot=\"upload-item\"",
+        "data-slot=\"upload-picture-item\"",
+        "data-slot=\"upload-helper\""
+      ],
+      "tokenRefs": [
+        "--primary",
+        "--info",
+        "--destructive",
+        "--success",
+        "--foreground",
+        "--foreground-disabled",
+        "--muted",
+        "--muted-foreground",
+        "--surface",
+        "--surface-disabled",
+        "--input",
+        "--border-subtle",
+        "--ring",
+        "--overlay"
+      ],
+      "usageRules": [
+        "使用 Upload 前必须以 src/components/ui/upload.tsx 为真实 API。",
+        "上传请求由业务层处理；Upload 只选择文件、执行本地限制并呈现受控 status/percent。",
+        "Figma 的悬浮、点击、拖拽中是原生交互状态，不新增视觉状态 prop。",
+        "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
+      ],
+      "variants": [
+        "button",
+        "dropzone",
+        "picture-card",
+        "link"
+      ],
+      "sizes": [
+        "small",
+        "mini",
+        "micro"
+      ],
+      "playgroundControls": {
+        "notComponentApi": true,
+        "props": [
+          {
+            "key": "variant",
+            "propName": "variant",
+            "type": "segment"
+          },
+          {
+            "key": "listType",
+            "propName": "listType",
+            "type": "segment"
+          },
+          {
+            "key": "status",
+            "propName": "value[].status",
+            "type": "segment"
+          },
+          {
+            "key": "showFileList",
+            "propName": "showFileList",
+            "type": "segment"
+          },
+          {
+            "key": "disabled",
+            "propName": "disabled",
+            "type": "segment"
+          }
+        ]
+      }
+    },
+    {
       "name": "WebsiteCardContainer",
       "layer": "fx",
       "category": "website-standards",
@@ -2434,7 +3037,8 @@
         "文档站的独立信息块、示例预览和说明区域统一使用 WebsiteCardContainer；它内部复用 shadcn Card 的真实 API。",
         "WebsiteCardContainer 固定选择 shadow-l1；文档站 ThemePanel 的全局 Shadow Level 统一控制 --fx-shadow-* 运行时值，页面调用处不得传入 elevated 或覆盖 shadow。",
         "padding 默认为 default；完整应用预览、色板或组件制作台等必须贴合容器边缘的既有结构可传 padding=\"none\"，该值同时移除根部默认间距，不得以 className 覆盖内边距或间距。",
-        "tone 仅允许 default、accent、muted；网站容器的语气差异必须通过 tone 表达，不在调用处覆盖背景或边框。",
+        "tone 仅允许 default、accent、muted、page；page 用 --background 承载全局页面画布，网站容器的语气差异必须通过 tone 表达，不在调用处覆盖背景或边框。",
+        "shape 仅允许 default、square；square 用于完整应用画布外壳，不在调用处覆盖圆角。",
         "组件自身的 API 预览可直接使用 shadcn Card，确保示例仍是被说明组件的真实用法。",
         "页面调用处不得重新手写卡片容器或卡片表面规则；需要调整网站卡片视觉时改 WebsiteCardContainer。",
         "查看规则里的取值逻辑必须同时展示 manifest 规则和组件插槽视觉取值。"
@@ -2442,7 +3046,8 @@
       "variants": [
         "default",
         "accent",
-        "muted"
+        "muted",
+        "page"
       ],
       "sizes": []
     },

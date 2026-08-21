@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-07-27
+last_verified: 2026-08-21
 teaches: "公司设计 token 的基础架构、真实值和全局视觉使用规则"
 use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadcn 组件样式或判断视觉是否符合公司规范时"
 ---
@@ -85,6 +85,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `muted` | `#F2F3F5` | `bg-muted` | 次级背景、弱按钮、代码块 |
 | `muted-foreground` | `#91959E` | `text-muted-foreground` | 辅助说明、弱信息 |
 | `accent` | `#F2F4FB` | `bg-accent text-accent-foreground` | 悬浮态、轻量高亮背景 |
+| `accent-hover` | 橙色 02 阶 | `bg-accent-hover` | 轻量高亮背景的 hover；例如已选表格行 |
 | `border` | `#DEE1E8` | `border-border` | 边框、分割线 |
 | `input` | `#C1C5CE` | `border-input` | 表单边框 |
 | `ring` | `#FF8000` | `ring-ring` | 键盘焦点和可访问性焦点环 |
@@ -144,7 +145,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 | 用途 | 值 | 变量/用法 |
 |------|-----|-----------|
-| 全局背景 | `--fx-neutrals-02` | `bg-background` |
+| 全局页面背景 | `--fx-page-background`（`#F5F6F7`） | `bg-background` |
 | 卡片背景 | `--fx-neutrals-01` | `bg-card` |
 | 弱背景 | `--fx-neutrals-03` | `bg-muted` |
 | 站点骨架最低存在感线 | `--fx-neutrals-02` | `border-border-chrome`；为需要几乎隐去的结构边界预留 |
@@ -395,12 +396,12 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 ## 中性色（Neutrals 01–20）
 
-**全站唯一中性灰轴**：变量名 `--fx-neutrals-{01~20}`，用 `color-mix(in oklch, white, neutral-dark N%)` 推导（`neutral-dark` 带品牌色相微量染色）。页面底/卡片/文字/边框，以及中性交互面（secondary / muted / ghost·outline 悬浮底）全部取自这里。
+**全站唯一中性灰轴**：变量名 `--fx-neutrals-{01~20}`，用 `color-mix(in oklch, white, neutral-dark N%)` 推导（`neutral-dark` 带品牌色相微量染色）。卡片、文字、边框，以及中性交互面（secondary / muted / ghost·outline 悬浮底）全部取自这里；全局页面画布单独使用 `--fx-page-background`，避免换页面底色时连带改变控件和边框。
 
 | 编号 | 混合比 | 常用场景 |
 |------|--------|----------|
 | 01 | white | 卡片、容器背景（`--card`）、反白文字、浅色图标 |
-| 02 | 2% | 页面底色（`--background`） |
+| 02 | 2% | 禁用控件底、低存在感结构线 |
 | 03 | 5% | 次级背景 muted / secondary 默认底、ghost·outline 悬浮底 |
 | 04 | 9% | secondary·muted hover |
 | 05 | 14% | secondary·muted active、分割线（`--border`） |

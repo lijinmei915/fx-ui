@@ -14,7 +14,7 @@ const docsSidebarSpacing = {
 };
 
 export function DocsSidebar({ isHidden, sections, activeHash, lang, onOpenSearch }: { isHidden: boolean; sections: SiteNavSection[]; activeHash: string; lang: Lang; onOpenSearch: () => void }) {
-  return <aside className={isHidden ? "hidden" : "hidden min-h-0 border-r border-border-faint bg-card lg:block"}>
+  return <aside data-slot="docs-sidebar" className={isHidden ? "hidden" : "hidden min-h-0 border-r border-border-faint bg-card lg:block"}>
     <div className={docsSidebarSpacing.shell}>
       <button type="button" onClick={onOpenSearch} className={`${docsSidebarSpacing.searchTrigger} flex w-full items-center gap-(--fx-control-gap) rounded-lg border border-input bg-card px-(--fx-control-px-md) text-left outline-none hover:bg-muted lg:hidden`}>
         <SearchIcon className="size-4 text-muted-foreground" />

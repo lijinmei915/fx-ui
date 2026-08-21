@@ -45,6 +45,7 @@ type SiteNavigationProps = {
   isFoundationArea: boolean;
   isComponentArea: boolean;
   isPageArea: boolean;
+  isBuilderArea: boolean;
   isGovernancePage: boolean;
 };
 
@@ -64,6 +65,7 @@ export function SiteNavigation({
   isFoundationArea,
   isComponentArea,
   isPageArea,
+  isBuilderArea,
   isGovernancePage,
 }: SiteNavigationProps) {
   return <>
@@ -89,6 +91,7 @@ export function SiteNavigation({
               (item.page === "tokens" && isFoundationArea) ||
               (item.page === "components" && isComponentArea) ||
               (item.page === "template-customer-list" && isPageArea) ||
+              (item.page === "page-builder" && isBuilderArea) ||
               (item.page === "governance-map" && isGovernancePage) ||
               (item.page === "theme" && page === "theme");
             const topNavClass = isActive

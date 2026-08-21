@@ -6,6 +6,12 @@ import { CardContent } from "@/components/ui/card"
 import { standardScenarioExamplesFromManifest, type ComponentPlaygroundsManifest } from "@/pages/docs/components/component-playground-manifest"
 import { finalizePageRegistry, type PageEntry } from "@/lib/page-registry"
 import { DatePickerPage, datePickerAnchors, datePickerDoDontRows, datePickerPropRows, datePickerSemanticDomRows } from "@/pages/docs/components/date-picker-page"
+import { ColorPickerPage, colorPickerAnchors } from "@/pages/docs/components/color-picker-page"
+import { IconPickerPage, iconPickerAnchors } from "@/pages/docs/components/icon-picker-page"
+import { TransferPage, transferAnchors } from "@/pages/docs/components/transfer-page"
+import { ConditionBuilderPage, conditionBuilderAnchors } from "@/pages/docs/components/condition-builder-page"
+import { PeoplePickerPage, peoplePickerAnchors } from "@/pages/docs/components/people-picker-page"
+import { ComboboxPage, comboboxAnchors } from "@/pages/docs/components/combobox-page"
 import { DateTimePickerPage, dateTimePickerAnchors, dateTimePickerDoDontRows, dateTimePickerPropRows, dateTimePickerSemanticDomRows } from "@/pages/docs/components/date-time-picker-page"
 import { TimePickerPage, timePickerAnchors, timePickerDoDontRows, timePickerPlaygroundConfig, timePickerPropRows, timePickerSemanticDomRows, timePickerImportCodeForPlayground } from "@/pages/docs/components/time-picker-page"
 import { selectPlaygroundConfig as manifestSelectPlaygroundConfig } from "@/pages/docs/components/select-playground"
@@ -14,6 +20,7 @@ import { CalendarPage, calendarAnchors, calendarDoDontRows, calendarPropRows, ca
 import { CollapsiblePage, collapsibleAnchors, collapsibleDoDontRows, collapsiblePropRows, collapsibleSemanticDomRows } from "@/pages/docs/components/collapsible-page"
 import { PopoverPage, popoverAnchors, popoverDoDontRows, popoverPropRows, popoverSemanticDomRows } from "@/pages/docs/components/popover-page"
 import { SeparatorPage, separatorAnchors, separatorDoDontRows, separatorPropRows, separatorSemanticDomRows } from "@/pages/docs/components/separator-page"
+import { SliderPage, sliderAnchors } from "@/pages/docs/components/slider-page"
 import { LinkPage, linkAnchors, linkDoDontRows, linkPlaygroundConfig, linkPropRows, linkSemanticDomRows } from "@/pages/docs/components/link-page"
 import { SidebarPage, sidebarAnchors, sidebarDoDontRows, sidebarPropRows, sidebarSemanticDomRows } from "@/pages/docs/components/sidebar-page"
 import { SpinnerPage, spinnerAnchors, spinnerDoDontRows, spinnerPropRows, spinnerSemanticDomRows } from "@/pages/docs/components/spinner-page"
@@ -32,12 +39,17 @@ import { FieldPage, fieldAnchors } from "@/pages/docs/components/field-page"
 import { LabelPage, labelAnchors } from "@/pages/docs/components/label-page"
 import { SelectPage as SelectDocPage, selectAnchors, selectDoDontRows, selectPropRows, selectSemanticDomRows } from "@/pages/docs/components/select-page"
 import { CheckboxPage as CheckboxDocPage, checkboxAnchors, checkboxDoDontRows, checkboxPropRows, checkboxSemanticDomRows } from "@/pages/docs/components/checkbox-page"
-import { SwitchPage as SwitchDocPage, switchAnchors, switchDoDontRows, switchPropRows, switchSemanticDomRows } from "@/pages/docs/components/switch-page"
+import { SwitchPage as SwitchDocPage, switchAnchors } from "@/pages/docs/components/switch-page"
 import { TextareaPage as TextareaDocPage, textareaAnchors, textareaDoDontRows, textareaPropRows, textareaSemanticDomRows } from "@/pages/docs/components/textarea-page"
+import { SignaturePage, signatureAnchors } from "@/pages/docs/components/signature-page"
+import { UploadPage, uploadAnchors } from "@/pages/docs/components/upload-page"
 import { CommandPage as CommandDocPage, commandAnchors, commandDoDontRows, commandPropRows, commandSemanticDomRows } from "@/pages/docs/components/command-page"
 import { CommandDemo } from "@/pages/docs/components/command-demo"
 import { DialogPage as DialogDocPage, dialogAnchors } from "@/pages/docs/components/dialog-page"
 import { AlertDialogPage as AlertDialogDocPage, alertDialogAnchors } from "@/pages/docs/components/alert-dialog-page"
+import { AlertPage, alertAnchors } from "@/pages/docs/components/alert-page"
+import { EmptyPage, emptyAnchors } from "@/pages/docs/components/empty-page"
+import { ScrollAreaPage, scrollAreaAnchors } from "@/pages/docs/components/scroll-area-page"
 import { SheetPage as SheetDocPage, sheetAnchors } from "@/pages/docs/components/sheet-page"
 import { SkeletonPage as SkeletonDocPage, skeletonAnchors } from "@/pages/docs/components/skeleton-page"
 import { PaginationPage as PaginationDocPage, paginationAnchors } from "@/pages/docs/components/pagination-page"
@@ -64,6 +76,8 @@ import { NavMenuPage, navMenuAnchors, navMenuDoDontRows, navMenuPropRows, navMen
 import { IconPage, iconAnchors } from "@/pages/docs/foundations/icon-page"
 import { AgentSurfacePage, agentSurfaceAnchors } from "@/pages/docs/components/agent-surface-page"
 import { CustomerListTemplate } from "@/pages/templates/customer-list-template"
+import { CustomerListCalibrationPage } from "@/pages/docs/governance/customer-list-calibration-page"
+import { PageBuilderPage } from "@/pages/docs/governance/page-builder-page"
 import { EditFormBlockPage, editFormBlockAnchors } from "@/pages/templates/edit-form-block-page"
 import { DetailPageBlockPage, detailPageBlockAnchors } from "@/pages/templates/detail-page-block-page"
 import { RadioGroupPage, radioGroupAnchors } from "@/pages/docs/components/radio-group-page"
@@ -111,13 +125,21 @@ export function createPageRegistry(
     field: { anchors: fieldAnchors, render: (a, l) => <FieldPage actions={a} lang={l} scenarioExamples={standardScenarioExamplesFromManifest(componentPlaygroundsManifest, "field")} autoScenarioSlugs={componentPlaygroundsManifest.autoScenarioComponents ?? []} /> },
     label: { anchors: labelAnchors, render: (a, l) => <LabelPage actions={a} lang={l} scenarioExamples={standardScenarioExamplesFromManifest(componentPlaygroundsManifest, "label")} autoScenarioSlugs={componentPlaygroundsManifest.autoScenarioComponents ?? []} /> },
     select: { anchors: selectAnchors, render: (a, l) => <SelectDocPage actions={a} lang={l} playground={<ComponentPlayground config={manifestSelectPlaygroundConfig} lang={l} />} propRows={selectPropRows} semanticDomRows={selectSemanticDomRows} doDontRows={selectDoDontRows} /> },
+    combobox: { anchors: comboboxAnchors, render: (a, l) => <ComboboxPage actions={a} lang={l} /> },
     "time-picker": { anchors: timePickerAnchors, render: (a, l) => <TimePickerPage actions={a} lang={l} playgroundConfig={timePickerPlaygroundConfig} importCode={timePickerImportCodeForPlayground} propRows={timePickerPropRows} semanticDomRows={timePickerSemanticDomRows} doDontRows={timePickerDoDontRows} /> },
     "date-picker": { anchors: datePickerAnchors, render: (a, l) => <DatePickerPage actions={a} lang={l} propRows={datePickerPropRows} semanticDomRows={datePickerSemanticDomRows} doDontRows={datePickerDoDontRows} /> },
     "date-time-picker": { anchors: dateTimePickerAnchors, render: (a, l) => <DateTimePickerPage actions={a} lang={l} propRows={dateTimePickerPropRows} semanticDomRows={dateTimePickerSemanticDomRows} doDontRows={dateTimePickerDoDontRows} /> },
+    "color-picker": { anchors: colorPickerAnchors, render: (a, l) => <ColorPickerPage actions={a} lang={l} /> },
+    "icon-picker": { anchors: iconPickerAnchors, render: (a, l) => <IconPickerPage actions={a} lang={l} /> },
+    transfer: { anchors: transferAnchors, render: (a, l) => <TransferPage actions={a} lang={l} /> },
+    "condition-builder": { anchors: conditionBuilderAnchors, render: (a, l) => <ConditionBuilderPage actions={a} lang={l} /> },
+    "people-picker": { anchors: peoplePickerAnchors, render: (a, l) => <PeoplePickerPage actions={a} lang={l} /> },
     checkbox: { anchors: checkboxAnchors, render: (a, l) => <CheckboxDocPage actions={a} lang={l} scenarioExamples={standardScenarioExamplesFromManifest(componentPlaygroundsManifest, "checkbox")} propRows={checkboxPropRows} semanticDomRows={checkboxSemanticDomRows} doDontRows={checkboxDoDontRows} /> },
-    "radio-group": { anchors: radioGroupAnchors, render: (a, l) => <RadioGroupPage actions={a} lang={l} autoScenarioSlugs={componentPlaygroundsManifest.autoScenarioComponents ?? []} /> },
-    switch: { anchors: switchAnchors, render: (a, l) => <SwitchDocPage actions={a} lang={l} scenarioExamples={standardScenarioExamplesFromManifest(componentPlaygroundsManifest, "switch")} propRows={switchPropRows} semanticDomRows={switchSemanticDomRows} doDontRows={switchDoDontRows} /> },
+    "radio-group": { anchors: radioGroupAnchors, render: (a, l) => <RadioGroupPage actions={a} lang={l} /> },
+    switch: { anchors: switchAnchors, render: (a, l) => <SwitchDocPage actions={a} lang={l} /> },
     textarea: { anchors: textareaAnchors, render: (a, l) => <TextareaDocPage actions={a} lang={l} scenarioExamples={standardScenarioExamplesFromManifest(componentPlaygroundsManifest, "textarea")} propRows={textareaPropRows} semanticDomRows={textareaSemanticDomRows} doDontRows={textareaDoDontRows} /> },
+    signature: { anchors: signatureAnchors, render: (a, l) => <SignaturePage actions={a} lang={l} /> },
+    upload: { anchors: uploadAnchors, render: (a, l) => <UploadPage actions={a} lang={l} /> },
     table: { anchors: tableAnchors, render: (a, l) => <TableDocPage actions={a} lang={l} playground={<ComponentPlayground config={tablePlaygroundConfig} lang={l} />} propRows={tablePropRows} semanticDomRows={tableSemanticDomRows} doDontRows={tableDoDontRows} /> },
     card: { anchors: cardAnchors, render: (a, l) => <CardDocPage actions={a} lang={l} propRows={cardPropRows} semanticDomRows={cardSemanticDomRows} doDontRows={cardDoDontRows} /> },
     badge: { anchors: badgeAnchors, render: (a, l) => <BadgeDocPage actions={a} lang={l} propRows={badgePropRows} semanticDomRows={badgeSemanticDomRows} doDontRows={badgeDoDontRows} /> },
@@ -125,6 +147,9 @@ export function createPageRegistry(
     tooltip: { anchors: tooltipAnchors, render: (a, l) => <TooltipDocPage actions={a} lang={l} autoScenarioSlugs={componentPlaygroundsManifest.autoScenarioComponents ?? []} /> },
     dialog: { anchors: dialogAnchors, render: (a, l) => <DialogDocPage actions={a} lang={l} autoScenarioSlugs={componentPlaygroundsManifest.autoScenarioComponents ?? []} /> },
     "alert-dialog": { anchors: alertDialogAnchors, render: (a, l) => <AlertDialogDocPage actions={a} lang={l} autoScenarioSlugs={componentPlaygroundsManifest.autoScenarioComponents ?? []} /> },
+    alert: { anchors: alertAnchors, render: (a, l) => <AlertPage actions={a} lang={l} /> },
+    empty: { anchors: emptyAnchors, render: (a, l) => <EmptyPage actions={a} lang={l} /> },
+    "scroll-area": { anchors: scrollAreaAnchors, render: (a, l) => <ScrollAreaPage actions={a} lang={l} /> },
     sheet: { anchors: sheetAnchors, render: (a, l) => <SheetDocPage actions={a} lang={l} autoScenarioSlugs={componentPlaygroundsManifest.autoScenarioComponents ?? []} /> },
     skeleton: { anchors: skeletonAnchors, render: (a, l) => <SkeletonDocPage actions={a} lang={l} autoScenarioSlugs={componentPlaygroundsManifest.autoScenarioComponents ?? []} /> },
     avatar: { anchors: avatarAnchors, render: (a, l) => <AvatarDocPage actions={a} lang={l} autoScenarioSlugs={componentPlaygroundsManifest.autoScenarioComponents ?? []} /> },
@@ -137,6 +162,7 @@ export function createPageRegistry(
     command: { anchors: commandAnchors, render: (a, l) => <CommandDocPage actions={a} lang={l} overview={<WebsiteCardContainer><CardContent className="flex items-center gap-3 p-6"><CommandDemo /></CardContent></WebsiteCardContainer>} scenarioExamples={standardScenarioExamplesFromManifest(componentPlaygroundsManifest, "command")} renderScenarioPreview={() => <CommandDemo />} propRows={commandPropRows} semanticDomRows={commandSemanticDomRows} doDontRows={commandDoDontRows} autoScenarioSlugs={componentPlaygroundsManifest.autoScenarioComponents ?? []} /> },
     popover: { anchors: popoverAnchors, render: (a, l) => <PopoverPage actions={a} lang={l} scenarioExamples={standardScenarioExamplesFromManifest(componentPlaygroundsManifest, "popover")} propRows={popoverPropRows} semanticDomRows={popoverSemanticDomRows} doDontRows={popoverDoDontRows} autoScenarioSlugs={componentPlaygroundsManifest.autoScenarioComponents ?? []} /> },
     separator: { anchors: separatorAnchors, render: (a, l) => <SeparatorPage actions={a} lang={l} propRows={separatorPropRows} semanticDomRows={separatorSemanticDomRows} doDontRows={separatorDoDontRows} /> },
+    slider: { anchors: sliderAnchors, render: (a, l) => <SliderPage actions={a} lang={l} /> },
     link: { anchors: linkAnchors, render: (a, l) => <LinkPage actions={a} lang={l} playgroundConfig={linkPlaygroundConfig} propRows={linkPropRows} semanticDomRows={linkSemanticDomRows} doDontRows={linkDoDontRows} /> },
     sidebar: { anchors: sidebarAnchors, render: (a, l) => <SidebarPage actions={a} lang={l} scenarioExamples={standardScenarioExamplesFromManifest(componentPlaygroundsManifest, "sidebar")} propRows={sidebarPropRows} semanticDomRows={sidebarSemanticDomRows} doDontRows={sidebarDoDontRows} autoScenarioSlugs={componentPlaygroundsManifest.autoScenarioComponents ?? []} /> },
     spinner: { anchors: spinnerAnchors, render: (a, l) => <SpinnerPage actions={a} lang={l} scenarioExamples={standardScenarioExamplesFromManifest(componentPlaygroundsManifest, "spinner")} propRows={spinnerPropRows} semanticDomRows={spinnerSemanticDomRows} doDontRows={spinnerDoDontRows} autoScenarioSlugs={componentPlaygroundsManifest.autoScenarioComponents ?? []} /> },
@@ -148,6 +174,8 @@ export function createPageRegistry(
     chart: { anchors: [], render: (a, l) => <Suspense fallback={<div className="min-h-24" />}><LazyChartPage actions={a} lang={l} /></Suspense> },
     "list-page": { anchors: [], fullBleed: true, render: (a, l) => <CustomerListTemplate actions={a} lang={l} /> },
     "template-customer-list": { anchors: [], fullBleed: true, render: (a, l) => <CustomerListTemplate actions={a} lang={l} /> },
+    "customer-list-calibration": { anchors: [], render: (a, l) => <CustomerListCalibrationPage actions={a} lang={l} /> },
+    "page-builder": { anchors: [], fullBleed: true, workspace: true, render: () => <PageBuilderPage /> },
     "template-edit-form": { anchors: editFormBlockAnchors, render: (a, l) => <EditFormBlockPage actions={a} lang={l} /> },
     "template-detail": { anchors: detailPageBlockAnchors, render: (a, l) => <DetailPageBlockPage actions={a} lang={l} /> },
     "customer-briefing": { anchors: [], render: () => <CustomerBriefingPage data={mockCustomerBriefingData} /> },

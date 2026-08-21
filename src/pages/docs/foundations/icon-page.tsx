@@ -1,14 +1,12 @@
-import { useMemo, useState, type ComponentType, type ReactNode, type SVGProps } from "react"
+import { useState, type ComponentType, type ReactNode, type SVGProps } from "react"
 
 import { Button } from "@/components/ui/button"
-import { CommandPalette, type CommandItem } from "@/components/ui/command"
-import { ComponentPlayground } from "@/components/fx/component-playground"
+import { ComponentPlayground, PlaygroundSegmentedControl } from "@/components/fx/component-playground"
 import { DocDoDont } from "@/components/fx/doc-do-dont"
 import { DocSurfaceCard, DocSurfaceTableCard } from "@/components/fx/doc-surface"
 import { PageLead } from "@/components/fx/page-lead"
 import { SectionLead } from "@/components/fx/section-lead"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { componentPlaygroundPropsFromManifest, type ComponentPlaygroundsManifest } from "@/pages/docs/components/component-playground-manifest"
 import { docsSpacing } from "@/lib/docs-spacing"
 import * as Icons from "@/lib/icons"
@@ -18,8 +16,7 @@ import iconsManifestRaw from "../../../../docs/data/icons.manifest.json?raw"
 export type IconPageLang = "zh" | "en"
 
 export const iconAnchors = [
-  { label: "图标库", labelEn: "Icon Library", href: "#icon-library" },
-  { label: "预览", labelEn: "Preview", href: "#icon-playground" },
+  { label: "调试台", labelEn: "Playground", href: "#icon-playground" },
   { label: "组合方式", labelEn: "Composition", href: "#icon-composition" },
   { label: "API", href: "#icon-props" },
   { label: "语义 DOM", labelEn: "Semantic DOM", href: "#icon-semantic-dom" },
@@ -93,23 +90,31 @@ function genIconPlaygroundCode(c: Record<string, string>, selectedIcon: IconCata
 
 export function IconPage({ actions, lang }: { actions: ReactNode; lang: IconPageLang }) {
   const [selectedIconName, setSelectedIconName] = useState("HomeIcon")
-  const [iconPickerOpen, setIconPickerOpen] = useState(false)
   const selectedIcon = iconCatalogByName.get(selectedIconName) ?? iconCatalog[0]
   const SelectedIcon = iconComponent(selectedIcon.name)
   const selectedIconVariants = iconVariantNames(selectedIcon)
-  const iconItems = useMemo<CommandItem[]>(() => iconCatalog.map((icon) => ({
-    id: icon.name,
-    label: icon.name,
-    meta: icon.style === "fill" ? (lang === "en" ? "Filled" : "面型") : (lang === "en" ? "Line" : "线性"),
-    group: icon.category,
-    keywords: icon.keywords.join(" "),
-    onSelect: () => setSelectedIconName(icon.name),
-  })), [lang])
   const iconPlaygroundConfig = {
     storySource: "docs/data/component-playgrounds.manifest.json#components.icon",
     props: componentPlaygroundPropsFromManifest(componentPlaygroundsManifest.components.icon),
     initial: componentPlaygroundsManifest.components.icon.initial,
     guidanceKey: componentPlaygroundsManifest.components.icon.guidanceKey,
+    leadingControls: [
+      {
+        key: "style",
+        zh: "类型",
+        en: "Style",
+        control: selectedIconVariants.length > 1 ? (
+          <PlaygroundSegmentedControl
+            value={selectedIcon.name}
+            onChange={setSelectedIconName}
+            options={selectedIconVariants.map((name) => ({
+              value: name,
+              label: name.endsWith("FilledIcon") ? (lang === "en" ? "Filled" : "面型") : (lang === "en" ? "Line" : "线性"),
+            }))}
+          />
+        ) : null,
+      },
+    ],
     renderOne: (values: Record<string, string>) => renderIconPlayground(values, selectedIcon),
     genCode: (values: Record<string, string>) => genIconPlaygroundCode(values, selectedIcon),
   }
@@ -138,49 +143,12 @@ export function IconPage({ actions, lang }: { actions: ReactNode; lang: IconPage
         
       </section>
 
-      <section id="icon-browser" className={docsSpacing.sectionStack}>
-        <SectionLead
-          title={lang === "en" ? "Icon browser" : "图标浏览"}
-          description={lang === "en" ? "Search registered exports. The selected export drives the preview and generated code." : "搜索已登记的图标导出；所选导出会驱动下方预览与生成代码。"}
-        />
-        <Button
-          variant="outline"
-          data-slot="icon-browser-trigger"
-          data-selected-icon={selectedIcon.name}
-          onClick={() => setIconPickerOpen(true)}
-        >
-          <SelectedIcon data-icon="inline-start" />
-          {selectedIcon.name}
-        </Button>
-        <CommandPalette
-          open={iconPickerOpen}
-          onOpenChange={setIconPickerOpen}
-          items={iconItems}
-          placeholder={lang === "en" ? "Search registered icons" : "搜索已登记图标"}
-          emptyText={lang === "en" ? "No matching icon" : "没有匹配的图标"}
-        />
-        {selectedIconVariants.length > 1 ? (
-          <ToggleGroup
-            aria-label={lang === "en" ? "Available icon exports" : "可用图标导出"}
-            size="sm"
-            variant="outline"
-            value={[selectedIcon.name]}
-          >
-            {selectedIconVariants.map((name) => (
-              <ToggleGroupItem key={name} value={name} onClick={() => setSelectedIconName(name)}>
-                {name.endsWith("FilledIcon") ? (lang === "en" ? "Filled" : "面型") : (lang === "en" ? "Line" : "线性")}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
-        ) : null}
-      </section>
-
       <section id="icon-playground" className={docsSpacing.sectionStack}>
         <SectionLead
-          title={lang === "en" ? "Preview" : "预览"}
+          title={lang === "en" ? "Playground" : "调试台"}
           description={lang === "en" ?
-          "Only actual icon rendering inputs are adjustable here. Export choice stays in the icon browser." :
-          "这里只调整真实的图标渲染输入；线性/面型导出选择留在图标浏览中。"} />
+          "Tune the live icon properties. The preview and generated code update together." :
+          "实时调图标属性，预览随之变化，写法可一键复制。"} />
         <ComponentPlayground config={iconPlaygroundConfig} lang={lang} />
       </section>
 

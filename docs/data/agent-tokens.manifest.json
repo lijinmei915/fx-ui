@@ -89,10 +89,7 @@
       "category": "surface-text",
       "usage": "页面底色",
       "resolvesTo": [
-        "--fx-neutrals-02",
-        "--fx-neutral-dark",
-        "--fx-brand-vivid",
-        "--fx-brand"
+        "--fx-page-background"
       ],
       "consumers": [
         "Button",
@@ -425,6 +422,17 @@
       "usage": "悬浮态、轻量高亮背景",
       "resolvesTo": [
         "--fx-orange-01",
+        "--fx-seed-orange"
+      ],
+      "consumers": []
+    },
+    {
+      "id": "semantic.accent-hover",
+      "cssVar": "--accent-hover",
+      "category": "shadcn-semantic",
+      "usage": "",
+      "resolvesTo": [
+        "--fx-orange-02",
         "--fx-seed-orange"
       ],
       "consumers": []
@@ -1782,6 +1790,12 @@
         "cssVar": "--accent",
         "category": "surface-text",
         "usage": "悬浮态、轻量高亮背景"
+      },
+      {
+        "id": "semantic.accent-hover",
+        "cssVar": "--accent-hover",
+        "category": "shadcn-semantic",
+        "usage": ""
       },
       {
         "id": "semantic.accent-foreground",

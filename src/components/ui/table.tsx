@@ -28,7 +28,7 @@ const tableRowVariants = cva(
   {
     variants: {
       variant: {
-        default: "hover:bg-muted-hover has-aria-expanded:bg-muted-hover data-[state=selected]:bg-muted-active",
+        default: "hover:bg-muted-hover has-aria-expanded:bg-muted-hover data-[state=selected]:bg-accent data-[state=selected]:hover:bg-accent-hover",
         static: "",
       },
     },

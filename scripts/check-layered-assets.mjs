@@ -32,7 +32,7 @@ for (const block of manifest.blocks ?? []) {
     if (!fs.existsSync(contractPath)) errors.push(`missing data contract: ${block.dataContractSource}`)
     else if (anchor) {
       const contract = JSON.parse(fs.readFileSync(contractPath, "utf8"))
-      const collection = contract.recipes ?? contract.archetypes ?? []
+      const collection = contract.recipes ?? contract.archetypes ?? contract.builderModes ?? []
       if (!collection.some((entry) => entry.id === anchor)) errors.push(`missing data contract anchor: ${block.dataContractSource}`)
     }
   }

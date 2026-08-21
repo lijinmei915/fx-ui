@@ -9,9 +9,10 @@ theme: theme/fx-theme.css
 tokens:
   - foreground
   - card
+  - accent
+  - accent-hover
   - muted
   - muted-hover
-  - muted-active
   - muted-foreground
   - border
   - border-subtle
@@ -84,7 +85,7 @@ import { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableC
 | `Table.density` | `"compact" \| "default" \| "comfortable"` | `"default"` | 28 / 36 / 42px 行高尺寸轴 |
 | `Table.maxHeight` | `number \| string` | — | 纵向滚动最大高度，与 `TableHeader sticky` 组合 |
 | `TableHeader.sticky` | `boolean` | `false` | 在 Table 滚动容器内吸顶 |
-| `TableRow data-state` | `"selected"` | — | 选中行语义与背景反馈 |
+| `TableRow data-state` | `"selected"` | — | 选中行使用主题浅色背景，hover 时加深一级 |
 | `TableRow.variant` | `"default" \| "static"` | `"default"` | 数据行有扫读 hover；Skeleton/空态占位行使用 static |
 | `TableHead.align` | `"left" \| "center" \| "right"` | `"left"` | 表头内容对齐 |
 | `TableHead.sortable / sorted / onSort` | `boolean / "asc" \| "desc" \| false / () => void` | — | 可键盘操作的排序入口，并同步 `aria-sort` |
@@ -129,7 +130,8 @@ Loading 使用 `Table + Skeleton`，Empty 使用跨列空态，分页使用 `Pag
 | `--card` | 表头、固定列和 bordered 表面的背景 |
 | `--muted` | 弱化背景、hover 背景或低强调区域 |
 | `--muted-hover` | 行 hover 与筛选入口 hover |
-| `--muted-active` | 选中行背景 |
+| `--accent` | 选中行的主题浅色背景 |
+| `--accent-hover` | 选中行 hover 的主题浅色加深背景 |
 | `--muted-foreground` | 辅助说明、placeholder 或弱化文字 |
 | `--border` | 边框、分隔线和描边结构 |
 | `--border-subtle` | 行分隔和 bordered 表面弱边框 |
@@ -153,7 +155,7 @@ Loading 使用 `Table + Skeleton`，Empty 使用跨列空态，分页使用 `Pag
 - 表格结构使用 TableHeader/TableBody/TableRow/TableCell，不要用 div grid 伪造表格。
 - `variant` 只选择表面，`density` 只选择行高；业务能力使用现有子组件或成形 Playground 场景。
 - 排序入口必须通过 `sortable + sorted + onSort` 保持图标、状态和 `aria-sort` 一致。
-- loading、empty、分页和批量选择是组合，不给 Table 增加布尔业务 API。
+- loading、empty、分页和批量选择是组合，不给 Table 增加布尔业务 API；列表行选择在 Table 调试台的“选择”能力中验证表头全选、半选、行高亮和批量操作。
 - 表头 hover 由 `TableHeader` 内部处理；Skeleton/empty 占位行用 `TableRow variant="static"`，不要在调用处覆盖 hover 背景。
 - 使用 Table 前必须以 src/components/ui/table.tsx 为真实 API。
 - 不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。

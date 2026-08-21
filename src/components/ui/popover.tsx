@@ -20,6 +20,7 @@ const popoverContentVariants = cva(
         sm: "w-56",
         md: "w-72",
         lg: "w-96",
+        picker: "w-[258px] gap-0 p-0",
       },
     },
     defaultVariants: {

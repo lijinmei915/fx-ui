@@ -20,6 +20,8 @@ export type Column<T> = {
   menuActions?: { label: string; icon?: ReactNode; onClick?: () => void }[] // ⋮ 列菜单：锁定/筛选等
 }
 
+export type DataTableDensity = "compact" | "default" | "comfortable"
+
 const dataTypeDefaults = {
   number: { align: "right", className: "tabular-nums" },
   currency: { align: "right", className: "tabular-nums" },
@@ -39,6 +41,7 @@ function DataTable<T>({
   onSelectedChange,
   rowActions,
   rowActionsHeader = "操作",
+  density = "default",
 }: {
   columns: Column<T>[]
   data: T[]
@@ -48,6 +51,8 @@ function DataTable<T>({
   onSelectedChange?: (next: Set<string | number>) => void
   rowActions?: (row: T) => ReactNode
   rowActionsHeader?: ReactNode
+  /** Delegates to the existing shadcn Table density API. */
+  density?: DataTableDensity
 }) {
   const [sort, setSort] = useState<{ key: string; dir: "asc" | "desc" } | null>(null)
   const toggleSort = (key: string) =>
@@ -72,7 +77,7 @@ function DataTable<T>({
     onSelectedChange?.(next)
   }
   return (
-    <Table>
+    <Table density={density}>
       <TableHeader sticky>
         <TableRow>
           {selectable && (

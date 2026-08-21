@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/governance-pages-manifest",
-  "updatedAt": "2026-07-29",
+  "updatedAt": "2026-08-21",
   "truthSource": "docs/data/governance-pages.manifest.json",
   "humanDoc": "docs/DOC_SITE_DESIGN.md",
   "note": "治理页里的规则型卡槽机器事实表。文档规范和检查命令页面优先从这里读表格、卡片和清单，避免把治理文案写死在 src/App.tsx。",
@@ -120,6 +120,11 @@
       {
         "title": "页面 Build Kit 检查",
         "script": "scripts/check-page-build-kit.mjs",
+        "desc": ""
+      },
+      {
+        "title": "页面搭建器 schema 检查",
+        "script": "scripts/check-page-builder.mjs",
         "desc": ""
       },
       {

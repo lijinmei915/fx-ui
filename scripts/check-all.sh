@@ -33,6 +33,7 @@ run_check "Agent 示例来源检查"      node scripts/check-agent-examples.mjs
 run_check "Agent 场景配方检查"      node scripts/check-agent-recipes.mjs
 run_check "Agent 快速上下文检查"    node scripts/build-agent-context.mjs --check
 run_check "页面 Build Kit 检查"     node scripts/check-page-build-kit.mjs
+run_check "页面搭建器 schema 检查" node scripts/check-page-builder.mjs
 run_check "分层资产契约检查"      node scripts/check-layered-assets.mjs
 run_check "浮层阴影 token 检查"    node scripts/check-shadow-tokens.mjs
 run_check "网站卡片容器检查"      node scripts/check-website-card-contract.mjs

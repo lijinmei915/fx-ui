@@ -57,6 +57,19 @@
       "checkCommand": "npm run check:tokens"
     },
     {
+      "id": "page-builder",
+      "path": "docs/data/page-builder.manifest.json",
+      "format": "fx-ui/page-builder",
+      "purpose": "登记受控页面搭建器可用的真实页面模板、Block 槽位、属性和预设，禁止运行时任意 JSX/CSS。",
+      "ownerRole": "page-builder-governance",
+      "consumedBy": [
+        "src/pages/docs/governance/page-builder-page.tsx",
+        "src/components/recipes/page-builder.tsx",
+        "scripts/check-page-builder.mjs"
+      ],
+      "checkCommand": "npm run check:page-builder"
+    },
+    {
       "id": "doc-site-manifest",
       "path": "docs/data/doc-site.manifest.json",
       "format": "fx-ui/doc-site-manifest",

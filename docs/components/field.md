@@ -63,7 +63,7 @@ import { Input } from "@/components/ui/input"
 
 ## 组件总览 {#overview}
 
-- 字段组：`FieldGroup`
+- 字段组：`FieldGroup`，支持 `orientation="vertical" | "horizontal"`
 - 单个字段：`Field`
 - 字段标签：`FieldLabel` / `FieldTitle`
 - 字段说明：`FieldDescription`
@@ -131,7 +131,7 @@ Field 由多个 open-code 子组件组成。
 
 | 组件 | 说明 | 关键属性 |
 | --- | --- | --- |
-| `FieldGroup` | 字段列表容器 | `className` |
+| `FieldGroup` | 字段列表容器 | `orientation="vertical" | "horizontal"`、`className` |
 | `Field` | 单个字段容器 | `orientation`、`data-invalid`、`data-disabled` |
 | `FieldLabel` | 字段标签 | `htmlFor` |
 | `FieldDescription` | 辅助说明 | 原生 `p` 属性 |

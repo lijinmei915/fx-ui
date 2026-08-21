@@ -31,6 +31,12 @@ export type ComponentPlaygroundOption = {
   hiddenWhen?: (v: ComponentPlaygroundValues) => boolean
 }
 export type ComponentPlaygroundControlGroup = "content" | "appearance" | "behavior" | "structure" | "semantics"
+export type ComponentPlaygroundLeadingControl = {
+  key: string
+  zh: string
+  en: string
+  control: ReactNode
+}
 export type ComponentPlaygroundPropDef =
   | { key: string; zh: string; en: string; propName: string; type: "segment"; options: ComponentPlaygroundOption[]; hasAll?: boolean; owner?: string | string[]; group?: "props" | "tokens"; controlGroup?: ComponentPlaygroundControlGroup; defaultVisible?: boolean; defaultOrder?: number; disabledWhen?: (v: ComponentPlaygroundValues) => boolean; hiddenWhen?: (v: ComponentPlaygroundValues) => boolean }
   | { key: string; zh: string; en: string; propName: string; type: "text"; bilingual?: boolean; owner?: string | string[]; group?: "props" | "tokens"; controlGroup?: ComponentPlaygroundControlGroup; defaultVisible?: boolean; defaultOrder?: number; disabledWhen?: (v: ComponentPlaygroundValues) => boolean; hiddenWhen?: (v: ComponentPlaygroundValues) => boolean }
@@ -73,6 +79,7 @@ export type ComponentPlaygroundWorkbenchConfig = {
 export type ComponentPlaygroundConfig = {
   props: ComponentPlaygroundPropDef[]
   initial: ComponentPlaygroundValues
+  leadingControls?: ComponentPlaygroundLeadingControl[]
   stories?: ComponentPlaygroundStory[]
   storyPresentation?: "presets" | "examples"
   storySource?: string
@@ -156,7 +163,7 @@ function PgSeg({ active, disabled, isAll, label, title, onClick }: { active: boo
   )
 }
 
-function PgSegmented({ value, onChange, options, allLabel, disabled }: { value: string; onChange: (v: string) => void; options: { value: string; label: string; title?: string }[]; allLabel?: string; disabled?: boolean }) {
+export function PlaygroundSegmentedControl({ value, onChange, options, allLabel, disabled }: { value: string; onChange: (v: string) => void; options: { value: string; label: string; title?: string }[]; allLabel?: string; disabled?: boolean }) {
   return (
     <div className="flex max-w-full flex-wrap items-center gap-0.5 self-start rounded-md border border-border-subtle bg-muted p-0.5 data-[disabled=true]:opacity-70" data-disabled={disabled ? "true" : undefined}>
       {allLabel ? (
@@ -194,8 +201,14 @@ function PlaygroundStateAssignmentRow({ assignment, active, lang, onPreview }: {
   )
 }
 
-export function ComponentPlayground({ config, lang }: { config: ComponentPlaygroundConfig; lang: ComponentPlaygroundLang }) {
-  const [v, setV] = useState<ComponentPlaygroundValues>(config.initial)
+export function ComponentPlayground({ config, lang, value, onValueChange }: { config: ComponentPlaygroundConfig; lang: ComponentPlaygroundLang; value?: ComponentPlaygroundValues; onValueChange?: (value: ComponentPlaygroundValues) => void }) {
+  const [internalValue, setInternalValue] = useState<ComponentPlaygroundValues>(config.initial)
+  const v = value ?? internalValue
+  const setV = (next: ComponentPlaygroundValues | ((current: ComponentPlaygroundValues) => ComponentPlaygroundValues)) => {
+    const resolved = typeof next === "function" ? next(v) : next
+    if (value === undefined) setInternalValue(resolved)
+    onValueChange?.(resolved)
+  }
   const [tab, setTab] = useState("preview")
   const [copied, setCopied] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -266,8 +279,8 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
   const isMatrix = matrixStories.length > 1
   const activeTab = isMatrix ? "preview" : tab
   const tabs: { value: string; icon: ReactNode; label: string }[] = [
-    { value: "preview", icon: <EyeIcon className="size-4" />, label: lang === "en" ? "Preview" : "预览" },
-    ...(isMatrix ? [] : [{ value: "code", icon: <Code2Icon className="size-4" />, label: lang === "en" ? "Code" : "代码" }]),
+    { value: "preview", icon: <EyeIcon className="size-[1.125rem]" />, label: lang === "en" ? "Preview" : "预览" },
+    ...(isMatrix ? [] : [{ value: "code", icon: <Code2Icon className="size-[1.125rem]" />, label: lang === "en" ? "Code" : "代码" }]),
   ]
   const code = config.genCode(matrixStories[0]?.values ?? v, lang)
   const validations = config.workbench?.validate(v) ?? {}
@@ -345,10 +358,11 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
   return (
     <WebsiteCardContainer
       padding="none"
+      size="lg"
       data-slot="component-playground"
       data-story-source={config.storySource}
       data-story-count={config.stories?.length || undefined}
-      className="[--card-spacing:var(--fx-panel-padding)] [--playground-gap:var(--fx-panel-gap)]"
+      className="[--playground-gap:var(--fx-panel-gap)]"
     >
       <div className="overflow-x-auto border-b border-border-subtle bg-card">
         <div className={workbenchActive ? "grid min-w-[1120px] grid-cols-[220px_minmax(360px,1fr)_minmax(320px,0.8fr)] gap-(--playground-gap) p-(--card-spacing)" : "grid grid-cols-[repeat(2,minmax(min-content,1fr))] gap-(--playground-gap) p-(--card-spacing) max-[900px]:grid-cols-1"}>
@@ -379,7 +393,7 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
             {showStories ? (
               <div data-slot="component-playground-stories" className="flex flex-col gap-(--fx-control-gap-tight)">
                 <PlaygroundPropLabel zh={lang === "en" ? (storyPresentation === "examples" ? "Examples" : "Presets") : (storyPresentation === "examples" ? "结构示例" : "场景预设")} />
-                <PgSegmented
+                <PlaygroundSegmentedControl
                   value={activeStoryId ?? ""}
                   onChange={selectStory}
                   options={config.stories!.map((story) => ({ value: story.id, label: lang === "en" ? (story.titleEn ?? story.title ?? story.id) : (story.title ?? story.id) }))}
@@ -387,6 +401,12 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
               </div>
             ) : null}
             <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Interactive props" : "实时属性"}</PlaygroundSectionTitle>
+            {config.leadingControls?.map((item) => (
+              <div key={item.key} className="flex flex-col gap-(--fx-control-gap-tight)" data-slot="component-playground-leading-control">
+                <PlaygroundPropLabel zh={lang === "en" ? item.en : item.zh} />
+                <div className="flex flex-wrap items-center gap-(--fx-control-gap-tight)">{item.control}</div>
+              </div>
+            ))}
             {workbenchActive && activeNode ? (
               <div className="flex items-center gap-(--fx-control-gap-tight) text-sm text-muted-foreground">
                 <span className="font-medium text-foreground">{lang === "en" ? activeNode.en : activeNode.zh}</span>
@@ -416,7 +436,7 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
                     className="w-full"
                   />
                 ) : (
-                  <PgSegmented
+                  <PlaygroundSegmentedControl
                     value={v[p.key]}
                     disabled={p.disabledWhen?.(v) ?? false}
                     onChange={(val) => set(p.key, val)}
@@ -478,14 +498,14 @@ export function ComponentPlayground({ config, lang }: { config: ComponentPlaygro
           </div>
         </div>
       </div>
-      <div className="flex h-[calc(var(--fx-control-lg-height)+12px)] items-center justify-between bg-background px-(--card-spacing)">
+      <div className="flex h-[calc(var(--fx-control-lg-height)+12px)] items-center justify-between bg-[var(--fx-neutrals-02)] px-(--card-spacing)">
         <div className="flex h-full items-center gap-1">
           {tabs.map(({ value: t, icon, label }) => (
             <button
               key={t}
               type="button"
               onClick={() => setTab(t)}
-              className={`flex h-full items-center gap-(--fx-control-gap-tight) border-b-2 px-(--fx-control-px-xs) text-sm font-medium transition-colors ${
+              className={`flex h-full items-center gap-2 border-b-2 px-(--fx-control-px-md) text-sm font-medium transition-colors ${
                 activeTab === t ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"
               }`}
             >

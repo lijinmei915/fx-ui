@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-07-29
+last_verified: 2026-08-21
 teaches: "fx-ui 重要的技术/协作决策记录：选了什么、放弃了什么、为什么"
 use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论"
 ---
@@ -306,6 +306,16 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **原因**：用户要的是"调已生成页的可变部分"，不是"搭任意页"。主流 SaaS 给终端用户的几乎都是前者（如 CRM 齿轮的列设置 + 保存的视图）。我们 block 本就 props 驱动，把变体 props 提升成 `config` + 一个设置面板即可，**几天级**，并能接回生成器（生成即自带可调）。
 - **影响（落地时）**：生成器模板改为吐 config-driven 页面 + 内置设置面板；新增一个"列表页设置面板" block。
 - **相关文件**：`scripts/gen-list-page.mjs`、`src/components/recipes/*`、`docs/PAGES.md`
+
+### DEC-065: 受控页面与区块搭建器取代 DEC-025 的“仅设置面板”范围
+
+- **日期**：2026-08-06
+- **状态**：已决定，MVP 实施中；本决策覆盖 DEC-025 对“可视化搭建器”的否定，但保留其 token 与 Block 边界。
+- **决定**：搭建器支持选择已登记页面预设、对已登记 Block 进行添加、删除和排序、以及编辑已声明属性；运行时 schema 只允许 `page-builder.manifest.json` 中存在的模板、槽位、Block 与属性。首个模板是客户列表。
+- **不做**：不接受任意 JSX、HTML、CSS class、原始色值、圆角、阴影、像素间距；不允许把任意组件拖入任意位置；不引入脱离 schema 的“自由画布”。
+- **原因**：当前目标从“调一张已生成页面”扩展为“受控搭建页面和区块”，但生产质量仍依赖已验证 Block、token 和视觉回归。结构自由度必须由 slot contract 管理，而不是由样式编辑器管理。
+- **影响**：新增 `PageBuilder` Block、`docs/data/page-builder.manifest.json` 及其校验；模板在发布前仍需完成页面/视觉检查。拖拽仅能作为未来的排序手势，不能扩大 schema 权限。
+- **相关文件**：`docs/data/page-builder.manifest.json`、`scripts/check-page-builder.mjs`、`src/components/recipes/page-builder.tsx`、`docs/PAGES.md`
 
 ### DEC-026: 暗色模式 token 方案（class .dark 触发，覆盖语义槽）
 
@@ -667,6 +677,111 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **原因**：用户明确要求紧凑箭头导航；它同时保留连续浏览月份和快速跨年的操作，并避免将同一导航结构复制到多个日期组合组件中。
 - **影响**：Calendar 标记为 `shadcn-extended`，在 manifest 登记上游、决策和扩展能力；日期相关组件保留 100 年导航边界。
 - **相关文件**：`src/components/ui/calendar.tsx`、`src/components/fx/{date-picker,time-picker}.tsx`、`docs/data/components.manifest.json`
+
+### DEC-060: Signature 作为签名输入的原生语义组件例外
+
+- **日期**：2026-07-30
+- **状态**：已决定
+- **决定**：新增 `Signature` 作为 `native-semantic` 白名单例外。shadcn registry 没有签名输入组件，canvas 绘制由 MIT 的 `signature_pad` 处理，fx-ui 只维护 React 生命周期、受控值、清空操作、禁用语义、响应式尺寸与 token 映射。
+- **放弃**：① 在业务页面直接拼 canvas、指针事件和清空按钮；② 自行实现笔迹平滑算法；③ 把 Figma 的“填充=on/off”误建成业务 variant。
+- **原因**：签名输入有明确的原生 canvas 交互语义，但不属于 shadcn 现有能力；集中治理可以统一数据 URL 输出、高清屏缩放、焦点态和容器自适应，并避免页面级重复实现。
+- **影响**：组件公开 API 以 `value/defaultValue/onChange/onBegin/onEnd/disabled/clearLabel/height` 为准；Figma 当前唯一实例属性“填充”映射为运行时 `data-filled` 状态，不作为调用方可设置的视觉属性。
+- **相关文件**：`src/components/ui/signature.tsx`、`docs/components/signature.md`、`docs/data/components.manifest.json`、`docs/data/component-playgrounds.manifest.json`
+
+### DEC-061: Upload 作为文件选择与上传状态入口的原生语义组件例外
+
+- **日期**：2026-07-30
+- **状态**：已决定
+- **决定**：新增 `Upload` 作为 `native-semantic` 白名单例外。shadcn registry 没有上传组件；组件以原生 `input[type=file]` 处理文件选择，统一按钮、拖拽区、照片墙、表单链接、文件限制、删除和受控状态展示，不内置网络请求。
+- **放弃**：① 在业务页面反复拼 file input、拖拽事件和文件列表；② 把 Figma 的悬浮、点击、拖拽中做成视觉 prop；③ 在基础组件内持有 action URL、鉴权头、分片、重试等业务传输策略。
+- **原因**：文件选择具有明确原生语义，但入口形态、可访问性、本地限制、进度和失败反馈需要统一。网络上传与鉴权高度依赖业务，留给调用方可避免基础组件成为传输黑盒。
+- **影响**：公开 API 以受控文件列表、`onFilesSelect`、本地限制、`variant/listType/imageSize` 为准；Figma 的上传形式映射为 variant，回填映射为文件列表，交互状态由真实 DOM 事件产生。
+- **相关文件**：`src/components/ui/upload.tsx`、`docs/components/upload.md`、`docs/data/components.manifest.json`、`docs/data/component-playgrounds.manifest.json`
+
+### DEC-062: PeoplePicker 以 Combobox 为基础组合人员与组织选择
+
+- **日期**：2026-07-31
+- **状态**：已决定
+- **决定**：通过 shadcn CLI 引入 Combobox，并在其 open-code 内补齐内联 panel、48px list density 与可关闭 item indicator 三项通用能力；PeoplePicker 位于 fx 层，复用 Combobox、InputGroup、Tabs、Checkbox、Avatar、ScrollArea 和 Button，承载人员、部门、组织、合伙人与用户组的搜索、多选、全选、收藏和下钻。
+- **放弃**：① 在页面中临时拼选人面板；② 把人员与组织字段塞进基础 Select/Combobox；③ 将 Figma 的悬浮、选中或下钻截图做成视觉 mode prop；④ 保留安装器带入的第二套 InputGroup 真相源。
+- **原因**：shadcn 没有完整 PeoplePicker，但 Combobox 已提供搜索、集合、键盘导航和多选语义。把通用列表几何留在基础层、业务数据模型留在 fx 层，既能贴合 Figma，又不污染基础组件契约。
+- **影响**：Combobox 登记为 `shadcn-extended`，上游为 `@shadcn/combobox`；PeoplePicker 的 Figma 场景映射为真实 Tab，尺寸映射为 normal/medium，视觉全部使用 fx-ui token。
+- **相关文件**：`src/components/ui/combobox.tsx`、`src/components/fx/people-picker.tsx`、`docs/components/{combobox,fx-people-picker}.md`、`docs/data/{components,component-playgrounds}.manifest.json`
+
+### DEC-063: ColorPicker 以成熟颜色引擎组合为 fx 组件
+
+- **日期**：2026-07-31
+- **状态**：已决定
+- **决定**：shadcn registry 没有 ColorPicker；在 `fx` 层复用 Popover、Button、Select、Input，并使用 MIT 的 `react-colorful` 处理色域、色相与透明度交互，使用 `colord` 处理解析和 HEX/RGB/HSL/CSS 转换。Popover 只新增受治理的 `picker` 尺寸以承载 Figma 的 258px 固定面板。
+- **放弃**：① 页面内临时拼颜色面板；② 手写颜色交互算法；③ 复制 Figma 原始颜色作为组件 chrome；④ 把截图状态做成视觉 mode prop。
+- **原因**：颜色交互、解析与浏览器边界已有成熟库可用；组合层负责真实 API、数据、可访问语义和 fx-ui token 映射即可。
+- **影响**：Figma 的预览、吸色器、透明度、格式、最近色、预设色与触发器内容映射为真实 props/data；用户颜色值可作为动态内联样式，面板阴影、边框、文字与表面只使用项目 token。
+- **相关文件**：`src/components/fx/color-picker.tsx`、`src/components/ui/popover.tsx`、`docs/components/fx-color-picker.md`、`docs/data/{components,component-playgrounds}.manifest.json`
+
+### DEC-064: 列表页视觉评审使用受控校准台，不提供自由样式编辑
+
+- **日期**：2026-08-06
+- **状态**：已决定
+- **决定**：客户列表页作为首个页面视觉校准样本。维护页 `#customer-list-calibration` 复用真实 `CustomerListFrame`，只开放 `CrmAppShell.frame`（`inset` / `continuous`）与 `DataTable.density`（`default` / `compact`）两条已声明的变体轴；每个候选组合均有意图、约束和视觉回归。
+- **放弃**：① 仿照独立 Dashboard Studio 提供颜色、圆角、阴影、任意间距等自由滑块并存到 localStorage；② 复制一份专供调试的列表页 JSX；③ 用页面调用处 className 临时覆盖背景、边框或圆角。
+- **原因**：fx-ui 的 token、组件与 Block 都有明确真相源。自由调参会产生“调试态”和正式页面两套视觉事实，而真实页面复用受控 Block 变体可先快速比较、后稳定收敛。
+- **影响**：新列表页沿用生成器和默认基线；出现经评审的跨列表页视觉变化时，先提升为已有 Block 的有限 variant，再更新 `docs/PAGES.md`、视觉基线和检查证据。全局视觉变化仍按 token 流程处理。
+- **相关文件**：`src/pages/docs/governance/customer-list-calibration-page.tsx`、`src/pages/templates/customer-list-template.tsx`、`src/components/recipes/{crm-app-shell,data-table}.tsx`、`docs/PAGES.md`、`docs/data/component-playgrounds.manifest.json`
+
+### DEC-065: 默认主题全局页面背景固定为 #F5F6F7
+
+- **日期**：2026-08-06
+- **状态**：已决定
+- **决定**：默认浅色主题使用 `--fx-page-background: #F5F6F7`，并由 shadcn 语义槽 `--background` 引用；所有页面继续使用 `bg-background`，不在调用处写死颜色。
+- **放弃**：① 直接把 `--fx-neutrals-02` 改成 `#EFF1F3`；② 在页面或搭建器上局部覆盖背景色。
+- **原因**：`--fx-neutrals-02` 同时服务禁用控件底色和低存在感结构线，修改它会扩大影响范围。独立页面画布 token 能保持语义清晰，并让全局换底不改变组件状态与边框。
+- **影响**：所有使用 `bg-background` / `--background` 的页面画布统一显示 `#F5F6F7`；Card、Surface、Popover 及中性色阶保持原值。
+- **相关文件**：`theme/fx-theme.css`、`docs/TOKENS.md`、`docs/data/design-tokens.json`、`docs/data/agent-tokens.manifest.json`
+
+### DEC-066: 完整应用画布外壳不使用卡片圆角
+
+- **日期**：2026-08-06
+- **状态**：已决定
+- **决定**：`WebsiteCardContainer` 增加受控 `shape="square"` 形态，`CrmAppShell` 作为完整应用画布固定使用它；普通网站信息卡继续使用默认圆角。
+- **放弃**：① 在页面调用处用 `rounded-none` 覆盖；② 全局移除 Card 圆角；③ 将整个应用预览视为浮起卡片。
+- **原因**：完整应用画布是页面边界，不是页面中的卡片；使用方角可避免搭建器选框和顶栏被误读为卡片。
+- **影响**：CRM 外壳的四角为 `0px`；内部导航、工作区和业务卡片仍按各自组件契约保留圆角。
+- **相关文件**：`src/components/fx/website-card-container.tsx`、`src/components/recipes/crm-app-shell.tsx`、`docs/data/components.manifest.json`、`docs/data/layered-assets.manifest.json`
+
+### DEC-067: 页面搭建与基础组件评审共用一个受控工作台
+
+- **日期**：2026-08-06
+- **状态**：已决定
+- **决定**：搭建器标题旁用 Select 切换“页面搭建 / 基础组件评审 / 业务组件搭建”。基础组件代码由外部 Agent/Codex 按同一套 MCP/CLI contract 生产，网页端只消费候选契约并负责真实预览、状态矩阵、既有 API/Props 校正、治理检查、返工与确认。预览只能走已登记的本地安全适配器；检查通过且用户确认后，候选才进入 Playground 与组件入库审核。
+- **放弃**：① 在网页端复制 Figma，靠容器、文字、图标和图层从零绘制组件；② 再放一个与外部 Agent 无差别的生成聊天框；③ 允许任意 JSX、CSS、像素值或 token 覆盖；④ 检查或确认前直接写源码和 registry。
+- **原因**：从空白建模仍要求用户掌握图层、布局和属性设计，效率与 Figma/低代码平台接近，也重复外部 Agent 的实现能力。网页端真正不可替代的价值是让不同 Agent 的产物经过同一个可视化治理、状态验收和人工确认出口。
+- **影响**：`page-builder.manifest.json#builderModes.component.reviewWorkbench` 成为基础组件评审真相源；当前首个安全预览适配器复用真实 Button API。返工只生成外部 Agent 任务，不伪称已执行；确认前不修改 `src/components/ui/*`、不创建 Playground、不写组件 manifest，确认后也只进入受治理的实现与审核队列。
+- **相关文件**：`src/components/recipes/{page-builder,component-builder}.tsx`、`docs/data/page-builder.manifest.json`
+
+### DEC-068: 业务组件从受控空白画布组合
+
+- **日期**：2026-08-06
+- **状态**：已决定
+- **决定**：业务组件模式默认进入空白画布，左侧在“组件 / 图层”间切换；组件库以全量 manifest 搜索替代默认分类展开，只展示当前关键词的匹配结果。已适配白名单以受治理的默认实例插入，不依赖业务数据；未适配匹配项只汇总提示，不逐项渲染禁用入口。组件可点击或拖放插入，画布支持单选、Shift 多选、成组与解组。整体与组合的 Auto Layout 只使用登记的方向和间距档。选中实例的属性来自真实 Playground contract，搭建器只白名单开放已评审属性；任一开放属性可绑定为公开业务 Prop，实例值、公开名和默认值随草稿及发布产物持久化。个人组件可本地发布，业务组件必须提交审核。
+- **放弃**：① 预置 TopBar 等业务模板作为唯一入口；② 自由拖入任意组件或 HTML；③ 输入像素、CSS 或 token 覆盖；④ 让 Agent 生成 JSX；⑤ 未经审核直接写入公共 fx 组件源码；⑥ 在搭建器复制属性选项或把调试台伪属性当成组件 API。
+- **原因**：用户需要从零组合，而不是理解模板插槽。同时，公司组件库仍需保护真实 API 和 token；白名单节点、结构化分组和有限布局档可以兼顾自由度与治理。
+- **影响**：`BusinessComponentBuilder` 的真相源是空白组合 schema；当前默认实例开放 Button、Input、Checkbox、Switch、Tag、Avatar、Separator、Select、Textarea、Badge、Slider、RadioGroup、Toggle、ToggleGroup、Link 和 Alert。存在 Playground contract 的组件通过 `page-builder.manifest.json` 指针派生初始值与已评审属性；只有固定默认实例的组件在真实属性契约登记前不显示可编辑属性。发布结果分为个人库与业务审核队列。
+- **相关文件**：`src/components/recipes/{page-builder,business-component-builder}.tsx`、`docs/data/{page-builder,layered-assets}.manifest.json`
+
+### DEC-069: 先补齐资产成熟度，再开放 fx-ui MCP
+
+- **日期**：2026-08-20
+- **状态**：已决定
+- **决定**：fx-ui 暂不以“完整组件库”或“完整 MCP”对外承诺。后续固定按四层顺序推进：① 盘点基础组件并以 `ready / review / missing / blocked` 标记真实成熟度；② 从真实页面验证中提炼稳定 Block；③ 仅将数据契约、响应式行为和视觉回归均通过的组合晋升为页面模板；④ 最后把既有 manifest 与 `fx` CLI 包装为 MCP Server。MCP 只能作为现有真相源的薄适配层，不维护第二套组件、Token、Block 或模板数据。
+- **基础组件准入**：每个 `ready` 基础组件必须具备真实 open-code 源码 API、主流必要能力、完整交互状态、fx-ui semantic token、Playground 实时属性、文档与真实示例、视觉证据和 Agent contract；缺少任一关键证据时保持 `review`，不得为了目录完整而虚标可用。
+- **Block 准入**：Block 必须从已验证业务页面提炼，只复用 `ready` 组件与已有 token，保留稳定结构、行为、数据入口和验收条件；候选包括页面顶栏、查询筛选栏、批量操作栏、数据表格区、分页区、空状态和表单区段。未经过真实页面验证的组合不得登记为可复用 Block。
+- **页面模板准入**：页面模板不是 Block 的随意排列。只有完整页面的数据契约稳定，关键交互、响应式布局和视觉回归通过，并拥有唯一生成或复用路径时才标记 `ready`；依赖缺失组件或 Block 的页面类型保持 `blocked / needs-block`。
+- **首条推进路径**：以客户列表作为第一条纵向样板，先核对并补齐 Button、Input、Select、Table、Pagination、Checkbox、DropdownMenu、Dialog、Tag、DatePicker、Filter、Empty、Skeleton、Tooltip 等真实依赖，再从完成页面中提炼 Block，最后将其晋升为生产级列表模板。随后按同一方法推进表单页与详情页，不横向机械搬运全部 shadcn 或 Ant Design 组件。
+- **MCP 边界**：资产达到可用规模后，MCP 首期只暴露真实能力，例如组件列表与搜索、组件契约、示例、Token、recipe、页面计划、影响链和质量状态；查询必须返回成熟度并诚实暴露缺口。MCP 不生成不存在的组件，不把 `review` 伪装为 `ready`，也不绕过源码、Playground、视觉测试和人工确认门。
+- **放弃**：① 先做完整 MCP 外壳再补内容；② 用数量衡量组件库完成度；③ 把所有 shadcn 或 Ant 组件机械搬入；④ 在基础资产未成熟时让搭建器自由生成任意页面；⑤ 维护一份独立于现有 manifest/CLI 的 MCP 数据目录。
+- **原因**：MCP 只能提高真实资产的发现与调用效率，不能替代组件质量、业务验证和模板治理。先建立诚实的成熟度与补齐队列，才能让搭建器和外部 Agent 得到可执行边界，而不是更快地产生不完整或未经验证的页面。
+- **影响**：后续资产盘点应从现有源码、组件 manifest、Playground、质量矩阵、分层资产和页面 Build Kit 派生，不手填第二套清单；当成熟度分类需要被页面、Agent 和脚本共同消费时，再扩展既有 manifest 与检查。搭建器当前继续承担资产评审与受控组合，不宣称全量页面生产能力。
+- **相关文件**：`docs/data/{components,component-playgrounds,component-quality,layered-assets,page-build-kit,agent-components,agent-tokens,agent-recipes}.manifest.json`、`scripts/fx-agent.mjs`、`src/pages/templates/customer-list-template.tsx`
 
 ## 相关文件
 

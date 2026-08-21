@@ -10,6 +10,7 @@ export type PageEntry = {
   anchors: PageAnchor[]
   render: (actions: ReactNode, lang: "zh" | "en", page: string, titleMeta?: string) => ReactNode
   fullBleed?: boolean
+  workspace?: boolean
 }
 
 const playgroundPrimaryAnchorPattern = /-(overview|preview|usage)$/

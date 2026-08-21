@@ -271,6 +271,9 @@
   --fx-neutrals-19: color-mix(in oklch, white, var(--fx-neutral-dark) 95%);
   --fx-neutrals-20: var(--fx-neutral-dark);
 
+  /* 全局页面画布底色：独立于中性灰轴，避免页面换底连带改变控件和边框。 */
+  --fx-page-background: #F5F6F7;
+
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    * ICONS
    * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -328,7 +331,7 @@
   --radius-page: calc(var(--radius) + 4px);
   --radius-full: 9999px;
 
-  --background: var(--fx-neutrals-02);
+  --background: var(--fx-page-background);
   /* 文字/图标四级层级（文字与图标共用同一套，全部取自中性轴）
      约 100/73/49/25 的均匀梯度（对齐 Ant 88/65/45/25）：
      ① 主 20 / ② 次 15 / ③ 弱信息·caption 11 / ④ 占位+禁用 06 */
@@ -367,6 +370,7 @@
   --fill-hover: color-mix(in oklch, var(--foreground) 8%, transparent);
 
   --accent: var(--fx-orange-01);
+  --accent-hover: var(--fx-orange-02);
   --accent-foreground: var(--fx-neutrals-20);
 
   --destructive: var(--fx-red-09);
@@ -482,6 +486,7 @@
   --muted-foreground: oklch(from var(--fx-brand-vivid) 0.64 0.006 h);
 
   --accent: color-mix(in oklch, var(--fx-brand-vivid) 18%, var(--card));
+  --accent-hover: color-mix(in oklch, var(--fx-brand-vivid) 26%, var(--card));
   --accent-foreground: var(--foreground);
 
   /* 边框/输入：白色 alpha，叠在任意暗面上自适应 */
@@ -541,6 +546,7 @@
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
@@ -715,9 +721,9 @@
   }
 }
 
-/* 文档站展示表：行不可点，关掉 Table 默认的行 hover 高亮（业务里真实数据表用 Table 仍保留 hover）。
-   选择器特异性 (0,3,0) 高于工具类 hover:bg-muted (0,2,0)，可覆盖。 */
-.fx-doc-static [data-slot="table-row"]:hover {
+/* 文档站展示表：未选中行不可点，关掉 Table 默认的行 hover 高亮。
+   已选行仍保留组件的主题色 hover，供调试台和真实选择场景校验。 */
+.fx-doc-static [data-slot="table-row"]:hover:not([data-state="selected"]) {
   background-color: transparent;
 }
 

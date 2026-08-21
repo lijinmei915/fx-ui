@@ -20,6 +20,10 @@ status: complete
 
 fx 组合组件，用于组件文档里的通用交互调试台。默认保持普通调试视图；配置制作台能力后，用户点击“编辑组件”才展开结构树、节点属性、语义 Token 槽位与真实渲染验证。制作台使用独立临时草稿；点击“完成编辑”返回普通调试视图并恢复进入编辑前的实时属性。
 
+调试台统一使用 Card 的 `size="lg"` 间距档，顶部属性与意图区四边内距为 16px；该尺寸只作用于 ComponentPlayground，不修改全局 `--fx-panel-padding`。
+
+预览与代码 Tab 共用同一套工具栏按钮结构：左右内距使用 `--fx-control-px-md`（12px），图标与文字间距使用间距规范 `gap-2`（8px），两个图标统一为 18px；不得在单个组件页分别覆盖。
+
 源码来自 fx-ui 公司组合组件，由 Button、Input 等现有 shadcn/ui 能力组合而成。公司视觉通过 `theme/fx-theme.css` 的语义 token 注入，不通过重新封装、硬编码颜色或手写状态样式实现。
 
 AI 使用 ComponentPlayground 前必须先以 `src/components/fx/component-playground.tsx` 为真实 API；本文档记录的是当前仓库源码能力，不是凭记忆推断的组件能力。
@@ -48,6 +52,9 @@ const config: ComponentPlaygroundConfig = {
 }
 
 <ComponentPlayground config={config} lang="zh" />
+
+// 搭建器需要共享撤销 / 重做历史时可使用受控值
+<ComponentPlayground config={config} lang="zh" value={values} onValueChange={setValues} />
 ```
 
 ## 组件总览 {#overview}
@@ -56,7 +63,7 @@ const config: ComponentPlaygroundConfig = {
 - 语义 DOM：root、interactive-props、intent、recommended-code、preview、code、`data-slot="component-playground-structure"`、`data-slot="component-playground-state-assignments"`、`data-slot="component-playground-validation"`
 - 原生/数据状态：preview-tab、code-tab、copied、scenario-selected、workbench-editing、workbench-node-selected、state-assignment-previewed
 - 变体：无独立 variant prop；能力由 `ComponentPlaygroundConfig` 驱动
-- 导出项：ComponentPlayground、ComponentPlaygroundConfig、`buildPlaygroundStories` 及相关类型
+- 导出项：ComponentPlayground、ComponentPlaygroundConfig、`PlaygroundSegmentedControl`、`buildPlaygroundStories` 及相关类型
 
 ### Story 归一化
 
@@ -120,11 +127,15 @@ const stories = buildPlaygroundStories(config.props, currentValues)
 | --- | --- |
 | `props` | 调试属性列表，支持 segment 和 text |
 | `initial` | 初始值 |
+| `leadingControls?` | 可选的结构化前置实时属性；由调试台统一渲染双语标签和控件排列，适合图标导出等无法由 segment/text 表达的真实选择能力 |
+| `PlaygroundSegmentedControl` | 前置实时属性需要分段选择时复用的统一控件，视觉和普通 segment 属性一致 |
 | `storySource?` | 可选 manifest/story 来源指针，同时写入根节点 `data-story-source`，供视觉测试和 Agent 审计 |
 | `stories?` | Storybook-lite 风格的结构示例或场景预设；两条及以上才显示切换控件。每项包含 `id`、`name`、`nameEn`、`args` 和 `parameters` |
 | `storyPresentation?` | `examples` 显示“结构示例”；`presets` 显示“场景预设” |
 | `guidanceKey?` | 用于展示使用意图的属性 key |
 | `workbench?` | 可选制作台配置：结构节点、状态语义映射、真实 DOM 检查目标和验证项 |
+| `value?` | 可选受控实时属性值；用于搭建器历史和 Agent 操作 |
+| `onValueChange?` | 受控值变更回调；手动属性与 Agent 必须共用它 |
 | `renderOne` | 根据当前值渲染预览 |
 | `genCode` | 根据当前值生成复制代码 |
 
@@ -144,6 +155,7 @@ const stories = buildPlaygroundStories(config.props, currentValues)
 ## AI Rules {#ai-rules}
 
 - 每个调试项必须来自组件源码真实 prop，不发明不存在的 prop。
+- `leadingControls` 只承载真实组件或导出选择能力，仍属于实时属性；不得用它放页面操作、说明或任意样式配置。
 - 新建或改造 Playground 必须按 controlPanelContract 的五组顺序声明实时属性；场景预设必须通过其准入规则，不能作为重复属性的快捷入口。
 - 结构示例与场景预设承载组合级切换；如果 stories 之间只由一个配置维度区分，该维度不得再作为实时属性重复展示。
 - `renderOne` 与 `genCode` 必须保持同一组值。

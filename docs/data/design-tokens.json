@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/design-tokens",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-08-21",
   "truthSource": "theme/fx-theme.css",
   "humanDoc": "docs/TOKENS.md",
   "note": "主项目采用 shadcn 友好的两层 Token 命名空间 + 组件用法：primitive -> semantic -> componentUsage。componentUsage 是组件属性/状态消费语义 Token 的映射事实，不是独立组件 Token。报告 skill 的 Seed -> Map -> Alias -> Component 四层结构可作为独立 HTML 输出参考，但不替代本项目的 shadcn semantic slots。",
@@ -1248,6 +1248,12 @@
       "usage": ""
     },
     {
+      "name": "--fx-page-background",
+      "value": "#F5F6F7",
+      "category": "palette",
+      "usage": ""
+    },
+    {
       "name": "--fx-icon-dark",
       "value": "var(--fx-neutrals-20)",
       "category": "icon",
@@ -1503,7 +1509,7 @@
     },
     {
       "name": "--background",
-      "value": "var(--fx-neutrals-02)",
+      "value": "var(--fx-page-background)",
       "category": "surface-text",
       "usage": "页面底色"
     },
@@ -1650,6 +1656,12 @@
       "value": "var(--fx-orange-01)",
       "category": "surface-text",
       "usage": "悬浮态、轻量高亮背景"
+    },
+    {
+      "name": "--accent-hover",
+      "value": "var(--fx-orange-02)",
+      "category": "shadcn-semantic",
+      "usage": ""
     },
     {
       "name": "--accent-foreground",

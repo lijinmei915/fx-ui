@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/icons-manifest",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-08-06",
   "truthSource": "src/lib/icons.ts",
   "humanDoc": "docs/TOKENS.md",
   "note": "图标注册表：AI 不靠像素识别图标，靠这张表的 name + keywords 检索取用。三种来源（内置 Tabler / 第三方库 / 上传自定义）统一汇流到 @/lib/icons 出口并登记于此。check-icons.mjs 校验每个 name 都能从 @/lib/icons 解析、名字唯一、自定义图标用 currentColor。",
@@ -85,6 +85,26 @@
       ]
     },
     {
+      "name": "ArrowDownIcon",
+      "source": "tabler",
+      "style": "line",
+      "category": "navigation",
+      "keywords": [
+        "arrow",
+        "down"
+      ]
+    },
+    {
+      "name": "ArrowUpIcon",
+      "source": "tabler",
+      "style": "line",
+      "category": "navigation",
+      "keywords": [
+        "arrow",
+        "up"
+      ]
+    },
+    {
       "name": "ArrowUpRightIcon",
       "source": "tabler",
       "style": "line",
@@ -93,6 +113,15 @@
         "arrow",
         "up",
         "right"
+      ]
+    },
+    {
+      "name": "ShuffleIcon",
+      "source": "tabler",
+      "style": "line",
+      "category": "action",
+      "keywords": [
+        "shuffle"
       ]
     },
     {
@@ -883,6 +912,16 @@
       ]
     },
     {
+      "name": "ColorPickerIcon",
+      "source": "tabler",
+      "style": "line",
+      "category": "action",
+      "keywords": [
+        "color",
+        "picker"
+      ]
+    },
+    {
       "name": "PaletteIcon",
       "source": "tabler",
       "style": "line",
@@ -1034,6 +1073,15 @@
       "category": "action",
       "keywords": [
         "trash2"
+      ]
+    },
+    {
+      "name": "UploadIcon",
+      "source": "tabler",
+      "style": "line",
+      "category": "action",
+      "keywords": [
+        "upload"
       ]
     },
     {

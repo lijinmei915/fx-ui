@@ -10,7 +10,7 @@ function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
     <fieldset
       data-slot="field-set"
       className={cn(
-        "flex flex-col gap-(--fx-panel-gap) has-[>[data-slot=checkbox-group]]:gap-(--fx-control-gap) has-[>[data-slot=radio-group]]:gap-(--fx-control-gap)",
+        "flex w-full flex-col gap-(--fx-panel-gap) has-[>[data-slot=checkbox-group]]:gap-(--fx-control-gap) has-[>[data-slot=radio-group]]:gap-(--fx-control-gap)",
         className
       )}
       {...props}
@@ -36,12 +36,20 @@ function FieldLegend({
   )
 }
 
-function FieldGroup({ className, ...props }: React.ComponentProps<"div">) {
+type FieldGroupProps = React.ComponentProps<"div"> & {
+  orientation?: "vertical" | "horizontal"
+}
+
+function FieldGroup({ className, orientation = "vertical", ...props }: FieldGroupProps) {
   return (
     <div
       data-slot="field-group"
+      data-orientation={orientation}
       className={cn(
-        "group/field-group @container/field-group flex w-full flex-col gap-[calc(var(--fx-panel-gap)+0.25rem)] data-[slot=checkbox-group]:gap-(--fx-control-gap) *:data-[slot=field-group]:gap-(--fx-panel-gap)",
+        "group/field-group @container/field-group flex data-[slot=checkbox-group]:gap-(--fx-control-gap) *:data-[slot=field-group]:gap-(--fx-panel-gap)",
+        orientation === "horizontal"
+          ? "w-full flex-row flex-wrap gap-x-4 gap-y-2 [&>[data-slot=field]]:!w-auto"
+          : "w-full flex-col gap-[calc(var(--fx-panel-gap)+0.25rem)]",
         className
       )}
       {...props}
@@ -50,15 +58,15 @@ function FieldGroup({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 const fieldVariants = cva(
-  "group/field flex w-full gap-(--fx-control-gap) data-[invalid=true]:text-destructive",
+  "group/field flex w-full gap-(--fx-control-gap) data-[invalid=true]:text-destructive has-[>[data-slot=checkbox]]:gap-(--fx-control-gap-tight) has-[>[data-slot=checkbox]]:[&>[data-slot=field-content]]:flex-none has-[>[data-slot=checkbox]]:[&_[data-slot=field-label]]:whitespace-nowrap has-[>[data-slot=checkbox]]:[&_[data-slot=field-label]]:text-sm has-[>[data-slot=checkbox]]:[&_[data-slot=field-label]]:font-normal has-[>[data-slot=checkbox]]:[&_[data-slot=field-label]]:leading-5 has-[>[data-slot=checkbox][data-size=sm]]:[&_[data-slot=field-label]]:text-xs has-[>[data-slot=checkbox][data-size=sm]]:[&_[data-slot=field-label]]:leading-[var(--fx-text-xs--line-height)] has-[>[data-slot=checkbox][data-size=lg]]:[&_[data-slot=field-label]]:text-base has-[>[data-slot=checkbox][data-size=lg]]:[&_[data-slot=field-label]]:leading-6 has-[>[data-slot=radio-group-item]]:gap-(--fx-control-gap-tight) has-[>[data-slot=radio-group-item]]:[&>[data-slot=field-content]]:flex-none has-[>[data-slot=radio-group-item]]:[&_[data-slot=field-label]]:whitespace-nowrap has-[>[data-slot=radio-group-item]]:[&_[data-slot=field-label]]:text-sm has-[>[data-slot=radio-group-item]]:[&_[data-slot=field-label]]:font-normal has-[>[data-slot=radio-group-item]]:[&_[data-slot=field-label]]:leading-5 has-[>[data-slot=radio-group-item][data-size=sm]]:[&_[data-slot=field-label]]:text-xs has-[>[data-slot=radio-group-item][data-size=sm]]:[&_[data-slot=field-label]]:leading-[var(--fx-text-xs--line-height)] has-[>[data-slot=radio-group-item][data-size=lg]]:[&_[data-slot=field-label]]:text-base has-[>[data-slot=radio-group-item][data-size=lg]]:[&_[data-slot=field-label]]:leading-6",
   {
     variants: {
       orientation: {
         vertical: "flex-col *:w-full [&>.sr-only]:w-auto",
         horizontal:
-          "flex-row items-center has-[>[data-slot=field-content]]:items-start *:data-[slot=field-label]:flex-auto has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px",
+          "flex-row items-center has-[>[data-slot=field-content]]:items-start has-[>[data-slot=checkbox]]:!items-center has-[>[data-slot=radio-group-item]]:!items-center *:data-[slot=field-label]:flex-auto",
         responsive:
-          "flex-col *:w-full @md/field-group:flex-row @md/field-group:items-center @md/field-group:*:w-auto @md/field-group:has-[>[data-slot=field-content]]:items-start @md/field-group:*:data-[slot=field-label]:flex-auto [&>.sr-only]:w-auto @md/field-group:has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px",
+          "flex-col *:w-full @md/field-group:flex-row @md/field-group:items-center @md/field-group:*:w-auto @md/field-group:has-[>[data-slot=field-content]]:items-start @md/field-group:has-[>[data-slot=checkbox]]:!items-center @md/field-group:has-[>[data-slot=radio-group-item]]:!items-center @md/field-group:*:data-[slot=field-label]:flex-auto [&>.sr-only]:w-auto",
       },
     },
     defaultVariants: {
@@ -233,4 +241,5 @@ export {
   FieldSet,
   FieldContent,
   FieldTitle,
+  type FieldGroupProps,
 }

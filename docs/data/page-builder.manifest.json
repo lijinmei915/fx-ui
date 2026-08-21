@@ -1,0 +1,677 @@
+{
+  "schemaVersion": 7,
+  "format": "fx-ui/page-builder",
+  "policy": "The builder only consumes registered page templates, Block slots, external Agent candidate contracts, semantic token options, and reviewed business-component instances. It never accepts JSX, CSS classes, arbitrary style values, or unregistered component types.",
+  "builderModes": [
+    {
+      "id": "page",
+      "name": "页面搭建",
+      "source": "src/components/recipes/page-builder.tsx#PageBuilder"
+    },
+    {
+      "id": "component",
+      "name": "基础组件评审",
+      "source": "src/components/recipes/component-builder.tsx#ComponentBuilder",
+      "contractSource": "docs/data/page-builder.manifest.json#builderModes.component.reviewWorkbench",
+      "reviewWorkbench": {
+        "candidateSources": ["external-agent-mcp", "external-agent-cli"],
+        "previewAdapters": [
+          {
+            "id": "button",
+            "name": "Button 安全预览适配器",
+            "contractSource": "docs/data/components.manifest.json#uiComponents.Button"
+          }
+        ],
+        "controls": [
+          {
+            "id": "variant",
+            "name": "外观变体",
+            "values": ["default", "outline", "secondary", "destructive"]
+          },
+          {
+            "id": "size",
+            "name": "组件尺寸",
+            "values": ["xs", "sm", "md", "lg"]
+          }
+        ],
+        "runtimeProperties": [
+          { "id": "text", "name": "文字内容", "type": "string", "recommended": true },
+          { "id": "variant", "name": "外观变体", "type": "enum", "recommended": true },
+          { "id": "size", "name": "组件尺寸", "type": "enum", "recommended": true },
+          { "id": "icon", "name": "前置图标", "type": "boolean", "recommended": false },
+          { "id": "disabled", "name": "禁用状态", "type": "boolean", "recommended": true },
+          { "id": "loading", "name": "加载状态", "type": "boolean", "recommended": true }
+        ],
+        "checks": [
+          { "id": "contract", "name": "组件 API 契约", "command": "npm run check:components" },
+          { "id": "tokens", "name": "Token 与主题边界", "command": "npm run check:tokens" },
+          { "id": "interaction", "name": "交互与无障碍状态", "command": "npm run check:shadcn" },
+          { "id": "visual", "name": "视觉回归", "command": "npm run test:visual" }
+        ],
+        "candidates": [
+          {
+            "id": "primary-action-v1",
+            "name": "主操作按钮",
+            "version": "v1",
+            "status": "pending-review",
+            "source": "external-agent-mcp",
+            "submittedBy": "外部 Agent",
+            "submittedAt": "刚刚",
+            "summary": "用于页面主操作，支持文字、尺寸、禁用和加载状态。",
+            "previewAdapter": "button",
+            "expectedOutputs": ["组件源码", "Playground", "组件清单", "组件文档", "行为与视觉测试"]
+          }
+        ],
+        "initial": {
+          "candidateId": "primary-action-v1",
+          "label": "主要操作",
+          "variant": "default",
+          "size": "sm",
+          "selectedProperties": ["text", "variant", "size", "disabled", "loading"]
+        },
+        "operations": [
+          "selectCandidate",
+          "setPreviewProp",
+          "toggleRuntimeProperty",
+          "createRevisionTask",
+          "runGovernanceChecks",
+          "approveCandidate"
+        ],
+        "rules": [
+          "The workbench reviews candidates created by an external Agent; it is not a component drawing tool.",
+          "Preview adapters render only registered local components and accept only their verified props.",
+          "Revision requests generate a structured handoff task and never claim that an external Agent has executed it.",
+          "Governance checks must pass before the candidate can enter Playground and registry review.",
+          "Approval queues the candidate for governed implementation; it does not directly overwrite component source."
+        ]
+      }
+    },
+    {
+      "id": "business-component",
+      "name": "业务组件搭建",
+      "source": "src/components/recipes/business-component-builder.tsx#BusinessComponentBuilder",
+      "registry": [
+        "Button",
+        "Input",
+        "Checkbox",
+        "Switch",
+        "Tag",
+        "Avatar",
+        "Separator",
+        "Select",
+        "Textarea",
+        "Badge",
+        "Slider",
+        "RadioGroup",
+        "Toggle",
+        "ToggleGroup",
+        "Link",
+        "Alert"
+      ],
+      "catalogSources": [
+        "docs/data/components.manifest.json#uiComponents",
+        "docs/data/components.manifest.json#fxComponents"
+      ],
+      "contractSource": "docs/data/page-builder.manifest.json#blank-component"
+    }
+  ],
+  "businessComponents": [
+    {
+      "id": "blank-component",
+      "name": "空白组件",
+      "source": "src/components/recipes/business-component-builder.tsx#BusinessComponentBuilder",
+      "layout": {
+        "id": "free-composition",
+        "name": "自由组合布局",
+        "interactionModel": [
+          "dragInsert",
+          "canvasSelection",
+          "layerTree",
+          "autoLayout"
+        ],
+        "slots": [
+          {
+            "id": "root",
+            "name": "组件画布",
+            "accepts": [
+              "button",
+              "input",
+              "checkbox",
+              "switch",
+              "tag",
+              "avatar",
+              "separator",
+              "select",
+              "textarea",
+              "badge",
+              "slider",
+              "radio-group",
+              "toggle",
+              "toggle-group",
+              "link",
+              "alert"
+            ]
+          }
+        ],
+        "spacingValues": ["none", "xs", "sm", "md", "lg"],
+        "directions": ["horizontal", "vertical"]
+      },
+      "components": [
+        {
+          "id": "button",
+          "name": "按钮",
+          "category": "操作",
+          "source": "src/components/ui/button.tsx#Button",
+          "contract": {
+            "source": "docs/data/component-playgrounds.manifest.json#customPlaygrounds.button",
+            "editableProps": ["text", "variant", "tone", "size", "disabled"]
+          },
+          "instance": { "preset": "default" }
+        },
+        {
+          "id": "input",
+          "name": "输入框",
+          "category": "录入",
+          "source": "src/components/ui/input.tsx#Input",
+          "contract": {
+            "source": "docs/data/component-playgrounds.manifest.json#components.input",
+            "editableProps": [
+              "placeholder",
+              "size",
+              "type",
+              "disabled",
+              "invalid"
+            ]
+          },
+          "instance": { "preset": "default" }
+        },
+        {
+          "id": "checkbox",
+          "name": "复选框",
+          "category": "选择",
+          "source": "src/components/ui/checkbox.tsx#Checkbox",
+          "contract": {
+            "source": "docs/data/component-playgrounds.manifest.json#customPlaygrounds.checkbox",
+            "editableProps": ["size", "state"]
+          },
+          "instance": { "preset": "default" }
+        },
+        {
+          "id": "switch",
+          "name": "开关",
+          "category": "选择",
+          "source": "src/components/ui/switch.tsx#Switch",
+          "contract": {
+            "source": "docs/data/component-playgrounds.manifest.json#customPlaygrounds.switch",
+            "editableProps": ["checked", "state", "size"]
+          },
+          "instance": { "preset": "default" }
+        },
+        {
+          "id": "tag",
+          "name": "标签",
+          "category": "展示",
+          "source": "src/components/ui/tag.tsx#Tag",
+          "instance": { "preset": "default", "content": { "text": "标签" } }
+        },
+        {
+          "id": "avatar",
+          "name": "头像",
+          "category": "展示",
+          "source": "src/components/ui/avatar.tsx#Avatar",
+          "instance": { "preset": "default", "content": { "fallback": "陈" } }
+        },
+        {
+          "id": "separator",
+          "name": "分割线",
+          "category": "布局",
+          "source": "src/components/ui/separator.tsx#Separator",
+          "instance": { "preset": "default" }
+        },
+        {
+          "id": "select",
+          "name": "选择器",
+          "category": "选择",
+          "source": "src/components/ui/select.tsx#Select",
+          "contract": {
+            "source": "docs/data/component-playgrounds.manifest.json#components.select",
+            "editableProps": ["variant", "size", "semanticState"]
+          },
+          "instance": { "preset": "default" }
+        },
+        {
+          "id": "textarea",
+          "name": "文本域",
+          "category": "录入",
+          "source": "src/components/ui/textarea.tsx#Textarea",
+          "instance": {
+            "preset": "default",
+            "content": { "placeholder": "请输入内容" }
+          }
+        },
+        {
+          "id": "badge",
+          "name": "徽标",
+          "category": "展示",
+          "source": "src/components/ui/badge.tsx#Badge",
+          "instance": { "preset": "default", "content": { "count": 8 } }
+        },
+        {
+          "id": "slider",
+          "name": "滑块",
+          "category": "录入",
+          "source": "src/components/ui/slider.tsx#Slider",
+          "contract": {
+            "source": "docs/data/component-playgrounds.manifest.json#customPlaygrounds.slider",
+            "editableProps": [
+              "type",
+              "value",
+              "min",
+              "max",
+              "step",
+              "orientation",
+              "disabled"
+            ]
+          },
+          "instance": { "preset": "default" }
+        },
+        {
+          "id": "radio-group",
+          "name": "单选组",
+          "category": "选择",
+          "source": "src/components/ui/radio-group.tsx#RadioGroup",
+          "contract": {
+            "source": "docs/data/component-playgrounds.manifest.json#customPlaygrounds.radioGroup",
+            "editableProps": ["size", "layout", "state"]
+          },
+          "instance": { "preset": "default" }
+        },
+        {
+          "id": "toggle",
+          "name": "切换按钮",
+          "category": "选择",
+          "source": "src/components/ui/toggle.tsx#Toggle",
+          "instance": { "preset": "default", "content": { "text": "收藏" } }
+        },
+        {
+          "id": "toggle-group",
+          "name": "切换按钮组",
+          "category": "选择",
+          "source": "src/components/ui/toggle-group.tsx#ToggleGroup",
+          "instance": { "preset": "default" }
+        },
+        {
+          "id": "link",
+          "name": "链接",
+          "category": "导航",
+          "source": "src/components/ui/link.tsx#Link",
+          "contract": {
+            "source": "docs/data/component-playgrounds.manifest.json#components.link",
+            "editableProps": ["underline", "tone", "size", "disabled"]
+          },
+          "instance": { "preset": "default", "content": { "text": "查看详情" } }
+        },
+        {
+          "id": "alert",
+          "name": "警告提示",
+          "category": "反馈",
+          "source": "src/components/ui/alert.tsx#Alert",
+          "instance": {
+            "preset": "default",
+            "content": {
+              "title": "操作已完成",
+              "description": "更改已成功保存。"
+            }
+          }
+        }
+      ],
+      "initial": {
+        "name": "未命名组件",
+        "nodes": [],
+        "margin": "none",
+        "gap": "sm",
+        "direction": "horizontal",
+        "destination": "personal",
+        "publicProps": []
+      },
+      "publishTargets": [
+        { "id": "personal", "name": "个人组件", "outcome": "个人组件已发布" },
+        {
+          "id": "business",
+          "name": "业务组件",
+          "outcome": "已提交业务组件审核"
+        }
+      ],
+      "constraints": [
+        "The canvas starts empty and only inserts components declared by the root slot.",
+        "Margin and gap only use the registered spacing scale; groups use the same direction and gap contract.",
+        "Editable instance properties are selected from referenced real playground contracts; public props bind to those registered properties.",
+        "The component search covers the full ui/fx component manifests. Reviewed components insert deterministic default instances without business data; unsupported matches are summarized as an implementation backlog.",
+        "Manual and Agent edits share registered composition operations.",
+        "Personal components persist locally; business components enter review instead of bypassing governance.",
+        "The builder accepts no JSX, CSS classes, token overrides or arbitrary component ids."
+      ]
+    }
+  ],
+  "operationContract": {
+    "format": "fx-ui/page-builder-operations",
+    "operations": [
+      { "op": "insertBlock", "required": ["block"], "optional": ["after"] },
+      { "op": "removeBlock", "required": ["block"] },
+      {
+        "op": "moveBlock",
+        "required": ["block"],
+        "optional": ["before", "after"]
+      },
+      { "op": "setProp", "required": ["target", "name", "value"] }
+    ],
+    "rules": [
+      "Agent and manual edits use the same operation application pipeline.",
+      "Unknown blocks, properties and enum values are rejected by normalization.",
+      "Operations contain no JSX, HTML, CSS classes or arbitrary style values."
+    ]
+  },
+  "componentCompositionOperationContract": {
+    "format": "fx-ui/component-composition-operations",
+    "operations": [
+      {
+        "op": "addComponent",
+        "required": ["component"],
+        "optional": ["parent", "before"]
+      },
+      { "op": "removeComponent", "required": ["target"] },
+      { "op": "moveComponent", "required": ["target", "direction"] },
+      { "op": "groupComponents", "required": ["targets", "group"] },
+      { "op": "ungroupComponents", "required": ["target"] },
+      {
+        "op": "setCompositionLayout",
+        "required": ["property", "value"],
+        "optional": ["target"]
+      },
+      { "op": "setComponentName", "required": ["value"] },
+      { "op": "setComponentProp", "required": ["target", "property", "value"] },
+      {
+        "op": "exposeComponentProp",
+        "required": ["target", "property", "name"]
+      },
+      { "op": "renamePublicProp", "required": ["id", "name"] },
+      { "op": "removePublicProp", "required": ["id"] }
+    ],
+    "rules": [
+      "Component ids, spacing values, directions and publish targets must be declared by the selected business component template.",
+      "Manual and Agent edits use the same operation application pipeline.",
+      "Drag insertion, canvas selection and layer actions resolve to the registered composition operations.",
+      "Operations contain no JSX, HTML, CSS classes, token values or arbitrary component ids."
+    ]
+  },
+  "templates": [
+    {
+      "id": "customer-list",
+      "name": "客户列表",
+      "status": "ready",
+      "source": "src/pages/templates/customer-list-template.tsx#CustomerListFrame",
+      "archetype": "list",
+      "frame": ["CrmAppShell"],
+      "slots": [
+        {
+          "id": "topbar",
+          "block": "TopBar",
+          "label": "顶栏",
+          "required": false,
+          "max": 1
+        },
+        {
+          "id": "navigation",
+          "block": "CrmShellNav",
+          "label": "侧边导航",
+          "required": false,
+          "max": 1
+        },
+        {
+          "id": "header",
+          "block": "ListPageHeader",
+          "label": "页面头部",
+          "required": false,
+          "max": 1
+        },
+        {
+          "id": "toolbar",
+          "block": "ListToolbar",
+          "label": "筛选工具栏",
+          "required": false,
+          "max": 1
+        },
+        {
+          "id": "customer-list",
+          "block": "CustomerListTemplate",
+          "label": "客户列表",
+          "required": false,
+          "max": 1
+        }
+      ],
+      "properties": [
+        { "id": "title", "type": "text", "default": "客户" },
+        {
+          "id": "frame",
+          "type": "enum",
+          "values": ["inset", "continuous"],
+          "default": "inset"
+        },
+        {
+          "id": "density",
+          "type": "enum",
+          "values": ["default", "compact"],
+          "default": "default"
+        },
+        {
+          "id": "columnSet",
+          "type": "enum",
+          "values": ["standard", "essential"],
+          "default": "standard"
+        },
+        {
+          "id": "rowActions",
+          "type": "enum",
+          "values": ["show", "hide"],
+          "default": "show"
+        },
+        {
+          "id": "permission",
+          "type": "enum",
+          "values": ["editable", "readonly"],
+          "default": "editable"
+        }
+      ],
+      "presets": [
+        {
+          "id": "standard",
+          "name": "标准 CRM 列表",
+          "blocks": [
+            "topbar",
+            "navigation",
+            "header",
+            "toolbar",
+            "customer-list"
+          ],
+          "properties": {
+            "title": "客户",
+            "frame": "inset",
+            "density": "default",
+            "columnSet": "standard",
+            "rowActions": "show",
+            "permission": "editable"
+          }
+        },
+        {
+          "id": "focus",
+          "name": "连续工作区",
+          "blocks": ["topbar", "navigation", "header", "customer-list"],
+          "properties": {
+            "title": "客户",
+            "frame": "continuous",
+            "density": "default",
+            "columnSet": "essential",
+            "rowActions": "show",
+            "permission": "editable"
+          }
+        }
+      ],
+      "constraints": [
+        "Every registered slot can be removed and restored from the component library.",
+        "CustomerListTemplate owns its DataTable and Pagination; they are selected, moved and removed as one Block.",
+        "A slot may only appear once and can only use its registered Block.",
+        "Property edits are limited to the declared property list.",
+        "Visual tokens are inherited from the registered Blocks and cannot be edited in the builder."
+      ],
+      "visualEvidence": {
+        "file": "tests/visual.spec.ts",
+        "testName": "页面搭建器客户列表 MVP"
+      }
+    },
+    {
+      "id": "blank-page",
+      "name": "空白页面",
+      "status": "ready",
+      "source": "src/pages/templates/customer-list-template.tsx#CustomerListFrame",
+      "archetype": "blank",
+      "frame": ["CrmAppShell"],
+      "builder": {
+        "layouts": [
+          {
+            "id": "single-column",
+            "name": "单栏页面",
+            "description": "内容按单一主轴自上而下排列",
+            "frame": "continuous",
+            "zones": ["main"]
+          },
+          {
+            "id": "list-workspace",
+            "name": "列表工作区",
+            "description": "适合筛选、表格和分页组成的工作页面",
+            "frame": "inset",
+            "zones": ["main"]
+          }
+        ],
+        "zones": [{ "id": "main", "name": "主要内容" }],
+        "libraryGroups": [
+          { "id": "business", "name": "业务区块" },
+          { "id": "primitive", "name": "基础组件" },
+          { "id": "saved", "name": "已保存" }
+        ]
+      },
+      "slots": [
+        {
+          "id": "topbar",
+          "block": "TopBar",
+          "label": "顶栏",
+          "category": "business",
+          "zones": ["main"],
+          "required": false,
+          "max": 1
+        },
+        {
+          "id": "navigation",
+          "block": "CrmShellNav",
+          "label": "侧边导航",
+          "category": "business",
+          "zones": ["main"],
+          "required": false,
+          "max": 1
+        },
+        {
+          "id": "header",
+          "block": "ListPageHeader",
+          "label": "页面头部",
+          "category": "business",
+          "zones": ["main"],
+          "required": false,
+          "max": 1
+        },
+        {
+          "id": "toolbar",
+          "block": "ListToolbar",
+          "label": "筛选工具栏",
+          "category": "business",
+          "zones": ["main"],
+          "required": false,
+          "max": 1
+        },
+        {
+          "id": "customer-list",
+          "block": "CustomerListTemplate",
+          "label": "客户列表",
+          "category": "business",
+          "zones": ["main"],
+          "required": false,
+          "max": 1
+        }
+      ],
+      "properties": [
+        { "id": "title", "type": "text", "default": "未命名页面" },
+        {
+          "id": "frame",
+          "type": "enum",
+          "values": ["inset", "continuous"],
+          "default": "inset"
+        },
+        {
+          "id": "density",
+          "type": "enum",
+          "values": ["default", "compact"],
+          "default": "default"
+        },
+        {
+          "id": "columnSet",
+          "type": "enum",
+          "values": ["standard", "essential"],
+          "default": "standard"
+        },
+        {
+          "id": "rowActions",
+          "type": "enum",
+          "values": ["show", "hide"],
+          "default": "show"
+        },
+        {
+          "id": "permission",
+          "type": "enum",
+          "values": ["editable", "readonly"],
+          "default": "editable"
+        },
+        {
+          "id": "layout",
+          "type": "enum",
+          "values": ["single-column", "list-workspace"],
+          "default": "single-column"
+        }
+      ],
+      "presets": [
+        {
+          "id": "blank",
+          "name": "空白页面",
+          "blocks": [],
+          "properties": {
+            "title": "未命名页面",
+            "frame": "continuous",
+            "density": "default",
+            "columnSet": "standard",
+            "rowActions": "show",
+            "permission": "editable",
+            "layout": "single-column"
+          }
+        }
+      ],
+      "constraints": [
+        "The blank page starts without blocks.",
+        "CustomerListTemplate owns its DataTable and Pagination; they are selected, moved and removed as one Block.",
+        "A slot may only appear once and can only use its registered Block.",
+        "Property edits are limited to the declared property list.",
+        "Visual tokens are inherited from registered Blocks and cannot be edited in the builder."
+      ],
+      "visualEvidence": {
+        "file": "tests/visual.spec.ts",
+        "testName": "页面搭建器空白页"
+      }
+    }
+  ]
+}

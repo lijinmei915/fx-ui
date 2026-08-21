@@ -63,7 +63,6 @@ export function ButtonPage({ actions, lang, propRows, semanticDomRows, doDontRow
         />
       </section>
       <section id="playground" className={docsSpacing.sectionStack}>
-        <SectionLead title={lang === "en" ? "Playground" : "调试台"} description={lang === "en" ? "Pick a usage mode or tweak props live, then copy the generated code." : "选模式或实时调属性，预览随之变化，写法可一键复制。"} />
         <ButtonPlayground lang={lang} />
       </section>
       <section id="props" className={docsSpacing.sectionStack}>

@@ -163,14 +163,13 @@ export function StandardDocPage({
   // manifest route for pages whose Playground is generated automatically.
   const playgroundPrimary = Boolean(playground) || autoScenarioSlugs.includes(slug)
   const resolvedPlayground = playground ?? (playgroundPrimary ? <StandardScenarioPlayground slug={slug} examples={scenarioExamples} renderScenarioPreview={renderScenarioPreview} importCode={importCode} lang={lang} storyPresentation={storyPresentation} /> : null)
-  const structureExamples = storyPresentation === "examples"
   const showOverview = !hideOverview && !playgroundPrimary
   const showScenarioExamples = !hideScenarioExamples && !playgroundPrimary
   const showUsage = !hideUsage && !playgroundPrimary
 
   return <div className={docsSpacing.pageStack}>
     <section id={slug} className="flex flex-col gap-2"><FxPageLead crumb={lang === "en" ? `Components / ${title}` : `组件 / ${displayTitle}`} title={displayTitle} titleMeta={lang === "en" ? undefined : titleMeta} lead={lead} actions={actions} /></section>
-    {resolvedPlayground ? <section id={`${slug}-playground`} className={docsSpacing.sectionStack}><SectionLead title={structureExamples ? (lang === "en" ? "Composition examples" : "结构示例") : (lang === "en" ? "Playground" : "调试台")} description={playgroundDescription ?? (structureExamples ? (lang === "en" ? "Switch between verified composition examples and copy the recommended code." : "切换已验证的结构用法并复制推荐代码。") : (lang === "en" ? "Pick a scenario or tweak props live, then copy the generated code." : "选场景或实时调属性，预览随之变化，写法可一键复制。"))} />{resolvedPlayground}</section> : null}
+    {resolvedPlayground ? <section id={`${slug}-playground`} className={docsSpacing.sectionStack}>{resolvedPlayground}</section> : null}
     {showOverview ? <section id={`${slug}-overview`} className={docsSpacing.sectionStack}><SectionLead title={lang === "en" ? "Overview" : "组件总览"} description={lang === "en" ? "A compact look at the component to quickly see what it looks like." : "紧凑展示该组件的样子，用来快速查看长什么样。"} />{overviewMatrix ?? <DocSurfaceCard><div className="flex items-center gap-3 p-5">{overview}</div></DocSurfaceCard>}</section> : null}
     {showScenarioExamples ? <section id={`${slug}-preview`} className={docsSpacing.sectionStack}><SectionLead title="场景示例" description="常见用法与适用场景。" /><ScenarioTable lang={lang} layout={scenarioLayout} filters={scenarioFilters} rows={scenarioExamples.map((example) => ({ key: example.id, group: example.group, title: example.title, preview: renderScenarioPreview(example.id), spec: example.spec, intent: example.intent, constraint: example.rule, code: example.code }))} elevated /></section> : null}
     {showUsage ? <section id={`${slug}-usage`} className={docsSpacing.sectionStack}><SectionLead title="使用方式" description={usageCode ? "把 import 和完整组装写法复制到业务页面里使用。" : "复制 import 即可；更多组合写法见上方「调试台」的代码 Tab。"} /><DocSurfaceCard><div className="grid gap-4 p-5"><CopyCodeBlock code={importCode} label="Import" lang={lang} />{usageCode ? <CopyCodeBlock code={usageCode} label="调用" lang={lang} /> : null}</div></DocSurfaceCard></section> : null}

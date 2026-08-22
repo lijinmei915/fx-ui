@@ -15,7 +15,7 @@ const iconSizes: Record<ButtonSize, "icon-xs" | "icon-sm" | "icon-md" | "icon-lg
 
 function renderButton(values: Record<string, string>, lang: "zh" | "en") {
   const variant = values.variant as ButtonVariant
-  const tone = variant === "plain" ? values.tone as ButtonTone : "default"
+  const tone = values.tone as ButtonTone
   const size = values.size as ButtonSize
   const icon = values.icon as ButtonIcon
   const disabled = values.disabled === "true"
@@ -39,7 +39,7 @@ function genButtonCode(values: Record<string, string>, lang: "zh" | "en") {
   const size = values.size as ButtonSize
   const icon = values.icon as ButtonIcon
   if (variant !== "default") attrs.push(`variant=\"${variant}\"`)
-  if (variant === "plain" && values.tone !== "default") attrs.push(`tone=\"${values.tone}\"`)
+  if (values.tone !== "default") attrs.push(`tone=\"${values.tone}\"`)
   if (icon === "only") attrs.push(`size=\"${iconSizes[size]}\"`)
   else if (size !== "sm") attrs.push(`size=\"${size}\"`)
   if (values.disabled === "true" || values.loading === "true") attrs.push("disabled")
@@ -58,7 +58,12 @@ export const buttonPlaygroundConfig: ComponentPlaygroundConfig = {
   initial: buttonManifest.initial,
   stories: componentPlaygroundStoriesFromManifest(buttonManifest),
   guidanceKey: buttonManifest.guidanceKey,
-  onValueChange: (next, key, value) => key === "loading" && value === "true" ? { ...next, disabled: "true" } : key === "variant" && value !== "plain" ? { ...next, tone: "default" } : next,
+  onValueChange: (next, key, value) => {
+    if (key === "loading" && value === "true") return { ...next, disabled: "true" }
+    if (key !== "variant") return next
+    const tone = value === "default" ? "primary" : value === "plain" ? "default" : "default"
+    return { ...next, tone }
+  },
   renderOne: renderButton,
   genCode: genButtonCode,
 }

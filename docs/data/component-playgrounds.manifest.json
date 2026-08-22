@@ -439,13 +439,13 @@
       "mode": "custom-config",
       "initial": {
         "variant": "default",
-        "tone": "default",
+        "tone": "primary",
         "size": "sm",
         "icon": "none",
         "disabled": "false",
         "loading": "false",
-        "text": "主要操作",
-        "textEn": "Primary action"
+        "text": "按钮",
+        "textEn": "Button"
       },
       "props": [
         {
@@ -469,8 +469,8 @@
           "options": [
             {
               "value": "default",
-              "label": "实心",
-              "labelEn": "Solid",
+              "label": "主要",
+              "labelEn": "Primary",
               "intent": "页面中的最高优先级主操作。",
               "intentEn": "The highest-priority primary action on a page.",
               "constraint": "同一视图通常只保留一个主操作；使用 Button 的 default variant。",
@@ -482,7 +482,7 @@
               "labelEn": "Secondary",
               "intent": "与主操作并列但优先级较低的操作。",
               "intentEn": "A lower-priority action placed alongside the primary action.",
-              "constraint": "适合次级操作，不要用它替代主操作或承载危险动作。",
+              "constraint": "使用中性填充与主要操作区分；不要用它替代主操作或承载危险动作。",
               "constraintEn": "Use for secondary actions; do not replace the primary or destructive action with it."
             },
             {
@@ -511,15 +511,6 @@
               "intentEn": "A lightweight text action within body content.",
               "constraint": "不提供按钮底色和边框；需要明确热区时改用 ghost 或 outline。",
               "constraintEn": "Provides no button surface or border; use ghost or outline when a clear hit area is needed."
-            },
-            {
-              "value": "destructive",
-              "label": "危险",
-              "labelEn": "Danger",
-              "intent": "删除、撤销等不可逆或高风险操作。",
-              "intentEn": "An irreversible or high-risk action such as delete or revoke.",
-              "constraint": "只用于明确的危险动作；文案必须直接说明后果，必要时配合确认。",
-              "constraintEn": "Reserve for explicit destructive actions; state the consequence and confirm when needed."
             }
           ]
         },
@@ -531,19 +522,14 @@
           "type": "segment",
           "hasAll": true,
           "disabledWhen": {
-            "variant": [
-              "default",
-              "secondary",
-              "outline",
-              "ghost",
-              "destructive"
-            ]
+            "variant": "destructive"
           },
           "options": [
             {
               "value": "default",
               "label": "默认",
               "labelEn": "Default",
+              "hiddenWhen": { "variant": "default" },
               "intent": "不额外强调语义的中性色。",
               "intentEn": "A neutral tone without additional semantic emphasis.",
               "constraint": "仅 plain variant 使用 tone；其他 variant 的语义由 variant 决定。",
@@ -562,6 +548,7 @@
               "value": "info",
               "label": "信息",
               "labelEn": "Info",
+              "hiddenWhen": { "variant": ["default", "secondary", "outline", "ghost"] },
               "intent": "需要信息色文字提示的轻量操作。",
               "intentEn": "A lightweight action with informational text emphasis.",
               "constraint": "仅与 plain variant 组合，并保持信息语义而非装饰。",
@@ -589,22 +576,30 @@
             {
               "value": "xs",
               "label": "超小24",
-              "labelEn": "XS 24"
+              "labelEn": "XS 24",
+              "intent": "24px 高配 12/18px 文字与 6px 圆角。",
+              "intentEn": "24px height with 12/18px text and a 6px radius."
             },
             {
               "value": "sm",
               "label": "默认28",
-              "labelEn": "SM 28"
+              "labelEn": "SM 28",
+              "intent": "默认 28px 高配 13/18px 紧凑控件文字与 6px 圆角。",
+              "intentEn": "Default 28px height with compact 13/18px text and a 6px radius."
             },
             {
               "value": "md",
               "label": "中32",
-              "labelEn": "MD 32"
+              "labelEn": "MD 32",
+              "intent": "32px 高配 14/20px 文字与 8px 圆角。",
+              "intentEn": "32px height with 14/20px text and an 8px radius."
             },
             {
               "value": "lg",
               "label": "大36",
-              "labelEn": "LG 36"
+              "labelEn": "LG 36",
+              "intent": "36px 高配 16/24px 文字与 8px 圆角。",
+              "intentEn": "36px height with 16/24px text and an 8px radius."
             }
           ]
         },
@@ -619,22 +614,38 @@
             {
               "value": "none",
               "label": "无",
-              "labelEn": "None"
+              "labelEn": "None",
+              "intent": "按钮只承载文字，不额外引入图标提示。",
+              "intentEn": "Use text only when an icon does not add useful recognition.",
+              "constraint": "保持短动作文案；不要为了装饰强行添加图标。",
+              "constraintEn": "Keep the action label concise; do not add an icon for decoration alone."
             },
             {
               "value": "start",
               "label": "左侧",
-              "labelEn": "Start"
+              "labelEn": "Start",
+              "intent": "图标用于辅助识别动作，放在文字左侧作为前置提示。",
+              "intentEn": "Use a leading icon to reinforce recognition of the action.",
+              "constraint": "使用 data-icon=\"inline-start\"，图标尺寸由 Button 按字号控制。",
+              "constraintEn": "Use data-icon=\"inline-start\" and let Button derive the icon size from text size."
             },
             {
               "value": "end",
               "label": "右侧",
-              "labelEn": "End"
+              "labelEn": "End",
+              "intent": "图标表示后续菜单、展开或跳转方向，放在文字右侧。",
+              "intentEn": "Use a trailing icon for a menu, expansion, or navigation cue.",
+              "constraint": "使用 data-icon=\"inline-end\"；图标不替代按钮文字。",
+              "constraintEn": "Use data-icon=\"inline-end\"; the icon must not replace the button label."
             },
             {
               "value": "only",
               "label": "仅图标",
-              "labelEn": "Icon only"
+              "labelEn": "Icon only",
+              "intent": "动作可由图标明确表达，使用纯图标按钮节省空间。",
+              "intentEn": "Use an icon-only button when the action is unambiguous from the icon.",
+              "constraint": "必须提供 aria-label；需要确认含义时优先使用带文字按钮。",
+              "constraintEn": "Always provide aria-label; use a labelled button when the icon could be ambiguous."
             }
           ]
         },

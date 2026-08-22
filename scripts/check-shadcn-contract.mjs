@@ -93,6 +93,9 @@ const [buttonSource, appSource, buttonPlaygroundModuleSource, buttonDocs, playgr
 ])
 
 const errors = []
+if (buttonSource.includes("bg-clip-padding text-sm font-normal")) {
+  errors.push("Button base class must not pin text-sm; typography belongs to each size variant")
+}
 const variants = extractVariantKeys(buttonSource, "variant")
 const sizes = extractVariantKeys(buttonSource, "size")
 const buttonPlaygroundSource = `${appSource}\n${buttonPlaygroundModuleSource}\n${JSON.stringify(playgroundManifest.customPlaygrounds?.button ?? {})}`
@@ -101,6 +104,9 @@ const normalizedButtonPlaygroundSource = buttonPlaygroundSource.replace(/\s/g, "
 for (const variant of variants) {
   const jsxUsage = variant === "default" ? 'variant: "default"' : `variant="${variant}"`
   const manifestOption = `"value":"${variant}"`
+  // destructive is a semantic danger treatment, not a visual-type option in the
+  // playground. Its real API remains documented and exercised by the component.
+  if (variant === "destructive" && buttonDocs.includes('variant="destructive"') && normalizedButtonPlaygroundSource.includes('"value":"danger"')) continue
   if (!buttonPlaygroundSource.includes(jsxUsage) && !normalizedButtonPlaygroundSource.includes(manifestOption)) {
     errors.push(`Button playground is missing "${jsxUsage}"`)
   }
@@ -115,6 +121,17 @@ assertIncludes(
   errors
 )
 assertIncludes(buttonDocs, variants, "Button Markdown variants", errors)
+assertIncludes(
+  buttonSource,
+  [
+    'xs: "h-(--fx-control-xs-height) rounded-sm px-(--fx-control-px-xs) text-xs',
+    'sm: "h-(--fx-control-sm-height) rounded-sm px-(--fx-control-px-sm) text-[length:var(--fx-text-control-sm)] leading-[var(--fx-text-control-sm--line-height)]',
+    'md: "h-(--fx-control-md-height) rounded-md px-(--fx-control-px-md) text-sm',
+    'lg: "h-(--fx-control-lg-height) gap-(--fx-control-gap) rounded-md px-(--fx-control-px-lg) text-base',
+  ],
+  "Button size typography/radius contract",
+  errors
+)
 assertIncludes(buttonDocs, sizes, "Button Markdown sizes", errors)
 
 const requiredStateContracts = [

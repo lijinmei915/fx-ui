@@ -20,6 +20,8 @@ tokens:
   - input
   - ring
   - radius
+  - fx-text-control-sm
+  - fx-text-control-sm--line-height
 status: complete
 ---
 
@@ -64,9 +66,9 @@ Figma 关键规格（默认/中尺寸）：
 | --- | --- | --- | --- |
 | 默认高度 | **28px**（中：24≤h≤28） | 28px（默认走 sm 档） | ✅ |
 | 横向内边距 | **10px**（外间距/Button） | sm 档 px-2.5（10px） | ✅ |
-| 圆角 | **6px**（中）/ 8px（大 h≥32） | `--radius-md` | 待核 |
+| 圆角 | **6px**（24/28）/ 8px（32/36） | `rounded-sm` / `rounded-md` | ✅ |
 | 图标-文字间距 | **4px**（内间距/Button） | 4px（gap-1） | ✅ |
-| 字号 | **13px** Regular | 按 Tailwind 字号档随尺寸递进 | ✅ |
+| 字号 | **13/18px** Regular | `text-[length:var(--fx-text-control-sm)]` + `leading-[var(--fx-text-control-sm--line-height)]` | ✅ |
 
 注：上表差异是**待体检对齐项**（尚未改动，先记录留痕）；调整时连同 size 阶梯（小24 / 中28 / 大32+）一并评估，不要只改默认。
 
@@ -74,11 +76,11 @@ Figma 关键规格（默认/中尺寸）：
 
 | size | 高度变量 | 字号类 | 标准 14 基准下 |
 | --- | --- | --- | --- |
-| `xs` | `--fx-control-xs-height` | `text-xs` | 12px |
-| `sm`（默认） | `--fx-control-sm-height` | `text-sm` | 14px |
-| `md` | `--fx-control-md-height` | `text-base` | 16px |
-| `lg` | `--fx-control-lg-height` | `text-lg` | 18px |
-| `toolbar` | `--fx-control-sm-height` | `text-sm` | 14px |
+| `xs` | `--fx-control-xs-height` | `text-xs` | 12/18px |
+| `sm`（默认） | `--fx-control-sm-height` | `text-[length:var(--fx-text-control-sm)]` + `leading-[var(--fx-text-control-sm--line-height)]` | 13/18px |
+| `md` | `--fx-control-md-height` | `text-sm` | 14/20px |
+| `lg` | `--fx-control-lg-height` | `text-base` | 16/24px |
+| `toolbar` | `--fx-control-sm-height` | `text-[length:var(--fx-text-control-sm)]` + `leading-[var(--fx-text-control-sm--line-height)]` | 13/18px |
 
 图标文字按钮的图标默认按 `1.15em` 跟随字号；纯图标按钮使用 `icon-*` 档单独控制热区和图标尺寸。
 
@@ -168,6 +170,8 @@ Button 支持 `@base-ui/react/button` 的原生 button props，并额外支持�
 | `--destructive` | 危险按钮、错误态和不可逆操作 |
 | `--ring` | 键盘焦点环和可访问性焦点态 |
 | `--radius` | 按钮圆角派生尺度 |
+| `--fx-text-control-sm` | 28px Button 与 toolbar 的 13/18px 紧凑控件文字 |
+| `--fx-text-control-sm--line-height` | 28px Button 与 toolbar 的 18px 紧凑控件行高 |
 
 完整 token 规则见 `docs/TOKENS.md`。
 
@@ -188,14 +192,14 @@ Button 只有一个组件，靠 4 个**互相独立**的轴组合，任意搭配
 | 轴 | prop | 取值 | 管什么 |
 | --- | --- | --- | --- |
 | 类型 | `variant` | default / secondary / outline / ghost / destructive / plain | 语义层级与底色 |
-| 尺寸 | `size` | xs(24) / sm(28,默认) / md(32) / lg(36) / toolbar(28+14px) / icon-* | 高度、内边距、字号、图标-文字 gap |
-| 分色 | `tone` | default / primary / info / danger | **仅 `plain` 生效**，给无底色按钮分色（info=蓝） |
+| 尺寸 | `size` | xs(24) / sm(28,默认) / md(32) / lg(36) / toolbar(28+13px) / icon-* | 高度、内边距、字号、图标-文字 gap |
+| 分色 | `tone` | default / primary / info / danger | 主要支持 primary / danger；次级、描边、幽灵支持 default / primary / danger；plain 额外支持 info |
 | 状态 | 原生 | `disabled`（+ Spinner = loading） | 交互态 |
 
-- 选择顺序：先按语义选 `variant` → 按密度/场景选 `size` → 若是 `plain` 再选 `tone` → 状态按需加。
+- 选择顺序：先按语义选 `variant` → 按主色/危险等语义选 `tone` → 按密度/场景选 `size` → 状态按需加。
 - 任意 `variant` 都能配任意 `size` 与状态（正交），例如 `<Button variant="plain" size="sm" tone="danger">`、`<Button variant="outline" size="lg" disabled>`。
-- `toolbar` / `toolbar-icon` 只用于页面顶栏、工具栏和页面动作区：保持 28px 热区，但文字固定走 14px，避免普通 `sm` 的 16px 字号挤进高密度工具区。
-- `tone` 只对 `plain` 有意义；实心/描边/ghost 的颜色由 `variant` 决定，不要叠 `tone`。
+- `toolbar` / `toolbar-icon` 只用于页面顶栏、工具栏和页面动作区：保持 28px 热区，文字固定走受控的 13/18px 紧凑控件字号。
+- `tone` 与主要、次级、描边、幽灵组合时表达主色或危险语义；`plain` 额外支持信息色。不要传入当前组合未声明的语义色。
 - 纯图标（任意 variant + `size="icon-*"`）必须补 `aria-label` + Tooltip。
 
 ## 正误示例 {#do-dont}

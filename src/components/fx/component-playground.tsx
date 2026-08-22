@@ -248,6 +248,7 @@ export function ComponentPlayground({ config, lang, value, onValueChange }: { co
     : guidanceOption
     ? lang === "en" ? (guidanceOption.constraintEn ?? guidanceOption.constraint) : guidanceOption.constraint
     : lang === "en" ? "Keep props aligned with the component source. Do not invent local-only variants." : "调试项必须和组件源码能力一致，不发明局部变体。"
+  const showGuidance = !isAllGuidance
   const visibleNodes = config.workbench?.nodes.filter((node) => !(node.hiddenWhen?.(v) ?? false)) ?? []
   const activeNode = visibleNodes.find((node) => node.key === selectedNode) ?? visibleNodes[0]
   const workbenchActive = Boolean(config.workbench && editing)
@@ -451,15 +452,17 @@ export function ComponentPlayground({ config, lang, value, onValueChange }: { co
           </div>
           <div className="border-l border-border-subtle pl-(--card-spacing) max-[900px]:border-l-0 max-[900px]:border-t max-[900px]:pl-0 max-[900px]:pt-(--card-spacing)">
             <div className="flex flex-col gap-(--playground-gap)">
-              <div>
-                <div className="mb-1">
-                  <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Intent" : "使用意图"}</PlaygroundSectionTitle>
+              {showGuidance && intentText ? (
+                <div>
+                  <div className="mb-1">
+                    <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Intent" : "使用意图"}</PlaygroundSectionTitle>
+                  </div>
+                  <p className="text-sm leading-relaxed text-foreground-secondary">
+                    {intentText}
+                  </p>
                 </div>
-                <p className="text-sm leading-relaxed text-foreground-secondary">
-                  {intentText}
-                </p>
-              </div>
-              {constraintText ? (
+              ) : null}
+              {showGuidance && constraintText ? (
                 <div>
                   <div className="mb-1">
                     <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Constraint" : "约束"}</PlaygroundSectionTitle>

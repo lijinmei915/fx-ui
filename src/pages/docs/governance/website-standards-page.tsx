@@ -53,7 +53,7 @@ export function WebsiteStandardsPage({
       <div className={docsSpacing.pageStack}>
         <section id="website-standards" className="flex flex-col gap-3">
           <FxPageLead
-            crumb={lang === "en" ? "Maintain / Website Standards" : "维护 / 网站规范"}
+            crumb={lang === "en" ? "Governance / Website Standards" : "治理中心 / 网站规范"}
             title={lang === "en" ? "Website Standards" : "网站规范"}
             titleMeta={lang === "en" ? undefined : "Website Standards"}
             lead={lang === "en" ? "Reusable page components for this docs website. Keep page chrome here, and keep business admin patterns in compositions." : "本站文档页的页面组件规范。文档站外壳放这里，业务后台模式仍放业务组合。"}
@@ -87,7 +87,7 @@ export function WebsiteStandardsPage({
               <WebsiteCardContainer>
                 <CardContent className="flex flex-col gap-5 p-5">
                   <FxPageLead
-                  crumb="维护 / 网站规范"
+                  crumb="治理中心 / 网站规范"
                   title="页面标题区"
                   titleMeta="PageLead"
                   lead="这里展示页面标题区的真实组件形态。标题下只保留一句说明，不再额外加线。"

@@ -80,6 +80,53 @@ test("navigation: page builder is a top-level workspace beside Pages", async ({
   await expect(page.locator("#page-builder-workspace")).toBeVisible();
   await expect(page.locator('[data-slot="docs-sidebar"]')).toBeHidden();
   await expect(page.locator("#page-builder")).toHaveCount(0);
+  const mainBounds = await page.locator("main.fx-doc-static").boundingBox();
+  const workspaceBounds = await page
+    .locator("#page-builder-workspace")
+    .boundingBox();
+  expect(workspaceBounds).toEqual(mainBounds);
+});
+
+test("navigation: builder modes are ordered from foundation to page", async ({
+  page,
+}) => {
+  await page.goto("/#page-builder");
+  await expect(page.getByLabel("搭建模式")).toContainText("页面");
+  await page.getByLabel("搭建模式").click();
+  await expect(page.getByRole("option")).toHaveText([
+    "基础组件",
+    "业务组件",
+    "页面",
+  ]);
+  await page.getByRole("option", { name: "业务组件", exact: true }).click();
+  await page.reload();
+  await expect(page.getByLabel("搭建模式")).toContainText("业务组件");
+});
+
+test("navigation: governance is a direct top-level entry", async ({ page }) => {
+  await page.goto("/#governance-map");
+  const headerNav = page.locator("header nav");
+  await expect(
+    headerNav.getByRole("link", { name: "治理中心", exact: true }),
+  ).toBeVisible();
+  await expect(
+    headerNav.getByRole("link", { name: "治理中心", exact: true }),
+  ).toHaveClass(/border-primary/);
+  await expect(page.locator('[data-slot="docs-sidebar"]')).toContainText(
+    "治理中心",
+  );
+  await expect(page.locator('[data-slot="docs-sidebar"]')).not.toContainText(
+    "列表页校准",
+  );
+});
+
+test("navigation: page builder exposes list calibration as a builder tool", async ({
+  page,
+}) => {
+  await page.goto("/#page-builder");
+  await expect(
+    page.getByRole("link", { name: "列表页校准", exact: true }),
+  ).toBeVisible();
 });
 
 test("component page headings use the shared Chinese and English title pair", async ({
@@ -166,7 +213,7 @@ test("state: page builder only edits registered customer-list slots and properti
   await expect(shell).toHaveAttribute("data-frame", "inset");
   await expect(shell).toHaveAttribute("data-shape", "square");
   await expect(shell).toHaveCSS("border-radius", "0px");
-  await expect(shell).toHaveCSS("background-color", "rgb(239, 241, 243)");
+  await expect(shell).toHaveCSS("background-color", "rgb(245, 246, 247)");
   await expect(
     preview.locator('[data-slot="crm-app-shell-content"]'),
   ).toHaveCSS("background-color", "rgb(255, 255, 255)");
@@ -292,65 +339,6 @@ test("state: page builder only edits registered customer-list slots and properti
   ).toBeVisible();
 });
 
-test("state: component review validates an external Agent candidate before Playground", async ({
-  page,
-}) => {
-  await page.goto("/#page-builder");
-  const workspace = page.locator("#page-builder-workspace");
-  await workspace.getByLabel("搭建模式").click();
-  await page.getByRole("option", { name: "基础组件评审", exact: true }).click();
-
-  const builder = workspace.locator('[data-slot="component-builder"]');
-  const preview = builder.locator('[data-slot="candidate-live-preview"]');
-  const stateMatrix = builder.locator('[data-slot="candidate-state-matrix"]');
-  await expect(builder).toBeVisible();
-  await expect(
-    builder.getByRole("button", { name: "选择候选 主操作按钮 v1" }),
-  ).toBeVisible();
-  await expect(preview.getByRole("button", { name: "主要操作" })).toHaveAttribute(
-    "data-variant",
-    "default",
-  );
-  await expect(builder.locator('[data-slot="component-playground"]')).toHaveCount(0);
-  await expect(stateMatrix.getByText("未暴露", { exact: true })).toBeVisible();
-
-  await builder.getByLabel("预览文字").fill("提交审批");
-  await expect(preview.getByRole("button", { name: "提交审批" })).toBeVisible();
-  await builder.getByRole("combobox", { name: "外观变体" }).click();
-  await page.getByRole("option", { name: "次级按钮", exact: true }).click();
-  await expect(preview.getByRole("button", { name: "提交审批" })).toHaveAttribute(
-    "data-variant",
-    "secondary",
-  );
-  await workspace.getByRole("button", { name: "撤销", exact: true }).click();
-  await expect(preview.getByRole("button", { name: "提交审批" })).toHaveAttribute(
-    "data-variant",
-    "default",
-  );
-  await workspace.getByRole("button", { name: "重做", exact: true }).click();
-  await expect(preview.getByRole("button", { name: "提交审批" })).toHaveAttribute(
-    "data-variant",
-    "secondary",
-  );
-
-  await builder.getByRole("checkbox", { name: "前置图标" }).click();
-  await expect(stateMatrix.getByText("未暴露", { exact: true })).toHaveCount(0);
-  await builder.getByLabel("给外部 Agent 的修改要求").fill("补充图标间距说明");
-  await builder.getByRole("button", { name: "生成返工任务" }).click();
-  await expect(builder.getByText("返工任务已生成", { exact: true })).toBeVisible();
-  await expect(builder.getByText(/尚未执行代码修改/)).toBeVisible();
-
-  const approve = builder.getByRole("button", { name: "确认进入 Playground" });
-  await expect(approve).toBeDisabled();
-  await builder.getByRole("button", { name: "运行验收" }).click();
-  await expect(builder.getByText("治理检查已通过", { exact: true })).toBeVisible();
-  await expect(builder.locator('[data-slot="candidate-checks"]')).toContainText("通过");
-  await expect(approve).toBeEnabled();
-  await approve.click();
-  await expect(builder.getByText("候选已确认", { exact: true })).toBeVisible();
-  await expect(builder.getByText(/尚未直接覆盖组件源码/)).toBeVisible();
-});
-
 test("state: business component builder starts blank, groups components, and publishes", async ({
   page,
 }) => {
@@ -358,7 +346,7 @@ test("state: business component builder starts blank, groups components, and pub
   await page.goto("/#page-builder");
   const workspace = page.locator("#page-builder-workspace");
   await workspace.getByLabel("搭建模式").click();
-  await page.getByRole("option", { name: "业务组件搭建", exact: true }).click();
+  await page.getByRole("option", { name: "业务组件", exact: true }).click();
 
   const builder = workspace.locator('[data-slot="business-component-builder"]');
   const preview = builder.locator('[data-slot="business-component-preview"]');
@@ -388,8 +376,19 @@ test("state: business component builder starts blank, groups components, and pub
   await library.getByPlaceholder("搜索组件").fill("输入框");
   await library.getByRole("button", { name: /输入框.*可添加/ }).click();
   await expect(preview.locator("[data-builder-node]")).toHaveCount(4);
+  await builder.getByRole("tab", { name: "图层", exact: true }).click();
+  await expect(
+    builder.locator('[data-slot="composition-layer-tree"]'),
+  ).toContainText("输入框");
+  await builder
+    .locator('[data-slot="composition-layer-tree"]')
+    .getByRole("button", { name: "上移输入框" })
+    .click();
+  await builder.getByRole("tab", { name: "组件", exact: true }).click();
+  await workspace.getByRole("button", { name: "撤销", exact: true }).click();
   await workspace.getByRole("button", { name: "撤销", exact: true }).click();
   await expect(preview.locator("[data-builder-node]")).toHaveCount(3);
+  await workspace.getByRole("button", { name: "重做", exact: true }).click();
   await workspace.getByRole("button", { name: "重做", exact: true }).click();
 
   await preview.locator('[data-node-type="button"]').click();
@@ -414,6 +413,7 @@ test("state: business component builder starts blank, groups components, and pub
   await expect(preview.locator('[data-slot="separator"]')).toHaveCount(1);
 
   await preview.click({ position: { x: 500, y: 180 } });
+  await builder.getByRole("tab", { name: "全局", exact: true }).click();
   await builder.getByLabel("组件间隔").click();
   await page
     .getByRole("listbox")
@@ -440,12 +440,297 @@ test("state: business component builder starts blank, groups components, and pub
   await preview
     .locator('[data-node-type="group"]')
     .click({ position: { x: 2, y: 2 } });
-  await builder
-    .getByRole("button", { name: "删除所选组件", exact: true })
-    .click();
+  await page.keyboard.press("Delete");
   await expect(preview.locator("[data-builder-node]")).toHaveCount(2);
   await workspace.getByRole("button", { name: "撤销", exact: true }).click();
   await expect(preview.locator('[data-node-type="group"]')).toHaveCount(1);
+});
+
+test("state: foundation component builder starts with one selected container", async ({
+  page,
+}) => {
+  await page.goto("/#page-builder");
+  const workspace = page.locator("#page-builder-workspace");
+  await workspace.getByLabel("搭建模式").click();
+  await page.getByRole("option", { name: "基础组件", exact: true }).click();
+
+  const builder = workspace.locator('[data-slot="business-component-builder"]');
+  const preview = builder.locator('[data-slot="business-component-preview"]');
+  await expect(builder).toBeVisible();
+  await expect(
+    builder.getByRole("tab", { name: "全部", exact: true }),
+  ).toBeVisible();
+  await expect(
+    builder.getByRole("tab", { name: "选中", exact: true }),
+  ).toBeVisible();
+  await expect(
+    builder.getByRole("tab", { name: "图层", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    builder.getByRole("tab", { name: "全局", exact: true }),
+  ).toBeVisible();
+  await expect(
+    builder.getByRole("tab", { name: "属性", exact: true }),
+  ).toBeVisible();
+  await expect(
+    builder.getByRole("tab", { name: "全局", exact: true }),
+  ).toHaveAttribute("data-active");
+  await expect(builder.getByLabel("组件名称")).toBeVisible();
+  await expect(preview.locator('[data-node-type="container"]')).toHaveCount(1);
+  await expect(
+    builder.locator('[data-slot="canvas-selection-toolbar"]'),
+  ).toHaveCount(0);
+  await expect(
+    builder.getByText("拖入组件，Shift 多选", { exact: true }),
+  ).toHaveCount(0);
+  await expect(preview).toHaveClass(/bg-transparent/);
+  const previewBounds = await preview.boundingBox();
+  const canvasBounds = await preview.locator("..").boundingBox();
+  expect(previewBounds).not.toBeNull();
+  expect(canvasBounds).not.toBeNull();
+  const previewCenter = {
+    x: previewBounds!.x + previewBounds!.width / 2,
+    y: previewBounds!.y + previewBounds!.height / 2,
+  };
+  const canvasCenter = {
+    x: canvasBounds!.x + canvasBounds!.width / 2,
+    y: canvasBounds!.y + canvasBounds!.height / 2,
+  };
+  expect(Math.abs(previewCenter.x - canvasCenter.x)).toBeLessThanOrEqual(1);
+  expect(Math.abs(previewCenter.y - canvasCenter.y)).toBeLessThanOrEqual(1);
+  await builder.getByRole("tab", { name: "选中", exact: true }).click();
+  await preview.locator('[data-node-type="container"]').click();
+  await expect(
+    builder.getByRole("tab", { name: "属性", exact: true }),
+  ).toHaveAttribute("data-active");
+  await expect(
+    builder.locator('[data-slot="component-instance-properties"]'),
+  ).toBeVisible();
+  await expect(
+    builder.locator('[data-slot="foundation-selection"]'),
+  ).toContainText("容器");
+  await expect(
+    builder.locator('[data-slot="foundation-selection-actions"]'),
+  ).toContainText("已选 1 项");
+  await builder
+    .getByRole("button", { name: "删除所选节点", exact: true })
+    .click();
+  await expect(preview.locator('[data-node-type="container"]')).toHaveCount(0);
+  await expect(
+    builder.locator('[data-slot="component-instance-properties"]'),
+  ).toHaveCount(0);
+  await expect(builder).not.toContainText("Auto Layout · 整体");
+  await expect(builder.getByLabel("组件名称")).toHaveCount(0);
+  await workspace.getByRole("button", { name: "撤销", exact: true }).click();
+  await expect(preview.locator('[data-node-type="container"]')).toHaveCount(1);
+  await preview.locator('[data-node-type="container"]').click();
+  await builder.getByRole("tab", { name: "全局", exact: true }).click();
+  await expect(builder.getByLabel("组件名称")).toBeVisible();
+  await expect(
+    builder.locator('[data-slot="foundation-candidate-gate"]'),
+  ).toBeVisible();
+  await builder.getByRole("tab", { name: "全部", exact: true }).click();
+  await expect(
+    builder.locator('[data-slot="business-component-builder-agent"]'),
+  ).toHaveCount(0);
+
+  const library = builder.locator("aside").first();
+  await expect(
+    library.locator('[data-slot="foundation-library"]'),
+  ).toContainText("容器");
+  await expect(
+    library.locator('[data-slot="foundation-library"]'),
+  ).toContainText("字体排版");
+  await library.getByPlaceholder("搜索基础资产").fill("图标");
+  await expect(
+    library.locator('[data-slot="foundation-library"]'),
+  ).toContainText("图标");
+  await expect(
+    library.locator('[data-slot="foundation-library"]'),
+  ).not.toContainText("容器");
+  await library.getByPlaceholder("搜索基础资产").fill("");
+  await library.getByRole("button", { name: /^文字/ }).click();
+  await library.getByRole("button", { name: /^间距/ }).click();
+  await library.getByRole("button", { name: /^交互状态/ }).click();
+  await expect(preview.locator("[data-builder-node]")).toHaveCount(4);
+  await expect(
+    preview.locator('[data-node-type="container"] [data-builder-node]'),
+  ).toHaveCount(3);
+  await preview.locator('[data-node-type="typography"]').click();
+  await library.getByRole("button", { name: /^图标/ }).click();
+  await expect(
+    preview.locator('[data-node-type="container"] [data-node-type="icon"]'),
+  ).toHaveCount(1);
+  await preview.locator('[data-node-type="icon"]').click();
+  await builder.getByLabel("图标属性").click();
+  await page.getByRole("option", { name: "搜索", exact: true }).click();
+  await expect(preview.getByLabel("图标")).toHaveAttribute(
+    "class",
+    /tabler-icon-search/,
+  );
+  await preview.locator('[data-node-type="typography"]').click();
+  await expect(
+    builder.locator('[data-slot="component-instance-properties"]'),
+  ).toBeVisible();
+  await builder.getByLabel("文字内容属性").fill("保存");
+  await builder
+    .getByRole("checkbox", { name: /公开文字内容为业务 Prop/ })
+    .click();
+  await builder.getByRole("tab", { name: "全局", exact: true }).click();
+  await expect(
+    builder.locator('[data-slot="business-component-public-props"]'),
+  ).toContainText("文字");
+  await builder.getByLabel("组件名称").fill("基础主按钮");
+  await expect(builder.getByLabel("组件方式")).toContainText("新建组件");
+  await workspace
+    .getByRole("button", { name: "发布组件", exact: true })
+    .click();
+  await expect(builder).toContainText("请先生成并验收候选");
+  const generate = builder.getByRole("button", {
+    name: "生成候选",
+    exact: true,
+  });
+  const accept = builder.getByRole("button", { name: "预览验收", exact: true });
+  await expect(generate).toBeEnabled();
+  await expect(accept).toBeDisabled();
+  await generate.click();
+  await expect(builder).toContainText("候选已生成，待预览验收");
+  await expect(
+    builder.locator('[data-slot="foundation-candidate-preview"]'),
+  ).toContainText("容器");
+  await expect(
+    builder.locator('[data-slot="foundation-candidate-preview"]'),
+  ).toContainText("文字");
+  await accept.click();
+  await expect(builder).toContainText("候选验收通过，可发布");
+  await workspace
+    .getByRole("button", { name: "发布组件", exact: true })
+    .click();
+  await expect(builder).toContainText("新组件已提交入库");
+
+  await preview.locator('[data-node-type="typography"]').click();
+  await builder.getByLabel("内容属性").fill("继续修改");
+  await builder.getByRole("tab", { name: "全局", exact: true }).click();
+  await expect(builder).toContainText("当前画布已有修改，请重新生成候选");
+  await expect(accept).toBeDisabled();
+  await generate.click();
+  await accept.click();
+  await expect(builder).toContainText("候选验收通过，可发布");
+});
+
+test("state: foundation builder nests assets in a container and offers a button preset", async ({
+  page,
+}) => {
+  await page.goto("/#page-builder");
+  const workspace = page.locator("#page-builder-workspace");
+  await workspace.getByLabel("搭建模式").click();
+  await page.getByRole("option", { name: "基础组件", exact: true }).click();
+  const builder = workspace.locator('[data-slot="business-component-builder"]');
+  const library = builder.locator("aside").first();
+  const preview = builder.locator('[data-slot="business-component-preview"]');
+
+  await library.getByRole("button", { name: /按钮结构/ }).click();
+  await expect(preview.locator('[data-node-type="container"]')).toHaveCount(1);
+  await expect(
+    preview.locator('[data-node-type="container"] > div').first(),
+  ).toHaveClass(/bg-primary/);
+  await expect(
+    builder.locator('[data-slot="component-instance-properties"]'),
+  ).toContainText("圆角");
+  await expect(
+    builder.locator('[data-slot="component-instance-properties"]'),
+  ).toContainText(/尺寸.*排列.*子项间距/s);
+  await builder
+    .getByRole("checkbox", { name: "公开交互状态为业务 Prop" })
+    .click();
+  await builder.getByRole("tab", { name: "全局", exact: true }).click();
+  await expect(
+    builder.locator('[data-slot="business-component-public-props"]'),
+  ).toContainText("容器 · state");
+  await builder.getByRole("button", { name: "生成候选", exact: true }).click();
+  await expect(builder).toContainText("1 个公开 Prop");
+  await preview.locator('[data-node-type="container"]').click();
+  await builder.getByLabel("交互状态属性").click();
+  await page.getByRole("option", { name: "悬停", exact: true }).click();
+  await expect(
+    preview.locator('[data-node-type="container"] > div').first(),
+  ).toHaveClass(/bg-primary-hover/);
+  await expect(
+    preview.locator(
+      '[data-node-type="container"] [data-node-type="typography"]',
+    ),
+  ).toHaveCount(1);
+
+  await preview
+    .locator('[data-node-type="container"]')
+    .click({ position: { x: 2, y: 2 } });
+  await library.getByRole("button", { name: /^图标/ }).click();
+  await expect(
+    preview.locator('[data-node-type="container"] [data-node-type="icon"]'),
+  ).toHaveCount(1);
+  const dataTransfer = await page.evaluateHandle(() => new DataTransfer());
+  await library
+    .getByRole("button", { name: /^文字/ })
+    .dispatchEvent("dragstart", { dataTransfer });
+  await preview
+    .locator('[data-node-type="container"]')
+    .first()
+    .dispatchEvent("drop", { dataTransfer });
+  await dataTransfer.dispose();
+  await expect(
+    preview.locator(
+      '[data-node-type="container"] [data-node-type="typography"]',
+    ),
+  ).toHaveCount(2);
+  await preview.locator('[data-node-type="typography"]').first().click();
+  await preview
+    .locator('[data-node-type="typography"]')
+    .nth(1)
+    .click({ modifiers: ["Shift"] });
+  await builder.getByRole("tab", { name: "选中", exact: true }).click();
+  await expect(
+    builder.locator('[data-slot="foundation-selection-actions"]'),
+  ).toContainText("已选 2 项");
+  await builder
+    .locator('[data-slot="foundation-selection-actions"]')
+    .getByRole("button", { name: "成组", exact: true })
+    .click();
+  await expect(
+    preview.locator('[data-node-type="container"] [data-node-type="group"]'),
+  ).toHaveCount(1);
+});
+
+test("state: foundation builder can submit an update for an existing governed component", async ({
+  page,
+}) => {
+  await page.goto("/#page-builder");
+  const workspace = page.locator("#page-builder-workspace");
+  await workspace.getByLabel("搭建模式").click();
+  await page.getByRole("option", { name: "基础组件", exact: true }).click();
+  const builder = workspace.locator('[data-slot="business-component-builder"]');
+  await builder.getByLabel("组件名称").fill("按钮更新候选");
+  await builder.getByRole("button", { name: "生成候选", exact: true }).click();
+  await expect(builder).toContainText("候选已生成，待预览验收");
+  await builder.getByRole("button", { name: "预览验收", exact: true }).click();
+  await expect(builder).toContainText("候选验收通过，可发布");
+  await builder.getByLabel("组件方式").click();
+  await page.getByRole("option", { name: "更新已有组件", exact: true }).click();
+  await expect(builder.getByLabel("选择已有组件")).toBeVisible();
+  await builder.getByLabel("选择已有组件").click();
+  await page.getByRole("option", { name: "按钮", exact: true }).click();
+  await workspace
+    .getByRole("button", { name: "发布组件", exact: true })
+    .click();
+  await expect(builder).toContainText("已有组件更新已提交审核");
+  const revisions = await page.evaluate(() =>
+    JSON.parse(
+      localStorage.getItem("fx-ui:foundation-component-revisions") ?? "[]",
+    ),
+  );
+  expect(revisions.at(-1)).toMatchObject({
+    deliveryMode: "existing",
+    existingComponent: "Button",
+  });
 });
 
 test("state: business component builder edits real instance properties and publishes public props", async ({
@@ -455,7 +740,7 @@ test("state: business component builder edits real instance properties and publi
   await page.goto("/#page-builder");
   const workspace = page.locator("#page-builder-workspace");
   await workspace.getByLabel("搭建模式").click();
-  await page.getByRole("option", { name: "业务组件搭建", exact: true }).click();
+  await page.getByRole("option", { name: "业务组件", exact: true }).click();
 
   const builder = workspace.locator('[data-slot="business-component-builder"]');
   const preview = builder.locator('[data-slot="business-component-preview"]');

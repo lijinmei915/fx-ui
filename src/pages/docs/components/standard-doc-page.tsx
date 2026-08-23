@@ -130,7 +130,6 @@ export function StandardDocPage({
   lang,
   autoScenarioSlugs = [],
   storyPresentation,
-  playgroundDescription,
 }: {
   slug: string
   title: string

@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-07-27
+last_verified: 2026-08-23
 teaches: "AI 在 fx-ui 项目里的行为红线：不手写组件、只注入 token、保护 token 真相源"
 use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token 时"
 ---
@@ -33,6 +33,8 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
    - className 只许用于**把组件放进布局**（外层容器的定位 / 宽度）；布局间距也照搬库里既有范例的写法，不自创（见红线 6）。
    - 改了页面 / 组合 / 视觉，**收尾必跑 `npm run test:visual` 看截图**（见自检清单 #10），没多余缝隙/圆角/漂移才算完。
    - 反例：给 `NavMenu` 加 `rounded-none border-r` 改它的圆角/边框 = 改外观（该加 variant 或别改）；给外层加范例没有的 `gap-2` = 偏离照搬（违反红线 6）。
+   - **组件默认只读：除非用户明确说“调试这个组件”，否则不得修改任何基础组件或组合组件的源码、默认 token 映射、variant、尺寸、状态、结构或文档契约。** 普通页面、Block、模板、搭建器预览和调用处只能选择现有 API/variant；页面中的视觉诉求先反馈为待确认，不得自行推断为全局组件改动。
+   - **组件调试例外必须走完整链路：** 进入该组件真实 Playground → 明确记录修改的是 token、variant、API 还是结构 → 同步组件源码、manifest、文档和引用项 → 运行 `npm run check:all` 与 `npm run test:visual`。只改截图、页面局部 className 或下游 manifest 不算完成。
 8. **不要只改“被引用的一头”。** 真相源 + 文档 + 网页 + 任何引用到它的示例 / manifest / 数据视图，都属于同一条联动链。改其中一处时，必须检查并同步所有被它引用或引用它的落点；禁止只改页面文案、只改 Markdown、只改 JSON、或只改源码后假设别处会自己对齐。
 9. **现有体系先锁定路由和 SSOT。** 用户要加/改已有体系里的能力（如调试台、组件概览、token 面板、导航、视觉基线）时，必须先在 `docs/MAP.md` 和现有实现里锁定真相源与统一组件，再动手；禁止先在页面里临时手搭一版。例：组件调试台必须先走 `docs/data/component-playgrounds.manifest.json` + `ComponentPlayground`，页面只做真实组件渲染适配。
 

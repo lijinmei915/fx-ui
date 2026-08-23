@@ -31,11 +31,11 @@ export const gettingStartedNavItems: GettingStartedNavItem[] = [
 ];
 
 export const governanceQuickLinks: GettingStartedNavItem[] = [
-  { label: "现状", labelEn: "Status", href: "#governance-map", page: "governance-map" },
-  { label: "AI 规则", labelEn: "AI Rules", href: "#ai-rules", page: "ai-rules" },
+  { label: "概览", labelEn: "Overview", href: "#governance-map", page: "governance-map" },
+  { label: "规则库", labelEn: "Rules", href: "#ai-rules", page: "ai-rules" },
   { label: "文档规范", labelEn: "Documentation", href: "#documentation", page: "documentation" },
   { label: "网站规范", labelEn: "Website Standards", href: "#website-standards", page: "website-standards" },
-  { label: "检查命令", labelEn: "Checks", href: "#checks", page: "checks" },
+  { label: "质量与诊断", labelEn: "Quality & Diagnostics", href: "#checks", page: "checks" },
 ];
 
 export const gettingStartedAnchors: Record<

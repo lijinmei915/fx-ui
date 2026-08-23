@@ -189,8 +189,9 @@ function App() {
   );
   const isFoundationArea = isTokenArea || isLayoutArea;
   const isPageArea = pageNavSections.some((section) =>
-  section.items.some((item) => getPageFromHash(item.href, resolvePageSlug) === page)
+    section.items.some((item) => getPageFromHash(item.href, resolvePageSlug) === page)
   );
+  const isBuilderArea = page === "page-builder";
   const isComponentArea =
   isComponentsIndexPage ||
   componentIndexSections.some((section) =>
@@ -330,21 +331,34 @@ function App() {
         isFoundationArea={isFoundationArea}
         isComponentArea={isComponentArea}
         isPageArea={isPageArea}
+        isBuilderArea={isBuilderArea}
         isGovernancePage={isGovernancePage} />
-      <div className={isGettingStartedPage ? "grid h-[calc(100dvh-var(--fx-topbar-height))] min-h-0 grid-cols-1 overflow-hidden bg-background" : "grid h-[calc(100dvh-var(--fx-topbar-height))] min-h-0 overflow-hidden bg-background lg:grid-cols-[240px_minmax(0,1fr)]"}>
-        <DocsSidebar isHidden={isGettingStartedPage} sections={sidebarSections} activeHash={activeHash} lang={lang} onOpenSearch={() => setSearchOpen(true)} />
+      <div className={isGettingStartedPage || isBuilderArea ? "grid h-[calc(100dvh-var(--fx-topbar-height))] min-h-0 grid-cols-1 overflow-hidden bg-background" : "grid h-[calc(100dvh-var(--fx-topbar-height))] min-h-0 overflow-hidden bg-background lg:grid-cols-[240px_minmax(0,1fr)]"}>
+        <DocsSidebar isHidden={isGettingStartedPage || isBuilderArea} sections={sidebarSections} activeHash={activeHash} lang={lang} onOpenSearch={() => setSearchOpen(true)} />
 
-        <main ref={mainRef} className="fx-doc-static h-full w-full min-w-0 max-w-full overflow-y-auto overflow-x-hidden">
+        <main ref={mainRef}
+          className={
+            pageEntry?.workspace
+              ? "fx-doc-static h-full w-full min-w-0 max-w-full overflow-hidden"
+              : "fx-doc-static h-full w-full min-w-0 max-w-full overflow-y-auto overflow-x-hidden"
+          }
+        >
           <div
             className={
+            pageEntry?.workspace ?
+            "h-full min-h-0 w-full" :
             pageEntry?.fullBleed ?
             "mx-auto grid w-full max-w-screen-2xl grid-cols-1 gap-10 px-6 py-8 xl:px-8" :
             "mx-auto grid w-full max-w-screen-2xl grid-cols-1 gap-10 px-6 py-10 2xl:grid-cols-[minmax(0,1080px)_220px] 2xl:justify-center 2xl:gap-16 2xl:px-8"
             }>
 
             <article
-              className="w-full min-w-0 break-words"
-              style={{ maxWidth: "calc(100vw - 3rem)" }}>
+              className={
+                pageEntry?.workspace
+                  ? "h-full min-h-0 w-full min-w-0 break-words"
+                  : "w-full min-w-0 break-words"
+              }
+              style={pageEntry?.workspace ? undefined : { maxWidth: "calc(100vw - 3rem)" }}>
 
               {viewMode === "markdown" && currentDoc ?
               <MarkdownPage doc={currentDoc} actions={pageActions} lead={uiText[lang].markdownLead} /> :

@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-08-21
+last_verified: 2026-08-23
 teaches: "fx-ui 页面装配 playbook：怎么拼出一个页面才不出错（拼装现成 block，不现拼）"
 use_when: "要生成 / 改造任意页面（列表页、表单页、详情页、看板…）前，先按这套流程走"
 ---
@@ -51,11 +51,11 @@ npm run fx -- build list --json
 
 ## 受控页面/区块搭建器
 
-`#page-builder` 是顶栏“页面”旁的一级独立工作台，路由使用 `workspace` 外壳，不进入文档侧栏，也不渲染 PageLead、目录或文档内容限宽。标题旁的受控下拉在“页面搭建 / 基础组件评审 / 业务组件搭建”之间切换：页面模式组合已验证模板和 Block；基础组件评审模式消费外部 Agent 通过 MCP/CLI 提交的候选契约，负责真实预览、状态验收、受控 API 校正、检查与确认；业务组件模式从空白画布开始，通过搜索加入白名单组件并组织结构。三者都不是自由样式编辑器，不接受 JSX、CSS class 或任意样式值。统一真相源为 `docs/data/page-builder.manifest.json`。
+`#page-builder` 是顶栏“页面”旁的一级独立工作台，路由使用 `workspace` 外壳，不进入文档侧栏，也不渲染 PageLead、目录或文档内容限宽。标题旁的受控下拉只切换“基础组件搭建 / 业务组件搭建 / 页面搭建”：基础组件搭建从空白画布开始，通过搜索加入白名单组件、配置结构与实时属性，然后直接发送给 AI；候选预览、验收和发布是该模式内部的连续步骤，不再单独暴露“基础组件评审”。页面模式组合已验证模板和 Block；业务组件模式从空白画布开始，通过搜索加入白名单组件并组织结构。三者都不是自由样式编辑器，不接受 JSX、CSS class 或任意样式值。统一真相源为 `docs/data/page-builder.manifest.json`。
 
 首个客户列表 MVP 支持预设、空白页起步、可选 Block 添加/删除、上移/下移排序、标题/工作区/表格密度的受控属性编辑和真实 `CustomerListFrame` 预览。空白页是独立登记的模板，首次进入先选择 Agent 或手动搭建；手动模式只能选择 manifest 登记的骨架与插入区，组件库按业务区块、基础组件、已保存区块分层，新增区块后自动成为当前配置对象。Agent 先给出受控操作摘要，确认后与手动编辑共用同一条 operation/撤销管线。以后可增加拖拽排序手势，但不能扩大已登记的可组合范围。
 
-基础组件评审 MVP 默认加载待评审的外部 Agent 候选。左侧只展示候选、来源与预期产物；中间使用 manifest 登记的安全预览适配器渲染真实组件与默认、禁用、加载、图标等状态；右侧只开放真实组件已有的 variant、size 和候选 Props。修改要求只生成结构化返工任务，未配置连接器时不伪称已发送或已修改代码。组件 API、token、交互/无障碍与视觉检查通过后，用户才能确认进入 Playground 和入库审核；确认动作仍不直接覆盖 `src/components/ui/*`。
+基础组件搭建发送给 AI 后，候选会在当前工作台内返回并进入预览验收。候选只通过登记的本地安全适配器预览，修改要求只生成结构化受控操作，未配置连接器时不伪称已执行代码修改。组件 API、token、交互/无障碍与视觉检查通过后，用户才能确认发布；确认动作仍不直接覆盖 `src/components/ui/*`。
 
 业务组件搭建默认是空白画布。左侧在“组件 / 图层”间切换：“组件”不默认展开长清单，而是搜索 `components.manifest.json` 中全部 ui/fx 组件后只展示匹配结果；已登记适配项使用受治理的默认实例直接加入画布，不要求先连接业务数据，其他匹配组件只汇总为一条待支持提示，不生成不可用节点。首批默认实例覆盖 Button、Input、Checkbox、Switch、Tag、Avatar、Separator、Select、Textarea、Badge、Slider、RadioGroup、Toggle、ToggleGroup、Link 和 Alert。图层树用于定位、排序和删除。画布支持单选、Shift 多选、成组与解组；右侧在未选中组件时配置 Auto Layout，选中组件后从 `component-playgrounds.manifest.json` 的真实 Playground contract 渲染经评审的实例属性；没有 Playground contract 的默认实例暂不显示虚构属性。属性可绑定为公开业务 Prop，并在发布前命名为唯一英文驼峰标识；实例值、公开名和默认值进入同一草稿与撤销历史。布局仍只开放 `none/xs/sm/md/lg` 间距档与横向/纵向方向，调用方不能输入像素或覆盖 token。组件命名后可直接保存到个人组件库；选择业务组件时只提交审核，审核通过后才进入公共 fx 组件体系。
 

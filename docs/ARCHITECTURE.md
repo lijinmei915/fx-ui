@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-08-21
+last_verified: 2026-08-23
 teaches: "fx-ui 的三层生产体系：基础组件、公司组合组件、页面 Blocks（目录细节见 CODE_STRUCTURE，布局规范见 LAYOUTS）"
 use_when: "AI 要判断某个能力归哪一层、三层之间如何分工时"
 ---
@@ -90,8 +90,7 @@ shadcn 组件进入 `src/components/ui/` 后，就视为 fx-ui 的本地源码�
 - `EditFormBlock`（`src/components/recipes/edit-form-block.tsx`）：schema 驱动的编辑表单区块 = Field + Input/Textarea + Button；内置必填校验、错误聚焦、提交 loading 和脏状态取消。
 - `DetailPageBlock`（`src/components/recipes/detail-page-block.tsx`）：对象详情区块 = 身份头、字段网格、Tabs、活动时间线、关联记录和空态；页面只注入对象数据与动作。
 - `PageBuilder`（`src/components/recipes/page-builder.tsx`）：受控页面/区块搭建工作台 = 已登记预设、Block slot、受限属性和真实预览；只消费 `docs/data/page-builder.manifest.json`，不接受任意 JSX/CSS。
-- `ComponentBuilder`（`src/components/recipes/component-builder.tsx`）：受控基础组件评审台 = 外部 Agent 候选契约 + 已登记真实组件预览适配器 + 状态验收 + 真实 API/Props 校正 + 治理检查 + 确认门。它不承担 Figma 式绘制，也不直接执行 Agent 或覆盖源码；返工任务回到 MCP/CLI，检查通过并由用户确认后才进入 Playground 与入库审核。
-- `BusinessComponentBuilder`（`src/components/recipes/business-component-builder.tsx`）：受控业务组件组合工作台 = 空白画布 + 组件/图层切换 + 拖放插入 + 画布多选成组 + Token 约束 Auto Layout + 真实实例属性 + 业务 Props 绑定 + 个人/业务发布目标。可编辑属性从 `component-playgrounds.manifest.json` 的真实 Playground contract 派生，搭建器只声明经过评审的键；实例值和公开 Prop 默认值共同进入草稿、撤销历史与发布产物，不复制选项或发明组件 API。
+- `BusinessComponentBuilder`（`src/components/recipes/business-component-builder.tsx`）：受控基础/业务组件组合工作台 = 空白画布 + 组件/图层切换 + 拖放插入 + 画布多选成组 + Token 约束 Auto Layout + 真实实例属性 + 业务 Props 绑定 + Agent 发送/候选验收 + 个人/业务发布目标。基础组件搭建与业务组件搭建复用同一工作台，仅由 workflow 区分发布门；可编辑属性从 `component-playgrounds.manifest.json` 的真实 Playground contract 派生，搭建器只声明经过评审的键；实例值和公开 Prop 默认值共同进入草稿、撤销历史与发布产物，不复制选项或发明组件 API。旧 `ComponentBuilder` 保留为候选契约的内部适配参考，不再作为用户可切换模式。
 
 候选 Blocks：
 

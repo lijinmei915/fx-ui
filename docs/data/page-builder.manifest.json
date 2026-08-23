@@ -1,16 +1,17 @@
 {
-  "schemaVersion": 7,
+  "schemaVersion": 9,
   "format": "fx-ui/page-builder",
-  "policy": "The builder only consumes registered page templates, Block slots, external Agent candidate contracts, semantic token options, and reviewed business-component instances. It never accepts JSX, CSS classes, arbitrary style values, or unregistered component types.",
+  "policy": "The builder only consumes registered page templates, Block slots, external Agent candidate contracts, semantic token options, and reviewed business-component instances. Agent candidate review is an internal step of foundation component creation, not a separate user-facing builder mode. It never accepts JSX, CSS classes, arbitrary style values, or unregistered component types.",
   "builderModes": [
     {
       "id": "page",
-      "name": "页面搭建",
+      "name": "页面",
       "source": "src/components/recipes/page-builder.tsx#PageBuilder"
     },
     {
       "id": "component",
-      "name": "基础组件评审",
+      "name": "Agent 候选合约（内嵌）",
+      "visibility": "internal",
       "source": "src/components/recipes/component-builder.tsx#ComponentBuilder",
       "contractSource": "docs/data/page-builder.manifest.json#builderModes.component.reviewWorkbench",
       "reviewWorkbench": {
@@ -35,18 +36,64 @@
           }
         ],
         "runtimeProperties": [
-          { "id": "text", "name": "文字内容", "type": "string", "recommended": true },
-          { "id": "variant", "name": "外观变体", "type": "enum", "recommended": true },
-          { "id": "size", "name": "组件尺寸", "type": "enum", "recommended": true },
-          { "id": "icon", "name": "前置图标", "type": "boolean", "recommended": false },
-          { "id": "disabled", "name": "禁用状态", "type": "boolean", "recommended": true },
-          { "id": "loading", "name": "加载状态", "type": "boolean", "recommended": true }
+          {
+            "id": "text",
+            "name": "文字内容",
+            "type": "string",
+            "recommended": true
+          },
+          {
+            "id": "variant",
+            "name": "外观变体",
+            "type": "enum",
+            "recommended": true
+          },
+          {
+            "id": "size",
+            "name": "组件尺寸",
+            "type": "enum",
+            "recommended": true
+          },
+          {
+            "id": "icon",
+            "name": "前置图标",
+            "type": "boolean",
+            "recommended": false
+          },
+          {
+            "id": "disabled",
+            "name": "禁用状态",
+            "type": "boolean",
+            "recommended": true
+          },
+          {
+            "id": "loading",
+            "name": "加载状态",
+            "type": "boolean",
+            "recommended": true
+          }
         ],
         "checks": [
-          { "id": "contract", "name": "组件 API 契约", "command": "npm run check:components" },
-          { "id": "tokens", "name": "Token 与主题边界", "command": "npm run check:tokens" },
-          { "id": "interaction", "name": "交互与无障碍状态", "command": "npm run check:shadcn" },
-          { "id": "visual", "name": "视觉回归", "command": "npm run test:visual" }
+          {
+            "id": "contract",
+            "name": "组件 API 契约",
+            "command": "npm run check:components"
+          },
+          {
+            "id": "tokens",
+            "name": "Token 与主题边界",
+            "command": "npm run check:tokens"
+          },
+          {
+            "id": "interaction",
+            "name": "交互与无障碍状态",
+            "command": "npm run check:shadcn"
+          },
+          {
+            "id": "visual",
+            "name": "视觉回归",
+            "command": "npm run test:visual"
+          }
         ],
         "candidates": [
           {
@@ -59,7 +106,13 @@
             "submittedAt": "刚刚",
             "summary": "用于页面主操作，支持文字、尺寸、禁用和加载状态。",
             "previewAdapter": "button",
-            "expectedOutputs": ["组件源码", "Playground", "组件清单", "组件文档", "行为与视觉测试"]
+            "expectedOutputs": [
+              "组件源码",
+              "Playground",
+              "组件清单",
+              "组件文档",
+              "行为与视觉测试"
+            ]
           }
         ],
         "initial": {
@@ -67,7 +120,13 @@
           "label": "主要操作",
           "variant": "default",
           "size": "sm",
-          "selectedProperties": ["text", "variant", "size", "disabled", "loading"]
+          "selectedProperties": [
+            "text",
+            "variant",
+            "size",
+            "disabled",
+            "loading"
+          ]
         },
         "operations": [
           "selectCandidate",
@@ -87,8 +146,180 @@
       }
     },
     {
+      "id": "component-create",
+      "name": "基础组件",
+      "source": "src/components/recipes/business-component-builder.tsx#BusinessComponentBuilder",
+      "contractSource": "docs/data/page-builder.manifest.json#blank-component",
+      "purpose": "从空白画布组合基础组件，配置结构、间距和受控实时属性，生成候选并完成预览验收后，选择新建组件或更新已有组件。外部 Agent 候选评审属于内部治理步骤，不在基础组件画布提供第二个指令入口。",
+      "candidateGate": {
+        "stages": ["draft", "generated", "accepted"],
+        "publishRequires": "accepted",
+        "instructionEntry": false,
+        "deliveryTargets": [
+          {
+            "id": "new",
+            "name": "新建组件",
+            "outcome": "新组件已提交入库",
+            "storageKey": "fx-ui:foundation-component-candidates"
+          },
+          {
+            "id": "existing",
+            "name": "更新已有组件",
+            "outcome": "已有组件更新已提交审核",
+            "storageKey": "fx-ui:foundation-component-revisions"
+          }
+        ],
+        "existingComponentSource": "docs/data/components.manifest.json#uiComponents",
+        "operations": ["generateCandidate", "acceptCandidate"],
+        "snapshot": "compositionDraft",
+        "staleOnEdit": true,
+        "initialComposition": {
+          "assetId": "surface",
+          "props": {
+            "surface": "card",
+            "padding": "md",
+            "radius": "container",
+            "size": "md",
+            "direction": "vertical",
+            "gap": "sm",
+            "state": "default"
+          }
+        },
+        "foundationAssets": [
+          {
+            "id": "layout",
+            "name": "布局",
+            "items": [
+              {
+                "id": "layout",
+                "name": "布局",
+                "kind": "layout",
+                "props": { "direction": "vertical", "gap": "sm" }
+              }
+            ]
+          },
+          {
+            "id": "container",
+            "name": "容器",
+            "items": [
+              {
+                "id": "surface",
+                "name": "容器",
+                "kind": "container",
+                "props": {
+                  "surface": "card",
+                  "padding": "md",
+                  "radius": "container",
+                  "size": "md",
+                  "direction": "vertical",
+                  "gap": "sm"
+                }
+              }
+            ]
+          },
+          {
+            "id": "color",
+            "name": "颜色",
+            "items": [
+              {
+                "id": "color",
+                "name": "颜色",
+                "kind": "color",
+                "props": { "token": "surface" }
+              }
+            ]
+          },
+          {
+            "id": "spacing",
+            "name": "间距",
+            "items": [
+              {
+                "id": "spacing",
+                "name": "间距",
+                "kind": "spacing",
+                "props": { "value": "md" }
+              }
+            ]
+          },
+          {
+            "id": "typography",
+            "name": "字体排版",
+            "items": [
+              {
+                "id": "text",
+                "name": "文字",
+                "kind": "typography",
+                "props": { "role": "body", "text": "文字" }
+              }
+            ]
+          },
+          {
+            "id": "icon",
+            "name": "图标",
+            "items": [
+              {
+                "id": "icon",
+                "name": "图标",
+                "kind": "icon",
+                "props": { "name": "sparkles" }
+              }
+            ]
+          },
+          {
+            "id": "separator",
+            "name": "分割线",
+            "items": [
+              {
+                "id": "separator",
+                "name": "分割线",
+                "kind": "separator",
+                "props": { "orientation": "horizontal" }
+              }
+            ]
+          },
+          {
+            "id": "interaction",
+            "name": "交互状态",
+            "items": [
+              {
+                "id": "interaction",
+                "name": "交互状态",
+                "kind": "interaction",
+                "props": { "state": "default" }
+              }
+            ]
+          }
+        ],
+        "compositionPresets": [
+          {
+            "id": "button",
+            "name": "按钮结构",
+            "description": "容器内放入一段文字，作为按钮的起点",
+            "assets": [
+              {
+                "assetId": "surface",
+                "props": {
+                  "surface": "primary",
+                  "padding": "sm",
+                  "radius": "element",
+                  "size": "md",
+                  "direction": "horizontal",
+                  "gap": "xs",
+                  "state": "default"
+                }
+              },
+              {
+                "assetId": "text",
+                "props": { "role": "label", "text": "按钮" }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
       "id": "business-component",
-      "name": "业务组件搭建",
+      "name": "业务组件",
       "source": "src/components/recipes/business-component-builder.tsx#BusinessComponentBuilder",
       "registry": [
         "Button",
@@ -127,7 +358,8 @@
           "dragInsert",
           "canvasSelection",
           "layerTree",
-          "autoLayout"
+          "autoLayout",
+          "keyboardDelete"
         ],
         "slots": [
           {
@@ -343,10 +575,10 @@
         }
       ],
       "constraints": [
-        "The canvas starts empty and only inserts components declared by the root slot.",
+        "The business component canvas starts empty. Foundation mode starts with one registered content container and only inserts foundation assets declared by its contract.",
         "Margin and gap only use the registered spacing scale; groups use the same direction and gap contract.",
         "Editable instance properties are selected from referenced real playground contracts; public props bind to those registered properties.",
-        "The component search covers the full ui/fx component manifests. Reviewed components insert deterministic default instances without business data; unsupported matches are summarized as an implementation backlog.",
+        "The business component search covers the full ui/fx component manifests. Foundation mode exposes one generic primitive in each registered layout, container, color, spacing, typography, icon, separator and interaction group; concrete values are configured after insertion through the properties panel, and search filters registered foundation presets and primitives by name or id.",
         "Manual and Agent edits share registered composition operations.",
         "Personal components persist locally; business components enter review instead of bypassing governance.",
         "The builder accepts no JSX, CSS classes, token overrides or arbitrary component ids."
@@ -379,6 +611,12 @@
         "required": ["component"],
         "optional": ["parent", "before"]
       },
+      {
+        "op": "addFoundation",
+        "required": ["foundation", "assetId", "props"],
+        "optional": ["parent", "before"]
+      },
+      { "op": "addFoundationPreset", "required": ["presetId"] },
       { "op": "removeComponent", "required": ["target"] },
       { "op": "moveComponent", "required": ["target", "direction"] },
       { "op": "groupComponents", "required": ["targets", "group"] },
@@ -398,9 +636,9 @@
       { "op": "removePublicProp", "required": ["id"] }
     ],
     "rules": [
-      "Component ids, spacing values, directions and publish targets must be declared by the selected business component template.",
+      "Component ids, foundation assets, spacing values, directions and publish targets must be declared by the selected builder template.",
       "Manual and Agent edits use the same operation application pipeline.",
-      "Drag insertion, canvas selection and layer actions resolve to the registered composition operations.",
+      "Drag insertion, canvas selection, same-parent nested grouping and layer actions resolve to the registered composition operations.",
       "Operations contain no JSX, HTML, CSS classes, token values or arbitrary component ids."
     ]
   },

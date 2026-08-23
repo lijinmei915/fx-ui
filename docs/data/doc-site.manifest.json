@@ -33,7 +33,7 @@
         "pageNavSections",
         "布局系统",
         "页面",
-        "维护",
+        "治理中心",
         "网站规范",
         "export const governanceNavSections = docsNav.filter"
       ],
@@ -83,11 +83,13 @@
       "id": "reading-width",
       "label": "阅读宽度",
       "source": "src/App.tsx",
-      "intent": "长说明不提前折行，主内容区保持可读宽度，文章内部不横向溢出。",
+      "intent": "长说明保持可读宽度且不横向溢出；登记为 workspace 的工作区则铺满主内容区。",
       "requiredSourceIncludes": [
       "2xl:grid-cols-[minmax(0,1080px)_220px]",
-      "className=\"w-full min-w-0 break-words\"",
-      "style={{ maxWidth: \"calc(100vw - 3rem)\" }}"
+      "pageEntry?.workspace",
+      "\"h-full min-h-0 w-full min-w-0 break-words\"",
+      "\"w-full min-w-0 break-words\"",
+      "style={pageEntry?.workspace ? undefined : { maxWidth: \"calc(100vw - 3rem)\" }}"
       ]
     },
     {
@@ -213,7 +215,7 @@
         "<WebsiteRulePanel",
         "<WebsiteRuleValueList",
         "<FxPageLead",
-        "crumb=\"维护 / 网站规范\"",
+        "crumb=\"治理中心 / 网站规范\"",
         "title=\"页面标题区\"",
         "lead=\"这里展示页面标题区的真实组件形态。标题下只保留一句说明，不再额外加线。\"",
         "<DocumentPageActions",

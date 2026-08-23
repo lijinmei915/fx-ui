@@ -443,6 +443,10 @@
   --fx-shadow-l3:    0px 6px 16px -8px var(--fx-shadow-color), 0px 9px 28px 0px var(--fx-shadow-color-soft), 0px 12px 48px 16px var(--fx-shadow-color-faint); /* L3 临时性插入 / Dialog / Modal */
   --fx-shadow-l1-up: 0px -2px 6px -2px var(--fx-shadow-color), 0px -4px 10px -4px var(--fx-shadow-color-soft); /* L1 向上变体：y 取负 */
 
+  /* 28px 紧凑控件专用字号；不作为正文或页面文本角色使用。 */
+  --fx-text-control-sm: 13px;
+  --fx-text-control-sm--line-height: 18px;
+
   /* sidebar */
   --sidebar: #FFFFFF;
   --sidebar-foreground: var(--fx-neutrals-20);
@@ -525,6 +529,7 @@
   --sidebar-accent-foreground: var(--foreground);
   --sidebar-border: oklch(1 0 0 / 0.10);
   --sidebar-ring: var(--fx-brand-08);
+
 }
 
 @theme inline {
@@ -632,6 +637,7 @@
   --fx-text-4xl: 36px; --fx-text-4xl--line-height: 40px;
 
   --text-xs: var(--fx-text-xs); --text-xs--line-height: var(--fx-text-xs--line-height);
+  --text-control-sm: var(--fx-text-control-sm); --text-control-sm--line-height: var(--fx-text-control-sm--line-height);
   --text-sm: var(--fx-text-sm); --text-sm--line-height: var(--fx-text-sm--line-height);
   --text-base: var(--fx-text-base); --text-base--line-height: var(--fx-text-base--line-height);
   --text-lg: var(--fx-text-lg); --text-lg--line-height: var(--fx-text-lg--line-height);
@@ -773,6 +779,8 @@
   --font-sans: "Inter Variable", "PingFang SC", "苹方", "Microsoft YaHei", "微软雅黑", "Noto Sans SC", Arial, sans-serif;
   --fx-text-xs: 12px;
   --fx-text-xs--line-height: 18px;
+  --fx-text-control-sm: 13px;
+  --fx-text-control-sm--line-height: 18px;
   --fx-text-sm: 14px;
   --fx-text-sm--line-height: 20px;
   --fx-text-base: 16px;

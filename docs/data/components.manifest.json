@@ -453,7 +453,17 @@
         "--border",
         "--input",
         "--ring",
-        "--radius"
+        "--radius",
+        "--fx-text-control-sm",
+        "--fx-text-control-sm--line-height"
+      ],
+      "typographyMappings": [
+        {
+          "element": "content",
+          "role": "button-size",
+          "implementation": "xs=12/18、sm/toolbar=13/18、md=14/20、lg=16/24；13/18 仅由已治理组件源码消费。",
+          "usage": "Button 文字按现有 size 自动映射，调用处不覆盖字号或行高。"
+        }
       ],
       "usageRules": [
         "使用 Button 前必须以 src/components/ui/button.tsx 为真实 API。",
@@ -1733,11 +1743,11 @@
       "category": "fx",
       "nativeStates": ["disabled", "menu-open"],
       "semanticDom": ["root", "copy-action", "more-menu", "page-navigation"],
-      "tokenRefs": ["--foreground", "--muted-foreground", "--surface", "--border"],
+      "tokenRefs": ["--foreground", "--muted-foreground", "--secondary", "--secondary-hover", "--secondary-active"],
       "usageRules": [
         "使用 PageActions 前必须以 src/components/fx/page-actions.tsx 为真实 API。",
         "PageActions 只放文档站页面级工具，不承载组件示例内部操作或业务操作。",
-        "PageActions 主按钮放最高频动作；复制、更多和页间导航使用 outline 白色表面；下拉只放同页次级动作；页间导航独立在右侧。",
+        "PageActions 主按钮放最高频动作；复制、更多和页间导航使用 secondary 次级按钮；下拉只放同页次级动作；页间导航独立在右侧。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ]

@@ -23,7 +23,7 @@ export function GettingStartedChecksPage({ actions, lang, checks, quickLinks }: 
     <div className={docsSpacing.pageStack}>
       <section id="checks" className="flex flex-col gap-2">
         <PageLead
-          crumb={lang === "en" ? "Governance / Checks" : "维护 / 检查命令"}
+          crumb={lang === "en" ? "Governance / Quality & Diagnostics" : "治理中心 / 质量与诊断"}
           title={lang === "en" ? "Checks" : "检查命令"}
           lead={lang === "en" ? "Use these commands to verify component contracts, token sync, documentation structure, and production build health." : "这里列出一次改动完成前该跑什么检查：组件契约、token 同步、文档站骨架、组件 manifest 和生产构建。"}
           actions={actions}

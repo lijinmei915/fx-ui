@@ -369,7 +369,9 @@
         "--border",
         "--input",
         "--ring",
-        "--radius"
+        "--radius",
+        "--fx-text-control-sm",
+        "--fx-text-control-sm--line-height"
       ],
       "usageRules": [
         "使用 Button 前必须以 src/components/ui/button.tsx 为真实 API。",
@@ -1600,13 +1602,14 @@
       "tokenRefs": [
         "--foreground",
         "--muted-foreground",
-        "--surface",
-        "--border"
+        "--secondary",
+        "--secondary-hover",
+        "--secondary-active"
       ],
       "usageRules": [
         "使用 PageActions 前必须以 src/components/fx/page-actions.tsx 为真实 API。",
         "PageActions 只放文档站页面级工具，不承载组件示例内部操作或业务操作。",
-        "PageActions 主按钮放最高频动作；复制、更多和页间导航使用 outline 白色表面；下拉只放同页次级动作；页间导航独立在右侧。",
+        "PageActions 主按钮放最高频动作；复制、更多和页间导航使用 secondary 次级按钮；下拉只放同页次级动作；页间导航独立在右侧。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],

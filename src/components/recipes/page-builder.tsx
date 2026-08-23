@@ -52,10 +52,6 @@ import {
 } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import {
-  ComponentBuilder,
-  type ComponentBuilderHandle,
-} from "@/components/recipes/component-builder";
-import {
   BusinessComponentBuilder,
   type BusinessComponentBuilderHandle,
 } from "@/components/recipes/business-component-builder";
@@ -317,6 +313,18 @@ function displayName(slot: PageBuilderSlot) {
   return slot.label ?? slot.block;
 }
 
+type BuilderMode = "page" | "component-create" | "business-component";
+
+const builderModeStorageKey = "fx-ui:page-builder-mode";
+
+function isBuilderMode(value: string | null): value is BuilderMode {
+  return (
+    value === "page" ||
+    value === "component-create" ||
+    value === "business-component"
+  );
+}
+
 function operationSummary(
   template: PageBuilderTemplate,
   operation: PageBuilderOperation,
@@ -343,16 +351,12 @@ function PageBuilder({
   onCreateBlankPage,
   renderPreview,
 }: PageBuilderProps) {
-  const [builderMode, setBuilderMode] = useState<
-    "page" | "component" | "business-component"
-  >("page");
-  const componentBuilderRef = useRef<ComponentBuilderHandle>(null);
+  const [builderMode, setBuilderMode] = useState<BuilderMode>(() => {
+    const savedMode = localStorage.getItem(builderModeStorageKey);
+    return isBuilderMode(savedMode) ? savedMode : "page";
+  });
   const businessComponentBuilderRef =
     useRef<BusinessComponentBuilderHandle>(null);
-  const [componentHistory, setComponentHistory] = useState({
-    canUndo: false,
-    canRedo: false,
-  });
   const [businessComponentHistory, setBusinessComponentHistory] = useState({
     canUndo: false,
     canRedo: false,
@@ -445,29 +449,28 @@ function PageBuilder({
           <span className="text-section-title">搭建器</span>
           <Select
             value={builderMode}
-            onValueChange={(next) =>
-              next &&
-              setBuilderMode(
-                next as "page" | "component" | "business-component",
-              )
-            }
+            onValueChange={(next) => {
+              if (!isBuilderMode(next)) return;
+              setBuilderMode(next);
+              localStorage.setItem(builderModeStorageKey, next);
+            }}
           >
             <SelectTrigger size="sm" aria-label="搭建模式">
               <SelectValue>
                 {(mode) =>
                   mode === "page"
-                    ? "页面搭建"
-                    : mode === "component"
-                      ? "基础组件评审"
-                      : "业务组件搭建"
+                    ? "页面"
+                    : mode === "component-create"
+                      ? "基础组件"
+                      : "业务组件"
                 }
               </SelectValue>
             </SelectTrigger>
             <SelectContent align="start">
               <SelectGroup>
-                <SelectItem value="page">页面搭建</SelectItem>
-                <SelectItem value="component">基础组件评审</SelectItem>
-                <SelectItem value="business-component">业务组件搭建</SelectItem>
+                <SelectItem value="component-create">基础组件</SelectItem>
+                <SelectItem value="business-component">业务组件</SelectItem>
+                <SelectItem value="page">页面</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -487,12 +490,21 @@ function PageBuilder({
                 <ToggleGroupItem value="web">WEB端</ToggleGroupItem>
                 <ToggleGroupItem value="mobile">移动端</ToggleGroupItem>
               </ToggleGroup>
+              <Button
+                variant="outline"
+                size="sm"
+                render={<a href="#customer-list-calibration" />}
+              >
+                列表页校准
+              </Button>
               <span className="text-body text-muted-foreground">100%</span>
             </>
           ) : (
-            <Tag variant="outline">
-              {builderMode === "component" ? "真实组件预览" : "真实组合预览"}
-            </Tag>
+            <span className="text-label">
+              {builderMode === "component-create"
+                ? "基础组件画布"
+                : "真实组合预览"}
+            </span>
           )}
         </div>
         <div className="flex shrink-0 items-center justify-end gap-1">
@@ -503,16 +515,12 @@ function PageBuilder({
             disabled={
               builderMode === "page"
                 ? !past.length
-                : builderMode === "component"
-                  ? !componentHistory.canUndo
-                  : !businessComponentHistory.canUndo
+                : !businessComponentHistory.canUndo
             }
             onClick={
               builderMode === "page"
                 ? undo
-                : builderMode === "component"
-                  ? () => componentBuilderRef.current?.undo()
-                  : () => businessComponentBuilderRef.current?.undo()
+                : () => businessComponentBuilderRef.current?.undo()
             }
           >
             <ArrowLeftIcon />
@@ -524,16 +532,12 @@ function PageBuilder({
             disabled={
               builderMode === "page"
                 ? !future.length
-                : builderMode === "component"
-                  ? !componentHistory.canRedo
-                  : !businessComponentHistory.canRedo
+                : !businessComponentHistory.canRedo
             }
             onClick={
               builderMode === "page"
                 ? redo
-                : builderMode === "component"
-                  ? () => componentBuilderRef.current?.redo()
-                  : () => businessComponentBuilderRef.current?.redo()
+                : () => businessComponentBuilderRef.current?.redo()
             }
           >
             <ArrowRightIcon />
@@ -557,44 +561,37 @@ function PageBuilder({
                         properties: { ...normalizedValue.properties },
                       },
                     ])
-                : builderMode === "business-component"
+                : builderMode === "business-component" ||
+                    builderMode === "component-create"
                   ? () => businessComponentBuilderRef.current?.save()
                   : undefined
             }
           >
-            {builderMode === "page"
-              ? "保存模板"
-              : builderMode === "business-component"
-                ? "保存草稿"
-                : "保存预设"}
+            {builderMode === "page" ? "保存模板" : "保存草稿"}
           </Button>
           <Button
             size="sm"
             onClick={
-              builderMode === "business-component"
+              builderMode === "business-component" ||
+              builderMode === "component-create"
                 ? () => businessComponentBuilderRef.current?.publish()
                 : undefined
             }
           >
             <CheckCircleIcon data-icon="inline-start" />
-            {builderMode === "page"
-              ? "发布"
-              : builderMode === "business-component"
-                ? "发布组件"
-                : "提交沉淀"}
+            {builderMode === "page" ? "发布" : "发布组件"}
           </Button>
         </div>
       </header>
 
-      {builderMode === "component" ? (
-        <ComponentBuilder
-          ref={componentBuilderRef}
-          onHistoryChange={setComponentHistory}
-        />
-      ) : builderMode === "business-component" ? (
+      {builderMode === "business-component" ||
+      builderMode === "component-create" ? (
         <BusinessComponentBuilder
           ref={businessComponentBuilderRef}
           onHistoryChange={setBusinessComponentHistory}
+          workflow={
+            builderMode === "component-create" ? "foundation" : "business"
+          }
         />
       ) : (
         <div className="grid min-h-0 grid-cols-[240px_minmax(0,1fr)_320px]">

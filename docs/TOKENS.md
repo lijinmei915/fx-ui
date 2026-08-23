@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-08-21
+last_verified: 2026-08-23
 teaches: "公司设计 token 的基础架构、真实值和全局视觉使用规则"
 use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadcn 组件样式或判断视觉是否符合公司规范时"
 ---
@@ -51,7 +51,7 @@ fx-ui 采用主流设计系统分层：**Tailwind 是表达层，FX token 是视
 |------|----------|------|
 | `spacing / layout / breakpoint` | **Tailwind 原生** | 保持与 shadcn / Tailwind 工程习惯一致，如 `gap-*`、`px-*`、`grid`、`lg:*` |
 | `color` | **FX token → Tailwind 语义类** | 必须走 `--fx-*` / 语义槽 / `bg-primary` 这类映射，不写死十六进制，不长期依赖 Tailwind 默认色 |
-| `typography` | **FX token → Tailwind 字号类** | 对外主推荐 `text-sm/base/lg/xl`；底层仍由企业字号 token 驱动，不靠 Tailwind 默认字号再乘百分比硬凑 |
+| `typography` | **FX token → Tailwind 字号类** | 对外主推荐 `text-sm/base/lg/xl`；`text-control-sm` 仅供 28px 紧凑控件内部使用，底层仍由企业字号 token 驱动 |
 | `radius` | **FX token → Tailwind 圆角类** | 组件圆角走 `--radius` 派生档，不另立一套默认刻度 |
 | `shadow` | **FX token → Tailwind 阴影类** | 统一 `shadow-l1/l2/l3`，不用 Tailwind 默认 `shadow-sm/md/lg` |
 | `border-width` | **FX 结构基线** | 默认 `1px`，由组件和 token 规范固定；不作为普通主题面板的运行时覆写项 |
@@ -194,10 +194,11 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `text-lg` | `18 / 28` | 模块/卡片/组件标题 | 区块标题、卡片标题 |
 | `text-base` | `16 / 24` | 默认正文、菜单、列表、表单 | 主体文案 |
 | `text-sm` | `14 / 20` | 标签、按钮、菜单项、辅助文案 | 短文本与辅助信息 |
+| `text-control-sm` | `13 / 18` | 28px 紧凑控件内部文字 | 仅由 Button 等已治理组件源码消费，不用于页面正文 |
 | `text-xs` | `12 / 18` | 最小辅助信息、紧凑场景 | 不承载正文 |
 
 **实现方式**：
-- 新代码统一使用 `text-xs / text-sm / text-base / text-lg / text-xl`。
+- 页面与组合层新代码统一使用 `text-xs / text-sm / text-base / text-lg / text-xl`；`text-control-sm` 只允许已治理组件源码按尺寸映射使用。
 - `theme/fx-theme.css` 覆盖 Tailwind 的 `--text-*` 变量，把企业字号和值注入到这套类里。
 - 主题面板继续只改底层 token，不改组件调用代码。
 - Web 字号底线是 **12px**：任何正文、标签、角标、头像缩写、示意图文字都不得低于 12px；需要弱化时用颜色、字重、透明层级或空间关系，不用更小字号。
@@ -210,6 +211,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `text-lg` | 18 / 28 | regular·bold | 模块/卡片/组件标题 |
 | `text-base` | 16 / 24 | regular·bold | **默认正文** — 菜单、列表、表单、大面积文案 |
 | `text-sm` | 14 / 20 | regular·medium | 字段标签、按钮、菜单项、辅助信息 |
+| `text-control-sm` | 13 / 18 | regular | 28px 紧凑控件内容；不进入正文角色 |
 | `text-xs` | 12 / 18 | regular | 最小辅助信息、紧凑场景 |
 
 **行高随主题字号映射一并调整**（上表"字号/行高"列即定义）。正文/说明**不要手写 `leading-7`/`leading-8`** 把行距抬到 2.0+——那样换行太散，不符合主流正文行高（约 1.5）。

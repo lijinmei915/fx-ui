@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/component-quality",
-  "updatedAt": "2026-08-21",
+  "updatedAt": "2026-08-23",
   "truthSources": [
     "docs/data/components.manifest.json",
     "docs/data/component-playgrounds.manifest.json",
@@ -1448,7 +1448,9 @@
         "--border",
         "--input",
         "--ring",
-        "--radius"
+        "--radius",
+        "--fx-text-control-sm",
+        "--fx-text-control-sm--line-height"
       ],
       "tokenUsage": {
         "status": "declared",
@@ -1465,7 +1467,9 @@
           "--border",
           "--input",
           "--ring",
-          "--radius"
+          "--radius",
+          "--fx-text-control-sm",
+          "--fx-text-control-sm--line-height"
         ]
       },
       "visual": {
@@ -7705,8 +7709,9 @@
       "tokens": [
         "--foreground",
         "--muted-foreground",
-        "--surface",
-        "--border"
+        "--secondary",
+        "--secondary-hover",
+        "--secondary-active"
       ],
       "tokenUsage": {
         "status": "declared",
@@ -7714,8 +7719,9 @@
         "refs": [
           "--foreground",
           "--muted-foreground",
-          "--surface",
-          "--border"
+          "--secondary",
+          "--secondary-hover",
+          "--secondary-active"
         ]
       },
       "visual": {

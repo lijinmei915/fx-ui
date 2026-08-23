@@ -24,7 +24,7 @@ export function GettingStartedDocumentationPage({ actions, lang, documentation, 
   return (
     <div className={docsSpacing.pageStack}>
       <section id="documentation" className="flex flex-col gap-2">
-        <PageLead crumb={lang === "en" ? "Governance / Documentation" : "维护 / 文档规范"} title={lang === "en" ? "Documentation" : "文档规范"} lead={lang === "en" ? "This page explains where information belongs, how to avoid orphan documents, and when text rules need machine checks." : "这页解决一件事：一条信息该写去哪，怎么避免孤岛文档，以及哪些文字规则必须升级成机器检查。"} actions={actions} />
+        <PageLead crumb={lang === "en" ? "Governance / Documentation" : "治理中心 / 文档规范"} title={lang === "en" ? "Documentation" : "文档规范"} lead={lang === "en" ? "This page explains where information belongs, how to avoid orphan documents, and when text rules need machine checks." : "这页解决一件事：一条信息该写去哪，怎么避免孤岛文档，以及哪些文字规则必须升级成机器检查。"} actions={actions} />
         <GovernanceQuickLinks currentPage="documentation" lang={lang} items={quickLinks} />
       </section>
       <section id="documentation-ssot" className={docsSpacing.sectionStack}>

@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-08-21
+last_verified: 2026-08-23
 teaches: "fx-ui 重要的技术/协作决策记录：选了什么、放弃了什么、为什么"
 use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论"
 ---
@@ -768,6 +768,16 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **影响**：`BusinessComponentBuilder` 的真相源是空白组合 schema；当前默认实例开放 Button、Input、Checkbox、Switch、Tag、Avatar、Separator、Select、Textarea、Badge、Slider、RadioGroup、Toggle、ToggleGroup、Link 和 Alert。存在 Playground contract 的组件通过 `page-builder.manifest.json` 指针派生初始值与已评审属性；只有固定默认实例的组件在真实属性契约登记前不显示可编辑属性。发布结果分为个人库与业务审核队列。
 - **相关文件**：`src/components/recipes/{page-builder,business-component-builder}.tsx`、`docs/data/{page-builder,layered-assets}.manifest.json`
 
+### DEC-072: 基础组件搭建与 AI 候选验收合并为一个入口
+
+- **日期**：2026-08-23
+- **状态**：已决定
+- **决定**：搭建器只向用户展示“基础组件搭建 / 业务组件搭建 / 页面搭建”三个模式。基础组件搭建从空白画布开始，用户配置结构、布局和受控实时属性后直接发送给 AI；候选返回、预览验收和发布是同一工作流的连续步骤，不再单独暴露“基础组件评审”模式。
+- **放弃**：① 让用户在“基础组件搭建”和“基础组件评审”之间切换；② 重复提供一个与搭建器无关的候选审查工作台；③ 因合并入口而放宽组件、Token、Props 或源码治理边界。
+- **原因**：用户的目标是制作基础组件并交给 AI 实现，独立评审入口增加认知负担，也把同一组件拆成两个不连续的任务。合并入口保留了候选验收的治理价值，同时让操作路径从空白画布到发布保持连续。
+- **影响**：`BusinessComponentBuilder` 负责基础/业务两种组合工作流；`page-builder.manifest.json#builderModes.component.reviewWorkbench` 降为内部候选合约，不再作为下拉模式或独立页面展示。基础组件模式的 Agent 发送、候选快照失效和验收门继续有效。
+- **相关文件**：`src/components/recipes/{page-builder,business-component-builder}.tsx`、`docs/PAGES.md`、`docs/ARCHITECTURE.md`、`docs/data/page-builder.manifest.json`
+
 ### DEC-069: 先补齐资产成熟度，再开放 fx-ui MCP
 
 - **日期**：2026-08-20
@@ -782,6 +792,26 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **原因**：MCP 只能提高真实资产的发现与调用效率，不能替代组件质量、业务验证和模板治理。先建立诚实的成熟度与补齐队列，才能让搭建器和外部 Agent 得到可执行边界，而不是更快地产生不完整或未经验证的页面。
 - **影响**：后续资产盘点应从现有源码、组件 manifest、Playground、质量矩阵、分层资产和页面 Build Kit 派生，不手填第二套清单；当成熟度分类需要被页面、Agent 和脚本共同消费时，再扩展既有 manifest 与检查。搭建器当前继续承担资产评审与受控组合，不宣称全量页面生产能力。
 - **相关文件**：`docs/data/{components,component-playgrounds,component-quality,layered-assets,page-build-kit,agent-components,agent-tokens,agent-recipes}.manifest.json`、`scripts/fx-agent.mjs`、`src/pages/templates/customer-list-template.tsx`
+
+### DEC-070: 组件默认只读，修改必须从组件调试台发起
+
+- **日期**：2026-08-22
+- **状态**：已决定
+- **决定**：基础组件和组合组件默认视为受治理资产，只能在页面、Block、模板和搭建器中选择既有 API、variant、尺寸与状态；未经用户明确授权“调试某个组件”，不得修改组件源码、默认 token 映射、variant、结构或文档契约。组件视觉诉求必须先回到对应真实 Playground 调试，再决定是 token、variant、API 还是结构变更。
+- **放弃**：① 看到页面局部颜色/间距不合适就直接改全局组件 token；② 在调用处用 `className` 覆盖组件视觉；③ 只更新视觉截图或 manifest，留下源码与文档漂移；④ 把页面搭建器预览当作组件修改入口。
+- **原因**：组件是多个页面和 Block 共享的公共资产，局部反馈不能自动推导为全局设计决策。默认只读可以避免一次页面校准误伤全站；真实 Playground 则提供可复现的属性、状态、代码和视觉验收入口。
+- **影响**：普通页面/Block/模板问题先记录为调用侧或待确认项；明确授权组件调试后，必须从真实 Playground 复现，沿“源码/Token → manifest → 文档/引用 → check:all → test:visual”链路完成，并在交付说明中标明修改范围。该规则适用于基础组件、fx 组合组件和已登记业务组件。
+- **相关文件**：`AGENTS.md`、`docs/data/component-playgrounds.manifest.json`、`docs/data/components.manifest.json`、`tests/visual.spec.ts`
+
+### DEC-071: 13/18 仅作为 28px 紧凑控件字号
+
+- **日期**：2026-08-22
+- **状态**：已决定
+- **决定**：在 DEC-055 的 `12 / 14 / 16 / 18` 页面与正文核心阶梯之外，增加受控的 `text-control-sm = 13 / 18px`。它只允许已治理组件源码为 28px 紧凑控件消费；页面、Block、模板和调用处仍不得把 13px 当作通用正文尺寸。Button 的文字档固定为 `24→12/18、28→13/18、32→14/20、36→16/24`，24/28 使用 6px 圆角，32/36 使用 8px 圆角。
+- **放弃**：① 在 Button 中硬写 `text-[13px]`；② 把 13px 重新扩散成正文、标签和页面文案的通用字号；③ 为保持纯 Tailwind 默认阶梯而继续使用视觉失衡的 `28px + 14/20px`；④ 修改全局圆角从而影响其他组件。
+- **原因**：公司 Figma 的 28px Button 明确采用 13/18，当前 shadcn `base-nova` 的 28px Button 也使用约 13px；将它收口为紧凑控件 token 可以恢复按钮比例，同时保留 DEC-055 对页面排版的稳定约束。
+- **影响**：主题真相源、主题字号运行时、Button 源码、组件 manifest、Button 文档与视觉基线必须同步；新增 token 不构成页面调用层新增任意字号的许可。
+- **相关文件**：`theme/fx-theme.css`、`src/lib/theme-runtime.ts`、`src/components/ui/button.tsx`、`docs/{TOKENS,components/button}.md`、`docs/data/{design-tokens,components}.manifest.json`
 
 ## 相关文件
 

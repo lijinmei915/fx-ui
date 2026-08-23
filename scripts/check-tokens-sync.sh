@@ -214,6 +214,24 @@ if (!shape || !Array.isArray(shape.scale) || !shape.concentricRule) {
 
 const typography = manifest.typography
 const allowedTypographyClasses = new Set(["text-xl", "text-lg", "text-base", "text-sm", "text-xs", "font-normal", "font-medium", "font-semibold", "font-bold"])
+const componentOnlySizes = typography?.componentOnlySizes
+if (!Array.isArray(componentOnlySizes) || componentOnlySizes.length === 0) {
+  errors.push("typography.componentOnlySizes 必须声明受控的组件内部字号。")
+} else {
+  for (const size of componentOnlySizes) {
+    if (!size.id || !size.utility || !size.fontSizeToken || !size.lineHeightToken || !size.value || !size.usage || !size.avoid) {
+      errors.push("typography.componentOnlySizes 存在缺少 id/utility/token/value/usage/avoid 的条目。")
+      continue
+    }
+    if (!cssVars.has(size.fontSizeToken) || !cssVars.has(size.lineHeightToken)) {
+      errors.push(`typography.componentOnlySizes.${size.id} 引用了不存在的字号或行高 token。`)
+    }
+    const utilityToken = `--${size.utility}`
+    if (!css.includes(`${utilityToken}: var(${size.fontSizeToken})`) || !css.includes(`${utilityToken}--line-height: var(${size.lineHeightToken})`)) {
+      errors.push(`typography.componentOnlySizes.${size.id} 未在 @theme 映射 ${size.utility}。`)
+    }
+  }
+}
 if (!typography || !Array.isArray(typography.roles) || typography.roles.length === 0) {
   errors.push("design-tokens.json 的 typography.roles 必须是非空数组。")
 } else {

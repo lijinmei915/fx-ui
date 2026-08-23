@@ -18,7 +18,7 @@ export const topNav: SiteNavItem[] = [
   { label: "基础", labelEn: "Foundations", href: "#tokens", page: "tokens" },
   { label: "页面", labelEn: "Pages", href: "#template-customer-list", page: "template-customer-list" },
   { label: "搭建器", labelEn: "Builder", href: "#page-builder", page: "page-builder" },
-  { label: "维护", labelEn: "Maintain", href: "#governance-map", page: "governance-map" },
+  { label: "治理中心", labelEn: "Governance", href: "#governance-map", page: "governance-map" },
 ];
 
 export const docsNav: SiteNavSection[] = [
@@ -31,8 +31,8 @@ export const docsNav: SiteNavSection[] = [
   { title: "反馈", titleEn: "Feedback", items: [{ label: "提示", labelEn: "Alert", href: "#alert" }, { label: "空状态", labelEn: "Empty", href: "#empty" }, { label: "对话框", labelEn: "Dialog", href: "#dialog" }, { label: "警告对话框", labelEn: "Alert Dialog", href: "#alert-dialog" }, { label: "抽屉", labelEn: "Sheet", href: "#sheet" }, { label: "骨架屏", labelEn: "Skeleton", href: "#skeleton" }, { label: "弹出层", labelEn: "Popover", href: "#popover" }, { label: "加载指示器", labelEn: "Spinner", href: "#spinner" }, { label: "轻提示", labelEn: "Toast", href: "#toast" }] },
   { title: "业务组合组件", titleEn: "Business Compositions", items: [{ label: "页面头部", labelEn: "PageHeader", href: "#page-header" }, { label: "搜索工具栏", labelEn: "SearchToolbar", href: "#search-toolbar" }, { label: "实体表格", labelEn: "EntityTable", href: "#entity-table" }, { label: "表单分组", labelEn: "FormSection", href: "#form-section" }, { label: "危险确认框", labelEn: "ConfirmDangerDialog", href: "#confirm-danger-dialog" }] },
   { title: "Agent 界面", titleEn: "Agent UI", items: [{ label: "生成式UI组件", labelEn: "Generative UI", href: "#agent-surface" }] },
-  { title: "页面", titleEn: "Pages", items: [{ label: "列表页", labelEn: "List Page", href: "#template-customer-list" }, { label: "编辑表单", labelEn: "Edit Form", href: "#template-edit-form" }, { label: "详情页", labelEn: "Detail Page", href: "#template-detail" }, { label: "客户简报", labelEn: "Customer Briefing", href: "#customer-briefing" }] },
-  { title: "维护", titleEn: "Maintain", items: [{ label: "现状", labelEn: "Status", href: "#governance-map" }, { label: "列表页校准", labelEn: "List Page Calibration", href: "#customer-list-calibration" }, { label: "AI 规则", labelEn: "AI Rules", href: "#ai-rules" }, { label: "文档规范", labelEn: "Documentation", href: "#documentation" }, { label: "网站规范", labelEn: "Website Standards", href: "#website-standards" }, { label: "检查命令", labelEn: "Checks", href: "#checks" }] },
+  { title: "页面", titleEn: "Pages", items: [{ label: "列表页", labelEn: "List Page", href: "#template-customer-list" }, { label: "编辑表单", labelEn: "Edit Form", href: "#template-edit-form" }, { label: "详情页", labelEn: "Detail Page", href: "#template-detail" }] },
+  { title: "治理中心", titleEn: "Governance", items: [{ label: "概览", labelEn: "Overview", href: "#governance-map" }, { label: "规则库", labelEn: "Rules", href: "#ai-rules" }, { label: "文档规范", labelEn: "Documentation", href: "#documentation" }, { label: "网站规范", labelEn: "Website Standards", href: "#website-standards" }, { label: "质量与诊断", labelEn: "Quality & Diagnostics", href: "#checks" }] },
 ];
 
 export const componentIndexSections = docsNav.filter((section) => ["通用", "数据录入", "数据展示", "导航", "反馈", "业务组合组件", "Agent 界面"].includes(section.title));
@@ -40,13 +40,13 @@ export const tokenNavSections = docsNav.filter((section) => section.title === "�
 export const layoutNavSections = docsNav.filter((section) => section.title === "布局系统");
 export const foundationNavSections = [...tokenNavSections, ...layoutNavSections];
 export const pageNavSections = docsNav.filter((section) => section.title === "页面");
-export const governanceNavSections = docsNav.filter((section) => section.title === "维护");
+export const governanceNavSections = docsNav.filter((section) => section.title === "治理中心");
 
 export const footerNavItems = [
   ...gettingStartedNavItems.map((item) => ({ ...item, group: "开始使用", groupEn: "Getting Started" })),
   { label: "组件", labelEn: "Components", href: "#components", group: "组件", groupEn: "Components" },
   ...componentIndexSections.flatMap((section) => section.items.map((item) => ({ ...item, group: section.title, groupEn: section.titleEn }))),
   ...[...foundationNavSections, ...pageNavSections].flatMap((section) => section.items.map((item) => ({ ...item, group: section.title, groupEn: section.titleEn }))),
-  ...governanceQuickLinks.map((item) => ({ ...item, group: "维护", groupEn: "Maintain" })),
+  ...governanceQuickLinks.map((item) => ({ ...item, group: "治理中心", groupEn: "Governance" })),
 ];
 import { gettingStartedNavItems, governanceQuickLinks } from "@/pages/docs/getting-started/getting-started-navigation";

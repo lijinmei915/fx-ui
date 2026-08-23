@@ -75,7 +75,7 @@ export function PageActions({
     <PageActionsShell navActions={navActions}>
       <DropdownMenu>
         <ButtonGroup>
-          <Button variant="outline" size="toolbar" onClick={copyCurrentPage}>
+          <Button variant="secondary" size="toolbar" onClick={copyCurrentPage}>
             <CopyIcon data-icon="inline-start" />
             {labels.copyPage}
           </Button>
@@ -83,7 +83,7 @@ export function PageActions({
           <DropdownMenuTrigger
             render={
               <Button
-                variant="outline"
+                variant="secondary"
                 size="toolbar-icon"
                 aria-label={labels.moreActions}
               />
@@ -150,7 +150,7 @@ export function PageStepActions({
       aria-label={lang === "en" ? "Page navigation" : "页面导航"}
     >
       <Button
-        variant="outline"
+        variant="secondary"
         size="toolbar-icon"
         nativeButton={!previous}
         onClick={preventDemoNavigation}
@@ -171,7 +171,7 @@ export function PageStepActions({
         <ArrowLeftIcon />
       </Button>
       <Button
-        variant="outline"
+        variant="secondary"
         size="toolbar-icon"
         nativeButton={!next}
         onClick={preventDemoNavigation}
@@ -209,7 +209,7 @@ export function CopyPageAction({
         window.location.href,
     );
   return (
-    <Button variant="outline" size="toolbar" onClick={copyCurrentPage}>
+    <Button variant="secondary" size="toolbar" onClick={copyCurrentPage}>
       <CopyIcon data-icon="inline-start" />
       {labels.copyPage}
     </Button>

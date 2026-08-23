@@ -301,11 +301,21 @@ test("组件搭建器 MVP", async ({ page }) => {
   await page.goto(`/${visual.route}`);
   const builder = page.locator(visual.selector);
   await builder.getByLabel("搭建模式").click();
-  await page.getByRole("option", { name: "基础组件评审", exact: true }).click();
+  await page.getByRole("option", { name: "基础组件", exact: true }).click();
   await expect(
-    builder.locator('[data-slot="component-builder"]'),
+    builder.locator('[data-slot="business-component-builder"]'),
   ).toBeVisible();
   await expect(builder).toHaveScreenshot("component-builder.png");
+  const composition = builder.locator('[data-slot="business-component-builder"]');
+  await composition.locator('[data-node-type="container"]').click();
+  await composition.getByRole("tab", { name: "选中", exact: true }).click();
+  await composition
+    .getByRole("button", { name: "删除所选节点", exact: true })
+    .click();
+  await expect(
+    composition.locator('[data-slot="component-instance-properties"]'),
+  ).toHaveCount(0);
+  await expect(builder).toHaveScreenshot("component-builder-empty-properties.png");
 });
 
 test("业务组件属性契约搭建器", async ({ page }) => {
@@ -314,7 +324,7 @@ test("业务组件属性契约搭建器", async ({ page }) => {
   await page.goto(`/${visual.route}`);
   const builder = page.locator(visual.selector);
   await builder.getByLabel("搭建模式").click();
-  await page.getByRole("option", { name: "业务组件搭建", exact: true }).click();
+  await page.getByRole("option", { name: "业务组件", exact: true }).click();
   const composition = builder.locator(
     '[data-slot="business-component-builder"]',
   );
@@ -328,6 +338,7 @@ test("业务组件属性契约搭建器", async ({ page }) => {
     .getByRole("checkbox", { name: /公开内容为业务 Prop/ })
     .first()
     .click();
+  await composition.getByRole("tab", { name: "全局", exact: true }).click();
   await expect(
     composition.locator('[data-slot="business-component-public-props"]'),
   ).toBeVisible();
@@ -864,15 +875,7 @@ test("Separator Playground 主入口", async ({ page }) => {
   await page.goto(`/${visual.route}`);
   const pg = page.locator(visual.selector);
   await expect(pg).toBeVisible();
-  const pageLead = pg.locator(':scope > [data-slot="section-lead"]');
-  await expect(
-    pageLead.getByRole("heading", { name: "调试台", exact: true }),
-  ).toHaveCount(1);
-  await expect(
-    pageLead.getByText("实时调真实属性，预览随之变化，写法可一键复制。", {
-      exact: true,
-    }),
-  ).toHaveCount(1);
+  await expect(pg.locator(':scope > [data-slot="section-lead"]')).toHaveCount(0);
   await expect(page.locator('a[href="#separator-playground"]')).toHaveCount(1);
   await expect(page.locator("#separator-overview")).toHaveCount(0);
   await expect(page.locator("#separator-preview")).toHaveCount(0);
@@ -1809,7 +1812,7 @@ test("DatePicker 日期选择器", async ({ page }) => {
   await page.goto(`/${visual.route}`);
   const picker = page.locator(visual.selector).first();
   await expect(picker).toBeVisible();
-  await expect(picker).toContainText("2026/07/15");
+  await expect(picker).toContainText("请选择日期");
   const trigger = picker.locator('[data-slot="date-picker-trigger"]');
   await trigger.click();
   await expect(page.locator('[data-slot="calendar"]')).toBeVisible();

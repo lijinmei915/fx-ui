@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/design-tokens",
-  "updatedAt": "2026-08-21",
+  "updatedAt": "2026-08-22",
   "truthSource": "theme/fx-theme.css",
   "humanDoc": "docs/TOKENS.md",
   "note": "主项目采用 shadcn 友好的两层 Token 命名空间 + 组件用法：primitive -> semantic -> componentUsage。componentUsage 是组件属性/状态消费语义 Token 的映射事实，不是独立组件 Token。报告 skill 的 Seed -> Map -> Alias -> Component 四层结构可作为独立 HTML 输出参考，但不替代本项目的 shadcn semantic slots。",
@@ -1462,6 +1462,18 @@
       "value": "0px -2px 6px -2px var(--fx-shadow-color), 0px -4px 10px -4px var(--fx-shadow-color-soft)",
       "category": "palette",
       "usage": ""
+    },
+    {
+      "name": "--fx-text-control-sm",
+      "value": "13px",
+      "category": "typography",
+      "usage": "28px 紧凑控件专用字号；不用于页面正文"
+    },
+    {
+      "name": "--fx-text-control-sm--line-height",
+      "value": "18px",
+      "category": "typography",
+      "usage": "28px 紧凑控件专用行高"
     }
   ],
   "semantic": [
@@ -2068,10 +2080,13 @@
         "--ring",
         "--border",
         "--background",
-        "--radius"
+        "--radius",
+        "--fx-text-control-sm",
+        "--fx-text-control-sm--line-height"
       ],
       "rules": [
         "用 variant 和 size 表达语义，不手写颜色和圆角。",
+        "文字与圆角按尺寸映射：24=12/18+6px、28=13/18+6px、32=14/20+8px、36=16/24+8px。",
         "Loading 是 disabled + Spinner 的组合态，Button 没有 loading prop。",
         "图标放入 Button 时使用 data-icon 标记位置，不手写图标尺寸。"
       ]
@@ -2341,7 +2356,18 @@
     "concentricRule": "嵌套圆角表面需要保持同心：innerRadius = max(0px, outerRadius - inset)。仅组件内部已有嵌套表面时采用；调用处不得临时计算或覆盖圆角。"
   },
   "typography": {
-    "policy": "调用处按 text-{role} 文本角色选择；每个角色组合复用现有 Tailwind text-{size}/font-* 工具类，不新增字号或字重数值 API；具体数值仍由 theme/fx-theme.css 的 --text-* 注入。",
+    "policy": "调用处按 text-{role} 文本角色选择；页面与组合层继续复用现有 Tailwind text-{size}/font-* 工具类。text-control-sm 是已治理组件内部的 28px 紧凑控件例外，不作为页面字号 API；具体数值仍由 theme/fx-theme.css 注入。",
+    "componentOnlySizes": [
+      {
+        "id": "control-sm",
+        "utility": "text-control-sm",
+        "fontSizeToken": "--fx-text-control-sm",
+        "lineHeightToken": "--fx-text-control-sm--line-height",
+        "value": "13 / 18px",
+        "usage": "28px 紧凑控件内部文字",
+        "avoid": "不得用于页面、Block、模板或普通正文。"
+      }
+    ],
     "conventions": [
       {
         "id": "mixed-language",

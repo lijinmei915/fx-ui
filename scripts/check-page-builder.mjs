@@ -22,9 +22,9 @@ const errors = [];
 
 if (manifest.format !== "fx-ui/page-builder")
   errors.push("page builder format is invalid");
-if (manifest.schemaVersion < 7)
+if (manifest.schemaVersion < 9)
   errors.push(
-    "page builder schema must include the governed external Agent review contract",
+    "page builder schema must include the single-entry foundation candidate flow",
   );
 const builderModes = new Set(manifest.builderModes?.map((mode) => mode.id));
 for (const mode of ["page", "component", "business-component"])
@@ -34,7 +34,9 @@ const componentMode = manifest.builderModes?.find(
   (mode) => mode.id === "component",
 );
 if (!componentMode?.contractSource || !componentMode?.reviewWorkbench)
-  errors.push("component builder mode must declare its review workbench contract");
+  errors.push(
+    "component builder mode must declare its review workbench contract",
+  );
 const reviewWorkbench = componentMode?.reviewWorkbench;
 if (
   !reviewWorkbench?.candidateSources?.includes("external-agent-mcp") ||
@@ -45,7 +47,9 @@ const previewAdapterIds = new Set(
   reviewWorkbench?.previewAdapters?.map((adapter) => adapter.id),
 );
 if (!previewAdapterIds.has("button"))
-  errors.push("component review must declare the governed Button preview adapter");
+  errors.push(
+    "component review must declare the governed Button preview adapter",
+  );
 const buttonContract = componentsManifest.uiComponents?.find(
   (component) => component.name === "Button",
 );
@@ -63,7 +67,9 @@ for (const control of reviewWorkbench?.controls ?? []) {
     !allowedValues ||
     control.values.some((value) => !allowedValues.includes(value))
   )
-    errors.push(`component review has an invalid Button control: ${control.id}`);
+    errors.push(
+      `component review has an invalid Button control: ${control.id}`,
+    );
 }
 const reviewPropertyIds = new Set();
 for (const property of reviewWorkbench?.runtimeProperties ?? []) {
@@ -130,6 +136,51 @@ for (const operation of [
 const businessComponentMode = manifest.builderModes?.find(
   (mode) => mode.id === "business-component",
 );
+const foundationComponentMode = manifest.builderModes?.find(
+  (mode) => mode.id === "component-create",
+);
+const foundationGroups =
+  foundationComponentMode?.candidateGate?.foundationAssets;
+const foundationDeliveryTargets = new Set(
+  foundationComponentMode?.candidateGate?.deliveryTargets?.map(
+    (target) => target.id,
+  ),
+);
+if (
+  foundationComponentMode?.candidateGate?.instructionEntry !== false ||
+  !foundationDeliveryTargets.has("new") ||
+  !foundationDeliveryTargets.has("existing") ||
+  foundationComponentMode?.candidateGate?.deliveryTargets?.some(
+    (target) => !target.name || !target.outcome || !target.storageKey,
+  ) ||
+  foundationComponentMode?.candidateGate?.existingComponentSource !==
+    "docs/data/components.manifest.json#uiComponents"
+)
+  errors.push(
+    "foundation builder must disable the duplicate instruction entry and declare governed delivery targets",
+  );
+const requiredFoundationKinds = [
+  "layout",
+  "container",
+  "color",
+  "spacing",
+  "typography",
+  "icon",
+  "separator",
+  "interaction",
+];
+for (const kind of requiredFoundationKinds) {
+  const group = foundationGroups?.find((item) => item.id === kind);
+  if (
+    !group ||
+    group.items?.length !== 1 ||
+    group.items[0]?.kind !== kind ||
+    group.items[0]?.name !== (kind === "typography" ? "文字" : group.name)
+  )
+    errors.push(
+      `foundation builder must expose one generic ${kind} primitive configured through properties`,
+    );
+}
 if (
   !businessComponentMode?.registry?.length ||
   !businessComponentMode.catalogSources?.length ||
@@ -170,6 +221,7 @@ const compositionOperationNames = new Set(
 );
 for (const operation of [
   "addComponent",
+  "addFoundation",
   "removeComponent",
   "moveComponent",
   "groupComponents",

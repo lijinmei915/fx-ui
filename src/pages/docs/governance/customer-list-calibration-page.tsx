@@ -107,7 +107,7 @@ export function CustomerListCalibrationPage({ actions, lang }: { actions: React.
     <div className={docsSpacing.pageStack}>
       <section id="customer-list-calibration" className="flex flex-col gap-2">
         <PageLead
-          crumb={lang === "en" ? "Maintain / Page calibration" : "维护 / 页面校准"}
+          crumb={lang === "en" ? "Builder / List calibration" : "搭建器 / 列表页校准"}
           title={lang === "en" ? "List Page Calibration" : "列表页视觉校准"}
           lead={lang === "en" ? "Compare only declared work-surface and density variants on the real customer list. Pick a direction here, then promote it to the owning Block or token before shipping." : "在真实客户列表上比较已声明的工作区与密度变体。先在此选定方向，再回写到对应 Block 或 token 后发布。"}
           actions={actions}

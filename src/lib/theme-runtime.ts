@@ -86,6 +86,8 @@ const themeTextScaleValues: Record<ThemeTextScale, Record<string, string>> = {
   compact: {
     "--fx-text-xs": "12px",
     "--fx-text-xs--line-height": "18px",
+    "--fx-text-control-sm": "12px",
+    "--fx-text-control-sm--line-height": "18px",
     "--fx-text-sm": "12px",
     "--fx-text-sm--line-height": "18px",
     "--fx-text-base": "14px",
@@ -126,6 +128,8 @@ const themeTextScaleValues: Record<ThemeTextScale, Record<string, string>> = {
   standard: {
     "--fx-text-xs": "12px",
     "--fx-text-xs--line-height": "18px",
+    "--fx-text-control-sm": "13px",
+    "--fx-text-control-sm--line-height": "18px",
     "--fx-text-sm": "14px",
     "--fx-text-sm--line-height": "20px",
     "--fx-text-base": "16px",
@@ -166,6 +170,8 @@ const themeTextScaleValues: Record<ThemeTextScale, Record<string, string>> = {
   spacious: {
     "--fx-text-xs": "14px",
     "--fx-text-xs--line-height": "20px",
+    "--fx-text-control-sm": "15px",
+    "--fx-text-control-sm--line-height": "22px",
     "--fx-text-sm": "16px",
     "--fx-text-sm--line-height": "24px",
     "--fx-text-base": "18px",

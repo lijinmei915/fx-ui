@@ -54,14 +54,17 @@ import { Toggle } from "@/components/ui/toggle";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
+  BoxIcon,
   CheckIcon,
-  CheckCircleIcon,
   ComponentsIcon,
   FolderIcon,
+  IconsIcon,
+  MinusIcon,
   PlusIcon,
   SearchIcon,
   SparklesIcon,
   Trash2Icon,
+  TypographyIcon,
 } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { componentIndexSections } from "@/lib/site-navigation";
@@ -77,15 +80,7 @@ type ComponentNode = {
   component: string;
   props: Record<string, string>;
 };
-type FoundationKind =
-  | "layout"
-  | "container"
-  | "color"
-  | "spacing"
-  | "typography"
-  | "icon"
-  | "separator"
-  | "interaction";
+type FoundationKind = "container" | "typography" | "icon" | "separator";
 type FoundationNode = {
   id: string;
   type: "foundation";
@@ -123,6 +118,7 @@ type CompositionOperation =
   | { op: "addComponent"; component: string; parent?: string; before?: string }
   | {
       op: "addFoundation";
+      id?: string;
       foundation: FoundationKind;
       assetId: string;
       props: Record<string, string>;
@@ -230,7 +226,7 @@ const pageBuilderManifest = JSON.parse(pageBuilderManifestRaw) as {
   businessComponents: BusinessComponentDefinition[];
   builderModes: {
     id: string;
-    candidateGate?: {
+    creationContract?: {
       initialComposition?: {
         assetId: string;
         props: Record<string, string>;
@@ -246,13 +242,14 @@ const definition = pageBuilderManifest.businessComponents[0];
 const foundationMode = pageBuilderManifest.builderModes.find(
   (mode) => mode.id === "component-create",
 );
-const foundationAssets = foundationMode?.candidateGate?.foundationAssets ?? [];
+const foundationAssets =
+  foundationMode?.creationContract?.foundationAssets ?? [];
 const foundationPresets =
-  foundationMode?.candidateGate?.compositionPresets ?? [];
+  foundationMode?.creationContract?.compositionPresets ?? [];
 const foundationDeliveryTargets =
-  foundationMode?.candidateGate?.deliveryTargets ?? [];
+  foundationMode?.creationContract?.deliveryTargets ?? [];
 const foundationInitialComposition =
-  foundationMode?.candidateGate?.initialComposition;
+  foundationMode?.creationContract?.initialComposition;
 const foundationAssetById = new Map(
   foundationAssets
     .flatMap((group) => group.items)
@@ -370,8 +367,8 @@ const radiusClasses: Record<RadiusValue, string> = {
   none: "rounded-none",
   inner: "rounded-sm",
   element: "rounded-md",
-  container: "rounded-lg",
-  page: "rounded-xl",
+  container: "rounded-xl",
+  page: "rounded-2xl",
   full: "rounded-full",
 };
 const foundationSizeLabels: Record<FoundationSize, string> = {
@@ -406,28 +403,6 @@ const gapClasses: Record<SpacingValue, string> = {
   lg: "gap-6",
 };
 const foundationProperties: Record<FoundationKind, PlaygroundProperty[]> = {
-  layout: [
-    {
-      key: "direction",
-      zh: "方向",
-      propName: "direction",
-      type: "segment",
-      options: [
-        { value: "horizontal", label: "横向" },
-        { value: "vertical", label: "纵向" },
-      ],
-    },
-    {
-      key: "gap",
-      zh: "间隔",
-      propName: "gap",
-      type: "segment",
-      options: Object.entries(spacingLabels).map(([value, label]) => ({
-        value,
-        label,
-      })),
-    },
-  ],
   container: [
     {
       key: "surface",
@@ -504,31 +479,6 @@ const foundationProperties: Record<FoundationKind, PlaygroundProperty[]> = {
       ],
     },
   ],
-  color: [
-    {
-      key: "token",
-      zh: "颜色 Token",
-      propName: "token",
-      type: "segment",
-      options: [
-        { value: "primary", label: "主色" },
-        { value: "surface", label: "表面" },
-        { value: "muted", label: "弱化" },
-      ],
-    },
-  ],
-  spacing: [
-    {
-      key: "value",
-      zh: "间距值",
-      propName: "value",
-      type: "segment",
-      options: Object.entries(spacingLabels).map(([value, label]) => ({
-        value,
-        label,
-      })),
-    },
-  ],
   typography: [
     {
       key: "role",
@@ -569,31 +519,15 @@ const foundationProperties: Record<FoundationKind, PlaygroundProperty[]> = {
       ],
     },
   ],
-  interaction: [
-    {
-      key: "state",
-      zh: "交互状态",
-      propName: "state",
-      type: "segment",
-      options: [
-        { value: "default", label: "默认" },
-        { value: "hover", label: "悬停" },
-        { value: "focus", label: "聚焦" },
-        { value: "disabled", label: "禁用" },
-      ],
-    },
-  ],
 };
 const foundationLabels: Record<FoundationKind, string> = {
-  layout: "布局",
   container: "容器",
-  color: "颜色",
-  spacing: "间距",
-  typography: "字体排版",
+  typography: "文字",
   icon: "图标",
   separator: "分割线",
-  interaction: "交互状态",
 };
+const foundationAssetTileClassName =
+  "flex min-h-20 w-full flex-col items-center justify-center gap-1 rounded-sm border border-border-subtle bg-surface p-2 transition-colors hover:border-border hover:bg-muted";
 
 function cloneDraft(draft: CompositionDraft): CompositionDraft {
   return structuredClone(draft);
@@ -847,7 +781,7 @@ function applyOperation(
   }
   if (operation.op === "addFoundation") {
     const node: FoundationNode = {
-      id: `${operation.assetId}-${crypto.randomUUID()}`,
+      id: operation.id ?? `${operation.assetId}-${crypto.randomUUID()}`,
       type: "foundation",
       foundation: operation.foundation,
       assetId: operation.assetId,
@@ -867,21 +801,19 @@ function applyOperation(
       const existingRoot =
         next.nodes.length === 1 &&
         next.nodes[0].type === "foundation" &&
-        next.nodes[0].foundation === "container" &&
-        (next.nodes[0].children?.length ?? 0) === 0
+        next.nodes[0].foundation === "container"
           ? next.nodes[0]
           : undefined;
-      const container: FoundationNode = existingRoot
-        ? { ...existingRoot, props: { ...preset.assets[0].props } }
-        : {
-            id: `${firstAsset.id}-${crypto.randomUUID()}`,
-            type: "foundation",
-            foundation: firstAsset.kind,
-            assetId: firstAsset.id,
-            props: { ...preset.assets[0].props },
-          };
+      const container: FoundationNode = {
+        id: `${firstAsset.id}-${crypto.randomUUID()}`,
+        type: "foundation",
+        foundation: firstAsset.kind,
+        assetId: firstAsset.id,
+        props: { ...preset.assets[0].props },
+        children: [],
+      };
       next.nodes = existingRoot
-        ? [container]
+        ? insertIntoParent(next.nodes, existingRoot.id, container)
         : insertNode(next.nodes, container);
       for (const asset of preset.assets.slice(1)) {
         const definition = foundationAssetById.get(asset.assetId);
@@ -1042,11 +974,6 @@ export const BusinessComponentBuilder = forwardRef<
   const [prompt, setPrompt] = useState("");
   const [pending, setPending] = useState<CompositionOperation[]>([]);
   const [status, setStatus] = useState("未保存");
-  const [candidateStage, setCandidateStage] = useState<
-    "draft" | "generated" | "accepted"
-  >("draft");
-  const [candidateSnapshot, setCandidateSnapshot] =
-    useState<CompositionDraft>();
   const [foundationDeliveryMode, setFoundationDeliveryMode] = useState<
     "new" | "existing"
   >(foundationDeliveryTargets[0]?.id ?? "new");
@@ -1060,7 +987,6 @@ export const BusinessComponentBuilder = forwardRef<
     setFuture([]);
     setDraft(next);
     setStatus("有未保存修改");
-    if (workflow === "foundation") setCandidateStage("draft");
   };
   const run = (operation: CompositionOperation) =>
     commit(applyOperation(draft, operation));
@@ -1087,10 +1013,6 @@ export const BusinessComponentBuilder = forwardRef<
     }
     if (draft.nodes.length === 0) {
       setStatus("请先添加组件");
-      return;
-    }
-    if (workflow === "foundation" && publish && candidateStage !== "accepted") {
-      setStatus("请先生成并验收候选");
       return;
     }
     const publicPropNames = draft.publicProps.map((property) =>
@@ -1243,6 +1165,14 @@ export const BusinessComponentBuilder = forwardRef<
       return node.id;
     return findParentNode(draft.nodes, id)?.id;
   };
+  const getFoundationRootId = () => {
+    const root = draft.nodes[0];
+    return draft.nodes.length === 1 &&
+      root?.type === "foundation" &&
+      root.foundation === "container"
+      ? root.id
+      : undefined;
+  };
   const getDefaultFoundationParentId = () => {
     const selectedParent = getSelectedParentId();
     if (selectedParent) return selectedParent;
@@ -1253,6 +1183,11 @@ export const BusinessComponentBuilder = forwardRef<
         ? draft.nodes[0]
         : undefined;
     return rootContainer?.id;
+  };
+  const getFoundationDropParentId = (assetId: string, targetId: string) => {
+    const asset = foundationAssetById.get(assetId);
+    if (asset?.kind !== "container") return targetId;
+    return getFoundationRootId() ?? targetId;
   };
   const dropComponent = (
     component: string,
@@ -1274,17 +1209,25 @@ export const BusinessComponentBuilder = forwardRef<
   const dropFoundation = (assetId: string, parent?: string) => {
     const asset = foundationAssetById.get(assetId);
     if (!asset) return;
+    const id = `${asset.id}-${crypto.randomUUID()}`;
     run({
       op: "addFoundation",
+      id,
       foundation: asset.kind,
       assetId: asset.id,
       props: asset.props,
       parent:
-        parent ??
-        (workflow === "foundation"
-          ? getDefaultFoundationParentId()
-          : undefined),
+        workflow === "foundation" && asset.kind === "container"
+          ? getFoundationRootId()
+          : (parent ??
+            (workflow === "foundation"
+              ? getDefaultFoundationParentId()
+              : undefined)),
     });
+    setRightPanel("properties");
+    setSelectedId(id);
+    setSelectedIds([id]);
+    selectedIdRef.current = id;
     setDragTarget(undefined);
   };
   const addFoundationPreset = (presetId: string) => {
@@ -1294,15 +1237,39 @@ export const BusinessComponentBuilder = forwardRef<
       op: "addFoundationPreset",
       presetId,
     });
-    const container = next.nodes.find(
-      (node) => node.type === "foundation" && node.foundation === "container",
-    );
+    const root = next.nodes[0];
+    const rootChildren =
+      root?.type === "foundation" && root.foundation === "container"
+        ? (root.children ?? [])
+        : [];
+    const container =
+      root?.type === "foundation" && root.foundation === "container"
+        ? rootChildren[rootChildren.length - 1]
+        : root;
     if (!container) return;
     commit(next);
     setRightPanel("properties");
     setSelectedId(container.id);
     setSelectedIds([container.id]);
     selectedIdRef.current = container.id;
+  };
+  const renderFoundationAssetPreview = (asset: FoundationAsset) => {
+    const PreviewIcon =
+      asset.kind === "container"
+        ? BoxIcon
+        : asset.kind === "typography"
+          ? TypographyIcon
+          : asset.kind === "icon"
+            ? IconsIcon
+            : MinusIcon;
+    return (
+      <span
+        data-foundation-preview-icon={asset.kind}
+        className="flex h-10 w-full items-center justify-center text-lg text-foreground"
+      >
+        <PreviewIcon />
+      </span>
+    );
   };
   const componentById = new Map(
     definition.components.map((component) => [component.id, component]),
@@ -1321,40 +1288,29 @@ export const BusinessComponentBuilder = forwardRef<
     }
     return `组合 ${node.children.length}`;
   };
-  const candidateNodeName = (node: CanvasNode) => {
-    if (node.type === "component")
-      return componentById.get(node.component)?.name ?? node.component;
-    if (node.type === "foundation")
+  const renderNodeTypeIcon = (node?: CanvasNode) => {
+    if (node?.type === "group")
+      return <FolderIcon data-icon="inline-start" data-node-icon="group" />;
+    if (node?.type === "foundation") {
+      const FoundationIcon =
+        node.foundation === "container"
+          ? BoxIcon
+          : node.foundation === "typography"
+            ? TypographyIcon
+            : node.foundation === "separator"
+              ? MinusIcon
+              : IconsIcon;
       return (
-        foundationAssetById.get(node.assetId)?.name ??
-        foundationLabels[node.foundation]
+        <FoundationIcon
+          data-icon="inline-start"
+          data-node-icon={node.foundation}
+        />
       );
-    return `组合 ${node.children.length}`;
+    }
+    return (
+      <ComponentsIcon data-icon="inline-start" data-node-icon="component" />
+    );
   };
-  const renderCandidateTree = (
-    nodes: CanvasNode[],
-    depth = 0,
-  ): React.ReactNode =>
-    nodes.flatMap((node) => [
-      <div
-        key={node.id}
-        className="flex items-center gap-2 text-caption"
-        style={{ paddingLeft: depth * 12 }}
-      >
-        <ComponentsIcon className="size-3.5" />
-        <span>{candidateNodeName(node)}</span>
-        {node.type === "foundation" ? (
-          <Tag variant="outline" className="ml-auto">
-            基础
-          </Tag>
-        ) : null}
-      </div>,
-      node.type === "group"
-        ? renderCandidateTree(node.children, depth + 1)
-        : node.type === "foundation" && node.foundation === "container"
-          ? renderCandidateTree(node.children ?? [], depth + 1)
-          : null,
-    ]);
   const insertableByName = new Map(
     definition.components.map((component) => [
       component.id.toLowerCase().replace(/[^a-z0-9]/g, ""),
@@ -1421,12 +1377,20 @@ export const BusinessComponentBuilder = forwardRef<
     return `${normalizedId}${property.charAt(0).toUpperCase()}${property.slice(1)}`;
   };
 
-  const renderFoundation = (node: FoundationNode): React.ReactNode => {
-    if (node.foundation === "container")
+  const renderFoundation = (
+    node: FoundationNode,
+    isRootContainer = false,
+  ): React.ReactNode => {
+    if (node.foundation === "container") {
+      const children = node.children ?? [];
+      const hasChildren = children.length > 0;
       return (
         <div
+          aria-label={!hasChildren ? "空容器" : undefined}
           className={cn(
             "flex min-w-40 border border-border-subtle text-body",
+            !hasChildren &&
+              "min-h-20 min-w-56 items-center justify-center border-dashed border-muted-foreground",
             node.props.surface === "primary"
               ? node.props.state === "hover"
                 ? "border-primary-hover bg-primary-hover text-primary-foreground"
@@ -1441,7 +1405,9 @@ export const BusinessComponentBuilder = forwardRef<
                     : "border-destructive bg-destructive text-destructive-foreground"
                 : node.props.surface === "surface"
                   ? "bg-surface"
-                  : "bg-card",
+                  : isRootContainer || hasChildren
+                    ? "bg-card"
+                    : "bg-transparent",
             paddingClasses[(node.props.padding as SpacingValue) || "md"],
             radiusClasses[(node.props.radius as RadiusValue) || "container"],
             foundationSizeClasses[(node.props.size as FoundationSize) || "md"],
@@ -1451,47 +1417,19 @@ export const BusinessComponentBuilder = forwardRef<
             node.props.state === "disabled" && "cursor-not-allowed",
           )}
         >
-          {node.children?.length ? (
-            node.children.map((child) =>
-              renderNode(
-                child,
-                node.props.direction === "horizontal"
-                  ? "horizontal"
-                  : "vertical",
-              ),
-            )
-          ) : (
-            <span className="text-muted-foreground">容器内容</span>
-          )}
+          {hasChildren
+            ? children.map((child) =>
+                renderNode(
+                  child,
+                  node.props.direction === "horizontal"
+                    ? "horizontal"
+                    : "vertical",
+                ),
+              )
+            : null}
         </div>
       );
-    if (node.foundation === "color")
-      return (
-        <div className="flex min-w-40 items-center gap-2 border border-border-subtle p-2">
-          <span
-            className={cn(
-              "size-6 shrink-0 border border-border-subtle",
-              node.props.token === "primary"
-                ? "bg-primary"
-                : node.props.token === "muted"
-                  ? "bg-muted"
-                  : "bg-surface",
-            )}
-          />
-          <span className="text-body">{node.props.token || "surface"}</span>
-        </div>
-      );
-    if (node.foundation === "spacing")
-      return (
-        <div
-          className={cn(
-            "flex min-w-32 items-center justify-center border border-dashed border-border-subtle text-caption text-muted-foreground",
-            paddingClasses[(node.props.value as SpacingValue) || "md"],
-          )}
-        >
-          间距 {spacingLabels[(node.props.value as SpacingValue) || "md"]}
-        </div>
-      );
+    }
     if (node.foundation === "typography")
       return (
         <span
@@ -1514,7 +1452,7 @@ export const BusinessComponentBuilder = forwardRef<
             ? SearchIcon
             : node.props.name === "check"
               ? CheckIcon
-              : SparklesIcon;
+              : IconsIcon;
       return <Icon aria-label="图标" />;
     }
     if (node.foundation === "separator")
@@ -1527,30 +1465,7 @@ export const BusinessComponentBuilder = forwardRef<
           className={node.props.orientation === "vertical" ? "h-8" : "w-40"}
         />
       );
-    if (node.foundation === "interaction")
-      return (
-        <div
-          className={cn(
-            node.props.state === "hover" && "rounded-md bg-primary-hover p-1",
-            node.props.state === "focus" && "rounded-md ring-2 ring-ring",
-          )}
-        >
-          <Button size="sm" disabled={node.props.state === "disabled"}>
-            {node.props.state || "default"}
-          </Button>
-        </div>
-      );
-    return (
-      <div
-        className={cn(
-          "flex min-w-40 items-center border border-dashed border-border-subtle p-2",
-          node.props.direction === "horizontal" ? "flex-row" : "flex-col",
-          gapClasses[(node.props.gap as SpacingValue) || "sm"],
-        )}
-      >
-        布局
-      </div>
-    );
+    return null;
   };
 
   const renderComponent = (node: ComponentNode, parentDirection: Direction) => {
@@ -1743,6 +1658,12 @@ export const BusinessComponentBuilder = forwardRef<
     parentDirection: Direction,
   ): React.ReactNode => {
     const selected = selectedIds.includes(node.id);
+    const isRootContainer =
+      workflow === "foundation" &&
+      draft.nodes.length === 1 &&
+      draft.nodes[0]?.id === node.id &&
+      node.type === "foundation" &&
+      node.foundation === "container";
     if (node.type === "group")
       return (
         <div
@@ -1769,6 +1690,10 @@ export const BusinessComponentBuilder = forwardRef<
               "application/x-fx-foundation",
             );
             if (foundation) dropFoundation(foundation, node.id);
+            const preset = event.dataTransfer.getData(
+              "application/x-fx-foundation-preset",
+            );
+            if (preset) addFoundationPreset(preset);
           }}
           className={cn(
             "flex min-h-12 items-center p-2 outline-2 outline-offset-[-2px]",
@@ -1791,6 +1716,7 @@ export const BusinessComponentBuilder = forwardRef<
         data-node-type={
           node.type === "foundation" ? node.foundation : node.component
         }
+        data-root-container={isRootContainer ? "true" : undefined}
         onClick={(event) => {
           event.stopPropagation();
           selectNode(node.id, event.shiftKey);
@@ -1798,7 +1724,18 @@ export const BusinessComponentBuilder = forwardRef<
         onDragOver={(event) => {
           event.preventDefault();
           event.stopPropagation();
-          setDragTarget(node.id);
+          const foundation = event.dataTransfer.getData(
+            "application/x-fx-foundation",
+          );
+          const targetId =
+            node.type === "foundation" && node.foundation === "container"
+              ? node.id
+              : undefined;
+          setDragTarget(
+            foundation && targetId
+              ? getFoundationDropParentId(foundation, targetId)
+              : node.id,
+          );
         }}
         onDrop={(event) => {
           event.preventDefault();
@@ -1815,10 +1752,23 @@ export const BusinessComponentBuilder = forwardRef<
           const foundation = event.dataTransfer.getData(
             "application/x-fx-foundation",
           );
-          if (foundation) dropFoundation(foundation, parent);
+          if (foundation)
+            dropFoundation(
+              foundation,
+              parent
+                ? getFoundationDropParentId(foundation, parent)
+                : undefined,
+            );
+          const preset = event.dataTransfer.getData(
+            "application/x-fx-foundation-preset",
+          );
+          if (preset) addFoundationPreset(preset);
         }}
         className={cn(
-          "flex min-h-10 items-center justify-center p-1 outline-2 outline-offset-[-2px]",
+          "flex min-h-10 items-center justify-center outline-1 outline-offset-2",
+          node.type === "foundation" && node.foundation === "container"
+            ? radiusClasses[(node.props.radius as RadiusValue) || "container"]
+            : "p-1",
           node.type === "component" && node.component === "input" && "w-56",
           node.type === "component" &&
             node.component === "separator" &&
@@ -1831,7 +1781,7 @@ export const BusinessComponentBuilder = forwardRef<
         )}
       >
         {node.type === "foundation"
-          ? renderFoundation(node)
+          ? renderFoundation(node, isRootContainer)
           : renderComponent(node, parentDirection)}
       </div>
     );
@@ -1958,29 +1908,14 @@ export const BusinessComponentBuilder = forwardRef<
       operations.push({ op: "setComponentName", value: name[1].trim() });
     setPending(operations);
   };
-  const generateCandidate = () => {
-    if (draft.nodes.length === 0) {
-      setStatus("请先添加组件");
-      return;
-    }
-    setCandidateSnapshot(cloneDraft(draft));
-    setCandidateStage("generated");
-    setStatus("候选已生成，待预览验收");
-  };
-  const acceptCandidate = () => {
-    if (candidateStage !== "generated") return;
-    setCandidateStage("accepted");
-    setStatus("候选验收通过，可发布");
-  };
-  const candidateIsCurrent = candidateSnapshot
-    ? JSON.stringify(candidateSnapshot) === JSON.stringify(draft)
-    : false;
-
   return (
     <div
       data-slot="business-component-builder"
       className="grid min-h-0 grid-cols-[240px_minmax(0,1fr)_320px]"
     >
+      <p aria-live="polite" className="sr-only">
+        {status}
+      </p>
       <aside className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)] border-r border-border-subtle bg-card">
         <Tabs
           value={leftPanel}
@@ -2039,52 +1974,85 @@ export const BusinessComponentBuilder = forwardRef<
                   className="flex flex-col gap-4 p-3"
                 >
                   {filteredFoundationPresets.length > 0 ? (
-                    <section className="flex flex-col gap-1">
-                      <span className="px-2 text-label">结构预设</span>
-                      {filteredFoundationPresets.map((preset) => (
-                        <Button
-                          key={preset.id}
-                          variant="outline"
-                          className="justify-start"
-                          onClick={() => addFoundationPreset(preset.id)}
-                        >
-                          {preset.name}
-                          <Tag variant="outline" className="ml-auto">
-                            起点
-                          </Tag>
-                          <PlusIcon />
-                        </Button>
-                      ))}
+                    <section className="flex flex-col gap-2">
+                      <span className="text-label">结构预设</span>
+                      <div className="grid grid-cols-2 gap-2">
+                        {filteredFoundationPresets.map((preset) => (
+                          <Button
+                            key={preset.id}
+                            variant="plain"
+                            className="w-full"
+                            aria-label={`添加${preset.name}`}
+                            draggable
+                            onDragStart={(event) => {
+                              event.dataTransfer.effectAllowed = "copy";
+                              event.dataTransfer.setData(
+                                "application/x-fx-foundation-preset",
+                                preset.id,
+                              );
+                            }}
+                            onClick={() => addFoundationPreset(preset.id)}
+                          >
+                            <span
+                              data-slot="foundation-asset-tile"
+                              className={foundationAssetTileClassName}
+                            >
+                              <span className="flex h-10 w-full items-center justify-center">
+                                <span className="bg-primary px-3 py-1 text-label text-primary-foreground">
+                                  按钮
+                                </span>
+                              </span>
+                              <span
+                                data-slot="foundation-asset-name"
+                                className="text-caption text-muted-foreground"
+                              >
+                                {preset.name}
+                              </span>
+                            </span>
+                          </Button>
+                        ))}
+                      </div>
                     </section>
                   ) : null}
-                  {filteredFoundationGroups.map((group) => (
-                    <section key={group.id} className="flex flex-col gap-1">
-                      <span className="px-2 text-label">{group.name}</span>
-                      {group.items.map((asset) => (
-                        <Button
-                          key={asset.id}
-                          variant="ghost"
-                          className="justify-start"
-                          draggable
-                          onDragStart={(event) => {
-                            event.dataTransfer.effectAllowed = "copy";
-                            event.dataTransfer.setData(
-                              "application/x-fx-foundation",
-                              asset.id,
-                            );
-                          }}
-                          onClick={() => dropFoundation(asset.id)}
-                        >
-                          <ComponentsIcon data-icon="inline-start" />
-                          {asset.name}
-                          <Tag variant="outline" className="ml-auto">
-                            基础
-                          </Tag>
-                          <PlusIcon />
-                        </Button>
-                      ))}
+                  {filteredFoundationGroups.length > 0 ? (
+                    <section className="flex flex-col gap-2">
+                      <span className="text-label">基础资产</span>
+                      <div className="grid grid-cols-2 gap-2">
+                        {filteredFoundationGroups.flatMap((group) =>
+                          group.items.map((asset) => (
+                            <Button
+                              key={asset.id}
+                              variant="plain"
+                              className="w-full"
+                              aria-label={`添加${asset.name}`}
+                              draggable
+                              onDragStart={(event) => {
+                                event.dataTransfer.effectAllowed = "copy";
+                                event.dataTransfer.setData(
+                                  "application/x-fx-foundation",
+                                  asset.id,
+                                );
+                              }}
+                              onClick={() => dropFoundation(asset.id)}
+                            >
+                              <span
+                                data-slot="foundation-asset-tile"
+                                className={foundationAssetTileClassName}
+                              >
+                                {renderFoundationAssetPreview(asset)}
+                                <span
+                                  data-slot="foundation-asset-name"
+                                  className="text-caption text-muted-foreground"
+                                >
+                                  {asset.name}
+                                </span>
+                              </span>
+                            </Button>
+                          )),
+                        )}
+                      </div>
                     </section>
-                  ))}
+                  ) : null}
                   {foundationSearch &&
                   filteredFoundationPresets.length === 0 &&
                   filteredFoundationGroups.length === 0 ? (
@@ -2182,7 +2150,12 @@ export const BusinessComponentBuilder = forwardRef<
                       data-slot="foundation-selection-actions"
                       className="flex items-center gap-1"
                     >
-                      <Tag variant="outline">已选 {selectedIds.length} 项</Tag>
+                      <span
+                        data-slot="foundation-selection-count"
+                        className="text-caption text-muted-foreground"
+                      >
+                        已选 {selectedIds.length} 项
+                      </span>
                       {selectedIds.length > 1 ? (
                         <Button size="sm" onClick={groupSelection}>
                           成组
@@ -2222,7 +2195,7 @@ export const BusinessComponentBuilder = forwardRef<
                           className="justify-start"
                           onClick={() => selectNode(id, false)}
                         >
-                          <ComponentsIcon data-icon="inline-start" />
+                          {renderNodeTypeIcon(findNode(draft.nodes, id))}
                           {nodeDisplayName(id)}
                         </Button>
                       ))}
@@ -2346,6 +2319,10 @@ export const BusinessComponentBuilder = forwardRef<
                   "application/x-fx-foundation",
                 );
                 if (foundation) dropFoundation(foundation);
+                const preset = event.dataTransfer.getData(
+                  "application/x-fx-foundation-preset",
+                );
+                if (preset) addFoundationPreset(preset);
               }}
               className={cn(
                 "outline-2 outline-offset-[-2px]",
@@ -2466,34 +2443,38 @@ export const BusinessComponentBuilder = forwardRef<
           <TabsContent value={rightPanel} className="min-h-0">
             <ScrollArea className="h-full">
               <div className="flex flex-col gap-5 p-4">
-                {rightPanel === "global" ? (
-                  <p className="text-caption text-muted-foreground">{status}</p>
-                ) : null}
-                {rightPanel === "global" || selectedNode ? (
+                {(rightPanel === "global" && workflow !== "foundation") ||
+                (rightPanel === "properties" && selectedNode) ? (
                   <section className="flex flex-col gap-3">
-                    <div>
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="text-label">
-                          {rightPanel === "global"
-                            ? "Auto Layout · 整体"
-                            : selectedNode?.type === "group"
-                              ? "Auto Layout · 组合"
-                              : selectedNode?.type === "component"
-                                ? "组件属性"
-                                : selectedNode?.type === "foundation"
-                                  ? `${foundationLabels[selectedNode.foundation]}属性`
-                                  : "属性"}
-                        </span>
-                        {rightPanel === "properties" ? (
-                          <Tag variant="outline">Token 约束</Tag>
-                        ) : null}
+                    {workflow === "foundation" ? (
+                      <span className="text-label">
+                        {selectedNode?.type === "group"
+                          ? "Auto Layout · 组合"
+                          : selectedNode?.type === "foundation"
+                            ? `${foundationLabels[selectedNode.foundation]}属性`
+                            : "属性"}
+                      </span>
+                    ) : (
+                      <div>
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="text-label">
+                            {rightPanel === "global"
+                              ? "Auto Layout · 整体"
+                              : selectedNode?.type === "group"
+                                ? "Auto Layout · 组合"
+                                : "组件属性"}
+                          </span>
+                          {rightPanel === "properties" ? (
+                            <Tag variant="outline">Token 约束</Tag>
+                          ) : null}
+                        </div>
+                        <p className="mt-1 text-caption text-muted-foreground">
+                          {rightPanel === "properties"
+                            ? "只修改当前选中的节点"
+                            : "配置整个组件画布的布局与间距"}
+                        </p>
                       </div>
-                      <p className="mt-1 text-caption text-muted-foreground">
-                        {rightPanel === "properties"
-                          ? "只修改当前选中的节点"
-                          : "配置整个组件画布的布局与间距"}
-                      </p>
-                    </div>
+                    )}
                     {rightPanel === "properties" &&
                     (selectedNode?.type === "component" ||
                       selectedNode?.type === "foundation") ? (
@@ -2501,25 +2482,16 @@ export const BusinessComponentBuilder = forwardRef<
                         data-slot="component-instance-properties"
                         className="flex flex-col gap-3"
                       >
-                        <div className="flex flex-col gap-1 text-caption text-muted-foreground">
-                          {selectedNode.type === "component" ? (
-                            <>
-                              <p>
-                                组件源：{selectedComponentDefinition?.source}
-                              </p>
-                              <p>
-                                属性契约：
-                                {selectedComponentDefinition?.contract
-                                  ?.source ?? "尚无已登记属性契约"}
-                              </p>
-                            </>
-                          ) : (
+                        {selectedNode.type === "component" ? (
+                          <div className="flex flex-col gap-1 text-caption text-muted-foreground">
+                            <p>组件源：{selectedComponentDefinition?.source}</p>
                             <p>
-                              基础资产：
-                              {foundationLabels[selectedNode.foundation]}
+                              属性契约：
+                              {selectedComponentDefinition?.contract?.source ??
+                                "尚无已登记属性契约"}
                             </p>
-                          )}
-                        </div>
+                          </div>
+                        ) : null}
                         {selectedProperties.length > 0 ? (
                           selectedProperties.map((property) => {
                             const bindingId = `${selectedNode.id}:${property.key}`;
@@ -2756,7 +2728,9 @@ export const BusinessComponentBuilder = forwardRef<
                     ) : null}
                   </section>
                 ) : null}
-                {rightPanel === "global" ? <Separator /> : null}
+                {rightPanel === "global" && workflow !== "foundation" ? (
+                  <Separator />
+                ) : null}
                 {rightPanel === "global" && draft.publicProps.length > 0 ? (
                   <section
                     data-slot="business-component-public-props"
@@ -2804,79 +2778,6 @@ export const BusinessComponentBuilder = forwardRef<
                   </section>
                 ) : null}
                 {rightPanel === "global" && draft.publicProps.length > 0 ? (
-                  <Separator />
-                ) : null}
-                {rightPanel === "global" && workflow === "foundation" ? (
-                  <section
-                    data-slot="foundation-candidate-gate"
-                    className="flex flex-col gap-3"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <span className="text-label">候选确认</span>
-                        <p className="text-caption text-muted-foreground">
-                          先生成候选，再确认预览结果，最后才能发布。
-                        </p>
-                      </div>
-                      <Tag
-                        variant={
-                          candidateStage === "accepted" ? "default" : "outline"
-                        }
-                      >
-                        {candidateStage === "draft"
-                          ? candidateSnapshot
-                            ? "需重新生成"
-                            : "未生成"
-                          : candidateStage === "generated"
-                            ? "待验收"
-                            : "已验收"}
-                      </Tag>
-                    </div>
-                    {candidateSnapshot ? (
-                      <div className="flex flex-col gap-2">
-                        <div className="flex items-center justify-between text-caption text-muted-foreground">
-                          <span>
-                            {candidateIsCurrent
-                              ? "候选与当前画布一致"
-                              : "当前画布已有修改，请重新生成候选"}
-                          </span>
-                          <span>
-                            {candidateSnapshot?.nodes.length ?? 0} 个节点 ·{" "}
-                            {candidateSnapshot?.publicProps.length ?? 0} 个公开
-                            Prop
-                          </span>
-                        </div>
-                        <div
-                          data-slot="foundation-candidate-preview"
-                          className="flex flex-col gap-2 border border-border-subtle p-3"
-                        >
-                          <span className="text-label">候选结构预览</span>
-                          {renderCandidateTree(candidateSnapshot.nodes)}
-                        </div>
-                      </div>
-                    ) : null}
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={generateCandidate}
-                        disabled={draft.nodes.length === 0}
-                      >
-                        <SparklesIcon data-icon="inline-start" />
-                        生成候选
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={acceptCandidate}
-                        disabled={candidateStage !== "generated"}
-                      >
-                        <CheckCircleIcon data-icon="inline-start" />
-                        预览验收
-                      </Button>
-                    </div>
-                  </section>
-                ) : null}
-                {rightPanel === "global" && workflow === "foundation" ? (
                   <Separator />
                 ) : null}
                 {rightPanel === "global" ? (
@@ -2982,13 +2883,6 @@ export const BusinessComponentBuilder = forwardRef<
                         </Select>
                       </Field>
                     ) : null}
-                    <p className="text-caption text-muted-foreground">
-                      {workflow === "foundation"
-                        ? foundationDeliveryMode === "new"
-                          ? "创建新的基础组件，验收后进入 Playground 与入库流程。"
-                          : "更新已有基础组件，验收后提交受控更新，不直接覆盖源码。"
-                        : "个人组件直接保存；业务组件提交审核后进入公共组件库。"}
-                    </p>
                   </section>
                 ) : null}
               </div>

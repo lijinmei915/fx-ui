@@ -306,16 +306,48 @@ test("组件搭建器 MVP", async ({ page }) => {
     builder.locator('[data-slot="business-component-builder"]'),
   ).toBeVisible();
   await expect(builder).toHaveScreenshot("component-builder.png");
-  const composition = builder.locator('[data-slot="business-component-builder"]');
+  const composition = builder.locator(
+    '[data-slot="business-component-builder"]',
+  );
+  const library = composition.locator("aside").first();
+  const root = composition.locator(
+    '[data-slot="composition-root"] > [data-node-type="container"]',
+  );
+  const containerAsset = library.getByRole("button", {
+    name: "添加容器",
+    exact: true,
+  });
+  await containerAsset.dragTo(root);
+  const firstChild = root
+    .locator(':scope > div > [data-node-type="container"]')
+    .first();
+  await containerAsset.dragTo(firstChild);
+  await expect(
+    root.locator(':scope > div > [data-node-type="container"]'),
+  ).toHaveCount(2);
+  await expect(root).not.toHaveClass(/outline-primary/);
+  await expect(
+    root.locator(':scope > div > [data-node-type="container"]').last(),
+  ).toHaveClass(/outline-primary/);
+  await expect(builder).toHaveScreenshot(
+    "component-builder-container-siblings.png",
+  );
+  await page.reload();
+  await expect(composition).toBeVisible();
+  await expect(root).toHaveCount(1);
   await composition.locator('[data-node-type="container"]').click();
+  await expect(builder).toHaveScreenshot("component-builder-properties.png");
   await composition.getByRole("tab", { name: "选中", exact: true }).click();
+  await expect(builder).toHaveScreenshot("component-builder-selection.png");
   await composition
     .getByRole("button", { name: "删除所选节点", exact: true })
     .click();
   await expect(
     composition.locator('[data-slot="component-instance-properties"]'),
   ).toHaveCount(0);
-  await expect(builder).toHaveScreenshot("component-builder-empty-properties.png");
+  await expect(builder).toHaveScreenshot(
+    "component-builder-empty-properties.png",
+  );
 });
 
 test("业务组件属性契约搭建器", async ({ page }) => {
@@ -875,7 +907,9 @@ test("Separator Playground 主入口", async ({ page }) => {
   await page.goto(`/${visual.route}`);
   const pg = page.locator(visual.selector);
   await expect(pg).toBeVisible();
-  await expect(pg.locator(':scope > [data-slot="section-lead"]')).toHaveCount(0);
+  await expect(pg.locator(':scope > [data-slot="section-lead"]')).toHaveCount(
+    0,
+  );
   await expect(page.locator('a[href="#separator-playground"]')).toHaveCount(1);
   await expect(page.locator("#separator-overview")).toHaveCount(0);
   await expect(page.locator("#separator-preview")).toHaveCount(0);

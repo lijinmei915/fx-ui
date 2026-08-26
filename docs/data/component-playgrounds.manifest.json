@@ -521,9 +521,6 @@
           "propName": "tone",
           "type": "segment",
           "hasAll": true,
-          "disabledWhen": {
-            "variant": "destructive"
-          },
           "options": [
             {
               "value": "default",
@@ -532,8 +529,8 @@
               "hiddenWhen": { "variant": "default" },
               "intent": "不额外强调语义的中性色。",
               "intentEn": "A neutral tone without additional semantic emphasis.",
-              "constraint": "仅 plain variant 使用 tone；其他 variant 的语义由 variant 决定。",
-              "constraintEn": "Tone applies only to the plain variant; other variants derive semantics from variant."
+              "constraint": "用于次级、描边、幽灵的默认语义；主要按钮使用主色，纯文字可用默认中性文字。",
+              "constraintEn": "Use for the default semantics of secondary, outline, and ghost; use primary for the main button, while plain may stay neutral."
             },
             {
               "value": "primary",
@@ -541,8 +538,8 @@
               "labelEn": "Primary",
               "intent": "需要品牌色文字强调的轻量操作。",
               "intentEn": "A lightweight action that needs brand-colored text emphasis.",
-              "constraint": "仅与 plain variant 组合，不把 tone 当作独立视觉变体。",
-              "constraintEn": "Combine only with plain; do not treat tone as an independent visual variant."
+              "constraint": "主要按钮用主色表达最高优先级；次级、描边、幽灵和纯文字可用主色强调，不把 tone 当作独立视觉变体。",
+              "constraintEn": "Use primary for the highest-priority main action; secondary, outline, ghost, and plain may use it for emphasis. Do not treat tone as an independent visual variant."
             },
             {
               "value": "info",
@@ -551,17 +548,17 @@
               "hiddenWhen": { "variant": ["default", "secondary", "outline", "ghost"] },
               "intent": "需要信息色文字提示的轻量操作。",
               "intentEn": "A lightweight action with informational text emphasis.",
-              "constraint": "仅与 plain variant 组合，并保持信息语义而非装饰。",
-              "constraintEn": "Combine only with plain and preserve informational semantics."
+              "constraint": "仅与纯文字组合，并保持信息语义而非装饰。",
+              "constraintEn": "Use only with plain and preserve informational semantics rather than decoration."
             },
             {
               "value": "danger",
               "label": "危险",
               "labelEn": "Danger",
-              "intent": "需要危险色文字提示但不使用实心危险按钮的操作。",
-              "intentEn": "A destructive-text action without a solid destructive button surface.",
-              "constraint": "仅与 plain variant 组合；不可逆操作仍应考虑确认流程。",
-              "constraintEn": "Combine only with plain; consider confirmation for irreversible actions."
+              "intent": "需要危险语义的操作，并按类型选择实心、浅色、描边、幽灵或纯文字表面。",
+              "intentEn": "A dangerous action whose surface is chosen independently as solid, light, outline, ghost, or plain.",
+              "constraint": "主要、次级、描边、幽灵和纯文字都可使用；不可逆操作仍应考虑确认流程，不要再把 destructive 当作类型重复选择。",
+              "constraintEn": "Available for primary, secondary, outline, ghost, and plain; consider confirmation for irreversible actions and do not duplicate destructive as a type choice."
             }
           ]
         },
@@ -578,28 +575,36 @@
               "label": "超小24",
               "labelEn": "XS 24",
               "intent": "24px 高配 12/18px 文字与 6px 圆角。",
-              "intentEn": "24px height with 12/18px text and a 6px radius."
+              "intentEn": "24px height with 12/18px text and a 6px radius.",
+              "constraint": "仅用于紧凑控件；保持最小可点击热区，不因视觉尺寸缩小交互区域。",
+              "constraintEn": "Use for compact controls; preserve the minimum hit target even when the visual size is small."
             },
             {
               "value": "sm",
               "label": "默认28",
               "labelEn": "SM 28",
               "intent": "默认 28px 高配 13/18px 紧凑控件文字与 6px 圆角。",
-              "intentEn": "Default 28px height with compact 13/18px text and a 6px radius."
+              "intentEn": "Default 28px height with compact 13/18px text and a 6px radius.",
+              "constraint": "作为默认控件密度；不要在调用处覆盖字号、行高或圆角。",
+              "constraintEn": "Use as the default control density; do not override typography or radius at the call site."
             },
             {
               "value": "md",
               "label": "中32",
               "labelEn": "MD 32",
               "intent": "32px 高配 14/20px 文字与 8px 圆角。",
-              "intentEn": "32px height with 14/20px text and an 8px radius."
+              "intentEn": "32px height with 14/20px text and an 8px radius.",
+              "constraint": "用于常规表单和工具栏操作；与 28px 档保持同一 Button API。",
+              "constraintEn": "Use for regular form and toolbar actions; keep the same Button API as the 28px size."
             },
             {
               "value": "lg",
               "label": "大36",
               "labelEn": "LG 36",
               "intent": "36px 高配 16/24px 文字与 8px 圆角。",
-              "intentEn": "36px height with 16/24px text and an 8px radius."
+              "intentEn": "36px height with 16/24px text and an 8px radius.",
+              "constraint": "只用于较宽松的主要操作区域；不要用大尺寸制造视觉层级。",
+              "constraintEn": "Use only in spacious primary-action areas; do not use size alone to create hierarchy."
             }
           ]
         },
@@ -660,12 +665,19 @@
               "value": "true",
               "label": "是",
               "labelEn": "Yes",
-              "constraint": "Button 没有 loading prop；用 disabled + Spinner 组合。"
+              "intent": "提交或异步操作正在处理，暂时阻止重复触发。",
+              "intentEn": "An async action is in progress and repeat triggering must be prevented.",
+              "constraint": "Button 没有 loading prop；用 disabled + Spinner 组合，并保留原操作文案。",
+              "constraintEn": "Button has no loading prop; compose disabled + Spinner and keep the original action label."
             },
             {
               "value": "false",
               "label": "否",
-              "labelEn": "No"
+              "labelEn": "No",
+              "intent": "操作处于可触发的常规状态。",
+              "intentEn": "The action is in its normal triggerable state.",
+              "constraint": "没有异步处理中状态时保持 false，不用加载态装饰按钮。",
+              "constraintEn": "Keep false when no async operation is running; do not use loading as decoration."
             }
           ]
         },
@@ -683,12 +695,20 @@
             {
               "value": "true",
               "label": "是",
-              "labelEn": "Yes"
+              "labelEn": "Yes",
+              "intent": "当前上下文不允许执行该操作。",
+              "intentEn": "The action is currently unavailable in this context.",
+              "constraint": "使用原生 disabled；不可用原因应由邻近说明或表单状态表达。",
+              "constraintEn": "Use native disabled; explain the reason through nearby help or form state."
             },
             {
               "value": "false",
               "label": "否",
-              "labelEn": "No"
+              "labelEn": "No",
+              "intent": "当前上下文允许执行该操作。",
+              "intentEn": "The action is available in the current context.",
+              "constraint": "默认保持可用，只有真实业务条件不满足时才切换为 disabled。",
+              "constraintEn": "Keep enabled by default and switch to disabled only when a real business condition prevents the action."
             }
           ]
         }

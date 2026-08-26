@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/page-semantics",
+  "policy": "Page types may define semantic roles and composition rules, but may not introduce page-local colors, spacing scales, radii, typography values, or component APIs.",
+  "foundationSource": "theme/fx-theme.css",
+  "globalSemanticSource": "docs/data/design-tokens.json#semantic",
+  "globalSemantics": [
+    "background",
+    "foreground",
+    "card",
+    "surface",
+    "muted",
+    "muted-foreground",
+    "accent",
+    "border",
+    "input",
+    "primary",
+    "destructive",
+    "ring"
+  ],
+  "roleContract": {
+    "required": ["id", "label", "semanticToken", "intent"],
+    "forbidden": ["hex", "rgb", "hsl", "spacingValue", "radiusValue", "fontSize"]
+  },
+  "pageTypes": [
+    {
+      "id": "list",
+      "label": "列表页",
+      "status": "ready",
+      "source": "docs/data/page-build-kit.manifest.json#list",
+      "roles": [
+        { "id": "page-surface", "label": "页面工作区", "semanticToken": "background", "intent": "承载列表页整体工作区。" },
+        { "id": "filter-surface", "label": "筛选区表面", "semanticToken": "surface", "intent": "承载筛选、搜索和视图切换。" },
+        { "id": "table-header", "label": "表头表面", "semanticToken": "muted", "intent": "区分表头与数据行，同时保持低干扰。" },
+        { "id": "selected-row", "label": "选中行", "semanticToken": "accent", "intent": "表达批量选择后的轻量高亮。" },
+        { "id": "divider", "label": "区块分割线", "semanticToken": "border", "intent": "区隔标题、工具栏、表格和分页。" },
+        { "id": "primary-action", "label": "主操作", "semanticToken": "primary", "intent": "表达列表页最重要的创建或提交动作。" },
+        { "id": "danger-action", "label": "危险操作", "semanticToken": "destructive", "intent": "表达删除等不可逆动作。" }
+      ]
+    },
+    {
+      "id": "detail",
+      "label": "详情页",
+      "status": "ready",
+      "source": "docs/data/page-build-kit.manifest.json#detail",
+      "roles": [
+        { "id": "page-surface", "label": "页面工作区", "semanticToken": "background", "intent": "承载对象详情页整体工作区。" },
+        { "id": "identity-surface", "label": "身份区表面", "semanticToken": "card", "intent": "突出对象身份、标题和关键状态。" },
+        { "id": "content-surface", "label": "内容区表面", "semanticToken": "card", "intent": "承载字段、Tabs、时间线和关联记录。" },
+        { "id": "secondary-text", "label": "次要说明", "semanticToken": "muted-foreground", "intent": "承载辅助描述和低优先级信息。" },
+        { "id": "divider", "label": "内容分割线", "semanticToken": "border", "intent": "区隔详情内容区块。" },
+        { "id": "primary-action", "label": "主操作", "semanticToken": "primary", "intent": "表达编辑或推进对象状态的主要动作。" },
+        { "id": "danger-action", "label": "危险操作", "semanticToken": "destructive", "intent": "表达删除、停用等不可逆动作。" }
+      ]
+    },
+    {
+      "id": "form",
+      "label": "编辑表单页",
+      "status": "ready",
+      "source": "docs/data/page-build-kit.manifest.json#form",
+      "roles": [
+        { "id": "page-surface", "label": "页面工作区", "semanticToken": "background", "intent": "承载表单页整体工作区。" },
+        { "id": "form-surface", "label": "表单表面", "semanticToken": "card", "intent": "承载字段分组和表单内容。" },
+        { "id": "field-help", "label": "字段帮助", "semanticToken": "muted-foreground", "intent": "承载字段说明和辅助提示。" },
+        { "id": "field-border", "label": "字段边界", "semanticToken": "input", "intent": "表达输入控件的默认边界。" },
+        { "id": "validation-error", "label": "校验错误", "semanticToken": "destructive", "intent": "表达字段错误和需要修正的状态。" },
+        { "id": "divider", "label": "表单分割线", "semanticToken": "border", "intent": "区隔字段分组和操作区。" },
+        { "id": "submit-action", "label": "提交操作", "semanticToken": "primary", "intent": "表达保存、提交等主要动作。" }
+      ]
+    },
+    {
+      "id": "dashboard",
+      "label": "数据看板页",
+      "status": "planned",
+      "source": "planned:page-build-kit#dashboard",
+      "roles": [],
+      "nextStep": "先沉淀真实 Dashboard Block，再登记指标、趋势、异常和时间范围角色。"
+    },
+    {
+      "id": "auth",
+      "label": "认证页",
+      "status": "planned",
+      "source": "planned:page-build-kit#auth",
+      "roles": [],
+      "nextStep": "先确定认证流程和可复用 Auth Block，再登记品牌入口、表单反馈和辅助操作角色。"
+    },
+    {
+      "id": "settings",
+      "label": "设置页",
+      "status": "planned",
+      "source": "planned:page-build-kit#settings",
+      "roles": [],
+      "nextStep": "先确定设置导航与分组 Block，再登记设置项、保存反馈和危险区角色。"
+    },
+    {
+      "id": "builder",
+      "label": "搭建器",
+      "status": "ready",
+      "source": "docs/data/page-builder.manifest.json#component-create",
+      "roles": [
+        { "id": "canvas-surface", "label": "画布", "semanticToken": "background", "intent": "承载实时搭建画布。" },
+        { "id": "panel-surface", "label": "面板", "semanticToken": "card", "intent": "承载资产和属性面板。" },
+        { "id": "drop-target", "label": "拖放目标", "semanticToken": "accent", "intent": "表达当前可插入位置。" },
+        { "id": "selection-ring", "label": "选中边界", "semanticToken": "ring", "intent": "表达当前选中节点。" },
+        { "id": "publish-action", "label": "发布操作", "semanticToken": "primary", "intent": "表达发布当前受控草稿。" }
+      ]
+    }
+  ]
+}

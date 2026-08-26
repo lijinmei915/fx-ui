@@ -124,10 +124,10 @@ assertIncludes(buttonDocs, variants, "Button Markdown variants", errors)
 assertIncludes(
   buttonSource,
   [
-    'xs: "h-(--fx-control-xs-height) rounded-sm px-(--fx-control-px-xs) text-xs',
-    'sm: "h-(--fx-control-sm-height) rounded-sm px-(--fx-control-px-sm) text-[length:var(--fx-text-control-sm)] leading-[var(--fx-text-control-sm--line-height)]',
-    'md: "h-(--fx-control-md-height) rounded-md px-(--fx-control-px-md) text-sm',
-    'lg: "h-(--fx-control-lg-height) gap-(--fx-control-gap) rounded-md px-(--fx-control-px-lg) text-base',
+    'xs: "h-(--fx-control-xs-height) rounded-md px-(--fx-control-px-xs) text-xs',
+    'sm: "h-(--fx-control-sm-height) rounded-md px-(--fx-control-px-sm) text-[length:var(--fx-text-control-sm)] leading-[var(--fx-text-control-sm--line-height)]',
+    'md: "h-(--fx-control-md-height) rounded-lg px-(--fx-control-px-md) text-sm',
+    'lg: "h-(--fx-control-lg-height) gap-(--fx-control-gap) rounded-lg px-(--fx-control-px-lg) text-base',
   ],
   "Button size typography/radius contract",
   errors

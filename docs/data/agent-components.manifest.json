@@ -376,6 +376,7 @@
       "usageRules": [
         "使用 Button 前必须以 src/components/ui/button.tsx 为真实 API。",
         "不要手写颜色、圆角、边框和状态样式；优先使用源码已有 prop、状态和 token。",
+        "危险语义优先使用 tone=\"danger\"，按 variant 选择表面层级；variant=\"destructive\" 保留为源码兼容能力，不在 Playground 类型轴重复展示。",
         "跳转但需要 Button 外观时使用 render，不要在 Button 内嵌套 a。",
         "className 只用于布局、宽度或外部间距，不用于覆盖组件自身基础视觉。"
       ],

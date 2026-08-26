@@ -13,7 +13,7 @@ type DoDontRow = { do: string; doEn?: string; dont: string; dontEn?: string }
 
 export const buttonPropRows = [
   { prop: "variant", type: "'default' | 'outline' | 'secondary' | 'ghost' | 'destructive' | 'plain'", defaultValue: "'default'", desc: "来自 Button 源码的样式变体", descEn: "Style variant from the Button source" },
-  { prop: "tone", type: "'default' | 'primary' | 'info' | 'danger'", defaultValue: "'default'", desc: "仅 plain 使用的语义色调", descEn: "Semantic tone for the plain variant only" },
+  { prop: "tone", type: "'default' | 'primary' | 'info' | 'danger'", defaultValue: "'default'", desc: "按按钮类型表达默认、主色、信息或危险语义；info 仅用于纯文字", descEn: "Semantic tone for default, primary, informational, or dangerous actions; info is only for plain" },
   { prop: "size", type: "'xs' | 'sm' | 'md' | 'lg' | 'icon-xs' | 'icon-sm' | 'icon-md' | 'icon-lg'", defaultValue: "'sm'", desc: "来自 Button 源码的尺寸变体；不写 size 即 28px", descEn: "Size variant from the Button source; omitted size renders 28px" },
   { prop: "disabled", type: "boolean", defaultValue: "false", desc: "是否禁用", descEn: "Whether the button is disabled" },
   { prop: "aria-invalid", type: "boolean", defaultValue: "false", desc: "错误态样式，继承 shadcn 语义 token", descEn: "Invalid state styling based on semantic tokens" },
@@ -28,7 +28,7 @@ export const buttonSemanticDomRows = [
 
 export const buttonDoDontRows = [
   { do: "用默认样式与语义 token，颜色交给主题。", doEn: "Use default styles and semantic tokens; leave color to the theme.", dont: "手写 bg-[#FF8000] 等品牌色硬编码。", dontEn: "Hard-code brand colors like bg-[#FF8000]." },
-  { do: "危险操作用 variant=\"destructive\"。", doEn: "Use variant=\"destructive\" for dangerous actions.", dont: "用默认按钮承载删除等危险操作。", dontEn: "Use a default button for destructive actions like delete." },
+  { do: "危险操作用 tone=\"danger\"，再按表面层级选择 variant。", doEn: "Use tone=\"danger\" for dangerous actions, then choose the surface variant.", dont: "把 destructive 同时作为类型和语义色重复选择。", dontEn: "Duplicate destructive as both a type and a semantic tone." },
   { do: "加载态用 disabled + Spinner 组合。", doEn: "Compose loading with disabled + Spinner.", dont: "发明 loading prop（<Button loading>）。", dontEn: "Invent a loading prop (<Button loading>)." },
   { do: "按钮内图标用 data-icon 标位，尺寸交给 Button。", doEn: "Mark icons with data-icon; let Button own the size.", dont: "给按钮内图标手写 size-4 等尺寸。", dontEn: "Hard-code icon size like size-4 inside Button." },
   { do: "一组操作只突出一个主按钮，其余用次按钮。", doEn: "Keep a single primary button per group; make the rest secondary.", dont: "同时摆多个主按钮，主次不分。", dontEn: "Stack multiple primary buttons with no clear hierarchy." },

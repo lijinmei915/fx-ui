@@ -24,7 +24,7 @@
   --fx-brand-vivid: oklch(from var(--fx-brand) clamp(0.58, l, 0.72) max(c, 0.12) h);
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   * PALETTE SEEDS — 参考 Tailwind v3 500 阶，12 个色系固定参考值
+   * PALETTE SEEDS — 参考主流设计系统，16 个色系固定参考值
    * 只有 --fx-brand / Orange 随换肤变化，其余为固定色
    * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   --fx-seed-orange:          #FF8000;  /* 固定橙，色板展示用，不随 brand 变 */
@@ -32,17 +32,20 @@
   --fx-seed-amber:          #F59E0B;  /* tw amber-500   → 琥珀 */
   --fx-seed-yellow:         #EAB308;  /* tw yellow-500  → 黄 */
   --fx-seed-lime:           #84CC16;  /* tw lime-500    → 嫩绿 */
-  --fx-seed-yellow-green:   oklch(0.70 0.19 137); /* 黄绿，介于嫩绿与绿之间 */
+  --fx-seed-yellow-green:   oklch(0.74 0.18 137); /* 黄绿，提亮并降低饱和度，介于嫩绿与绿之间 */
   --fx-seed-green:          #22C55E;  /* tw green-500   → 成功 */
   --fx-seed-teal:           #14B8A6;  /* tw teal-500    → 青 */
   --fx-seed-cyan:           #06B6D4;  /* tw cyan-500    → 青蓝 */
-  --fx-seed-blue:           #3B82F6;  /* tw blue-500    → 蓝 / 链接 / 信息 */
+  --fx-seed-light-blue:     #0EA5E9;  /* tw sky-500     → 亮蓝 */
+  --fx-seed-blue:           #3B73E8;  /* calibrated blue → 蓝 / 链接 / 信息 */
+  --fx-seed-indigo:         #6366F1;  /* tw indigo-500  → 靛蓝 */
   --fx-seed-purple:         #8B5CF6;  /* tw violet-500  → 紫 */
   --fx-seed-pink:           #EC4899;  /* tw pink-500    → 粉 */
+  --fx-seed-magenta:        #D946EF;  /* tw fuchsia-500 → 洋红 */
   --fx-seed-red:            #EF4444;  /* tw red-500     → 错误 */
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   * GENERATED PALETTE — 14 色系 × 12 阶（01–12），对齐 Radix 分区
+   * GENERATED PALETTE — 16 色系 × 12 阶（01–12），对齐 Radix 分区
    * 01-02 背景 | 03-05 交互 | 06-08 边框 | 09-10 实心 | 11-12 文字
    * 09 = 种子色（最鲜艳），11-12 = 深色文字专用
    * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -187,6 +190,20 @@
   --fx-cyan-11: oklch(from var(--fx-seed-cyan) calc(l * 0.72) calc(c * 0.82) h);
   --fx-cyan-12: oklch(from var(--fx-seed-cyan) calc(l * 0.35) calc(c * 0.65) h);
 
+  /* Light Blue */
+  --fx-light-blue-01: oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
+  --fx-light-blue-02: oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
+  --fx-light-blue-03: oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
+  --fx-light-blue-04: oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
+  --fx-light-blue-05: oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
+  --fx-light-blue-06: oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
+  --fx-light-blue-07: oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
+  --fx-light-blue-08: oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
+  --fx-light-blue-09: var(--fx-seed-light-blue);
+  --fx-light-blue-10: oklch(from var(--fx-seed-light-blue) calc(l * 0.92) calc(c * 0.95) h);
+  --fx-light-blue-11: oklch(from var(--fx-seed-light-blue) calc(l * 0.72) calc(c * 0.82) h);
+  --fx-light-blue-12: oklch(from var(--fx-seed-light-blue) calc(l * 0.35) calc(c * 0.65) h);
+
   /* Blue */
   --fx-blue-01: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
   --fx-blue-02: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
@@ -200,6 +217,20 @@
   --fx-blue-10: oklch(from var(--fx-seed-blue) calc(l * 0.92) calc(c * 0.95) h);
   --fx-blue-11: oklch(from var(--fx-seed-blue) calc(l * 0.72) calc(c * 0.82) h);
   --fx-blue-12: oklch(from var(--fx-seed-blue) calc(l * 0.35) calc(c * 0.65) h);
+
+  /* Indigo */
+  --fx-indigo-01: oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
+  --fx-indigo-02: oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
+  --fx-indigo-03: oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
+  --fx-indigo-04: oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
+  --fx-indigo-05: oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
+  --fx-indigo-06: oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
+  --fx-indigo-07: oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
+  --fx-indigo-08: oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
+  --fx-indigo-09: var(--fx-seed-indigo);
+  --fx-indigo-10: oklch(from var(--fx-seed-indigo) calc(l * 0.92) calc(c * 0.95) h);
+  --fx-indigo-11: oklch(from var(--fx-seed-indigo) calc(l * 0.72) calc(c * 0.82) h);
+  --fx-indigo-12: oklch(from var(--fx-seed-indigo) calc(l * 0.35) calc(c * 0.65) h);
 
   /* Purple */
   --fx-purple-01: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
@@ -229,6 +260,20 @@
   --fx-pink-11: oklch(from var(--fx-seed-pink) calc(l * 0.72) calc(c * 0.82) h);
   --fx-pink-12: oklch(from var(--fx-seed-pink) calc(l * 0.35) calc(c * 0.65) h);
 
+  /* Magenta */
+  --fx-magenta-01: oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
+  --fx-magenta-02: oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
+  --fx-magenta-03: oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
+  --fx-magenta-04: oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
+  --fx-magenta-05: oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
+  --fx-magenta-06: oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
+  --fx-magenta-07: oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
+  --fx-magenta-08: oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
+  --fx-magenta-09: var(--fx-seed-magenta);
+  --fx-magenta-10: oklch(from var(--fx-seed-magenta) calc(l * 0.92) calc(c * 0.95) h);
+  --fx-magenta-11: oklch(from var(--fx-seed-magenta) calc(l * 0.72) calc(c * 0.82) h);
+  --fx-magenta-12: oklch(from var(--fx-seed-magenta) calc(l * 0.35) calc(c * 0.65) h);
+
   /* Red */
   --fx-red-01: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
   --fx-red-02: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
@@ -238,7 +283,8 @@
   --fx-red-06: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
   --fx-red-07: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
   --fx-red-08: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  --fx-red-09: var(--fx-seed-red);
+  /* red-09 is manually calibrated brighter than the red seed; 08/10 remain the interaction transition steps. */
+  --fx-red-09: #F04446;
   --fx-red-10: oklch(from var(--fx-seed-red) calc(l * 0.92) calc(c * 0.95) h);
   --fx-red-11: oklch(from var(--fx-seed-red) calc(l * 0.72) calc(c * 0.82) h);
   --fx-red-12: oklch(from var(--fx-seed-red) calc(l * 0.35) calc(c * 0.65) h);
@@ -323,12 +369,12 @@
 
   /* ===== shadcn 标准语义槽 ←映射← 公司 token ===== */
 
-  --radius: 0.625rem;
+  --radius: 0.5rem;
   --radius-none: 0px;
-  --radius-inner: calc(var(--radius) - 4px);
-  --radius-element: calc(var(--radius) - 2px);
-  --radius-container: var(--radius);
-  --radius-page: calc(var(--radius) + 4px);
+  --radius-inner: 4px;
+  --radius-element: 6px;
+  --radius-container: 12px;
+  --radius-page: 16px;
   --radius-full: 9999px;
 
   --background: var(--fx-page-background);
@@ -610,14 +656,13 @@
   --color-destructive-light:        var(--destructive-light);
   --color-destructive-light-hover:  var(--destructive-light-hover);
   --color-destructive-light-active: var(--destructive-light-active);
-  /* 核心档：shadcn 标准 ±2px 步进，以 --radius(10px) 为 lg 基准 */
-  --radius-xs: calc(var(--radius) - 6px); /* 4px  极小元素：复选框/缩略图/内联 code */
-  --radius-sm: calc(var(--radius) - 4px); /* 6px  小标签/小 chip */
-  --radius-md: calc(var(--radius) - 2px); /* 8px  按钮/输入框/小控件 */
-  --radius-lg: var(--radius);             /* 10px 卡片/下拉/浮层 */
-  --radius-xl: calc(var(--radius) + 4px); /* 14px Dialog/Sheet/大容器 */
-  /* 大容器档：Tailwind 默认固定值 */
-  --radius-2xl: 1rem;   /* 16px */
+  /* 固定圆角档：2 / 4 / 6 / 8 / 12 / 16px，按组件层级选择 */
+  --radius-xs: 2px;     /* 极小图形、紧凑结构 */
+  --radius-sm: 4px;     /* 小标签、嵌套内层 */
+  --radius-md: 6px;     /* 24/28 控件、输入框 */
+  --radius-lg: 8px;     /* 32/36 控件、常规表面 */
+  --radius-xl: 12px;    /* 下拉、浮层、较大容器 */
+  --radius-2xl: 1rem;   /* 16px，Dialog/Sheet/页面级容器 */
   --radius-3xl: 1.5rem; /* 24px */
   --radius-4xl: 2rem;   /* 32px */
 
@@ -775,7 +820,7 @@
 /* 主题定制面板是控制台本体，不作为被调主题的预览对象。
    固定这把“尺子”，避免用户调字号/圆角/阴影时面板自己也跟着变形。 */
 .fx-theme-panel-static {
-  --radius: 0.625rem;
+  --radius: 0.5rem;
   --font-sans: "Inter Variable", "PingFang SC", "苹方", "Microsoft YaHei", "微软雅黑", "Noto Sans SC", Arial, sans-serif;
   --fx-text-xs: 12px;
   --fx-text-xs--line-height: 18px;

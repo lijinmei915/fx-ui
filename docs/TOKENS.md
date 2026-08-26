@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-08-23
+last_verified: 2026-08-26
 teaches: "公司设计 token 的基础架构、真实值和全局视觉使用规则"
 use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadcn 组件样式或判断视觉是否符合公司规范时"
 ---
@@ -69,7 +69,7 @@ fx-ui 采用主流设计系统分层：**Tailwind 是表达层，FX token 是视
 | `fx-success` | `#30C776` | 成功绿 |
 | `fx-info` | `#0C6CFF` | 信息蓝 |
 | `fx-warning` | `#FF7C19` | 警告橙 |
-| `fx-danger` | `#FF522A` | 危险红 |
+| `fx-danger` | `#F04446` | 危险红 |
 
 ### 2. Semantic Token
 
@@ -89,7 +89,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `border` | `#DEE1E8` | `border-border` | 边框、分割线 |
 | `input` | `#C1C5CE` | `border-input` | 表单边框 |
 | `ring` | `#FF8000` | `ring-ring` | 键盘焦点和可访问性焦点环 |
-| `destructive` | `#FF522A` | `bg-destructive text-destructive-foreground` | 删除、危险、不可逆操作 |
+| `destructive` | `#F04446` | `bg-destructive text-destructive-foreground` | 删除、危险、不可逆操作 |
 | `overlay` | `oklch(from neutrals-20 … / 0.2)` | `bg-overlay` | 弹窗/抽屉的**遮罩蒙层**（20%，配合组件的 `backdrop-blur-xs` 模糊，故比主流纯遮罩浅）；透明度烤进 token，直接用不加 `/x` |
 
 > 遮罩归颜色（语义色）：本质是"蒙层色 + 透明度"。从最深中性灰派生跟随色板，**透明度内置**（半透明），Dialog/Sheet/AlertDialog 直接 `bg-overlay`，不写死 `bg-black/10`。z-index 归层级、淡入归动效，是共用机制不是归属。
@@ -164,24 +164,23 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 ## 圆角
 
-按组件**类型/层级**选档（标签<控件<卡片<弹窗），不是按同一组件的大小——同一按钮的大中小尺寸通常共用一档（fx-ui 小尺寸按钮降到 md，常规/大按钮用 lg）。核心档由唯一基准 `--radius` 按 **shadcn 标准 ±2px 步进**派生；大容器档用 Tailwind 默认固定值；`full` 是胶囊/圆形，不参与派生。
+按组件**类型/层级**选档（标签<控件<卡片<弹窗），不是在调用处自由输入数值。固定档位为 `2 / 4 / 6 / 8 / 12 / 16px`，另有 `full` 胶囊档；同一按钮按高度映射：24/28 用 6px，32/36 用 8px。
 
 为方便 Agent 按用途判断，Token manifest 额外提供 `none / inner / element / container / page / full` 六个**语义别名**，它们映射到现有圆角阶，不改变任何已落地组件外观。嵌套圆角表面遵守同心规则：`innerRadius = max(0px, outerRadius - inset)`；该计算只应由组件内部实现，业务调用处不手写 `calc()` 或覆盖圆角。
 
-**为什么 calc 派生而非固定值**：① 单一总开关，改 `--radius` 整套等量平移；② 步进恒定，相邻档差值一致不漂移；③ 品牌可调（更圆/更方一处生效）。固定值更直观但失去总开关，故表里同时标 px。
-
-**尺寸与圆角（0.15~0.35 比值带）**：先按组件类型选一档，套到该组件所有尺寸上算 `圆角 ÷ 高度`——每个尺寸都落在 0.15~0.35 就共用一档（如 8px 按钮在 28/32/36px → 0.29/0.25/0.22，全在带内，不破例）。掉出带的尺寸**自动**换相邻档：> 0.4 太圆下调、< 0.15 太尖上调，复用现有阶梯不造新值。判定靠比值算，不靠感觉，也不用逐组件预先指定。
+**为什么采用固定档位**：① 数值容易记忆和验收；② 与现有 2px/4px 节奏一致；③ 组件层级清晰；④ 不允许页面临时造新圆角。`--radius` 仍保留为 shadcn 的常规 8px 基准，语义别名负责表达容器层级。
 
 | 项 | 值 | 用法 |
 |----|-----|------|
-| `--radius` | `0.625rem`（10px，= rounded-lg） | 基础圆角真相源 |
+| `--radius` | `0.5rem`（8px，= rounded-lg） | 基础圆角真相源 |
 | `rounded-none` | `0` | 表格、紧贴边缘容器、直角分割块 |
-| `rounded-xs` | `calc(var(--radius) - 6px)` ≈ 4px | 极小元素：复选框、缩略图角、内联 code |
-| `rounded-sm` | `calc(var(--radius) - 4px)` ≈ 6px | 小标签、小 chip |
-| `rounded-md` | `calc(var(--radius) - 2px)` ≈ 8px | 按钮、输入框、小控件 |
-| `rounded-lg` | `var(--radius)` = 10px | 卡片、下拉、浮层容器 |
-| `rounded-xl` | `calc(var(--radius) + 4px)` ≈ 14px | Dialog、Sheet、较大区域容器 |
-| `rounded-2xl/3xl/4xl` | 16 / 24 / 32px | 大区域容器（Tailwind 默认） |
+| `rounded-xs` | `2px` | 极小图形、紧凑结构 |
+| `rounded-sm` | `4px` | 小标签、嵌套内层 |
+| `rounded-md` | `6px` | 24/28 控件、输入框 |
+| `rounded-lg` | `8px` | 32/36 控件、常规表面 |
+| `rounded-xl` | `12px` | 下拉、浮层、较大容器 |
+| `rounded-2xl` | `16px` | Dialog、Sheet、页面级容器 |
+| `rounded-3xl/4xl` | 24 / 32px | 特殊大区域，不作为常规组件默认值 |
 | `rounded-full` | `9999px` | 胶囊按钮、Badge、头像、开关 |
 
 ## 排版（字号 / 字重 / 字体 · 企业 web 规范）
@@ -341,7 +340,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `z-40` | 固定 Header、文档顶部导航 |
 | `z-50` | Dialog、Dropdown、Popover、Sheet、Tooltip 等浮层 |
 
-## 基础色板（13 有色色系 × 12 阶 + 中性灰 20 阶）
+## 基础色板（16 有色色系 × 12 阶 + 中性灰 20 阶）
 
 > 真相源：`theme/fx-theme.css`，用 CSS 相对颜色语法从种子色（seed）在 oklch 空间推导。
 > 变量名格式：`--fx-{色系}-{阶}`，例如 `--fx-orange-09`。
@@ -376,7 +375,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | 11 | 低对比文字 | 彩色链接、Tag 文字、品牌色标注 |
 | 12 | 高对比文字 | 深色正文、需要高对比的彩色文字 |
 
-### 13 有色色系种子色
+### 16 有色色系种子色
 
 | 色系变量 | 参考值 | 语义 |
 |----------|--------|------|
@@ -385,12 +384,15 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | `--fx-seed-amber` | `#F59E0B` | 琥珀 |
 | `--fx-seed-yellow` | `#EAB308` | 黄 |
 | `--fx-seed-lime` | `#84CC16` | 嫩绿 |
-| `--fx-seed-yellow-green` | `oklch(0.70 0.19 137)` | 黄绿 |
+| `--fx-seed-yellow-green` | `oklch(0.74 0.18 137)` | 黄绿（提亮版） |
 | `--fx-seed-green` | `#22C55E` | 绿 · 成功 |
 | `--fx-seed-teal` | `#14B8A6` | 青 |
 | `--fx-seed-cyan` | `#06B6D4` | 青蓝 |
-| `--fx-seed-blue` | `#3B82F6` | 蓝 · 链接/信息 |
+| `--fx-seed-light-blue` | `#0EA5E9` | 亮蓝 |
+| `--fx-seed-blue` | `#3B73E8` | 蓝 · 链接/信息 |
+| `--fx-seed-indigo` | `#6366F1` | 靛蓝 |
 | `--fx-seed-purple` | `#8B5CF6` | 紫 |
+| `--fx-seed-magenta` | `#D946EF` | 洋红 |
 | `--fx-seed-pink` | `#EC4899` | 粉 |
 | `--fx-seed-red` | `#EF4444` | 红 · 错误 |
 

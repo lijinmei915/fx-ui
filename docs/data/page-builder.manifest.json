@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 9,
+  "schemaVersion": 10,
   "format": "fx-ui/page-builder",
-  "policy": "The builder only consumes registered page templates, Block slots, external Agent candidate contracts, semantic token options, and reviewed business-component instances. Agent candidate review is an internal step of foundation component creation, not a separate user-facing builder mode. It never accepts JSX, CSS classes, arbitrary style values, or unregistered component types.",
+  "policy": "The builder only consumes registered page templates, Block slots, external Agent candidate contracts, semantic token options, and reviewed business-component instances. Foundation components use the live canvas as their preview and publish the current governed draft without a duplicate candidate-confirmation gate. It never accepts JSX, CSS classes, arbitrary style values, or unregistered component types.",
   "builderModes": [
     {
       "id": "page",
@@ -150,10 +150,18 @@
       "name": "基础组件",
       "source": "src/components/recipes/business-component-builder.tsx#BusinessComponentBuilder",
       "contractSource": "docs/data/page-builder.manifest.json#blank-component",
-      "purpose": "从空白画布组合基础组件，配置结构、间距和受控实时属性，生成候选并完成预览验收后，选择新建组件或更新已有组件。外部 Agent 候选评审属于内部治理步骤，不在基础组件画布提供第二个指令入口。",
-      "candidateGate": {
-        "stages": ["draft", "generated", "accepted"],
-        "publishRequires": "accepted",
+      "purpose": "从默认容器开始组合基础组件，配置结构、间距和受控实时属性，通过实时画布确认结果后，直接选择新建组件或更新已有组件。",
+      "creationContract": {
+        "previewSource": "liveCanvas",
+        "publishFlow": "direct",
+        "assetPresentation": "visualTiles",
+        "assetColumns": 2,
+        "insertMethods": ["click", "drag"],
+        "globalLayout": false,
+        "rootModel": "singleContainer",
+        "rootContainerSurface": "card",
+        "containerInsertion": "rootChildren",
+        "propertyChrome": "titleOnly",
         "instructionEntry": false,
         "deliveryTargets": [
           {
@@ -170,9 +178,6 @@
           }
         ],
         "existingComponentSource": "docs/data/components.manifest.json#uiComponents",
-        "operations": ["generateCandidate", "acceptCandidate"],
-        "snapshot": "compositionDraft",
-        "staleOnEdit": true,
         "initialComposition": {
           "assetId": "surface",
           "props": {
@@ -186,18 +191,6 @@
           }
         },
         "foundationAssets": [
-          {
-            "id": "layout",
-            "name": "布局",
-            "items": [
-              {
-                "id": "layout",
-                "name": "布局",
-                "kind": "layout",
-                "props": { "direction": "vertical", "gap": "sm" }
-              }
-            ]
-          },
           {
             "id": "container",
             "name": "容器",
@@ -218,32 +211,8 @@
             ]
           },
           {
-            "id": "color",
-            "name": "颜色",
-            "items": [
-              {
-                "id": "color",
-                "name": "颜色",
-                "kind": "color",
-                "props": { "token": "surface" }
-              }
-            ]
-          },
-          {
-            "id": "spacing",
-            "name": "间距",
-            "items": [
-              {
-                "id": "spacing",
-                "name": "间距",
-                "kind": "spacing",
-                "props": { "value": "md" }
-              }
-            ]
-          },
-          {
             "id": "typography",
-            "name": "字体排版",
+            "name": "文字",
             "items": [
               {
                 "id": "text",
@@ -274,18 +243,6 @@
                 "name": "分割线",
                 "kind": "separator",
                 "props": { "orientation": "horizontal" }
-              }
-            ]
-          },
-          {
-            "id": "interaction",
-            "name": "交互状态",
-            "items": [
-              {
-                "id": "interaction",
-                "name": "交互状态",
-                "kind": "interaction",
-                "props": { "state": "default" }
               }
             ]
           }

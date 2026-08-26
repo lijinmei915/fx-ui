@@ -66,7 +66,7 @@ Figma 关键规格（默认/中尺寸）：
 | --- | --- | --- | --- |
 | 默认高度 | **28px**（中：24≤h≤28） | 28px（默认走 sm 档） | ✅ |
 | 横向内边距 | **10px**（外间距/Button） | sm 档 px-2.5（10px） | ✅ |
-| 圆角 | **6px**（24/28）/ 8px（32/36） | `rounded-sm` / `rounded-md` | ✅ |
+| 圆角 | **6px**（24/28）/ 8px（32/36） | `rounded-md` / `rounded-lg` | ✅ |
 | 图标-文字间距 | **4px**（内间距/Button） | 4px（gap-1） | ✅ |
 | 字号 | **13/18px** Regular | `text-[length:var(--fx-text-control-sm)]` + `leading-[var(--fx-text-control-sm--line-height)]` | ✅ |
 
@@ -112,7 +112,7 @@ AI 选择 Button 时按这个顺序判断：
 ```tsx
 <Button>保存</Button>
 <Button variant="secondary">取消</Button>
-<Button variant="destructive">删除项目</Button>
+<Button variant="default" tone="danger">删除项目</Button>
 <Button variant="plain" tone="danger" size="icon-sm" aria-label="删除">
   <Trash2Icon />
 </Button>
@@ -178,7 +178,7 @@ Button 支持 `@base-ui/react/button` 的原生 button props，并额外支持�
 ## AI Rules {#ai-rules}
 
 - 需要主操作时使用 `<Button>保存</Button>`，不要手写 `bg-[#FF8000]`。
-- 需要危险操作时使用 `variant="destructive"`。
+- 危险语义优先使用 `tone="danger"`，再按表面层级选择 `variant`；不要在“类型”和“语义色”两个入口重复表达危险。
 - 需要跳转但仍要 Button 外观时，使用 `nativeButton={false}` 加 `render={<a href="..." />}`，不要在 Button 里套 `<a>`。
 - 图标按钮必须有 `aria-label`。
 - 图标放在按钮内时，图标使用 `data-icon`，不要直接写 `size-4`。
@@ -191,7 +191,7 @@ Button 只有一个组件，靠 4 个**互相独立**的轴组合，任意搭配
 
 | 轴 | prop | 取值 | 管什么 |
 | --- | --- | --- | --- |
-| 类型 | `variant` | default / secondary / outline / ghost / destructive / plain | 语义层级与底色 |
+| 类型 | `variant` | default / secondary / outline / ghost / plain（`destructive` 仅保留兼容） | 表面层级与底色 |
 | 尺寸 | `size` | xs(24) / sm(28,默认) / md(32) / lg(36) / toolbar(28+13px) / icon-* | 高度、内边距、字号、图标-文字 gap |
 | 分色 | `tone` | default / primary / info / danger | 主要支持 primary / danger；次级、描边、幽灵支持 default / primary / danger；plain 额外支持 info |
 | 状态 | 原生 | `disabled`（+ Spinner = loading） | 交互态 |
@@ -201,6 +201,8 @@ Button 只有一个组件，靠 4 个**互相独立**的轴组合，任意搭配
 - `toolbar` / `toolbar-icon` 只用于页面顶栏、工具栏和页面动作区：保持 28px 热区，文字固定走受控的 13/18px 紧凑控件字号。
 - `tone` 与主要、次级、描边、幽灵组合时表达主色或危险语义；`plain` 额外支持信息色。不要传入当前组合未声明的语义色。
 - 纯图标（任意 variant + `size="icon-*"`）必须补 `aria-label` + Tooltip。
+
+源码仍接受 `<Button variant="destructive">` 以兼容既有 shadcn 用法；新代码请使用 `tone="danger"`，再按需要选择表面类型。
 
 ## 正误示例 {#do-dont}
 
@@ -220,7 +222,7 @@ Button 只有一个组件，靠 4 个**互相独立**的轴组合，任意搭配
 <Button>保存</Button>
 ```
 
-### 危险操作使用 destructive
+### 危险操作使用语义色 danger
 
 不推荐：
 
@@ -231,7 +233,7 @@ Button 只有一个组件，靠 4 个**互相独立**的轴组合，任意搭配
 推荐：
 
 ```tsx
-<Button variant="destructive">删除项目</Button>
+<Button variant="default" tone="danger">删除项目</Button>
 ```
 
 ### 加载态用组合，不新增加载属性

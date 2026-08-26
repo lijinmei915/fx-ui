@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-08-21
+last_verified: 2026-08-26
 teaches: "fx-ui 仓库地图：任意产物住哪、怎么新增登记、谁来检查——按产物种类一站式分流"
 use_when: "要新增或查找任何产物（组件/block/token/图标/页面路由/视觉基线/规则/检查）前，先来这里定位，别靠猜"
 ---
@@ -21,6 +21,7 @@ use_when: "要新增或查找任何产物（组件/block/token/图标/页面路�
 | 分层资产（Components / Hooks / Patterns / Blocks / Page templates） | `docs/data/layered-assets.manifest.json`（只登记已有源码和已验证 recipe/build-kit） | 新增资产先确认真实 source/contract，再登记唯一 id、状态和约束 | `check:layered-assets` |
 | Block（区块；文件夹历史名 recipes/） | `src/components/recipes/` | 复用既有区块只换数据 → 在 `docs/ARCHITECTURE.md`「页面 Block 层」登记 | （暂无脚本，人工核） |
 | 页面 / 路由 | `pageRegistry`（`src/lib/page-registry-config.tsx`，唯一真相源；App 只消费注册表，见 DEC-023） | **先按 `docs/PAGES.md` 装配流程拼**；派生 Build Kit 只登记已验证的 block/generator；再加 registry 一行（满宽页加 `fullBleed`）+ `docsNav` 导航项（统一维护于 `src/lib/site-navigation.ts`） | `check:doc-site` + `check:page-build-kit` |
+| 页面类型语义 | `docs/data/page-semantics.manifest.json` | 登记页面角色到全局 semantic token 的受控映射；ready 类型必须绑定已声明 Build Kit 或真实页面来源；不得写页面专属色值/字号/间距/圆角 | `check:page-semantics` + `test:visual` |
 | 页面/组件搭建器 schema | `docs/data/page-builder.manifest.json` | 页面先登记模板、Block slots、properties 与 preset；基础组件评审只登记外部 Agent 候选、真实预览适配器、受控 API、检查与确认门；业务组件只登记已评审实例，新增后补视觉用例 | `check:page-builder` + `test:visual` |
 | 文档页面模块 | `src/pages/docs/<domain>/` | 按 `components` / `foundations` / `getting-started` / `governance` / `tokens` 归位；页面专属 Playground、预览和适配器与页面同域；跨域运行时留在 `src/lib/` | `check:doc-site` + `check:toc-anchors` + `test:visual` |
 | Getting Started 页面域 | `src/pages/docs/getting-started/` | 安装命令、主题接入代码和页面适配器按领域集中维护；`App.tsx` 只注入 manifest 数据和治理看板渲染器 | `npm run build` + `check:doc-site` + `check:doc-structure` |

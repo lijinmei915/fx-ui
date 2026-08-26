@@ -61,7 +61,7 @@ export const buttonPlaygroundConfig: ComponentPlaygroundConfig = {
   onValueChange: (next, key, value) => {
     if (key === "loading" && value === "true") return { ...next, disabled: "true" }
     if (key !== "variant") return next
-    const tone = value === "default" ? "primary" : value === "plain" ? "default" : "default"
+    const tone = value === "default" ? "primary" : "default"
     return { ...next, tone }
   },
   renderOne: renderButton,

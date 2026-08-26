@@ -13,8 +13,11 @@ export const seedColors = [
 { name: "Green", nameZh: "绿", tag: "Success", tagZh: "成功", cssVar: "--fx-seed-green", hueOffset: "#22C55E", prefix: "--fx-green" },
 { name: "Teal", nameZh: "青", tag: "", tagZh: "", cssVar: "--fx-seed-teal", hueOffset: "#14B8A6", prefix: "--fx-teal" },
 { name: "Cyan", nameZh: "青蓝", tag: "", tagZh: "", cssVar: "--fx-seed-cyan", hueOffset: "#06B6D4", prefix: "--fx-cyan" },
-{ name: "Blue", nameZh: "蓝", tag: "Link/Info", tagZh: "链接/信息", cssVar: "--fx-seed-blue", hueOffset: "#3B82F6", prefix: "--fx-blue" },
+{ name: "Light Blue", nameZh: "亮蓝", tag: "", tagZh: "", cssVar: "--fx-seed-light-blue", hueOffset: "#38BDF8", prefix: "--fx-light-blue" },
+{ name: "Blue", nameZh: "蓝", tag: "Link/Info", tagZh: "链接/信息", cssVar: "--fx-seed-blue", hueOffset: "#3B73E8", prefix: "--fx-blue" },
+{ name: "Indigo", nameZh: "靛蓝", tag: "", tagZh: "", cssVar: "--fx-seed-indigo", hueOffset: "#6366F1", prefix: "--fx-indigo" },
 { name: "Purple", nameZh: "紫", tag: "", tagZh: "", cssVar: "--fx-seed-purple", hueOffset: "#8B5CF6", prefix: "--fx-purple" },
+{ name: "Magenta", nameZh: "洋红", tag: "", tagZh: "", cssVar: "--fx-seed-magenta", hueOffset: "#D946EF", prefix: "--fx-magenta" },
 { name: "Pink", nameZh: "粉", tag: "", tagZh: "", cssVar: "--fx-seed-pink", hueOffset: "#EC4899", prefix: "--fx-pink" },
 { name: "Red", nameZh: "红", tag: "Error", tagZh: "错误", cssVar: "--fx-seed-red", hueOffset: "#EF4444", prefix: "--fx-red" }];
 export function ColorPaletteWithTabs({ lang }: {lang: Lang;}) {
@@ -47,8 +50,8 @@ export function ColorPaletteWithTabs({ lang }: {lang: Lang;}) {
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Chromatic Palette" : "彩色色板"}</h2>
           <p className="text-sm text-muted-foreground">
             {lang === "en" ?
-            "13 chromatic families × 12 steps, derived from a seed in oklch. 01–08 toward white: L += (1−L)×[.93 .84 .72 .58 .43 .28 .14 .12], C ×= [.04 .10 .18 .30 .45 .62 .80 .94]. 09 = seed. 10–12 toward black: L ×= [.87 .72 .35], C ×= [.95 .82 .65]. Steps 01–07 dark text, 08–12 white. Click a swatch to copy its variable." :
-            "13 个有色色系 × 12 阶（中性灰见下方中性色色板），由种子色在 oklch 空间推导。01–08 向白：L += (1−L)×[.93 .84 .72 .58 .43 .28 .14 .12]、C ×= [.04 .10 .18 .30 .45 .62 .80 .94]；09 = 种子色；10–12 向黑：L ×= [.87 .72 .35]、C ×= [.95 .82 .65]。01–07 深色字，08–12 白色字。点击色块复制变量名。"}
+            "16 chromatic families × 12 steps, derived from a seed in oklch. 01–08 toward white: L += (1−L)×[.93 .84 .72 .58 .43 .28 .14 .12], C ×= [.04 .10 .18 .30 .45 .62 .80 .94]. 09 = seed. 10–12 toward black: L ×= [.87 .72 .35], C ×= [.95 .82 .65]. Steps 01–07 dark text, 08–12 white. Click a swatch to copy its variable." :
+            "16 个有色色系 × 12 阶（中性灰见下方中性色色板），由种子色在 oklch 空间推导。01–08 向白：L += (1−L)×[.93 .84 .72 .58 .43 .28 .14 .12]、C ×= [.04 .10 .18 .30 .45 .62 .80 .94]；09 = 种子色；10–12 向黑：L ×= [.87 .72 .35]、C ×= [.95 .82 .65]。01–07 深色字，08–12 白色字。点击色块复制变量名。"}
           </p>
         </div>
         <div className="flex shrink-0 items-center rounded-md border border-border bg-muted/50 p-0.5 text-xs">

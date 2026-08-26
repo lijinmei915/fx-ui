@@ -55,6 +55,7 @@ export {
   IconClock as ClockIcon,
   IconCode as Code2Icon,
   IconComponents as ComponentsIcon,
+  IconIcons as IconsIcon,
   IconCopy as CopyIcon,
   IconCreditCard as CreditCardIcon,
   IconDatabase as DatabaseIcon,

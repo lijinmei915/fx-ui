@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-08-23
+last_verified: 2026-08-26
 teaches: "fx-ui 重要的技术/协作决策记录：选了什么、放弃了什么、为什么"
 use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论"
 ---
@@ -771,12 +771,22 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 ### DEC-072: 基础组件搭建与 AI 候选验收合并为一个入口
 
 - **日期**：2026-08-23
-- **状态**：已决定
+- **状态**：已决定（候选确认门部分被 DEC-073 取代）
 - **决定**：搭建器只向用户展示“基础组件搭建 / 业务组件搭建 / 页面搭建”三个模式。基础组件搭建从空白画布开始，用户配置结构、布局和受控实时属性后直接发送给 AI；候选返回、预览验收和发布是同一工作流的连续步骤，不再单独暴露“基础组件评审”模式。
 - **放弃**：① 让用户在“基础组件搭建”和“基础组件评审”之间切换；② 重复提供一个与搭建器无关的候选审查工作台；③ 因合并入口而放宽组件、Token、Props 或源码治理边界。
 - **原因**：用户的目标是制作基础组件并交给 AI 实现，独立评审入口增加认知负担，也把同一组件拆成两个不连续的任务。合并入口保留了候选验收的治理价值，同时让操作路径从空白画布到发布保持连续。
 - **影响**：`BusinessComponentBuilder` 负责基础/业务两种组合工作流；`page-builder.manifest.json#builderModes.component.reviewWorkbench` 降为内部候选合约，不再作为下拉模式或独立页面展示。基础组件模式的 Agent 发送、候选快照失效和验收门继续有效。
 - **相关文件**：`src/components/recipes/{page-builder,business-component-builder}.tsx`、`docs/PAGES.md`、`docs/ARCHITECTURE.md`、`docs/data/page-builder.manifest.json`
+
+### DEC-073: 基础组件以实时画布直接发布
+
+- **日期**：2026-08-24
+- **状态**：已决定（部分取代 DEC-072）
+- **决定**：基础组件模式以中央实时画布作为唯一发布前预览；右侧不再显示“候选确认”、候选快照、“生成候选”和“预览验收”。基础组件固定采用单根容器模型，第一个容器是默认白底的最外层容器，后续容器和结构预设只进入它的直接子级，不产生第二个根节点或更深的容器嵌套；左侧借鉴海报编辑器，以两列可视素材块提供容器、文字、图标、分割线和结构预设，整块支持点击与拖拽。布局、颜色、间距和交互状态不作为可插入节点，只在右侧属性中配置；全局只保留命名与发布，外边距交给使用方父级。属性页只保留当前资产的属性标题和真实控件，不重复展示 Token 标签、选中说明和基础资产来源。用户完成受控结构、属性、命名与发布方式配置后，顶部“发布组件”直接提交当前草稿到新建入库或已有组件更新队列。
+- **放弃**：① 在同一画布结果之外再复制候选快照；② 发布前要求连续点击生成和验收；③ 因减少点击而直接覆盖组件源码。
+- **原因**：实时画布已经持续展示当前草稿，再生成同内容快照并人工确认没有新增信息，只增加认知和操作成本。真正的组件治理发生在 Playground、契约检查、视觉回归与入库审核链，不应伪装成右侧的重复按钮。
+- **影响**：`page-builder.manifest.json#builderModes.component-create` 使用 `creationContract` 声明实时预览、直接发布、单根容器、禁用全局布局和仅保留标题的属性说明层；仍校验组件名称、画布节点、公开 Prop，以及更新已有组件时的目标选择。业务组件的整体 Auto Layout、组件来源和属性契约提示不变。发布只进入对应队列，不直接修改 `src/components/ui/*`。
+- **相关文件**：`src/components/recipes/business-component-builder.tsx`、`docs/data/page-builder.manifest.json`、`scripts/check-page-builder.mjs`、`tests/component-behavior.spec.ts`、`docs/{ARCHITECTURE,PAGES}.md`
 
 ### DEC-069: 先补齐资产成熟度，再开放 fx-ui MCP
 
@@ -812,6 +822,27 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **原因**：公司 Figma 的 28px Button 明确采用 13/18，当前 shadcn `base-nova` 的 28px Button 也使用约 13px；将它收口为紧凑控件 token 可以恢复按钮比例，同时保留 DEC-055 对页面排版的稳定约束。
 - **影响**：主题真相源、主题字号运行时、Button 源码、组件 manifest、Button 文档与视觉基线必须同步；新增 token 不构成页面调用层新增任意字号的许可。
 - **相关文件**：`theme/fx-theme.css`、`src/lib/theme-runtime.ts`、`src/components/ui/button.tsx`、`docs/{TOKENS,components/button}.md`、`docs/data/{design-tokens,components}.manifest.json`
+
+### DEC-072: 基础无语义规范与页面类型语义分离
+
+- **日期**：2026-08-26
+- **状态**：已决定
+- **决定**：fx-ui 的页面视觉采用“基础无语义层 → 全局语义层 → 页面类型语义层”。基础层只维护色板、字号/行高、间距、圆角、阴影、图标和边框基线；全局语义层维护跨页面共用的 `background`、`card`、`surface`、`muted`、`primary`、`destructive`、`border` 等槽位；页面类型只在 `docs/data/page-semantics.manifest.json` 声明区域角色，并映射到已有全局 semantic token。
+- **页面类型边界**：列表页、详情页、编辑表单页和搭建器先作为 `ready` 页面类型；Dashboard、认证页、设置页先登记为 `planned`，必须先有真实 Block、数据契约和视觉证据才能升级。页面类型不得声明专属色值、字号、间距、圆角、阴影刻度或组件 API。
+- **放弃**：① 每个页面类型复制一套颜色/间距/字号；② 在调用处用 `className` 绕过页面角色覆盖组件视觉；③ 没有真实 Block 就把页面类型标成 ready；④ 为了页面语义批量制造组件 token。
+- **原因**：页面之间需要有不同的信息层级和交互意图，但视觉语言必须保持一致。角色映射提供页面差异，semantic token 保持换肤和组件契约稳定，基础层则避免被业务语义污染。
+- **影响**：新增或迁移页面先查 `page-semantics.manifest.json`，运行 `npm run check:page-semantics`；页面视觉变更必须同步 Block/模板引用和视觉回归，不能只改页面截图或局部样式。
+- **相关文件**：`docs/data/page-semantics.manifest.json`、`docs/data/page-build-kit.manifest.json`、`scripts/check-page-semantics.mjs`、`docs/{DESIGN_STANDARDS,PAGES}.md`
+
+### DEC-074: 圆角采用固定 2/4/6/8/12/16 档位
+
+- **日期**：2026-08-26
+- **状态**：已决定
+- **决定**：圆角基础档统一为 `2 / 4 / 6 / 8 / 12 / 16px`，另保留 `full`。`--radius` 固定为 8px；语义别名映射为 `inner=4px`、`element=6px`、`container=12px`、`page=16px`。按钮按高度映射：24/28 使用 6px，32/36 使用 8px。
+- **放弃**：① 页面调用处自由输入任意圆角；② 用连续 `calc()` 派生替代可验收的固定档位；③ 将大容器和小控件共用同一档圆角。
+- **原因**：固定档位更容易记忆、审查和跨组件统一，同时保留组件层级差异；按钮尺寸映射解决紧凑按钮过扁或过圆的问题。
+- **影响**：`theme/fx-theme.css` 是真相源，`docs/TOKENS.md`、token manifest、圆角文档页和搭建器语义映射必须同步；圆角变更属于全局视觉变更，完成后必须运行 token sync、全量 check 和视觉回归。
+- **相关文件**：`theme/fx-theme.css`、`docs/data/design-tokens.json`、`src/components/recipes/business-component-builder.tsx`、`src/pages/docs/tokens/tokens-radius-page.tsx`
 
 ## 相关文件
 

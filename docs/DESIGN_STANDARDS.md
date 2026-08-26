@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-06-25
+last_verified: 2026-08-26
 teaches: "fx-ui 当前的 UI 规则、token 使用方式和设计边界"
 use_when: "做 UI/视觉相关改动前，判断该走哪条规则、参考哪份文档"
 ---
@@ -16,6 +16,18 @@ use_when: "做 UI/视觉相关改动前，判断该走哪条规则、参考哪�
 - 是否已有设计系统：有——公司 token 已映射进 shadcn 语义槽（`theme/fx-theme.css`），Button 验证换肤成功（公司橙 ✅）
 - 是否已有组件库：有——基于 shadcn/ui 的 open-code 组件（`src/components/ui/`），公司组合组件正在沉淀（`src/components/fx/`）
 - 当前视觉基调：克制、专业、AI 友好（结构化优先于花哨视觉），详见 `PRODUCT.md`
+
+## 视觉规范分层
+
+页面视觉统一采用三层，不为每种页面复制一套颜色、字号或间距：
+
+1. **基础无语义层**：色板阶梯、字号/行高、间距、圆角、阴影、图标和边框基线。真相源是 `theme/fx-theme.css`，它只回答“值是什么”。
+2. **全局语义层**：`background`、`card`、`surface`、`muted`、`primary`、`destructive`、`border` 等，供所有组件和页面共享。它回答“通常表达什么”。
+3. **页面类型语义层**：列表页的筛选区/表头、详情页的身份区、表单页的校验区、搭建器的画布/选中态等角色，统一登记在 `docs/data/page-semantics.manifest.json`。它回答“当前页面中的区域承担什么职责”。
+
+页面类型语义只能引用全局 semantic token，禁止声明页面专属 hex、字号、间距、圆角、阴影刻度或组件 API。新增页面类型先登记为 `planned`，只有真实 Block / Build Kit / 视觉证据齐全后才升为 `ready`。
+
+页面迁移顺序固定为：先确定页面类型 → 复用已验证 Block → 在 Build Kit 声明 `semanticsProfile` → 给区域绑定页面角色 → 由角色解析到全局 semantic token → 运行 `npm run check:page-semantics` 和 `npm run test:visual`。页面调用处不得用 `className` 绕过角色映射覆盖组件视觉。
 
 ## 基本规则
 
@@ -78,6 +90,7 @@ use_when: "做 UI/视觉相关改动前，判断该走哪条规则、参考哪�
 - `docs/TOKENS.md` —— token 查询表（颜色/圆角/间距/阴影/焦点环具体取值）
 - `docs/LAYOUTS.md` —— 布局规范（页面间距、标题区、筛选区、表格区规则）
 - `docs/ARCHITECTURE.md` —— 三层组件体系与目录边界
+- `docs/data/page-semantics.manifest.json` —— 页面类型角色到全局 semantic token 的机器事实
 
 ## 相关文件
 

@@ -5,6 +5,7 @@
   "archetypes": [
     {
       "id": "list",
+      "semanticsProfile": "list",
       "name": "实体列表页",
       "status": "ready",
       "intent": ["列表", "表格", "筛选", "分页", "管理"],
@@ -16,6 +17,7 @@
     },
     {
       "id": "detail",
+      "semanticsProfile": "detail",
       "name": "详情页",
       "status": "ready",
       "intent": ["详情", "对象", "信息页"],
@@ -34,6 +36,7 @@
     },
     {
       "id": "form",
+      "semanticsProfile": "form",
       "name": "编辑表单页",
       "status": "ready",
       "intent": ["表单", "新建", "编辑"],

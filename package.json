@@ -16,6 +16,7 @@
     "check:agent-examples": "node scripts/check-agent-examples.mjs",
     "check:agent-recipes": "node scripts/check-agent-recipes.mjs",
     "check:page-build-kit": "node scripts/check-page-build-kit.mjs",
+    "check:page-semantics": "node scripts/check-page-semantics.mjs",
     "check:page-builder": "node scripts/check-page-builder.mjs",
     "check:layered-assets": "node scripts/check-layered-assets.mjs",
     "check:doc-site": "node scripts/check-doc-site-contract.mjs",

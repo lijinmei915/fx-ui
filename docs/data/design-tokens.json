@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/design-tokens",
-  "updatedAt": "2026-08-22",
+  "updatedAt": "2026-08-26",
   "truthSource": "theme/fx-theme.css",
   "humanDoc": "docs/TOKENS.md",
   "note": "主项目采用 shadcn 友好的两层 Token 命名空间 + 组件用法：primitive -> semantic -> componentUsage。componentUsage 是组件属性/状态消费语义 Token 的映射事实，不是独立组件 Token。报告 skill 的 Seed -> Map -> Alias -> Component 四层结构可作为独立 HTML 输出参考，但不替代本项目的 shadcn semantic slots。",
@@ -67,7 +67,7 @@
     },
     {
       "name": "--fx-seed-yellow-green",
-      "value": "oklch(0.70 0.19 137)",
+      "value": "oklch(0.74 0.18 137)",
       "category": "palette",
       "usage": ""
     },
@@ -90,8 +90,20 @@
       "usage": ""
     },
     {
+      "name": "--fx-seed-light-blue",
+      "value": "#0EA5E9",
+      "category": "palette",
+      "usage": ""
+    },
+    {
       "name": "--fx-seed-blue",
-      "value": "#3B82F6",
+      "value": "#3B73E8",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-seed-indigo",
+      "value": "#6366F1",
       "category": "palette",
       "usage": ""
     },
@@ -104,6 +116,12 @@
     {
       "name": "--fx-seed-pink",
       "value": "#EC4899",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-seed-magenta",
+      "value": "#D946EF",
       "category": "palette",
       "usage": ""
     },
@@ -834,6 +852,78 @@
       "usage": ""
     },
     {
+      "name": "--fx-light-blue-01",
+      "value": "oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-light-blue-02",
+      "value": "oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-light-blue-03",
+      "value": "oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-light-blue-04",
+      "value": "oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-light-blue-05",
+      "value": "oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-light-blue-06",
+      "value": "oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-light-blue-07",
+      "value": "oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-light-blue-08",
+      "value": "oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-light-blue-09",
+      "value": "var(--fx-seed-light-blue)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-light-blue-10",
+      "value": "oklch(from var(--fx-seed-light-blue) calc(l * 0.92) calc(c * 0.95) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-light-blue-11",
+      "value": "oklch(from var(--fx-seed-light-blue) calc(l * 0.72) calc(c * 0.82) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-light-blue-12",
+      "value": "oklch(from var(--fx-seed-light-blue) calc(l * 0.35) calc(c * 0.65) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
       "name": "--fx-blue-01",
       "value": "oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
       "category": "palette.blue",
@@ -902,6 +992,78 @@
     {
       "name": "--fx-blue-12",
       "value": "oklch(from var(--fx-seed-blue) calc(l * 0.35) calc(c * 0.65) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-indigo-01",
+      "value": "oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-indigo-02",
+      "value": "oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-indigo-03",
+      "value": "oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-indigo-04",
+      "value": "oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-indigo-05",
+      "value": "oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-indigo-06",
+      "value": "oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-indigo-07",
+      "value": "oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-indigo-08",
+      "value": "oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-indigo-09",
+      "value": "var(--fx-seed-indigo)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-indigo-10",
+      "value": "oklch(from var(--fx-seed-indigo) calc(l * 0.92) calc(c * 0.95) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-indigo-11",
+      "value": "oklch(from var(--fx-seed-indigo) calc(l * 0.72) calc(c * 0.82) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-indigo-12",
+      "value": "oklch(from var(--fx-seed-indigo) calc(l * 0.35) calc(c * 0.65) h)",
       "category": "palette",
       "usage": ""
     },
@@ -1050,6 +1212,78 @@
       "usage": ""
     },
     {
+      "name": "--fx-magenta-01",
+      "value": "oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-magenta-02",
+      "value": "oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.84) calc(c * 0.10) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-magenta-03",
+      "value": "oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.72) calc(c * 0.18) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-magenta-04",
+      "value": "oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.58) calc(c * 0.30) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-magenta-05",
+      "value": "oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.43) calc(c * 0.45) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-magenta-06",
+      "value": "oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.28) calc(c * 0.62) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-magenta-07",
+      "value": "oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.14) calc(c * 0.80) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-magenta-08",
+      "value": "oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.12) calc(c * 0.94) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-magenta-09",
+      "value": "var(--fx-seed-magenta)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-magenta-10",
+      "value": "oklch(from var(--fx-seed-magenta) calc(l * 0.92) calc(c * 0.95) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-magenta-11",
+      "value": "oklch(from var(--fx-seed-magenta) calc(l * 0.72) calc(c * 0.82) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
+      "name": "--fx-magenta-12",
+      "value": "oklch(from var(--fx-seed-magenta) calc(l * 0.35) calc(c * 0.65) h)",
+      "category": "palette",
+      "usage": ""
+    },
+    {
       "name": "--fx-red-01",
       "value": "oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.90) calc(c * 0.06) h)",
       "category": "palette.red",
@@ -1099,7 +1333,7 @@
     },
     {
       "name": "--fx-red-09",
-      "value": "var(--fx-seed-red)",
+      "value": "#F04446",
       "category": "palette.red",
       "usage": "深色阶，用于强调、点击或深色文本"
     },
@@ -1479,7 +1713,7 @@
   "semantic": [
     {
       "name": "--radius",
-      "value": "0.625rem",
+      "value": "0.5rem",
       "category": "radius-source",
       "usage": "基础圆角真相源"
     },
@@ -1491,25 +1725,25 @@
     },
     {
       "name": "--radius-inner",
-      "value": "calc(var(--radius) - 4px)",
+      "value": "4px",
       "category": "shadcn-semantic",
       "usage": ""
     },
     {
       "name": "--radius-element",
-      "value": "calc(var(--radius) - 2px)",
+      "value": "6px",
       "category": "shadcn-semantic",
       "usage": ""
     },
     {
       "name": "--radius-container",
-      "value": "var(--radius)",
+      "value": "12px",
       "category": "shadcn-semantic",
       "usage": ""
     },
     {
       "name": "--radius-page",
-      "value": "calc(var(--radius) + 4px)",
+      "value": "16px",
       "category": "shadcn-semantic",
       "usage": ""
     },
@@ -2046,23 +2280,38 @@
   "radius": [
     {
       "name": "--radius",
-      "value": "0.625rem",
+      "value": "0.5rem",
       "usage": "基础圆角真相源"
     },
     {
+      "name": "radius-xs",
+      "value": "2px",
+      "usage": "极小图形、紧凑结构"
+    },
+    {
       "name": "radius-sm",
-      "value": "calc(var(--radius) * 0.6)",
-      "usage": "小控件、tag"
+      "value": "4px",
+      "usage": "小标签、嵌套内层"
     },
     {
       "name": "radius-md",
-      "value": "calc(var(--radius) * 0.8)",
-      "usage": "默认控件"
+      "value": "6px",
+      "usage": "24/28 控件、输入框"
     },
     {
       "name": "radius-lg",
-      "value": "var(--radius)",
-      "usage": "卡片、弹窗、区域容器"
+      "value": "8px",
+      "usage": "32/36 控件、常规表面"
+    },
+    {
+      "name": "radius-xl",
+      "value": "12px",
+      "usage": "下拉、浮层、较大容器"
+    },
+    {
+      "name": "radius-2xl",
+      "value": "16px",
+      "usage": "Dialog、Sheet、页面级容器"
     }
   ],
   "componentUsage": [

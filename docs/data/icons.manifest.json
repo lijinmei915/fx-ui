@@ -586,6 +586,18 @@
       ]
     },
     {
+      "name": "IconsIcon",
+      "source": "tabler",
+      "style": "line",
+      "category": "editor",
+      "keywords": [
+        "图标",
+        "图标集",
+        "icons",
+        "symbol"
+      ]
+    },
+    {
       "name": "CopyIcon",
       "source": "tabler",
       "style": "line",

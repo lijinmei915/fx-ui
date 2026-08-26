@@ -22,9 +22,9 @@ const errors = [];
 
 if (manifest.format !== "fx-ui/page-builder")
   errors.push("page builder format is invalid");
-if (manifest.schemaVersion < 9)
+if (manifest.schemaVersion < 10)
   errors.push(
-    "page builder schema must include the single-entry foundation candidate flow",
+    "page builder schema must include the direct foundation publishing flow",
   );
 const builderModes = new Set(manifest.builderModes?.map((mode) => mode.id));
 for (const mode of ["page", "component", "business-component"])
@@ -140,34 +140,45 @@ const foundationComponentMode = manifest.builderModes?.find(
   (mode) => mode.id === "component-create",
 );
 const foundationGroups =
-  foundationComponentMode?.candidateGate?.foundationAssets;
+  foundationComponentMode?.creationContract?.foundationAssets;
 const foundationDeliveryTargets = new Set(
-  foundationComponentMode?.candidateGate?.deliveryTargets?.map(
+  foundationComponentMode?.creationContract?.deliveryTargets?.map(
     (target) => target.id,
   ),
 );
 if (
-  foundationComponentMode?.candidateGate?.instructionEntry !== false ||
+  foundationComponentMode?.candidateGate !== undefined ||
+  foundationComponentMode?.creationContract?.previewSource !== "liveCanvas" ||
+  foundationComponentMode?.creationContract?.publishFlow !== "direct" ||
+  foundationComponentMode?.creationContract?.assetPresentation !==
+    "visualTiles" ||
+  foundationComponentMode?.creationContract?.assetColumns !== 2 ||
+  !["click", "drag"].every((method) =>
+    foundationComponentMode?.creationContract?.insertMethods?.includes(method),
+  ) ||
+  foundationComponentMode?.creationContract?.globalLayout !== false ||
+  foundationComponentMode?.creationContract?.rootModel !== "singleContainer" ||
+  foundationComponentMode?.creationContract?.rootContainerSurface !== "card" ||
+  foundationComponentMode?.creationContract?.containerInsertion !==
+    "rootChildren" ||
+  foundationComponentMode?.creationContract?.propertyChrome !== "titleOnly" ||
+  foundationComponentMode?.creationContract?.instructionEntry !== false ||
   !foundationDeliveryTargets.has("new") ||
   !foundationDeliveryTargets.has("existing") ||
-  foundationComponentMode?.candidateGate?.deliveryTargets?.some(
+  foundationComponentMode?.creationContract?.deliveryTargets?.some(
     (target) => !target.name || !target.outcome || !target.storageKey,
   ) ||
-  foundationComponentMode?.candidateGate?.existingComponentSource !==
+  foundationComponentMode?.creationContract?.existingComponentSource !==
     "docs/data/components.manifest.json#uiComponents"
 )
   errors.push(
-    "foundation builder must disable the duplicate instruction entry and declare governed delivery targets",
+    "foundation builder must use its live canvas, publish directly, present two-column visual assets with click and drag insertion, rely on one root container without global layout or redundant property metadata, keep title-only property chrome, omit the duplicate candidate gate, and declare governed delivery targets",
   );
 const requiredFoundationKinds = [
-  "layout",
   "container",
-  "color",
-  "spacing",
   "typography",
   "icon",
   "separator",
-  "interaction",
 ];
 for (const kind of requiredFoundationKinds) {
   const group = foundationGroups?.find((item) => item.id === kind);
@@ -179,6 +190,12 @@ for (const kind of requiredFoundationKinds) {
   )
     errors.push(
       `foundation builder must expose one generic ${kind} primitive configured through properties`,
+    );
+}
+for (const kind of ["layout", "color", "spacing", "interaction"]) {
+  if (foundationGroups?.some((group) => group.id === kind))
+    errors.push(
+      `foundation builder must configure ${kind} in the property panel instead of exposing it as an insertable asset`,
     );
 }
 if (

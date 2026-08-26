@@ -34,18 +34,18 @@ const buttonVariants = cva(
       // 文字档：24→12/18、28→13/18、32→14/20、36→16/24；24/28 圆角 6px，32/36 圆角 8px。
       // 图标-文字大小关系：文字档不写 svg 尺寸，统一走 base 的 size-[1.15em]（图标=字号×1.15，各档自动成比例）。
       size: {
-        xs: "h-(--fx-control-xs-height) rounded-sm px-(--fx-control-px-xs) text-xs in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-[calc(var(--fx-control-px-xs)-2px)] has-data-[icon=inline-start]:pl-[calc(var(--fx-control-px-xs)-2px)]",
-        sm: "h-(--fx-control-sm-height) rounded-sm px-(--fx-control-px-sm) text-[length:var(--fx-text-control-sm)] leading-[var(--fx-text-control-sm--line-height)] in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-[calc(var(--fx-control-px-sm)-2px)] has-data-[icon=inline-start]:pl-[calc(var(--fx-control-px-sm)-2px)]",
-        md: "h-(--fx-control-md-height) rounded-md px-(--fx-control-px-md) text-sm has-data-[icon=inline-end]:pr-[calc(var(--fx-control-px-md)-2px)] has-data-[icon=inline-start]:pl-[calc(var(--fx-control-px-md)-2px)]",
-        lg: "h-(--fx-control-lg-height) gap-(--fx-control-gap) rounded-md px-(--fx-control-px-lg) text-base has-data-[icon=inline-end]:pr-[calc(var(--fx-control-px-lg)-4px)] has-data-[icon=inline-start]:pl-[calc(var(--fx-control-px-lg)-4px)]",
+        xs: "h-(--fx-control-xs-height) rounded-md px-(--fx-control-px-xs) text-xs in-data-[slot=button-group]:rounded-sm has-data-[icon=inline-end]:pr-[calc(var(--fx-control-px-xs)-2px)] has-data-[icon=inline-start]:pl-[calc(var(--fx-control-px-xs)-2px)]",
+        sm: "h-(--fx-control-sm-height) rounded-md px-(--fx-control-px-sm) text-[length:var(--fx-text-control-sm)] leading-[var(--fx-text-control-sm--line-height)] in-data-[slot=button-group]:rounded-sm has-data-[icon=inline-end]:pr-[calc(var(--fx-control-px-sm)-2px)] has-data-[icon=inline-start]:pl-[calc(var(--fx-control-px-sm)-2px)]",
+        md: "h-(--fx-control-md-height) rounded-lg px-(--fx-control-px-md) text-sm has-data-[icon=inline-end]:pr-[calc(var(--fx-control-px-md)-2px)] has-data-[icon=inline-start]:pl-[calc(var(--fx-control-px-md)-2px)]",
+        lg: "h-(--fx-control-lg-height) gap-(--fx-control-gap) rounded-lg px-(--fx-control-px-lg) text-base has-data-[icon=inline-end]:pr-[calc(var(--fx-control-px-lg)-4px)] has-data-[icon=inline-start]:pl-[calc(var(--fx-control-px-lg)-4px)]",
         // 工具栏档复用 28px 的 13/18 紧凑文字与 6px 圆角。
-        toolbar: "h-(--fx-control-sm-height) rounded-sm px-(--fx-control-px-sm) text-[length:var(--fx-text-control-sm)] leading-[var(--fx-text-control-sm--line-height)] in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-[calc(var(--fx-control-px-sm)-2px)] has-data-[icon=inline-start]:pl-[calc(var(--fx-control-px-sm)-2px)]",
-        "toolbar-icon": "size-(--fx-control-icon-sm) rounded-sm text-[length:var(--fx-text-control-sm)] leading-[var(--fx-text-control-sm--line-height)] in-data-[slot=button-group]:rounded-md [&_svg:not([class*='size-'])]:size-4",
+        toolbar: "h-(--fx-control-sm-height) rounded-md px-(--fx-control-px-sm) text-[length:var(--fx-text-control-sm)] leading-[var(--fx-text-control-sm--line-height)] in-data-[slot=button-group]:rounded-sm has-data-[icon=inline-end]:pr-[calc(var(--fx-control-px-sm)-2px)] has-data-[icon=inline-start]:pl-[calc(var(--fx-control-px-sm)-2px)]",
+        "toolbar-icon": "size-(--fx-control-icon-sm) rounded-md text-[length:var(--fx-text-control-sm)] leading-[var(--fx-text-control-sm--line-height)] in-data-[slot=button-group]:rounded-sm [&_svg:not([class*='size-'])]:size-4",
         // 纯图标档：图标占满方形热区的比例由各档手控（脱离字号），不走 1.15em
-        "icon-xs": "size-(--fx-control-icon-xs) rounded-sm in-data-[slot=button-group]:rounded-md [&_svg:not([class*='size-'])]:size-3.5",
-        "icon-sm": "size-(--fx-control-icon-sm) rounded-sm in-data-[slot=button-group]:rounded-md [&_svg:not([class*='size-'])]:size-4",
-        "icon-md": "size-(--fx-control-icon-md) rounded-md [&_svg:not([class*='size-'])]:size-4",
-        "icon-lg": "size-(--fx-control-icon-lg) rounded-md [&_svg:not([class*='size-'])]:size-5",
+        "icon-xs": "size-(--fx-control-icon-xs) rounded-md in-data-[slot=button-group]:rounded-sm [&_svg:not([class*='size-'])]:size-3.5",
+        "icon-sm": "size-(--fx-control-icon-sm) rounded-md in-data-[slot=button-group]:rounded-sm [&_svg:not([class*='size-'])]:size-4",
+        "icon-md": "size-(--fx-control-icon-md) rounded-lg [&_svg:not([class*='size-'])]:size-4",
+        "icon-lg": "size-(--fx-control-icon-lg) rounded-lg [&_svg:not([class*='size-'])]:size-5",
       },
     },
     compoundVariants: [

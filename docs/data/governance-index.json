@@ -70,6 +70,19 @@
       "checkCommand": "npm run check:page-builder"
     },
     {
+      "id": "page-semantics",
+      "path": "docs/data/page-semantics.manifest.json",
+      "format": "fx-ui/page-semantics",
+      "purpose": "登记页面类型语义角色到全局 semantic token 的受控映射，隔离基础无语义规范与页面类型语义。",
+      "ownerRole": "page-design-governance",
+      "consumedBy": [
+        "scripts/check-page-semantics.mjs",
+        "docs/PAGES.md",
+        "docs/DESIGN_STANDARDS.md"
+      ],
+      "checkCommand": "npm run check:page-semantics"
+    },
+    {
       "id": "doc-site-manifest",
       "path": "docs/data/doc-site.manifest.json",
       "format": "fx-ui/doc-site-manifest",

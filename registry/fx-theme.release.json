@@ -15,23 +15,23 @@
   },
   "sourceContract": {
     "path": "docs/data/theme-presets.manifest.json",
-    "sha256": "8b4814f0045017b7b218757bcfdf84a0014a8c43a94b7e1d3c07b4d9dbee4dcc"
+    "sha256": "545a5f32d1b7ddffad15380de7cac1d40f2fd3f1aee7d19a526e65f5404ff5d3"
   },
   "sourceContracts": {
     "docs/data/theme-presets.manifest.json": {
-      "sha256": "8b4814f0045017b7b218757bcfdf84a0014a8c43a94b7e1d3c07b4d9dbee4dcc"
+      "sha256": "545a5f32d1b7ddffad15380de7cac1d40f2fd3f1aee7d19a526e65f5404ff5d3"
     },
     "docs/data/token-naming.manifest.json": {
       "sha256": "20375ab1f54177c9b8c3c2443221eb2f0018c24274fc391103e85508624b0970"
     },
     "tokens/source/primitive.tokens.json": {
-      "sha256": "6569f85f3889ff16870bf2dd50dd6f2b4f42bcd6e60279ae695e05fbad6af806"
+      "sha256": "90b77d59d6b030762a5eda1e22643674ec6c7d5aa76e9dc304ff1fa2a85b37bb"
     },
     "tokens/source/map.tokens.json": {
       "sha256": "439a0ab5fdd939a0702e8347830cba90b38fdf799b6b66d8d1ea5b681470b55c"
     },
     "tokens/source/semantic.tokens.json": {
-      "sha256": "f385f178266d7f9feeff504e39f3d1174a7f35f796625397f478ec8ed5919d90"
+      "sha256": "3c4b1f3374092117a16ef5d7c8d809039638c691132f52e6c891f84207018c0b"
     },
     "tokens/source/component.tokens.json": {
       "sha256": "499b6a761cc9edf26b7eed07110144936b59edeb254fd92326ae231b20e24f26"
@@ -39,31 +39,31 @@
   },
   "artifacts": {
     "docs/data/fds-foundation.manifest.json": {
-      "sha256": "afe003c50e80dc8d03b456047a5e21584cbd58445723d7f86173856984082245"
+      "sha256": "bf457247cfb4673d48f11c57b8b6ff99b77a6f312cc94d7bf2371f7560739f82"
     },
     "docs/data/fds-semantic.manifest.json": {
-      "sha256": "2d39c285325ba0314be051707aae0f18b3ce3b56154455e2dfa6eae9f1512a6e"
+      "sha256": "b8a04e22b315347698bcb316e95ddecbc9ee43db213e35eb02d46b8b52f7e36f"
     },
     "docs/data/fds-components.manifest.json": {
       "sha256": "4b3ff26aa18f6797761503734a4e0476348a8829557b134b8c16e2c3179e78f7"
     },
     "docs/data/fds-migration-audit.manifest.json": {
-      "sha256": "7a6a90f1a28dd18a0d1a5c71985ea05dd56d9891977f984e51d161aca93e1521"
+      "sha256": "14d7db9b9bdf106c21e3095dbfffb3c3157cf2d9ec247d3226b6d8a5e2f1e4e4"
     },
     "registry/fx-theme.css": {
-      "sha256": "3a1d5ed037931f6d84f4349d59bb3e2fefc3dbeffce57c693a58d91ca9d5e597"
+      "sha256": "700fb1e10373e55b369f4bd1ba45e2da644aeac5f73558b7e137819b7a69d419"
     },
     "registry/fx-theme.contract.json": {
-      "sha256": "e42b4655cc107d4b6c3735179cf118625e224aa74c403deb6b194d029ae05174"
+      "sha256": "6314abd0eb81ea0194c7725588dbb530ec66575c248ad8d4fdbfafd00f99dbc8"
     },
     "registry/fx-theme.json": {
       "sha256": "59eb8676336a50abbd3af041c3cc3cf6804f831f69618e3c7168777699e0a8d4"
     },
     "docs/data/theme-audit.manifest.json": {
-      "sha256": "83c61c968c1e4e4e771db7107bf7df3338ab9eeb5c31c56526401f95a3d21c64"
+      "sha256": "6d5ff4abd1f5f5c8ea0e5bf664f9e9a4e9f844a33123d18520ba69f2d4dd9e3c"
     },
     "docs/data/framework-core.manifest.json": {
-      "sha256": "319f89fde51c252a3b82096f46163c8f8de2e965318b7ab01a67968db7d59dca"
+      "sha256": "cb77b3e8d8b68f260fff7770d41f3290c8a6110e07c45562c7b537e047fad3ee"
     }
   },
   "qualityEvidence": {

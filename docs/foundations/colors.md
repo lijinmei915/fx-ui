@@ -12,7 +12,7 @@ use_when: "查询颜色值、状态色、中性轴、图表色或对比度时"
 
 ## 语义颜色 Token
 
-shadcn/ui 和业务页面真正使用的语义槽。
+组件和业务页面真正使用的跨框架语义槽。
 
 当前生成的 Semantic contract 共 149 项，其中 101 项为 Public Global、48 项为 Internal；准确计数以 `docs/data/fds-semantic.manifest.json#counts` 为准。Internal 包括 `--fds-g-color-brand-identity`、Theme profile 输出与迁移期内部角色，不是外部可随意覆盖的 Hook。
 
@@ -81,7 +81,7 @@ shadcn/ui 和业务页面真正使用的语义槽。
 
 > **placeholder 与禁用同档**（④）：当前项目将中性禁用/placeholder 从 `neutrals-07` 上调到 `neutrals-06`，避免文字按钮禁用后过虚；表单 placeholder 一律 `placeholder:text-foreground-disabled`。
 
-> 图标不再单列一套色，直接复用这四级（默认图标 = ①，次要/禁用图标取 ③/④）。`text-icon` / `text-icon-muted` 作为 ①/③ 的别名保留，供 shadcn 组件兼容。
+> 图标不再单列一套色，直接复用这四级（默认图标 = ①，次要/禁用图标取 ③/④）。`text-icon` / `text-icon-muted` 作为 ①/③ 的兼容别名保留，供现有组件语义类使用。
 
 ## 背景 / 边框
 

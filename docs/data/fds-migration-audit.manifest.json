@@ -17,7 +17,7 @@
     "earliestRemovalVersion": "2.0.0"
   },
   "replacementCatalog": {
-    "count": 453,
+    "count": 454,
     "mappings": [
       {
         "legacyName": "--fx-amber-01",
@@ -668,6 +668,12 @@
         "sourceId": "font.family.serif"
       },
       {
+        "legacyName": "--fx-font-size-11",
+        "name": "--fds-g-font-size-11",
+        "layer": "primitive",
+        "sourceId": "font.size.11"
+      },
+      {
         "legacyName": "--fx-font-size-12",
         "name": "--fds-g-font-size-12",
         "layer": "primitive",
@@ -728,22 +734,16 @@
         "sourceId": "font.size.28"
       },
       {
-        "legacyName": "--fx-font-size-30",
-        "name": "--fds-g-font-size-30",
+        "legacyName": "--fx-font-size-32",
+        "name": "--fds-g-font-size-32",
         "layer": "primitive",
-        "sourceId": "font.size.30"
+        "sourceId": "font.size.32"
       },
       {
-        "legacyName": "--fx-font-size-36",
-        "name": "--fds-g-font-size-36",
+        "legacyName": "--fx-font-size-40",
+        "name": "--fds-g-font-size-40",
         "layer": "primitive",
-        "sourceId": "font.size.36"
-      },
-      {
-        "legacyName": "--fx-font-size-44",
-        "name": "--fds-g-font-size-44",
-        "layer": "primitive",
-        "sourceId": "font.size.44"
+        "sourceId": "font.size.40"
       },
       {
         "legacyName": "--fx-font-weight-400",
@@ -1118,6 +1118,12 @@
         "sourceId": "color.lime.base.120"
       },
       {
+        "legacyName": "--fx-line-height-16",
+        "name": "--fds-g-font-line-height-16",
+        "layer": "primitive",
+        "sourceId": "font.line-height.16"
+      },
+      {
         "legacyName": "--fx-line-height-18",
         "name": "--fds-g-font-line-height-18",
         "layer": "primitive",
@@ -1184,10 +1190,10 @@
         "sourceId": "font.line-height.44"
       },
       {
-        "legacyName": "--fx-line-height-52",
-        "name": "--fds-g-font-line-height-52",
+        "legacyName": "--fx-line-height-48",
+        "name": "--fds-g-font-line-height-48",
         "layer": "primitive",
-        "sourceId": "font.line-height.52"
+        "sourceId": "font.line-height.48"
       },
       {
         "legacyName": "--fx-list-blue",
@@ -2780,24 +2786,24 @@
       "nextPhasePolicy": "legacy-aliases-allowed-until-legacy-removal",
       "scannedFiles": 3,
       "filesWithLegacy": 2,
-      "occurrences": 455,
-      "exactOccurrences": 453,
-      "mappedOccurrences": 453,
+      "occurrences": 456,
+      "exactOccurrences": 454,
+      "mappedOccurrences": 454,
       "unmappedExactOccurrences": 0,
       "dynamicOccurrences": 2,
-      "directFdsAliasDeclarations": 453,
-      "uniqueExactNames": 453,
-      "mappedUniqueNames": 453,
+      "directFdsAliasDeclarations": 454,
+      "uniqueExactNames": 454,
+      "mappedUniqueNames": 454,
       "replacementCoverage": 1,
       "files": [
         {
           "path": "theme/foundation.css",
-          "occurrences": 378,
-          "exactOccurrences": 376,
-          "mappedOccurrences": 376,
+          "occurrences": 379,
+          "exactOccurrences": 377,
+          "mappedOccurrences": 377,
           "unmappedExactOccurrences": 0,
           "dynamicOccurrences": 2,
-          "directFdsAliasDeclarations": 376
+          "directFdsAliasDeclarations": 377
         },
         {
           "path": "theme/fds-semantic.css",
@@ -2816,24 +2822,24 @@
       "nextPhasePolicy": "legacy-aliases-allowed-until-legacy-removal",
       "scannedFiles": 3,
       "filesWithLegacy": 2,
-      "occurrences": 461,
-      "exactOccurrences": 459,
-      "mappedOccurrences": 459,
+      "occurrences": 462,
+      "exactOccurrences": 460,
+      "mappedOccurrences": 460,
       "unmappedExactOccurrences": 0,
       "dynamicOccurrences": 2,
-      "directFdsAliasDeclarations": 453,
-      "uniqueExactNames": 453,
-      "mappedUniqueNames": 453,
+      "directFdsAliasDeclarations": 454,
+      "uniqueExactNames": 454,
+      "mappedUniqueNames": 454,
       "replacementCoverage": 1,
       "files": [
         {
           "path": "registry/fx-theme.css",
-          "occurrences": 455,
-          "exactOccurrences": 453,
-          "mappedOccurrences": 453,
+          "occurrences": 456,
+          "exactOccurrences": 454,
+          "mappedOccurrences": 454,
           "unmappedExactOccurrences": 0,
           "dynamicOccurrences": 2,
-          "directFdsAliasDeclarations": 453
+          "directFdsAliasDeclarations": 454
         },
         {
           "path": "registry/fx-theme.contract.json",
@@ -2852,11 +2858,11 @@
       "nextPhasePolicy": "measured-not-blocking",
       "scannedFiles": 101,
       "filesWithLegacy": 21,
-      "occurrences": 164,
+      "occurrences": 163,
       "exactOccurrences": 119,
       "mappedOccurrences": 107,
       "unmappedExactOccurrences": 12,
-      "dynamicOccurrences": 45,
+      "dynamicOccurrences": 44,
       "directFdsAliasDeclarations": 0,
       "uniqueExactNames": 87,
       "mappedUniqueNames": 78,
@@ -2918,11 +2924,11 @@
         },
         {
           "path": "docs/TOKENS.md",
-          "occurrences": 8,
+          "occurrences": 7,
           "exactOccurrences": 6,
           "mappedOccurrences": 6,
           "unmappedExactOccurrences": 0,
-          "dynamicOccurrences": 2,
+          "dynamicOccurrences": 1,
           "directFdsAliasDeclarations": 0
         },
         {
@@ -3122,14 +3128,14 @@
       "nextPhasePolicy": "legacy-contract-data-allowed-until-legacy-removal",
       "scannedFiles": 4,
       "filesWithLegacy": 3,
-      "occurrences": 221,
-      "exactOccurrences": 220,
-      "mappedOccurrences": 220,
+      "occurrences": 222,
+      "exactOccurrences": 221,
+      "mappedOccurrences": 221,
       "unmappedExactOccurrences": 0,
       "dynamicOccurrences": 1,
       "directFdsAliasDeclarations": 0,
-      "uniqueExactNames": 220,
-      "mappedUniqueNames": 220,
+      "uniqueExactNames": 221,
+      "mappedUniqueNames": 221,
       "replacementCoverage": 1,
       "files": [
         {
@@ -3143,9 +3149,9 @@
         },
         {
           "path": "tokens/source/primitive.tokens.json",
-          "occurrences": 143,
-          "exactOccurrences": 143,
-          "mappedOccurrences": 143,
+          "occurrences": 144,
+          "exactOccurrences": 144,
+          "mappedOccurrences": 144,
           "unmappedExactOccurrences": 0,
           "dynamicOccurrences": 0,
           "directFdsAliasDeclarations": 0
@@ -3187,7 +3193,7 @@
           "id": "authoritative-replacement-catalog-exists",
           "pass": true,
           "expected": "Foundation and Semantic contracts expose legacy-to-FDS replacements",
-          "actual": "453 replacements"
+          "actual": "454 replacements"
         },
         {
           "id": "runtime-source-uses-fds-only",
@@ -3235,7 +3241,7 @@
           "id": "generated-compatibility-window-is-preserved",
           "pass": true,
           "expected": "generated and published compatibility aliases remain available until at least 2.0.0",
-          "actual": "release=1.14.0; generatedLegacy=455; publishedLegacy=461"
+          "actual": "release=1.14.0; generatedLegacy=456; publishedLegacy=462"
         }
       ],
       "blockers": []
@@ -3260,7 +3266,7 @@
           "id": "runtime-and-published-artifacts-have-no-legacy-prefix",
           "pass": false,
           "expected": 0,
-          "actual": 916
+          "actual": 918
         }
       ],
       "blockers": [
@@ -3289,7 +3295,7 @@
           "id": "runtime-and-published-artifacts-have-no-legacy-prefix",
           "pass": false,
           "expected": 0,
-          "actual": 916
+          "actual": 918
         }
       ],
       "blockers": [

@@ -3,7 +3,7 @@ layer: knowledge
 type: spec
 last_verified: 2026-08-28
 teaches: "公司设计 token 的基础架构、真实值和全局视觉使用规则"
-use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadcn 组件样式或判断视觉是否符合公司规范时"
+use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、调整组件样式或判断视觉是否符合公司规范时"
 ---
 
 # fx-ui 设计 Token
@@ -12,11 +12,11 @@ use_when: "AI 要用颜色/圆角/字体/状态样式、生成页面、改 shadc
 > 真相源分层：`tokens/source/primitive.tokens.json` 保存 DTCG Primitive，`tokens/source/map.tokens.json` 保存生成式 Map，`tokens/source/semantic.tokens.json` 保存 Semantic，`tokens/source/component.tokens.json` 保存经过准入的 Component Hooks；`theme/foundation.css`、`theme/fds-semantic.css` 与 `theme/fds-components.css` 由它们生成，`theme/fx-theme.css` 只作唯一公开装配入口。改任一真相层都必须先说明影响。
 > 改完 Primitive/Map 或 Semantic 后，跑 `npm run build:tokens` 依次重建 Foundation runtime、portable contract、Token manifest 和 Agent contract，再跑 `bash scripts/check-tokens-sync.sh` 校验本表有没有漏抄或漂移。
 
-FDS 四层 Token 与 `--fds-g-*` / `--fds-c-*` Styling Hooks 的完整命名语法、受控词典、公开面和 `--fx-*` 兼容阶段统一以 `docs/TOKEN_NAMING.md` + `docs/data/token-naming.manifest.json` 为准。当前处于 `fds-primary`：运行时、公开装配、派生数据和 portable contract 使用 FDS 主名称；旧变量与 shadcn 插槽只通过生成别名兼容。
+FDS 四层 Token 与 `--fds-g-*` / `--fds-c-*` Styling Hooks 的完整命名语法、受控词典、公开面和 `--fx-*` 兼容阶段统一以 `docs/TOKEN_NAMING.md` + `docs/data/token-naming.manifest.json` 为准。当前处于 `fds-primary`：运行时、公开装配、派生数据和 portable contract 使用 FDS 主名称；旧变量与框架适配槽只通过生成别名兼容。
 
 机器可消费的公开 Hook 清单位于 `registry/fx-theme.contract.json#stylingHooks`，并与跨框架 core 的 `tokens.publicStylingHooks` 强制同构。当前 114 项中有 48 个 `public-global` 和 13 个 `public-component` stable Hook，剩余 53 个 Global Hook 仍为 experimental，因此公共合同整体保持 experimental。主题默认值由 `registry/fx-theme.css` 提供，内部四层全量合同不等于公开兼容面。
 
-fx-ui 的组件源码来自 shadcn/ui，公司的视觉统一不靠重写组件，而靠 token 注入。
+FDS 通过 Token 合同向不同技术框架注入同一套视觉规范，不要求各框架复制物理数值。
 
 ## Agent Token Contract
 
@@ -43,25 +43,25 @@ npm run tokens -- component Input --json
 
 ### 0. 分层治理
 
-FDS 采用主流设计系统分层：**Tailwind 是表达层，FDS Token 是视觉真相源；企业视觉数值统一映射进 Tailwind 类体系消费**。
+FDS 采用主流设计系统分层：**FDS Token 是跨框架视觉真相源，具体技术框架通过适配层消费同一套基础值和语义角色**。
 
-- Tailwind 负责“怎么摆、怎么调用”：布局、栅格、间距、断点、对齐、显隐、响应式，以及统一的 class API。
-- FX token 负责“值是多少”：颜色、字号、圆角、阴影、边框粗细、动效时长。
-- 组件层负责把两者接起来：把 FX 数值挂到 Tailwind 语义类上，用统一类名消费，而不是平行维护两套视觉刻度。
+- FDS Token 负责“值是多少、意图是什么”：颜色、字号、间距、圆角、阴影、边框、动效和语义角色。
+- 框架适配层负责“在当前技术里怎么调用”：可以输出 CSS 变量、工具类或框架主题配置，但不得复制或改写 Token 真相。
+- 组件层负责把组件 API 映射到 FDS 语义角色，不在业务页面直接写死物理值。
 
 治理口径：
 
 | 维度 | 默认口径 | 说明 |
 |------|----------|------|
-| `spacing / layout / breakpoint` | **Tailwind 原生** | 保持与 shadcn / Tailwind 工程习惯一致，如 `gap-*`、`px-*`、`grid`、`lg:*` |
-| `color` | **FX token → Tailwind 语义类** | 必须走 `--fx-*` / 语义槽 / `bg-primary` 这类映射，不写死十六进制，不长期依赖 Tailwind 默认色 |
-| `typography` | **FX token → Tailwind 字号类** | 对外主推荐 `text-sm/base/lg/xl`；`text-control-sm` 仅供 28px 紧凑控件内部使用，底层仍由企业字号 token 驱动 |
-| `radius` | **FX token → Tailwind 圆角类** | 组件圆角走 `--radius` 派生档，不另立一套默认刻度 |
-| `shadow` | **FX token → Tailwind 阴影类** | 统一 `shadow-l1/l2/l3`，不用 Tailwind 默认 `shadow-sm/md/lg` |
+| `spacing / layout / breakpoint` | **FDS 基础值 + 布局规范** | 各框架使用同一组间距、栅格和断点规则，不在页面随意新增数值 |
+| `color` | **FDS Semantic Color** | 必须使用语义颜色映射，不写死十六进制，不直接从基础色板挑色 |
+| `typography` | **FDS Text Role** | 业务优先使用正文、标签、标题等文本角色；框架适配器再映射到具体调用方式 |
+| `radius` | **FDS Radius Map** | 组件按类型选择受治理圆角档，不由调用处任意覆盖 |
+| `shadow` | **FDS Elevation Semantic** | 统一使用 elevation 语义档，不由各框架另建默认阴影刻度 |
 | `border-width` | **FX 结构基线** | 默认 `1px`，由组件和 token 规范固定；不作为普通主题面板的运行时覆写项 |
 | `motion` | **FX token / 约定档位** | 动效时长跟随主题或规范档位，不在单页随意发明时长 |
 
-一句话收口：**Tailwind 管形式，FX 管数值；FX 的值映射进 Tailwind 里用。**
+一句话收口：**FDS 管统一规范，框架适配层负责把规范接入 React、Vue 2 或其他技术栈。**
 
 ## 主题生成合同
 
@@ -76,7 +76,7 @@ Theme Preset / custom brand seed
               -> Global Semantic 自动消费色阶
               -> resolver 为主按钮整组三态选择白色或近黑色前景
               -> 四类功能色前景通过 Semantic 稳定别名跟随主按钮
-              -> 同版本 CSS / contract JSON / shadcn light+dark registry
+              -> 同版本 CSS / contract JSON / 框架主题产物
               -> React / 未来框架适配器渲染
 ```
 
@@ -88,7 +88,7 @@ Theme Preset / custom brand seed
 - 排版、控件、面板、导航和主题动效共有 41 个 profile 输出登记为 `internal` Global Semantic；Preset 把它们映射到 Foundation 引用，消费者只读 Semantic 名称。
 - 任何框架不得复制预设表或重写色阶公式。算法版本变化必须同步 contract、审计和发布版本。
 
-`npm run fx -- theme build` 重建整条派生链；`npm run fx -- theme release --json` 只在审计全绿后输出 `registry/fx-theme.release.json`。Release manifest 绑定同版本 CSS、contract JSON、shadcn registry、审计证据和 portable core 的 SHA-256，供接入方核对是否来自同一次发布。
+`npm run fx -- theme build` 重建整条派生链；`npm run fx -- theme release --json` 只在审计全绿后输出 `registry/fx-theme.release.json`。Release manifest 绑定同版本 CSS、contract JSON、框架主题产物、审计证据和 portable core 的 SHA-256，供接入方核对是否来自同一次发布。
 
 这条链路在全局语义层后分成两个消费方向，不是四层 Token：
 
@@ -111,7 +111,7 @@ Foundation 物理值 -> Global Semantic 全局语义
 | 色彩 | `--fds-g-color-{family}-{base|dark}-{range}` | 16 个有色色系各含 Base/Dark 12 阶，另含动态品牌色阶和中性灰 20 阶 |
 | 间距 | `--fds-g-spacing-{value}` | 0–96px；4px 主网格，2/6/10px 仅供受治理的紧凑间距映射 |
 | 尺寸 | `--fds-g-sizing-{value}` | 12–64px；包含主题密度使用的 22/26/30/34px 控件补档 |
-| 排版 | `--fds-g-font-{property}-{value}` | 4 套受治理字族、字号 12–44、行高 18–52、字重 400–700 |
+| 排版 | `--fds-g-font-{property}-{value}` | 4 套受治理字族、字号 11–40、行高 16–48、字重 400–700 |
 | 形状与描边 | `--fds-g-radius-*` / `--fds-g-border-width-*` / `--fds-g-icon-stroke-*` | 圆角 Seed 8px，生成 Map 0/2/4/6/8/12/16，固定 Primitive full；边框 0/1/2，图标线宽 1.5/1.75/2 |
 | 效果 | `--fds-g-opacity-*` / `--fds-g-blur-*` | 透明度 0–100%（含阴影强度补档），模糊 0–40px |
 | 动效 | `--fds-g-motion-duration-*` / `--fds-g-motion-easing-*` | 0–1000ms，linear/in/out/in-out 数学曲线 |
@@ -119,7 +119,7 @@ Foundation 物理值 -> Global Semantic 全局语义
 
 治理边界：
 
-- Primitive 物理值 SSOT 是 `tokens/source/primitive.tokens.json`，Map 算法 SSOT 是 `tokens/source/map.tokens.json`，Semantic SSOT 是 `tokens/source/semantic.tokens.json`，准入式组件公开面 SSOT 是 `tokens/source/component.tokens.json`；三个 `theme/fds-*.css` 运行时文件只能由生成器输出，`theme/fx-theme.css` 只负责统一导入和 Tailwind/shadcn 装配。
+- Primitive 物理值 SSOT 是 `tokens/source/primitive.tokens.json`，Map 算法 SSOT 是 `tokens/source/map.tokens.json`，Semantic SSOT 是 `tokens/source/semantic.tokens.json`，准入式组件公开面 SSOT 是 `tokens/source/component.tokens.json`；三个 `theme/fds-*.css` 运行时文件只能由生成器输出，`theme/fx-theme.css` 只负责统一导入和当前 Web 适配装配。
 - 仅基础规范维护者可以新增或修改；协作者和 AI 只能读取。
 - 页面、组件调用处和产品运行时不得直接选择基础值，只能消费语义角色或现有组件 API。
 - `primary`、`danger`、`dashboard`、`report`、`workbench`、`button`、`control` 等用途词不得进入基础 Token 名称。

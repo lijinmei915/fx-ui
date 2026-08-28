@@ -30,8 +30,8 @@ const cssVars = new Map([...foundationVars, ...semanticVars, ...entryVars])
 const expectedScales = {
   "--fds-g-spacing-": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48, 56, 64, 80, 96],
   "--fds-g-sizing-": [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 40, 42, 48, 56, 64],
-  "--fds-g-font-size-": [12, 13, 14, 15, 16, 18, 20, 22, 24, 28, 30, 36, 44],
-  "--fds-g-font-line-height-": [18, 20, 22, 24, 28, 30, 32, 36, 38, 40, 44, 52],
+  "--fds-g-font-size-": [11, 12, 13, 14, 15, 16, 18, 20, 22, 24, 28, 32, 40],
+  "--fds-g-font-line-height-": [16, 18, 20, 22, 24, 28, 30, 32, 36, 38, 40, 44, 48],
   "--fds-g-font-weight-": [400, 500, 600, 700],
   "--fds-g-radius-": [0, 2, 4, 6, 8, 12, 16],
   "--fds-g-border-width-": [0, 1, 2],

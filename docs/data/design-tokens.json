@@ -756,6 +756,18 @@
       "stability": "experimental"
     },
     {
+      "name": "--fds-g-font-size-11",
+      "value": "11px",
+      "category": "foundation.font-size",
+      "usage": "",
+      "legacyName": "--fx-font-size-11",
+      "resolvedValue": "11px",
+      "layer": "primitive",
+      "type": "dimension",
+      "visibility": "internal",
+      "stability": "experimental"
+    },
+    {
       "name": "--fds-g-font-size-12",
       "value": "12px",
       "category": "foundation.font-size",
@@ -876,36 +888,36 @@
       "stability": "experimental"
     },
     {
-      "name": "--fds-g-font-size-30",
-      "value": "30px",
+      "name": "--fds-g-font-size-32",
+      "value": "32px",
       "category": "foundation.font-size",
       "usage": "",
-      "legacyName": "--fx-font-size-30",
-      "resolvedValue": "30px",
+      "legacyName": "--fx-font-size-32",
+      "resolvedValue": "32px",
       "layer": "primitive",
       "type": "dimension",
       "visibility": "internal",
       "stability": "experimental"
     },
     {
-      "name": "--fds-g-font-size-36",
-      "value": "36px",
+      "name": "--fds-g-font-size-40",
+      "value": "40px",
       "category": "foundation.font-size",
       "usage": "",
-      "legacyName": "--fx-font-size-36",
-      "resolvedValue": "36px",
+      "legacyName": "--fx-font-size-40",
+      "resolvedValue": "40px",
       "layer": "primitive",
       "type": "dimension",
       "visibility": "internal",
       "stability": "experimental"
     },
     {
-      "name": "--fds-g-font-size-44",
-      "value": "44px",
-      "category": "foundation.font-size",
+      "name": "--fds-g-font-line-height-16",
+      "value": "16px",
+      "category": "foundation.line-height",
       "usage": "",
-      "legacyName": "--fx-font-size-44",
-      "resolvedValue": "44px",
+      "legacyName": "--fx-line-height-16",
+      "resolvedValue": "16px",
       "layer": "primitive",
       "type": "dimension",
       "visibility": "internal",
@@ -1044,12 +1056,12 @@
       "stability": "experimental"
     },
     {
-      "name": "--fds-g-font-line-height-52",
-      "value": "52px",
+      "name": "--fds-g-font-line-height-48",
+      "value": "48px",
       "category": "foundation.line-height",
       "usage": "",
-      "legacyName": "--fx-line-height-52",
-      "resolvedValue": "52px",
+      "legacyName": "--fx-line-height-48",
+      "resolvedValue": "48px",
       "layer": "primitive",
       "type": "dimension",
       "visibility": "internal",
@@ -8909,7 +8921,7 @@
     },
     {
       "name": "--fds-g-font-size-3xl",
-      "value": "var(--fds-g-font-size-30)",
+      "value": "var(--fds-g-font-size-28)",
       "category": "shadcn-semantic",
       "usage": "",
       "id": "font.size.3xl",
@@ -8949,7 +8961,7 @@
     },
     {
       "name": "--fds-g-font-size-4xl",
-      "value": "var(--fds-g-font-size-36)",
+      "value": "var(--fds-g-font-size-32)",
       "category": "shadcn-semantic",
       "usage": "",
       "id": "font.size.4xl",
@@ -10920,6 +10932,7 @@
         "label": "Font size",
         "count": 13,
         "tokens": [
+          "--fds-g-font-size-11",
           "--fds-g-font-size-12",
           "--fds-g-font-size-13",
           "--fds-g-font-size-14",
@@ -10930,16 +10943,16 @@
           "--fds-g-font-size-22",
           "--fds-g-font-size-24",
           "--fds-g-font-size-28",
-          "--fds-g-font-size-30",
-          "--fds-g-font-size-36",
-          "--fds-g-font-size-44"
+          "--fds-g-font-size-32",
+          "--fds-g-font-size-40"
         ]
       },
       {
         "id": "line-height",
         "label": "Line height",
-        "count": 12,
+        "count": 13,
         "tokens": [
+          "--fds-g-font-line-height-16",
           "--fds-g-font-line-height-18",
           "--fds-g-font-line-height-20",
           "--fds-g-font-line-height-22",
@@ -10951,7 +10964,7 @@
           "--fds-g-font-line-height-38",
           "--fds-g-font-line-height-40",
           "--fds-g-font-line-height-44",
-          "--fds-g-font-line-height-52"
+          "--fds-g-font-line-height-48"
         ]
       },
       {

@@ -2958,7 +2958,7 @@
       "category": "shadcn-semantic",
       "usage": "",
       "resolvesTo": [
-        "--fds-g-font-size-30"
+        "--fds-g-font-size-28"
       ],
       "consumers": []
     },
@@ -2969,7 +2969,7 @@
       "usage": "",
       "resolvesTo": [
         "--fds-g-font-size-3xl",
-        "--fds-g-font-size-30"
+        "--fds-g-font-size-28"
       ],
       "consumers": []
     },
@@ -3000,7 +3000,7 @@
       "category": "shadcn-semantic",
       "usage": "",
       "resolvesTo": [
-        "--fds-g-font-size-36"
+        "--fds-g-font-size-32"
       ],
       "consumers": []
     },
@@ -3011,7 +3011,7 @@
       "usage": "",
       "resolvesTo": [
         "--fds-g-font-size-4xl",
-        "--fds-g-font-size-36"
+        "--fds-g-font-size-32"
       ],
       "consumers": []
     },

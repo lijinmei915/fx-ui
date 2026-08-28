@@ -21,6 +21,8 @@ export default defineConfig(({ mode }) => {
     : []
 
   return {
+  base: isFoundationPublication ? "./" : "/",
+  publicDir: isFoundationPublication ? false : "public",
   plugins: [
     ...(isFoundationPublication ? [{
       name: "fx-ui-foundation-design-token-projection",

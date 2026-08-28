@@ -270,7 +270,7 @@
         "--fds-g-font-line-height-2xl": "--fds-g-font-line-height-28",
         "--fds-g-font-size-3xl": "--fds-g-font-size-24",
         "--fds-g-font-line-height-3xl": "--fds-g-font-line-height-32",
-        "--fds-g-font-size-4xl": "--fds-g-font-size-30",
+        "--fds-g-font-size-4xl": "--fds-g-font-size-28",
         "--fds-g-font-line-height-4xl": "--fds-g-font-line-height-36",
         "--fds-g-sizing-control-block-xs": "--fds-g-sizing-22",
         "--fds-g-sizing-control-block-sm": "--fds-g-sizing-26",
@@ -310,9 +310,9 @@
         "--fds-g-font-line-height-xl": "--fds-g-font-line-height-30",
         "--fds-g-font-size-2xl": "--fds-g-font-size-24",
         "--fds-g-font-line-height-2xl": "--fds-g-font-line-height-32",
-        "--fds-g-font-size-3xl": "--fds-g-font-size-30",
+        "--fds-g-font-size-3xl": "--fds-g-font-size-28",
         "--fds-g-font-line-height-3xl": "--fds-g-font-line-height-38",
-        "--fds-g-font-size-4xl": "--fds-g-font-size-36",
+        "--fds-g-font-size-4xl": "--fds-g-font-size-32",
         "--fds-g-font-line-height-4xl": "--fds-g-font-line-height-44",
         "--fds-g-sizing-control-block-xs": "--fds-g-sizing-24",
         "--fds-g-sizing-control-block-sm": "--fds-g-sizing-28",
@@ -352,10 +352,10 @@
         "--fds-g-font-line-height-xl": "--fds-g-font-line-height-32",
         "--fds-g-font-size-2xl": "--fds-g-font-size-28",
         "--fds-g-font-line-height-2xl": "--fds-g-font-line-height-36",
-        "--fds-g-font-size-3xl": "--fds-g-font-size-36",
+        "--fds-g-font-size-3xl": "--fds-g-font-size-32",
         "--fds-g-font-line-height-3xl": "--fds-g-font-line-height-44",
-        "--fds-g-font-size-4xl": "--fds-g-font-size-44",
-        "--fds-g-font-line-height-4xl": "--fds-g-font-line-height-52",
+        "--fds-g-font-size-4xl": "--fds-g-font-size-40",
+        "--fds-g-font-line-height-4xl": "--fds-g-font-line-height-48",
         "--fds-g-sizing-control-block-xs": "--fds-g-sizing-26",
         "--fds-g-sizing-control-block-sm": "--fds-g-sizing-30",
         "--fds-g-sizing-control-block-md": "--fds-g-sizing-36",
@@ -1518,7 +1518,7 @@
   "artifacts": {
     "css": {
       "path": "registry/fx-theme.css",
-      "sha256": "3a1d5ed037931f6d84f4349d59bb3e2fefc3dbeffce57c693a58d91ca9d5e597"
+      "sha256": "700fb1e10373e55b369f4bd1ba45e2da644aeac5f73558b7e137819b7a69d419"
     },
     "shadcnRegistry": {
       "path": "registry/fx-theme.json",
@@ -1537,13 +1537,13 @@
     "docs/data/fds-components.manifest.json"
   ],
   "sourceIntegrity": {
-    "foundation": "ccc4a54ec49a4941bbfcb3f5645f61223a134d307a5e98d9a681ef764f3c6e86",
-    "semantic": "bc5df8e00b1f37dc6fc12b1d08935416b87df2cf00d3de412374ea74be8da1bc",
+    "foundation": "7927f7f0a24da56504e45ea96c5836389ec61ba732b478320e921dd20f64435b",
+    "semantic": "1286e35f098ce5894dd551186a180640b44560d1a5a550e68758a36be85ac70c",
     "components": "5b1e10dc334b7835d3ef26222b6ea40eef79f8ce142203b71ff8ed60dae25ef8",
     "entry": "3a6124e09fb19802d681141dce94cc13969dba4dbac445d8c784d7e896c842a1",
-    "presets": "8b4814f0045017b7b218757bcfdf84a0014a8c43a94b7e1d3c07b4d9dbee4dcc",
+    "presets": "545a5f32d1b7ddffad15380de7cac1d40f2fd3f1aee7d19a526e65f5404ff5d3",
     "naming": "20375ab1f54177c9b8c3c2443221eb2f0018c24274fc391103e85508624b0970",
-    "semanticContract": "2d39c285325ba0314be051707aae0f18b3ce3b56154455e2dfa6eae9f1512a6e",
+    "semanticContract": "b8a04e22b315347698bcb316e95ddecbc9ee43db213e35eb02d46b8b52f7e36f",
     "componentContract": "4b3ff26aa18f6797761503734a4e0476348a8829557b134b8c16e2c3179e78f7"
   }
 }

@@ -1216,6 +1216,14 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **原因**：当前极端 Seed 会让部分 Default/Hover 色差被色域边界压缩；本阶段优先发布常规企业品牌色能力，极端色保护另行建设。
 - **相关文件**：`docs/data/theme-presets.manifest.json`、`docs/data/theme-audit.manifest.json`、`docs/TOKENS.md`
 
+### DEC-111: Web Primitive 字号与行高收口为受治理离散档
+
+- **日期**：2026-08-28
+- **状态**：已决定
+- **决定**：Primitive 字号统一为 `11/12/13/14/15/16/18/20/22/24/28/32/40px`，删除 `30/36/44px`。行高按小字/正文、界面标题、展示标题三段倍率选择后吸附到偶数像素档；边界配对为 `11/16` 与 `40/48`，不保留无人引用的 `52px` 行高。默认 Semantic 的 `3xl/4xl` 分别映射 `28/32px`；compact、standard、spacious 三套字号密度同步落到新档位，保持从紧凑到舒展的层级递增。
+- **使用边界**：`11px` 只用于 BI 图表中空间受限的极小刻度或数据标注；正文、操作文字和关键状态仍以 `12px` 为下限。业务页面继续消费文本角色或语义字号，不直接引用 Primitive。
+- **相关文件**：`tokens/source/{primitive,semantic}.tokens.json`、`docs/data/theme-presets.manifest.json`、`docs/foundations/typography.md`、`src/pages/docs/tokens/tokens-typography-page.tsx`
+
 ## 相关文件
 
 | 文件                   | 关系                   |

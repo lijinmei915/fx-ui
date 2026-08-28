@@ -12,9 +12,9 @@
   ],
   "migrationPhase": "fds-primary",
   "counts": {
-    "primitive": 143,
+    "primitive": 144,
     "map": 425,
-    "total": 568
+    "total": 569
   },
   "tokens": [
     {
@@ -689,6 +689,17 @@
       "stability": "experimental"
     },
     {
+      "path": "font.size.11",
+      "layer": "primitive",
+      "type": "dimension",
+      "name": "--fds-g-font-size-11",
+      "legacyName": "--fx-font-size-11",
+      "value": "11px",
+      "legacyValue": "11px",
+      "visibility": "internal",
+      "stability": "experimental"
+    },
+    {
       "path": "font.size.12",
       "layer": "primitive",
       "type": "dimension",
@@ -799,35 +810,35 @@
       "stability": "experimental"
     },
     {
-      "path": "font.size.30",
+      "path": "font.size.32",
       "layer": "primitive",
       "type": "dimension",
-      "name": "--fds-g-font-size-30",
-      "legacyName": "--fx-font-size-30",
-      "value": "30px",
-      "legacyValue": "30px",
+      "name": "--fds-g-font-size-32",
+      "legacyName": "--fx-font-size-32",
+      "value": "32px",
+      "legacyValue": "32px",
       "visibility": "internal",
       "stability": "experimental"
     },
     {
-      "path": "font.size.36",
+      "path": "font.size.40",
       "layer": "primitive",
       "type": "dimension",
-      "name": "--fds-g-font-size-36",
-      "legacyName": "--fx-font-size-36",
-      "value": "36px",
-      "legacyValue": "36px",
+      "name": "--fds-g-font-size-40",
+      "legacyName": "--fx-font-size-40",
+      "value": "40px",
+      "legacyValue": "40px",
       "visibility": "internal",
       "stability": "experimental"
     },
     {
-      "path": "font.size.44",
+      "path": "font.line-height.16",
       "layer": "primitive",
       "type": "dimension",
-      "name": "--fds-g-font-size-44",
-      "legacyName": "--fx-font-size-44",
-      "value": "44px",
-      "legacyValue": "44px",
+      "name": "--fds-g-font-line-height-16",
+      "legacyName": "--fx-line-height-16",
+      "value": "16px",
+      "legacyValue": "16px",
       "visibility": "internal",
       "stability": "experimental"
     },
@@ -953,13 +964,13 @@
       "stability": "experimental"
     },
     {
-      "path": "font.line-height.52",
+      "path": "font.line-height.48",
       "layer": "primitive",
       "type": "dimension",
-      "name": "--fds-g-font-line-height-52",
-      "legacyName": "--fx-line-height-52",
-      "value": "52px",
-      "legacyValue": "52px",
+      "name": "--fds-g-font-line-height-48",
+      "legacyName": "--fx-line-height-48",
+      "value": "48px",
+      "legacyValue": "48px",
       "visibility": "internal",
       "stability": "experimental"
     },

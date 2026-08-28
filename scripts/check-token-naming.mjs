@@ -301,7 +301,7 @@ if (!fs.existsSync(primitiveSourcePath) || !fs.existsSync(foundationContractPath
   const foundationContract = JSON.parse(fs.readFileSync(foundationContractPath, "utf8"))
   if (primitiveSource.$extensions?.fds?.format !== "fds/dtcg-primitive-tokens") errors.push("Primitive source 不是 FDS DTCG 格式")
   if (foundationContract.format !== "fds/foundation-contract") errors.push("Foundation portable contract format 不正确")
-  const expectedCounts = { primitive: 143, map: 425, total: 568 }
+  const expectedCounts = { primitive: 144, map: 425, total: 569 }
   for (const [key, value] of Object.entries(expectedCounts)) {
     if (foundationContract.counts?.[key] !== value) errors.push(`Foundation ${key} 数量应为 ${value}`)
   }

@@ -85,7 +85,7 @@ export function describeTailwindTokenValue(classes: string) {
     "text-base": "16px",
     "text-lg": "18px",
     "text-xl": "20px / 28px",
-    "text-3xl": "30px / 36px",
+    "text-3xl": "28px / 38px",
   };
   const weightMap: Record<string, string> = {
     "font-normal": "400",

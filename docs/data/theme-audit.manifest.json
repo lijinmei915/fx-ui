@@ -8,8 +8,8 @@
     "registry/fx-theme.css"
   ],
   "sourceHashes": {
-    "presetContractSha256": "8b4814f0045017b7b218757bcfdf84a0014a8c43a94b7e1d3c07b4d9dbee4dcc",
-    "themeCssSha256": "3a1d5ed037931f6d84f4349d59bb3e2fefc3dbeffce57c693a58d91ca9d5e597"
+    "presetContractSha256": "545a5f32d1b7ddffad15380de7cac1d40f2fd3f1aee7d19a526e65f5404ff5d3",
+    "themeCssSha256": "700fb1e10373e55b369f4bd1ba45e2da644aeac5f73558b7e137819b7a69d419"
   },
   "thresholds": {
     "normalTextMinimum": 4.5,

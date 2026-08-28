@@ -55,6 +55,8 @@ npm run test:visual:foundation
 
 `dist-foundation/` 可以部署到 GitLab Pages、内部 Nginx 或其他静态托管。它按 `docs/data/publication-profiles.manifest.json` 的白名单只包含 Token、栅格、布局和对应 Markdown；构建结束会扫描产物，发现组件文档、Playground、搭建器、页面模板、报告或治理数据时直接失败。不要把仓库权限或完整 `dist/` 当成 Foundation 交付物。
 
+Foundation 构建使用相对资源路径，因此既可部署在域名根目录，也可部署在 GitLab Pages 的项目子路径（例如 `/fds/`）；同时禁用完整站 `public/` 目录的默认复制，避免把未被 Foundation 引用的业务图片带入分享包。完整维护站仍使用根路径资源并保留原有公开资源。
+
 ## 常见故障
 
 ### Tailwind v4 utility class 不生效

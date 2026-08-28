@@ -688,7 +688,7 @@
     {
       "id": "font.size.3xl",
       "$type": "dimension",
-      "$value": "var(--fds-g-font-size-30)",
+      "$value": "var(--fds-g-font-size-28)",
       "$extensions": { "fds": { "cssName": "--fds-g-font-size-3xl", "aliases": ["--fx-text-3xl"], "visibility": "internal" } }
     },
     {
@@ -700,7 +700,7 @@
     {
       "id": "font.size.4xl",
       "$type": "dimension",
-      "$value": "var(--fds-g-font-size-36)",
+      "$value": "var(--fds-g-font-size-32)",
       "$extensions": { "fds": { "cssName": "--fds-g-font-size-4xl", "aliases": ["--fx-text-4xl"], "visibility": "internal" } }
     },
     {

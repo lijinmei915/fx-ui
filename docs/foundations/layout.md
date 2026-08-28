@@ -44,7 +44,7 @@ use_when: "设计或实现 Header/Sider/Content/Footer 页面骨架时"
 - 页面外边距：移动端 `px-4 py-6`，桌面端逐步增加到 `lg:px-8`。
 - 页面最大宽度：后台工作台默认 `max-w-7xl`。
 - 页面区块间距：默认 `gap-4`。
-- 卡片内部使用 shadcn `Card` 自带 spacing，不额外写死大段 padding。
+- 卡片内部使用受治理 `Card` 组件的默认间距，不在调用处额外写死大段 padding。
 
 ### 列表页内部纵向节奏（高度与间距解耦）
 

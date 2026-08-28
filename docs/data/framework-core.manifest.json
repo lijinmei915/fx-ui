@@ -981,9 +981,9 @@
       ],
       "migrationPhase": "fds-primary",
       "counts": {
-        "primitive": 143,
+        "primitive": 144,
         "map": 425,
-        "total": 568
+        "total": 569
       },
       "tokens": [
         {
@@ -1658,6 +1658,17 @@
           "stability": "experimental"
         },
         {
+          "path": "font.size.11",
+          "layer": "primitive",
+          "type": "dimension",
+          "name": "--fds-g-font-size-11",
+          "legacyName": "--fx-font-size-11",
+          "value": "11px",
+          "legacyValue": "11px",
+          "visibility": "internal",
+          "stability": "experimental"
+        },
+        {
           "path": "font.size.12",
           "layer": "primitive",
           "type": "dimension",
@@ -1768,35 +1779,35 @@
           "stability": "experimental"
         },
         {
-          "path": "font.size.30",
+          "path": "font.size.32",
           "layer": "primitive",
           "type": "dimension",
-          "name": "--fds-g-font-size-30",
-          "legacyName": "--fx-font-size-30",
-          "value": "30px",
-          "legacyValue": "30px",
+          "name": "--fds-g-font-size-32",
+          "legacyName": "--fx-font-size-32",
+          "value": "32px",
+          "legacyValue": "32px",
           "visibility": "internal",
           "stability": "experimental"
         },
         {
-          "path": "font.size.36",
+          "path": "font.size.40",
           "layer": "primitive",
           "type": "dimension",
-          "name": "--fds-g-font-size-36",
-          "legacyName": "--fx-font-size-36",
-          "value": "36px",
-          "legacyValue": "36px",
+          "name": "--fds-g-font-size-40",
+          "legacyName": "--fx-font-size-40",
+          "value": "40px",
+          "legacyValue": "40px",
           "visibility": "internal",
           "stability": "experimental"
         },
         {
-          "path": "font.size.44",
+          "path": "font.line-height.16",
           "layer": "primitive",
           "type": "dimension",
-          "name": "--fds-g-font-size-44",
-          "legacyName": "--fx-font-size-44",
-          "value": "44px",
-          "legacyValue": "44px",
+          "name": "--fds-g-font-line-height-16",
+          "legacyName": "--fx-line-height-16",
+          "value": "16px",
+          "legacyValue": "16px",
           "visibility": "internal",
           "stability": "experimental"
         },
@@ -1922,13 +1933,13 @@
           "stability": "experimental"
         },
         {
-          "path": "font.line-height.52",
+          "path": "font.line-height.48",
           "layer": "primitive",
           "type": "dimension",
-          "name": "--fds-g-font-line-height-52",
-          "legacyName": "--fx-line-height-52",
-          "value": "52px",
-          "legacyValue": "52px",
+          "name": "--fds-g-font-line-height-48",
+          "legacyName": "--fx-line-height-48",
+          "value": "48px",
+          "legacyValue": "48px",
           "visibility": "internal",
           "stability": "experimental"
         },
@@ -9043,7 +9054,7 @@
           "id": "font.size.3xl",
           "type": "dimension",
           "name": "--fds-g-font-size-3xl",
-          "value": "var(--fds-g-font-size-30)",
+          "value": "var(--fds-g-font-size-28)",
           "modes": {},
           "aliases": [
             "--fx-text-3xl"
@@ -9071,7 +9082,7 @@
           "id": "font.size.4xl",
           "type": "dimension",
           "name": "--fds-g-font-size-4xl",
-          "value": "var(--fds-g-font-size-36)",
+          "value": "var(--fds-g-font-size-32)",
           "modes": {},
           "aliases": [
             "--fx-text-4xl"
@@ -11582,6 +11593,18 @@
         "stability": "experimental"
       },
       {
+        "name": "--fds-g-font-size-11",
+        "value": "11px",
+        "category": "foundation.font-size",
+        "usage": "",
+        "legacyName": "--fx-font-size-11",
+        "resolvedValue": "11px",
+        "layer": "primitive",
+        "type": "dimension",
+        "visibility": "internal",
+        "stability": "experimental"
+      },
+      {
         "name": "--fds-g-font-size-12",
         "value": "12px",
         "category": "foundation.font-size",
@@ -11702,36 +11725,36 @@
         "stability": "experimental"
       },
       {
-        "name": "--fds-g-font-size-30",
-        "value": "30px",
+        "name": "--fds-g-font-size-32",
+        "value": "32px",
         "category": "foundation.font-size",
         "usage": "",
-        "legacyName": "--fx-font-size-30",
-        "resolvedValue": "30px",
+        "legacyName": "--fx-font-size-32",
+        "resolvedValue": "32px",
         "layer": "primitive",
         "type": "dimension",
         "visibility": "internal",
         "stability": "experimental"
       },
       {
-        "name": "--fds-g-font-size-36",
-        "value": "36px",
+        "name": "--fds-g-font-size-40",
+        "value": "40px",
         "category": "foundation.font-size",
         "usage": "",
-        "legacyName": "--fx-font-size-36",
-        "resolvedValue": "36px",
+        "legacyName": "--fx-font-size-40",
+        "resolvedValue": "40px",
         "layer": "primitive",
         "type": "dimension",
         "visibility": "internal",
         "stability": "experimental"
       },
       {
-        "name": "--fds-g-font-size-44",
-        "value": "44px",
-        "category": "foundation.font-size",
+        "name": "--fds-g-font-line-height-16",
+        "value": "16px",
+        "category": "foundation.line-height",
         "usage": "",
-        "legacyName": "--fx-font-size-44",
-        "resolvedValue": "44px",
+        "legacyName": "--fx-line-height-16",
+        "resolvedValue": "16px",
         "layer": "primitive",
         "type": "dimension",
         "visibility": "internal",
@@ -11870,12 +11893,12 @@
         "stability": "experimental"
       },
       {
-        "name": "--fds-g-font-line-height-52",
-        "value": "52px",
+        "name": "--fds-g-font-line-height-48",
+        "value": "48px",
         "category": "foundation.line-height",
         "usage": "",
-        "legacyName": "--fx-line-height-52",
-        "resolvedValue": "52px",
+        "legacyName": "--fx-line-height-48",
+        "resolvedValue": "48px",
         "layer": "primitive",
         "type": "dimension",
         "visibility": "internal",
@@ -19735,7 +19758,7 @@
       },
       {
         "name": "--fds-g-font-size-3xl",
-        "value": "var(--fds-g-font-size-30)",
+        "value": "var(--fds-g-font-size-28)",
         "category": "shadcn-semantic",
         "usage": "",
         "id": "font.size.3xl",
@@ -19775,7 +19798,7 @@
       },
       {
         "name": "--fds-g-font-size-4xl",
-        "value": "var(--fds-g-font-size-36)",
+        "value": "var(--fds-g-font-size-32)",
         "category": "shadcn-semantic",
         "usage": "",
         "id": "font.size.4xl",
@@ -21251,7 +21274,7 @@
             "id": "authoritative-replacement-catalog-exists",
             "pass": true,
             "expected": "Foundation and Semantic contracts expose legacy-to-FDS replacements",
-            "actual": "453 replacements"
+            "actual": "454 replacements"
           },
           {
             "id": "runtime-source-uses-fds-only",
@@ -21299,7 +21322,7 @@
             "id": "generated-compatibility-window-is-preserved",
             "pass": true,
             "expected": "generated and published compatibility aliases remain available until at least 2.0.0",
-            "actual": "release=1.14.0; generatedLegacy=455; publishedLegacy=461"
+            "actual": "release=1.14.0; generatedLegacy=456; publishedLegacy=462"
           }
         ],
         "blockers": []
@@ -21324,7 +21347,7 @@
             "id": "runtime-and-published-artifacts-have-no-legacy-prefix",
             "pass": false,
             "expected": 0,
-            "actual": 916
+            "actual": 918
           }
         ],
         "blockers": [
@@ -21353,7 +21376,7 @@
             "id": "runtime-and-published-artifacts-have-no-legacy-prefix",
             "pass": false,
             "expected": 0,
-            "actual": 916
+            "actual": 918
           }
         ],
         "blockers": [
@@ -21595,7 +21618,7 @@
           "--fds-g-font-line-height-2xl": "--fds-g-font-line-height-28",
           "--fds-g-font-size-3xl": "--fds-g-font-size-24",
           "--fds-g-font-line-height-3xl": "--fds-g-font-line-height-32",
-          "--fds-g-font-size-4xl": "--fds-g-font-size-30",
+          "--fds-g-font-size-4xl": "--fds-g-font-size-28",
           "--fds-g-font-line-height-4xl": "--fds-g-font-line-height-36",
           "--fds-g-sizing-control-block-xs": "--fds-g-sizing-22",
           "--fds-g-sizing-control-block-sm": "--fds-g-sizing-26",
@@ -21635,9 +21658,9 @@
           "--fds-g-font-line-height-xl": "--fds-g-font-line-height-30",
           "--fds-g-font-size-2xl": "--fds-g-font-size-24",
           "--fds-g-font-line-height-2xl": "--fds-g-font-line-height-32",
-          "--fds-g-font-size-3xl": "--fds-g-font-size-30",
+          "--fds-g-font-size-3xl": "--fds-g-font-size-28",
           "--fds-g-font-line-height-3xl": "--fds-g-font-line-height-38",
-          "--fds-g-font-size-4xl": "--fds-g-font-size-36",
+          "--fds-g-font-size-4xl": "--fds-g-font-size-32",
           "--fds-g-font-line-height-4xl": "--fds-g-font-line-height-44",
           "--fds-g-sizing-control-block-xs": "--fds-g-sizing-24",
           "--fds-g-sizing-control-block-sm": "--fds-g-sizing-28",
@@ -21677,10 +21700,10 @@
           "--fds-g-font-line-height-xl": "--fds-g-font-line-height-32",
           "--fds-g-font-size-2xl": "--fds-g-font-size-28",
           "--fds-g-font-line-height-2xl": "--fds-g-font-line-height-36",
-          "--fds-g-font-size-3xl": "--fds-g-font-size-36",
+          "--fds-g-font-size-3xl": "--fds-g-font-size-32",
           "--fds-g-font-line-height-3xl": "--fds-g-font-line-height-44",
-          "--fds-g-font-size-4xl": "--fds-g-font-size-44",
-          "--fds-g-font-line-height-4xl": "--fds-g-font-line-height-52",
+          "--fds-g-font-size-4xl": "--fds-g-font-size-40",
+          "--fds-g-font-line-height-4xl": "--fds-g-font-line-height-48",
           "--fds-g-sizing-control-block-xs": "--fds-g-sizing-26",
           "--fds-g-sizing-control-block-sm": "--fds-g-sizing-30",
           "--fds-g-sizing-control-block-md": "--fds-g-sizing-36",

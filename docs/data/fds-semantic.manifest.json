@@ -1709,7 +1709,7 @@
       "id": "font.size.3xl",
       "type": "dimension",
       "name": "--fds-g-font-size-3xl",
-      "value": "var(--fds-g-font-size-30)",
+      "value": "var(--fds-g-font-size-28)",
       "modes": {},
       "aliases": [
         "--fx-text-3xl"
@@ -1737,7 +1737,7 @@
       "id": "font.size.4xl",
       "type": "dimension",
       "name": "--fds-g-font-size-4xl",
-      "value": "var(--fds-g-font-size-36)",
+      "value": "var(--fds-g-font-size-32)",
       "modes": {},
       "aliases": [
         "--fx-text-4xl"

@@ -503,6 +503,7 @@
   --fds-g-font-family-serif: "Noto Serif SC", "Songti SC", STSong, Georgia, "Times New Roman", SimSun, serif;
   --fds-g-font-family-mono: "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono", "Noto Sans SC", monospace;
   --fds-g-font-family-geometric: "Geist Variable", "HarmonyOS Sans SC", "MiSans", "Inter Variable", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --fds-g-font-size-11: 11px;
   --fds-g-font-size-12: 12px;
   --fds-g-font-size-13: 13px;
   --fds-g-font-size-14: 14px;
@@ -513,9 +514,9 @@
   --fds-g-font-size-22: 22px;
   --fds-g-font-size-24: 24px;
   --fds-g-font-size-28: 28px;
-  --fds-g-font-size-30: 30px;
-  --fds-g-font-size-36: 36px;
-  --fds-g-font-size-44: 44px;
+  --fds-g-font-size-32: 32px;
+  --fds-g-font-size-40: 40px;
+  --fds-g-font-line-height-16: 16px;
   --fds-g-font-line-height-18: 18px;
   --fds-g-font-line-height-20: 20px;
   --fds-g-font-line-height-22: 22px;
@@ -527,7 +528,7 @@
   --fds-g-font-line-height-38: 38px;
   --fds-g-font-line-height-40: 40px;
   --fds-g-font-line-height-44: 44px;
-  --fds-g-font-line-height-52: 52px;
+  --fds-g-font-line-height-48: 48px;
   --fds-g-font-weight-400: 400;
   --fds-g-font-weight-500: 500;
   --fds-g-font-weight-600: 600;
@@ -647,6 +648,7 @@
   --fx-font-family-serif: var(--fds-g-font-family-serif);
   --fx-font-family-mono: var(--fds-g-font-family-mono);
   --fx-font-family-geometric: var(--fds-g-font-family-geometric);
+  --fx-font-size-11: var(--fds-g-font-size-11);
   --fx-font-size-12: var(--fds-g-font-size-12);
   --fx-font-size-13: var(--fds-g-font-size-13);
   --fx-font-size-14: var(--fds-g-font-size-14);
@@ -657,9 +659,9 @@
   --fx-font-size-22: var(--fds-g-font-size-22);
   --fx-font-size-24: var(--fds-g-font-size-24);
   --fx-font-size-28: var(--fds-g-font-size-28);
-  --fx-font-size-30: var(--fds-g-font-size-30);
-  --fx-font-size-36: var(--fds-g-font-size-36);
-  --fx-font-size-44: var(--fds-g-font-size-44);
+  --fx-font-size-32: var(--fds-g-font-size-32);
+  --fx-font-size-40: var(--fds-g-font-size-40);
+  --fx-line-height-16: var(--fds-g-font-line-height-16);
   --fx-line-height-18: var(--fds-g-font-line-height-18);
   --fx-line-height-20: var(--fds-g-font-line-height-20);
   --fx-line-height-22: var(--fds-g-font-line-height-22);
@@ -671,7 +673,7 @@
   --fx-line-height-38: var(--fds-g-font-line-height-38);
   --fx-line-height-40: var(--fds-g-font-line-height-40);
   --fx-line-height-44: var(--fds-g-font-line-height-44);
-  --fx-line-height-52: var(--fds-g-font-line-height-52);
+  --fx-line-height-48: var(--fds-g-font-line-height-48);
   --fx-font-weight-400: var(--fds-g-font-weight-400);
   --fx-font-weight-500: var(--fds-g-font-weight-500);
   --fx-font-weight-600: var(--fds-g-font-weight-600);
@@ -1078,9 +1080,9 @@
   --fds-g-font-line-height-xl: var(--fds-g-font-line-height-30);
   --fds-g-font-size-2xl: var(--fds-g-font-size-24);
   --fds-g-font-line-height-2xl: var(--fds-g-font-line-height-32);
-  --fds-g-font-size-3xl: var(--fds-g-font-size-30);
+  --fds-g-font-size-3xl: var(--fds-g-font-size-28);
   --fds-g-font-line-height-3xl: var(--fds-g-font-line-height-38);
-  --fds-g-font-size-4xl: var(--fds-g-font-size-36);
+  --fds-g-font-size-4xl: var(--fds-g-font-size-32);
   --fds-g-font-line-height-4xl: var(--fds-g-font-line-height-44);
   --fds-g-sizing-control-block-xs: var(--fds-g-sizing-24);
   --fds-g-sizing-control-block-sm: var(--fds-g-sizing-28);

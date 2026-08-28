@@ -50,7 +50,7 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
 - 类型：display
 - 语义 DOM：data-slot="avatar"、data-slot="avatar-image"、data-slot="avatar-fallback"、data-slot="avatar-badge"、data-slot="avatar-group"、data-slot="avatar-group-count"、data-slot="avatar-composite"、data-slot="avatar-composite-cell"
 - 原生/数据状态：`imageLoadingStatus`（idle/loading/loaded/error）
-- 能力：`size`（xs/sm/default/lg/xl = 20/24/32/40/48）、`shape`（circle/square）、`AvatarFallback colorful`（按内容 hash 取色板色）、`AvatarBadge status`（online/away/busy/offline）、`AvatarGroup max`（超出自动折叠 +N）、`AvatarComposite max`（2/3/4 人拼接）
+- 能力：`size`（xs/sm/default/lg/xl = 20/24/32/40/48）、`shape`（circle/square）、`AvatarFallback neutral`（默认 muted 兜底）、`AvatarFallback colorful`（按内容 hash 取色板色）、`AvatarBadge status`（online/away/busy/offline）、`AvatarGroup max`（超出自动折叠 +N）、`AvatarComposite max`（2/3/4 人拼接）
 - 导出项：Avatar、AvatarImage、AvatarFallback、AvatarGroup、AvatarGroupCount、AvatarComposite、AvatarBadge、avatarInitials
 
 ## 场景示例 {#examples}
@@ -85,7 +85,7 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
 | `AvatarImage.onLoadingStatusChange` | `(status) => void` | — | 监听 Base UI 图片加载状态：idle/loading/loaded/error |
 | `AvatarFallback.delay` | `number` | — | 图片加载时延迟显示 fallback，避免快速加载产生闪烁 |
 | `AvatarFallback.render` | `AvatarPrimitive.Fallback.Props["render"]` | — | 使用 Base UI 原生 render 能力替换 fallback 标签 |
-| `AvatarFallback.colorful` | `boolean` | `false` | 兜底文字按内容 hash 取色板色，实底（08 阶）+ 白字反白（参考 Gmail，08 比满饱和 09 柔半阶） |
+| `AvatarFallback.colorful` | `boolean` | `false` | 兜底文字按内容 hash 取色板色，实底（Map base-80，对应旧 08 阶）+ 语义反白文字；六色查表由组件内部治理，不是公开 Styling Hook |
 | `AvatarBadge.status` | `"online" \| "away" \| "busy" \| "offline"` | — | 右下角 presence 状态点：在线绿 / 离开黄 / 忙红 / 离线灰（参考 Slack/Teams）|
 | `AvatarGroup.max` | `number` | — | 最多展示几个，超出折叠为 `+N` |
 | `AvatarGroupCount.render` | `useRender.ComponentProps<"div">["render"]` | — | 需要 hover/focus 触发 Tooltip 时渲染为 button，获得正确键盘语义 |
@@ -147,7 +147,7 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
 - **中文**：≤2 字全取（「张三」→张三）；≥3 字取**末两字**（名），「欧阳娜娜」→娜娜、「王小明」→小明。
 - **英文**：单名取首字母（Alice→A）；全名取**首末两词首字母**（John Doe→JD），统一大写。
 
-彩色兜底：`colorful` 按内容 hash 在 6 色系（brand/green/amber/red/blue/purple）里取一色，实底（08 阶）+ 白字反白，不写死颜色。
+彩色兜底：`colorful` 按内容 hash 在 6 色系（brand/green/amber/red/blue/purple）里取一色，背景固定查表到 FDS Map 的 `base-80`，前景使用 `text.inverse` Semantic。调用方不写死颜色，也不覆盖单个实例。
 
 
 ## Semantic DOM {#semantic-dom}
@@ -173,9 +173,9 @@ import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
 
 | Token | 用途 |
 | --- | --- |
-| `--fx-brand-08` / `--fx-green-08` / `--fx-amber-08` | 彩色 fallback 的品牌、绿色与琥珀色实底 |
-| `--fx-red-08` / `--fx-blue-08` / `--fx-purple-08` | 彩色 fallback 的红、蓝与紫色实底 |
-| `--fx-neutrals-01` | 彩色 fallback 上的反白文字与图标 |
+| `--fds-g-color-brand-base-80` / `--fds-g-color-green-base-80` / `--fds-g-color-amber-base-80` | 彩色 fallback 内部查表的品牌、绿色与琥珀色实底；不是组件公开 Hook |
+| `--fds-g-color-red-base-80` / `--fds-g-color-blue-base-80` / `--fds-g-color-purple-base-80` | 彩色 fallback 内部查表的红、蓝与紫色实底；不是组件公开 Hook |
+| `--fds-g-color-text-inverse` | 彩色 fallback 上的反白文字与图标 |
 | `--primary` / `--primary-foreground` | 默认 Badge 强调色及其前景色 |
 | `--background` | 头像组描边和拼接单元间隔背景 |
 | `--muted` / `--muted-foreground` | 默认 fallback 与折叠计数的弱化表面和文字 |

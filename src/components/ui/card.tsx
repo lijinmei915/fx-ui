@@ -6,7 +6,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const cardVariants = cva(
-  "group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl py-(--card-spacing) text-base text-card-foreground transition-[background-color,border-color,box-shadow] [--card-spacing:var(--fx-panel-padding)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl [a]:cursor-pointer [a]:outline-none [button]:cursor-pointer [button]:appearance-none [button]:text-left [button]:outline-none [a]:focus-visible:border-ring [a]:focus-visible:ring-3 [a]:focus-visible:ring-ring/50 [button]:focus-visible:border-ring [button]:focus-visible:ring-3 [button]:focus-visible:ring-ring/50 [button]:disabled:cursor-not-allowed [button]:disabled:bg-surface-disabled [button]:disabled:text-foreground-disabled",
+  "group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl py-(--card-spacing) text-base text-card-foreground transition-[background-color,border-color,box-shadow] [--card-spacing:var(--fds-g-spacing-panel-padding)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl [a]:cursor-pointer [a]:outline-none [button]:cursor-pointer [button]:appearance-none [button]:text-left [button]:outline-none [a]:focus-visible:border-ring [a]:focus-visible:ring-3 [a]:focus-visible:ring-ring/50 [button]:focus-visible:border-ring [button]:focus-visible:ring-3 [button]:focus-visible:ring-ring/50 [button]:disabled:cursor-not-allowed [button]:disabled:bg-surface-disabled [button]:disabled:text-foreground-disabled",
   {
     variants: {
       variant: {
@@ -18,9 +18,9 @@ const cardVariants = cva(
           "border border-border-container bg-card shadow-l1 [a]:hover:bg-muted [a]:active:bg-muted-hover [button]:not-disabled:hover:bg-muted [button]:not-disabled:active:bg-muted-hover",
       },
       size: {
-        sm: "[--card-spacing:calc(var(--fx-panel-padding)-2px)]",
-        md: "[--card-spacing:var(--fx-panel-padding)]",
-        lg: "[--card-spacing:calc(var(--fx-panel-padding)+4px)]",
+        sm: "[--card-spacing:calc(var(--fds-g-spacing-panel-padding)-2px)]",
+        md: "[--card-spacing:var(--fds-g-spacing-panel-padding)]",
+        lg: "[--card-spacing:calc(var(--fds-g-spacing-panel-padding)+4px)]",
       },
     },
     defaultVariants: {
@@ -62,7 +62,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-header"
       className={cn(
-        "group/card-header @container/card-header grid auto-rows-min items-start gap-(--fx-control-gap-tight) rounded-t-xl px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing)",
+        "group/card-header @container/card-header grid auto-rows-min items-start gap-(--fds-g-spacing-control-gap-tight) rounded-t-xl px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing)",
         className
       )}
       {...props}
@@ -137,7 +137,7 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-footer"
       className={cn(
-        "flex items-center gap-(--fx-control-gap) rounded-b-xl border-t bg-muted p-(--card-spacing)",
+        "flex items-center gap-(--fds-g-spacing-control-gap) rounded-b-xl border-t bg-muted p-(--card-spacing)",
         className
       )}
       {...props}

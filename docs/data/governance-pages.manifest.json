@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/governance-pages-manifest",
-  "updatedAt": "2026-08-26",
+  "updatedAt": "2026-08-28",
   "truthSource": "docs/data/governance-pages.manifest.json",
   "humanDoc": "docs/DOC_SITE_DESIGN.md",
   "note": "治理页里的规则型卡槽机器事实表。文档规范和检查命令页面优先从这里读表格、卡片和清单，避免把治理文案写死在 src/App.tsx。",
@@ -74,7 +74,7 @@
       },
       {
         "command": "npm run check:tokens",
-        "usage": "改了 theme/fx-theme.css、docs/TOKENS.md 或 design-tokens.json 时单独跑。"
+        "usage": "改了 tokens/source/*.tokens.json、docs/TOKENS.md 或 design-tokens.json 时单独跑。"
       },
       {
         "command": "npm run check:all",
@@ -98,8 +98,23 @@
         "desc": "确认 token 文档、JSON 和主题文件没有互相飘。"
       },
       {
+        "title": "无语义基础 token 检查",
+        "script": "scripts/check-foundation-tokens.mjs",
+        "desc": ""
+      },
+      {
+        "title": "FDS Token 命名合同检查",
+        "script": "scripts/check-token-naming.mjs",
+        "desc": ""
+      },
+      {
         "title": "Theme Contract 检查",
         "script": "scripts/check-theme-contract.mjs",
+        "desc": ""
+      },
+      {
+        "title": "Theme Preset 检查",
+        "script": "scripts/check-theme-presets.mjs",
         "desc": ""
       },
       {
@@ -181,6 +196,11 @@
         "title": "文档站骨架",
         "script": "scripts/check-doc-site-contract.mjs",
         "desc": "确认导航、页面骨架、右侧目录这些结构还存在。"
+      },
+      {
+        "title": "文档站发布配置检查",
+        "script": "scripts/check-publication-profiles.mjs",
+        "desc": ""
       },
       {
         "title": "组件 manifest",
@@ -268,7 +288,7 @@
     "structure": [
       "src/components/ui/：shadcn 基础组件，CLI 拉取，open-code 可读可改。",
       "src/components/fx/：公司组合组件，由 shadcn 组件组合而成。",
-      "theme/fx-theme.css：公司 token 真相源，改它等于全局换肤。",
+      "tokens/source/：Primitive、Map、Semantic 真相源；theme/foundation.css 与 theme/fds-semantic.css：生成产物；theme/fx-theme.css：运行时入口。",
       "docs/components/：组件文档资产，给工程师和 AI 共同消费。"
     ],
     "verify": [
@@ -281,12 +301,12 @@
     "semanticSlots": [
       {
         "layer": "Primitive",
-        "example": "--fx-primary: #FF8000",
+        "example": "--fds-g-color-seed-brand / --fds-g-color-brand-base-90",
         "purpose": "公司原始视觉值，只在 token 真相源维护。"
       },
       {
         "layer": "Semantic",
-        "example": "--primary / --background / --ring",
+        "example": "--fds-g-color-action-primary / --fds-g-color-surface-page",
         "purpose": "shadcn/ui 和 Tailwind 真正消费的语义槽。"
       },
       {
@@ -297,7 +317,7 @@
     ],
     "changeFlow": [
       "先判断这是全局主题问题，还是局部组件用法问题。",
-      "全局 token 改 theme/fx-theme.css；组件规则改 docs/components。",
+      "物理值改 tokens/source/primitive.tokens.json 或 map.tokens.json；语义映射改 semantic.tokens.json；组件规则改 docs/components。",
       "运行 npm run check，拦住 token 和文档漂移。"
     ]
   },
@@ -309,7 +329,7 @@
       },
       {
         "title": "不乱改 token 真相源",
-        "desc": "theme/fx-theme.css 是全局换肤入口，修改前说明影响范围。"
+        "desc": "Foundation 与语义主题均受治理；修改前先确认层级并说明影响范围。"
       },
       {
         "title": "不发明组件 API",

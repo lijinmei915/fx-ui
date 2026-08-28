@@ -7,9 +7,17 @@ import { useRender } from "@base-ui/react/use-render"
 
 import { cn } from "@/lib/utils"
 
-// 文字头像彩色背景（反白）：按内容 hash 取一个色系，实底(08 阶) + 白字(neutrals-01)。
-// 参考 Gmail/Google 头像的中饱和实底白字；用 08 而非满饱和 09，柔半阶又保证白字对比。
-const AVATAR_TONES = ["brand", "green", "amber", "red", "blue", "purple"] as const
+// 彩色 fallback 是组件内部的稳定分类色查表，不是可覆盖的 Component Hook。
+// base-80 对应旧 08 阶；保持中饱和实底，同时避免动态拼接 Token 名称。
+const AVATAR_TONE_BACKGROUNDS = {
+  brand: "var(--fds-g-color-brand-base-80)",
+  green: "var(--fds-g-color-green-base-80)",
+  amber: "var(--fds-g-color-amber-base-80)",
+  red: "var(--fds-g-color-red-base-80)",
+  blue: "var(--fds-g-color-blue-base-80)",
+  purple: "var(--fds-g-color-purple-base-80)",
+} as const
+const AVATAR_TONES = Object.keys(AVATAR_TONE_BACKGROUNDS) as Array<keyof typeof AVATAR_TONE_BACKGROUNDS>
 type AvatarSize = "xs" | "sm" | "default" | "lg" | "xl"
 type AvatarCompositeSize = Extract<AvatarSize, "default" | "lg" | "xl">
 
@@ -83,7 +91,7 @@ function AvatarFallback({
   const seed = typeof children === "string" ? children : ""
   const tone = avatarTone(seed)
   const toneStyle = colorful
-    ? { backgroundColor: `var(--fx-${tone}-08)`, color: "var(--fx-neutrals-01)", ...style }
+    ? { backgroundColor: AVATAR_TONE_BACKGROUNDS[tone], color: "var(--fds-g-color-text-inverse)", ...style }
     : style
   const fallbackClassName = cn(
     "flex size-full items-center justify-center rounded-[inherit] text-xs leading-none",

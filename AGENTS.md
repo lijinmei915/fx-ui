@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-08-23
+last_verified: 2026-08-28
 teaches: "AI 在 fx-ui 项目里的行为红线：不手写组件、只注入 token、保护 token 真相源"
 use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token 时"
 ---
@@ -24,7 +24,7 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
    - 已拉取的 shadcn open-code 若缺少主流基础能力，可在用户审核后于原组件补齐；必须登记 `origin: shadcn-extended`、上游、DEC 和 `extensions`，不得借“补全”另造无关组件。
 2. **不要封装黑盒。** shadcn 组件以 open-code 进 `src/components/ui/`，源码可见可改。
 3. **不要从零写页面。** 页面用 shadcn Blocks / v0 / 内部 blocks 现成区块起步。
-4. **不要乱改 token 真相源。** `theme/fx-theme.css` 是公司视觉的 SSOT，改它 = 全局换肤，必须先向用户说明再动。
+4. **不要乱改 token 真相源。** `tokens/source/primitive.tokens.json` 是 DTCG Primitive SSOT，`tokens/source/map.tokens.json` 是生成式 Map SSOT，仅 Foundation 维护者可改；`tokens/source/semantic.tokens.json` 是需评审的 Semantic SSOT；`tokens/source/component.tokens.json` 只接受带 owner、语义缺口、合同与视觉证据的 Component Hook。`theme/foundation.css`、`theme/fds-semantic.css` 与 `theme/fds-components.css` 都是生成产物，禁止手改；`theme/fx-theme.css` 是唯一公开装配入口。改任一真相层都可能全局换肤，必须先向用户说明再动。
 5. **不要自动同步 shadcn 上游。** shadcn 官网 / registry 更新不等于本项目必须更新；只有遇到 bug、安全、可访问性或明确业务需要时，才按单个组件评估升级，且不得盲目覆盖本地源码。
 6. **不要手写重拼组装结构。** 搭页面 / 组合 UI 时，只能用现有组件 + 现有 token，且必须**搬运库里已有的成形用法**（组件文档页 / demo / example 里的写法），整段复用或抽成共享件，**只换数据 props**。禁止：重新推导一套组装结构、自创简化版、杜撰 props/数据形态。库里缺的能力 → 标"需沉淀为组件"交给用户，**绝不临时手搓填补**。反例：照搬真实组件却重写了导航的组装与交互（漏掉折叠/hover/选中）—— 这是错的，应复用既有 `comboDemo`。
 7. **不改组件外观——要变体，不要覆盖。**（对齐主流治理型设计系统 Polaris/Spectrum：调用处覆盖组件视觉 = 坏味道）
@@ -42,7 +42,7 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 
 ## ✅ 你该做的
 
-- 公司视觉**只靠注入 token 实现**（`theme/fx-theme.css` 里的语义变量）
+- 公司视觉**只靠注入 token 实现**（Semantic 值来自 `tokens/source/semantic.tokens.json`，统一通过 `theme/fx-theme.css` 注入）
 - 需要新组件 → 查 shadcn 有没有现成的 → `npx shadcn add` 拉
 - 需要改某个组件样式 → 改它的 Tailwind class 或 token，不重写
 - 需要升级已有 shadcn 组件 → 先说明升级原因，只处理相关组件，对比本地源码和上游差异，保留 fx-ui token、文档契约和 `data-slot` 语义，再跑 `npm run check`
@@ -54,7 +54,8 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 - **面向用户的新建或调整文本先选 `text-{role}` 文本角色**：如 `text-page-title`、`text-body`；不得在同一元素再叠加基础 `text-{size}` / `font-*`。既有代码不做批量迁移；角色、底层映射与检查以 `docs/data/design-tokens.json#typography.roles` 为准。
 - **Agent 查询先查 contract，再读源码**：意图搜索的结果必须给出命中依据，优先返回组件与已验证页面骨架；组件实现前必须读取 `apiSource`，调试台控制项不是组件 API；场景组合先查 `fx recipe`，只能复用已验证配方；示例只能返回真实文档页/调试台来源指针，不得复制成第二份 JSX 真相源。改动前用 `fx impact` 查看已声明的联动链与检查；可扩展的同义词和排序权重留在查询实现中，不作为组件或设计规则。
 - 用户说"记住这个规则"→ **先判断类型**：设计/架构/产品决策 → `docs/DECISIONS.md`；AI 行为偏好/跨项目约定 → memory；不要两个都写
-- **任何涉及 token 的改动，按固定顺序：① 先改 `theme/fx-theme.css`（真相源）② 同步 `docs/TOKENS.md` + 相关规则/`DECISIONS.md` ③ 跑 `npm run build:tokens` 重建 manifest ④ 最后才改组件等映射处**。顺序不能反——先改组件后补 token 会漂移
+- **任何涉及 token 的改动，按固定顺序：① 先判断归属并改 `tokens/source/primitive.tokens.json` / `tokens/source/map.tokens.json`（仅维护者）或 `tokens/source/semantic.tokens.json`（评审）②跑 `npm run build:tokens` 生成 Foundation/Semantic runtime 与 contract ③同步 `docs/TOKENS.md` + 相关规则/`DECISIONS.md` ④重建 Agent/Theme/Framework 派生物 ⑤最后才改组件等映射处**。顺序不能反——先改生成 CSS 或组件再补真相源会漂移
+- **新增或迁移 FDS Token / Styling Hook 先查 `docs/TOKEN_NAMING.md` 与 `docs/data/token-naming.manifest.json`**：不得在 CSS 中先造词后补规范；`--fds-c-*` 必须走组件准入，`--fx-*` 只能按 manifest 声明的迁移阶段保留为生成别名。运行 `npm run check:token-naming` 后再进入 Token 构建链。
 - **主题先查 Theme Contract，再谈多主题**：`fx theme show` 只开放已声明的语义视觉槽；半径、字族、间距和结构性效果不是主题调用处可覆盖项。`fx theme audit` 通过前不得宣称主题契约完整；当前只有 light，不能伪称已支持 dark 或自定义主题构建。
 - **任何存在引用关系的内容，都按“真相源 → 引用项”联动处理**：源码、Markdown、manifest、网页示例、数据表谁引用谁都要查清，改动时同步更新，不留孤立副本
 
@@ -83,11 +84,11 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 
 **动手前：**
 1. **路由唯一**：这条信息/能力唯一归哪个文件？查 `docs/DOCUMENTATION.md` SSOT 表——已有归属就别另起，别和别的文档蹭。
-2. **认准真相源**：要改的是不是真相源（`theme/fx-theme.css` / `docs/data/*.json`）？是就从源头改，别从下游改。
+2. **认准真相源**：无语义物理值归 `tokens/source/primitive.tokens.json` / `map.tokens.json`，语义映射归 `tokens/source/semantic.tokens.json`，生成 CSS 不手改，结构事实归 `docs/data/*.json`；从归属源头改，别从下游改。
 3. **先找联动链**：这个内容被哪些 Markdown / 网页 / manifest / 示例 / 数据视图引用？没找清引用链前，不要只改眼前这一处。
 
 **改 token / 颜色：**
-4. 顺序铁律：**改 `theme/fx-theme.css` → 同步 `docs/TOKENS.md`+规则 → `npm run build:tokens` → 最后改组件**。顺序不能反。
+4. 顺序铁律：**按层改 `tokens/source/{primitive,map,semantic,component}.tokens.json` → `npm run build:tokens` → 同步 `docs/TOKENS.md`+规则与发布派生物 → 最后改组件**。顺序不能反。
 5. 交互态一律走色板阶梯（实心 09/08/10/05、浅色 01/02/03，仅浅色模式），禁 `color-mix`、禁 `/透明度`。
 
 **新建 / 改文档：**
@@ -112,7 +113,7 @@ use_when: "AI 首次进入 fx-ui、要写组件代码、或要改样式/token �
 0. `docs/MAP.md` — 仓库地图/产物路由表（加或找任何产物前先查它）
 1. `PROJECT.md` — 项目定位和当前进度
 2. `docs/ARCHITECTURE.md` — 三层体系：基础组件、公司组合组件、页面 Blocks / 布局规范
-3. `theme/fx-theme.css` — 公司 token（改这里要谨慎）
+3. `tokens/source/{primitive,map,semantic,component}.tokens.json` + `theme/fx-theme.css` — 四层 Token SSOT + 唯一公开装配入口；`theme/{foundation,fds-semantic,fds-components}.css` 是生成产物
 4. `docs/TOKENS.md` — token 值和用法
 5. `docs/DOCUMENTATION.md` — 文档该写去哪的 SSOT 路由表（写文档前先查这里）
 

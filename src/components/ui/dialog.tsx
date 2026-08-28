@@ -39,7 +39,7 @@ function DialogOverlay({
 }
 
 const dialogContentVariants = cva(
-  "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-(--fx-panel-gap) rounded-xl bg-popover p-(--fx-panel-padding) text-base text-popover-foreground shadow-l3 ring-1 ring-foreground/10 duration-100 outline-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+  "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-(--fds-g-spacing-panel-gap) rounded-xl bg-popover p-(--fds-g-spacing-panel-padding) text-base text-popover-foreground shadow-l3 ring-1 ring-foreground/10 duration-100 outline-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
   {
     variants: {
       size: {
@@ -79,7 +79,7 @@ function DialogContent({
             render={
               <Button
                 variant="ghost"
-                className="absolute top-(--fx-control-px-xs) right-(--fx-control-px-xs)"
+                className="absolute top-(--fds-g-spacing-control-inline-xs) right-(--fds-g-spacing-control-inline-xs)"
                 size="icon-sm"
               />
             }
@@ -98,7 +98,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="dialog-header"
-      className={cn("flex flex-col gap-(--fx-control-gap)", className)}
+      className={cn("flex flex-col gap-(--fds-g-spacing-control-gap)", className)}
       {...props}
     />
   )
@@ -116,7 +116,7 @@ function DialogFooter({
     <div
       data-slot="dialog-footer"
       className={cn(
-        "-mx-(--fx-panel-padding) -mb-(--fx-panel-padding) flex flex-col-reverse gap-(--fx-control-gap) rounded-b-xl border-t bg-muted p-(--fx-panel-padding) sm:flex-row sm:justify-end",
+        "-mx-(--fds-g-spacing-panel-padding) -mb-(--fds-g-spacing-panel-padding) flex flex-col-reverse gap-(--fds-g-spacing-control-gap) rounded-b-xl border-t bg-muted p-(--fds-g-spacing-panel-padding) sm:flex-row sm:justify-end",
         className
       )}
       {...props}

@@ -110,7 +110,7 @@ export function EditFormBlock({
   return (
     <WebsiteCardContainer data-slot="edit-form-block">
       <form onSubmit={submit} noValidate>
-        <div className="flex flex-col gap-(--fx-panel-gap) p-(--fx-panel-padding)">
+        <div className="flex flex-col gap-(--fds-g-spacing-panel-gap) p-(--fds-g-spacing-panel-padding)">
           <div>
             <h2 className="font-heading text-base font-medium">{title}</h2>
             {description ? <p className="mt-1 text-sm text-muted-foreground">{description}</p> : null}
@@ -140,7 +140,7 @@ export function EditFormBlock({
               );
             })}
           </FieldGroup>
-          <div className="flex flex-wrap justify-end gap-(--fx-control-gap)">
+          <div className="flex flex-wrap justify-end gap-(--fds-g-spacing-control-gap)">
             {onCancel ? <Button type="button" variant="outline" onClick={cancel} disabled={submitting}>{cancelLabel}</Button> : null}
             <Button type="submit" disabled={submitting}>{submitting ? <Spinner /> : null}{submitLabel}</Button>
           </div>

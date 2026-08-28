@@ -79,7 +79,7 @@ export function PageActions({
             <CopyIcon data-icon="inline-start" />
             {labels.copyPage}
           </Button>
-          <ButtonGroupSeparator className="bg-white" />
+          <ButtonGroupSeparator />
           <DropdownMenuTrigger
             render={
               <Button

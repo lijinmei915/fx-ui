@@ -67,7 +67,7 @@ function Pagination({
       </Button>
       {items.map((it, i) =>
         it === "ellipsis" ? (
-          <span key={`ellipsis-${i}`} data-slot="pagination-ellipsis" className="flex size-(--fx-control-icon-sm) items-center justify-center text-muted-foreground" aria-hidden>
+          <span key={`ellipsis-${i}`} data-slot="pagination-ellipsis" className="flex size-(--fds-g-sizing-control-icon-sm) items-center justify-center text-muted-foreground" aria-hidden>
             <MoreHorizontalIcon className="size-4" />
           </span>
         ) : (

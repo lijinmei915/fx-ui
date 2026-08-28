@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "format": "fx-ui/page-semantics",
   "policy": "Page types may define semantic roles and composition rules, but may not introduce page-local colors, spacing scales, radii, typography values, or component APIs.",
-  "foundationSource": "theme/fx-theme.css",
+  "foundationSource": "theme/foundation.css",
   "globalSemanticSource": "docs/data/design-tokens.json#semantic",
   "globalSemantics": [
     "background",

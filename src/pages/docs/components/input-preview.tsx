@@ -32,8 +32,8 @@ export function InputPreview({ values }: { values: InputPreviewValues }) {
   const visualState = values.state === "hover" || values.state === "focus" ? values.state : undefined;
   const previewStateProps = visualState ? { "data-input-state": visualState } : {};
   const tokenStyle = {
-    ...(values.surfaceToken !== "surface" ? { "--surface": `var(--${values.surfaceToken})` } : {}),
-    ...(values.borderToken !== "input" ? { "--input": `var(--${values.borderToken})` } : {}),
+    ...(values.surfaceToken !== "surface" ? { "--fds-c-input-color-background": `var(--${values.surfaceToken})` } : {}),
+    ...(values.borderToken !== "input" ? { "--fds-c-input-color-border": `var(--${values.borderToken})` } : {}),
     ...(values.placeholderToken !== "foreground-disabled" ? { "--foreground-disabled": `var(--${values.placeholderToken})` } : {})
   } as CSSProperties;
   const inputType = values.trailing === "password-toggle" && showPassword ? "text" : values.type;

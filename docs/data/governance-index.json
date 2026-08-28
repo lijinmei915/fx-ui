@@ -187,6 +187,30 @@
         "scripts/check-icons.mjs"
       ],
       "checkCommand": "npm run check:icons"
+    },
+    {
+      "id": "framework-adapters",
+      "path": "docs/data/framework-adapters.manifest.json",
+      "format": "fx-ui/framework-adapters",
+      "purpose": "登记框架适配器的真实状态、实现根、能力和新框架准入门；planned 不等于已支持。",
+      "ownerRole": "architecture-governance",
+      "consumedBy": [
+        "scripts/build-framework-core.mjs",
+        "docs/FRAMEWORK_ADAPTERS.md"
+      ],
+      "checkCommand": "npm run check:framework-core"
+    },
+    {
+      "id": "framework-core",
+      "path": "docs/data/framework-core.manifest.json",
+      "format": "fx-ui/framework-core",
+      "purpose": "从既有 Token、组件、图标、页面和 Agent UI 真相源派生框架无关语义契约。",
+      "ownerRole": "architecture-governance",
+      "consumedBy": [
+        "scripts/build-framework-core.mjs",
+        "docs/FRAMEWORK_ADAPTERS.md"
+      ],
+      "checkCommand": "npm run check:framework-core"
     }
   ]
 }

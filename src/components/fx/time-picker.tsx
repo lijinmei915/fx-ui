@@ -11,9 +11,9 @@ import { CalendarIcon, ClockIcon, XIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
 const timePickerSizeClassName = {
-  xs: "h-(--fx-control-xs-height) rounded-md px-(--fx-control-px-xs) text-xs",
-  sm: "h-(--fx-control-sm-height) rounded-md px-2 text-sm",
-  md: "h-(--fx-control-md-height) rounded-lg px-2 text-base",
+  xs: "h-(--fds-g-sizing-control-block-xs) rounded-md px-(--fds-g-spacing-control-inline-xs) text-xs",
+  sm: "h-(--fds-g-sizing-control-block-sm) rounded-md px-2 text-sm",
+  md: "h-(--fds-g-sizing-control-block-md) rounded-lg px-2 text-base",
 } as const
 
 const timePickerIconClassName = {
@@ -320,7 +320,7 @@ function TimePicker({
           )}
         >
           {range ? (
-            <span className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-(--fx-control-gap)">
+            <span className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-(--fds-g-spacing-control-gap)">
               <span className="truncate">{selectedRangeValue.start || startPlaceholder}</span>
               <span className="text-muted-foreground">-</span>
               <span className="truncate">{selectedRangeValue.end || endPlaceholder}</span>
@@ -818,8 +818,8 @@ function DateTimePicker({
             <Separator orientation="vertical" className="hidden h-auto md:block" />
             <div
               data-slot="date-time-picker-time-panel"
-              className="flex min-w-48 min-h-0 flex-col gap-2 overflow-hidden p-2 md:h-[calc(var(--fx-date-time-calendar-height)+3px)]"
-              style={calendarHeight ? { "--fx-date-time-calendar-height": `${calendarHeight}px` } as React.CSSProperties : undefined}
+              className="flex min-w-48 min-h-0 flex-col gap-2 overflow-hidden p-2 md:h-[calc(var(--date-time-picker-calendar-height)+3px)]"
+              style={calendarHeight ? { "--date-time-picker-calendar-height": `${calendarHeight}px` } as React.CSSProperties : undefined}
             >
               {range ? (
                 <div className="flex min-h-0 flex-1 flex-col gap-2">

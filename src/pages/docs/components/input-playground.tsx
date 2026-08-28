@@ -7,7 +7,7 @@ import { InputPreview } from "@/pages/docs/components/input-preview"
 const componentPlaygroundsManifest = JSON.parse(componentPlaygroundsManifestRaw) as ComponentPlaygroundsManifest
 const designTokensManifest = JSON.parse(designTokensManifestRaw) as { semantic: { name: string; value: string }[] }
 const semanticTokenPaletteNames = new Map(designTokensManifest.semantic.map((token) => {
-  const paletteReference = token.value.match(/var\(--fx-([^)]+)\)/)?.[1] ?? token.name.replace(/^--/, "")
+  const paletteReference = token.value.match(/var\(--fds-g-color-([^)]+)\)/)?.[1] ?? token.name.replace(/^--fds-g-color-/, "")
   return [token.name.replace(/^--/, ""), paletteReference]
 }))
 
@@ -47,8 +47,8 @@ ${leading}  ${inputLine}${trailing}
   ${fieldFeedback}
 </Field>` : control;
   const tokenOverrides = [
-    values.surfaceToken !== "surface" ? `  "--surface": "var(--${values.surfaceToken})",` : "",
-    values.borderToken !== "input" ? `  "--input": "var(--${values.borderToken})",` : "",
+    values.surfaceToken !== "surface" ? `  "--fds-c-input-color-background": "var(--${values.surfaceToken})",` : "",
+    values.borderToken !== "input" ? `  "--fds-c-input-color-border": "var(--${values.borderToken})",` : "",
     values.placeholderToken !== "foreground-disabled" ? `  "--foreground-disabled": "var(--${values.placeholderToken})",` : "",
   ].filter(Boolean);
 

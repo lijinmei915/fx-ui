@@ -124,10 +124,10 @@ assertIncludes(buttonDocs, variants, "Button Markdown variants", errors)
 assertIncludes(
   buttonSource,
   [
-    'xs: "h-(--fx-control-xs-height) rounded-md px-(--fx-control-px-xs) text-xs',
-    'sm: "h-(--fx-control-sm-height) rounded-md px-(--fx-control-px-sm) text-[length:var(--fx-text-control-sm)] leading-[var(--fx-text-control-sm--line-height)]',
-    'md: "h-(--fx-control-md-height) rounded-lg px-(--fx-control-px-md) text-sm',
-    'lg: "h-(--fx-control-lg-height) gap-(--fx-control-gap) rounded-lg px-(--fx-control-px-lg) text-base',
+    'xs: "h-(--fds-g-sizing-control-block-xs) rounded-md px-(--fds-g-spacing-control-inline-xs) text-xs',
+    'sm: "h-(--fds-g-sizing-control-block-sm) rounded-md px-(--fds-g-spacing-control-inline-sm) text-[length:var(--fds-g-font-size-control-sm)] leading-[var(--fds-g-font-line-height-control-sm)]',
+    'md: "h-(--fds-g-sizing-control-block-md) rounded-lg px-(--fds-g-spacing-control-inline-md) text-sm',
+    'lg: "h-(--fds-g-sizing-control-block-lg) gap-(--fds-g-spacing-control-gap) rounded-lg px-(--fds-g-spacing-control-inline-lg) text-base',
   ],
   "Button size typography/radius contract",
   errors

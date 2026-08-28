@@ -157,12 +157,12 @@ export function IconPage({ actions, lang }: { actions: ReactNode; lang: IconPage
           title={lang === "en" ? "Composition examples" : "组合示例"}
           description={lang === "en" ? "These are calling-side structures, not Icon props. Use Button or Link whenever the icon performs an action." : "以下是调用侧结构，不是 Icon 属性。图标承担操作时，必须交给 Button 或 Link。"}
         />
-        <DocSurfaceCard className="grid gap-(--fx-panel-gap) p-(--fx-panel-padding) md:grid-cols-3">
-          <div className="flex items-center gap-(--fx-control-gap-tight) text-muted-foreground">
+        <DocSurfaceCard className="grid gap-(--fds-g-spacing-panel-gap) p-(--fds-g-spacing-panel-padding) md:grid-cols-3">
+          <div className="flex items-center gap-(--fds-g-spacing-control-gap-tight) text-muted-foreground">
             <SelectedIcon className="size-5" aria-hidden="true" />
             <span>{lang === "en" ? "Icon with text" : "图标配文字"}</span>
           </div>
-          <div className="flex items-center gap-(--fx-control-gap-tight)">
+          <div className="flex items-center gap-(--fds-g-spacing-control-gap-tight)">
             <span className="flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
               <SelectedIcon className="size-5" aria-hidden="true" />
             </span>

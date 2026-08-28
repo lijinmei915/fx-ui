@@ -1,0 +1,472 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/theme-preset-contract",
+  "contractVersion": "1.12.0",
+  "truthSource": "docs/data/theme-presets.manifest.json",
+  "humanDoc": "docs/TOKENS.md#主题生成合同",
+  "ownership": {
+    "foundation": "foundation-maintainer-only",
+    "presetContract": "design-system-maintainers",
+    "pageSemantics": "approved-collaborators",
+    "frameworkAdapters": "read-only-consumers"
+  },
+  "publication": {
+    "runtimePreviewModes": ["light", "dark"],
+    "publishedModes": ["light", "dark"],
+    "status": "published",
+    "releaseChannel": "stable",
+    "versioning": "semver",
+    "qualityEvidence": "docs/data/theme-audit.manifest.json",
+    "note": "Both modes are generated from the same contract and must pass the governed browser audit before release."
+  },
+  "defaults": {
+    "mode": "light",
+    "primaryColor": "amber",
+    "customColorHex": "#3b82f6",
+    "fontFamily": "sans",
+    "textScale": "standard",
+    "borderRadius": "md",
+    "shadowLevel": "medium",
+    "animationStyle": "smooth"
+  },
+  "dimensions": {
+    "primaryColor": {
+      "owner": "foundation-reference",
+      "customInput": { "enabled": true, "format": "hex6", "normalization": "vivid-map-v2" },
+      "options": [
+        { "id": "indigo", "label": "Indigo", "foundationRef": "--fds-g-color-seed-indigo" },
+        { "id": "violet", "label": "Violet", "foundationRef": "--fds-g-color-seed-purple" },
+        { "id": "emerald", "label": "Emerald", "foundationRef": "--fds-g-color-seed-green" },
+        { "id": "rose", "label": "Rose", "foundationRef": "--fds-g-color-seed-red" },
+        { "id": "amber", "label": "Amber", "foundationRef": "--fds-g-color-seed-orange" },
+        { "id": "sky", "label": "Sky", "foundationRef": "--fds-g-color-seed-light-blue" },
+        { "id": "slate", "label": "Slate", "foundationRef": "--fds-g-color-seed-slate" }
+      ]
+    },
+    "fontFamily": {
+      "owner": "foundation-reference",
+      "options": [
+        { "id": "sans", "label": "系统默认", "foundationRef": "--fds-g-font-family-sans" },
+        { "id": "serif", "label": "书面雅致", "foundationRef": "--fds-g-font-family-serif" },
+        { "id": "mono", "label": "代码极客", "foundationRef": "--fds-g-font-family-mono" },
+        { "id": "geometric", "label": "现代几何", "foundationRef": "--fds-g-font-family-geometric" }
+      ]
+    },
+    "textScale": {
+      "owner": "foundation-reference",
+      "options": [
+        { "id": "compact", "label": "紧凑", "desc": "12px 基准" },
+        { "id": "standard", "label": "标准", "desc": "14px 基准" },
+        { "id": "spacious", "label": "宽松", "desc": "16px 基准" }
+      ]
+    },
+    "borderRadius": {
+      "owner": "foundation-reference",
+      "options": [
+        { "id": "none", "label": "无", "foundationRef": "--fds-g-radius-0" },
+        { "id": "sm", "label": "小", "foundationRef": "--fds-g-radius-6" },
+        { "id": "md", "label": "中", "foundationRef": "--fds-g-radius-8" },
+        { "id": "lg", "label": "大", "foundationRef": "--fds-g-radius-12" },
+        { "id": "full", "label": "全圆", "foundationRef": "--fds-g-radius-full" }
+      ]
+    },
+    "shadowLevel": {
+      "owner": "foundation-reference",
+      "options": [
+        { "id": "none", "label": "无", "desc": "平面" },
+        { "id": "low", "label": "低", "desc": "贴面" },
+        { "id": "medium", "label": "中", "desc": "浮起" },
+        { "id": "high", "label": "高", "desc": "悬浮" }
+      ]
+    },
+    "animationStyle": {
+      "owner": "foundation-reference",
+      "output": "--fds-g-motion-duration-theme",
+      "options": [
+        { "id": "none", "label": "无动效", "desc": "极速", "foundationRef": "--fds-g-motion-duration-0" },
+        { "id": "fast", "label": "快速", "desc": "利落", "foundationRef": "--fds-g-motion-duration-100" },
+        { "id": "smooth", "label": "平滑", "desc": "经典", "foundationRef": "--fds-g-motion-duration-200" },
+        { "id": "playful", "label": "弹性", "desc": "灵动", "foundationRef": "--fds-g-motion-duration-300" }
+      ]
+    }
+  },
+  "profiles": {
+    "textScale": {
+      "compact": {
+        "--fds-g-font-size-xs": "--fds-g-font-size-12", "--fds-g-font-line-height-xs": "--fds-g-font-line-height-18",
+        "--fds-g-font-size-control-sm": "--fds-g-font-size-12", "--fds-g-font-line-height-control-sm": "--fds-g-font-line-height-18",
+        "--fds-g-font-size-sm": "--fds-g-font-size-12", "--fds-g-font-line-height-sm": "--fds-g-font-line-height-18",
+        "--fds-g-font-size-base": "--fds-g-font-size-14", "--fds-g-font-line-height-base": "--fds-g-font-line-height-20",
+        "--fds-g-font-size-lg": "--fds-g-font-size-16", "--fds-g-font-line-height-lg": "--fds-g-font-line-height-24",
+        "--fds-g-font-size-xl": "--fds-g-font-size-18", "--fds-g-font-line-height-xl": "--fds-g-font-line-height-28",
+        "--fds-g-font-size-2xl": "--fds-g-font-size-20", "--fds-g-font-line-height-2xl": "--fds-g-font-line-height-28",
+        "--fds-g-font-size-3xl": "--fds-g-font-size-24", "--fds-g-font-line-height-3xl": "--fds-g-font-line-height-32",
+        "--fds-g-font-size-4xl": "--fds-g-font-size-30", "--fds-g-font-line-height-4xl": "--fds-g-font-line-height-36",
+        "--fds-g-sizing-control-block-xs": "--fds-g-sizing-22", "--fds-g-sizing-control-block-sm": "--fds-g-sizing-26", "--fds-g-sizing-control-block-md": "--fds-g-sizing-30", "--fds-g-sizing-control-block-lg": "--fds-g-sizing-34",
+        "--fds-g-sizing-control-icon-xs": "--fds-g-sizing-22", "--fds-g-sizing-control-icon-sm": "--fds-g-sizing-26", "--fds-g-sizing-control-icon-md": "--fds-g-sizing-30", "--fds-g-sizing-control-icon-lg": "--fds-g-sizing-34",
+        "--fds-g-spacing-control-inline-xs": "--fds-g-spacing-6", "--fds-g-spacing-control-inline-sm": "--fds-g-spacing-8", "--fds-g-spacing-control-inline-md": "--fds-g-spacing-10", "--fds-g-spacing-control-inline-lg": "--fds-g-spacing-14",
+        "--fds-g-spacing-control-gap-tight": "--fds-g-spacing-2", "--fds-g-spacing-control-gap": "--fds-g-spacing-4",
+        "--fds-g-spacing-panel-gap": "--fds-g-spacing-10", "--fds-g-spacing-panel-padding": "--fds-g-spacing-10",
+        "--fds-g-font-size-menu": "--fds-g-font-size-14", "--fds-g-font-line-height-menu": "--fds-g-font-line-height-20",
+        "--fds-g-sizing-navigation-item-block": "--fds-g-sizing-28", "--fds-g-sizing-navigation-item-block-sm": "--fds-g-sizing-24", "--fds-g-sizing-navigation-topbar-block": "--fds-g-sizing-48", "--fds-g-sizing-navigation-search-block": "--fds-g-sizing-30"
+      },
+      "standard": {
+        "--fds-g-font-size-xs": "--fds-g-font-size-12", "--fds-g-font-line-height-xs": "--fds-g-font-line-height-18",
+        "--fds-g-font-size-control-sm": "--fds-g-font-size-13", "--fds-g-font-line-height-control-sm": "--fds-g-font-line-height-18",
+        "--fds-g-font-size-sm": "--fds-g-font-size-14", "--fds-g-font-line-height-sm": "--fds-g-font-line-height-20",
+        "--fds-g-font-size-base": "--fds-g-font-size-16", "--fds-g-font-line-height-base": "--fds-g-font-line-height-24",
+        "--fds-g-font-size-lg": "--fds-g-font-size-18", "--fds-g-font-line-height-lg": "--fds-g-font-line-height-28",
+        "--fds-g-font-size-xl": "--fds-g-font-size-20", "--fds-g-font-line-height-xl": "--fds-g-font-line-height-30",
+        "--fds-g-font-size-2xl": "--fds-g-font-size-24", "--fds-g-font-line-height-2xl": "--fds-g-font-line-height-32",
+        "--fds-g-font-size-3xl": "--fds-g-font-size-30", "--fds-g-font-line-height-3xl": "--fds-g-font-line-height-38",
+        "--fds-g-font-size-4xl": "--fds-g-font-size-36", "--fds-g-font-line-height-4xl": "--fds-g-font-line-height-44",
+        "--fds-g-sizing-control-block-xs": "--fds-g-sizing-24", "--fds-g-sizing-control-block-sm": "--fds-g-sizing-28", "--fds-g-sizing-control-block-md": "--fds-g-sizing-32", "--fds-g-sizing-control-block-lg": "--fds-g-sizing-36",
+        "--fds-g-sizing-control-icon-xs": "--fds-g-sizing-24", "--fds-g-sizing-control-icon-sm": "--fds-g-sizing-28", "--fds-g-sizing-control-icon-md": "--fds-g-sizing-32", "--fds-g-sizing-control-icon-lg": "--fds-g-sizing-36",
+        "--fds-g-spacing-control-inline-xs": "--fds-g-spacing-8", "--fds-g-spacing-control-inline-sm": "--fds-g-spacing-10", "--fds-g-spacing-control-inline-md": "--fds-g-spacing-12", "--fds-g-spacing-control-inline-lg": "--fds-g-spacing-16",
+        "--fds-g-spacing-control-gap-tight": "--fds-g-spacing-4", "--fds-g-spacing-control-gap": "--fds-g-spacing-6",
+        "--fds-g-spacing-panel-gap": "--fds-g-spacing-12", "--fds-g-spacing-panel-padding": "--fds-g-spacing-12",
+        "--fds-g-font-size-menu": "--fds-g-font-size-14", "--fds-g-font-line-height-menu": "--fds-g-font-line-height-20",
+        "--fds-g-sizing-navigation-item-block": "--fds-g-sizing-32", "--fds-g-sizing-navigation-item-block-sm": "--fds-g-sizing-28", "--fds-g-sizing-navigation-topbar-block": "--fds-g-sizing-56", "--fds-g-sizing-navigation-search-block": "--fds-g-sizing-32"
+      },
+      "spacious": {
+        "--fds-g-font-size-xs": "--fds-g-font-size-14", "--fds-g-font-line-height-xs": "--fds-g-font-line-height-20",
+        "--fds-g-font-size-control-sm": "--fds-g-font-size-15", "--fds-g-font-line-height-control-sm": "--fds-g-font-line-height-22",
+        "--fds-g-font-size-sm": "--fds-g-font-size-16", "--fds-g-font-line-height-sm": "--fds-g-font-line-height-24",
+        "--fds-g-font-size-base": "--fds-g-font-size-18", "--fds-g-font-line-height-base": "--fds-g-font-line-height-28",
+        "--fds-g-font-size-lg": "--fds-g-font-size-20", "--fds-g-font-line-height-lg": "--fds-g-font-line-height-30",
+        "--fds-g-font-size-xl": "--fds-g-font-size-22", "--fds-g-font-line-height-xl": "--fds-g-font-line-height-32",
+        "--fds-g-font-size-2xl": "--fds-g-font-size-28", "--fds-g-font-line-height-2xl": "--fds-g-font-line-height-36",
+        "--fds-g-font-size-3xl": "--fds-g-font-size-36", "--fds-g-font-line-height-3xl": "--fds-g-font-line-height-44",
+        "--fds-g-font-size-4xl": "--fds-g-font-size-44", "--fds-g-font-line-height-4xl": "--fds-g-font-line-height-52",
+        "--fds-g-sizing-control-block-xs": "--fds-g-sizing-26", "--fds-g-sizing-control-block-sm": "--fds-g-sizing-30", "--fds-g-sizing-control-block-md": "--fds-g-sizing-36", "--fds-g-sizing-control-block-lg": "--fds-g-sizing-40",
+        "--fds-g-sizing-control-icon-xs": "--fds-g-sizing-26", "--fds-g-sizing-control-icon-sm": "--fds-g-sizing-30", "--fds-g-sizing-control-icon-md": "--fds-g-sizing-36", "--fds-g-sizing-control-icon-lg": "--fds-g-sizing-40",
+        "--fds-g-spacing-control-inline-xs": "--fds-g-spacing-10", "--fds-g-spacing-control-inline-sm": "--fds-g-spacing-12", "--fds-g-spacing-control-inline-md": "--fds-g-spacing-14", "--fds-g-spacing-control-inline-lg": "--fds-g-spacing-18",
+        "--fds-g-spacing-control-gap-tight": "--fds-g-spacing-6", "--fds-g-spacing-control-gap": "--fds-g-spacing-8",
+        "--fds-g-spacing-panel-gap": "--fds-g-spacing-14", "--fds-g-spacing-panel-padding": "--fds-g-spacing-14",
+        "--fds-g-font-size-menu": "--fds-g-font-size-16", "--fds-g-font-line-height-menu": "--fds-g-font-line-height-24",
+        "--fds-g-sizing-navigation-item-block": "--fds-g-sizing-36", "--fds-g-sizing-navigation-item-block-sm": "--fds-g-sizing-32", "--fds-g-sizing-navigation-topbar-block": "--fds-g-sizing-64", "--fds-g-sizing-navigation-search-block": "--fds-g-sizing-36"
+      }
+    },
+    "shadowLevel": {
+      "none": { "--fds-g-color-shadow-default": "transparent", "--fds-g-color-shadow-soft": "transparent", "--fds-g-color-shadow-faint": "transparent", "--fds-g-shadow-elevation-1": "none", "--fds-g-shadow-elevation-2": "none", "--fds-g-shadow-elevation-3": "none", "--fds-g-shadow-elevation-1-up": "none" },
+      "low": { "--fds-g-color-shadow-default": "oklch(from var(--fds-g-color-neutral-base-200) l c h / var(--fds-g-opacity-8))", "--fds-g-color-shadow-soft": "oklch(from var(--fds-g-color-neutral-base-200) l c h / var(--fds-g-opacity-5))", "--fds-g-color-shadow-faint": "oklch(from var(--fds-g-color-neutral-base-200) l c h / var(--fds-g-opacity-3))" },
+      "medium": { "--fds-g-color-shadow-default": "oklch(from var(--fds-g-color-neutral-base-200) l c h / var(--fds-g-opacity-18))", "--fds-g-color-shadow-soft": "oklch(from var(--fds-g-color-neutral-base-200) l c h / var(--fds-g-opacity-10))", "--fds-g-color-shadow-faint": "oklch(from var(--fds-g-color-neutral-base-200) l c h / var(--fds-g-opacity-5))" },
+      "high": { "--fds-g-color-shadow-default": "oklch(from var(--fds-g-color-neutral-base-200) l c h / var(--fds-g-opacity-22))", "--fds-g-color-shadow-soft": "oklch(from var(--fds-g-color-neutral-base-200) l c h / var(--fds-g-opacity-12))", "--fds-g-color-shadow-faint": "oklch(from var(--fds-g-color-neutral-base-200) l c h / var(--fds-g-opacity-6))" }
+    }
+  },
+  "algorithm": {
+    "id": "fx-theme-derivation",
+    "version": 5,
+    "colorSpace": "oklch",
+    "brandNormalization": "vivid-map-v2",
+    "darkPalette": {
+      "truthSource": "tokens/source/map.tokens.json#darkPalette",
+      "anchorLightness": 0.18,
+      "seedStep": 90,
+      "direction": "dark-anchor-to-seed-to-highlight",
+      "intent": "Generate a governed 12-step dark profile from the same seed without changing the light Base palette."
+    },
+    "brandScale": {
+      "01": { "lightness": 0.97, "chromaMultiplier": 0.06 },
+      "02": { "lightness": 0.94, "chromaMultiplier": 0.1 },
+      "03": { "lightness": 0.9, "chromaMultiplier": 0.18 },
+      "04": { "lightness": 0.84, "chromaMultiplier": 0.3 },
+      "05": { "lightness": 0.76, "chromaMultiplier": 0.45 },
+      "08": { "lightnessToWhite": 0.12, "chromaMultiplier": 0.94 },
+      "09": { "source": "brand-vivid" },
+      "10": { "lightnessMultiplier": 0.92, "chromaMultiplier": 0.95 }
+    }
+  },
+  "runtimeOutputs": {
+    "adapterWrites": ["--fds-g-color-seed-brand"],
+    "resolverWrites": ["--fds-g-color-foreground-primary", "--fds-g-color-foreground-destructive", "--fds-g-color-foreground-success", "--fds-g-color-foreground-warning", "--fds-g-color-foreground-info"],
+    "cssDerivedOutputs": ["--fds-g-color-brand-base-10", "--fds-g-color-brand-base-20", "--fds-g-color-brand-base-30", "--fds-g-color-brand-base-40", "--fds-g-color-brand-base-50", "--fds-g-color-brand-base-80", "--fds-g-color-brand-base-90", "--fds-g-color-brand-base-100"],
+    "semanticConsumers": ["--fds-g-color-brand-identity", "--primary", "--color-primary", "--fx-primary-hover", "--fx-primary-active", "--fx-primary-disabled", "--fx-primary-light", "--fx-primary-light-hover", "--fx-primary-light-active", "--ring"]
+  },
+  "interactionLadder": {
+    "modes": ["light", "dark"],
+    "note": "Solid actions use the canonical Base 90/80/100 ladder and Base 50 for disabled. Light soft surfaces use Base 10/20/30; dark soft surfaces use Dark 20/30/40. Link text uses Base 90/80/100 in light and Dark 110/120/100 in dark.",
+    "solid": { "default": "09", "hover": "08", "active": "10", "disabled": "05" },
+    "soft": { "default": "01", "hover": "02", "active": "03" },
+    "colors": [
+      { "name": "primary", "scale": "brand", "default": "--primary", "hover": "--fx-primary-hover", "active": "--fx-primary-active", "disabled": "--fx-primary-disabled" },
+      { "name": "success", "scale": "green", "default": "--success", "hover": "--success-hover", "active": "--success-active", "disabled": "--success-disabled" },
+      { "name": "warning", "scale": "amber", "default": "--warning", "hover": "--warning-hover", "active": "--warning-active", "disabled": "--warning-disabled" },
+      { "name": "destructive", "scale": "red", "default": "--destructive", "hover": "--destructive-hover", "active": "--destructive-active", "disabled": "--destructive-disabled" },
+      { "name": "info", "scale": "blue", "default": "--info", "hover": "--info-hover", "active": "--info-active", "disabled": "--info-disabled" },
+      { "name": "link", "scale": "blue", "default": "--link", "hover": "--link-hover", "active": "--link-active", "steps": { "default": "09", "hover": "08", "active": "10" } }
+    ]
+  },
+  "qualityGates": {
+    "colorResolution": "chromium-computed-style",
+    "contrastMethod": "wcag2-relative-luminance",
+    "normalTextMinimum": 4.5,
+    "nonTextMinimum": 3,
+    "stateDeltaEOklabMinimum": 0.015,
+    "disabledStateDeltaEOklabMinimum": 0.03,
+    "disabledAdjacentContrastMinimum": 1.5,
+    "solidForeground": {
+      "strategy": "prefer-light-for-entire-state-group-with-dark-fallback",
+      "minimumContrast": 2,
+      "preferred": "--fds-g-color-neutral-base-10",
+      "fallback": "--fds-g-color-neutral-base-200",
+      "groups": [
+        { "id": "primary", "foreground": "--fds-g-color-foreground-primary", "backgrounds": ["--fds-g-color-action-primary", "--fds-g-color-action-primary-hover", "--fds-g-color-action-primary-active"] },
+        { "id": "destructive", "foreground": "--fds-g-color-foreground-destructive", "backgrounds": ["--fds-g-color-action-destructive", "--fds-g-color-action-destructive-hover", "--fds-g-color-action-destructive-active"] },
+        { "id": "success", "foreground": "--fds-g-color-foreground-success", "backgrounds": ["--fds-g-color-status-success", "--fds-g-color-status-success-hover", "--fds-g-color-status-success-active"] },
+        { "id": "warning", "foreground": "--fds-g-color-foreground-warning", "backgrounds": ["--fds-g-color-status-warning", "--fds-g-color-status-warning-hover", "--fds-g-color-status-warning-active"], "policy": "fixed-preferred" },
+        { "id": "info", "foreground": "--fds-g-color-foreground-info", "backgrounds": ["--fds-g-color-status-info", "--fds-g-color-status-info-hover", "--fds-g-color-status-info-active"] }
+      ]
+    },
+    "auditedModes": ["light", "dark"],
+    "customSeedSamples": ["#000000", "#FFFFFF", "#00FF00", "#FFFF00", "#0000FF", "#FF00FF", "#00FFFF"],
+    "darkPalette": {
+      "profile": "dark",
+      "families": ["orange", "deep-orange", "amber", "yellow", "lime", "yellow-green", "green", "teal", "cyan", "light-blue", "blue", "indigo", "purple", "pink", "magenta", "red"],
+      "steps": [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120],
+      "seedStep": 90,
+      "minimumAdjacentDeltaEOklab": 0.025,
+      "requireIncreasingLuminance": true,
+      "colorResolution": "chromium-computed-style"
+    },
+    "semanticPairs": [
+      { "id": "canvas", "background": "--fds-g-color-surface-page", "foreground": "--fds-g-color-text-primary" },
+      { "id": "secondary-text-on-canvas", "background": "--fds-g-color-surface-page", "foreground": "--fds-g-color-text-secondary" },
+      { "id": "card", "background": "--fds-g-color-surface-raised", "foreground": "--fds-g-color-text-primary" },
+      { "id": "popover", "background": "--fds-g-color-surface-floating", "foreground": "--fds-g-color-text-primary" },
+      { "id": "secondary", "background": "--fds-g-color-action-secondary", "foreground": "--fds-g-color-text-primary" },
+      { "id": "muted", "background": "--fds-g-color-action-muted", "foreground": "--fds-g-color-text-muted" },
+      { "id": "accent", "background": "--fds-g-color-action-accent", "foreground": "--fds-g-color-text-primary" },
+      { "id": "sidebar", "background": "--fds-g-color-navigation-surface", "foreground": "--fds-g-color-text-primary" }
+    ],
+    "nonTextPairs": [
+      { "id": "icon-muted-on-page", "foreground": "--fds-g-color-icon-muted", "background": "--fds-g-color-surface-page", "minimum": 3, "purpose": "secondary-meaningful-icon" }
+    ],
+    "candidateNonTextPairs": [
+      { "id": "border-strong-on-page", "foreground": "--fds-g-color-border-strong", "background": "--fds-g-color-surface-page", "minimum": 3, "purpose": "strong-structural-boundary" },
+      { "id": "border-interactive-on-control", "foreground": "--fds-g-color-border-interactive", "background": "--fds-g-color-surface-control", "minimum": 3, "purpose": "interactive-control-boundary" },
+      { "id": "ring-focus-on-page", "foreground": "--fds-g-color-ring-focus", "background": "--fds-g-color-surface-page", "minimum": 3, "purpose": "focus-indicator" },
+      { "id": "icon-primary-on-page", "foreground": "--fds-g-color-icon-primary", "background": "--fds-g-color-surface-page", "minimum": 3, "purpose": "primary-meaningful-icon" }
+    ],
+    "candidateTextStateGroups": [
+      {
+        "id": "link-on-page",
+        "background": "--fds-g-color-surface-page",
+        "states": ["--fds-g-color-link", "--fds-g-color-link-hover", "--fds-g-color-link-active"],
+        "minimum": 4.5,
+        "purpose": "inline-link-text"
+      }
+    ],
+    "disabledBehaviorEvidence": [
+      {
+        "id": "button-native-disabled",
+        "source": "tests/component-behavior.spec.ts",
+        "testTitle": "state: Button disabled loading",
+        "requiredAssertions": ["await expect(previewButton).toBeDisabled()"]
+      },
+      {
+        "id": "input-native-disabled",
+        "source": "tests/component-behavior.spec.ts",
+        "testTitle": "state: Input disabled error",
+        "requiredAssertions": ["await expect(input).toBeDisabled()"]
+      },
+      {
+        "id": "select-native-disabled",
+        "source": "tests/component-behavior.spec.ts",
+        "testTitle": "state: Select search, error, and disabled",
+        "requiredAssertions": [".toBeDisabled()"]
+      },
+      {
+        "id": "link-semantic-disabled",
+        "source": "tests/component-behavior.spec.ts",
+        "testTitle": "state: Link real, disabled, and icon semantics",
+        "requiredAssertions": [
+          "not.toHaveAttribute(\"href\")",
+          "toHaveAttribute(\"aria-disabled\", \"true\")",
+          "toHaveAttribute(\"tabindex\", \"-1\")",
+          "not.toHaveAttribute(\"data-activated\")"
+        ]
+      },
+      {
+        "id": "tabs-native-disabled-navigation",
+        "source": "tests/component-behavior.spec.ts",
+        "testTitle": "state: Tabs vertical keyboard navigation keeps disabled tabs inactive",
+        "requiredAssertions": [
+          "await expect(notifications).toBeDisabled()",
+          "await expect(notifications).toHaveAttribute(\"aria-selected\", \"false\")"
+        ]
+      }
+    ],
+    "candidateDisabledGroups": [
+      {
+        "id": "control-surface-disabled",
+        "enabled": "--fds-g-color-surface-control",
+        "disabled": "--fds-g-color-surface-control-disabled",
+        "background": "--fds-g-color-surface-page",
+        "purpose": "disabled-control-surface",
+        "behaviorEvidenceRefs": ["input-native-disabled", "select-native-disabled"],
+        "runtimeConsumerEvidence": [
+          { "source": "src/components/ui/input.tsx", "contains": "disabled:bg-muted" },
+          { "source": "src/components/ui/select.tsx", "contains": "disabled:bg-surface-disabled" }
+        ]
+      },
+      {
+        "id": "control-text-disabled",
+        "enabled": "--fds-g-color-text-primary",
+        "disabled": "--fds-g-color-text-disabled",
+        "background": "--fds-g-color-surface-control-disabled",
+        "purpose": "disabled-control-text-and-icon",
+        "behaviorEvidenceRefs": ["button-native-disabled", "input-native-disabled", "select-native-disabled", "tabs-native-disabled-navigation"],
+        "runtimeConsumerEvidence": [
+          { "source": "src/components/ui/button.tsx", "contains": "disabled:text-foreground-disabled" },
+          { "source": "src/components/ui/tabs.tsx", "contains": "disabled:text-foreground-disabled" }
+        ]
+      },
+      {
+        "id": "primary-action-disabled",
+        "enabled": "--fds-g-color-action-primary",
+        "disabled": "--fds-g-color-action-primary-disabled",
+        "background": "--fds-g-color-surface-page",
+        "purpose": "disabled-primary-action",
+        "behaviorEvidenceRefs": ["button-native-disabled"],
+        "runtimeConsumerEvidence": [
+          { "source": "src/components/ui/switch.tsx", "contains": "data-disabled:data-checked:bg-primary-disabled" }
+        ]
+      },
+      {
+        "id": "destructive-action-disabled",
+        "enabled": "--fds-g-color-action-destructive",
+        "disabled": "--fds-g-color-action-destructive-disabled",
+        "background": "--fds-g-color-surface-page",
+        "purpose": "disabled-destructive-action",
+        "behaviorEvidenceRefs": ["button-native-disabled"],
+        "runtimeConsumerEvidence": [
+          { "source": "src/components/ui/button.tsx", "contains": "disabled:bg-destructive-disabled" }
+        ]
+      },
+      {
+        "id": "link-disabled",
+        "enabled": "--fds-g-color-link",
+        "disabled": "--fds-g-color-link-disabled",
+        "background": "--fds-g-color-surface-page",
+        "purpose": "disabled-inline-link",
+        "behaviorEvidenceRefs": ["link-semantic-disabled"],
+        "runtimeConsumerEvidence": []
+      },
+      {
+        "id": "success-status-disabled",
+        "enabled": "--fds-g-color-status-success",
+        "disabled": "--fds-g-color-status-success-disabled",
+        "background": "--fds-g-color-surface-page",
+        "purpose": "disabled-success-action",
+        "behaviorEvidenceRefs": [],
+        "runtimeConsumerEvidence": []
+      },
+      {
+        "id": "warning-status-disabled",
+        "enabled": "--fds-g-color-status-warning",
+        "disabled": "--fds-g-color-status-warning-disabled",
+        "background": "--fds-g-color-surface-page",
+        "purpose": "disabled-warning-action",
+        "behaviorEvidenceRefs": [],
+        "runtimeConsumerEvidence": []
+      },
+      {
+        "id": "info-status-disabled",
+        "enabled": "--fds-g-color-status-info",
+        "disabled": "--fds-g-color-status-info-disabled",
+        "background": "--fds-g-color-surface-page",
+        "purpose": "disabled-info-action",
+        "behaviorEvidenceRefs": ["button-native-disabled"],
+        "runtimeConsumerEvidence": [
+          { "source": "src/components/ui/button.tsx", "contains": "disabled:text-info-disabled" }
+        ]
+      }
+    ],
+    "shadowVisualEvidence": [
+      {
+        "id": "elevation-1-card",
+        "source": "tests/visual.spec.ts",
+        "testTitle": "网站卡片容器",
+        "requiredAssertions": ["toHaveScreenshot(\"website-card-container.png\")"],
+        "screenshot": "website-card-container.png"
+      },
+      {
+        "id": "elevation-2-sheet",
+        "source": "tests/visual.spec.ts",
+        "testTitle": "Dialog / Sheet 成熟尺寸矩阵",
+        "requiredAssertions": ["toHaveScreenshot(\"sheet-right-lg.png\")"],
+        "screenshot": "sheet-right-lg.png"
+      },
+      {
+        "id": "elevation-3-dialog",
+        "source": "tests/visual.spec.ts",
+        "testTitle": "Dialog / Sheet 成熟尺寸矩阵",
+        "requiredAssertions": ["\"dialog-confirm-sm.png\""],
+        "screenshot": "dialog-confirm-sm.png"
+      }
+    ],
+    "candidateShadowSystem": {
+      "levels": ["none", "low", "medium", "high"],
+      "colorHooks": [
+        "--fds-g-color-shadow-default",
+        "--fds-g-color-shadow-soft",
+        "--fds-g-color-shadow-faint"
+      ],
+      "colorAlphaOrder": ["--fds-g-color-shadow-default", "--fds-g-color-shadow-soft", "--fds-g-color-shadow-faint"],
+      "elevations": [
+        {
+          "id": "elevation-1",
+          "hook": "--fds-g-shadow-elevation-1",
+          "layerCount": 2,
+          "direction": "down",
+          "runtimeConsumerEvidence": [
+            { "source": "src/components/ui/popover.tsx", "contains": "shadow-l1" }
+          ],
+          "visualEvidenceRefs": ["elevation-1-card"]
+        },
+        {
+          "id": "elevation-2",
+          "hook": "--fds-g-shadow-elevation-2",
+          "layerCount": 3,
+          "direction": "down",
+          "runtimeConsumerEvidence": [
+            { "source": "src/components/ui/sheet.tsx", "contains": "shadow-l2" }
+          ],
+          "visualEvidenceRefs": ["elevation-2-sheet"]
+        },
+        {
+          "id": "elevation-3",
+          "hook": "--fds-g-shadow-elevation-3",
+          "layerCount": 3,
+          "direction": "down",
+          "runtimeConsumerEvidence": [
+            { "source": "src/components/ui/dialog.tsx", "contains": "shadow-l3" }
+          ],
+          "visualEvidenceRefs": ["elevation-3-dialog"]
+        },
+        {
+          "id": "elevation-1-up",
+          "hook": "--fds-g-shadow-elevation-1-up",
+          "layerCount": 2,
+          "direction": "up",
+          "mirrorOf": "elevation-1",
+          "runtimeConsumerEvidence": [],
+          "visualEvidenceRefs": []
+        }
+      ],
+      "downwardOrder": ["elevation-1", "elevation-2", "elevation-3"],
+      "purpose": "governed-overlay-elevation-system"
+    },
+    "interactionGroups": [
+      { "id": "primary-solid", "states": ["--fds-g-color-action-primary", "--fds-g-color-action-primary-hover", "--fds-g-color-action-primary-active"] },
+      { "id": "primary-light", "states": ["--fds-g-color-action-primary-subtle", "--fds-g-color-action-primary-subtle-hover", "--fds-g-color-action-primary-subtle-active"] },
+      { "id": "secondary", "states": ["--fds-g-color-action-secondary", "--fds-g-color-action-secondary-hover", "--fds-g-color-action-secondary-active"] },
+      { "id": "destructive-solid", "states": ["--fds-g-color-action-destructive", "--fds-g-color-action-destructive-hover", "--fds-g-color-action-destructive-active"] },
+      { "id": "destructive-light", "states": ["--fds-g-color-action-destructive-subtle", "--fds-g-color-action-destructive-subtle-hover", "--fds-g-color-action-destructive-subtle-active"] },
+      { "id": "success-solid", "states": ["--fds-g-color-status-success", "--fds-g-color-status-success-hover", "--fds-g-color-status-success-active"] },
+      { "id": "warning-solid", "states": ["--fds-g-color-status-warning", "--fds-g-color-status-warning-hover", "--fds-g-color-status-warning-active"] },
+      { "id": "info-solid", "states": ["--fds-g-color-status-info", "--fds-g-color-status-info-hover", "--fds-g-color-status-info-active"] }
+    ]
+  }
+}

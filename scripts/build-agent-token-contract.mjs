@@ -7,7 +7,9 @@ import { fileURLToPath } from "node:url"
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 const sourcePath = path.join(root, "docs/data/design-tokens.json")
 const outputPath = path.join(root, "docs/data/agent-tokens.manifest.json")
+const presetPath = path.join(root, "docs/data/theme-presets.manifest.json")
 const source = JSON.parse(fs.readFileSync(sourcePath, "utf8"))
+const presets = JSON.parse(fs.readFileSync(presetPath, "utf8"))
 
 const variablePattern = /var\((--[\w-]+)/g
 const tokenByName = new Map(
@@ -91,9 +93,10 @@ function buildContract() {
     },
     policy: {
       primitiveAccess: "internal-only",
-      componentTokenLayer: "componentUsage mappings only; do not create independent component tokens",
+      componentTokenLayer: "Component Hooks are admission-only. Default to Global Semantic; create --fds-c-* only with the governed owner, semantic-gap, contract-test, and visual-test evidence.",
       callingRule: "Agents select semantic tokens or declared component state mappings; they do not select primitive palette values.",
     },
+    componentHooks: source.componentHooks,
     semanticTokens,
     componentMappings: usage.map((component) => ({
       component: component.component,
@@ -112,11 +115,11 @@ function buildContract() {
     shape: source.shape,
     interactionStates,
     themeContract: {
-      status: "single-light-mode",
-      truthSource: source.truthSource,
+      status: presets.publication.publishedModes.length > 1 ? "published-multi-mode" : "single-mode",
+      truthSource: presets.truthSource,
       humanDoc: source.humanDoc,
-      supportedModes: ["light"],
-      unsupportedModes: ["dark", "custom-theme-build"],
+      supportedModes: presets.publication.publishedModes,
+      unsupportedModes: [...presets.publication.runtimePreviewModes.filter((mode) => !presets.publication.publishedModes.includes(mode)), "custom-theme-build"],
       applyPolicy: "A theme may replace declared semantic visual tokens only. It must not use primitive palette values, add page-level visual overrides, or change protected structural tokens.",
       replaceableTokens,
       protectedTokens,
@@ -125,7 +128,8 @@ function buildContract() {
         { source: "docs/data/design-tokens.json#shape", reason: "Shape roles and concentric-radius rules are structural, not a theme override surface." },
       ],
       requiredInteractionGroups: interactionStates,
-      buildBoundary: "npm run fx -- theme build regenerates contracts from the existing CSS truth source; it does not create a theme or change component APIs.",
+      qualityEvidence: presets.publication.qualityEvidence,
+      buildBoundary: "npm run fx -- theme build regenerates governed CSS/JSON artifacts and audits them; it does not change component APIs.",
     },
     commands: {
       search: "npm run tokens -- search <query> [--json]",

@@ -1,5 +1,5 @@
 // 自定义/上传图标：放这里，统一从 @/lib/icons 出口（不要在页面里塞裸 <svg>/<img>）。
-// 规则（详见 docs/DECISIONS.md DEC-013、docs/TOKENS.md 图标小节）：
+// 规则（详见 docs/DECISIONS.md DEC-013、docs/foundations/icons.md）：
 //   1. 必须用 currentColor 描边/填充（line 用 stroke、fill 用 fill），颜色才跟随 token / text-* 类。
 //   2. viewBox 统一 "0 0 24 24"，尺寸交给外层（size-4 等），组件不写死宽高数值。
 //   3. 上传的第三方 SVG 必须先消毒：删 <script>、on* 事件、外链 href/xlink、内联 style 里的写死色值。

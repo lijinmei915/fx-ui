@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-07-27
+last_verified: 2026-08-28
 teaches: "fx-ui 实际采用的技术栈、版本边界，以及 AI 生成代码前要遵守的版本约束"
 use_when: "生成代码、加依赖、或讨论技术选型前，先确认这里标的是不是已确定"
 ---
@@ -15,11 +15,14 @@ use_when: "生成代码、加依赖、或讨论技术选型前，先确认这里
 
 | 层级 | 技术 / 工具 | 版本 / 要求 | 状态 | 说明 |
 |------|-------------|-------------|------|------|
-| 前端框架 | React + TypeScript | React `^19.2.7`、TS `^6.0.3` | 已确定 | |
-| 样式 | Tailwind CSS | `^4.3.0`（v4，新引擎） | 已确定 | token 通过 `theme/fx-theme.css` 注入语义槽 |
+| 当前参考适配器 | React + TypeScript | React `^19.2.7`、TS `^6.0.3` | 已确定 | 当前唯一 ready 的组件/Block 运行时 |
+| 框架无关核心 | JSON contract + CSS variables | `fx-ui/framework-core` schema v1 | 已确定 | 从既有 SSOT 派生，不承载组件运行时 |
+| Vue 2 适配器 | Vue 2 | 版本与组件基础待准入评估 | 规划（planned） | 只保留扩展口；当前无源码、依赖和可用能力 |
+| 样式 | Tailwind CSS | `^4.3.0`（v4，新引擎） | 已确定 | `foundation.css` 提供物理值，`fx-theme.css` 作为公开入口注入语义槽 |
 | 组件库 | shadcn/ui | CLI `shadcn ^4.10.0` | 已确定 | open-code 模式，组件源码进 `src/components/ui/` |
 | 组件底层原语 | Base UI (`@base-ui/react`) | `^1.5.0` | 已确定 | 不是 Radix——Button 等组件基于 Base UI，见 `docs/DECISIONS.md` DEC-001、`docs/LESSONS.md` LES-002 |
 | 构建 / 包管理 | Vite + npm | Vite `^8.0.16` | 已确定 | `npm run build` 实际是 `tsc -b && vite build` |
+| 文档站发布配置 | Vite 构建期白名单 | `full` / `foundation` | 已确定 | 完整站输出 `dist/`；Foundation 站只投影 Token、布局与对应 Markdown，输出 `dist-foundation/` |
 | 图标 | @tabler/icons-react | `^3.44.0` | 已确定 | 统一从 `@/lib/icons` 导入，线性默认、选中态使用 `*Filled` 变体 |
 | 工具库 | class-variance-authority / clsx / tailwind-merge | `^0.7.1` / `^2.1.1` / `^3.6.0` | 已确定 | shadcn 组件标配的变体/类名合并方案 |
 | 部署 | `候选` | — | 候选 | 尚未确定，不要假设具体平台 |
@@ -28,6 +31,7 @@ use_when: "生成代码、加依赖、或讨论技术选型前，先确认这里
 - `已确定`：项目已经在用，AI 可以直接当作实现前提
 - `候选`：方向已讨论，但还没进入实现，AI 只能讨论不能假设已落地
 - `待定`：暂时不要让 AI 假设具体版本
+- `规划（planned）`：已登记边界和准入门，但没有实现，不能对外宣称支持
 
 ## 版本边界
 
@@ -41,13 +45,15 @@ use_when: "生成代码、加依赖、或讨论技术选型前，先确认这里
 | 选型 | 原因 | 替代方案 | 取舍 |
 |------|------|----------|------|
 | shadcn/ui（open-code）而非自研组件库 | 组件源码可读可改，AI 和工程师都能直接消费；详细原因见 `docs/DECISIONS.md` DEC-001 | 自己手写组件、沿用老 Element 改造库 | 放弃自研——黑盒难维护、AI 读不懂 |
-| Tailwind v4 + token 注入 | 公司视觉只需改 `theme/fx-theme.css` 一处即可全局换肤，不在组件层动手脚 | 在组件 className 里硬编码颜色 | 放弃硬编码——会导致视觉散落、难统一 |
+| Tailwind v4 + 分层 token 注入 | Foundation 与语义映射各有唯一归属，运行时仍只导入 `theme/fx-theme.css`，不在组件层动手脚 | 在组件 className 里硬编码颜色 | 放弃硬编码——会导致视觉散落、难统一 |
 
 ## AI 使用约束
 
 - 标记为 `已确定` 的才能当作实现前提；`候选`/`待定` 的只能讨论方向，不能直接当成已落地的事实写进代码或文档
+- 跨框架需求先读 `docs/FRAMEWORK_ADAPTERS.md` 和适配器 manifest；portable contract 只描述共享语义，不允许据此翻译 React 源码
 - 涉及组件底层库（Base UI / Radix 等）时，先看本表 + 源码确认，不要凭"shadcn 生态通识"假设——这条是 LES-002 踩过的坑
 - 如果本文件与 `package.json` 实际版本冲突，以 `package.json` 为准，并回来更新本文件
+- Foundation 发布范围以 `docs/data/publication-profiles.manifest.json` 为准；不得通过隐藏导航伪装隔离，也不得复制 Token 或 Markdown 正文另建一站
 
 ## 相关文件
 
@@ -56,3 +62,4 @@ use_when: "生成代码、加依赖、或讨论技术选型前，先确认这里
 | `docs/ARCHITECTURE.md` | 系统结构和模块边界 |
 | `docs/DECISIONS.md` | 技术选型背后的决策原因（DEC-001） |
 | `docs/LESSONS.md` | 因误判底层库踩过的坑（LES-002） |
+| `docs/FRAMEWORK_ADAPTERS.md` | 当前适配器状态和新框架准入条件 |

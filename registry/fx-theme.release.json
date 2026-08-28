@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/theme-release",
+  "name": "fx-theme",
+  "version": "1.12.0",
+  "channel": "stable",
+  "status": "released",
+  "publishedModes": [
+    "light",
+    "dark"
+  ],
+  "algorithm": {
+    "id": "fx-theme-derivation",
+    "version": 5
+  },
+  "sourceContract": {
+    "path": "docs/data/theme-presets.manifest.json",
+    "sha256": "3ca912a30a9367256fcece9c209195820f05d761e2384857dbb47551129b89e0"
+  },
+  "sourceContracts": {
+    "docs/data/theme-presets.manifest.json": {
+      "sha256": "3ca912a30a9367256fcece9c209195820f05d761e2384857dbb47551129b89e0"
+    },
+    "docs/data/token-naming.manifest.json": {
+      "sha256": "20375ab1f54177c9b8c3c2443221eb2f0018c24274fc391103e85508624b0970"
+    },
+    "tokens/source/primitive.tokens.json": {
+      "sha256": "6569f85f3889ff16870bf2dd50dd6f2b4f42bcd6e60279ae695e05fbad6af806"
+    },
+    "tokens/source/map.tokens.json": {
+      "sha256": "76d033ec836434c7ee877a50d2f08dda12b56adcb9ff73501ede66c28ee34248"
+    },
+    "tokens/source/semantic.tokens.json": {
+      "sha256": "09a183d167bf97b0a1ddc5987a95a301a6ce20643465305fe609c0fbb62905ca"
+    },
+    "tokens/source/component.tokens.json": {
+      "sha256": "499b6a761cc9edf26b7eed07110144936b59edeb254fd92326ae231b20e24f26"
+    }
+  },
+  "artifacts": {
+    "docs/data/fds-foundation.manifest.json": {
+      "sha256": "86c34b2bf35d6cf217ef5b34ba8687e93e29480965600b9f0b93976d57f6d856"
+    },
+    "docs/data/fds-semantic.manifest.json": {
+      "sha256": "2124790cc459f52fde7bf30fc6114536495c675a5c32d2e5e60883c67a8db8e5"
+    },
+    "docs/data/fds-components.manifest.json": {
+      "sha256": "4b3ff26aa18f6797761503734a4e0476348a8829557b134b8c16e2c3179e78f7"
+    },
+    "docs/data/fds-migration-audit.manifest.json": {
+      "sha256": "b7cd1a4f185c10e7282db7d4b171d6eb30ea68a0d54385948f4fae8c39aba8cf"
+    },
+    "registry/fx-theme.css": {
+      "sha256": "fdd18521bb5d15b9461ea7e814a865a6b20636c64e58ee5f85a46d22c8eec02c"
+    },
+    "registry/fx-theme.contract.json": {
+      "sha256": "f45027c8d1adb5a7a32710e8e41e84b766201792d2c6b76087580fd9062d1bbe"
+    },
+    "registry/fx-theme.json": {
+      "sha256": "6f4e7e12412856445e4035bbe82efdb922fb922d02dd39d9f2e25472ada779c9"
+    },
+    "docs/data/theme-audit.manifest.json": {
+      "sha256": "0878b8d02eb29da3166e193a7d9b83232e2ef2167174dd4436af49b22fe0abb2"
+    },
+    "docs/data/framework-core.manifest.json": {
+      "sha256": "7095666698d82b441f9c14591652cd1f34a28dfcfb74714a5cc788e91351b2c5"
+    }
+  },
+  "qualityEvidence": {
+    "path": "docs/data/theme-audit.manifest.json",
+    "status": "ready",
+    "inputs": 14,
+    "modes": [
+      "light",
+      "dark"
+    ],
+    "failures": 0
+  },
+  "adapterStatus": {
+    "react": "ready",
+    "vue2": "planned"
+  },
+  "adapterStylingHooks": {
+    "react": {
+      "contract": "registry/fx-theme.contract.json#stylingHooks",
+      "boundComponents": 3,
+      "boundComponentHooks": 13
+    },
+    "vue2": null
+  },
+  "stylingHooks": {
+    "contractVersion": "1.0.0-draft.14",
+    "status": "experimental",
+    "counts": {
+      "total": 114,
+      "publicGlobal": 101,
+      "publicComponent": 13,
+      "experimental": 53,
+      "stable": 61,
+      "deprecated": 0
+    },
+    "artifact": "registry/fx-theme.contract.json#stylingHooks"
+  },
+  "migration": {
+    "phase": "fds-primary",
+    "currentPhaseCompliant": true,
+    "nextPhase": "legacy-removal",
+    "nextPhaseReady": false
+  }
+}

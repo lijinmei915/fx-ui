@@ -51,6 +51,9 @@ for (const e of entries) {
 // 覆盖：实际治理文档都要登记（避免漏登记 = 孤岛）
 const govDocs = [
   ...fs.readdirSync(path.join(root, "docs")).filter(f => f.endsWith(".md")).map(f => `docs/${f}`),
+  ...["foundations", "pages"].flatMap((directory) =>
+    fs.readdirSync(path.join(root, "docs", directory)).filter(f => f.endsWith(".md")).map(f => `docs/${directory}/${f}`)
+  ),
   ...["AGENTS.md", "PROJECT.md", "HANDOFF.md", "PRODUCT.md"].filter(f => fs.existsSync(path.join(root, f))),
 ]
 for (const d of govDocs) {

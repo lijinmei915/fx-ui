@@ -1,0 +1,695 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/framework-adapters",
+  "truthSource": "docs/data/framework-adapters.manifest.json",
+  "humanDoc": "docs/FRAMEWORK_ADAPTERS.md",
+  "policy": "Share semantic contracts, not framework runtime code. A planned adapter is not supported.",
+  "portableCore": {
+    "generatedArtifact": "docs/data/framework-core.manifest.json",
+    "sources": [
+      "docs/data/design-tokens.json",
+      "docs/data/token-naming.manifest.json",
+      "docs/data/fds-foundation.manifest.json",
+      "docs/data/fds-semantic.manifest.json",
+      "docs/data/fds-components.manifest.json",
+      "docs/data/fds-migration-audit.manifest.json",
+      "docs/data/theme-presets.manifest.json",
+      "docs/data/components.manifest.json",
+      "docs/data/component-playgrounds.manifest.json",
+      "docs/data/icons.manifest.json",
+      "docs/data/page-semantics.manifest.json",
+      "docs/data/page-build-kit.manifest.json",
+      "docs/data/page-builder.manifest.json",
+      "docs/data/agent-ui.manifest.json"
+    ],
+    "excluded": [
+      "framework component source",
+      "framework package bindings",
+      "render and ref conventions",
+      "framework event objects",
+      "visual test harness"
+    ]
+  },
+  "canonicalComponents": [
+    {
+      "id": "Input",
+      "status": "adapter-ready",
+      "semanticRole": "single-line-text-entry",
+      "valueModel": {
+        "kind": "scalar",
+        "valueType": "string",
+        "controlled": true,
+        "defaultValue": true,
+        "emptyValue": "",
+        "canonicalEvent": "valueChange"
+      },
+      "properties": [
+        { "id": "value", "type": "string", "optional": true },
+        { "id": "defaultValue", "type": "string", "optional": true },
+        { "id": "inputType", "type": "string", "defaultValue": "text" },
+        { "id": "placeholder", "type": "string", "optional": true },
+        { "id": "name", "type": "string", "optional": true },
+        { "id": "disabled", "type": "boolean", "defaultValue": false },
+        { "id": "invalid", "type": "boolean", "defaultValue": false },
+        { "id": "readOnly", "type": "boolean", "defaultValue": false },
+        { "id": "required", "type": "boolean", "defaultValue": false },
+        { "id": "size", "type": "enum", "values": ["xs", "sm", "md"], "defaultValue": "sm" }
+      ],
+      "events": [
+        {
+          "id": "valueChange",
+          "payload": { "value": "string" },
+          "timing": "each user edit"
+        },
+        { "id": "focus", "payload": {} },
+        { "id": "blur", "payload": {} }
+      ],
+      "states": ["hover", "focus-visible", "disabled", "invalid", "read-only"],
+      "composition": [
+        {
+          "id": "field",
+          "parts": ["FieldGroup", "Field", "FieldLabel", "Input", "FieldError"],
+          "constraint": "Use for labelled form fields; invalid and disabled semantics must exist on both field and control."
+        },
+        {
+          "id": "input-group",
+          "parts": ["InputGroup", "InputAddon", "InputAffix", "Input", "InputAction"],
+          "constraint": "Use for prefixes, suffixes, units, and inline actions; do not emulate these with visual overrides."
+        }
+      ],
+      "accessibility": {
+        "nameRequired": true,
+        "nameSources": ["associated label", "accessible label"],
+        "invalidProperty": "invalid",
+        "disabledProperty": "disabled",
+        "requiredProperty": "required",
+        "rules": [
+          "A labelled field associates its label and control identifiers.",
+          "Invalid fields expose the invalid state on both field wrapper and input control.",
+          "Disabled fields expose the disabled state on both field wrapper and input control.",
+          "Icon-only input actions require an accessible name."
+        ]
+      }
+    },
+    {
+      "id": "Button",
+      "status": "adapter-ready",
+      "semanticRole": "immediate-action-trigger",
+      "properties": [
+        { "id": "content", "type": "content", "optional": true },
+        { "id": "variant", "type": "enum", "values": ["default", "secondary", "outline", "ghost", "plain", "destructive"], "defaultValue": "default" },
+        { "id": "tone", "type": "enum", "values": ["default", "primary", "info", "danger"], "defaultValue": "default" },
+        { "id": "size", "type": "enum", "values": ["xs", "sm", "md", "lg", "toolbar", "toolbar-icon", "icon-xs", "icon-sm", "icon-md", "icon-lg"], "defaultValue": "sm" },
+        { "id": "disabled", "type": "boolean", "defaultValue": false },
+        { "id": "invalid", "type": "boolean", "defaultValue": false },
+        { "id": "actionType", "type": "enum", "values": ["button", "submit", "reset"], "defaultValue": "button" }
+      ],
+      "events": [
+        {
+          "id": "activate",
+          "payload": {},
+          "timing": "successful pointer or keyboard activation"
+        },
+        { "id": "focus", "payload": {} },
+        { "id": "blur", "payload": {} }
+      ],
+      "states": ["hover", "active", "focus-visible", "disabled", "invalid", "expanded"],
+      "composition": [
+        {
+          "id": "leading-icon",
+          "parts": ["Button", "Icon", "Content"],
+          "constraint": "Mark the leading icon through the adapter's governed icon-position mechanism; the Button owns icon size and spacing."
+        },
+        {
+          "id": "trailing-icon",
+          "parts": ["Button", "Content", "Icon"],
+          "constraint": "Use a trailing icon only when it communicates a menu, expansion, or navigation cue."
+        },
+        {
+          "id": "icon-only",
+          "parts": ["Tooltip", "Button", "Icon"],
+          "constraint": "Use an icon size and provide both an accessible name and Tooltip; a Tooltip does not replace the accessible name."
+        },
+        {
+          "id": "loading",
+          "parts": ["Button", "Spinner", "Content"],
+          "constraint": "Loading is composed from disabled Button plus Spinner while retaining the action label; it is not a Button property."
+        },
+        {
+          "id": "link-surface",
+          "parts": ["Button", "Link"],
+          "constraint": "When navigation needs Button appearance, render the governed Button surface onto a real link without nesting interactive elements."
+        }
+      ],
+      "accessibility": {
+        "nameRequired": true,
+        "nameSources": ["visible content", "accessible label"],
+        "invalidProperty": "invalid",
+        "disabledProperty": "disabled",
+        "rules": [
+          "Native buttons activate with pointer, Enter, and Space semantics supplied by the framework primitive.",
+          "Icon-only buttons require an accessible name even when a Tooltip is present.",
+          "Disabled actions do not activate and should expose the reason in nearby content when it is not obvious.",
+          "Navigation uses a real link element; do not nest a link inside a button."
+        ]
+      }
+    },
+    {
+      "id": "Select",
+      "status": "adapter-ready",
+      "semanticRole": "predefined-option-selection",
+      "valueModel": {
+        "kind": "single-or-multiple",
+        "valueType": "string | string[] | null",
+        "controlled": true,
+        "defaultValue": true,
+        "emptyValue": { "single": null, "multiple": [] },
+        "canonicalEvent": "valueChange"
+      },
+      "properties": [
+        { "id": "items", "type": "option-data", "optional": true },
+        { "id": "value", "type": "string | string[] | null", "optional": true },
+        { "id": "defaultValue", "type": "string | string[] | null", "optional": true },
+        { "id": "multiple", "type": "boolean", "defaultValue": false },
+        { "id": "name", "type": "string", "optional": true },
+        { "id": "disabled", "type": "boolean", "defaultValue": false },
+        { "id": "readOnly", "type": "boolean", "defaultValue": false },
+        { "id": "required", "type": "boolean", "defaultValue": false },
+        { "id": "open", "type": "boolean", "optional": true },
+        { "id": "defaultOpen", "type": "boolean", "defaultValue": false },
+        { "id": "variant", "type": "enum", "values": ["outline", "borderless"], "defaultValue": "outline" },
+        { "id": "size", "type": "enum", "values": ["xs", "sm", "md"], "defaultValue": "sm" },
+        { "id": "invalid", "type": "boolean", "defaultValue": false },
+        { "id": "clearable", "type": "boolean", "defaultValue": false }
+      ],
+      "events": [
+        { "id": "valueChange", "payload": { "value": "string | string[] | null" }, "timing": "after a selection or governed clear action" },
+        { "id": "openChange", "payload": { "open": "boolean" } },
+        { "id": "focus", "payload": {} },
+        { "id": "blur", "payload": {} }
+      ],
+      "states": ["hover", "focus-visible", "disabled", "read-only", "invalid", "open", "highlighted", "selected"],
+      "composition": [
+        {
+          "id": "basic",
+          "parts": ["Select", "SelectTrigger", "SelectValue", "SelectContent", "SelectGroup", "SelectItem"],
+          "constraint": "Use predefined unique item values and a placeholder for the empty state."
+        },
+        {
+          "id": "multiple",
+          "parts": ["Select", "SelectTrigger", "SelectMultiValue", "SelectContent", "SelectItem", "SelectItemIndicator"],
+          "constraint": "Use an array value; selected tags may collapse or scroll, and each item indicator remains driven by the Select item state."
+        },
+        {
+          "id": "clear",
+          "parts": ["SelectControl", "SelectTrigger", "SelectClear"],
+          "constraint": "Use controlled value and keep the clear action as a trigger sibling; clearable reserves stable suffix space but does not clear state by itself."
+        },
+        {
+          "id": "local-search",
+          "parts": ["SelectContent", "Input", "SelectGroup", "SelectItem"],
+          "constraint": "Local filtering is a content composition; remote or domain search belongs in a governed composite component."
+        },
+        {
+          "id": "other-input",
+          "parts": ["Select", "SelectContent", "SelectItem", "Field", "Input"],
+          "constraint": "Render the additional input only after selecting a predefined other value; do not add ad hoc Select properties."
+        },
+        {
+          "id": "field",
+          "parts": ["Field", "FieldLabel", "Select", "SelectTrigger", "FieldError"],
+          "constraint": "Label the trigger and expose invalid, disabled, and required semantics through the governed field and control mapping."
+        }
+      ],
+      "accessibility": {
+        "nameRequired": true,
+        "nameSources": ["associated label", "accessible label"],
+        "invalidProperty": "invalid",
+        "disabledProperty": "disabled",
+        "requiredProperty": "required",
+        "rules": [
+          "The trigger exposes the selected value or placeholder and controls the popup.",
+          "Keyboard navigation, highlighting, selection, and popup dismissal come from the framework primitive.",
+          "Every item value is unique within the option collection.",
+          "Clear and multi-value remove actions require accessible names and must not unintentionally open the popup."
+        ]
+      }
+    },
+    {
+      "id": "Checkbox",
+      "status": "adapter-ready",
+      "semanticRole": "boolean-or-set-membership-control",
+      "valueModel": {
+        "kind": "boolean",
+        "valueType": "boolean",
+        "controlled": true,
+        "defaultValue": true,
+        "emptyValue": false,
+        "canonicalEvent": "checkedChange",
+        "derivedState": "indeterminate"
+      },
+      "properties": [
+        { "id": "checked", "type": "boolean", "optional": true },
+        { "id": "defaultChecked", "type": "boolean", "defaultValue": false },
+        { "id": "indeterminate", "type": "boolean", "defaultValue": false },
+        { "id": "name", "type": "string", "optional": true },
+        { "id": "value", "type": "string", "optional": true },
+        { "id": "disabled", "type": "boolean", "defaultValue": false },
+        { "id": "readOnly", "type": "boolean", "defaultValue": false },
+        { "id": "required", "type": "boolean", "defaultValue": false },
+        { "id": "invalid", "type": "boolean", "defaultValue": false },
+        { "id": "size", "type": "enum", "values": ["sm", "default", "lg"], "defaultValue": "default" }
+      ],
+      "events": [
+        { "id": "checkedChange", "payload": { "checked": "boolean" }, "timing": "after successful user activation" },
+        { "id": "focus", "payload": {} },
+        { "id": "blur", "payload": {} }
+      ],
+      "states": ["unchecked", "checked", "indeterminate", "hover", "active", "focus-visible", "disabled", "read-only", "invalid"],
+      "composition": [
+        {
+          "id": "field",
+          "parts": ["Field", "Checkbox", "FieldContent", "FieldLabel", "FieldError"],
+          "constraint": "Associate every standalone checkbox with a label; invalid and disabled semantics exist on both field and control."
+        },
+        {
+          "id": "group",
+          "parts": ["FieldSet", "FieldLegend", "FieldGroup", "Field", "Checkbox", "FieldLabel"],
+          "constraint": "The caller owns the selected value set; use a field set and legend when a real form group needs a shared accessible name or validation."
+        },
+        {
+          "id": "select-all",
+          "parts": ["Checkbox", "FieldLabel", "ChildCheckboxes"],
+          "constraint": "Derive parent checked and indeterminate states from the same child value set; never persist indeterminate as an independent business value."
+        }
+      ],
+      "accessibility": {
+        "nameRequired": true,
+        "nameSources": ["associated label", "accessible label"],
+        "invalidProperty": "invalid",
+        "disabledProperty": "disabled",
+        "requiredProperty": "required",
+        "rules": [
+          "Space toggles an enabled checkbox through the framework primitive.",
+          "Checked and indeterminate states are exposed through native checkbox semantics.",
+          "A checkbox group uses a shared legend only when the collection forms one labelled field.",
+          "The visible label and checkbox identifier remain associated."
+        ]
+      }
+    },
+    {
+      "id": "Dialog",
+      "status": "adapter-ready",
+      "semanticRole": "modal-focused-task",
+      "valueModel": {
+        "kind": "open-state",
+        "valueType": "boolean",
+        "controlled": true,
+        "defaultValue": true,
+        "emptyValue": false,
+        "canonicalEvent": "openChange"
+      },
+      "properties": [
+        { "id": "open", "type": "boolean", "optional": true },
+        { "id": "defaultOpen", "type": "boolean", "defaultValue": false },
+        { "id": "modal", "type": "boolean", "defaultValue": true },
+        { "id": "size", "type": "enum", "values": ["sm", "md", "lg"], "defaultValue": "md" },
+        { "id": "showCloseButton", "type": "boolean", "defaultValue": true },
+        { "id": "initialFocus", "type": "focus-target | false", "optional": true },
+        { "id": "finalFocus", "type": "focus-target | false", "optional": true }
+      ],
+      "events": [
+        { "id": "openChange", "payload": { "open": "boolean", "reason": "interaction-reason" } },
+        { "id": "openChangeComplete", "payload": { "open": "boolean" }, "timing": "after transition completion" }
+      ],
+      "states": ["open", "closed", "opening", "closing", "nested-dialog-open"],
+      "composition": [
+        {
+          "id": "standard",
+          "parts": ["Dialog", "DialogTrigger", "DialogContent", "DialogHeader", "DialogTitle", "DialogDescription", "DialogFooter", "DialogClose"],
+          "constraint": "Use for one focused task; always retain title semantics and keep cancel before the primary action."
+        },
+        {
+          "id": "form",
+          "parts": ["Dialog", "DialogContent", "DialogHeader", "DialogTitle", "DialogDescription", "FieldGroup", "DialogFooter"],
+          "constraint": "Focus the first meaningful field or validation error and prevent accidental duplicate submission while pending."
+        },
+        {
+          "id": "controlled-close-guard",
+          "parts": ["Dialog", "DialogContent", "DialogClose"],
+          "constraint": "Use controlled open state when unsaved content requires intercepting backdrop, Escape, or close actions; dangerous confirmation uses AlertDialog."
+        }
+      ],
+      "accessibility": {
+        "nameRequired": true,
+        "nameSources": ["DialogTitle"],
+        "rules": [
+          "Every dialog includes a title; visually hidden titles remain in the accessibility tree.",
+          "Description text is associated when it helps explain the focused task.",
+          "Modal dialogs trap focus while open and restore focus to the trigger or declared final target when closed.",
+          "Escape and close controls dismiss through the framework primitive unless a controlled close guard intentionally intercepts the request."
+        ]
+      }
+    },
+    {
+      "id": "Table",
+      "status": "adapter-ready",
+      "semanticRole": "structured-tabular-data",
+      "manifestAxes": {
+        "variant": "variants",
+        "density": "sizes"
+      },
+      "properties": [
+        { "id": "content", "type": "semantic-table-content" },
+        { "id": "variant", "type": "enum", "values": ["plain", "bordered", "striped"], "defaultValue": "plain" },
+        { "id": "density", "type": "enum", "values": ["compact", "default", "comfortable"], "defaultValue": "default" },
+        { "id": "maxHeight", "type": "number | string", "optional": true },
+        { "id": "stickyHeader", "type": "boolean", "defaultValue": false }
+      ],
+      "events": [
+        {
+          "id": "sortChange",
+          "payload": { "column": "caller-owned-column-id", "direction": "asc | desc | false" },
+          "timing": "after a sortable column header is activated",
+          "ownership": "composition"
+        }
+      ],
+      "states": ["hover", "focus-visible", "expanded", "sorted", "selected", "filtered"],
+      "composition": [
+        {
+          "id": "basic",
+          "parts": ["Table", "TableCaption", "TableHeader", "TableBody", "TableRow", "TableHead", "TableCell"],
+          "constraint": "Preserve native table structure; use TableCaption when the data set needs an overall accessible description."
+        },
+        {
+          "id": "sortable",
+          "parts": ["TableHead", "SortControl"],
+          "constraint": "The caller owns column identity and next-direction state; the adapter maps sorted state to aria-sort and keeps the control keyboard operable."
+        },
+        {
+          "id": "filterable",
+          "parts": ["TableHead", "FilterTrigger", "FilterContent"],
+          "constraint": "Use the governed column filter surface and expose whether a filter is active; filtering data remains caller-owned."
+        },
+        {
+          "id": "pinned-or-frozen-columns",
+          "parts": ["TableHead", "TableCell"],
+          "constraint": "Apply matching pinned or frozen metadata to the header and every cell in that column; offsets remain caller-owned layout data."
+        },
+        {
+          "id": "selectable",
+          "parts": ["Table", "CheckboxOrRadio", "TableRow"],
+          "constraint": "Selection is composed with governed controls; the caller owns selected row identifiers and derives header checked or indeterminate state."
+        },
+        {
+          "id": "loading",
+          "parts": ["Table", "TableRow[variant=static]", "Skeleton"],
+          "constraint": "Render stable placeholder rows with the governed Skeleton; loading is not a Table root property."
+        },
+        {
+          "id": "empty",
+          "parts": ["Table", "TableRow[variant=static]", "TableCell", "Empty"],
+          "constraint": "Render one static row with a cell spanning the visible columns; empty is not a Table root property."
+        },
+        {
+          "id": "pagination",
+          "parts": ["Table", "Pagination"],
+          "constraint": "Pagination is a sibling composition whose page state and data slicing remain caller-owned."
+        },
+        {
+          "id": "summary",
+          "parts": ["TableFooter", "TableRow", "TableCell"],
+          "constraint": "Use the semantic footer for totals or summaries that correspond to table columns."
+        }
+      ],
+      "accessibility": {
+        "nameRequired": false,
+        "nameSources": ["TableCaption", "nearby heading with an explicit relationship"],
+        "rules": [
+          "Use native table, thead, tbody, tfoot, tr, th, td, and caption semantics rather than a visual grid of div elements.",
+          "Header and data cells remain structurally associated through valid table markup.",
+          "Sortable headers expose none, ascending, or descending through aria-sort and provide a keyboard-operable control.",
+          "Filter and column-menu icon controls require accessible names.",
+          "Selection controls retain their own accessible names and row selection state is not communicated by color alone."
+        ]
+      }
+    }
+  ],
+  "adapters": [
+    {
+      "id": "react",
+      "framework": "React",
+      "status": "ready",
+      "reference": true,
+      "sourceRoots": [
+        "src/components/ui",
+        "src/components/fx",
+        "src/components/recipes"
+      ],
+      "primitiveDependencies": [
+        "@base-ui/react",
+        "@tabler/icons-react"
+      ],
+      "capabilities": [
+        "tokens",
+        "components",
+        "icons",
+        "blocks",
+        "agent-ui"
+      ],
+      "componentMappings": [
+        {
+          "canonicalId": "Input",
+          "status": "ready",
+          "source": "src/components/ui/input.tsx",
+          "exports": ["Input", "InputGroup", "InputAddon", "InputAffix", "InputAction"],
+          "primitive": "@base-ui/react/input#Input",
+          "stylingHooks": [
+            "--fds-c-input-color-background",
+            "--fds-c-input-color-border",
+            "--fds-c-input-color-border-hover",
+            "--fds-c-input-color-border-focus",
+            "--fds-c-input-color-border-invalid"
+          ],
+          "value": {
+            "controlledProp": "value",
+            "defaultProp": "defaultValue"
+          },
+          "properties": {
+            "value": "value",
+            "defaultValue": "defaultValue",
+            "inputType": "type",
+            "placeholder": "placeholder",
+            "name": "name",
+            "disabled": "disabled",
+            "invalid": "aria-invalid",
+            "readOnly": "readOnly",
+            "required": "required",
+            "size": "size"
+          },
+          "events": {
+            "valueChange": {
+              "prop": "onChange",
+              "payload": "event.currentTarget.value"
+            },
+            "focus": { "prop": "onFocus" },
+            "blur": { "prop": "onBlur" }
+          },
+          "composition": {
+            "field": ["FieldGroup", "Field", "FieldLabel", "Input", "FieldError"],
+            "input-group": ["InputGroup", "InputAddon", "InputAffix", "Input", "InputAction"]
+          }
+        },
+        {
+          "canonicalId": "Button",
+          "status": "ready",
+          "source": "src/components/ui/button.tsx",
+          "exports": ["Button", "buttonVariants"],
+          "primitive": "@base-ui/react/button#Button",
+          "stylingHooks": [
+            "--fds-c-button-color-background",
+            "--fds-c-button-color-background-hover",
+            "--fds-c-button-color-background-active",
+            "--fds-c-button-color-background-disabled",
+            "--fds-c-button-color-foreground"
+          ],
+          "properties": {
+            "content": "children",
+            "variant": "variant",
+            "tone": "tone",
+            "size": "size",
+            "disabled": "disabled",
+            "invalid": "aria-invalid",
+            "actionType": "type"
+          },
+          "events": {
+            "activate": { "prop": "onClick" },
+            "focus": { "prop": "onFocus" },
+            "blur": { "prop": "onBlur" }
+          },
+          "composition": {
+            "leading-icon": ["Button", "Icon[data-icon=inline-start]", "children"],
+            "trailing-icon": ["Button", "children", "Icon[data-icon=inline-end]"],
+            "icon-only": ["Tooltip", "Button[size=icon-*][aria-label]", "Icon"],
+            "loading": ["Button[disabled]", "Spinner[data-icon=inline-start]", "children"],
+            "link-surface": ["Button[nativeButton=false][render=<a>]" ]
+          }
+        },
+        {
+          "canonicalId": "Select",
+          "status": "ready",
+          "source": "src/components/ui/select.tsx",
+          "exports": ["Select", "SelectControl", "SelectContent", "SelectGroup", "SelectItem", "SelectItemIndicator", "SelectLabel", "SelectMultiValue", "SelectScrollDownButton", "SelectScrollUpButton", "SelectSeparator", "SelectClear", "SelectTrigger", "SelectValue"],
+          "primitive": "@base-ui/react/select#Select",
+          "value": {
+            "controlledProp": "value",
+            "defaultProp": "defaultValue"
+          },
+          "properties": {
+            "items": "Select.items",
+            "value": "Select.value",
+            "defaultValue": "Select.defaultValue",
+            "multiple": "Select.multiple",
+            "name": "Select.name",
+            "disabled": "Select.disabled",
+            "readOnly": "Select.readOnly",
+            "required": "Select.required",
+            "open": "Select.open",
+            "defaultOpen": "Select.defaultOpen",
+            "variant": "SelectTrigger.variant",
+            "size": "SelectTrigger.size + SelectContent.size",
+            "invalid": "SelectTrigger.aria-invalid",
+            "clearable": "SelectTrigger.clearable"
+          },
+          "events": {
+            "valueChange": { "prop": "Select.onValueChange", "payload": "value" },
+            "openChange": { "prop": "Select.onOpenChange", "payload": "open" },
+            "focus": { "prop": "SelectTrigger.onFocus" },
+            "blur": { "prop": "SelectTrigger.onBlur" }
+          },
+          "composition": {
+            "basic": ["Select", "SelectTrigger", "SelectValue", "SelectContent", "SelectGroup", "SelectItem"],
+            "multiple": ["Select[multiple]", "SelectTrigger[render=<div>][nativeButton=false]", "SelectMultiValue", "SelectItemIndicator"],
+            "clear": ["SelectControl", "SelectTrigger[clearable]", "SelectClear"],
+            "local-search": ["SelectContent", "Input", "SelectGroup", "SelectItem"],
+            "other-input": ["SelectItem[value=other]", "Field", "Input"],
+            "field": ["Field", "FieldLabel", "Select", "SelectTrigger[aria-invalid]", "FieldError"]
+          }
+        },
+        {
+          "canonicalId": "Checkbox",
+          "status": "ready",
+          "source": "src/components/ui/checkbox.tsx",
+          "exports": ["Checkbox", "CheckboxProps", "CheckboxSize"],
+          "primitive": "@base-ui/react/checkbox#Checkbox",
+          "value": {
+            "controlledProp": "checked",
+            "defaultProp": "defaultChecked"
+          },
+          "properties": {
+            "checked": "checked",
+            "defaultChecked": "defaultChecked",
+            "indeterminate": "indeterminate",
+            "name": "name",
+            "value": "value",
+            "disabled": "disabled",
+            "readOnly": "readOnly",
+            "required": "required",
+            "invalid": "aria-invalid",
+            "size": "size"
+          },
+          "events": {
+            "checkedChange": { "prop": "onCheckedChange", "payload": "checked" },
+            "focus": { "prop": "onFocus" },
+            "blur": { "prop": "onBlur" }
+          },
+          "composition": {
+            "field": ["Field", "Checkbox", "FieldContent", "FieldLabel", "FieldError"],
+            "group": ["FieldSet", "FieldLegend", "FieldGroup", "Field", "Checkbox", "FieldLabel"],
+            "select-all": ["Checkbox[checked][indeterminate]", "FieldLabel", "ChildCheckboxes"]
+          }
+        },
+        {
+          "canonicalId": "Dialog",
+          "status": "ready",
+          "source": "src/components/ui/dialog.tsx",
+          "exports": ["Dialog", "DialogClose", "DialogContent", "DialogDescription", "DialogFooter", "DialogHeader", "DialogOverlay", "DialogPortal", "DialogTitle", "DialogTrigger", "dialogContentVariants"],
+          "primitive": "@base-ui/react/dialog#Dialog",
+          "value": {
+            "controlledProp": "Dialog.open",
+            "defaultProp": "Dialog.defaultOpen"
+          },
+          "properties": {
+            "open": "Dialog.open",
+            "defaultOpen": "Dialog.defaultOpen",
+            "modal": "Dialog.modal",
+            "size": "DialogContent.size",
+            "showCloseButton": "DialogContent.showCloseButton",
+            "initialFocus": "DialogContent.initialFocus",
+            "finalFocus": "DialogContent.finalFocus"
+          },
+          "events": {
+            "openChange": { "prop": "Dialog.onOpenChange", "payload": "open + eventDetails.reason" },
+            "openChangeComplete": { "prop": "Dialog.onOpenChangeComplete", "payload": "open" }
+          },
+          "composition": {
+            "standard": ["Dialog", "DialogTrigger", "DialogContent", "DialogHeader", "DialogTitle", "DialogDescription", "DialogFooter", "DialogClose"],
+            "form": ["Dialog", "DialogContent", "DialogHeader", "DialogTitle", "DialogDescription", "FieldGroup", "DialogFooter"],
+            "controlled-close-guard": ["Dialog[open][onOpenChange]", "DialogContent", "DialogClose"]
+          }
+        },
+        {
+          "canonicalId": "Table",
+          "status": "ready",
+          "source": "src/components/ui/table.tsx",
+          "exports": ["Table", "TableHeader", "TableBody", "TableFooter", "TableHead", "TableRow", "TableCell", "TableCaption", "tableContainerVariants", "tableRowVariants", "TableProps", "TableRowProps"],
+          "primitive": "native-html#table",
+          "stylingHooks": [
+            "--fds-c-table-sizing-cell-block",
+            "--fds-c-table-sizing-cell-block-compact",
+            "--fds-c-table-sizing-cell-block-comfortable"
+          ],
+          "properties": {
+            "content": "children using exported semantic table parts",
+            "variant": "Table.variant",
+            "density": "Table.density",
+            "maxHeight": "Table.maxHeight",
+            "stickyHeader": "TableHeader.sticky"
+          },
+          "events": {
+            "sortChange": { "prop": "TableHead.onSort", "payload": "caller-owned column id + next sorted direction" }
+          },
+          "composition": {
+            "basic": ["Table", "TableCaption", "TableHeader", "TableBody", "TableRow", "TableHead", "TableCell"],
+            "sortable": ["TableHead[sortable][sorted][onSort]"],
+            "filterable": ["TableHead[filterContent][filtered]"],
+            "pinned-or-frozen-columns": ["TableHead[pinned|frozenLeft|frozenEdge]", "TableCell[pinned|frozenLeft|frozenEdge]"],
+            "selectable": ["Table", "Checkbox|RadioGroup", "TableRow[data-state=selected]"],
+            "loading": ["Table", "TableRow[variant=static]", "Skeleton"],
+            "empty": ["Table", "TableRow[variant=static]", "TableCell[colSpan]", "Empty"],
+            "pagination": ["Table", "Pagination"],
+            "summary": ["TableFooter", "TableRow", "TableCell"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "vue2",
+      "framework": "Vue 2",
+      "status": "planned",
+      "reference": false,
+      "sourceRoots": [],
+      "primitiveDependencies": [],
+      "capabilities": [],
+      "componentMappings": [],
+      "entryCriteria": [
+        "Select a maintained Vue 2 primitive or component base.",
+        "Map canonical component and icon identifiers without translating React source.",
+        "Define props, events, controlled value, focus, keyboard, and accessibility mappings.",
+        "Reuse the portable token contract without creating another token truth source.",
+        "Implement framework-specific blocks and renderers behind independent tests.",
+        "Pass contract, interaction, accessibility, build, and visual gates before status changes."
+      ]
+    }
+  ]
+}

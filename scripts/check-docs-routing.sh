@@ -20,19 +20,25 @@ missing=0
 check_one() {
   local path="$1"
   local name
+  local directory_pattern
   name="$(basename "$path")"
+  directory_pattern="$(dirname "$path")/*.md"
 
   case " $exempt " in
     *" $name "*) return ;;
   esac
 
-  if ! grep -qF "$name" "$routing_doc"; then
+  if ! grep -qF "$path" "$routing_doc" && ! grep -qF "$name" "$routing_doc" && ! grep -qF "$directory_pattern" "$routing_doc"; then
     missing=$((missing + 1))
     echo "WARN: $path 没有出现在 $routing_doc 的 SSOT 路由表里——可能是孤岛文档"
   fi
 }
 
 for f in docs/*.md; do
+  check_one "$f"
+done
+
+for f in docs/foundations/*.md docs/pages/*.md; do
   check_one "$f"
 done
 

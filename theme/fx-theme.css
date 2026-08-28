@@ -2,580 +2,30 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import "./foundation.css";
+@import "./fds-semantic.css";
+@import "./fds-components.css";
 
-/* fx-theme.css — 公司 token 注入 shadcn/ui (Tailwind v4)
+/* fx-theme.css — 语义 token 注入 shadcn/ui (Tailwind v4)
  * ───────────────────────────────────────────────────────
- * token 真相源：项目2-公司CLI/studio/src/tokens/index.js（Figma 导出）
- * 所有 shadcn 现成组件读这里的变量，改这里 = 全局换肤
+ * Foundation runtime：theme/foundation.css
+ * Semantic runtime：theme/fds-semantic.css
+ * 本文件只负责公开入口、Tailwind/shadcn 装配与运行时结构映射。
  */
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   * SEED — 唯一种子色，改这一行，全部 16 个色系 + 中性色自动更新
-   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  --fx-brand: #FF8000;
-
-  /* 归一化：亮度钳制到 0.58–0.72（可用区间），饱和度兜底 0.12
-   * 太深的颜色（如深蓝 #1A237E）→ L 拉亮到 0.58
-   * 太浅的颜色（如米色 #FFE4B5）→ L 压暗到 0.72
-   * 近中性灰 → C max(c, 0.12) 强制有色调 */
-  --fx-brand-vivid: oklch(from var(--fx-brand) clamp(0.58, l, 0.72) max(c, 0.12) h);
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   * PALETTE SEEDS — 参考主流设计系统，16 个色系固定参考值
-   * 只有 --fx-brand / Orange 随换肤变化，其余为固定色
-   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  --fx-seed-orange:          #FF8000;  /* 固定橙，色板展示用，不随 brand 变 */
-  --fx-seed-orange-warning: #F97316;  /* tw orange-500  → Warning */
-  --fx-seed-amber:          #F59E0B;  /* tw amber-500   → 琥珀 */
-  --fx-seed-yellow:         #EAB308;  /* tw yellow-500  → 黄 */
-  --fx-seed-lime:           #84CC16;  /* tw lime-500    → 嫩绿 */
-  --fx-seed-yellow-green:   oklch(0.74 0.18 137); /* 黄绿，提亮并降低饱和度，介于嫩绿与绿之间 */
-  --fx-seed-green:          #22C55E;  /* tw green-500   → 成功 */
-  --fx-seed-teal:           #14B8A6;  /* tw teal-500    → 青 */
-  --fx-seed-cyan:           #06B6D4;  /* tw cyan-500    → 青蓝 */
-  --fx-seed-light-blue:     #0EA5E9;  /* tw sky-500     → 亮蓝 */
-  --fx-seed-blue:           #3B73E8;  /* calibrated blue → 蓝 / 链接 / 信息 */
-  --fx-seed-indigo:         #6366F1;  /* tw indigo-500  → 靛蓝 */
-  --fx-seed-purple:         #8B5CF6;  /* tw violet-500  → 紫 */
-  --fx-seed-pink:           #EC4899;  /* tw pink-500    → 粉 */
-  --fx-seed-magenta:        #D946EF;  /* tw fuchsia-500 → 洋红 */
-  --fx-seed-red:            #EF4444;  /* tw red-500     → 错误 */
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   * GENERATED PALETTE — 16 色系 × 12 阶（01–12），对齐 Radix 分区
-   * 01-02 背景 | 03-05 交互 | 06-08 边框 | 09-10 实心 | 11-12 文字
-   * 09 = 种子色（最鲜艳），11-12 = 深色文字专用
-   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-  /* Orange（固定橙，色板展示；品牌语义 token 仍用 --fx-brand-vivid） */
-  --fx-orange-01: oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
-  --fx-orange-02: oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
-  --fx-orange-03: oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
-  --fx-orange-04: oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
-  --fx-orange-05: oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
-  --fx-orange-06: oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
-  --fx-orange-07: oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
-  --fx-orange-08: oklch(from var(--fx-seed-orange) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  --fx-orange-09: var(--fx-seed-orange);
-  --fx-orange-10: oklch(from var(--fx-seed-orange) calc(l * 0.92) calc(c * 0.95) h);
-  --fx-orange-11: oklch(from var(--fx-seed-orange) calc(l * 0.72) calc(c * 0.82) h);
-  --fx-orange-12: oklch(from var(--fx-seed-orange) calc(l * 0.35) calc(c * 0.65) h);
-
-  /* Brand（随换肤变化，品牌语义 token 的真相源；09 = --fx-brand-vivid） */
-  --fx-brand-01: oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
-  --fx-brand-02: oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
-  --fx-brand-03: oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
-  --fx-brand-04: oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
-  --fx-brand-05: oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
-  --fx-brand-06: oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
-  --fx-brand-07: oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
-  --fx-brand-08: oklch(from var(--fx-brand-vivid) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  --fx-brand-09: var(--fx-brand-vivid);
-  --fx-brand-10: oklch(from var(--fx-brand-vivid) calc(l * 0.92) calc(c * 0.95) h);
-  --fx-brand-11: oklch(from var(--fx-brand-vivid) calc(l * 0.72) calc(c * 0.82) h);
-  --fx-brand-12: oklch(from var(--fx-brand-vivid) calc(l * 0.35) calc(c * 0.65) h);
-
-  /* Orange Warning */
-  --fx-orange-warning-01: oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
-  --fx-orange-warning-02: oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
-  --fx-orange-warning-03: oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
-  --fx-orange-warning-04: oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
-  --fx-orange-warning-05: oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
-  --fx-orange-warning-06: oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
-  --fx-orange-warning-07: oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
-  --fx-orange-warning-08: oklch(from var(--fx-seed-orange-warning) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  --fx-orange-warning-09: var(--fx-seed-orange-warning);
-  --fx-orange-warning-10: oklch(from var(--fx-seed-orange-warning) calc(l * 0.92) calc(c * 0.95) h);
-  --fx-orange-warning-11: oklch(from var(--fx-seed-orange-warning) calc(l * 0.72) calc(c * 0.82) h);
-  --fx-orange-warning-12: oklch(from var(--fx-seed-orange-warning) calc(l * 0.35) calc(c * 0.65) h);
-
-  /* Amber */
-  --fx-amber-01: oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
-  --fx-amber-02: oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
-  --fx-amber-03: oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
-  --fx-amber-04: oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
-  --fx-amber-05: oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
-  --fx-amber-06: oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
-  --fx-amber-07: oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
-  --fx-amber-08: oklch(from var(--fx-seed-amber) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  --fx-amber-09: var(--fx-seed-amber);
-  --fx-amber-10: oklch(from var(--fx-seed-amber) calc(l * 0.92) calc(c * 0.95) h);
-  --fx-amber-11: oklch(from var(--fx-seed-amber) calc(l * 0.72) calc(c * 0.82) h);
-  --fx-amber-12: oklch(from var(--fx-seed-amber) calc(l * 0.35) calc(c * 0.65) h);
-
-  /* Yellow */
-  --fx-yellow-01: oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
-  --fx-yellow-02: oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
-  --fx-yellow-03: oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
-  --fx-yellow-04: oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
-  --fx-yellow-05: oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
-  --fx-yellow-06: oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
-  --fx-yellow-07: oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
-  --fx-yellow-08: oklch(from var(--fx-seed-yellow) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  --fx-yellow-09: var(--fx-seed-yellow);
-  --fx-yellow-10: oklch(from var(--fx-seed-yellow) calc(l * 0.92) calc(c * 0.95) h);
-  --fx-yellow-11: oklch(from var(--fx-seed-yellow) calc(l * 0.72) calc(c * 0.82) h);
-  --fx-yellow-12: oklch(from var(--fx-seed-yellow) calc(l * 0.35) calc(c * 0.65) h);
-
-  /* Lime */
-  --fx-lime-01: oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
-  --fx-lime-02: oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
-  --fx-lime-03: oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
-  --fx-lime-04: oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
-  --fx-lime-05: oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
-  --fx-lime-06: oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
-  --fx-lime-07: oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
-  --fx-lime-08: oklch(from var(--fx-seed-lime) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  --fx-lime-09: var(--fx-seed-lime);
-  --fx-lime-10: oklch(from var(--fx-seed-lime) calc(l * 0.92) calc(c * 0.95) h);
-  --fx-lime-11: oklch(from var(--fx-seed-lime) calc(l * 0.72) calc(c * 0.82) h);
-  --fx-lime-12: oklch(from var(--fx-seed-lime) calc(l * 0.35) calc(c * 0.65) h);
-
-  /* Yellow Green */
-  --fx-yellow-green-01: oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
-  --fx-yellow-green-02: oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
-  --fx-yellow-green-03: oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
-  --fx-yellow-green-04: oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
-  --fx-yellow-green-05: oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
-  --fx-yellow-green-06: oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
-  --fx-yellow-green-07: oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
-  --fx-yellow-green-08: oklch(from var(--fx-seed-yellow-green) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  --fx-yellow-green-09: var(--fx-seed-yellow-green);
-  --fx-yellow-green-10: oklch(from var(--fx-seed-yellow-green) calc(l * 0.92) calc(c * 0.95) h);
-  --fx-yellow-green-11: oklch(from var(--fx-seed-yellow-green) calc(l * 0.72) calc(c * 0.82) h);
-  --fx-yellow-green-12: oklch(from var(--fx-seed-yellow-green) calc(l * 0.35) calc(c * 0.65) h);
-
-  /* Green */
-  --fx-green-01: oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
-  --fx-green-02: oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
-  --fx-green-03: oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
-  --fx-green-04: oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
-  --fx-green-05: oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
-  --fx-green-06: oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
-  --fx-green-07: oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
-  --fx-green-08: oklch(from var(--fx-seed-green) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  --fx-green-09: var(--fx-seed-green);
-  --fx-green-10: oklch(from var(--fx-seed-green) calc(l * 0.92) calc(c * 0.95) h);
-  --fx-green-11: oklch(from var(--fx-seed-green) calc(l * 0.72) calc(c * 0.82) h);
-  --fx-green-12: oklch(from var(--fx-seed-green) calc(l * 0.35) calc(c * 0.65) h);
-
-  /* Teal */
-  --fx-teal-01: oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
-  --fx-teal-02: oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
-  --fx-teal-03: oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
-  --fx-teal-04: oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
-  --fx-teal-05: oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
-  --fx-teal-06: oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
-  --fx-teal-07: oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
-  --fx-teal-08: oklch(from var(--fx-seed-teal) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  --fx-teal-09: var(--fx-seed-teal);
-  --fx-teal-10: oklch(from var(--fx-seed-teal) calc(l * 0.92) calc(c * 0.95) h);
-  --fx-teal-11: oklch(from var(--fx-seed-teal) calc(l * 0.72) calc(c * 0.82) h);
-  --fx-teal-12: oklch(from var(--fx-seed-teal) calc(l * 0.35) calc(c * 0.65) h);
-
-  /* Cyan */
-  --fx-cyan-01: oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
-  --fx-cyan-02: oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
-  --fx-cyan-03: oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
-  --fx-cyan-04: oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
-  --fx-cyan-05: oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
-  --fx-cyan-06: oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
-  --fx-cyan-07: oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
-  --fx-cyan-08: oklch(from var(--fx-seed-cyan) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  --fx-cyan-09: var(--fx-seed-cyan);
-  --fx-cyan-10: oklch(from var(--fx-seed-cyan) calc(l * 0.92) calc(c * 0.95) h);
-  --fx-cyan-11: oklch(from var(--fx-seed-cyan) calc(l * 0.72) calc(c * 0.82) h);
-  --fx-cyan-12: oklch(from var(--fx-seed-cyan) calc(l * 0.35) calc(c * 0.65) h);
-
-  /* Light Blue */
-  --fx-light-blue-01: oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
-  --fx-light-blue-02: oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
-  --fx-light-blue-03: oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
-  --fx-light-blue-04: oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
-  --fx-light-blue-05: oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
-  --fx-light-blue-06: oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
-  --fx-light-blue-07: oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
-  --fx-light-blue-08: oklch(from var(--fx-seed-light-blue) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  --fx-light-blue-09: var(--fx-seed-light-blue);
-  --fx-light-blue-10: oklch(from var(--fx-seed-light-blue) calc(l * 0.92) calc(c * 0.95) h);
-  --fx-light-blue-11: oklch(from var(--fx-seed-light-blue) calc(l * 0.72) calc(c * 0.82) h);
-  --fx-light-blue-12: oklch(from var(--fx-seed-light-blue) calc(l * 0.35) calc(c * 0.65) h);
-
-  /* Blue */
-  --fx-blue-01: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
-  --fx-blue-02: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
-  --fx-blue-03: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
-  --fx-blue-04: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
-  --fx-blue-05: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
-  --fx-blue-06: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
-  --fx-blue-07: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
-  --fx-blue-08: oklch(from var(--fx-seed-blue) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  --fx-blue-09: var(--fx-seed-blue);
-  --fx-blue-10: oklch(from var(--fx-seed-blue) calc(l * 0.92) calc(c * 0.95) h);
-  --fx-blue-11: oklch(from var(--fx-seed-blue) calc(l * 0.72) calc(c * 0.82) h);
-  --fx-blue-12: oklch(from var(--fx-seed-blue) calc(l * 0.35) calc(c * 0.65) h);
-
-  /* Indigo */
-  --fx-indigo-01: oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
-  --fx-indigo-02: oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
-  --fx-indigo-03: oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
-  --fx-indigo-04: oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
-  --fx-indigo-05: oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
-  --fx-indigo-06: oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
-  --fx-indigo-07: oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
-  --fx-indigo-08: oklch(from var(--fx-seed-indigo) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  --fx-indigo-09: var(--fx-seed-indigo);
-  --fx-indigo-10: oklch(from var(--fx-seed-indigo) calc(l * 0.92) calc(c * 0.95) h);
-  --fx-indigo-11: oklch(from var(--fx-seed-indigo) calc(l * 0.72) calc(c * 0.82) h);
-  --fx-indigo-12: oklch(from var(--fx-seed-indigo) calc(l * 0.35) calc(c * 0.65) h);
-
-  /* Purple */
-  --fx-purple-01: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
-  --fx-purple-02: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
-  --fx-purple-03: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
-  --fx-purple-04: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
-  --fx-purple-05: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
-  --fx-purple-06: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
-  --fx-purple-07: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
-  --fx-purple-08: oklch(from var(--fx-seed-purple) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  --fx-purple-09: var(--fx-seed-purple);
-  --fx-purple-10: oklch(from var(--fx-seed-purple) calc(l * 0.92) calc(c * 0.95) h);
-  --fx-purple-11: oklch(from var(--fx-seed-purple) calc(l * 0.72) calc(c * 0.82) h);
-  --fx-purple-12: oklch(from var(--fx-seed-purple) calc(l * 0.35) calc(c * 0.65) h);
-
-  /* Pink */
-  --fx-pink-01: oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
-  --fx-pink-02: oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
-  --fx-pink-03: oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
-  --fx-pink-04: oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
-  --fx-pink-05: oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
-  --fx-pink-06: oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
-  --fx-pink-07: oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
-  --fx-pink-08: oklch(from var(--fx-seed-pink) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  --fx-pink-09: var(--fx-seed-pink);
-  --fx-pink-10: oklch(from var(--fx-seed-pink) calc(l * 0.92) calc(c * 0.95) h);
-  --fx-pink-11: oklch(from var(--fx-seed-pink) calc(l * 0.72) calc(c * 0.82) h);
-  --fx-pink-12: oklch(from var(--fx-seed-pink) calc(l * 0.35) calc(c * 0.65) h);
-
-  /* Magenta */
-  --fx-magenta-01: oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
-  --fx-magenta-02: oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
-  --fx-magenta-03: oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
-  --fx-magenta-04: oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
-  --fx-magenta-05: oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
-  --fx-magenta-06: oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
-  --fx-magenta-07: oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
-  --fx-magenta-08: oklch(from var(--fx-seed-magenta) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  --fx-magenta-09: var(--fx-seed-magenta);
-  --fx-magenta-10: oklch(from var(--fx-seed-magenta) calc(l * 0.92) calc(c * 0.95) h);
-  --fx-magenta-11: oklch(from var(--fx-seed-magenta) calc(l * 0.72) calc(c * 0.82) h);
-  --fx-magenta-12: oklch(from var(--fx-seed-magenta) calc(l * 0.35) calc(c * 0.65) h);
-
-  /* Red */
-  --fx-red-01: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.90) calc(c * 0.06) h);
-  --fx-red-02: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.84) calc(c * 0.10) h);
-  --fx-red-03: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.72) calc(c * 0.18) h);
-  --fx-red-04: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.58) calc(c * 0.30) h);
-  --fx-red-05: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.43) calc(c * 0.45) h);
-  --fx-red-06: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.28) calc(c * 0.62) h);
-  --fx-red-07: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.14) calc(c * 0.80) h);
-  --fx-red-08: oklch(from var(--fx-seed-red) calc(l + (1 - l) * 0.12) calc(c * 0.94) h);
-  /* red-09 is manually calibrated brighter than the red seed; 08/10 remain the interaction transition steps. */
-  --fx-red-09: #F04446;
-  --fx-red-10: oklch(from var(--fx-seed-red) calc(l * 0.92) calc(c * 0.95) h);
-  --fx-red-11: oklch(from var(--fx-seed-red) calc(l * 0.72) calc(c * 0.82) h);
-  --fx-red-12: oklch(from var(--fx-seed-red) calc(l * 0.35) calc(c * 0.65) h);
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   * NEUTRALS — 20 阶灰阶，带品牌色相极轻染（neutral-dark chroma 0.008，肉眼近中性）
-   * --fx-neutral-dark 是近黑基色，含品牌色相微量；01 最浅(白) → 20 最深
-   * 全站唯一中性灰轴：页面底/卡片/文字/边框/中性交互面（secondary·muted·ghost）都取自这里
-   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  --fx-neutral-dark: oklch(from var(--fx-brand-vivid) 0.12 0.008 h);
-
-  --fx-neutrals-01: white;
-  --fx-neutrals-02: color-mix(in oklch, white, var(--fx-neutral-dark)  2%);
-  --fx-neutrals-03: color-mix(in oklch, white, var(--fx-neutral-dark)  5%);
-  --fx-neutrals-04: color-mix(in oklch, white, var(--fx-neutral-dark)  9%);
-  --fx-neutrals-05: color-mix(in oklch, white, var(--fx-neutral-dark) 14%);
-  --fx-neutrals-06: color-mix(in oklch, white, var(--fx-neutral-dark) 19%);
-  --fx-neutrals-07: color-mix(in oklch, white, var(--fx-neutral-dark) 25%);
-  --fx-neutrals-08: color-mix(in oklch, white, var(--fx-neutral-dark) 31%);
-  --fx-neutrals-09: color-mix(in oklch, white, var(--fx-neutral-dark) 37%);
-  --fx-neutrals-10: color-mix(in oklch, white, var(--fx-neutral-dark) 43%);
-  --fx-neutrals-11: color-mix(in oklch, white, var(--fx-neutral-dark) 49%);
-  --fx-neutrals-12: color-mix(in oklch, white, var(--fx-neutral-dark) 55%);
-  --fx-neutrals-13: color-mix(in oklch, white, var(--fx-neutral-dark) 61%);
-  --fx-neutrals-14: color-mix(in oklch, white, var(--fx-neutral-dark) 67%);
-  --fx-neutrals-15: color-mix(in oklch, white, var(--fx-neutral-dark) 73%);
-  --fx-neutrals-16: color-mix(in oklch, white, var(--fx-neutral-dark) 79%);
-  --fx-neutrals-17: color-mix(in oklch, white, var(--fx-neutral-dark) 85%);
-  --fx-neutrals-18: color-mix(in oklch, white, var(--fx-neutral-dark) 90%);
-  --fx-neutrals-19: color-mix(in oklch, white, var(--fx-neutral-dark) 95%);
-  --fx-neutrals-20: var(--fx-neutral-dark);
-
-  /* 全局页面画布底色：独立于中性灰轴，避免页面换底连带改变控件和边框。 */
-  --fx-page-background: #F5F6F7;
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   * ICONS
-   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  --fx-icon-dark:  var(--fx-neutrals-20);
-  --fx-icon-light: var(--fx-neutrals-01);
-  --fx-icon-gray:  var(--fx-neutrals-11);
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   * PRIMITIVE ALIASES
-   * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  --fx-primary:          var(--fx-brand-09);
-  --fx-success:          var(--fx-green-09);
-  --fx-info:             var(--fx-blue-09);
-  --fx-warning:          var(--fx-amber-09);
-  --fx-danger:           var(--fx-red-09);
-
-  /* 实心交互态：hover 浅一阶（08）、active 深一阶（10），随换肤变化 */
-  --fx-primary-hover:    var(--fx-brand-08);
-  --fx-primary-active:   var(--fx-brand-10);
-  --fx-primary-disabled: var(--fx-brand-04);
-
-  /* 浅色变体（Tag / Badge / Alert / Ghost 按钮背景） */
-  --fx-primary-light:        var(--fx-brand-01);
-  --fx-primary-light-hover:  var(--fx-brand-02);
-  --fx-primary-light-active: var(--fx-brand-03);
-
-  /* 功能色浅色三态（Tag / Badge / Alert / 软按钮 —— 全走各自 12 阶色板 01/02/03） */
-  --fx-success-light:        var(--fx-green-01);
-  --fx-success-light-hover:  var(--fx-green-02);
-  --fx-success-light-active: var(--fx-green-03);
-  --fx-info-light:           var(--fx-blue-01);
-  --fx-info-light-hover:     var(--fx-blue-02);
-  --fx-info-light-active:    var(--fx-blue-03);
-  --fx-warning-light:        var(--fx-amber-01);
-  --fx-warning-light-hover:  var(--fx-amber-02);
-  --fx-warning-light-active: var(--fx-amber-03);
-  --fx-danger-light:         var(--fx-red-01);
-  --fx-danger-light-hover:   var(--fx-red-02);
-  --fx-danger-light-active:  var(--fx-red-03);
-
-  /* 中性面交互态（secondary / muted / ghost / outline —— 走灰色 12 阶色板） */
-  /* 默认 02、hover 03、active 04，对齐 Radix 灰交互区 */
-
-  /* ===== 列表行高亮色 List row highlight ===== */
-  --fx-list-orange: var(--fx-orange-01);
-  --fx-list-blue:   var(--fx-blue-01);
-
-  /* ===== shadcn 标准语义槽 ←映射← 公司 token ===== */
-
-  --radius: 0.5rem;
-  --radius-none: 0px;
-  --radius-inner: 4px;
-  --radius-element: 6px;
-  --radius-container: 12px;
-  --radius-page: 16px;
-  --radius-full: 9999px;
-
-  --background: var(--fx-page-background);
-  /* 文字/图标四级层级（文字与图标共用同一套，全部取自中性轴）
-     约 100/73/49/25 的均匀梯度（对齐 Ant 88/65/45/25）：
-     ① 主 20 / ② 次 15 / ③ 弱信息·caption 11 / ④ 占位+禁用 06 */
-  --foreground: var(--fx-neutrals-20);
-  --foreground-secondary: var(--fx-neutrals-15);
-  --foreground-disabled: var(--fx-neutrals-06);
-
-  --card: #FFFFFF;
-  --card-foreground: var(--fx-neutrals-20);
-  --surface: var(--fx-neutrals-01);  /* 浮起控件白底（outline 按钮/白底图标按钮等），与 card 同值但语义独立：card=容器、surface=控件表面 */
-  --surface-disabled: var(--fx-neutrals-02);  /* 控件禁用底（如 outline 按钮禁用态），比 surface 略灰 */
-
-  --popover: #FFFFFF;
-  --popover-foreground: var(--fx-neutrals-20);
-
-  /* 遮罩/蒙层：从最深中性灰派生，透明度烤进 token 本身（半透明），组件直接 bg-overlay */
-  --overlay: oklch(from var(--fx-neutrals-20) l c h / 0.2);
-  /* 遮罩背后内容的模糊半径：配合 20% 浅遮罩，一处统管 */
-  --overlay-blur: 2px;
-
-  --primary: var(--fx-brand-09);     /* ★ 品牌色 → 主按钮/强调（唯一真相：色板 09 阶） */
-  --primary-foreground: #FFFFFF;
-
-  --secondary: var(--fx-neutrals-03);
-  --secondary-hover: var(--fx-neutrals-04);
-  --secondary-active: var(--fx-neutrals-05);
-  --secondary-foreground: var(--fx-neutrals-20);
-
-  --muted: var(--fx-neutrals-03);
-  --muted-hover: var(--fx-neutrals-04);
-  --muted-active: var(--fx-neutrals-05);
-  --muted-foreground: var(--fx-neutrals-11);
-
-  /* 半透明填充：用于"透明容器上的填充控件"（如全局顶栏搜索框），叠在任意宿主底色上都自带相对反差，不挑背景 */
-  --fill-subtle: color-mix(in oklch, var(--foreground) 5%, transparent);
-  --fill-hover: color-mix(in oklch, var(--foreground) 8%, transparent);
-
-  --accent: var(--fx-orange-01);
-  --accent-hover: var(--fx-orange-02);
-  --accent-foreground: var(--fx-neutrals-20);
-
-  --destructive: var(--fx-red-09);
-  --destructive-hover: var(--fx-red-08);
-  --destructive-active: var(--fx-red-10);
-  --destructive-disabled: var(--fx-red-04);
-  --destructive-foreground: #FFFFFF;
-  --destructive-light: var(--fx-danger-light);
-  --destructive-light-hover: var(--fx-danger-light-hover);
-  --destructive-light-active: var(--fx-danger-light-active);
-
-  /* 链接色（蓝）：统一交互阶梯 默认 09 / hover 08 / active 10（浅色模式） */
-  --link: var(--fx-blue-09);
-  --link-hover: var(--fx-blue-08);
-  --link-active: var(--fx-blue-10);
-  --link-disabled: var(--fx-blue-04);
-
-  /* 边框层级：站点骨架 02 / faint 03 / 弱 04 / 默认 05 / 强 08；input 07 为可交互元素边框 */
-  --border-chrome: var(--fx-neutrals-02);
-  --border-faint: var(--fx-neutrals-03);
-  --border-container: color-mix(in oklch, var(--fx-neutrals-04), white 45%);
-  --border-subtle: var(--fx-neutrals-04);
-  --border: var(--fx-neutrals-05);
-  --border-strong: var(--fx-neutrals-08);
-  --input: var(--fx-neutrals-07);
-  --ring: oklch(from var(--fx-brand-09) l c h / 0.4);
-
-  /* ===== 扩展功能色（实心组：默认09 / hover08 / active10 / disabled05，全走色板）===== */
-  --success: var(--fx-green-09);
-  --success-hover: var(--fx-green-08);
-  --success-active: var(--fx-green-10);
-  --success-disabled: var(--fx-green-05);
-  --success-foreground: #FFFFFF;
-  --warning: var(--fx-amber-09);
-  --warning-hover: var(--fx-amber-08);
-  --warning-active: var(--fx-amber-10);
-  --warning-disabled: var(--fx-amber-05);
-  --warning-foreground: #FFFFFF;
-
-  --info: var(--fx-blue-09);
-  --info-hover: var(--fx-blue-08);
-  --info-active: var(--fx-blue-10);
-  --info-disabled: var(--fx-blue-04);
-  --info-foreground: var(--fx-neutrals-01);
-
-  /* 企业真实字族（Figma 字体规范）：西文 Helvetica 优先，中文思源黑体 CN，全系统字体不下载 */
-  /* 拉丁 Inter（对齐 showcase 默认 sans）；中文优先系统苹方/雅黑（更顺眼），Noto Sans SC 退为跨平台兜底 */
-  --font-sans: "Inter Variable", "PingFang SC", "苹方", "Microsoft YaHei", "微软雅黑", "Helvetica Neue", "Noto Sans SC", Arial, sans-serif;
-
-  /* chart — BI 常用色（Figma「BI常用颜色」规范，各色系视觉均衡阶） */
-  --chart-1:  #FF7383; /* Magenta 05 */
-  --chart-2:  #FF7752; /* Red 05 */
-  --chart-3:  #FF9B29; /* Orange 05 */
-  --chart-4:  #FFDA54; /* Yellow 04 */
-  --chart-5:  #DDF2BB; /* Yellow Green 03 */
-  --chart-6:  #55D48C; /* Green 05 */
-  --chart-7:  #5BCFC1; /* Teal 04 */
-  --chart-8:  #40B6FF; /* Blue 05 */
-  --chart-9:  #368DFF; /* Blue 05 deep */
-  --chart-10: #976AEB; /* Purple 05 */
-
-  /* ===== 投影 Shadow（Figma「图层样式」规范） ===== */
-  /* 单个 elevation token 由 2~3 层投影组成：近层保留落点，远层提供柔和扩散。
-     三层色均从最深中性灰（含品牌色相微染）派生，不写死纯黑。 */
-  --fx-shadow-color: oklch(from var(--fx-neutrals-20) l c h / 0.08);
-  --fx-shadow-color-soft: oklch(from var(--fx-neutrals-20) l c h / 0.05);
-  --fx-shadow-color-faint: oklch(from var(--fx-neutrals-20) l c h / 0.03);
-  --fx-shadow-l1:    0px 2px 6px -2px var(--fx-shadow-color), 0px 4px 10px -4px var(--fx-shadow-color-soft); /* L1 浮层菜单 / Dropdown */
-  --fx-shadow-l2:    0px 4px 12px -4px var(--fx-shadow-color), 0px 8px 20px -2px var(--fx-shadow-color-soft), 0px 12px 28px 0px var(--fx-shadow-color-faint); /* L2 页面滑出 / Sheet */
-  --fx-shadow-l3:    0px 6px 16px -8px var(--fx-shadow-color), 0px 9px 28px 0px var(--fx-shadow-color-soft), 0px 12px 48px 16px var(--fx-shadow-color-faint); /* L3 临时性插入 / Dialog / Modal */
-  --fx-shadow-l1-up: 0px -2px 6px -2px var(--fx-shadow-color), 0px -4px 10px -4px var(--fx-shadow-color-soft); /* L1 向上变体：y 取负 */
-
-  /* 28px 紧凑控件专用字号；不作为正文或页面文本角色使用。 */
-  --fx-text-control-sm: 13px;
-  --fx-text-control-sm--line-height: 18px;
-
-  /* sidebar */
-  --sidebar: #FFFFFF;
-  --sidebar-foreground: var(--fx-neutrals-20);
-  --sidebar-primary: #FF8000;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #F2F4FB;
-  --sidebar-accent-foreground: var(--fx-neutrals-20);
-  --sidebar-border: #DEE1E8;
-  --sidebar-ring: #FF8000;
-}
-
-/* ===== 暗色模式：覆盖语义槽（class .dark 触发，见顶部 @custom-variant）=====
-   原则：表面用品牌微染 oklch（C 0.008）、由暗到亮分层；边框/分隔用白色 alpha 自适应；
-   品牌/状态色保留色相（暗底上更亮一档），软底(-light)改成暗调混色。暗色阶梯方向与浅色相反。 */
-.dark {
-  --background: oklch(from var(--fx-brand-vivid) 0.165 0.008 h);   /* 页面最底 */
-  --foreground: oklch(from var(--fx-brand-vivid) 0.955 0.006 h);
-  --foreground-secondary: oklch(from var(--fx-brand-vivid) 0.72 0.006 h);
-  --foreground-disabled: oklch(from var(--fx-brand-vivid) 0.45 0.006 h);
-
-  --card: oklch(from var(--fx-brand-vivid) 0.205 0.008 h);          /* 抬起面，比 bg 亮一档 */
-  --card-foreground: var(--foreground);
-  --surface: oklch(from var(--fx-brand-vivid) 0.205 0.008 h);
-  --surface-disabled: oklch(from var(--fx-brand-vivid) 0.235 0.008 h);
-  --popover: oklch(from var(--fx-brand-vivid) 0.225 0.008 h);
-  --popover-foreground: var(--foreground);
-
-  --overlay: oklch(0 0 0 / 0.55);
-
-  --primary: var(--fx-brand-08);                                    /* 品牌橙暗底上提一档更亮 */
-  /* primary-foreground 保持白（继承 :root），品牌橙上白字更稳 */
-
-  --secondary: oklch(from var(--fx-brand-vivid) 0.255 0.008 h);
-  --secondary-hover: oklch(from var(--fx-brand-vivid) 0.295 0.008 h);
-  --secondary-active: oklch(from var(--fx-brand-vivid) 0.335 0.008 h);
-  --secondary-foreground: var(--foreground);
-
-  --muted: oklch(from var(--fx-brand-vivid) 0.255 0.008 h);
-  --muted-hover: oklch(from var(--fx-brand-vivid) 0.295 0.008 h);
-  --muted-active: oklch(from var(--fx-brand-vivid) 0.335 0.008 h);
-  --muted-foreground: oklch(from var(--fx-brand-vivid) 0.64 0.006 h);
-
-  --accent: color-mix(in oklch, var(--fx-brand-vivid) 18%, var(--card));
-  --accent-hover: color-mix(in oklch, var(--fx-brand-vivid) 26%, var(--card));
-  --accent-foreground: var(--foreground);
-
-  /* 边框/输入：白色 alpha，叠在任意暗面上自适应 */
-  --border-chrome: oklch(1 0 0 / 0.04);
-  --border-faint: oklch(1 0 0 / 0.06);
-  --border-container: oklch(1 0 0 / 0.07);
-  --border-subtle: oklch(1 0 0 / 0.10);
-  --border: oklch(1 0 0 / 0.14);
-  --border-strong: oklch(1 0 0 / 0.26);
-  --input: oklch(1 0 0 / 0.18);
-  --ring: oklch(from var(--fx-brand-08) l c h / 0.5);
-
-  /* 链接蓝：暗底提亮 */
-  --link: var(--fx-blue-07);
-  --link-hover: var(--fx-blue-06);
-  --link-active: var(--fx-blue-08);
-  --link-disabled: oklch(from var(--fx-blue-07) l c h / 0.4);
-
-  /* 危险：实心保留，软底改暗调混色（红 + 暗面） */
-  --destructive: var(--fx-red-08);
-  --destructive-hover: var(--fx-red-07);
-  --destructive-active: var(--fx-red-09);
-  --destructive-light: color-mix(in oklch, var(--fx-red-09) 22%, var(--card));
-  --destructive-light-hover: color-mix(in oklch, var(--fx-red-09) 30%, var(--card));
-  --destructive-light-active: color-mix(in oklch, var(--fx-red-09) 38%, var(--card));
-
-  /* 状态色：实心提一档；warning 亮黄需深字 */
-  --success: var(--fx-green-08);
-  --warning: var(--fx-amber-08);
-  --warning-foreground: oklch(0.18 0 0);
-
-  /* 侧栏（Sidebar 组件，原 :root 写死浅色，暗色下覆盖）*/
-  --sidebar: oklch(from var(--fx-brand-vivid) 0.19 0.008 h);
-  --sidebar-foreground: var(--foreground);
-  --sidebar-accent: color-mix(in oklch, var(--fx-brand-vivid) 18%, var(--card));
-  --sidebar-accent-foreground: var(--foreground);
-  --sidebar-border: oklch(1 0 0 / 0.10);
-  --sidebar-ring: var(--fx-brand-08);
-
+  /* Structural compatibility aliases remain outside Semantic. */
+  --radius: var(--fds-g-radius-8);
+  --radius-none: var(--fds-g-radius-0);
+  --radius-inner: var(--fds-g-radius-4);
+  --radius-element: var(--fds-g-radius-6);
+  --radius-container: var(--fds-g-radius-12);
+  --radius-page: var(--fds-g-radius-16);
+  --radius-full: var(--fds-g-radius-full);
+
+  --font-sans: var(--fds-g-font-family-sans);
 }
 
 @theme inline {
@@ -628,93 +78,57 @@
   --color-destructive-hover: var(--destructive-hover);
   --color-destructive-active: var(--destructive-active);
   --color-destructive-disabled: var(--destructive-disabled);
-  --color-icon:       var(--fx-icon-dark);
-  --color-icon-muted: var(--fx-icon-gray);
+  --color-icon:       var(--fds-g-color-icon-primary);
+  --color-icon-muted: var(--fds-g-color-icon-muted);
 
-  --color-primary-hover:        var(--fx-primary-hover);
-  --color-primary-active:       var(--fx-primary-active);
-  --color-primary-disabled:     var(--fx-primary-disabled);
-  --color-primary-light:        var(--fx-primary-light);
-  --color-primary-light-hover:  var(--fx-primary-light-hover);
-  --color-primary-light-active: var(--fx-primary-light-active);
+  --color-primary-hover:        var(--fds-g-color-action-primary-hover);
+  --color-primary-active:       var(--fds-g-color-action-primary-active);
+  --color-primary-disabled:     var(--fds-g-color-action-primary-disabled);
+  --color-primary-light:        var(--fds-g-color-action-primary-subtle);
+  --color-primary-light-hover:  var(--fds-g-color-action-primary-subtle-hover);
+  --color-primary-light-active: var(--fds-g-color-action-primary-subtle-active);
   --color-secondary-hover:       var(--secondary-hover);
   --color-secondary-active:      var(--secondary-active);
   --color-muted-hover:           var(--muted-hover);
   --color-muted-active:          var(--muted-active);
   --color-fill-subtle:           var(--fill-subtle);
   --color-fill-hover:            var(--fill-hover);
-  --color-success-light:         var(--fx-success-light);
-  --color-success-light-hover:   var(--fx-success-light-hover);
-  --color-success-light-active:  var(--fx-success-light-active);
-  --color-warning-light:         var(--fx-warning-light);
-  --color-warning-light-hover:   var(--fx-warning-light-hover);
-  --color-warning-light-active:  var(--fx-warning-light-active);
-  --color-info-light:            var(--fx-info-light);
-  --color-info-light-hover:      var(--fx-info-light-hover);
-  --color-info-light-active:     var(--fx-info-light-active);
-  --color-danger-light:          var(--fx-danger-light);
+  --color-success-light:         var(--fds-g-color-status-success-subtle);
+  --color-success-light-hover:   var(--fds-g-color-status-success-subtle-hover);
+  --color-success-light-active:  var(--fds-g-color-status-success-subtle-active);
+  --color-warning-light:         var(--fds-g-color-status-warning-subtle);
+  --color-warning-light-hover:   var(--fds-g-color-status-warning-subtle-hover);
+  --color-warning-light-active:  var(--fds-g-color-status-warning-subtle-active);
+  --color-info-light:            var(--fds-g-color-status-info-subtle);
+  --color-info-light-hover:      var(--fds-g-color-status-info-subtle-hover);
+  --color-info-light-active:     var(--fds-g-color-status-info-subtle-active);
+  --color-danger-light:          var(--fds-g-color-status-error-subtle);
   --color-destructive-light:        var(--destructive-light);
   --color-destructive-light-hover:  var(--destructive-light-hover);
   --color-destructive-light-active: var(--destructive-light-active);
   /* 固定圆角档：2 / 4 / 6 / 8 / 12 / 16px，按组件层级选择 */
-  --radius-xs: 2px;     /* 极小图形、紧凑结构 */
-  --radius-sm: 4px;     /* 小标签、嵌套内层 */
-  --radius-md: 6px;     /* 24/28 控件、输入框 */
-  --radius-lg: 8px;     /* 32/36 控件、常规表面 */
-  --radius-xl: 12px;    /* 下拉、浮层、较大容器 */
-  --radius-2xl: 1rem;   /* 16px，Dialog/Sheet/页面级容器 */
-  --radius-3xl: 1.5rem; /* 24px */
-  --radius-4xl: 2rem;   /* 32px */
+  --radius-xs: var(--fds-g-radius-2);   /* 极小图形、紧凑结构 */
+  --radius-sm: var(--fds-g-radius-4);   /* 小标签、嵌套内层 */
+  --radius-md: var(--fds-g-radius-6);   /* 24/28 控件、输入框 */
+  --radius-lg: var(--fds-g-radius-8);   /* 32/36 控件、常规表面 */
+  --radius-xl: var(--fds-g-radius-12);  /* 下拉、浮层、较大容器 */
+  --radius-2xl: var(--fds-g-radius-16); /* Dialog/Sheet/页面级容器 */
+  --radius-3xl: var(--fds-g-sizing-24); /* 特殊大区域 */
+  --radius-4xl: var(--fds-g-sizing-32); /* 特殊大区域 */
 
   --font-sans: var(--font-sans);
   --font-heading: var(--font-sans);
 
-  /* 企业 web 字体规范收口到 Tailwind 字号类。
-     Tailwind 的 text-* 始终映射到一层 fx 运行时变量，主题面板改的是 --fx-text-*，
-     避免被编译成固定像素后无法实时响应。 */
-  --fx-text-xs: 12px;  --fx-text-xs--line-height: 18px;
-  --fx-text-sm: 14px;  --fx-text-sm--line-height: 20px;
-  --fx-text-base: 16px;  --fx-text-base--line-height: 24px;
-  --fx-text-lg: 18px;  --fx-text-lg--line-height: 28px;
-  --fx-text-xl: 18px;  --fx-text-xl--line-height: 28px;
-  --fx-text-2xl: 24px; --fx-text-2xl--line-height: 32px;
-  --fx-text-3xl: 30px; --fx-text-3xl--line-height: 36px;
-  --fx-text-4xl: 36px; --fx-text-4xl--line-height: 40px;
-
-  --text-xs: var(--fx-text-xs); --text-xs--line-height: var(--fx-text-xs--line-height);
-  --text-control-sm: var(--fx-text-control-sm); --text-control-sm--line-height: var(--fx-text-control-sm--line-height);
-  --text-sm: var(--fx-text-sm); --text-sm--line-height: var(--fx-text-sm--line-height);
-  --text-base: var(--fx-text-base); --text-base--line-height: var(--fx-text-base--line-height);
-  --text-lg: var(--fx-text-lg); --text-lg--line-height: var(--fx-text-lg--line-height);
-  --text-xl: var(--fx-text-xl); --text-xl--line-height: var(--fx-text-xl--line-height);
-  --text-2xl: var(--fx-text-2xl); --text-2xl--line-height: var(--fx-text-2xl--line-height);
-  --text-3xl: var(--fx-text-3xl); --text-3xl--line-height: var(--fx-text-3xl--line-height);
-  --text-4xl: var(--fx-text-4xl); --text-4xl--line-height: var(--fx-text-4xl--line-height);
-
-  /* 界面密度：高频控件高度 / 内边距 / 间距统一从这里读。 */
-  --fx-control-xs-height: 24px;
-  --fx-control-sm-height: 28px;
-  --fx-control-md-height: 32px;
-  --fx-control-lg-height: 36px;
-  --fx-control-icon-xs: 24px;
-  --fx-control-icon-sm: 28px;
-  --fx-control-icon-md: 32px;
-  --fx-control-icon-lg: 36px;
-  --fx-control-px-xs: 0.5rem;
-  --fx-control-px-sm: 0.625rem;
-  --fx-control-px-md: 0.75rem;
-  --fx-control-px-lg: 1rem;
-  --fx-control-gap-tight: 0.25rem;
-  --fx-control-gap: 0.375rem;
-  --fx-table-row-height-compact: 28px;
-  --fx-table-row-height-default: 36px;
-  --fx-table-row-height-comfortable: 42px;
-  --fx-panel-gap: 0.75rem;
-  --fx-panel-padding: 0.75rem;
-  --fx-sidebar-item-height: 32px;
-  --fx-sidebar-item-height-sm: 28px;
-  --fx-topbar-height: 48px;
-  --fx-topbar-search-height: 32px;
+  /* 企业 web 字体规范由 internal FDS Semantic profile 驱动，Tailwind 只做映射。 */
+  --text-xs: var(--fds-g-font-size-xs); --text-xs--line-height: var(--fds-g-font-line-height-xs);
+  --text-control-sm: var(--fds-g-font-size-control-sm); --text-control-sm--line-height: var(--fds-g-font-line-height-control-sm);
+  --text-sm: var(--fds-g-font-size-sm); --text-sm--line-height: var(--fds-g-font-line-height-sm);
+  --text-base: var(--fds-g-font-size-base); --text-base--line-height: var(--fds-g-font-line-height-base);
+  --text-lg: var(--fds-g-font-size-lg); --text-lg--line-height: var(--fds-g-font-line-height-lg);
+  --text-xl: var(--fds-g-font-size-xl); --text-xl--line-height: var(--fds-g-font-line-height-xl);
+  --text-2xl: var(--fds-g-font-size-2xl); --text-2xl--line-height: var(--fds-g-font-line-height-2xl);
+  --text-3xl: var(--fds-g-font-size-3xl); --text-3xl--line-height: var(--fds-g-font-line-height-3xl);
+  --text-4xl: var(--fds-g-font-size-4xl); --text-4xl--line-height: var(--fds-g-font-line-height-4xl);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -733,10 +147,10 @@
   --color-chart-3:  var(--chart-3);
   --color-chart-2:  var(--chart-2);
   --color-chart-1:  var(--chart-1);
-  --shadow-l1:    var(--fx-shadow-l1);
-  --shadow-l2:    var(--fx-shadow-l2);
-  --shadow-l3:    var(--fx-shadow-l3);
-  --shadow-l1-up: var(--fx-shadow-l1-up);
+  --shadow-l1:    var(--fds-g-shadow-elevation-1);
+  --shadow-l2:    var(--fds-g-shadow-elevation-2);
+  --shadow-l3:    var(--fds-g-shadow-elevation-3);
+  --shadow-l1-up: var(--fds-g-shadow-elevation-1-up);
 }
 
 /* 文本角色是调用层；字号和字重继续复用上面的现有 Tailwind token。 */
@@ -803,18 +217,18 @@
 
 /* 轻量前后缀与输入内容的内侧留白必须镜像，避免左右组合密度漂移。 */
 [data-slot="input-group"] > [data-slot="input-affix"] + [data-slot="input"] {
-  padding-left: var(--fx-control-gap-tight);
+  padding-left: var(--fds-g-spacing-control-gap-tight);
 }
 
 [data-slot="input-group"] > [data-slot="input"]:has(+ [data-slot="input-affix"]) {
-  padding-right: var(--fx-control-gap-tight);
+  padding-right: var(--fds-g-spacing-control-gap-tight);
 }
 
 /* 图标线宽（Tabler）：全局默认描边粗细，一处统管，需要更粗/更细改这一个值。
    1.75 介于偏细(1.5)和 shadcn/lucide(2)之间；CSS stroke-width 覆盖图标自带属性。
    面型(*Filled)是实心填充、无描边，不受影响。 */
 .tabler-icon {
-  stroke-width: 1.75;
+  stroke-width: var(--fds-g-icon-stroke-175);
 }
 
 /* 主题定制面板是控制台本体，不作为被调主题的预览对象。
@@ -822,55 +236,55 @@
 .fx-theme-panel-static {
   --radius: 0.5rem;
   --font-sans: "Inter Variable", "PingFang SC", "苹方", "Microsoft YaHei", "微软雅黑", "Noto Sans SC", Arial, sans-serif;
-  --fx-text-xs: 12px;
-  --fx-text-xs--line-height: 18px;
-  --fx-text-control-sm: 13px;
-  --fx-text-control-sm--line-height: 18px;
-  --fx-text-sm: 14px;
-  --fx-text-sm--line-height: 20px;
-  --fx-text-base: 16px;
-  --fx-text-base--line-height: 24px;
-  --fx-text-lg: 18px;
-  --fx-text-lg--line-height: 28px;
-  --fx-text-xl: 20px;
-  --fx-text-xl--line-height: 30px;
-  --fx-text-2xl: 24px;
-  --fx-text-2xl--line-height: 32px;
-  --fx-text-3xl: 30px;
-  --fx-text-3xl--line-height: 38px;
-  --fx-text-4xl: 36px;
-  --fx-text-4xl--line-height: 44px;
-  --fx-control-xs-height: 24px;
-  --fx-control-sm-height: 28px;
-  --fx-control-md-height: 32px;
-  --fx-control-lg-height: 36px;
-  --fx-control-icon-xs: 24px;
-  --fx-control-icon-sm: 28px;
-  --fx-control-icon-md: 32px;
-  --fx-control-icon-lg: 36px;
-  --fx-control-px-xs: 0.5rem;
-  --fx-control-px-sm: 0.625rem;
-  --fx-control-px-md: 0.75rem;
-  --fx-control-px-lg: 1rem;
-  --fx-control-gap-tight: 0.25rem;
-  --fx-control-gap: 0.375rem;
-  --fx-table-row-height-compact: 28px;
-  --fx-table-row-height-default: 36px;
-  --fx-table-row-height-comfortable: 42px;
-  --fx-panel-gap: 0.75rem;
-  --fx-panel-padding: 0.75rem;
-  --fx-theme-duration: 200ms;
-  --fx-shadow-color: oklch(from var(--fx-neutrals-20) l c h / 0.08);
-  --fx-shadow-color-soft: oklch(from var(--fx-neutrals-20) l c h / 0.05);
-  --fx-shadow-color-faint: oklch(from var(--fx-neutrals-20) l c h / 0.03);
-  --fx-shadow-l1: 0px 2px 6px -2px var(--fx-shadow-color), 0px 4px 10px -4px var(--fx-shadow-color-soft);
-  --fx-shadow-l2: 0px 4px 12px -4px var(--fx-shadow-color), 0px 8px 20px -2px var(--fx-shadow-color-soft), 0px 12px 28px 0px var(--fx-shadow-color-faint);
-  --fx-shadow-l3: 0px 6px 16px -8px var(--fx-shadow-color), 0px 9px 28px 0px var(--fx-shadow-color-soft), 0px 12px 48px 16px var(--fx-shadow-color-faint);
-  --fx-shadow-l1-up: 0px -2px 6px -2px var(--fx-shadow-color), 0px -4px 10px -4px var(--fx-shadow-color-soft);
+  --fds-g-font-size-xs: 12px;
+  --fds-g-font-line-height-xs: 18px;
+  --fds-g-font-size-control-sm: 13px;
+  --fds-g-font-line-height-control-sm: 18px;
+  --fds-g-font-size-sm: 14px;
+  --fds-g-font-line-height-sm: 20px;
+  --fds-g-font-size-base: 16px;
+  --fds-g-font-line-height-base: 24px;
+  --fds-g-font-size-lg: 18px;
+  --fds-g-font-line-height-lg: 28px;
+  --fds-g-font-size-xl: 20px;
+  --fds-g-font-line-height-xl: 30px;
+  --fds-g-font-size-2xl: 24px;
+  --fds-g-font-line-height-2xl: 32px;
+  --fds-g-font-size-3xl: 30px;
+  --fds-g-font-line-height-3xl: 38px;
+  --fds-g-font-size-4xl: 36px;
+  --fds-g-font-line-height-4xl: 44px;
+  --fds-g-sizing-control-block-xs: 24px;
+  --fds-g-sizing-control-block-sm: 28px;
+  --fds-g-sizing-control-block-md: 32px;
+  --fds-g-sizing-control-block-lg: 36px;
+  --fds-g-sizing-control-icon-xs: 24px;
+  --fds-g-sizing-control-icon-sm: 28px;
+  --fds-g-sizing-control-icon-md: 32px;
+  --fds-g-sizing-control-icon-lg: 36px;
+  --fds-g-spacing-control-inline-xs: 0.5rem;
+  --fds-g-spacing-control-inline-sm: 0.625rem;
+  --fds-g-spacing-control-inline-md: 0.75rem;
+  --fds-g-spacing-control-inline-lg: 1rem;
+  --fds-g-spacing-control-gap-tight: 0.25rem;
+  --fds-g-spacing-control-gap: 0.375rem;
+  --fds-c-table-sizing-cell-block-compact: 28px;
+  --fds-c-table-sizing-cell-block: 36px;
+  --fds-c-table-sizing-cell-block-comfortable: 42px;
+  --fds-g-spacing-panel-gap: 0.75rem;
+  --fds-g-spacing-panel-padding: 0.75rem;
+  --fds-g-motion-duration-theme: 200ms;
+  --fds-g-color-shadow-default: oklch(from var(--fds-g-color-neutral-base-200) l c h / 0.08);
+  --fds-g-color-shadow-soft: oklch(from var(--fds-g-color-neutral-base-200) l c h / 0.05);
+  --fds-g-color-shadow-faint: oklch(from var(--fds-g-color-neutral-base-200) l c h / 0.03);
+  --fds-g-shadow-elevation-1: 0px 2px 6px -2px var(--fds-g-color-shadow-default), 0px 4px 10px -4px var(--fds-g-color-shadow-soft);
+  --fds-g-shadow-elevation-2: 0px 4px 12px -4px var(--fds-g-color-shadow-default), 0px 8px 20px -2px var(--fds-g-color-shadow-soft), 0px 12px 28px 0px var(--fds-g-color-shadow-faint);
+  --fds-g-shadow-elevation-3: 0px 6px 16px -8px var(--fds-g-color-shadow-default), 0px 9px 28px 0px var(--fds-g-color-shadow-soft), 0px 12px 48px 16px var(--fds-g-color-shadow-faint);
+  --fds-g-shadow-elevation-1-up: 0px -2px 6px -2px var(--fds-g-color-shadow-default), 0px -4px 10px -4px var(--fds-g-color-shadow-soft);
 }
 
 [data-theme-motion] :where([class*="transition"], [class*="duration-"]):not(.fx-theme-panel-static *) {
-  transition-duration: var(--fx-theme-duration, 200ms);
+  transition-duration: var(--fds-g-motion-duration-theme, 200ms);
 }
 [data-theme-motion="none"] :where(*, *::before, *::after):not(.fx-theme-panel-static *) {
   animation-duration: 0ms !important;
@@ -888,7 +302,7 @@
   scrollbar-color: transparent transparent;
 }
 .scrollbar-thin:hover {
-  scrollbar-color: var(--fx-neutrals-07) transparent;
+  scrollbar-color: var(--fds-g-color-border-interactive) transparent;
 }
 .scrollbar-thin::-webkit-scrollbar {
   width: 4px;
@@ -902,5 +316,5 @@
   border-radius: 9999px;
 }
 .scrollbar-thin:hover::-webkit-scrollbar-thumb {
-  background: var(--fx-neutrals-07);
+  background: var(--fds-g-color-border-interactive);
 }

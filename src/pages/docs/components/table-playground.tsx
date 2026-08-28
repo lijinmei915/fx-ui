@@ -177,7 +177,7 @@ function TableBusinessDemo({
       <div className="border-b border-border-subtle p-2">
         <div className="relative">
           <SearchIcon className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
-          <Input value={levelFilterQuery} onChange={(event) => setLevelFilterQuery(event.currentTarget.value)} placeholder="在筛选项中搜索" className="h-(--fx-control-sm-height) rounded-md pl-7" />
+          <Input value={levelFilterQuery} onChange={(event) => setLevelFilterQuery(event.currentTarget.value)} placeholder="在筛选项中搜索" className="h-(--fds-g-sizing-control-block-sm) rounded-md pl-7" />
         </div>
       </div>
       <div className="max-h-60 overflow-y-auto p-2">

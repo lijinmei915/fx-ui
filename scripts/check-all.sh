@@ -25,9 +25,20 @@ run_check() {
 run_check "shadcn 组件契约检查"   node scripts/check-shadcn-contract.mjs
 run_check "治理页面数据重建"      node scripts/build-governance-pages.mjs
 run_check "token 漂移检查"        bash scripts/check-tokens-sync.sh
+run_check "FDS Foundation 生成检查" node scripts/build-fds-foundation.mjs --check
+run_check "FDS Semantic 生成检查" node scripts/build-fds-semantic.mjs --check
+run_check "FDS Component Hook 生成检查" node scripts/build-fds-components.mjs --check
+run_check "无语义基础 token 检查" node scripts/check-foundation-tokens.mjs
+run_check "FDS Token 命名合同检查" node scripts/check-token-naming.mjs
+run_check "FDS 前缀迁移就绪审计" node scripts/build-fds-migration-audit.mjs --check
 run_check "Theme Contract 检查"    node scripts/check-theme-contract.mjs
+run_check "Theme Preset 检查"      node scripts/check-theme-presets.mjs
+run_check "Theme 发布产物检查"     node scripts/build-theme-artifacts.mjs --check
+run_check "Theme 对比度/状态审计"  node scripts/build-theme-audit.mjs --check
 run_check "Agent Token 合约检查"   node scripts/build-agent-token-contract.mjs --check
 run_check "Agent 组件合约检查"      node scripts/build-agent-components.mjs --check
+run_check "跨框架核心契约检查"      node scripts/build-framework-core.mjs --check
+run_check "Theme 版本发布检查"       node scripts/build-theme-release.mjs --check
 run_check "Agent 查询边界检查"      node scripts/check-agent-query-contract.mjs
 run_check "Agent 示例来源检查"      node scripts/check-agent-examples.mjs
 run_check "Agent 场景配方检查"      node scripts/check-agent-recipes.mjs
@@ -45,6 +56,7 @@ run_check "组件体检硬伤检查"      node scripts/check-component-hygiene.m
 run_check "列表页来源检查"        node scripts/check-list-page-source.mjs
 run_check "导入约定检查"          node scripts/check-imports.mjs
 run_check "文档站骨架契约检查"    node scripts/check-doc-site-contract.mjs
+run_check "文档站发布配置检查"    node scripts/check-publication-profiles.mjs
 run_check "组件 manifest 检查"    node scripts/check-components-manifest.mjs
 run_check "组件质量矩阵检查"    node scripts/build-component-quality.mjs --check
 run_check "Playground 来源契约检查" node scripts/check-playground-contract.mjs

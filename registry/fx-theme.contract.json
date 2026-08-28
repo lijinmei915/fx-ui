@@ -1,0 +1,1553 @@
+{
+  "schemaVersion": 1,
+  "format": "fx-ui/theme-artifact",
+  "name": "fx-theme",
+  "version": "1.12.0",
+  "algorithm": {
+    "id": "fx-theme-derivation",
+    "version": 5,
+    "colorSpace": "oklch",
+    "brandNormalization": "vivid-map-v2",
+    "darkPalette": {
+      "truthSource": "tokens/source/map.tokens.json#darkPalette",
+      "anchorLightness": 0.18,
+      "seedStep": 90,
+      "direction": "dark-anchor-to-seed-to-highlight",
+      "intent": "Generate a governed 12-step dark profile from the same seed without changing the light Base palette."
+    },
+    "brandScale": {
+      "10": {
+        "lightnessMultiplier": 0.92,
+        "chromaMultiplier": 0.95
+      },
+      "01": {
+        "lightness": 0.97,
+        "chromaMultiplier": 0.06
+      },
+      "02": {
+        "lightness": 0.94,
+        "chromaMultiplier": 0.1
+      },
+      "03": {
+        "lightness": 0.9,
+        "chromaMultiplier": 0.18
+      },
+      "04": {
+        "lightness": 0.84,
+        "chromaMultiplier": 0.3
+      },
+      "05": {
+        "lightness": 0.76,
+        "chromaMultiplier": 0.45
+      },
+      "08": {
+        "lightnessToWhite": 0.12,
+        "chromaMultiplier": 0.94
+      },
+      "09": {
+        "source": "brand-vivid"
+      }
+    }
+  },
+  "modes": {
+    "runtimePreviewModes": [
+      "light",
+      "dark"
+    ],
+    "publishedModes": [
+      "light",
+      "dark"
+    ],
+    "status": "published",
+    "releaseChannel": "stable",
+    "versioning": "semver",
+    "qualityEvidence": "docs/data/theme-audit.manifest.json",
+    "note": "Both modes are generated from the same contract and must pass the governed browser audit before release."
+  },
+  "defaults": {
+    "mode": "light",
+    "primaryColor": "amber",
+    "customColorHex": "#3b82f6",
+    "fontFamily": "sans",
+    "textScale": "standard",
+    "borderRadius": "md",
+    "shadowLevel": "medium",
+    "animationStyle": "smooth"
+  },
+  "dimensions": {
+    "primaryColor": {
+      "owner": "foundation-reference",
+      "customInput": {
+        "enabled": true,
+        "format": "hex6",
+        "normalization": "vivid-map-v2"
+      },
+      "options": [
+        {
+          "id": "indigo",
+          "label": "Indigo",
+          "foundationRef": "--fds-g-color-seed-indigo"
+        },
+        {
+          "id": "violet",
+          "label": "Violet",
+          "foundationRef": "--fds-g-color-seed-purple"
+        },
+        {
+          "id": "emerald",
+          "label": "Emerald",
+          "foundationRef": "--fds-g-color-seed-green"
+        },
+        {
+          "id": "rose",
+          "label": "Rose",
+          "foundationRef": "--fds-g-color-seed-red"
+        },
+        {
+          "id": "amber",
+          "label": "Amber",
+          "foundationRef": "--fds-g-color-seed-orange"
+        },
+        {
+          "id": "sky",
+          "label": "Sky",
+          "foundationRef": "--fds-g-color-seed-light-blue"
+        },
+        {
+          "id": "slate",
+          "label": "Slate",
+          "foundationRef": "--fds-g-color-seed-slate"
+        }
+      ]
+    },
+    "fontFamily": {
+      "owner": "foundation-reference",
+      "options": [
+        {
+          "id": "sans",
+          "label": "系统默认",
+          "foundationRef": "--fds-g-font-family-sans"
+        },
+        {
+          "id": "serif",
+          "label": "书面雅致",
+          "foundationRef": "--fds-g-font-family-serif"
+        },
+        {
+          "id": "mono",
+          "label": "代码极客",
+          "foundationRef": "--fds-g-font-family-mono"
+        },
+        {
+          "id": "geometric",
+          "label": "现代几何",
+          "foundationRef": "--fds-g-font-family-geometric"
+        }
+      ]
+    },
+    "textScale": {
+      "owner": "foundation-reference",
+      "options": [
+        {
+          "id": "compact",
+          "label": "紧凑",
+          "desc": "12px 基准"
+        },
+        {
+          "id": "standard",
+          "label": "标准",
+          "desc": "14px 基准"
+        },
+        {
+          "id": "spacious",
+          "label": "宽松",
+          "desc": "16px 基准"
+        }
+      ]
+    },
+    "borderRadius": {
+      "owner": "foundation-reference",
+      "options": [
+        {
+          "id": "none",
+          "label": "无",
+          "foundationRef": "--fds-g-radius-0"
+        },
+        {
+          "id": "sm",
+          "label": "小",
+          "foundationRef": "--fds-g-radius-6"
+        },
+        {
+          "id": "md",
+          "label": "中",
+          "foundationRef": "--fds-g-radius-8"
+        },
+        {
+          "id": "lg",
+          "label": "大",
+          "foundationRef": "--fds-g-radius-12"
+        },
+        {
+          "id": "full",
+          "label": "全圆",
+          "foundationRef": "--fds-g-radius-full"
+        }
+      ]
+    },
+    "shadowLevel": {
+      "owner": "foundation-reference",
+      "options": [
+        {
+          "id": "none",
+          "label": "无",
+          "desc": "平面"
+        },
+        {
+          "id": "low",
+          "label": "低",
+          "desc": "贴面"
+        },
+        {
+          "id": "medium",
+          "label": "中",
+          "desc": "浮起"
+        },
+        {
+          "id": "high",
+          "label": "高",
+          "desc": "悬浮"
+        }
+      ]
+    },
+    "animationStyle": {
+      "owner": "foundation-reference",
+      "output": "--fds-g-motion-duration-theme",
+      "options": [
+        {
+          "id": "none",
+          "label": "无动效",
+          "desc": "极速",
+          "foundationRef": "--fds-g-motion-duration-0"
+        },
+        {
+          "id": "fast",
+          "label": "快速",
+          "desc": "利落",
+          "foundationRef": "--fds-g-motion-duration-100"
+        },
+        {
+          "id": "smooth",
+          "label": "平滑",
+          "desc": "经典",
+          "foundationRef": "--fds-g-motion-duration-200"
+        },
+        {
+          "id": "playful",
+          "label": "弹性",
+          "desc": "灵动",
+          "foundationRef": "--fds-g-motion-duration-300"
+        }
+      ]
+    }
+  },
+  "profiles": {
+    "textScale": {
+      "compact": {
+        "--fds-g-font-size-xs": "--fds-g-font-size-12",
+        "--fds-g-font-line-height-xs": "--fds-g-font-line-height-18",
+        "--fds-g-font-size-control-sm": "--fds-g-font-size-12",
+        "--fds-g-font-line-height-control-sm": "--fds-g-font-line-height-18",
+        "--fds-g-font-size-sm": "--fds-g-font-size-12",
+        "--fds-g-font-line-height-sm": "--fds-g-font-line-height-18",
+        "--fds-g-font-size-base": "--fds-g-font-size-14",
+        "--fds-g-font-line-height-base": "--fds-g-font-line-height-20",
+        "--fds-g-font-size-lg": "--fds-g-font-size-16",
+        "--fds-g-font-line-height-lg": "--fds-g-font-line-height-24",
+        "--fds-g-font-size-xl": "--fds-g-font-size-18",
+        "--fds-g-font-line-height-xl": "--fds-g-font-line-height-28",
+        "--fds-g-font-size-2xl": "--fds-g-font-size-20",
+        "--fds-g-font-line-height-2xl": "--fds-g-font-line-height-28",
+        "--fds-g-font-size-3xl": "--fds-g-font-size-24",
+        "--fds-g-font-line-height-3xl": "--fds-g-font-line-height-32",
+        "--fds-g-font-size-4xl": "--fds-g-font-size-30",
+        "--fds-g-font-line-height-4xl": "--fds-g-font-line-height-36",
+        "--fds-g-sizing-control-block-xs": "--fds-g-sizing-22",
+        "--fds-g-sizing-control-block-sm": "--fds-g-sizing-26",
+        "--fds-g-sizing-control-block-md": "--fds-g-sizing-30",
+        "--fds-g-sizing-control-block-lg": "--fds-g-sizing-34",
+        "--fds-g-sizing-control-icon-xs": "--fds-g-sizing-22",
+        "--fds-g-sizing-control-icon-sm": "--fds-g-sizing-26",
+        "--fds-g-sizing-control-icon-md": "--fds-g-sizing-30",
+        "--fds-g-sizing-control-icon-lg": "--fds-g-sizing-34",
+        "--fds-g-spacing-control-inline-xs": "--fds-g-spacing-6",
+        "--fds-g-spacing-control-inline-sm": "--fds-g-spacing-8",
+        "--fds-g-spacing-control-inline-md": "--fds-g-spacing-10",
+        "--fds-g-spacing-control-inline-lg": "--fds-g-spacing-14",
+        "--fds-g-spacing-control-gap-tight": "--fds-g-spacing-2",
+        "--fds-g-spacing-control-gap": "--fds-g-spacing-4",
+        "--fds-g-spacing-panel-gap": "--fds-g-spacing-10",
+        "--fds-g-spacing-panel-padding": "--fds-g-spacing-10",
+        "--fds-g-font-size-menu": "--fds-g-font-size-14",
+        "--fds-g-font-line-height-menu": "--fds-g-font-line-height-20",
+        "--fds-g-sizing-navigation-item-block": "--fds-g-sizing-28",
+        "--fds-g-sizing-navigation-item-block-sm": "--fds-g-sizing-24",
+        "--fds-g-sizing-navigation-topbar-block": "--fds-g-sizing-48",
+        "--fds-g-sizing-navigation-search-block": "--fds-g-sizing-30"
+      },
+      "standard": {
+        "--fds-g-font-size-xs": "--fds-g-font-size-12",
+        "--fds-g-font-line-height-xs": "--fds-g-font-line-height-18",
+        "--fds-g-font-size-control-sm": "--fds-g-font-size-13",
+        "--fds-g-font-line-height-control-sm": "--fds-g-font-line-height-18",
+        "--fds-g-font-size-sm": "--fds-g-font-size-14",
+        "--fds-g-font-line-height-sm": "--fds-g-font-line-height-20",
+        "--fds-g-font-size-base": "--fds-g-font-size-16",
+        "--fds-g-font-line-height-base": "--fds-g-font-line-height-24",
+        "--fds-g-font-size-lg": "--fds-g-font-size-18",
+        "--fds-g-font-line-height-lg": "--fds-g-font-line-height-28",
+        "--fds-g-font-size-xl": "--fds-g-font-size-20",
+        "--fds-g-font-line-height-xl": "--fds-g-font-line-height-30",
+        "--fds-g-font-size-2xl": "--fds-g-font-size-24",
+        "--fds-g-font-line-height-2xl": "--fds-g-font-line-height-32",
+        "--fds-g-font-size-3xl": "--fds-g-font-size-30",
+        "--fds-g-font-line-height-3xl": "--fds-g-font-line-height-38",
+        "--fds-g-font-size-4xl": "--fds-g-font-size-36",
+        "--fds-g-font-line-height-4xl": "--fds-g-font-line-height-44",
+        "--fds-g-sizing-control-block-xs": "--fds-g-sizing-24",
+        "--fds-g-sizing-control-block-sm": "--fds-g-sizing-28",
+        "--fds-g-sizing-control-block-md": "--fds-g-sizing-32",
+        "--fds-g-sizing-control-block-lg": "--fds-g-sizing-36",
+        "--fds-g-sizing-control-icon-xs": "--fds-g-sizing-24",
+        "--fds-g-sizing-control-icon-sm": "--fds-g-sizing-28",
+        "--fds-g-sizing-control-icon-md": "--fds-g-sizing-32",
+        "--fds-g-sizing-control-icon-lg": "--fds-g-sizing-36",
+        "--fds-g-spacing-control-inline-xs": "--fds-g-spacing-8",
+        "--fds-g-spacing-control-inline-sm": "--fds-g-spacing-10",
+        "--fds-g-spacing-control-inline-md": "--fds-g-spacing-12",
+        "--fds-g-spacing-control-inline-lg": "--fds-g-spacing-16",
+        "--fds-g-spacing-control-gap-tight": "--fds-g-spacing-4",
+        "--fds-g-spacing-control-gap": "--fds-g-spacing-6",
+        "--fds-g-spacing-panel-gap": "--fds-g-spacing-12",
+        "--fds-g-spacing-panel-padding": "--fds-g-spacing-12",
+        "--fds-g-font-size-menu": "--fds-g-font-size-14",
+        "--fds-g-font-line-height-menu": "--fds-g-font-line-height-20",
+        "--fds-g-sizing-navigation-item-block": "--fds-g-sizing-32",
+        "--fds-g-sizing-navigation-item-block-sm": "--fds-g-sizing-28",
+        "--fds-g-sizing-navigation-topbar-block": "--fds-g-sizing-56",
+        "--fds-g-sizing-navigation-search-block": "--fds-g-sizing-32"
+      },
+      "spacious": {
+        "--fds-g-font-size-xs": "--fds-g-font-size-14",
+        "--fds-g-font-line-height-xs": "--fds-g-font-line-height-20",
+        "--fds-g-font-size-control-sm": "--fds-g-font-size-15",
+        "--fds-g-font-line-height-control-sm": "--fds-g-font-line-height-22",
+        "--fds-g-font-size-sm": "--fds-g-font-size-16",
+        "--fds-g-font-line-height-sm": "--fds-g-font-line-height-24",
+        "--fds-g-font-size-base": "--fds-g-font-size-18",
+        "--fds-g-font-line-height-base": "--fds-g-font-line-height-28",
+        "--fds-g-font-size-lg": "--fds-g-font-size-20",
+        "--fds-g-font-line-height-lg": "--fds-g-font-line-height-30",
+        "--fds-g-font-size-xl": "--fds-g-font-size-22",
+        "--fds-g-font-line-height-xl": "--fds-g-font-line-height-32",
+        "--fds-g-font-size-2xl": "--fds-g-font-size-28",
+        "--fds-g-font-line-height-2xl": "--fds-g-font-line-height-36",
+        "--fds-g-font-size-3xl": "--fds-g-font-size-36",
+        "--fds-g-font-line-height-3xl": "--fds-g-font-line-height-44",
+        "--fds-g-font-size-4xl": "--fds-g-font-size-44",
+        "--fds-g-font-line-height-4xl": "--fds-g-font-line-height-52",
+        "--fds-g-sizing-control-block-xs": "--fds-g-sizing-26",
+        "--fds-g-sizing-control-block-sm": "--fds-g-sizing-30",
+        "--fds-g-sizing-control-block-md": "--fds-g-sizing-36",
+        "--fds-g-sizing-control-block-lg": "--fds-g-sizing-40",
+        "--fds-g-sizing-control-icon-xs": "--fds-g-sizing-26",
+        "--fds-g-sizing-control-icon-sm": "--fds-g-sizing-30",
+        "--fds-g-sizing-control-icon-md": "--fds-g-sizing-36",
+        "--fds-g-sizing-control-icon-lg": "--fds-g-sizing-40",
+        "--fds-g-spacing-control-inline-xs": "--fds-g-spacing-10",
+        "--fds-g-spacing-control-inline-sm": "--fds-g-spacing-12",
+        "--fds-g-spacing-control-inline-md": "--fds-g-spacing-14",
+        "--fds-g-spacing-control-inline-lg": "--fds-g-spacing-18",
+        "--fds-g-spacing-control-gap-tight": "--fds-g-spacing-6",
+        "--fds-g-spacing-control-gap": "--fds-g-spacing-8",
+        "--fds-g-spacing-panel-gap": "--fds-g-spacing-14",
+        "--fds-g-spacing-panel-padding": "--fds-g-spacing-14",
+        "--fds-g-font-size-menu": "--fds-g-font-size-16",
+        "--fds-g-font-line-height-menu": "--fds-g-font-line-height-24",
+        "--fds-g-sizing-navigation-item-block": "--fds-g-sizing-36",
+        "--fds-g-sizing-navigation-item-block-sm": "--fds-g-sizing-32",
+        "--fds-g-sizing-navigation-topbar-block": "--fds-g-sizing-64",
+        "--fds-g-sizing-navigation-search-block": "--fds-g-sizing-36"
+      }
+    },
+    "shadowLevel": {
+      "none": {
+        "--fds-g-color-shadow-default": "transparent",
+        "--fds-g-color-shadow-soft": "transparent",
+        "--fds-g-color-shadow-faint": "transparent",
+        "--fds-g-shadow-elevation-1": "none",
+        "--fds-g-shadow-elevation-2": "none",
+        "--fds-g-shadow-elevation-3": "none",
+        "--fds-g-shadow-elevation-1-up": "none"
+      },
+      "low": {
+        "--fds-g-color-shadow-default": "oklch(from var(--fds-g-color-neutral-base-200) l c h / var(--fds-g-opacity-8))",
+        "--fds-g-color-shadow-soft": "oklch(from var(--fds-g-color-neutral-base-200) l c h / var(--fds-g-opacity-5))",
+        "--fds-g-color-shadow-faint": "oklch(from var(--fds-g-color-neutral-base-200) l c h / var(--fds-g-opacity-3))"
+      },
+      "medium": {
+        "--fds-g-color-shadow-default": "oklch(from var(--fds-g-color-neutral-base-200) l c h / var(--fds-g-opacity-18))",
+        "--fds-g-color-shadow-soft": "oklch(from var(--fds-g-color-neutral-base-200) l c h / var(--fds-g-opacity-10))",
+        "--fds-g-color-shadow-faint": "oklch(from var(--fds-g-color-neutral-base-200) l c h / var(--fds-g-opacity-5))"
+      },
+      "high": {
+        "--fds-g-color-shadow-default": "oklch(from var(--fds-g-color-neutral-base-200) l c h / var(--fds-g-opacity-22))",
+        "--fds-g-color-shadow-soft": "oklch(from var(--fds-g-color-neutral-base-200) l c h / var(--fds-g-opacity-12))",
+        "--fds-g-color-shadow-faint": "oklch(from var(--fds-g-color-neutral-base-200) l c h / var(--fds-g-opacity-6))"
+      }
+    }
+  },
+  "runtimeOutputs": {
+    "adapterWrites": [
+      "--fds-g-color-seed-brand"
+    ],
+    "resolverWrites": [
+      "--fds-g-color-foreground-primary",
+      "--fds-g-color-foreground-destructive",
+      "--fds-g-color-foreground-success",
+      "--fds-g-color-foreground-warning",
+      "--fds-g-color-foreground-info"
+    ],
+    "cssDerivedOutputs": [
+      "--fds-g-color-brand-base-10",
+      "--fds-g-color-brand-base-20",
+      "--fds-g-color-brand-base-30",
+      "--fds-g-color-brand-base-40",
+      "--fds-g-color-brand-base-50",
+      "--fds-g-color-brand-base-80",
+      "--fds-g-color-brand-base-90",
+      "--fds-g-color-brand-base-100"
+    ],
+    "semanticConsumers": [
+      "--fds-g-color-brand-identity",
+      "--primary",
+      "--color-primary",
+      "--fx-primary-hover",
+      "--fx-primary-active",
+      "--fx-primary-disabled",
+      "--fx-primary-light",
+      "--fx-primary-light-hover",
+      "--fx-primary-light-active",
+      "--ring"
+    ]
+  },
+  "stylingHooks": {
+    "schemaVersion": 1,
+    "format": "fds/styling-hooks-public-contract",
+    "contractVersion": "1.0.0-draft.14",
+    "status": "experimental",
+    "defaultValues": "registry/fx-theme.css",
+    "prefixes": {
+      "global": "--fds-g-",
+      "component": "--fds-c-"
+    },
+    "overridePolicy": {
+      "scope": "theme-root-or-governed-theme-provider",
+      "instanceOverride": "forbidden"
+    },
+    "versioning": "semver",
+    "counts": {
+      "total": 114,
+      "publicGlobal": 101,
+      "publicComponent": 13,
+      "experimental": 53,
+      "stable": 61,
+      "deprecated": 0
+    },
+    "hooks": [
+      {
+        "id": "button.color.background",
+        "name": "--fds-c-button-color-background",
+        "layer": "component",
+        "type": "color",
+        "visibility": "public-component",
+        "stability": "stable",
+        "component": "button",
+        "owner": "fds-action-maintainers",
+        "documentation": "docs/components/button.md#component-styling-hooks"
+      },
+      {
+        "id": "button.color.background.active",
+        "name": "--fds-c-button-color-background-active",
+        "layer": "component",
+        "type": "color",
+        "visibility": "public-component",
+        "stability": "stable",
+        "component": "button",
+        "owner": "fds-action-maintainers",
+        "documentation": "docs/components/button.md#component-styling-hooks"
+      },
+      {
+        "id": "button.color.background.disabled",
+        "name": "--fds-c-button-color-background-disabled",
+        "layer": "component",
+        "type": "color",
+        "visibility": "public-component",
+        "stability": "stable",
+        "component": "button",
+        "owner": "fds-action-maintainers",
+        "documentation": "docs/components/button.md#component-styling-hooks"
+      },
+      {
+        "id": "button.color.background.hover",
+        "name": "--fds-c-button-color-background-hover",
+        "layer": "component",
+        "type": "color",
+        "visibility": "public-component",
+        "stability": "stable",
+        "component": "button",
+        "owner": "fds-action-maintainers",
+        "documentation": "docs/components/button.md#component-styling-hooks"
+      },
+      {
+        "id": "button.color.foreground",
+        "name": "--fds-c-button-color-foreground",
+        "layer": "component",
+        "type": "color",
+        "visibility": "public-component",
+        "stability": "stable",
+        "component": "button",
+        "owner": "fds-action-maintainers",
+        "documentation": "docs/components/button.md#component-styling-hooks"
+      },
+      {
+        "id": "input.color.background",
+        "name": "--fds-c-input-color-background",
+        "layer": "component",
+        "type": "color",
+        "visibility": "public-component",
+        "stability": "stable",
+        "component": "input",
+        "owner": "fds-form-maintainers",
+        "documentation": "docs/components/input.md#component-styling-hooks"
+      },
+      {
+        "id": "input.color.border",
+        "name": "--fds-c-input-color-border",
+        "layer": "component",
+        "type": "color",
+        "visibility": "public-component",
+        "stability": "stable",
+        "component": "input",
+        "owner": "fds-form-maintainers",
+        "documentation": "docs/components/input.md#component-styling-hooks"
+      },
+      {
+        "id": "input.color.border.focus",
+        "name": "--fds-c-input-color-border-focus",
+        "layer": "component",
+        "type": "color",
+        "visibility": "public-component",
+        "stability": "stable",
+        "component": "input",
+        "owner": "fds-form-maintainers",
+        "documentation": "docs/components/input.md#component-styling-hooks"
+      },
+      {
+        "id": "input.color.border.hover",
+        "name": "--fds-c-input-color-border-hover",
+        "layer": "component",
+        "type": "color",
+        "visibility": "public-component",
+        "stability": "stable",
+        "component": "input",
+        "owner": "fds-form-maintainers",
+        "documentation": "docs/components/input.md#component-styling-hooks"
+      },
+      {
+        "id": "input.color.border.invalid",
+        "name": "--fds-c-input-color-border-invalid",
+        "layer": "component",
+        "type": "color",
+        "visibility": "public-component",
+        "stability": "stable",
+        "component": "input",
+        "owner": "fds-form-maintainers",
+        "documentation": "docs/components/input.md#component-styling-hooks"
+      },
+      {
+        "id": "table.sizing.cell-block",
+        "name": "--fds-c-table-sizing-cell-block",
+        "layer": "component",
+        "type": "dimension",
+        "visibility": "public-component",
+        "stability": "stable",
+        "component": "table",
+        "owner": "fds-data-display-maintainers",
+        "documentation": "docs/components/table.md#component-styling-hooks"
+      },
+      {
+        "id": "table.sizing.cell-block.comfortable",
+        "name": "--fds-c-table-sizing-cell-block-comfortable",
+        "layer": "component",
+        "type": "dimension",
+        "visibility": "public-component",
+        "stability": "stable",
+        "component": "table",
+        "owner": "fds-data-display-maintainers",
+        "documentation": "docs/components/table.md#component-styling-hooks"
+      },
+      {
+        "id": "table.sizing.cell-block.compact",
+        "name": "--fds-c-table-sizing-cell-block-compact",
+        "layer": "component",
+        "type": "dimension",
+        "visibility": "public-component",
+        "stability": "stable",
+        "component": "table",
+        "owner": "fds-data-display-maintainers",
+        "documentation": "docs/components/table.md#component-styling-hooks"
+      },
+      {
+        "id": "blur.overlay",
+        "name": "--fds-g-blur-overlay",
+        "layer": "semantic",
+        "type": "dimension",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.accent",
+        "name": "--fds-g-color-action-accent",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.accent-hover",
+        "name": "--fds-g-color-action-accent-hover",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.destructive",
+        "name": "--fds-g-color-action-destructive",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.destructive-active",
+        "name": "--fds-g-color-action-destructive-active",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.destructive-disabled",
+        "name": "--fds-g-color-action-destructive-disabled",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.destructive-hover",
+        "name": "--fds-g-color-action-destructive-hover",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.destructive-subtle",
+        "name": "--fds-g-color-action-destructive-subtle",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.destructive-subtle-active",
+        "name": "--fds-g-color-action-destructive-subtle-active",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.destructive-subtle-hover",
+        "name": "--fds-g-color-action-destructive-subtle-hover",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.muted",
+        "name": "--fds-g-color-action-muted",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.muted-active",
+        "name": "--fds-g-color-action-muted-active",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.muted-hover",
+        "name": "--fds-g-color-action-muted-hover",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.primary",
+        "name": "--fds-g-color-action-primary",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.primary-active",
+        "name": "--fds-g-color-action-primary-active",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.primary-disabled",
+        "name": "--fds-g-color-action-primary-disabled",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.primary-hover",
+        "name": "--fds-g-color-action-primary-hover",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.primary-subtle",
+        "name": "--fds-g-color-action-primary-subtle",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.primary-subtle-active",
+        "name": "--fds-g-color-action-primary-subtle-active",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.primary-subtle-hover",
+        "name": "--fds-g-color-action-primary-subtle-hover",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.secondary",
+        "name": "--fds-g-color-action-secondary",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.secondary-active",
+        "name": "--fds-g-color-action-secondary-active",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.action.secondary-hover",
+        "name": "--fds-g-color-action-secondary-hover",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.border.chrome",
+        "name": "--fds-g-color-border-chrome",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.border.container",
+        "name": "--fds-g-color-border-container",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.border.default",
+        "name": "--fds-g-color-border-default",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.border.faint",
+        "name": "--fds-g-color-border-faint",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.border.interactive",
+        "name": "--fds-g-color-border-interactive",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.border.strong",
+        "name": "--fds-g-color-border-strong",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.border.subtle",
+        "name": "--fds-g-color-border-subtle",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.data.categorical.1",
+        "name": "--fds-g-color-data-categorical-1",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.data.categorical.10",
+        "name": "--fds-g-color-data-categorical-10",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.data.categorical.2",
+        "name": "--fds-g-color-data-categorical-2",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.data.categorical.3",
+        "name": "--fds-g-color-data-categorical-3",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.data.categorical.4",
+        "name": "--fds-g-color-data-categorical-4",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.data.categorical.5",
+        "name": "--fds-g-color-data-categorical-5",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.data.categorical.6",
+        "name": "--fds-g-color-data-categorical-6",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.data.categorical.7",
+        "name": "--fds-g-color-data-categorical-7",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.data.categorical.8",
+        "name": "--fds-g-color-data-categorical-8",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.data.categorical.9",
+        "name": "--fds-g-color-data-categorical-9",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.fill.subtle",
+        "name": "--fds-g-color-fill-subtle",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.fill.subtle-hover",
+        "name": "--fds-g-color-fill-subtle-hover",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.foreground.destructive",
+        "name": "--fds-g-color-foreground-destructive",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.foreground.info",
+        "name": "--fds-g-color-foreground-info",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.foreground.primary",
+        "name": "--fds-g-color-foreground-primary",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.foreground.success",
+        "name": "--fds-g-color-foreground-success",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.foreground.warning",
+        "name": "--fds-g-color-foreground-warning",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.icon.inverse",
+        "name": "--fds-g-color-icon-inverse",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.icon.muted",
+        "name": "--fds-g-color-icon-muted",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.icon.primary",
+        "name": "--fds-g-color-icon-primary",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.link.default",
+        "name": "--fds-g-color-link",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.link.active",
+        "name": "--fds-g-color-link-active",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.link.disabled",
+        "name": "--fds-g-color-link-disabled",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.link.hover",
+        "name": "--fds-g-color-link-hover",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.navigation.accent",
+        "name": "--fds-g-color-navigation-accent",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.navigation.border",
+        "name": "--fds-g-color-navigation-border",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.navigation.ring",
+        "name": "--fds-g-color-navigation-ring",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.navigation.surface",
+        "name": "--fds-g-color-navigation-surface",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.ring.focus",
+        "name": "--fds-g-color-ring-focus",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "shadow.color.default",
+        "name": "--fds-g-color-shadow-default",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "shadow.color.faint",
+        "name": "--fds-g-color-shadow-faint",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "shadow.color.soft",
+        "name": "--fds-g-color-shadow-soft",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.error-subtle",
+        "name": "--fds-g-color-status-error-subtle",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.error-subtle-active",
+        "name": "--fds-g-color-status-error-subtle-active",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.error-subtle-hover",
+        "name": "--fds-g-color-status-error-subtle-hover",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.info",
+        "name": "--fds-g-color-status-info",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.info-active",
+        "name": "--fds-g-color-status-info-active",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.info-disabled",
+        "name": "--fds-g-color-status-info-disabled",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.info-hover",
+        "name": "--fds-g-color-status-info-hover",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.info-subtle",
+        "name": "--fds-g-color-status-info-subtle",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.info-subtle-active",
+        "name": "--fds-g-color-status-info-subtle-active",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.info-subtle-hover",
+        "name": "--fds-g-color-status-info-subtle-hover",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.success",
+        "name": "--fds-g-color-status-success",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.success-active",
+        "name": "--fds-g-color-status-success-active",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.success-disabled",
+        "name": "--fds-g-color-status-success-disabled",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.success-hover",
+        "name": "--fds-g-color-status-success-hover",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.success-subtle",
+        "name": "--fds-g-color-status-success-subtle",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.success-subtle-active",
+        "name": "--fds-g-color-status-success-subtle-active",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.success-subtle-hover",
+        "name": "--fds-g-color-status-success-subtle-hover",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.warning",
+        "name": "--fds-g-color-status-warning",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.warning-active",
+        "name": "--fds-g-color-status-warning-active",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.warning-disabled",
+        "name": "--fds-g-color-status-warning-disabled",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.warning-hover",
+        "name": "--fds-g-color-status-warning-hover",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.warning-subtle",
+        "name": "--fds-g-color-status-warning-subtle",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.warning-subtle-active",
+        "name": "--fds-g-color-status-warning-subtle-active",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.status.warning-subtle-hover",
+        "name": "--fds-g-color-status-warning-subtle-hover",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.surface.control",
+        "name": "--fds-g-color-surface-control",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.surface.control-disabled",
+        "name": "--fds-g-color-surface-control-disabled",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.surface.popover",
+        "name": "--fds-g-color-surface-floating",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.surface.overlay",
+        "name": "--fds-g-color-surface-overlay",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.surface.page",
+        "name": "--fds-g-color-surface-page",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.surface.card",
+        "name": "--fds-g-color-surface-raised",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.text.disabled",
+        "name": "--fds-g-color-text-disabled",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.text.inverse",
+        "name": "--fds-g-color-text-inverse",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.text.muted",
+        "name": "--fds-g-color-text-muted",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.text.primary",
+        "name": "--fds-g-color-text-primary",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "color.text.secondary",
+        "name": "--fds-g-color-text-secondary",
+        "layer": "semantic",
+        "type": "color",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "shadow.elevation.1",
+        "name": "--fds-g-shadow-elevation-1",
+        "layer": "semantic",
+        "type": "shadow",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "shadow.elevation.1-up",
+        "name": "--fds-g-shadow-elevation-1-up",
+        "layer": "semantic",
+        "type": "shadow",
+        "visibility": "public-global",
+        "stability": "experimental",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "shadow.elevation.2",
+        "name": "--fds-g-shadow-elevation-2",
+        "layer": "semantic",
+        "type": "shadow",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      },
+      {
+        "id": "shadow.elevation.3",
+        "name": "--fds-g-shadow-elevation-3",
+        "layer": "semantic",
+        "type": "shadow",
+        "visibility": "public-global",
+        "stability": "stable",
+        "owner": "fds-maintainers-with-approved-collaborators"
+      }
+    ]
+  },
+  "artifacts": {
+    "css": {
+      "path": "registry/fx-theme.css",
+      "sha256": "d1b8876fbb79232be3a62be5fe308ecaf76082c139c12f290a17e6bcb91c934f"
+    },
+    "shadcnRegistry": {
+      "path": "registry/fx-theme.json",
+      "format": "registry:theme",
+      "sha256": "59eb8676336a50abbd3af041c3cc3cf6804f831f69618e3c7168777699e0a8d4"
+    }
+  },
+  "derivedFrom": [
+    "theme/foundation.css",
+    "theme/fds-semantic.css",
+    "theme/fds-components.css",
+    "theme/fx-theme.css",
+    "docs/data/theme-presets.manifest.json",
+    "docs/data/token-naming.manifest.json",
+    "docs/data/fds-semantic.manifest.json",
+    "docs/data/fds-components.manifest.json"
+  ],
+  "sourceIntegrity": {
+    "foundation": "ccc4a54ec49a4941bbfcb3f5645f61223a134d307a5e98d9a681ef764f3c6e86",
+    "semantic": "60ea8816ef8460855a152c007dbab27b0506c465ad1091f15ea9948464319be8",
+    "components": "5b1e10dc334b7835d3ef26222b6ea40eef79f8ce142203b71ff8ed60dae25ef8",
+    "entry": "3a6124e09fb19802d681141dce94cc13969dba4dbac445d8c784d7e896c842a1",
+    "presets": "4e277c98db039565bee2b6444a7a3bd543dba8f58504befffbe63ffb8a3334ea",
+    "naming": "20375ab1f54177c9b8c3c2443221eb2f0018c24274fc391103e85508624b0970",
+    "semanticContract": "2124790cc459f52fde7bf30fc6114536495c675a5c32d2e5e60883c67a8db8e5",
+    "componentContract": "4b3ff26aa18f6797761503734a4e0476348a8829557b134b8c16e2c3179e78f7"
+  }
+}

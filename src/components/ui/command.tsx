@@ -71,7 +71,7 @@ function CommandPalette({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent showCloseButton={false} className="top-[20%] max-w-xl translate-y-0 gap-0 overflow-hidden p-0">
         <DialogTitle className="sr-only">命令面板</DialogTitle>
-        <div className="flex items-center gap-(--fx-control-gap) border-b border-border-subtle px-(--fx-control-px-md)">
+        <div className="flex items-center gap-(--fds-g-spacing-control-gap) border-b border-border-subtle px-(--fds-g-spacing-control-inline-md)">
           <SearchIcon className="size-4 shrink-0 text-muted-foreground" />
           <input
             autoFocus
@@ -79,7 +79,7 @@ function CommandPalette({
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onKeyDown}
             placeholder={placeholder}
-            className="h-[calc(var(--fx-control-lg-height)+8px)] w-full bg-transparent text-sm outline-none placeholder:text-foreground-disabled"
+            className="h-[calc(var(--fds-g-sizing-control-block-lg)+8px)] w-full bg-transparent text-sm outline-none placeholder:text-foreground-disabled"
           />
         </div>
         <div ref={listRef} className="scrollbar-thin max-h-80 overflow-y-auto overscroll-contain p-1">
@@ -94,11 +94,11 @@ function CommandPalette({
                 onMouseMove={() => setActive(i)}
                 onClick={() => select(it)}
                 className={cn(
-                  "flex min-h-(--fx-control-md-height) w-full items-center justify-between gap-(--fx-control-gap) rounded-md px-(--fx-control-px-sm) text-left text-base outline-none",
+                  "flex min-h-(--fds-g-sizing-control-block-md) w-full items-center justify-between gap-(--fds-g-spacing-control-gap) rounded-md px-(--fds-g-spacing-control-inline-sm) text-left text-base outline-none",
                   i === active ? "bg-muted text-foreground" : "text-foreground"
                 )}
               >
-                <span className="flex min-w-0 items-baseline gap-(--fx-control-gap)">
+                <span className="flex min-w-0 items-baseline gap-(--fds-g-spacing-control-gap)">
                   <span className="truncate">{it.label}</span>
                   {it.meta && <span className="shrink-0 text-sm text-muted-foreground">{it.meta}</span>}
                 </span>

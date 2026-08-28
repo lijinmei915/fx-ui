@@ -165,15 +165,15 @@ function frozenClass(frozenLeft?: number, frozenEdge?: boolean) {
   return cn(
     "sticky z-[2] bg-card",
     frozenEdge &&
-      "after:pointer-events-none after:absolute after:top-0 after:right-0 after:bottom-0 after:w-7 after:translate-x-full group-data-[scrolled-x=true]/table-container:after:shadow-[inset_10px_0_8px_-8px_var(--fx-shadow-color)]"
+      "after:pointer-events-none after:absolute after:top-0 after:right-0 after:bottom-0 after:w-7 after:translate-x-full group-data-[scrolled-x=true]/table-container:after:shadow-[inset_10px_0_8px_-8px_var(--fds-g-color-shadow-default)]"
   )
 }
 
 const pinnedEdgeClass = (pinned?: "left" | "right") =>
   pinned === "right"
-    ? "before:pointer-events-none before:absolute before:top-0 before:bottom-0 before:left-0 before:w-7 before:-translate-x-full group-data-[scrolled-x=true]/table-container:before:shadow-[inset_-10px_0_8px_-8px_var(--fx-shadow-color)]"
+    ? "before:pointer-events-none before:absolute before:top-0 before:bottom-0 before:left-0 before:w-7 before:-translate-x-full group-data-[scrolled-x=true]/table-container:before:shadow-[inset_-10px_0_8px_-8px_var(--fds-g-color-shadow-default)]"
     : pinned === "left"
-      ? "after:pointer-events-none after:absolute after:top-0 after:right-0 after:bottom-0 after:w-7 after:translate-x-full group-data-[scrolled-x=true]/table-container:after:shadow-[inset_10px_0_8px_-8px_var(--fx-shadow-color)]"
+      ? "after:pointer-events-none after:absolute after:top-0 after:right-0 after:bottom-0 after:w-7 after:translate-x-full group-data-[scrolled-x=true]/table-container:after:shadow-[inset_10px_0_8px_-8px_var(--fds-g-color-shadow-default)]"
       : ""
 
 function TableHead({
@@ -211,7 +211,7 @@ function TableHead({
       data-sorted={sorted || undefined}
       aria-sort={sortable ? (sorted === "asc" ? "ascending" : sorted === "desc" ? "descending" : "none") : undefined}
       className={cn(
-        "group/th relative h-(--fx-table-row-height-default) min-w-[96px] px-(--fx-control-px-xs) align-middle whitespace-nowrap font-medium text-foreground/88 group-data-[density=compact]/table:h-(--fx-table-row-height-compact) group-data-[density=comfortable]/table:h-(--fx-table-row-height-comfortable)",
+        "group/th relative h-(--fds-c-table-sizing-cell-block) min-w-[96px] px-(--fds-g-spacing-control-inline-xs) align-middle whitespace-nowrap font-medium text-foreground/88 group-data-[density=compact]/table:h-(--fds-c-table-sizing-cell-block-compact) group-data-[density=comfortable]/table:h-(--fds-c-table-sizing-cell-block-comfortable)",
         selectionCellClass,
         selectionHeadInnerClass,
         alignClass(align),
@@ -223,12 +223,12 @@ function TableHead({
       style={{ ...frozenStyle(frozenLeft), ...style }}
       {...props}
     >
-      <div className={cn("inline-flex items-center gap-(--fx-control-gap-tight)", align === "right" && "flex-row-reverse")}>
+      <div className={cn("inline-flex items-center gap-(--fds-g-spacing-control-gap-tight)", align === "right" && "flex-row-reverse")}>
         {sortable ? (
           <button
             type="button"
             onClick={onSort}
-            className="inline-flex items-center gap-(--fx-control-gap-tight) rounded-sm font-medium outline-none select-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 data-[sorted]:text-foreground [&_svg]:size-3.5 [&_svg]:shrink-0"
+            className="inline-flex items-center gap-(--fds-g-spacing-control-gap-tight) rounded-sm font-medium outline-none select-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 data-[sorted]:text-foreground [&_svg]:size-3.5 [&_svg]:shrink-0"
           >
             {children}
             {sorted === "asc" ? (
@@ -246,7 +246,7 @@ function TableHead({
           <Popover>
             <PopoverTrigger
               aria-label="列筛选"
-              className="ml-0.5 inline-flex size-(--fx-control-xs-height) items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:bg-muted-hover hover:text-foreground focus-visible:opacity-100 focus-visible:ring-3 focus-visible:ring-ring/50 group-hover/th:opacity-100 data-popup-open:opacity-100 data-popup-open:bg-muted data-[filtered=true]:text-primary data-[filtered=true]:opacity-100 [&_svg]:size-3.5"
+              className="ml-0.5 inline-flex size-(--fds-g-sizing-control-block-xs) items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:bg-muted-hover hover:text-foreground focus-visible:opacity-100 focus-visible:ring-3 focus-visible:ring-ring/50 group-hover/th:opacity-100 data-popup-open:opacity-100 data-popup-open:bg-muted data-[filtered=true]:text-primary data-[filtered=true]:opacity-100 [&_svg]:size-3.5"
               data-filtered={filtered ? "true" : undefined}
             >
               <FilterIcon />
@@ -259,7 +259,7 @@ function TableHead({
         {menuActions && menuActions.length > 0 && (
           <DropdownMenu>
             <DropdownMenuTrigger
-              className="ml-0.5 inline-flex size-(--fx-control-xs-height) items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:bg-muted-hover hover:text-foreground focus-visible:opacity-100 focus-visible:ring-3 focus-visible:ring-ring/50 group-hover/th:opacity-100 data-popup-open:opacity-100 data-popup-open:bg-muted [&_svg]:size-3.5"
+              className="ml-0.5 inline-flex size-(--fds-g-sizing-control-block-xs) items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:bg-muted-hover hover:text-foreground focus-visible:opacity-100 focus-visible:ring-3 focus-visible:ring-ring/50 group-hover/th:opacity-100 data-popup-open:opacity-100 data-popup-open:bg-muted [&_svg]:size-3.5"
               aria-label="列操作"
             >
               <MoreVerticalIcon />
@@ -293,7 +293,7 @@ function TableCell({
       data-slot="table-cell"
       className={cn(
         // 表体三档行高（对齐公司）：紧凑28 / 舒适36(默认) / 宽松42；统一 align-middle 垂直居中
-        "relative h-(--fx-table-row-height-default) px-(--fx-control-px-xs) py-0 align-middle whitespace-nowrap group-data-[density=compact]/table:h-(--fx-table-row-height-compact) group-data-[density=comfortable]/table:h-(--fx-table-row-height-comfortable)",
+        "relative h-(--fds-c-table-sizing-cell-block) px-(--fds-g-spacing-control-inline-xs) py-0 align-middle whitespace-nowrap group-data-[density=compact]/table:h-(--fds-c-table-sizing-cell-block-compact) group-data-[density=comfortable]/table:h-(--fds-c-table-sizing-cell-block-comfortable)",
         selectionCellClass,
         alignClass(align),
         pinnedClass(pinned),

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/component-quality",
-  "updatedAt": "2026-08-26",
+  "updatedAt": "2026-08-28",
   "truthSources": [
     "docs/data/components.manifest.json",
     "docs/data/component-playgrounds.manifest.json",
@@ -454,13 +454,13 @@
         }
       },
       "tokens": [
-        "--fx-brand-08",
-        "--fx-green-08",
-        "--fx-amber-08",
-        "--fx-red-08",
-        "--fx-blue-08",
-        "--fx-purple-08",
-        "--fx-neutrals-01",
+        "--fds-g-color-brand-base-80",
+        "--fds-g-color-green-base-80",
+        "--fds-g-color-amber-base-80",
+        "--fds-g-color-red-base-80",
+        "--fds-g-color-blue-base-80",
+        "--fds-g-color-purple-base-80",
+        "--fds-g-color-text-inverse",
         "--primary",
         "--primary-foreground",
         "--background",
@@ -475,13 +475,13 @@
         "status": "declared",
         "evidence": "components-manifest-tokenRefs",
         "refs": [
-          "--fx-brand-08",
-          "--fx-green-08",
-          "--fx-amber-08",
-          "--fx-red-08",
-          "--fx-blue-08",
-          "--fx-purple-08",
-          "--fx-neutrals-01",
+          "--fds-g-color-brand-base-80",
+          "--fds-g-color-green-base-80",
+          "--fds-g-color-amber-base-80",
+          "--fds-g-color-red-base-80",
+          "--fds-g-color-blue-base-80",
+          "--fds-g-color-purple-base-80",
+          "--fds-g-color-text-inverse",
           "--primary",
           "--primary-foreground",
           "--background",
@@ -791,7 +791,39 @@
         "--success",
         "--warning",
         "--destructive",
-        "--border"
+        "--border",
+        "--fds-g-color-neutral-base-30",
+        "--fds-g-color-neutral-base-40",
+        "--fds-g-color-red-base-10",
+        "--fds-g-color-red-base-30",
+        "--fds-g-color-red-base-80",
+        "--fds-g-color-amber-base-10",
+        "--fds-g-color-amber-base-30",
+        "--fds-g-color-amber-base-80",
+        "--fds-g-color-yellow-base-10",
+        "--fds-g-color-yellow-base-30",
+        "--fds-g-color-yellow-base-80",
+        "--fds-g-color-lime-base-10",
+        "--fds-g-color-lime-base-30",
+        "--fds-g-color-lime-base-80",
+        "--fds-g-color-green-base-10",
+        "--fds-g-color-green-base-30",
+        "--fds-g-color-green-base-80",
+        "--fds-g-color-teal-base-10",
+        "--fds-g-color-teal-base-30",
+        "--fds-g-color-teal-base-80",
+        "--fds-g-color-cyan-base-10",
+        "--fds-g-color-cyan-base-30",
+        "--fds-g-color-cyan-base-80",
+        "--fds-g-color-blue-base-10",
+        "--fds-g-color-blue-base-30",
+        "--fds-g-color-blue-base-80",
+        "--fds-g-color-purple-base-10",
+        "--fds-g-color-purple-base-30",
+        "--fds-g-color-purple-base-80",
+        "--fds-g-color-pink-base-10",
+        "--fds-g-color-pink-base-30",
+        "--fds-g-color-pink-base-80"
       ],
       "tokenUsage": {
         "status": "declared",
@@ -802,7 +834,39 @@
           "--success",
           "--warning",
           "--destructive",
-          "--border"
+          "--border",
+          "--fds-g-color-neutral-base-30",
+          "--fds-g-color-neutral-base-40",
+          "--fds-g-color-red-base-10",
+          "--fds-g-color-red-base-30",
+          "--fds-g-color-red-base-80",
+          "--fds-g-color-amber-base-10",
+          "--fds-g-color-amber-base-30",
+          "--fds-g-color-amber-base-80",
+          "--fds-g-color-yellow-base-10",
+          "--fds-g-color-yellow-base-30",
+          "--fds-g-color-yellow-base-80",
+          "--fds-g-color-lime-base-10",
+          "--fds-g-color-lime-base-30",
+          "--fds-g-color-lime-base-80",
+          "--fds-g-color-green-base-10",
+          "--fds-g-color-green-base-30",
+          "--fds-g-color-green-base-80",
+          "--fds-g-color-teal-base-10",
+          "--fds-g-color-teal-base-30",
+          "--fds-g-color-teal-base-80",
+          "--fds-g-color-cyan-base-10",
+          "--fds-g-color-cyan-base-30",
+          "--fds-g-color-cyan-base-80",
+          "--fds-g-color-blue-base-10",
+          "--fds-g-color-blue-base-30",
+          "--fds-g-color-blue-base-80",
+          "--fds-g-color-purple-base-10",
+          "--fds-g-color-purple-base-30",
+          "--fds-g-color-purple-base-80",
+          "--fds-g-color-pink-base-10",
+          "--fds-g-color-pink-base-30",
+          "--fds-g-color-pink-base-80"
         ]
       },
       "visual": {
@@ -1450,7 +1514,12 @@
         "--ring",
         "--radius",
         "--fx-text-control-sm",
-        "--fx-text-control-sm--line-height"
+        "--fx-text-control-sm--line-height",
+        "--fds-c-button-color-background",
+        "--fds-c-button-color-background-hover",
+        "--fds-c-button-color-background-active",
+        "--fds-c-button-color-background-disabled",
+        "--fds-c-button-color-foreground"
       ],
       "tokenUsage": {
         "status": "declared",
@@ -1469,7 +1538,12 @@
           "--ring",
           "--radius",
           "--fx-text-control-sm",
-          "--fx-text-control-sm--line-height"
+          "--fx-text-control-sm--line-height",
+          "--fds-c-button-color-background",
+          "--fds-c-button-color-background-hover",
+          "--fds-c-button-color-background-active",
+          "--fds-c-button-color-background-disabled",
+          "--fds-c-button-color-foreground"
         ]
       },
       "visual": {
@@ -2919,6 +2993,7 @@
         "--foreground",
         "--popover",
         "--popover-foreground",
+        "--fds-g-color-text-subtle",
         "--muted",
         "--muted-foreground",
         "--accent",
@@ -2934,6 +3009,7 @@
           "--foreground",
           "--popover",
           "--popover-foreground",
+          "--fds-g-color-text-subtle",
           "--muted",
           "--muted-foreground",
           "--accent",
@@ -3255,7 +3331,12 @@
         "--border",
         "--input",
         "--primary",
-        "--ring"
+        "--ring",
+        "--fds-c-input-color-background",
+        "--fds-c-input-color-border",
+        "--fds-c-input-color-border-hover",
+        "--fds-c-input-color-border-focus",
+        "--fds-c-input-color-border-invalid"
       ],
       "tokenUsage": {
         "status": "declared",
@@ -3268,7 +3349,12 @@
           "--border",
           "--input",
           "--primary",
-          "--ring"
+          "--ring",
+          "--fds-c-input-color-background",
+          "--fds-c-input-color-border",
+          "--fds-c-input-color-border-hover",
+          "--fds-c-input-color-border-focus",
+          "--fds-c-input-color-border-invalid"
         ]
       },
       "visual": {
@@ -6085,7 +6171,11 @@
         "--muted-foreground",
         "--border",
         "--border-subtle",
-        "--ring"
+        "--ring",
+        "--fds-g-color-shadow-default",
+        "--fds-c-table-sizing-cell-block",
+        "--fds-c-table-sizing-cell-block-compact",
+        "--fds-c-table-sizing-cell-block-comfortable"
       ],
       "tokenUsage": {
         "status": "declared",
@@ -6100,7 +6190,11 @@
           "--muted-foreground",
           "--border",
           "--border-subtle",
-          "--ring"
+          "--ring",
+          "--fds-g-color-shadow-default",
+          "--fds-c-table-sizing-cell-block",
+          "--fds-c-table-sizing-cell-block-compact",
+          "--fds-c-table-sizing-cell-block-comfortable"
         ]
       },
       "visual": {
@@ -8004,7 +8098,9 @@
         "--foreground",
         "--muted-foreground",
         "--border",
-        "--primary"
+        "--primary",
+        "--fds-g-color-surface-subtle",
+        "--fds-g-color-text-subtle"
       ],
       "tokenUsage": {
         "status": "declared",
@@ -8015,7 +8111,9 @@
           "--foreground",
           "--muted-foreground",
           "--border",
-          "--primary"
+          "--primary",
+          "--fds-g-color-surface-subtle",
+          "--fds-g-color-text-subtle"
         ]
       },
       "visual": {

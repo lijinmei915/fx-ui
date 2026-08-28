@@ -12,6 +12,7 @@ const json = rawArgs.includes("--json")
 const args = rawArgs.filter((arg) => arg !== "--json")
 const components = read("docs/data/agent-components.manifest.json")
 const tokens = read("docs/data/agent-tokens.manifest.json")
+const themePresets = read("docs/data/theme-presets.manifest.json")
 const buildKit = read("docs/data/page-build-kit.manifest.json")
 const recipes = read("docs/data/agent-recipes.manifest.json")
 const layered = read("docs/data/layered-assets.manifest.json")
@@ -252,7 +253,7 @@ function impact(kind, query) {
     .map((component) => ({ name: component.name, apiSource: component.apiSource, doc: component.doc, examples: component.examples }))
   print({
     target: { kind, id: token.id, cssVar: token.cssVar },
-    truthSource: { file: "theme/fx-theme.css", action: "Change the semantic token source first, then rebuild the token contract before changing consumers." },
+    truthSource: { file: "tokens/source/semantic.tokens.json", action: "Change the governed Semantic source first, then rebuild runtime and token contracts before changing consumers." },
     declaredReferences: {
       tokenMapping: "docs/data/design-tokens.json",
       tokenDocumentation: "docs/TOKENS.md",
@@ -433,18 +434,42 @@ switch (command) {
   case "init": init(readOption(args, "--agent")); break
   case "doctor": execFileSync(process.execPath, [path.join(root, "scripts/doctor.mjs"), ...(json ? ["--json"] : [])], { stdio: "inherit" }); break
   case "theme": {
+    const buildTheme = () => {
+      const stdio = json ? "pipe" : "inherit"
+      execFileSync("npm", ["run", "build:tokens"], { cwd: root, stdio })
+      execFileSync("npm", ["run", "build:theme-artifacts"], { cwd: root, stdio })
+      execFileSync("npm", ["run", "build:theme-audit"], { cwd: root, stdio })
+      execFileSync("npm", ["run", "build:agent"], { cwd: root, stdio })
+      execFileSync("npm", ["run", "build:framework-core"], { cwd: root, stdio })
+      execFileSync("npm", ["run", "build:theme-release"], { cwd: root, stdio })
+    }
     if (args[0] === "build") {
-      execFileSync("npm", ["run", "build:tokens"], { cwd: root, stdio: "inherit" })
-      execFileSync("npm", ["run", "build:agent"], { cwd: root, stdio: "inherit" })
+      buildTheme()
+      if (json) print({ status: "built", release: read("registry/fx-theme.release.json") })
     }
-    else if (!args[0] || args[0] === "show") print(tokens.themeContract)
+    else if (!args[0] || args[0] === "show") print({
+      status: themePresets.publication.status,
+      contractVersion: themePresets.contractVersion,
+      semanticContract: tokens.themeContract,
+      presetContract: themePresets,
+      release: fs.existsSync(path.join(root, "registry/fx-theme.release.json")) ? read("registry/fx-theme.release.json") : null,
+    })
     else if (args[0] === "audit") {
-      const output = execFileSync(process.execPath, [path.join(root, "scripts/check-theme-contract.mjs"), "--json"], { cwd: root, encoding: "utf8" })
-      print(JSON.parse(output))
+      const semantic = JSON.parse(execFileSync(process.execPath, [path.join(root, "scripts/check-theme-contract.mjs"), "--json"], { cwd: root, encoding: "utf8" }))
+      const presets = JSON.parse(execFileSync(process.execPath, [path.join(root, "scripts/check-theme-presets.mjs"), "--json"], { cwd: root, encoding: "utf8" }))
+      execFileSync(process.execPath, [path.join(root, "scripts/build-theme-audit.mjs"), "--check"], { cwd: root, stdio: "pipe" })
+      execFileSync(process.execPath, [path.join(root, "scripts/build-theme-release.mjs"), "--check"], { cwd: root, stdio: "pipe" })
+      const quality = read("docs/data/theme-audit.manifest.json")
+      const release = read("registry/fx-theme.release.json")
+      print({ status: semantic.status === "ready" && presets.status === "ready" && quality.summary.status === "ready" && release.status === "released" ? "ready" : "repair-needed", semantic, presets, quality: quality.summary, release: { version: release.version, status: release.status, publishedModes: release.publishedModes } })
     }
-    else fail("Usage: npm run fx -- theme [show|audit|build] [--json]")
+    else if (args[0] === "release") {
+      buildTheme()
+      print(read("registry/fx-theme.release.json"))
+    }
+    else fail("Usage: npm run fx -- theme [show|audit|build|release] [--json]")
     break
   }
   case "upgrade": print({ status: "no-migrations", policy: "Add a codemod only for a released breaking API/token rename. No migration is inferred from current source." }); break
-  default: console.log("fx Agent CLI\n  npm run fx -- search <intent> --json\n  npm run fx -- recipe <intent> --json\n  npm run fx -- layer [hooks|patterns|blocks|page-templates] [query] --json\n  npm run fx -- quality <component> --json\n  npm run fx -- quality --summary --json\n  npm run fx -- plan <intent> [--name <实体名称> --slug <slug>] --json\n  npm run fx -- impact component <Name> --json\n  npm run fx -- impact token <id|cssVar> --json\n  npm run fx -- component <Name> --detail brief|full|source --json\n  npm run fx -- build <archetype> [--execute --name <实体名称> --slug <slug>] --json\n  npm run fx -- token <query> --json\n  npm run fx -- context\n  npm run fx -- init --agent codex|claude|cursor --json\n  npm run fx -- doctor [--json]\n  npm run fx -- theme [show|audit|build]\n  npm run fx -- upgrade")
+  default: console.log("fx Agent CLI\n  npm run fx -- search <intent> --json\n  npm run fx -- recipe <intent> --json\n  npm run fx -- layer [hooks|patterns|blocks|page-templates] [query] --json\n  npm run fx -- quality <component> --json\n  npm run fx -- quality --summary --json\n  npm run fx -- plan <intent> [--name <实体名称> --slug <slug>] --json\n  npm run fx -- impact component <Name> --json\n  npm run fx -- impact token <id|cssVar> --json\n  npm run fx -- component <Name> --detail brief|full|source --json\n  npm run fx -- build <archetype> [--execute --name <实体名称> --slug <slug>] --json\n  npm run fx -- token <query> --json\n  npm run fx -- context\n  npm run fx -- init --agent codex|claude|cursor --json\n  npm run fx -- doctor [--json]\n  npm run fx -- theme [show|audit|build|release]\n  npm run fx -- upgrade")
 }

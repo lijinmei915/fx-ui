@@ -80,7 +80,8 @@ const errors = []
 const knownTokenRefs = new Set([
   ...(designTokens.primitive ?? []),
   ...(designTokens.semantic ?? []),
-].map((token) => token.name))
+  ...(designTokens.componentHooks?.tokens ?? []),
+].flatMap((token) => [token.name, token.fdsName].filter(Boolean)))
 
 if (manifest.format !== "fx-ui/components-manifest") {
   errors.push("components manifest format must be fx-ui/components-manifest")

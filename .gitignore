@@ -1,5 +1,6 @@
 node_modules
 dist
+dist-foundation
 .project-os/graph/
 .DS_Store
 

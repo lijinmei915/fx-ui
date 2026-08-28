@@ -9,9 +9,9 @@ import { CalendarIcon, XIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
 const datePickerSizeClassName = {
-  xs: "h-(--fx-control-xs-height) rounded-md px-(--fx-control-px-xs) text-xs",
-  sm: "h-(--fx-control-sm-height) rounded-md px-2 text-sm",
-  md: "h-(--fx-control-md-height) rounded-lg px-2 text-base",
+  xs: "h-(--fds-g-sizing-control-block-xs) rounded-md px-(--fds-g-spacing-control-inline-xs) text-xs",
+  sm: "h-(--fds-g-sizing-control-block-sm) rounded-md px-2 text-sm",
+  md: "h-(--fds-g-sizing-control-block-md) rounded-lg px-2 text-base",
 } as const
 
 const datePickerIconClassName = {
@@ -238,7 +238,7 @@ function DatePicker({
                 />
               ) : placeholder
             ) : range ? (
-              <span className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-(--fx-control-gap)">
+              <span className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-(--fds-g-spacing-control-gap)">
                 <span className="truncate">{selectedRangeValue?.from ? formatDate(selectedRangeValue.from, format) : startPlaceholder}</span>
                 <span className="text-muted-foreground">-</span>
                 <span className="truncate">{selectedRangeValue?.to ? formatDate(selectedRangeValue.to, format) : endPlaceholder}</span>

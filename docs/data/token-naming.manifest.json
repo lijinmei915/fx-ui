@@ -1,0 +1,351 @@
+{
+  "schemaVersion": 1,
+  "format": "fds/token-naming-contract",
+  "contractVersion": "1.0.0-draft.14",
+  "status": "draft-enforced",
+  "truthSource": "docs/data/token-naming.manifest.json",
+  "humanDoc": "docs/TOKEN_NAMING.md",
+  "brand": {
+    "displayName": "FDS",
+    "globalPrefix": "--fds-g-",
+    "componentPrefix": "--fds-c-",
+    "legacyPrefix": "--fx-"
+  },
+  "layers": [
+    {
+      "id": "primitive",
+      "order": 1,
+      "namespace": "global",
+      "owner": "fds-foundation-maintainers",
+      "authoring": "maintainer-only",
+      "generated": false,
+      "allowedReferences": []
+    },
+    {
+      "id": "map",
+      "order": 2,
+      "namespace": "global",
+      "owner": "fds-theme-generator",
+      "authoring": "generated-only",
+      "generated": true,
+      "allowedReferences": ["primitive"]
+    },
+    {
+      "id": "semantic",
+      "order": 3,
+      "namespace": "global",
+      "owner": "fds-maintainers-with-approved-collaborators",
+      "authoring": "review-required",
+      "generated": false,
+      "allowedReferences": ["primitive", "map"]
+    },
+    {
+      "id": "component",
+      "order": 4,
+      "namespace": "component",
+      "owner": "component-owner-with-fds-approval",
+      "authoring": "admission-required",
+      "generated": false,
+      "allowedReferences": ["primitive", "semantic"]
+    }
+  ],
+  "grammar": {
+    "case": "lower-kebab",
+    "separator": "-",
+    "defaultState": "omit",
+    "global": {
+      "primitiveColorSeed": "--fds-g-color-seed-{family}",
+      "primitiveDimensionSeed": "--fds-g-{category}-seed-{role}",
+      "primitiveScale": "--fds-g-{category}-{property?}-{range}",
+      "colorMap": "--fds-g-color-{family}-{scale}-{range}",
+      "colorMapAnchor": "--fds-g-color-{anchor}",
+      "dimensionMap": "--fds-g-{category}-{range}",
+      "semantic": "--fds-g-{category}-{property}-{role?}-{modifier?}-{state?}",
+      "semanticProfile": "--fds-g-{category}-{property}-{role?}-{size?}"
+    },
+    "component": {
+      "visual": "--fds-c-{component}-{variant?}-{category}-{property}-{state?}",
+      "structural": "--fds-c-{component}-{category}-{property}-{size?}"
+    },
+    "definitions": [
+      {
+        "id": "primitive-color-seed",
+        "layer": "primitive",
+        "namespace": "global",
+        "template": "--fds-g-color-seed-{family}",
+        "fieldOrder": ["family"],
+        "fields": [
+          { "name": "family", "required": true, "source": "dictionaries.colorFamilies" }
+        ],
+        "terminalField": "family"
+      },
+      {
+        "id": "primitive-dimension-seed",
+        "layer": "primitive",
+        "namespace": "global",
+        "template": "--fds-g-{category}-seed-{role}",
+        "fieldOrder": ["category", "role"],
+        "fields": [
+          { "name": "category", "required": true, "source": "dictionaries.dimensionSeedCategories" },
+          { "name": "role", "required": true, "source": "dictionaries.dimensionSeedRoles" }
+        ],
+        "terminalField": "role"
+      },
+      {
+        "id": "primitive-scale",
+        "layer": "primitive",
+        "namespace": "global",
+        "template": "--fds-g-{category}-{property?}-{range}",
+        "fieldOrder": ["category", "property", "range"],
+        "fields": [
+          { "name": "category", "required": true, "source": "dictionaries.categories" },
+          { "name": "property", "required": false, "source": "category-specific-primitive-property" },
+          { "name": "range", "required": true, "source": "primitive-source-range-id" }
+        ],
+        "terminalField": "range"
+      },
+      {
+        "id": "color-map",
+        "layer": "map",
+        "namespace": "global",
+        "template": "--fds-g-color-{family}-{scale}-{range}",
+        "fieldOrder": ["family", "scale", "range"],
+        "fields": [
+          { "name": "family", "required": true, "source": "dictionaries.colorFamilies" },
+          { "name": "scale", "required": true, "source": "dictionaries.colorMapScales" },
+          { "name": "range", "required": true, "source": "ranges.colorMap" }
+        ],
+        "terminalField": "range"
+      },
+      {
+        "id": "color-map-anchor",
+        "layer": "map",
+        "namespace": "global",
+        "template": "--fds-g-color-{anchor}",
+        "fieldOrder": ["anchor"],
+        "fields": [
+          { "name": "anchor", "required": true, "source": "dictionaries.colorMapAnchors" }
+        ],
+        "terminalField": "anchor"
+      },
+      {
+        "id": "dimension-map",
+        "layer": "map",
+        "namespace": "global",
+        "template": "--fds-g-{category}-{range}",
+        "fieldOrder": ["category", "range"],
+        "fields": [
+          { "name": "category", "required": true, "source": "dictionaries.dimensionSeedCategories" },
+          { "name": "range", "required": true, "source": "ranges.radiusMap" }
+        ],
+        "terminalField": "range"
+      },
+      {
+        "id": "semantic-intent",
+        "layer": "semantic",
+        "namespace": "global",
+        "template": "--fds-g-{category}-{property}-{role?}-{modifier?}-{state?}",
+        "fieldOrder": ["category", "property", "role", "modifier", "state"],
+        "fields": [
+          { "name": "category", "required": true, "source": "dictionaries.categories" },
+          { "name": "property", "required": true, "source": "dictionaries.semanticProperties" },
+          { "name": "role", "required": false, "source": "dictionaries.intentRoles" },
+          { "name": "modifier", "required": false, "source": "dictionaries.semanticModifiers" },
+          { "name": "state", "required": false, "source": "dictionaries.states" }
+        ],
+        "terminalField": "state"
+      },
+      {
+        "id": "semantic-profile",
+        "layer": "semantic",
+        "namespace": "global",
+        "visibility": "internal",
+        "template": "--fds-g-{category}-{property}-{role?}-{size?}",
+        "fieldOrder": ["category", "property", "role", "size"],
+        "fields": [
+          { "name": "category", "required": true, "source": "dictionaries.categories" },
+          { "name": "property", "required": true, "source": "dictionaries.profileProperties" },
+          { "name": "role", "required": false, "source": "dictionaries.semanticProfileRoles" },
+          { "name": "size", "required": false, "source": "dictionaries.profileSizes" }
+        ],
+        "terminalField": "size"
+      },
+      {
+        "id": "component-visual",
+        "layer": "component",
+        "namespace": "component",
+        "template": "--fds-c-{component}-{variant?}-{category}-{property}-{state?}",
+        "fieldOrder": ["component", "variant", "category", "property", "state"],
+        "fields": [
+          { "name": "component", "required": true, "source": "docs/data/components.manifest.json#canonical-id" },
+          { "name": "variant", "required": false, "source": "component-source-public-variant" },
+          { "name": "category", "required": true, "source": "dictionaries.visualCategories" },
+          { "name": "property", "required": true, "source": "dictionaries.componentVisualProperties" },
+          { "name": "state", "required": false, "source": "dictionaries.states" }
+        ],
+        "terminalField": "state"
+      },
+      {
+        "id": "component-structural",
+        "layer": "component",
+        "namespace": "component",
+        "template": "--fds-c-{component}-{category}-{property}-{size?}",
+        "fieldOrder": ["component", "category", "property", "size"],
+        "fields": [
+          { "name": "component", "required": true, "source": "docs/data/components.manifest.json#canonical-id" },
+          { "name": "category", "required": true, "source": "dictionaries.structuralCategories" },
+          { "name": "property", "required": true, "source": "dictionaries.componentStructuralProperties" },
+          { "name": "size", "required": false, "source": "ranges.componentSizes" }
+        ],
+        "terminalField": "size"
+      }
+    ]
+  },
+  "dictionaries": {
+    "categories": ["color", "spacing", "sizing", "font", "radius", "border", "shadow", "opacity", "blur", "motion", "z-index", "icon"],
+    "states": ["hover", "active", "focus", "focus-visible", "disabled", "selected", "checked", "invalid", "readonly", "expanded"],
+    "sizes": ["xs", "sm", "md", "lg", "xl", "compact", "comfortable"],
+    "colorFamilies": ["brand", "neutral", "slate", "orange", "deep-orange", "amber", "yellow", "lime", "yellow-green", "green", "teal", "cyan", "light-blue", "blue", "indigo", "purple", "pink", "magenta", "red"],
+    "colorMapScales": ["base", "dark"],
+    "colorMapAnchors": ["brand-vivid", "neutral-anchor-dark"],
+    "dimensionSeedCategories": ["radius"],
+    "dimensionSeedRoles": ["base"],
+    "colorProperties": ["background", "foreground", "text", "icon", "border", "ring", "fill", "stroke", "surface", "action", "status", "link", "highlight", "navigation", "data", "shadow"],
+    "semanticProperties": ["surface", "foreground", "text", "icon", "action", "fill", "status", "link", "border", "ring", "highlight", "navigation", "shadow", "data", "overlay", "elevation"],
+    "semanticModifiers": ["subtle", "raised", "floating", "interactive", "categorical"],
+    "semanticProfileRoles": ["control", "panel", "menu", "navigation", "theme"],
+    "profileProperties": ["size", "line-height", "block", "inline", "gap", "padding", "duration"],
+    "profileSizes": ["xs", "sm", "base", "lg", "xl", "2xl", "3xl", "4xl"],
+    "intentRoles": ["default", "primary", "secondary", "brand", "neutral", "destructive", "error", "success", "warning", "info", "muted", "inverse", "container", "overlay", "link"],
+    "visualCategories": ["color"],
+    "structuralCategories": ["spacing", "sizing", "font", "radius", "border", "shadow", "opacity", "blur", "motion", "z-index", "icon"],
+    "componentVisualProperties": ["background", "foreground", "text", "icon", "border", "ring", "fill", "stroke", "shadow"],
+    "componentStructuralProperties": ["block", "inline", "gap", "inset", "height", "width", "min-height", "min-width", "max-height", "max-width", "cell-block", "cell-inline", "size", "line-height", "weight", "duration", "easing", "delay"],
+    "spacingProperties": ["block", "inline", "gap", "inset"],
+    "sizingProperties": ["height", "width", "min-height", "min-width", "max-height", "max-width", "cell-block", "cell-inline"],
+    "fontProperties": ["family", "size", "line-height", "weight", "letter-spacing"],
+    "motionProperties": ["duration", "easing", "delay"],
+    "forbiddenAbbreviations": ["bg", "fg", "txt", "bd", "px", "py", "h", "w"],
+    "forbiddenImplementationTerms": ["react", "vue", "tailwind", "radix", "dom", "div", "span"],
+    "visibility": ["internal", "public-global", "public-component"],
+    "stability": ["experimental", "stable", "deprecated"]
+  },
+  "ranges": {
+    "colorMap": [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200],
+    "radiusMap": [0, 2, 4, 6, 8, 12, 16],
+    "componentSizes": ["xs", "sm", "md", "lg", "xl", "compact", "comfortable"],
+    "direction": "color-map-numeric-value-increases-with-visual-depth"
+  },
+  "componentAdmission": {
+    "default": "use-global-semantic-without-component-hook",
+    "requiredEvidence": ["independent-theming-need", "semantic-gap", "cross-context-reuse", "owner", "documentation", "contract-test", "visual-test"],
+    "stableRequiredEvidence": ["documentation-target", "contract-test-target", "visual-test-target", "ready-reference-adapter-binding", "runtime-consumer"],
+    "forbiddenSubjects": ["behavior", "dom-structure", "event", "business-data", "loading-composition"],
+    "pilotComponents": ["button", "input", "table"]
+  },
+  "globalStability": {
+    "stableRequiredEvidence": ["public-global-visibility", "semantic-owner", "generated-runtime", "fds-primary-theme-audit", "published-contract"],
+    "auditContract": "docs/data/theme-presets.manifest.json#qualityGates",
+    "auditEvidence": "docs/data/theme-audit.manifest.json"
+  },
+  "publication": {
+    "internalLayers": ["primitive", "map", "semantic", "component"],
+    "publicVisibility": ["public-global", "public-component"],
+    "contractStatus": "experimental",
+    "publicContractArtifact": "registry/fx-theme.contract.json#stylingHooks",
+    "overrideScope": "theme-root-or-governed-theme-provider",
+    "instanceOverride": "forbidden",
+    "versioning": "semver",
+    "stablePromotionRequirement": "all-published-hooks-reviewed-and-no-experimental-hooks"
+  },
+  "migration": {
+    "phase": "fds-primary",
+    "phases": ["contract-only", "dual-write", "fds-primary", "legacy-removal"],
+    "legacyPrefix": "--fx-",
+    "newPrefixCreation": "runtime-fds-truth-with-generated-legacy-aliases",
+    "deprecationWindow": "at-least-one-major",
+    "aliasPolicy": "generated-reference-only-no-duplicated-physical-values",
+    "aliasIntroducedVersion": "1.3.0",
+    "earliestRemovalVersion": "2.0.0",
+    "readinessAudit": "docs/data/fds-migration-audit.manifest.json",
+    "legacyDispositions": [
+      {
+        "id": "runtime-profile-global-semantic",
+        "selectors": ["--fx-text-*", "--fx-control-*", "--fx-panel-*", "--fx-menu-text*", "--fx-sidebar-item-height*", "--fx-topbar-*", "--fx-theme-duration"],
+        "consumerPrefixes": ["src/", "theme/"],
+        "classification": "internal-global-semantic-required",
+        "targetLayer": "semantic",
+        "public": false,
+        "nextStep": "admit-reviewed-internal-global-token-before-consumer-migration"
+      },
+      {
+        "id": "component-local-runtime-variable",
+        "selectors": ["--fx-date-time-calendar-height"],
+        "consumerPrefixes": ["src/components/fx/time-picker.tsx"],
+        "classification": "not-a-design-token",
+        "targetLayer": "none",
+        "public": false,
+        "replacement": "--date-time-picker-calendar-height",
+        "nextStep": "rename-local-css-variable-without-fds-prefix"
+      },
+      {
+        "id": "avatar-dynamic-color-map",
+        "selectors": ["--fx-{dynamic}-08"],
+        "consumerPrefixes": ["src/components/ui/avatar.tsx"],
+        "classification": "component-internal-static-map-lookup",
+        "targetLayer": "map",
+        "public": false,
+        "replacement": "AVATAR_TONE_BACKGROUNDS -> --fds-g-color-{family}-base-80",
+        "nextStep": "keep-static-governed-map-lookup-without-public-component-hook"
+      },
+      {
+        "id": "documentation-foundation-display",
+        "selectors": ["--fx-*"],
+        "consumerPrefixes": ["src/pages/docs/tokens/"],
+        "classification": "foundation-display-must-use-fds-contract",
+        "targetLayer": "primitive-or-map",
+        "public": false,
+        "nextStep": "render-fds-name-and-range-from-foundation-contract"
+      }
+    ]
+  },
+  "examples": {
+    "valid": [
+      { "layer": "primitive", "name": "--fds-g-color-seed-brand" },
+      { "layer": "primitive", "name": "--fds-g-radius-seed-base" },
+      { "layer": "primitive", "name": "--fds-g-spacing-8" },
+      { "layer": "primitive", "name": "--fds-g-font-size-14" },
+      { "layer": "map", "name": "--fds-g-color-brand-base-50" },
+      { "layer": "map", "name": "--fds-g-color-blue-dark-110" },
+      { "layer": "map", "name": "--fds-g-color-brand-base-90" },
+      { "layer": "map", "name": "--fds-g-color-brand-vivid" },
+      { "layer": "map", "name": "--fds-g-radius-6" },
+      { "layer": "semantic", "name": "--fds-g-color-surface-default" },
+      { "layer": "semantic", "name": "--fds-g-color-text-secondary" },
+      { "layer": "semantic", "name": "--fds-g-color-action-primary-hover" },
+      { "layer": "semantic", "name": "--fds-g-font-size-control-sm" },
+      { "layer": "semantic", "name": "--fds-g-sizing-navigation-topbar-block" },
+      { "layer": "semantic", "name": "--fds-g-motion-duration-theme" },
+      { "layer": "component", "name": "--fds-c-button-color-background" },
+      { "layer": "component", "name": "--fds-c-button-color-background-hover" },
+      { "layer": "component", "name": "--fds-c-input-color-border-focus" },
+      { "layer": "component", "name": "--fds-c-table-sizing-cell-block-compact" }
+    ],
+    "invalid": [
+      { "layer": "primitive", "name": "--fds-g-blue-500", "reason": "missing-category-and-uncontrolled-range" },
+      { "layer": "semantic", "name": "--fds-g-color-primary-bg", "reason": "forbidden-abbreviation" },
+      { "layer": "primitive", "name": "--fds-g-spacing-card-16", "reason": "primitive-contains-component-intent" },
+      { "layer": "map", "name": "--fds-g-color-brand-hover-50", "reason": "map-cannot-contain-state" },
+      { "layer": "semantic", "name": "--fds-g-color-action-hover-primary", "reason": "state-must-be-terminal" },
+      { "layer": "component", "name": "--fds-c-react-button-color-background", "reason": "implementation-term" },
+      { "layer": "component", "name": "--fds-c-button-default-color-background", "reason": "default-variant-must-be-omitted" },
+      { "layer": "component", "name": "--fds-c-table-sizing-cell-block-hover-compact", "reason": "state-and-size-cannot-coexist" }
+    ]
+  },
+  "enforcement": {
+    "phase": "foundation-semantic-and-component-fds-primary",
+    "check": "scripts/check-token-naming.mjs",
+    "activeScopes": ["dtcg-source", "foundation-contract", "generated-fds-css", "semantic-css", "component-hooks", "public-release"],
+    "futureScopes": []
+  }
+}

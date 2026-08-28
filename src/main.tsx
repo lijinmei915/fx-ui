@@ -21,7 +21,7 @@ if (import.meta.env.DEV) {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    {/* 图标用 Tabler；全局线宽由 theme 的 .tabler-icon { stroke-width } 统一控制，面型用 *Filled。见 docs/TOKENS.md 图标小节 */}
+    {/* 图标用 Tabler；全局线宽由 theme 的 .tabler-icon { stroke-width } 统一控制，面型用 *Filled。见 docs/foundations/icons.md */}
     <App />
     <Toaster />
   </StrictMode>

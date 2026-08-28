@@ -102,9 +102,9 @@ Input 默认显示普通调用调试台，提供能直接落到真实调用的�
 
 新增属性时先判断它是否已经能由现有结构推导：能推导就收进“输入组合”，不新增 `search` 等平行能力或伪 prop；不能推导且包含建议列表、远程请求、历史或筛选联动时，沉淀为 fx 组合组件。页面只保留调试台作为实时示例入口，不再额外维护“组件总览”或“场景示例”重复区块。
 
-Token 编辑属于组件作者模式。预览区局部重映射 `--surface`、`--input` 和 `--foreground-disabled` 来确认真实组件是否生效；生成结果是组件源码草稿，非默认 Token 组合必须沉淀为受治理的 variant 或组件映射后才能在业务页面使用。
+Token 编辑属于组件作者模式。预览区局部重映射 `--fds-c-input-color-background`、`--fds-c-input-color-border` 和占位文字语义来确认真实组件是否生效；生成结果是组件源码草稿，非默认 Token 组合必须经过 Component Hook 治理后才能进入主题，不能用于业务页面的单实例覆盖。
 
-选择槽位默认值时不写局部覆盖，例如默认边框直接继承主题 `--input`，不能生成 `--input: var(--input)`；CSS 变量自引用会失效并让边框回退为不可控颜色。
+选择槽位默认值时不写局部覆盖，例如默认边框直接继承 `--fds-c-input-color-border`；只有选择非默认映射时才生成 Hook 草稿，避免 CSS 变量自引用。
 
 ### 当前规格
 
@@ -165,6 +165,20 @@ Input 支持原生 input props，并保留 shadcn open-code 的基础视觉。�
 | `--radius` | 输入框圆角派生尺度 |
 
 完整 token 规则见 `docs/TOKENS.md`。
+
+## Component Styling Hooks {#component-styling-hooks}
+
+以下 5 个 Hook 已通过 stable 准入，覆盖 Input 与同源 InputGroup 的公开换肤边界：
+
+| Hook | 默认引用 |
+| --- | --- |
+| `--fds-c-input-color-background` | `--fds-g-color-surface-control` |
+| `--fds-c-input-color-border` | `--fds-g-color-border-interactive` |
+| `--fds-c-input-color-border-hover` | `--fds-g-color-action-primary` |
+| `--fds-c-input-color-border-focus` | `--fds-g-color-action-primary` |
+| `--fds-c-input-color-border-invalid` | `--fds-g-color-action-destructive` |
+
+Hook 覆盖范围同时作用于 Input 与同源 InputGroup 外框。它不新增 prop，也不允许页面局部覆写；字段错误语义仍必须由 `data-invalid + aria-invalid` 驱动。
 
 ## 排版 Typography {#typography}
 

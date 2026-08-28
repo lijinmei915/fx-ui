@@ -1,7 +1,10 @@
 import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
-import { componentIndexSections } from "../src/lib/site-navigation";
+import {
+  componentIndexSections,
+  foundationNavSections,
+} from "../src/lib/site-navigation";
 
 type VisualConfig = { route: string; selector: string };
 type QualityEntry = {
@@ -10,6 +13,7 @@ type QualityEntry = {
 };
 
 const root = process.cwd();
+const fixedTestTime = new Date(2026, 6, 1, 12, 0, 0);
 const playgroundManifest = JSON.parse(
   fs.readFileSync(
     path.join(root, "docs/data/component-playgrounds.manifest.json"),
@@ -55,6 +59,10 @@ function visualFor(name: string): VisualConfig | undefined {
   );
 }
 
+test.beforeEach(async ({ page }) => {
+  await page.clock.setFixedTime(fixedTestTime);
+});
+
 test("navigation: direct hash resolves the registered documentation page", async ({
   page,
 }) => {
@@ -64,6 +72,128 @@ test("navigation: direct hash resolves the registered documentation page", async
   await expect(
     page.getByRole("heading", { name: "颜色", exact: true }),
   ).toBeVisible();
+  await expect(page.getByText("90 · Seed", { exact: true })).toHaveCount(1);
+  await expect(page.getByText("90 · Base", { exact: true })).toHaveCount(1);
+  await expect(page.getByText("Brand 90", { exact: true })).toHaveCount(0);
+});
+
+test("theme: solid foreground keeps one role color and falls back for a bright seed", async ({
+  page,
+}) => {
+  await page.goto("/#tokens-colors");
+  await expect.poll(() => page.evaluate(() =>
+    document.documentElement.style.getPropertyValue("--fds-g-color-foreground-primary"),
+  )).toBe("var(--fds-g-color-neutral-base-10)");
+
+  await page.evaluate(() => {
+    window.localStorage.setItem("fx-ui-theme-config", JSON.stringify({
+      primaryColor: "custom",
+      customColorHex: "#00FF00",
+      customColorIndex: 0,
+      customColors: ["#00FF00"],
+    }));
+  });
+  await page.reload();
+
+  await expect.poll(() => page.evaluate(() =>
+    document.documentElement.style.getPropertyValue("--fds-g-color-foreground-primary"),
+  )).toBe("var(--fds-g-color-neutral-base-200)");
+});
+
+test("foundation palette: base and dark use their fixed documentation foreground splits", async ({ page }) => {
+  await page.goto("/#tokens-colors");
+
+  for (const family of ["orange", "yellow", "lime", "blue"]) {
+    for (const step of ["10", "20", "30", "40", "50", "60"]) {
+      await expect(page.locator(`[data-token-color="--fds-g-color-${family}-base-${step}"]`))
+        .toHaveAttribute("data-swatch-foreground", "fallback");
+    }
+    for (const step of ["70", "80", "90", "100", "110", "120"]) {
+      await expect(page.locator(`[data-token-color="--fds-g-color-${family}-base-${step}"]`))
+        .toHaveAttribute("data-swatch-foreground", "preferred");
+    }
+  }
+
+  await page.getByRole("tab", { name: "Dark", exact: true }).click();
+  for (const family of ["orange", "yellow", "lime", "blue"]) {
+    for (const step of ["10", "20", "30", "40", "50", "60", "70", "80", "90", "100"]) {
+      await expect(page.locator(`[data-token-color="--fds-g-color-${family}-dark-${step}"]`))
+        .toHaveAttribute("data-swatch-foreground", "preferred");
+    }
+    for (const step of ["110", "120"]) {
+      await expect(page.locator(`[data-token-color="--fds-g-color-${family}-dark-${step}"]`))
+        .toHaveAttribute("data-swatch-foreground", "fallback");
+    }
+  }
+});
+
+test("navigation: Foundation detail pages expose their shared Markdown source", async ({
+  page,
+}) => {
+  await page.goto("/#tokens-colors");
+  await page.getByRole("button", { name: "更多页面操作" }).click();
+  await expect(page.getByText("docs/foundations/colors.md", { exact: true })).toBeVisible();
+  await page.getByRole("menuitem", { name: "Markdown" }).click();
+  await expect(page.getByText("Markdown / docs/foundations/colors.md", { exact: true })).toBeVisible();
+
+  await page.goto("/#grid");
+  await page.getByRole("button", { name: "更多页面操作" }).click();
+  await expect(page.getByText("docs/foundations/grid.md", { exact: true })).toBeVisible();
+});
+
+test("state: Foundation inventory filters and traces generated token contracts", async ({
+  page,
+}) => {
+  await page.goto("/#tokens");
+  const foundation = page.locator("#tokens-foundation");
+
+  await expect(foundation.getByRole("tab", { name: "全部 568" })).toBeVisible();
+  await expect(foundation.getByRole("tab", { name: "Seed 19" })).toBeVisible();
+  await expect(foundation.getByRole("tab", { name: "Primitive 124" })).toBeVisible();
+  await expect(foundation.getByRole("tab", { name: "Map 425" })).toBeVisible();
+
+  await foundation.getByRole("tab", { name: "Seed 19" }).click();
+  await expect(foundation.locator("tbody tr")).toHaveCount(19);
+  await foundation.getByLabel("搜索 Foundation Token").fill("radius-seed-base");
+  await expect(foundation.locator("tbody tr")).toHaveCount(1);
+
+  await foundation.getByRole("tab", { name: "全部 568" }).click();
+  await foundation.getByLabel("搜索 Foundation Token").fill("radius-full");
+  await expect(foundation.locator("tbody tr")).toHaveCount(1);
+  await foundation.getByRole("button", { name: "--fds-g-radius-full" }).click();
+
+  const details = page.getByRole("dialog");
+  await expect(details).toBeVisible();
+  await expect(details).toContainText("tokens/source/primitive.tokens.json");
+  await expect(details).toContainText("仅 Foundation 维护者可修改");
+  await expect(details).toContainText("Semantic 引用");
+});
+
+test("navigation: TopBar belongs to business compositions, not foundations", async ({
+  page,
+}) => {
+  const foundationItems = foundationNavSections.flatMap(
+    (section) => section.items,
+  );
+  const businessCompositions = componentIndexSections.find(
+    (section) => section.title === "业务组合组件",
+  );
+
+  expect(foundationItems.some((item) => item.href === "#top-bar")).toBe(false);
+  expect(
+    businessCompositions?.items.some((item) => item.href === "#top-bar"),
+  ).toBe(true);
+
+  await page.goto("/#top-bar");
+  await expect(
+    page.locator("header nav").getByRole("link", { name: "组件", exact: true }),
+  ).toHaveClass(/brand-identity/);
+  await expect(page.locator('[data-slot="docs-sidebar"]')).toContainText(
+    "业务组合组件",
+  );
+  await expect(page.locator('[data-slot="docs-sidebar"]')).not.toContainText(
+    "布局系统",
+  );
 });
 
 test("navigation: page builder is a top-level workspace beside Pages", async ({
@@ -76,7 +206,7 @@ test("navigation: page builder is a top-level workspace beside Pages", async ({
   ).toBeVisible();
   await expect(
     headerNav.getByRole("link", { name: "搭建器", exact: true }),
-  ).toHaveClass(/border-primary/);
+  ).toHaveClass(/brand-identity/);
   await expect(page.locator("#page-builder-workspace")).toBeVisible();
   await expect(page.locator('[data-slot="docs-sidebar"]')).toBeHidden();
   await expect(page.locator("#page-builder")).toHaveCount(0);
@@ -111,7 +241,7 @@ test("navigation: governance is a direct top-level entry", async ({ page }) => {
   ).toBeVisible();
   await expect(
     headerNav.getByRole("link", { name: "治理中心", exact: true }),
-  ).toHaveClass(/border-primary/);
+  ).toHaveClass(/brand-identity/);
   await expect(page.locator('[data-slot="docs-sidebar"]')).toContainText(
     "治理中心",
   );
@@ -1002,40 +1132,28 @@ test("state: page builder Agent operations share undo and redo history", async (
   await expect(preview).toContainText("重点客户");
 });
 
-test("state: Icon browser only exposes registered line and filled exports", async ({
+test("state: Icon playground switches between registered line and filled exports", async ({
   page,
 }) => {
   await page.goto("/#icon");
-  const trigger = page.locator('[data-slot="icon-browser-trigger"]');
-  await expect(trigger).toHaveAttribute("data-selected-icon", "HomeIcon");
-
-  await trigger.click();
-  const dialog = page.getByRole("dialog");
-  await expect(dialog).toBeVisible();
-  await dialog.getByPlaceholder("搜索已登记图标").fill("SearchIcon");
-  await dialog.getByRole("button", { name: /SearchIcon/ }).click();
-
-  await expect(dialog).toHaveCount(0);
-  await expect(trigger).toHaveAttribute("data-selected-icon", "SearchIcon");
-  await expect(page.locator('[data-slot="toggle-group"]')).toHaveCount(0);
-
   const playground = page.locator("#icon-playground");
+  const lineButton = playground.getByRole("button", {
+    name: "线性",
+    exact: true,
+  });
+  const filledButton = playground.getByRole("button", {
+    name: "面型",
+    exact: true,
+  });
+  await expect(lineButton).toBeVisible();
+  await expect(filledButton).toBeVisible();
+
   await playground.getByRole("button", { name: "代码", exact: true }).click();
   await expect(playground.locator("pre code")).toContainText(
-    'import { SearchIcon } from "@/lib/icons"',
+    'import { HomeIcon } from "@/lib/icons"',
   );
 
-  await trigger.click();
-  await dialog.getByPlaceholder("搜索已登记图标").fill("HomeIcon");
-  await dialog.getByRole("button", { name: /HomeIcon/ }).click();
-  await expect(trigger).toHaveAttribute("data-selected-icon", "HomeIcon");
-
-  const exportToggle = page.locator('[data-slot="toggle-group"]');
-  await expect(exportToggle).toHaveCount(1);
-  await exportToggle.getByRole("button", { name: "面型", exact: true }).click();
-  await expect(trigger).toHaveAttribute("data-selected-icon", "HomeFilledIcon");
-
-  await playground.getByRole("button", { name: "代码", exact: true }).click();
+  await filledButton.click();
   await expect(playground.locator("pre code")).toContainText(
     'import { HomeFilledIcon } from "@/lib/icons"',
   );
@@ -2275,7 +2393,7 @@ test("state: Select multiple defaults to outline and scales value tags", async (
   expect(mdVerticalGap?.top).toBeCloseTo(4, 1);
   expect(mdVerticalGap?.bottom).toBeCloseTo(4, 1);
   await playground.evaluate((node) =>
-    node.style.setProperty("--fx-control-md-height", "30px"),
+    node.style.setProperty("--fds-g-sizing-control-block-md", "30px"),
   );
   await expect(trigger).toHaveCSS("height", "30px");
   await expect(valueTags.first()).toHaveCSS("height", "22px");
@@ -2438,8 +2556,16 @@ test("Checkbox 调试台：尺寸、布局、悬停与已选禁用状态", async
     exact: true,
   });
 
+  const primary = await page.evaluate(() => {
+    const probe = document.createElement("span");
+    probe.style.backgroundColor = "var(--primary)";
+    document.body.append(probe);
+    const background = getComputedStyle(probe).backgroundColor;
+    probe.remove();
+    return background;
+  });
   await single.hover();
-  await expect(single).toHaveCSS("border-top-color", "rgb(255, 128, 0)");
+  await expect(single).toHaveCSS("border-top-color", primary);
 
   const primaryHover = await page.evaluate(() => {
     const probe = document.createElement("span");
@@ -2537,8 +2663,16 @@ test("RadioGroup 调试台：尺寸、布局、悬停与已选禁用状态", asy
     0,
   );
 
+  const primary = await page.evaluate(() => {
+    const probe = document.createElement("span");
+    probe.style.backgroundColor = "var(--primary)";
+    document.body.append(probe);
+    const background = getComputedStyle(probe).backgroundColor;
+    probe.remove();
+    return background;
+  });
   await radio.hover();
-  await expect(radio).toHaveCSS("border-top-color", "rgb(255, 128, 0)");
+  await expect(radio).toHaveCSS("border-top-color", primary);
   await expect(radio).toHaveAttribute("aria-checked", "false");
 
   await playground.getByRole("button", { name: "已选", exact: true }).click();

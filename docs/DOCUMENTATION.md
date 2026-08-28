@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-07-27
+last_verified: 2026-08-28
 teaches: "fx-ui 的文档分工边界、SSOT 规则——一条信息该写进哪个文件"
 use_when: "不确定一条新信息该记录到哪份文档时，先查这里的 SSOT 表和判断示例"
 ---
@@ -45,7 +45,8 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 | 组件事实 | `docs/components/*.md` | `docs/data/components.manifest.json` | `scripts/check-components-manifest.mjs` |
 | 组件质量矩阵 | 组件源码、组件 manifest、Playground manifest、视觉测试 | `docs/data/component-quality.manifest.json`（派生） | `scripts/check-component-quality.mjs` |
 | 组件生产分层事实 | 组件源码、Hook、recipes/Blocks、page build kit | `docs/data/layered-assets.manifest.json` | `scripts/check-layered-assets.mjs` |
-| token | `docs/TOKENS.md` | `docs/data/design-tokens.json`（映射事实）→ `docs/data/agent-tokens.manifest.json`（派生 Agent / Theme contract） | `scripts/check-tokens-sync.sh` + `scripts/build-agent-token-contract.mjs --check` + `scripts/check-theme-contract.mjs` |
+| token | `docs/TOKENS.md`（架构总览）+ `docs/foundations/*.md`（专题规范） | `docs/data/design-tokens.json`（映射事实）→ `docs/data/agent-tokens.manifest.json`（派生 Agent / Theme contract） | `scripts/check-tokens-sync.sh` + `scripts/build-agent-token-contract.mjs --check` + `scripts/check-theme-contract.mjs` |
+| FDS Token 命名、四层生成与前缀迁移 | `docs/TOKEN_NAMING.md` | `docs/data/token-naming.manifest.json`（命名 SSOT）+ `tokens/source/{primitive,map,semantic,component}.tokens.json`（四层 SSOT）→ `docs/data/fds-{foundation,semantic,components}.manifest.json` + `docs/data/fds-migration-audit.manifest.json`（派生） | `scripts/check-token-naming.mjs` + `scripts/build-fds-{foundation,semantic,components}.mjs --check` + `scripts/build-fds-migration-audit.mjs --check` |
 | Agent 查询能力 | `AGENTS.md`（行为边界）、现有组件/token/page 真相源 | `docs/data/agent-*.manifest.json`、`docs/data/agent-context.md`、`docs/data/page-build-kit.manifest.json`、`docs/data/agent-recipes.manifest.json` | `doctor` 聚合 Token、组件源码/API、文档示例、Build Kit 与 Agent UI 检查；`check:agent-query` 守查询/计划/影响/配方边界，`check:agent-examples` 守示例来源，`check:agent-recipes` 守场景证据 |
 | 文档章节/职责 | 本文（SSOT 表） | `docs/data/doc-structure.manifest.json` | `scripts/check-doc-structure.mjs` |
 
@@ -86,6 +87,7 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 
 | 问题 | SSOT |
 |------|------|
+| 基础、组件和页面规范的统一人读入口 | `docs/INDEX.md`（只导航，不复制规则） |
 | 任意产物住哪/怎么新增登记/谁 check（按种类分流总入口） | `docs/MAP.md` |
 | 怎么装配一个页面（流程/决策树/可用区块） | `docs/PAGES.md` |
 | 怎么开始用 | `README.md` |
@@ -95,10 +97,14 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 | 交接 / 接手 | `HANDOFF.md` |
 | Claude Code 专属行为规则 | `CLAUDE.md`（通用规则仍以 `AGENTS.md` 为准，本文件只放 Claude Code 特有行为） |
 | 三层架构、模块职责 | `docs/ARCHITECTURE.md` |
+| 跨框架核心边界、适配器状态与新框架准入 | `docs/FRAMEWORK_ADAPTERS.md` |
 | 设计规则总览（指向 token/布局） | `docs/DESIGN_STANDARDS.md` |
 | 文档站自身的页面结构、样式边界和改样式流程 | `docs/DOC_SITE_DESIGN.md` |
-| token 具体取值 | `docs/TOKENS.md` |
+| Token 架构、治理边界与专题路由 | `docs/TOKENS.md` |
+| 颜色、排版、圆角、间距、阴影、动效、层级、图标、栅格和布局专题规范 | `docs/foundations/*.md` |
+| FDS Token / Styling Hooks 命名语法、词典、公开与兼容规则 | `docs/TOKEN_NAMING.md` |
 | 布局规范 | `docs/LAYOUTS.md` |
+| 已就绪/规划中页面类型的人读索引 | `docs/pages/README.md`（状态事实仍引用 page manifest） |
 | Agent UI 生成式界面协议 | `docs/AGENT_UI.md` |
 | Agent UI 视觉规范 | `docs/AGENT_UI_VISUAL.md` |
 | 对外报告/简报渲染层（`src/reports/`）说明和数据契约 | `docs/REPORTS.md` |
@@ -137,6 +143,10 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 ### docs/DOC_SITE_DESIGN.md
 回答"fx-ui 文档站本身怎么布局、哪些样式能改、改样式时该动哪一层"。不写 token 具体值、组件 API 或业务后台页面布局规则。
 
+### docs/TOKEN_NAMING.md
+
+回答"FDS Token 与 Styling Hooks 应该叫什么、字段按什么顺序、哪些词合法、哪些接口公开"。不抄 Token 具体值，不负责文件命名，也不维护组件真实 API。
+
 ### docs/TECH_STACK.md
 回答"用了什么技术、什么版本、AI 能不能假设它已落地"。不写产品路线。
 
@@ -151,6 +161,9 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 
 ### docs/ARCHITECTURE.md
 回答"模块职责、三层边界、目录结构"。不写运行规则、当前进度。
+
+### docs/FRAMEWORK_ADAPTERS.md
+回答"哪些契约跨框架共享、各框架适配器处于什么状态、何时允许新增实现"。不写具体组件 API 或虚构尚未落地的框架支持。
 
 ### docs/AGENT_UI.md
 回答"公司 Agent 怎么生成受控 UI、AgentSurface 支持哪些 JSON block、action 怎么回传、哪些字段禁止"。不写具体业务接口、权限规则或某个 Agent 的提示词。
@@ -182,7 +195,7 @@ use_when: "不确定一条新信息该记录到哪份文档时，先查这里的
 ---
 layer: knowledge | governance
 type: spec | status | log | architecture
-last_verified: 2026-07-27
+last_verified: 2026-08-28
 teaches: "这份文档回答什么问题"
 use_when: "什么场景下应该先查这份文档"
 ---
@@ -206,6 +219,7 @@ use_when: "什么场景下应该先查这份文档"
 | 文件 | 关系 |
 |------|------|
 | `docs/NAMING.md` | 文件命名和放置位置 |
+| `docs/TOKEN_NAMING.md` | FDS Token 与 Styling Hooks 命名语言 |
 | `docs/KNOWLEDGE_SCHEMA.md` | frontmatter 元数据字段和取值规范（本文件定文档边界，它定 frontmatter 格式） |
 | `AGENTS.md` | AI 的文档职责定义 |
 | `PRODUCT.md` | 产品方向（文档内容需对齐产品定位） |

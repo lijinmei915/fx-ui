@@ -1,0 +1,54 @@
+{
+  "format": "fx-ui/publication-profiles",
+  "schemaVersion": 1,
+  "truthSource": "docs/data/publication-profiles.manifest.json",
+  "profiles": {
+    "full": {
+      "mode": "default",
+      "outputDirectory": "dist",
+      "visibility": "internal",
+      "contentPolicy": "all-registered-pages"
+    },
+    "foundation": {
+      "mode": "foundation",
+      "outputDirectory": "dist-foundation",
+      "visibility": "shareable-read-only",
+      "defaultPage": "tokens",
+      "allowedPages": [
+        "tokens",
+        "tokens-colors",
+        "tokens-typography",
+        "tokens-icons",
+        "tokens-radius",
+        "tokens-shadow",
+        "tokens-spacing",
+        "tokens-layer",
+        "tokens-motion",
+        "grid",
+        "layout"
+      ],
+      "allowedMarkdown": [
+        "docs/TOKENS.md",
+        "docs/foundations/colors.md",
+        "docs/foundations/typography.md",
+        "docs/foundations/icons.md",
+        "docs/foundations/radius.md",
+        "docs/foundations/shadow.md",
+        "docs/foundations/spacing.md",
+        "docs/foundations/layer.md",
+        "docs/foundations/motion.md",
+        "docs/foundations/grid.md",
+        "docs/foundations/layout.md"
+      ],
+      "excludedDomains": [
+        "components",
+        "component-playgrounds",
+        "page-builder",
+        "page-templates",
+        "reports",
+        "governance"
+      ],
+      "sourceMaps": false
+    }
+  }
+}

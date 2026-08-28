@@ -1,22 +1,34 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# 校验 docs/TOKENS.md 和 docs/data/design-tokens.json 是否和 theme/fx-theme.css 保持一致。
-# fx-theme.css 是唯一真相源；本脚本只检查有没有抄漏/抄错，不生成内容。
+# 校验 Token 总览/Foundation 专题文档和 docs/data/design-tokens.json 是否和生成后的 Foundation + Semantic 保持一致。
+# 本脚本只检查有没有抄漏/抄错，不生成内容。
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
 css="$root/theme/fx-theme.css"
-doc="$root/docs/TOKENS.md"
+foundation="$root/theme/foundation.css"
+semantic="$root/theme/fds-semantic.css"
+docs=("$root/docs/TOKENS.md" "$root"/docs/foundations/*.md)
 json="$root/docs/data/design-tokens.json"
 
 if [ ! -f "$css" ]; then
   echo "ERROR: not found: $css"
   exit 2
 fi
-if [ ! -f "$doc" ]; then
-  echo "ERROR: not found: $doc"
+if [ ! -f "$foundation" ]; then
+  echo "ERROR: not found: $foundation"
   exit 2
 fi
+if [ ! -f "$semantic" ]; then
+  echo "ERROR: not found: $semantic"
+  exit 2
+fi
+for doc in "${docs[@]}"; do
+  if [ ! -f "$doc" ]; then
+    echo "ERROR: not found: $doc"
+    exit 2
+  fi
+done
 if [ ! -f "$json" ]; then
   echo "ERROR: not found: $json"
   exit 2
@@ -31,43 +43,47 @@ while IFS= read -r line; do
 
   [ -z "$value" ] && continue
 
-  if ! grep -qiF "$value" "$doc"; then
+  if ! grep -qiF "$value" "${docs[@]}"; then
     warnings=$((warnings + 1))
-    echo "WARN: --$name: $value 在 fx-theme.css 中存在，但 docs/TOKENS.md 里找不到这个值（可能漏抄或改漂了）"
+    echo "WARN: --$name: $value 在 fx-theme.css 中存在，但 Token 总览/Foundation 专题文档里找不到这个值（可能漏抄或改漂了）"
   fi
-done < <(sed -n '/:root {/,/^}/p' "$css" | grep -E '^\s*--[a-zA-Z0-9-]+:.*#[0-9A-Fa-f]{6}')
+done < <(sed -n '/:root {/,/^}/p' "$foundation" "$semantic" "$css" | grep -E '^\s*--[a-zA-Z0-9-]+:.*#[0-9A-Fa-f]{6}')
 
 if [ "$warnings" -gt 0 ]; then
   echo ""
-  echo "Result: 发现 $warnings 处可能的漂移。请检查 docs/TOKENS.md 是否需要同步 theme/fx-theme.css 的最新值。"
+  echo "Result: 发现 $warnings 处可能的漂移。请检查 docs/TOKENS.md 或 docs/foundations/*.md 是否需要同步生成后的 Token 值。"
   exit 1
 fi
 
-CSS_PATH="$css" JSON_PATH="$json" PROJECT_ROOT="$root" node --input-type=module <<'NODE'
+FOUNDATION_PATH="$foundation" SEMANTIC_PATH="$semantic" CSS_PATH="$css" JSON_PATH="$json" PROJECT_ROOT="$root" node --input-type=module <<'NODE'
 import fs from "node:fs"
 import path from "node:path"
 
 const cssPath = process.env.CSS_PATH
+const foundationPath = process.env.FOUNDATION_PATH
+const semanticPath = process.env.SEMANTIC_PATH
 const jsonPath = process.env.JSON_PATH
 const projectRoot = process.env.PROJECT_ROOT
 
-const css = fs.readFileSync(cssPath, "utf8")
+const css = [foundationPath, semanticPath, cssPath].map((file) => fs.readFileSync(file, "utf8")).join("\n")
 const manifest = JSON.parse(fs.readFileSync(jsonPath, "utf8"))
-const rootMatch = css.match(/:root\s*\{([\s\S]*?)\n\}/)
+const rootMatches = [...css.matchAll(/:root\s*\{([\s\S]*?)\n\}/g)]
 const errors = []
 
-if (!rootMatch) {
-  errors.push("theme/fx-theme.css 找不到 :root token 块。")
+if (rootMatches.length !== 3) {
+  errors.push("theme/foundation.css、theme/fds-semantic.css 与 theme/fx-theme.css 必须各有一个 :root token 块。")
 }
 
 const normalize = (value) => String(value ?? "").trim().replace(/\s+/g, " ")
 const cssVars = new Map()
 
-for (const line of (rootMatch?.[1] ?? "").split("\n")) {
-  const match = line.match(/^\s*(--[\w-]+):\s*([^;]+);/)
+for (const rootMatch of rootMatches) {
+  for (const line of rootMatch[1].split("\n")) {
+    const match = line.match(/^\s*(--[\w-]+):\s*([^;]+);/)
 
-  if (match) {
-    cssVars.set(match[1], normalize(match[2]))
+    if (match) {
+      cssVars.set(match[1], normalize(match[2]))
+    }
   }
 }
 
@@ -314,6 +330,23 @@ if (!Array.isArray(typography?.dataRules) || typography.dataRules.length !== all
 // 交互色状态阶梯校验：hover/active/disabled 必须按 interactionLadder 取阶
 const ladder = manifest.interactionLadder
 if (ladder) {
+  const fdsStepName = (scale, step) => {
+    return `--fds-g-color-${scale}-base-${Number(step) * 10}`
+  }
+  const referenceChain = (name) => {
+    const chain = []
+    const seen = new Set()
+    let current = name
+    while (!seen.has(current)) {
+      seen.add(current)
+      const value = cssVars.get(current)
+      const reference = value?.match(/^var\((--[\w-]+)\)$/)?.[1]
+      if (!reference) break
+      chain.push(reference)
+      current = reference
+    }
+    return chain
+  }
   const steps = ladder.solid
   for (const c of ladder.colors ?? []) {
     const colorSteps = c.steps ?? {}
@@ -325,12 +358,12 @@ if (ladder) {
     ]
     for (const [state, tokenName, step] of checks) {
       if (!tokenName) continue
-      const expected = `var(--fx-${c.scale}-${step})`
+      const expected = fdsStepName(c.scale, step)
       const actual = cssVars.get(tokenName)
       if (actual === undefined) {
         errors.push(`interactionLadder: ${c.name}.${state} 的 token ${tokenName} 在 CSS 中不存在。`)
-      } else if (normalize(actual) !== expected) {
-        errors.push(`interactionLadder: ${c.name}.${state} 应为 ${expected}（${step}阶），实际 ${tokenName}=${actual}`)
+      } else if (!referenceChain(tokenName).includes(expected)) {
+        errors.push(`interactionLadder: ${c.name}.${state} 应解析到 ${expected}（${step}阶），实际 ${tokenName}=${actual}`)
       }
     }
   }
@@ -347,8 +380,8 @@ if (errors.length > 0) {
   process.exit(1)
 }
 
-console.log("OK: docs/data/design-tokens.json 与 theme/fx-theme.css 保持一致，组件 token 用法也已核对。")
+console.log("OK: docs/data/design-tokens.json 与 Foundation / Semantic CSS 真相源保持一致，组件 token 用法也已核对。")
 NODE
 
-echo "OK: docs/TOKENS.md 中的色值均能在 theme/fx-theme.css 找到，未发现漂移。"
+echo "OK: docs/TOKENS.md 中的色值均能在 Foundation / Semantic CSS 真相源找到，未发现漂移。"
 echo "Result: completed with 0 warning(s)."

@@ -1,10 +1,10 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-07-27
+last_verified: 2026-08-28
 teaches: "fx-ui 文档站自身的页面结构、样式边界和改样式流程"
 use_when: "要改 fx-ui 文档网站的顶部导航、侧边栏、内容区、目录、示例区、代码块或文档页展示样式时"
-depends_on: [theme/fx-theme.css, docs/TOKENS.md, docs/LAYOUTS.md, src/App.tsx]
+depends_on: [theme/fx-theme.css, docs/TOKENS.md, docs/foundations/colors.md, docs/LAYOUTS.md, src/App.tsx]
 ---
 
 # 文档站设计规范
@@ -27,8 +27,9 @@ fx-ui 文档站是组件、token、Blocks 和 AI 规则的承载界面。它本�
 
 | 层级             | 管什么                                                 | 修改位置                                           |
 | ---------------- | ------------------------------------------------------ | -------------------------------------------------- |
-| 全局视觉         | 品牌色、背景、文字、边框、圆角、字体                   | `theme/fx-theme.css`                               |
-| token 说明       | token 值、用途、Tailwind 用法                          | `docs/TOKENS.md`                                   |
+| 全局视觉         | 品牌色、背景、文字、边框、圆角、字体                   | `tokens/source/{primitive,map,semantic}.tokens.json` → `theme/fx-theme.css` |
+| token 架构总览   | 四层架构、主题合同与治理边界                           | `docs/TOKENS.md`                                   |
+| Foundation 专题  | 颜色、排版、圆角、间距等具体值与用法                   | `docs/foundations/*.md`                            |
 | token 机器事实表 | token 分层、语义槽、组件消费规则                       | `docs/data/design-tokens.json`                     |
 | 组件机器事实表   | 组件来源、文档状态、API 契约和 AI 可读规则             | `docs/data/components.manifest.json`               |
 | 治理数据总入口   | 机器事实表目录、用途、消费方、维护角色和检查命令       | `docs/data/governance-index.json`                  |
@@ -36,7 +37,7 @@ fx-ui 文档站是组件、token、Blocks 和 AI 规则的承载界面。它本�
 | 工程文件关系     | 文档站和项目文件之间的读取、导入、检查、约束和产出关系 | `docs/data/system-relations.json`                  |
 | 现状治理内容     | 当前状态卡、数据新鲜度、规则资产、治理闭环和参考案例   | `docs/data/governance-status.json`                 |
 | 组件文档内容     | Button / Icon 等组件的规则和示例文本                   | `docs/components/*.md` 与 `src/App.tsx` 中对应数据 |
-| 页面布局沉淀     | 业务后台页面布局规则                                   | `docs/LAYOUTS.md`                                  |
+| 页面布局沉淀     | 栅格与页面容器总入口                                   | `docs/LAYOUTS.md` → `docs/foundations/{grid,layout}.md` |
 
 ## 机器可读结构
 
@@ -56,21 +57,23 @@ docs/DOC_SITE_DESIGN.md
 
 ### token 分层
 
-主项目采用 shadcn 友好的“两层 Token + 组件用法”结构：
+主项目采用四层 Token SSOT，并在 Semantic 之后增加页面类型消费分支：
 
 ```txt
-Primitive -> Semantic -> Component Usage
+Primitive -> Primitive Map -> Semantic -> Component Hook
+                                  |             `-> Framework Adapter
+                                  `-> Page Type Semantics -> Block / Page
 ```
 
-- `Primitive`：公司原始视觉值，例如 `--fx-brand-09`。
-- `Semantic`：shadcn/ui 和 Tailwind 真正消费的槽位，例如 `--primary`、`--background`、`--ring`。
-- `Component Usage`：组件的属性/状态如何消费语义 token 的规则，例如 Input 的 hover 边框使用 `--primary`；它是映射事实，不是独立的组件 Token 命名空间。
+- `Primitive`：颜色原色、字号、间距、圆角等无语义物理值；只有 Foundation 维护者可改。
+- `Primitive Map`：由 Seed 或 Primitive 生成的品牌、中性和功能色阶等映射。
+- `Semantic`：shadcn/ui、Tailwind 和页面共享的用途槽，例如 `--fds-g-color-background`、`--primary`、`--ring`。
+- `Component Hook`：只有通过 owner、语义缺口、合同与视觉证据准入的组件专属接口，不为每个状态默认创建。
+- `Page Type Semantics`：协作者为列表页、Dashboard、Report 或工作台定义角色、布局、交互和数据契约；角色只映射已治理的全局语义。
 
-因此关系可以画成三段，但准确名称是 `组件用法 → 语义 Token → 基础色板`，不能把它写成“三层 Token”。只有组件确实需要长期独立换肤且通用语义无法表达时，才按 DEC-037 单独评估组件 Token；不为每个组件状态默认建 Token。
+四层描述的是 Token 真相源；Page Type Semantics 是 Semantic 的消费分支，不是第五层。shadcn 兼容槽仍由 Semantic 层生成，不与 FDS Token 平行维护。文档站和组件体系以 `docs/data/design-tokens.json` 为机器可读映射入口。
 
-`fx-ui-report-skill` 的 `Seed -> Map -> Alias -> Component` 四层结构可作为报告输出参考，但不替代主项目的 shadcn semantic slots。文档站和组件体系以 `docs/data/design-tokens.json` 为机器可读 token 入口。
-
-`docs/data/design-tokens.json` 必须覆盖 `theme/fx-theme.css` 里的 token 事实：`primitive` 对应 `--fx-*` 原始值，`semantic` 对应 shadcn/Tailwind 消费槽，`componentUsage` 记录核心组件如何消费 token。`npm run check:tokens` 会核对 JSON 中的 token 名和值是否和 CSS 真相源一致，并检查组件消费规则指向的源码和 token 是否存在。
+`docs/data/design-tokens.json` 必须从 Foundation/Semantic portable contract 派生：`primitive` 以 FDS 名称为主并通过 `legacyName` 保留迁移对照，`semantic` 同时登记 FDS Global Token 与 shadcn/legacy 兼容槽，`componentUsage` 记录核心组件如何消费 token。`npm run check:tokens` 会核对 JSON 与生成 CSS，并检查组件消费规则指向的源码和 token 是否存在。
 
 ### 组件 manifest
 
@@ -276,7 +279,8 @@ Primitive -> Semantic -> Component Usage
 | 想改什么                               | 应该改哪里                          | 备注                             |
 | -------------------------------------- | ----------------------------------- | -------------------------------- |
 | 全站颜色、圆角、字体、背景             | `theme/fx-theme.css`                | 全局影响，动手前说明影响范围     |
-| token 文案和值说明                     | `docs/TOKENS.md`                    | 改 token 后要同步检查 token 文档 |
+| token 架构、主题合同与治理说明         | `docs/TOKENS.md`                    | 保持总览，不复制专题数值           |
+| 颜色、排版、圆角等具体值与用法         | `docs/foundations/*.md`             | 改 token 后同步对应专题并跑检查     |
 | 顶部导航、侧边栏、右侧目录、文档页布局 | `src/App.tsx`                       | 文档站局部骨架                   |
 | 某个组件文档的内容规则                 | `docs/components/*.md` 和对应数据   | 需要和源码 API 对齐              |
 | shadcn 基础组件默认样式                | `src/components/ui/<component>.tsx` | 不新增黑盒封装                   |
@@ -307,8 +311,12 @@ Primitive -> Semantic -> Component Usage
 | 文件                                  | 关系                                                       |
 | ------------------------------------- | ---------------------------------------------------------- |
 | `src/App.tsx`                         | 当前文档站主要页面骨架和渲染入口                           |
-| `theme/fx-theme.css`                  | 文档站和组件共同使用的视觉 token 真相源                    |
-| `docs/TOKENS.md`                      | token 值和用法说明                                         |
+| `tokens/source/{primitive,map}.tokens.json` | 文档站和组件共享的 Primitive/Map 真相源             |
+| `theme/foundation.css`                | 从 Primitive/Map 生成的 Foundation 运行时 CSS              |
+| `theme/fds-semantic.css`              | 从 Semantic source 生成的 Global Semantic 运行时 CSS        |
+| `theme/fx-theme.css`                  | 文档站和组件共同使用的唯一运行时公开装配入口                 |
+| `docs/TOKENS.md`                      | Token 架构、主题合同与治理总览                             |
+| `docs/foundations/*.md`               | Foundation 各专题的具体值、计算逻辑与用法                  |
 | `docs/data/governance-index.json`     | 治理数据总入口，登记所有机器事实表                         |
 | `docs/data/design-tokens.json`        | token 机器可读事实表                                       |
 | `docs/data/components.manifest.json`  | 组件机器可读事实表                                         |
@@ -316,6 +324,6 @@ Primitive -> Semantic -> Component Usage
 | `docs/data/system-relations.json`     | 工程运行图文件关系机器事实表                               |
 | `docs/data/governance-status.json`    | 现状看板当前状态、数据新鲜度、治理内容和历史沉淀机器事实表 |
 | `scripts/check-doc-site-contract.mjs` | 文档站骨架和 manifest 基础一致性检查                       |
-| `docs/LAYOUTS.md`                     | 业务后台页面布局规范，不等同于文档站布局                   |
+| `docs/LAYOUTS.md`                     | 栅格与页面布局总入口，不等同于文档站布局                   |
 | `docs/DESIGN_STANDARDS.md`            | 设计规则总览                                               |
 | `docs/components/`                    | 组件文档内容来源                                           |

@@ -1,0 +1,873 @@
+{
+  "$extensions": {
+    "fds": {
+      "schemaVersion": 1,
+      "format": "fds/semantic-token-source",
+      "contractVersion": "1.0.0-draft.8",
+      "truthSource": "tokens/source/semantic.tokens.json",
+      "layer": "semantic",
+      "owner": "fds-maintainers-with-approved-collaborators",
+      "authoring": "review-required",
+      "generatedRuntime": "theme/fds-semantic.css",
+      "portableContract": "docs/data/fds-semantic.manifest.json"
+    }
+  },
+  "tokens": [
+    {
+      "id": "color.surface.page-base",
+      "$type": "color",
+      "$value": "#F5F6F7",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-surface-page-base", "aliases": ["--fx-page-background"], "visibility": "internal", "rawValueReason": "preserve-established-page-canvas-during-prefix-migration" } }
+    },
+    {
+      "id": "color.surface.page",
+      "$type": "color",
+      "$value": "var(--fds-g-color-surface-page-base)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-surface-page", "aliases": ["--background"], "modes": { "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.165 0.008 h)" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.surface.card",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-surface-raised", "aliases": ["--card"], "modes": { "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.205 0.008 h)" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.surface.control",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-surface-control", "aliases": ["--surface"], "modes": { "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.205 0.008 h)" } } }
+    },
+    {
+      "id": "color.surface.control-disabled",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-20)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-surface-control-disabled", "aliases": ["--surface-disabled"], "modes": { "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.235 0.008 h)" } } }
+    },
+    {
+      "id": "color.surface.popover",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-surface-floating", "aliases": ["--popover"], "modes": { "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.225 0.008 h)" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.surface.overlay",
+      "$type": "color",
+      "$value": "oklch(from var(--fds-g-color-neutral-base-200) l c h / 0.2)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-surface-overlay", "aliases": ["--overlay"], "modes": { "dark": "oklch(from var(--fds-g-color-neutral-base-200) 0 0 h / 0.55)" } } }
+    },
+    {
+      "id": "color.surface.subtle",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-20)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-surface-subtle", "visibility": "internal" } }
+    },
+    {
+      "id": "blur.overlay",
+      "$type": "dimension",
+      "$value": "var(--fds-g-blur-2)",
+      "$extensions": { "fds": { "cssName": "--fds-g-blur-overlay", "aliases": ["--overlay-blur"] } }
+    },
+    {
+      "id": "color.text.primary",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-200)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-text-primary", "aliases": ["--foreground", "--card-foreground", "--popover-foreground"], "modes": { "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.955 0.006 h)" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.text.secondary",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-150)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-text-secondary", "aliases": ["--foreground-secondary"], "modes": { "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.72 0.006 h)" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.text.muted",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-120)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-text-muted", "aliases": ["--muted-foreground"], "modes": { "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.64 0.006 h)" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.text.subtle",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-100)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-text-subtle", "visibility": "internal" } }
+    },
+    {
+      "id": "color.text.disabled",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-60)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-text-disabled", "aliases": ["--foreground-disabled"], "modes": { "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.45 0.006 h)" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.text.inverse",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-text-inverse", "stability": "experimental" } }
+    },
+    {
+      "id": "color.text.on-vivid",
+      "$type": "color",
+      "$value": "var(--fds-g-color-foreground-primary)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-text-on-vivid", "visibility": "internal", "stability": "deprecated" } }
+    },
+    {
+      "id": "color.icon.primary",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-200)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-icon-primary", "aliases": ["--fx-icon-dark"] } }
+    },
+    {
+      "id": "color.icon.muted",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-110)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-icon-muted", "aliases": ["--fx-icon-gray"], "stability": "stable" } }
+    },
+    {
+      "id": "color.icon.inverse",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-icon-inverse", "aliases": ["--fx-icon-light"], "stability": "experimental" } }
+    },
+    {
+      "id": "color.brand.identity",
+      "$type": "color",
+      "$value": "var(--fds-g-color-brand-base-90)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-brand-identity", "modes": { "dark": "var(--fds-g-color-brand-base-80)" }, "visibility": "internal" } }
+    },
+    {
+      "id": "color.action.primary",
+      "$type": "color",
+      "$value": "var(--fds-g-color-brand-base-90)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-primary", "aliases": ["--fx-primary", "--primary"], "stability": "stable" } }
+    },
+    {
+      "id": "color.action.primary-hover",
+      "$type": "color",
+      "$value": "var(--fds-g-color-brand-base-80)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-primary-hover", "aliases": ["--fx-primary-hover"], "stability": "stable" } }
+    },
+    {
+      "id": "color.action.primary-active",
+      "$type": "color",
+      "$value": "var(--fds-g-color-brand-base-100)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-primary-active", "aliases": ["--fx-primary-active"], "stability": "stable" } }
+    },
+    {
+      "id": "color.foreground.primary",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-foreground-primary", "aliases": ["--primary-foreground"], "stability": "stable", "derivation": "solid-foreground-primary" } }
+    },
+    {
+      "id": "color.action.primary-disabled",
+      "$type": "color",
+      "$value": "var(--fds-g-color-brand-base-50)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-primary-disabled", "aliases": ["--fx-primary-disabled"], "modes": { "dark": "color-mix(in oklch, var(--fds-g-color-brand-vivid) 34%, var(--fds-g-color-surface-raised))" } } }
+    },
+    {
+      "id": "color.action.primary-subtle",
+      "$type": "color",
+      "$value": "var(--fds-g-color-brand-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-primary-subtle", "aliases": ["--fx-primary-light"], "modes": { "dark": "color-mix(in oklch, var(--fds-g-color-brand-vivid) 16%, var(--fds-g-color-surface-raised))" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.action.primary-subtle-hover",
+      "$type": "color",
+      "$value": "var(--fds-g-color-brand-base-20)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-primary-subtle-hover", "aliases": ["--fx-primary-light-hover"], "modes": { "dark": "color-mix(in oklch, var(--fds-g-color-brand-vivid) 24%, var(--fds-g-color-surface-raised))" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.action.primary-subtle-active",
+      "$type": "color",
+      "$value": "var(--fds-g-color-brand-base-30)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-primary-subtle-active", "aliases": ["--fx-primary-light-active"], "modes": { "dark": "color-mix(in oklch, var(--fds-g-color-brand-vivid) 32%, var(--fds-g-color-surface-raised))" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.action.secondary",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-30)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-secondary", "aliases": ["--secondary"], "modes": { "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.255 0.008 h)" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.action.secondary-hover",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-40)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-secondary-hover", "aliases": ["--secondary-hover"], "modes": { "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.295 0.008 h)" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.action.secondary-active",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-50)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-secondary-active", "aliases": ["--secondary-active"], "modes": { "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.335 0.008 h)" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.action.muted",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-30)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-muted", "aliases": ["--muted"], "modes": { "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.255 0.008 h)" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.action.muted-hover",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-40)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-muted-hover", "aliases": ["--muted-hover"], "modes": { "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.295 0.008 h)" } } }
+    },
+    {
+      "id": "color.action.muted-active",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-50)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-muted-active", "aliases": ["--muted-active"], "modes": { "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.335 0.008 h)" } } }
+    },
+    {
+      "id": "color.fill.subtle",
+      "$type": "color",
+      "$value": "color-mix(in oklch, var(--fds-g-color-text-primary) 5%, transparent)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-fill-subtle", "aliases": ["--fill-subtle"] } }
+    },
+    {
+      "id": "color.fill.subtle-hover",
+      "$type": "color",
+      "$value": "color-mix(in oklch, var(--fds-g-color-text-primary) 8%, transparent)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-fill-subtle-hover", "aliases": ["--fill-hover"] } }
+    },
+    {
+      "id": "color.action.accent",
+      "$type": "color",
+      "$value": "var(--fds-g-color-orange-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-accent", "aliases": ["--accent"], "modes": { "dark": "var(--fds-g-color-orange-dark-20)" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.action.accent-hover",
+      "$type": "color",
+      "$value": "var(--fds-g-color-orange-base-20)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-accent-hover", "aliases": ["--accent-hover"], "modes": { "dark": "var(--fds-g-color-orange-dark-30)" } } }
+    },
+    {
+      "id": "color.action.destructive",
+      "$type": "color",
+      "$value": "var(--fds-g-color-red-base-90)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-destructive", "aliases": ["--fx-danger", "--destructive"], "stability": "stable" } }
+    },
+    {
+      "id": "color.action.destructive-hover",
+      "$type": "color",
+      "$value": "var(--fds-g-color-red-base-80)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-destructive-hover", "aliases": ["--destructive-hover"], "stability": "stable" } }
+    },
+    {
+      "id": "color.action.destructive-active",
+      "$type": "color",
+      "$value": "var(--fds-g-color-red-base-100)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-destructive-active", "aliases": ["--destructive-active"], "stability": "stable" } }
+    },
+    {
+      "id": "color.foreground.destructive",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-foreground-destructive", "aliases": ["--destructive-foreground"], "stability": "stable", "derivation": "solid-foreground-destructive" } }
+    },
+    {
+      "id": "color.action.destructive-disabled",
+      "$type": "color",
+      "$value": "var(--fds-g-color-red-base-50)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-destructive-disabled", "aliases": ["--destructive-disabled"], "modes": { "dark": "var(--fds-g-color-red-dark-50)" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.action.destructive-subtle",
+      "$type": "color",
+      "$value": "var(--fds-g-color-red-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-destructive-subtle", "aliases": ["--destructive-light"], "modes": { "dark": "var(--fds-g-color-red-dark-20)" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.action.destructive-subtle-hover",
+      "$type": "color",
+      "$value": "var(--fds-g-color-red-base-20)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-destructive-subtle-hover", "aliases": ["--destructive-light-hover"], "modes": { "dark": "var(--fds-g-color-red-dark-30)" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.action.destructive-subtle-active",
+      "$type": "color",
+      "$value": "var(--fds-g-color-red-base-30)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-action-destructive-subtle-active", "aliases": ["--destructive-light-active"], "modes": { "dark": "var(--fds-g-color-red-dark-40)" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.status.error-subtle",
+      "$type": "color",
+      "$value": "var(--fds-g-color-red-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-error-subtle", "aliases": ["--fx-danger-light"], "modes": { "dark": "var(--fds-g-color-red-dark-20)" } } }
+    },
+    {
+      "id": "color.status.error-subtle-hover",
+      "$type": "color",
+      "$value": "var(--fds-g-color-red-base-20)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-error-subtle-hover", "aliases": ["--fx-danger-light-hover"], "modes": { "dark": "var(--fds-g-color-red-dark-30)" } } }
+    },
+    {
+      "id": "color.status.error-subtle-active",
+      "$type": "color",
+      "$value": "var(--fds-g-color-red-base-30)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-error-subtle-active", "aliases": ["--fx-danger-light-active"], "modes": { "dark": "var(--fds-g-color-red-dark-40)" } } }
+    },
+    {
+      "id": "color.link.default",
+      "$type": "color",
+      "$value": "var(--fds-g-color-blue-base-90)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-link", "aliases": ["--link"], "modes": { "dark": "var(--fds-g-color-blue-dark-110)" } } }
+    },
+    {
+      "id": "color.link.hover",
+      "$type": "color",
+      "$value": "var(--fds-g-color-blue-base-80)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-link-hover", "aliases": ["--link-hover"], "modes": { "dark": "var(--fds-g-color-blue-dark-120)" } } }
+    },
+    {
+      "id": "color.link.active",
+      "$type": "color",
+      "$value": "var(--fds-g-color-blue-base-100)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-link-active", "aliases": ["--link-active"], "modes": { "dark": "var(--fds-g-color-blue-dark-100)" } } }
+    },
+    {
+      "id": "color.link.disabled",
+      "$type": "color",
+      "$value": "var(--fds-g-color-blue-base-40)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-link-disabled", "aliases": ["--link-disabled"], "modes": { "dark": "oklch(from var(--fds-g-color-blue-dark-110) l c h / 0.4)" } } }
+    },
+    {
+      "id": "color.border.chrome",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-20)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-border-chrome", "aliases": ["--border-chrome"], "modes": { "dark": "oklch(1 0 0 / 0.04)" } } }
+    },
+    {
+      "id": "color.border.faint",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-30)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-border-faint", "aliases": ["--border-faint"], "modes": { "dark": "oklch(1 0 0 / 0.06)" } } }
+    },
+    {
+      "id": "color.border.container",
+      "$type": "color",
+      "$value": "color-mix(in oklch, var(--fds-g-color-neutral-base-40), var(--fds-g-color-neutral-base-10) 45%)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-border-container", "aliases": ["--border-container"], "modes": { "dark": "oklch(1 0 0 / 0.07)" } } }
+    },
+    {
+      "id": "color.border.subtle",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-40)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-border-subtle", "aliases": ["--border-subtle"], "modes": { "dark": "oklch(1 0 0 / 0.10)" } } }
+    },
+    {
+      "id": "color.border.default",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-50)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-border-default", "aliases": ["--border"], "modes": { "dark": "oklch(1 0 0 / 0.14)" } } }
+    },
+    {
+      "id": "color.border.strong",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-80)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-border-strong", "aliases": ["--border-strong"], "modes": { "dark": "oklch(1 0 0 / 0.26)" } } }
+    },
+    {
+      "id": "color.border.interactive",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-70)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-border-interactive", "aliases": ["--input"], "modes": { "dark": "oklch(1 0 0 / 0.18)" } } }
+    },
+    {
+      "id": "color.ring.focus",
+      "$type": "color",
+      "$value": "oklch(from var(--fds-g-color-brand-base-90) l c h / 0.4)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-ring-focus", "aliases": ["--ring"], "modes": { "dark": "oklch(from var(--fds-g-color-brand-base-80) l c h / 0.5)" } } }
+    },
+    {
+      "id": "color.status.success",
+      "$type": "color",
+      "$value": "var(--fds-g-color-green-base-90)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-success", "aliases": ["--fx-success", "--success"], "stability": "stable" } }
+    },
+    {
+      "id": "color.status.success-hover",
+      "$type": "color",
+      "$value": "var(--fds-g-color-green-base-80)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-success-hover", "aliases": ["--success-hover"], "stability": "stable" } }
+    },
+    {
+      "id": "color.status.success-active",
+      "$type": "color",
+      "$value": "var(--fds-g-color-green-base-100)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-success-active", "aliases": ["--success-active"], "stability": "stable" } }
+    },
+    {
+      "id": "color.foreground.success",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-foreground-success", "aliases": ["--success-foreground"], "stability": "stable", "derivation": "solid-foreground-success" } }
+    },
+    {
+      "id": "color.status.success-disabled",
+      "$type": "color",
+      "$value": "var(--fds-g-color-green-base-50)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-success-disabled", "aliases": ["--success-disabled"], "modes": { "dark": "var(--fds-g-color-green-dark-50)" } } }
+    },
+    {
+      "id": "color.status.success-subtle",
+      "$type": "color",
+      "$value": "var(--fds-g-color-green-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-success-subtle", "aliases": ["--fx-success-light"], "modes": { "dark": "var(--fds-g-color-green-dark-20)" } } }
+    },
+    {
+      "id": "color.status.success-subtle-hover",
+      "$type": "color",
+      "$value": "var(--fds-g-color-green-base-20)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-success-subtle-hover", "aliases": ["--fx-success-light-hover"], "modes": { "dark": "var(--fds-g-color-green-dark-30)" } } }
+    },
+    {
+      "id": "color.status.success-subtle-active",
+      "$type": "color",
+      "$value": "var(--fds-g-color-green-base-30)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-success-subtle-active", "aliases": ["--fx-success-light-active"], "modes": { "dark": "var(--fds-g-color-green-dark-40)" } } }
+    },
+    {
+      "id": "color.status.warning",
+      "$type": "color",
+      "$value": "var(--fds-g-color-amber-base-90)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-warning", "aliases": ["--fx-warning", "--warning"], "stability": "stable" } }
+    },
+    {
+      "id": "color.status.warning-hover",
+      "$type": "color",
+      "$value": "var(--fds-g-color-amber-base-80)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-warning-hover", "aliases": ["--warning-hover"], "stability": "stable" } }
+    },
+    {
+      "id": "color.status.warning-active",
+      "$type": "color",
+      "$value": "var(--fds-g-color-amber-base-100)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-warning-active", "aliases": ["--warning-active"], "stability": "stable" } }
+    },
+    {
+      "id": "color.foreground.warning",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-foreground-warning", "aliases": ["--warning-foreground"], "stability": "stable", "derivation": "solid-foreground-warning" } }
+    },
+    {
+      "id": "color.status.warning-disabled",
+      "$type": "color",
+      "$value": "var(--fds-g-color-amber-base-50)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-warning-disabled", "aliases": ["--warning-disabled"], "modes": { "dark": "var(--fds-g-color-amber-dark-50)" } } }
+    },
+    {
+      "id": "color.status.warning-subtle",
+      "$type": "color",
+      "$value": "var(--fds-g-color-amber-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-warning-subtle", "aliases": ["--fx-warning-light"], "modes": { "dark": "var(--fds-g-color-amber-dark-20)" } } }
+    },
+    {
+      "id": "color.status.warning-subtle-hover",
+      "$type": "color",
+      "$value": "var(--fds-g-color-amber-base-20)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-warning-subtle-hover", "aliases": ["--fx-warning-light-hover"], "modes": { "dark": "var(--fds-g-color-amber-dark-30)" } } }
+    },
+    {
+      "id": "color.status.warning-subtle-active",
+      "$type": "color",
+      "$value": "var(--fds-g-color-amber-base-30)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-warning-subtle-active", "aliases": ["--fx-warning-light-active"], "modes": { "dark": "var(--fds-g-color-amber-dark-40)" } } }
+    },
+    {
+      "id": "color.status.info",
+      "$type": "color",
+      "$value": "var(--fds-g-color-blue-base-90)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-info", "aliases": ["--fx-info", "--info"], "stability": "stable" } }
+    },
+    {
+      "id": "color.status.info-hover",
+      "$type": "color",
+      "$value": "var(--fds-g-color-blue-base-80)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-info-hover", "aliases": ["--info-hover"], "stability": "stable" } }
+    },
+    {
+      "id": "color.status.info-active",
+      "$type": "color",
+      "$value": "var(--fds-g-color-blue-base-100)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-info-active", "aliases": ["--info-active"], "stability": "stable" } }
+    },
+    {
+      "id": "color.status.info-disabled",
+      "$type": "color",
+      "$value": "var(--fds-g-color-blue-base-50)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-info-disabled", "aliases": ["--info-disabled"], "modes": { "dark": "var(--fds-g-color-blue-dark-50)" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.status.info-subtle",
+      "$type": "color",
+      "$value": "var(--fds-g-color-blue-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-info-subtle", "aliases": ["--fx-info-light"], "modes": { "dark": "var(--fds-g-color-blue-dark-20)" } } }
+    },
+    {
+      "id": "color.status.info-subtle-hover",
+      "$type": "color",
+      "$value": "var(--fds-g-color-blue-base-20)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-info-subtle-hover", "aliases": ["--fx-info-light-hover"], "modes": { "dark": "var(--fds-g-color-blue-dark-30)" } } }
+    },
+    {
+      "id": "color.status.info-subtle-active",
+      "$type": "color",
+      "$value": "var(--fds-g-color-blue-base-30)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-status-info-subtle-active", "aliases": ["--fx-info-light-active"], "modes": { "dark": "var(--fds-g-color-blue-dark-40)" } } }
+    },
+    {
+      "id": "color.foreground.info",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-foreground-info", "aliases": ["--info-foreground"], "stability": "stable", "derivation": "solid-foreground-info" } }
+    },
+    {
+      "id": "color.highlight.orange",
+      "$type": "color",
+      "$value": "var(--fds-g-color-orange-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-highlight-orange", "aliases": ["--fx-list-orange"], "modes": { "dark": "var(--fds-g-color-orange-dark-20)" }, "visibility": "internal" } }
+    },
+    {
+      "id": "color.highlight.blue",
+      "$type": "color",
+      "$value": "var(--fds-g-color-blue-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-highlight-blue", "aliases": ["--fx-list-blue"], "modes": { "dark": "var(--fds-g-color-blue-dark-20)" }, "visibility": "internal" } }
+    },
+    {
+      "id": "color.navigation.surface",
+      "$type": "color",
+      "$value": "var(--fds-g-color-neutral-base-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-navigation-surface", "aliases": ["--sidebar"], "modes": { "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.19 0.008 h)" }, "stability": "stable" } }
+    },
+    {
+      "id": "color.navigation.accent",
+      "$type": "color",
+      "$value": "#F2F4FB",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-navigation-accent", "aliases": ["--sidebar-accent"], "modes": { "dark": "color-mix(in oklch, var(--fds-g-color-brand-vivid) 18%, var(--fds-g-color-surface-raised))" }, "rawValueReason": "preserve-established-navigation-accent-during-component-hook-pilot" } }
+    },
+    {
+      "id": "color.navigation.border",
+      "$type": "color",
+      "$value": "#DEE1E8",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-navigation-border", "aliases": ["--sidebar-border"], "modes": { "dark": "oklch(1 0 0 / 0.10)" }, "rawValueReason": "preserve-established-navigation-border-during-component-hook-pilot" } }
+    },
+    {
+      "id": "color.navigation.ring",
+      "$type": "color",
+      "$value": "var(--fds-g-color-seed-brand)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-navigation-ring", "aliases": ["--sidebar-ring"], "modes": { "dark": "var(--fds-g-color-brand-base-80)" } } }
+    },
+    {
+      "id": "shadow.color.default",
+      "$type": "color",
+      "$value": "oklch(from var(--fds-g-color-neutral-base-200) l c h / 0.08)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-shadow-default", "aliases": ["--fx-shadow-color"], "stability": "stable" } }
+    },
+    {
+      "id": "shadow.color.soft",
+      "$type": "color",
+      "$value": "oklch(from var(--fds-g-color-neutral-base-200) l c h / 0.05)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-shadow-soft", "aliases": ["--fx-shadow-color-soft"], "stability": "stable" } }
+    },
+    {
+      "id": "shadow.color.faint",
+      "$type": "color",
+      "$value": "oklch(from var(--fds-g-color-neutral-base-200) l c h / 0.03)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-shadow-faint", "aliases": ["--fx-shadow-color-faint"], "stability": "stable" } }
+    },
+    {
+      "id": "shadow.elevation.1",
+      "$type": "shadow",
+      "$value": "0px 2px 6px -2px var(--fds-g-color-shadow-default), 0px 4px 10px -4px var(--fds-g-color-shadow-soft)",
+      "$extensions": { "fds": { "cssName": "--fds-g-shadow-elevation-1", "aliases": ["--fx-shadow-l1"], "stability": "stable" } }
+    },
+    {
+      "id": "shadow.elevation.2",
+      "$type": "shadow",
+      "$value": "0px 4px 12px -4px var(--fds-g-color-shadow-default), 0px 8px 20px -2px var(--fds-g-color-shadow-soft), 0px 12px 28px 0px var(--fds-g-color-shadow-faint)",
+      "$extensions": { "fds": { "cssName": "--fds-g-shadow-elevation-2", "aliases": ["--fx-shadow-l2"], "stability": "stable" } }
+    },
+    {
+      "id": "shadow.elevation.3",
+      "$type": "shadow",
+      "$value": "0px 6px 16px -8px var(--fds-g-color-shadow-default), 0px 9px 28px 0px var(--fds-g-color-shadow-soft), 0px 12px 48px 16px var(--fds-g-color-shadow-faint)",
+      "$extensions": { "fds": { "cssName": "--fds-g-shadow-elevation-3", "aliases": ["--fx-shadow-l3"], "stability": "stable" } }
+    },
+    {
+      "id": "shadow.elevation.1-up",
+      "$type": "shadow",
+      "$value": "0px -2px 6px -2px var(--fds-g-color-shadow-default), 0px -4px 10px -4px var(--fds-g-color-shadow-soft)",
+      "$extensions": { "fds": { "cssName": "--fds-g-shadow-elevation-1-up", "aliases": ["--fx-shadow-l1-up"] } }
+    },
+    {
+      "id": "font.size.xs",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-size-12)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-size-xs", "aliases": ["--fx-text-xs"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.line-height.xs",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-line-height-18)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-line-height-xs", "aliases": ["--fx-text-xs--line-height"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.size.control-sm",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-size-13)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-size-control-sm", "aliases": ["--fx-text-control-sm"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.line-height.control-sm",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-line-height-18)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-line-height-control-sm", "aliases": ["--fx-text-control-sm--line-height"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.size.sm",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-size-14)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-size-sm", "aliases": ["--fx-text-sm"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.line-height.sm",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-line-height-20)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-line-height-sm", "aliases": ["--fx-text-sm--line-height"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.size.base",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-size-16)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-size-base", "aliases": ["--fx-text-base"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.line-height.base",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-line-height-24)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-line-height-base", "aliases": ["--fx-text-base--line-height"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.size.lg",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-size-18)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-size-lg", "aliases": ["--fx-text-lg"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.line-height.lg",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-line-height-28)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-line-height-lg", "aliases": ["--fx-text-lg--line-height"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.size.xl",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-size-20)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-size-xl", "aliases": ["--fx-text-xl"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.line-height.xl",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-line-height-30)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-line-height-xl", "aliases": ["--fx-text-xl--line-height"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.size.2xl",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-size-24)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-size-2xl", "aliases": ["--fx-text-2xl"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.line-height.2xl",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-line-height-32)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-line-height-2xl", "aliases": ["--fx-text-2xl--line-height"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.size.3xl",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-size-30)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-size-3xl", "aliases": ["--fx-text-3xl"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.line-height.3xl",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-line-height-38)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-line-height-3xl", "aliases": ["--fx-text-3xl--line-height"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.size.4xl",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-size-36)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-size-4xl", "aliases": ["--fx-text-4xl"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.line-height.4xl",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-line-height-44)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-line-height-4xl", "aliases": ["--fx-text-4xl--line-height"], "visibility": "internal" } }
+    },
+    {
+      "id": "sizing.control.block.xs",
+      "$type": "dimension",
+      "$value": "var(--fds-g-sizing-24)",
+      "$extensions": { "fds": { "cssName": "--fds-g-sizing-control-block-xs", "aliases": ["--fx-control-xs-height"], "visibility": "internal" } }
+    },
+    {
+      "id": "sizing.control.block.sm",
+      "$type": "dimension",
+      "$value": "var(--fds-g-sizing-28)",
+      "$extensions": { "fds": { "cssName": "--fds-g-sizing-control-block-sm", "aliases": ["--fx-control-sm-height"], "visibility": "internal" } }
+    },
+    {
+      "id": "sizing.control.block.md",
+      "$type": "dimension",
+      "$value": "var(--fds-g-sizing-32)",
+      "$extensions": { "fds": { "cssName": "--fds-g-sizing-control-block-md", "aliases": ["--fx-control-md-height"], "visibility": "internal" } }
+    },
+    {
+      "id": "sizing.control.block.lg",
+      "$type": "dimension",
+      "$value": "var(--fds-g-sizing-36)",
+      "$extensions": { "fds": { "cssName": "--fds-g-sizing-control-block-lg", "aliases": ["--fx-control-lg-height"], "visibility": "internal" } }
+    },
+    {
+      "id": "sizing.control.icon.xs",
+      "$type": "dimension",
+      "$value": "var(--fds-g-sizing-24)",
+      "$extensions": { "fds": { "cssName": "--fds-g-sizing-control-icon-xs", "aliases": ["--fx-control-icon-xs"], "visibility": "internal" } }
+    },
+    {
+      "id": "sizing.control.icon.sm",
+      "$type": "dimension",
+      "$value": "var(--fds-g-sizing-28)",
+      "$extensions": { "fds": { "cssName": "--fds-g-sizing-control-icon-sm", "aliases": ["--fx-control-icon-sm"], "visibility": "internal" } }
+    },
+    {
+      "id": "sizing.control.icon.md",
+      "$type": "dimension",
+      "$value": "var(--fds-g-sizing-32)",
+      "$extensions": { "fds": { "cssName": "--fds-g-sizing-control-icon-md", "aliases": ["--fx-control-icon-md"], "visibility": "internal" } }
+    },
+    {
+      "id": "sizing.control.icon.lg",
+      "$type": "dimension",
+      "$value": "var(--fds-g-sizing-36)",
+      "$extensions": { "fds": { "cssName": "--fds-g-sizing-control-icon-lg", "aliases": ["--fx-control-icon-lg"], "visibility": "internal" } }
+    },
+    {
+      "id": "spacing.control.inline.xs",
+      "$type": "dimension",
+      "$value": "var(--fds-g-spacing-8)",
+      "$extensions": { "fds": { "cssName": "--fds-g-spacing-control-inline-xs", "aliases": ["--fx-control-px-xs"], "visibility": "internal" } }
+    },
+    {
+      "id": "spacing.control.inline.sm",
+      "$type": "dimension",
+      "$value": "var(--fds-g-spacing-10)",
+      "$extensions": { "fds": { "cssName": "--fds-g-spacing-control-inline-sm", "aliases": ["--fx-control-px-sm"], "visibility": "internal" } }
+    },
+    {
+      "id": "spacing.control.inline.md",
+      "$type": "dimension",
+      "$value": "var(--fds-g-spacing-12)",
+      "$extensions": { "fds": { "cssName": "--fds-g-spacing-control-inline-md", "aliases": ["--fx-control-px-md"], "visibility": "internal" } }
+    },
+    {
+      "id": "spacing.control.inline.lg",
+      "$type": "dimension",
+      "$value": "var(--fds-g-spacing-16)",
+      "$extensions": { "fds": { "cssName": "--fds-g-spacing-control-inline-lg", "aliases": ["--fx-control-px-lg"], "visibility": "internal" } }
+    },
+    {
+      "id": "spacing.control.gap-tight",
+      "$type": "dimension",
+      "$value": "var(--fds-g-spacing-4)",
+      "$extensions": { "fds": { "cssName": "--fds-g-spacing-control-gap-tight", "aliases": ["--fx-control-gap-tight"], "visibility": "internal" } }
+    },
+    {
+      "id": "spacing.control.gap",
+      "$type": "dimension",
+      "$value": "var(--fds-g-spacing-6)",
+      "$extensions": { "fds": { "cssName": "--fds-g-spacing-control-gap", "aliases": ["--fx-control-gap"], "visibility": "internal" } }
+    },
+    {
+      "id": "spacing.panel.gap",
+      "$type": "dimension",
+      "$value": "var(--fds-g-spacing-12)",
+      "$extensions": { "fds": { "cssName": "--fds-g-spacing-panel-gap", "aliases": ["--fx-panel-gap"], "visibility": "internal" } }
+    },
+    {
+      "id": "spacing.panel.padding",
+      "$type": "dimension",
+      "$value": "var(--fds-g-spacing-12)",
+      "$extensions": { "fds": { "cssName": "--fds-g-spacing-panel-padding", "aliases": ["--fx-panel-padding"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.size.menu",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-size-14)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-size-menu", "aliases": ["--fx-menu-text"], "visibility": "internal" } }
+    },
+    {
+      "id": "font.line-height.menu",
+      "$type": "dimension",
+      "$value": "var(--fds-g-font-line-height-20)",
+      "$extensions": { "fds": { "cssName": "--fds-g-font-line-height-menu", "aliases": ["--fx-menu-text--line-height"], "visibility": "internal" } }
+    },
+    {
+      "id": "sizing.navigation.item.block",
+      "$type": "dimension",
+      "$value": "var(--fds-g-sizing-32)",
+      "$extensions": { "fds": { "cssName": "--fds-g-sizing-navigation-item-block", "aliases": ["--fx-sidebar-item-height"], "visibility": "internal" } }
+    },
+    {
+      "id": "sizing.navigation.item.block-sm",
+      "$type": "dimension",
+      "$value": "var(--fds-g-sizing-28)",
+      "$extensions": { "fds": { "cssName": "--fds-g-sizing-navigation-item-block-sm", "aliases": ["--fx-sidebar-item-height-sm"], "visibility": "internal" } }
+    },
+    {
+      "id": "sizing.navigation.topbar.block",
+      "$type": "dimension",
+      "$value": "var(--fds-g-sizing-56)",
+      "$extensions": { "fds": { "cssName": "--fds-g-sizing-navigation-topbar-block", "aliases": ["--fx-topbar-height"], "visibility": "internal" } }
+    },
+    {
+      "id": "sizing.navigation.search.block",
+      "$type": "dimension",
+      "$value": "var(--fds-g-sizing-32)",
+      "$extensions": { "fds": { "cssName": "--fds-g-sizing-navigation-search-block", "aliases": ["--fx-topbar-search-height"], "visibility": "internal" } }
+    },
+    {
+      "id": "motion.duration.theme",
+      "$type": "duration",
+      "$value": "var(--fds-g-motion-duration-200)",
+      "$extensions": { "fds": { "cssName": "--fds-g-motion-duration-theme", "aliases": ["--fx-theme-duration"], "visibility": "internal" } }
+    }
+  ],
+  "dataColors": [
+    { "name": "--fds-g-color-data-categorical-1", "value": "#FF7383", "alias": "--chart-1", "rawValueReason": "preserve-governed-bi-palette" },
+    { "name": "--fds-g-color-data-categorical-2", "value": "#FF7752", "alias": "--chart-2", "rawValueReason": "preserve-governed-bi-palette" },
+    { "name": "--fds-g-color-data-categorical-3", "value": "#FF9B29", "alias": "--chart-3", "rawValueReason": "preserve-governed-bi-palette" },
+    { "name": "--fds-g-color-data-categorical-4", "value": "#FFDA54", "alias": "--chart-4", "rawValueReason": "preserve-governed-bi-palette" },
+    { "name": "--fds-g-color-data-categorical-5", "value": "#DDF2BB", "alias": "--chart-5", "rawValueReason": "preserve-governed-bi-palette" },
+    { "name": "--fds-g-color-data-categorical-6", "value": "#55D48C", "alias": "--chart-6", "rawValueReason": "preserve-governed-bi-palette" },
+    { "name": "--fds-g-color-data-categorical-7", "value": "#5BCFC1", "alias": "--chart-7", "rawValueReason": "preserve-governed-bi-palette" },
+    { "name": "--fds-g-color-data-categorical-8", "value": "#40B6FF", "alias": "--chart-8", "rawValueReason": "preserve-governed-bi-palette" },
+    { "name": "--fds-g-color-data-categorical-9", "value": "#368DFF", "alias": "--chart-9", "rawValueReason": "preserve-governed-bi-palette" },
+    { "name": "--fds-g-color-data-categorical-10", "value": "#976AEB", "alias": "--chart-10", "rawValueReason": "preserve-governed-bi-palette" }
+  ],
+  "compatibility": {
+    "aliases": [
+      { "name": "--secondary-foreground", "target": "--fds-g-color-text-primary" },
+      { "name": "--accent-foreground", "target": "--fds-g-color-text-primary" },
+      { "name": "--sidebar-foreground", "target": "--fds-g-color-text-primary" },
+      { "name": "--sidebar-accent-foreground", "target": "--fds-g-color-text-primary" },
+      { "name": "--sidebar-primary", "target": "--fds-g-color-action-primary" },
+      { "name": "--sidebar-primary-foreground", "target": "--fds-g-color-foreground-primary" }
+    ]
+  }
+}

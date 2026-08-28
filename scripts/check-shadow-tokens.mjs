@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // 校验浮层阴影只用公司档，不用 Tailwind 内置浮层档。
 // 规则（见 docs/TOKENS.md 阴影、docs/DOC_SITE_DESIGN.md）：
-//  - 浮层/弹层必须用 shadow-l1 / shadow-l2 / shadow-l3 / shadow-l1-up（映射 --fx-shadow-*，跟随色板）
+//  - 浮层/弹层必须用 shadow-l1 / shadow-l2 / shadow-l3 / shadow-l1-up（映射 FDS Semantic shadow，跟随主题）
 //  - 禁用 Tailwind 内置浮层档 shadow-md / shadow-lg / shadow-xl / shadow-2xl（另一套数值、不跟随公司变量，会漂）
 //  - 允许 shadow-sm / shadow-none（非浮层的微抬升）和 shadow-[...]（一次性自定义）
 import fs from "node:fs"

@@ -1,0 +1,125 @@
+{
+  "$extensions": {
+    "fds": {
+      "schemaVersion": 1,
+      "format": "fds/component-token-source",
+      "contractVersion": "1.1.0",
+      "truthSource": "tokens/source/component.tokens.json",
+      "layer": "component",
+      "owner": "component-owner-with-fds-approval",
+      "authoring": "admission-required"
+    }
+  },
+  "admissions": [
+    {
+      "component": "button",
+      "owner": "fds-action-maintainers",
+      "independentThemingNeed": "允许主题在不改变全局 primary、链接和选择态语义的前提下调整默认主按钮表面。",
+      "semanticGap": "Global action.primary 同时服务多个操作入口，不能表达 Button 默认变体的独立公开换肤边界。",
+      "crossContextReuse": ["product-ui", "dashboard", "report", "workbench"],
+      "documentation": "docs/components/button.md#component-styling-hooks",
+      "contractTest": "scripts/check-token-naming.mjs",
+      "visualTest": "tests/visual.spec.ts#Button 交互调试台"
+    },
+    {
+      "component": "input",
+      "owner": "fds-form-maintainers",
+      "independentThemingNeed": "允许主题独立校准文本输入控件的表面和状态边框，而不改写全部交互边框。",
+      "semanticGap": "Global border.interactive 和 action.primary 不能单独区分 Input 的默认、悬停、聚焦和错误边框合同。",
+      "crossContextReuse": ["product-ui", "dashboard", "report", "workbench"],
+      "documentation": "docs/components/input.md#component-styling-hooks",
+      "contractTest": "scripts/check-token-naming.mjs",
+      "visualTest": "tests/visual.spec.ts#Input 组件制作台"
+    },
+    {
+      "component": "table",
+      "owner": "fds-data-display-maintainers",
+      "independentThemingNeed": "让跨框架 Table 适配器共享同一套密度尺寸，而不依赖 React 或 Tailwind 内部变量。",
+      "semanticGap": "三档表格单元格块轴尺寸是 Table 专属结构合同，不属于跨组件 Global Semantic。",
+      "crossContextReuse": ["dashboard", "report", "workbench", "framework-adapters"],
+      "documentation": "docs/components/table.md#component-styling-hooks",
+      "contractTest": "scripts/check-token-naming.mjs",
+      "visualTest": "tests/visual.spec.ts#Table 成熟能力矩阵"
+    }
+  ],
+  "tokens": [
+    {
+      "id": "button.color.background",
+      "$type": "color",
+      "$value": "var(--fds-g-color-action-primary)",
+      "$extensions": { "fds": { "cssName": "--fds-c-button-color-background", "component": "button", "visibility": "public-component", "stability": "stable" } }
+    },
+    {
+      "id": "button.color.background.hover",
+      "$type": "color",
+      "$value": "var(--fds-g-color-action-primary-hover)",
+      "$extensions": { "fds": { "cssName": "--fds-c-button-color-background-hover", "component": "button", "visibility": "public-component", "stability": "stable" } }
+    },
+    {
+      "id": "button.color.background.active",
+      "$type": "color",
+      "$value": "var(--fds-g-color-action-primary-active)",
+      "$extensions": { "fds": { "cssName": "--fds-c-button-color-background-active", "component": "button", "visibility": "public-component", "stability": "stable" } }
+    },
+    {
+      "id": "button.color.background.disabled",
+      "$type": "color",
+      "$value": "var(--fds-g-color-action-primary-disabled)",
+      "$extensions": { "fds": { "cssName": "--fds-c-button-color-background-disabled", "component": "button", "visibility": "public-component", "stability": "stable" } }
+    },
+    {
+      "id": "button.color.foreground",
+      "$type": "color",
+      "$value": "var(--fds-g-color-foreground-primary)",
+      "$extensions": { "fds": { "cssName": "--fds-c-button-color-foreground", "component": "button", "visibility": "public-component", "stability": "stable" } }
+    },
+    {
+      "id": "input.color.background",
+      "$type": "color",
+      "$value": "var(--fds-g-color-surface-control)",
+      "$extensions": { "fds": { "cssName": "--fds-c-input-color-background", "component": "input", "visibility": "public-component", "stability": "stable" } }
+    },
+    {
+      "id": "input.color.border",
+      "$type": "color",
+      "$value": "var(--fds-g-color-border-interactive)",
+      "$extensions": { "fds": { "cssName": "--fds-c-input-color-border", "component": "input", "visibility": "public-component", "stability": "stable" } }
+    },
+    {
+      "id": "input.color.border.hover",
+      "$type": "color",
+      "$value": "var(--fds-g-color-action-primary)",
+      "$extensions": { "fds": { "cssName": "--fds-c-input-color-border-hover", "component": "input", "visibility": "public-component", "stability": "stable" } }
+    },
+    {
+      "id": "input.color.border.focus",
+      "$type": "color",
+      "$value": "var(--fds-g-color-action-primary)",
+      "$extensions": { "fds": { "cssName": "--fds-c-input-color-border-focus", "component": "input", "visibility": "public-component", "stability": "stable" } }
+    },
+    {
+      "id": "input.color.border.invalid",
+      "$type": "color",
+      "$value": "var(--fds-g-color-action-destructive)",
+      "$extensions": { "fds": { "cssName": "--fds-c-input-color-border-invalid", "component": "input", "visibility": "public-component", "stability": "stable" } }
+    },
+    {
+      "id": "table.sizing.cell-block",
+      "$type": "dimension",
+      "$value": "var(--fds-g-sizing-36)",
+      "$extensions": { "fds": { "cssName": "--fds-c-table-sizing-cell-block", "component": "table", "visibility": "public-component", "stability": "stable" } }
+    },
+    {
+      "id": "table.sizing.cell-block.compact",
+      "$type": "dimension",
+      "$value": "var(--fds-g-sizing-28)",
+      "$extensions": { "fds": { "cssName": "--fds-c-table-sizing-cell-block-compact", "component": "table", "visibility": "public-component", "stability": "stable" } }
+    },
+    {
+      "id": "table.sizing.cell-block.comfortable",
+      "$type": "dimension",
+      "$value": "var(--fds-g-sizing-42)",
+      "$extensions": { "fds": { "cssName": "--fds-c-table-sizing-cell-block-comfortable", "component": "table", "visibility": "public-component", "stability": "stable" } }
+    }
+  ]
+}

@@ -19,7 +19,7 @@
     {
       "title": "token 事实",
       "valueKey": "tokenFacts",
-      "desc": "来自 design-tokens.json，覆盖 theme/fx-theme.css 的完整 primitive、semantic 和核心组件消费规则。"
+      "desc": "来自 design-tokens.json，覆盖 theme/foundation.css、theme/fx-theme.css 和核心组件消费规则。"
     },
     {
       "title": "项目图谱",
@@ -67,7 +67,7 @@
       }
     ],
     "rules": [
-      "改视觉 token：先改 theme/fx-theme.css，再同步 docs/data/design-tokens.json 和 docs/TOKENS.md，最后跑 npm run check:tokens。",
+      "改视觉 token：先判断物理值或语义映射归属，修改对应 CSS，再同步派生 manifest 与 docs/TOKENS.md，最后跑 npm run check:tokens。",
       "改组件能力：先看 src/components/ui 源码，再同步 docs/components 和 docs/data/components.manifest.json，最后跑 npm run check:components。",
       "改文档站结构：同步 src/App.tsx、docs/data/doc-site.manifest.json 和 docs/DOC_SITE_DESIGN.md，最后跑 npm run check:doc-site。",
       "改工程关系图：同步 docs/data/system-relations.json，再跑 bash scripts/build-project-graph.sh 和 npm run check:doc-site。"
@@ -231,11 +231,18 @@
       "doneEn": "Token values, docs, JSON facts, and component usage stay aligned.",
       "steps": [
         {
+          "file": "theme/foundation.css",
+          "action": "物理值真相源",
+          "actionEn": "Physical truth source",
+          "note": "无语义物理刻度仅由 Foundation 维护者管理。",
+          "noteEn": "Non-semantic physical scales are maintained only by the Foundation owner."
+        },
+        {
           "file": "theme/fx-theme.css",
-          "action": "真相源",
-          "actionEn": "Truth source",
-          "note": "公司视觉 token 和 shadcn 语义槽从这里开始。",
-          "noteEn": "Company visual tokens and shadcn semantic slots start here."
+          "action": "语义入口",
+          "actionEn": "Semantic entry",
+          "note": "统一导入 Foundation，并向 shadcn 和运行时暴露语义槽。",
+          "noteEn": "Imports Foundation and exposes semantic slots to shadcn and runtimes."
         },
         {
           "file": "docs/data/design-tokens.json",
@@ -440,9 +447,9 @@
       "priority": "P0",
       "status": "done",
       "ownerRole": "token-governance",
-      "targetFiles": ["theme/fx-theme.css", "docs/TOKENS.md", "docs/data/design-tokens.json"],
+      "targetFiles": ["theme/foundation.css", "theme/fx-theme.css", "docs/TOKENS.md", "docs/data/design-tokens.json"],
       "checkCommand": "npm run check:tokens",
-      "definitionOfDone": "design-tokens.json 覆盖 theme/fx-theme.css 的 primitive、semantic 和核心组件 token 消费规则，并由 check:tokens 自动核对。"
+      "definitionOfDone": "design-tokens.json 覆盖 Foundation 物理值、语义映射和核心组件 token 消费规则，并由 check:tokens 自动核对。"
     },
     {
       "id": "complete-component-usage-rules",

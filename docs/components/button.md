@@ -134,9 +134,11 @@ Button 支持 `@base-ui/react/button` 的原生 button props，并额外支持�
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | `variant` | 按钮样式变体 | `'default' \| 'outline' \| 'secondary' \| 'ghost' \| 'destructive' \| 'plain'` | `'default'` |
+| `tone` | 按表面类型表达默认、主色、信息或危险语义；`info` 仅用于 `plain` | `'default' \| 'primary' \| 'info' \| 'danger'` | `'default'` |
 | `size` | 按钮尺寸（默认值见 defaultVariants） | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'toolbar' \| 'toolbar-icon' \| 'icon-xs' \| 'icon-sm' \| 'icon-md' \| 'icon-lg'` | `'sm'`（28px） |
 | `disabled` | 是否禁用 | `boolean` | `false` |
 | `aria-invalid` | 是否展示错误态 | `boolean` | `false` |
+| `nativeButton` | `render` 替换根元素时声明是否仍为原生按钮；渲染链接时设为 `false` | `boolean` | `true` |
 | `render` | 把按钮样式渲染到自定义元素上，例如 `<a>`；这是 Base UI 版本的 asChild 能力 | `ReactElement \| (props, state) => ReactElement` | - |
 | `className` | 追加 class，主要用于布局，不用于硬覆盖颜色和字体 | `string` | - |
 
@@ -174,6 +176,20 @@ Button 支持 `@base-ui/react/button` 的原生 button props，并额外支持�
 | `--fx-text-control-sm--line-height` | 28px Button 与 toolbar 的 18px 紧凑控件行高 |
 
 完整 token 规则见 `docs/TOKENS.md`。
+
+## Component Styling Hooks {#component-styling-hooks}
+
+Button 首批 stable Hook 只开放默认主操作表面，不把全部 variant 和内部尺寸机械镜像为 Hook：
+
+| Hook | 默认引用 |
+| --- | --- |
+| `--fds-c-button-color-background` | `--fds-g-color-action-primary` |
+| `--fds-c-button-color-background-hover` | `--fds-g-color-action-primary-hover` |
+| `--fds-c-button-color-background-active` | `--fds-g-color-action-primary-active` |
+| `--fds-c-button-color-background-disabled` | `--fds-g-color-action-primary-disabled` |
+| `--fds-c-button-color-foreground` | `--fds-g-color-foreground-primary` |
+
+这些 Hook 只允许在主题根或受治理 Theme Provider 覆盖。单个 Button 仍通过 `variant / tone / size` 表达差异，不在调用处局部覆盖。
 
 ## AI Rules {#ai-rules}
 

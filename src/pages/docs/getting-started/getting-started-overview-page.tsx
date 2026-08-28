@@ -81,8 +81,8 @@ export function GettingStartedOverviewPage({
             </CardHeader>
             <CardContent className="text-sm leading-6 text-muted-foreground">
               {lang === "en"
-                ? "theme/fx-theme.css is the visual truth source. Components consume semantic slots instead of hard-coded colors."
-                : "theme/fx-theme.css 是视觉真相源。组件吃语义 token，不在调用处硬编码颜色、圆角、边框或阴影。"}
+                ? "foundation.css owns physical values; fx-theme.css is the single semantic runtime entry. Components consume semantic slots instead of hard-coded values."
+                : "foundation.css 管物理值，fx-theme.css 是唯一语义运行时入口。组件只消费语义 token，不在调用处硬编码视觉值。"}
             </CardContent>
           </WebsiteCardContainer>
           <WebsiteCardContainer>
@@ -153,7 +153,7 @@ export function GettingStartedOverviewPage({
         <SectionLead title={lang === "en" ? "Theme Setup" : "主题接入"} description={lang === "en" ? "fx-ui does not restyle every component by hand. Company visuals are injected through shadcn semantic tokens." : "fx-ui 不逐个重写组件样式。公司视觉通过 shadcn 语义 token 注入。"} />
         <WebsiteCardContainer>
           <CardContent className="grid gap-4 p-5 md:grid-cols-2">
-            <div><Tag variant="secondary">SSOT</Tag><h3 className="mt-3 font-medium">theme/fx-theme.css</h3><p className="mt-2 text-sm text-muted-foreground">{lang === "en" ? "Changing this file changes the whole system." : "改这里等于全局换肤，必须先说明影响范围。"}</p></div>
+            <div><Tag variant="secondary">ENTRY</Tag><h3 className="mt-3 font-medium">theme/fx-theme.css</h3><p className="mt-2 text-sm text-muted-foreground">{lang === "en" ? "Single runtime entry for protected Foundation values and semantic mappings." : "统一装配受保护的 Foundation 物理值与语义映射。"}</p></div>
             <CopyCodeBlock code={themeImportCode} label="src/main.tsx" lang={lang} />
           </CardContent>
         </WebsiteCardContainer>

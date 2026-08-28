@@ -149,6 +149,8 @@ const stories = buildPlaygroundStories(config.props, currentValues)
 | `--muted-foreground` | 辅助文字 |
 | `--border` | 分隔线和边框 |
 | `--primary` | 当前标签、强调态 |
+| `--fds-g-color-surface-subtle` | 预览/代码工具栏的低强调表面；内部 Semantic |
+| `--fds-g-color-text-subtle` | 使用意图与约束标题的低强调文字；内部 Semantic |
 
 完整 token 规则见 `docs/TOKENS.md`。
 

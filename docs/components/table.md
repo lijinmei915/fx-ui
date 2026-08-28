@@ -136,8 +136,21 @@ Loading 使用 `Table + Skeleton`，Empty 使用跨列空态，分页使用 `Pag
 | `--border` | 边框、分隔线和描边结构 |
 | `--border-subtle` | 行分隔和 bordered 表面弱边框 |
 | `--ring` | 排序、筛选和列操作的焦点环 |
+| `--fds-g-color-shadow-default` | 横向滚动时固定列边缘的柔和阴影 |
 
 完整 token 规则见 `docs/TOKENS.md`。
+
+## Component Styling Hooks {#component-styling-hooks}
+
+以下 3 个结构 Hook 已通过 stable 准入，用于跨框架共享真实 density 尺寸：
+
+| Hook | 默认引用 | 对应 API |
+| --- | --- | --- |
+| `--fds-c-table-sizing-cell-block` | `--fds-g-sizing-36` | `density="default"` |
+| `--fds-c-table-sizing-cell-block-compact` | `--fds-g-sizing-28` | `density="compact"` |
+| `--fds-c-table-sizing-cell-block-comfortable` | `--fds-g-sizing-42` | `density="comfortable"` |
+
+默认 density 在 Hook 名中省略 `default`；`compact / comfortable` 与真实组件 API 一致，不使用虚构的 `sm / md / lg`。这些结构 Hook 供主题根和跨框架适配器读取，页面调用仍只传 `density`。
 
 ## 排版 Typography {#typography}
 

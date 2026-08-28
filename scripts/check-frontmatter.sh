@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# 校验 docs/ 顶层治理/知识文档的 YAML frontmatter：
+# 校验 docs/ 治理/知识文档的 YAML frontmatter：
 #   - 必填 layer / type / last_verified
 #   - layer / type 取值在 KNOWLEDGE_SCHEMA 枚举内
 #   - last_verified 是 YYYY-MM-DD
 #   - depends_on 指向的文件真实存在
+# 检查 docs/ 顶层、docs/foundations/ 与 docs/pages/；
 # 不检查 docs/components/*.md（用的是另一套 category/title frontmatter）
 set -euo pipefail
 
@@ -26,12 +27,12 @@ const requiredFields = ["layer", "type", "last_verified"];
 let errors = 0;
 const fail = (m) => { errors += 1; console.error(`ERROR: ${m}`); };
 
-function docsTopLevel() {
-  const dir = path.join(root, "docs");
+function markdownFiles(relDir) {
+  const dir = path.join(root, relDir);
   if (!fs.existsSync(dir)) return [];
   return fs.readdirSync(dir, { withFileTypes: true })
     .filter(e => e.isFile() && e.name.endsWith(".md"))
-    .map(e => path.join("docs", e.name));
+    .map(e => path.join(relDir, e.name));
 }
 
 function parseFrontmatter(text) {
@@ -60,7 +61,12 @@ function deps(v) {
 const rootFiles = ["AGENTS.md", "PROJECT.md", "PRODUCT.md"]
   .filter(f => fs.existsSync(path.join(root, f)));
 
-const files = [...rootFiles, ...docsTopLevel()];
+const files = [
+  ...rootFiles,
+  ...markdownFiles("docs"),
+  ...markdownFiles("docs/foundations"),
+  ...markdownFiles("docs/pages"),
+];
 
 for (const rel of files) {
   const fm = parseFrontmatter(fs.readFileSync(path.join(root, rel), "utf8"));

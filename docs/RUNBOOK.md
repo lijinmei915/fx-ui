@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: guide
-last_verified: 2026-06-17
+last_verified: 2026-08-28
 teaches: "fx-ui 的常用命令、提交前检查和常见故障处理（运行环境/依赖见 ENVIRONMENT）"
 use_when: "要查命令、跑检查、或本地启动/构建出问题时"
 ---
@@ -26,6 +26,9 @@ npm run check:shadcn # 单独跑 shadcn contract 检查
 npm run check:tokens # 单独跑 token 漂移检查
 npm run build:tokens # 从 fx-theme.css 重建 design-tokens.json（改完 CSS 必跑）
 npm run preview      # 预览构建产物
+npm run build:foundation         # 构建只含基础规范与对应 Markdown 的分享版
+npm run preview:foundation       # 预览 dist-foundation
+npm run test:visual:foundation   # 验证分享范围、Markdown 和视觉基线
 ```
 
 ## 提交前自动检查（pre-commit 钩子）
@@ -42,8 +45,15 @@ bash scripts/install-git-hooks.sh
 
 ## 发布流程
 
-目前没有真正的对外发布/部署流程——fx-ui 现在是内部组件文档站，止步于推送到 GitHub 私有仓库（`lijinmei915/fx-ui`）。
-有真正的部署需求时，再回来补充这一节，不要在没有的情况下假写一套发布步骤。
+当前已经有两个静态构建出口，但托管平台仍待公司环境确认：
+
+```bash
+npm run build                 # 完整维护站 → dist/
+npm run build:foundation      # Foundation 分享站 → dist-foundation/
+npm run test:visual:foundation
+```
+
+`dist-foundation/` 可以部署到 GitLab Pages、内部 Nginx 或其他静态托管。它按 `docs/data/publication-profiles.manifest.json` 的白名单只包含 Token、栅格、布局和对应 Markdown；构建结束会扫描产物，发现组件文档、Playground、搭建器、页面模板、报告或治理数据时直接失败。不要把仓库权限或完整 `dist/` 当成 Foundation 交付物。
 
 ## 常见故障
 

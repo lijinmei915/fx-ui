@@ -171,7 +171,7 @@ function ColorPicker({
       <PopoverTrigger
         disabled={disabled}
         className={cn(
-          "inline-flex h-(--fx-control-sm-height) items-center gap-2 rounded-md border border-input bg-surface px-(--fx-control-px-sm) text-sm text-foreground outline-none hover:border-primary focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:bg-surface-disabled disabled:text-foreground-disabled",
+          "inline-flex h-(--fds-g-sizing-control-block-sm) items-center gap-2 rounded-md border border-input bg-surface px-(--fds-g-spacing-control-inline-sm) text-sm text-foreground outline-none hover:border-primary focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:bg-surface-disabled disabled:text-foreground-disabled",
           className
         )}
       >

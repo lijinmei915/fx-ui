@@ -87,6 +87,7 @@ function storyParameter(pointer: string, key: "intent") {
 // 截组件局部（定位器）比整页更稳；头像图片用 mask 屏蔽（异步加载、非视觉契约）。
 
 test.beforeEach(async ({ page }) => {
+  await page.clock.setFixedTime(new Date(2026, 7, 26, 12, 0, 0));
   // 关 CSS 过渡/动画，避免截图抓到中间帧
   await page.addInitScript(() => {
     const style = document.createElement("style");
@@ -398,6 +399,23 @@ test("治理工程运行图", async ({ page }) => {
   const systemMap = page.locator(visual.selector);
   await expect(systemMap).toBeVisible();
   await expect(systemMap).toHaveScreenshot("governance-system-map.png");
+});
+
+test("FDS Token 四层架构", async ({ page }) => {
+  const visual = visualConfig("baselineVisuals", "fds-token-architecture");
+  await page.goto(`/${visual.route}`);
+  const architecture = page.locator(visual.selector);
+  await expect(architecture).toBeVisible();
+  await expect(architecture.locator("[data-website-card-container]")).toHaveCount(4);
+  await expect(architecture).toHaveScreenshot("fds-token-architecture.png");
+});
+
+test("Foundation 图标规范", async ({ page }) => {
+  const visual = visualConfig("baselineVisuals", "foundation-icons");
+  await page.goto(`/${visual.route}`);
+  const pageLead = page.locator(visual.selector);
+  await expect(pageLead).toBeVisible();
+  await expect(pageLead).toHaveScreenshot("foundation-icons.png");
 });
 
 test("客户简报报告", async ({ page }) => {
@@ -1704,7 +1722,7 @@ test("Input 组件制作台", async ({ page }) => {
 
   await workbench.getByRole("button", { name: "代码", exact: true }).click();
   await expect(workbench.locator("code")).toContainText(
-    '"--surface": "var(--muted)"',
+    '"--fds-c-input-color-background": "var(--muted)"',
   );
   await workbench.getByRole("button", { name: "预览", exact: true }).click();
 
@@ -1715,11 +1733,8 @@ test("Input 组件制作台", async ({ page }) => {
   await expect(stateAssignments.getByRole("button")).toHaveCount(6);
   await expect(stateAssignments).toContainText("input");
   await expect(stateAssignments).toContainText("primary");
+  await expect(stateAssignments).toContainText("muted");
   await expect(stateAssignments).toContainText("destructive");
-  await expect(stateAssignments).toContainText("neutrals-07");
-  await expect(stateAssignments).toContainText("brand-09");
-  await expect(stateAssignments).toContainText("neutrals-03");
-  await expect(stateAssignments).toContainText("red-09");
   await expect(stateAssignments).not.toContainText("oklch(");
   await expect(stateAssignments).not.toContainText("rgb(");
   const normalAssignment = stateAssignments.getByRole("button", {

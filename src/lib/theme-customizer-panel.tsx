@@ -163,15 +163,15 @@ export function ThemeCustomizerPanel({
         className="fx-theme-panel-static w-80 gap-0 sm:max-w-80"
         overlayClassName="pointer-events-none bg-transparent backdrop-blur-none supports-backdrop-filter:backdrop-blur-none">
         
-        <SheetHeader className="p-[calc(var(--fx-panel-padding)*2)] pb-0">
-          <div className="flex items-center gap-(--fx-control-gap)">
+        <SheetHeader className="p-[calc(var(--fds-g-spacing-panel-padding)*2)] pb-0">
+          <div className="flex items-center gap-(--fds-g-spacing-control-gap)">
             <SettingsIcon className="size-5 text-muted-foreground" />
             <SheetTitle className="text-lg font-medium">{lang === "en" ? "Theme Customizer" : "主题定制"}</SheetTitle>
           </div>
         </SheetHeader>
 
-        <div className="flex min-h-0 flex-1 flex-col gap-[calc(var(--fx-panel-gap)*2)] overflow-y-auto p-[calc(var(--fx-panel-padding)*2)] pb-12">
-          <section className="flex flex-col gap-(--fx-control-gap)">
+        <div className="flex min-h-0 flex-1 flex-col gap-[calc(var(--fds-g-spacing-panel-gap)*2)] overflow-y-auto p-[calc(var(--fds-g-spacing-panel-padding)*2)] pb-12">
+          <section className="flex flex-col gap-(--fds-g-spacing-control-gap)">
             <ThemePanelHeading icon={<SunIcon />} title={lang === "en" ? "Appearance" : "外观模式"} />
             <div className="flex h-8 gap-0.5 rounded-lg bg-muted p-0.5">
               <button
@@ -179,7 +179,7 @@ export function ThemeCustomizerPanel({
                 aria-pressed={config.mode === "light"}
                 onClick={() => setConfigValue("mode", "light")}
                 className={cn(
-                  "flex h-full flex-1 items-center justify-center gap-(--fx-control-gap-tight) rounded-md px-(--fx-control-px-xs) text-sm font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                  "flex h-full flex-1 items-center justify-center gap-(--fds-g-spacing-control-gap-tight) rounded-md px-(--fds-g-spacing-control-inline-xs) text-sm font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
                   config.mode === "light" ? "bg-card text-foreground shadow-l1" : "text-muted-foreground hover:text-foreground dark:text-foreground/70 dark:hover:text-foreground"
                 )}>
                 
@@ -191,7 +191,7 @@ export function ThemeCustomizerPanel({
                 aria-pressed={config.mode === "dark"}
                 onClick={() => setConfigValue("mode", "dark")}
                 className={cn(
-                  "flex h-full flex-1 items-center justify-center gap-(--fx-control-gap-tight) rounded-md px-(--fx-control-px-xs) text-sm font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                  "flex h-full flex-1 items-center justify-center gap-(--fds-g-spacing-control-gap-tight) rounded-md px-(--fds-g-spacing-control-inline-xs) text-sm font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
                   config.mode === "dark" ? "bg-card text-foreground shadow-l1" : "text-muted-foreground hover:text-foreground dark:text-foreground/70 dark:hover:text-foreground"
                 )}>
                 
@@ -201,9 +201,9 @@ export function ThemeCustomizerPanel({
             </div>
           </section>
 
-          <section className="flex flex-col gap-(--fx-control-gap)">
+          <section className="flex flex-col gap-(--fds-g-spacing-control-gap)">
             <ThemePanelHeading icon={<PaletteIcon />} title={lang === "en" ? "Brand Color" : "主色调"} />
-            <div className="flex flex-wrap items-center gap-(--fx-control-gap)">
+            <div className="flex flex-wrap items-center gap-(--fds-g-spacing-control-gap)">
               {themeColorOptions.map((item) =>
               <button
                 key={item.id}
@@ -212,7 +212,7 @@ export function ThemeCustomizerPanel({
                 aria-pressed={config.primaryColor === item.id}
                 onClick={() => setConfigValue("primaryColor", item.id)}
                 className={cn(
-                  "flex size-(--fx-control-icon-sm) items-center justify-center rounded-full border border-border-subtle outline-none transition-all hover:scale-105 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                  "flex size-(--fds-g-sizing-control-icon-sm) items-center justify-center rounded-full border border-border-subtle outline-none transition-all hover:scale-105 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
                   config.primaryColor === item.id && "scale-110 ring-2 ring-foreground ring-offset-2 ring-offset-background"
                 )}
                 style={{ backgroundColor: item.value }}>
@@ -220,7 +220,7 @@ export function ThemeCustomizerPanel({
                   {config.primaryColor === item.id ? <span className="size-2 rounded-full bg-primary-foreground" /> : null}
                 </button>
               )}
-              <Separator orientation="vertical" className="mx-1 h-(--fx-control-icon-sm)" />
+              <Separator orientation="vertical" className="mx-1 h-(--fds-g-sizing-control-icon-sm)" />
               {config.customColors.map((color, index) => {
                 const selected =
                 !isPickingCustomColor &&
@@ -228,14 +228,14 @@ export function ThemeCustomizerPanel({
                 config.customColorIndex === index;
 
                 return (
-                  <div key={`${color}-${index}`} className="group relative size-(--fx-control-icon-sm) shrink-0">
+                  <div key={`${color}-${index}`} className="group relative size-(--fds-g-sizing-control-icon-sm) shrink-0">
                     <button
                       type="button"
                       aria-label={lang === "en" ? `Use custom color ${color}` : `使用自定义颜色 ${color}`}
                       aria-pressed={selected}
                       onClick={() => selectCustomColor(color, index)}
                       className={cn(
-                        "flex size-(--fx-control-icon-sm) items-center justify-center rounded-full border border-border-subtle outline-none transition-all hover:scale-105 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                        "flex size-(--fds-g-sizing-control-icon-sm) items-center justify-center rounded-full border border-border-subtle outline-none transition-all hover:scale-105 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
                         selected && "scale-110 ring-2 ring-foreground ring-offset-2 ring-offset-background"
                       )}
                       style={{ backgroundColor: color }}>
@@ -258,7 +258,7 @@ export function ThemeCustomizerPanel({
               })}
               <label
                 className={cn(
-                  "relative flex size-(--fx-control-icon-sm) shrink-0 cursor-pointer items-center justify-center rounded-full border border-border/55 bg-muted/18 text-muted-foreground/60 outline-none transition-[border-color,background-color,color,box-shadow,transform,opacity] duration-220 ease-out hover:border-border-strong hover:bg-muted/28 hover:text-foreground/80 focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50",
+                  "relative flex size-(--fds-g-sizing-control-icon-sm) shrink-0 cursor-pointer items-center justify-center rounded-full border border-border/55 bg-muted/18 text-muted-foreground/60 outline-none transition-[border-color,background-color,color,box-shadow,transform,opacity] duration-220 ease-out hover:border-border-strong hover:bg-muted/28 hover:text-foreground/80 focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50",
                   isPickingCustomColor && "border-border-strong bg-muted/28 text-foreground/80"
                 )}>
                 
@@ -293,16 +293,16 @@ export function ThemeCustomizerPanel({
                       commitCustomColor(nextColor);
                     }
                   }}
-                  className="absolute inset-0 size-(--fx-control-icon-sm) cursor-pointer rounded-full opacity-0"
+                  className="absolute inset-0 size-(--fds-g-sizing-control-icon-sm) cursor-pointer rounded-full opacity-0"
                   aria-label={lang === "en" ? "Add custom color" : "添加自定义颜色"} />
                 
               </label>
             </div>
           </section>
 
-          <section className="flex flex-col gap-(--fx-control-gap)">
+          <section className="flex flex-col gap-(--fds-g-spacing-control-gap)">
             <ThemePanelHeading icon={<TypographyIcon />} title={lang === "en" ? "Typography" : "字体主题"} />
-            <div className="grid grid-cols-2 gap-(--fx-control-gap)">
+            <div className="grid grid-cols-2 gap-(--fds-g-spacing-control-gap)">
               {themeFontOptions.map((item) =>
               <ThemeChoiceButton
                 key={item.id}
@@ -345,7 +345,7 @@ export function ThemeCustomizerPanel({
                 aria-pressed={config.borderRadius === item.id}
                 onClick={() => setConfigValue("borderRadius", item.id)}
                 className={cn(
-                  "flex h-(--fx-control-sm-height) items-center justify-center rounded-lg border px-(--fx-control-px-xs) text-xs font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+                  "flex h-(--fds-g-sizing-control-block-sm) items-center justify-center rounded-lg border px-(--fds-g-spacing-control-inline-xs) text-xs font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
                   config.borderRadius === item.id ? "border-foreground bg-muted text-foreground" : "border-border bg-surface text-muted-foreground hover:border-border-strong hover:text-foreground"
                 )}>
                 

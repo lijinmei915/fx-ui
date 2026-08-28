@@ -21,7 +21,7 @@ Read AGENTS.md first for mandatory governance. This file is a compact lookup ind
 ## Current Facts
 
 - Components: 67 (43 ui, 24 fx)
-- Semantic tokens: 88
+- Semantic tokens: 314
 - Ready page archetypes: list, detail, form
 - Proven recipes: 4
 - Token policy: choose semantic tokens or declared component state mappings; never pick primitive palette values.

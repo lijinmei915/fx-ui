@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-08-26
+last_verified: 2026-08-28
 teaches: "fx-ui 的三层生产体系：基础组件、公司组合组件、页面 Blocks（目录细节见 CODE_STRUCTURE，布局规范见 LAYOUTS）"
 use_when: "AI 要判断某个能力归哪一层、三层之间如何分工时"
 ---
@@ -19,7 +19,7 @@ fx-ui 的目标不是重新手写一套 UI 组件库，而是建立一套公司�
 - 页面可以快速生成
 - 生成后的页面可以继续改造
 - 高频页面模式可以沉淀成公司的布局规范和内部 Blocks
-- Agent 回复可以通过受控 JSON 生成产品内 React UI
+- Agent 回复可以通过受控 JSON 交给当前 React 适配器生成产品内 UI
 
 ## 三层体系
 
@@ -115,6 +115,14 @@ shadcn 组件进入 `src/components/ui/` 后，就视为 fx-ui 的本地源码�
 
 这一层解决：Agent 回复可以生成产品内真实 React UI，同时保持安全、可控和可检查。
 
+## 跨框架边界
+
+上述生产层是当前 React 参考适配器的实现结构。它们上方共享一套框架无关核心契约：Token 与语义槽、组件身份和受治理选项、图标语义 ID、页面类型/数据契约、搭建操作协议和 Agent UI 协议。
+
+FDS Token 架构为 `Primitive / Seed -> Map -> Semantic -> Component`，并以 `--fds-g-*` / `--fds-c-*` Styling Hooks 区分 Global 与受准入组件公开面。当前迁移阶段是 `fds-primary`：Foundation、Semantic、首批 Button/Input/Table Component Hooks、React runtime、公开装配与 portable contract 均使用 FDS 主名称；旧 `--fx-*` 只由生成兼容层保留至至少 v2.0.0。其余组件仍默认直接消费 Global Semantic，不批量开放 Hook。完整语法和迁移门见 `docs/TOKEN_NAMING.md`。
+
+共享核心不是新的组件运行时，也不把 React JSX 翻译成其他框架。`docs/data/framework-core.manifest.json` 只从现有真相源生成 portable 投影；React 组件、Base UI 绑定、Tabler React 绑定、hooks、ref/event 约定和 Blocks renderer 都留在 React 适配器。Vue 2 当前只登记为 `planned`，没有实现目录或可用能力。详细边界和准入门见 `docs/FRAMEWORK_ADAPTERS.md`。
+
 ## 模块职责
 
 | 目录 / 文件                           | 职责                                  | 备注                                                                     |
@@ -129,8 +137,19 @@ shadcn 组件进入 `src/components/ui/` 后，就视为 fx-ui 的本地源码�
 | `src/components/fx/agent-surface.tsx` | Agent UI 渲染面                       | 受控 JSON -> 本地 React 组件                                             |
 | `docs/AGENT_UI.md`                    | Agent UI 生成式界面协议               | 定义 block、action 和安全红线                                            |
 | `docs/data/agent-ui.manifest.json`    | Agent UI 机器事实表                   | 给 AI 和检查脚本读取                                                     |
-| `theme/fx-theme.css`                  | 公司 token 真相源                     | 改它 = 全局换肤                                                          |
-| `registry/fx-theme.json`              | shadcn 官方 `registry:theme` 分发格式 | 对外分发主题用                                                           |
+| `docs/data/framework-adapters.manifest.json` | 框架适配器状态真相源           | React ready；Vue 2 planned                                               |
+| `docs/data/framework-core.manifest.json` | 跨框架核心派生契约                 | 不含框架源码、包绑定或渲染约定                                           |
+| `docs/data/token-naming.manifest.json` | FDS Token 命名机器合同              | 四层、前缀、词典、公开边界、组件准入与迁移阶段 SSOT                       |
+| `tokens/source/primitive.tokens.json` | DTCG Primitive 真相源                 | 仅 Foundation 维护者可改                                                 |
+| `tokens/source/map.tokens.json`       | Map 算法、色阶与例外真相源            | 仅 Foundation 维护者可改；生成式，禁止手填派生结果                       |
+| `theme/foundation.css`                | Foundation 运行时生成产物             | 由 `build:fds-foundation` 输出，禁止手改                                  |
+| `theme/fds-semantic.css`              | Global Semantic 运行时生成产物        | 由 `build:fds-semantic` 输出，禁止手改                                    |
+| `theme/fds-components.css`            | Component Styling Hooks 运行时生成产物 | 由 `build:fds-components` 输出，禁止手改                                  |
+| `theme/fx-theme.css`                  | 运行时唯一公开装配入口                | 固定导入 Foundation/Semantic；组件只消费这里暴露的语义槽                  |
+| `registry/fx-theme.css` / `registry/fx-theme.contract.json` | 框架无关主题发布产物 | 同版本 CSS 与机器合同，由 Preset Contract 派生                           |
+| `registry/fx-theme.json`              | shadcn 官方 `registry:theme` 分发格式 | 由真实 CSS 解析生成 light/dark，不手填                                   |
+| `registry/fx-theme.release.json`      | 主题版本发布清单                       | 绑定 CSS/JSON/审计/portable core 哈希与适配器状态                         |
+| `docs/data/theme-audit.manifest.json` | 主题发布质量证据                       | Chromium 审计预设/自定义样本的对比度、状态与失效变量                     |
 | `docs/components/`                    | 组件文档资产                          | 给人和 AI 共同消费                                                       |
 | `docs/LAYOUTS.md`                     | 布局规范                              | 来自真实页面沉淀                                                         |
 
@@ -155,7 +174,9 @@ shadcn 组件进入 `src/components/ui/` 后，就视为 fx-ui 的本地源码�
 - 页面不从零写，优先从 shadcn Blocks / v0 / 内部 Blocks 起步
 - 公司组合组件可以写，但必须是 shadcn 组件的可读组合
 - Agent UI 可以生成界面，但只能生成受控 JSON 意图，不执行 LLM 生成代码
-- token 真相源仍然是 `theme/fx-theme.css`
+- FDS Token 链路固定为 `tokens/source Primitive / Seed → Map generator → Semantic → Component`；迁移前后都不允许反向引用、循环引用或复制物理值
+- 跨框架只共享语义契约，不共享或翻译框架运行时代码
+- `planned` 适配器不等于已支持；通过独立准入门后才能升级状态
 - 对外分发主题时使用 shadcn 官方 `registry:theme` 格式：`registry/fx-theme.json`
 - 布局规范来自真实页面沉淀，不凭空制定
 
@@ -167,3 +188,4 @@ shadcn 组件进入 `src/components/ui/` 后，就视为 fx-ui 的本地源码�
 | `PROJECT.md`      | 当前进度（本文件只记长期方向，不记当前做到哪） |
 | `docs/LAYOUTS.md` | 三层体系第三层的具体布局规范产出               |
 | `docs/TOKENS.md`  | token 真相源的具体取值表                       |
+| `docs/FRAMEWORK_ADAPTERS.md` | 跨框架核心与适配器准入边界             |

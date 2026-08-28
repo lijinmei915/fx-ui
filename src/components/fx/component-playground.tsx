@@ -125,7 +125,7 @@ export function buildPlaygroundStories(
 
 function PlaygroundSectionTitle({ dot, children }: { dot: string; children: ReactNode }) {
   return (
-    <div className="flex items-center gap-(--fx-control-gap-tight) text-xs font-normal text-[var(--fx-neutrals-10)]">
+    <div className="flex items-center gap-(--fds-g-spacing-control-gap-tight) text-xs font-normal text-[var(--fds-g-color-text-subtle)]">
       <span className={`size-1.5 rounded-full ${dot}`} />
       {children}
     </div>
@@ -134,7 +134,7 @@ function PlaygroundSectionTitle({ dot, children }: { dot: string; children: Reac
 
 function PlaygroundPropLabel({ zh }: { zh: string }) {
   return (
-    <label className="flex items-center gap-(--fx-control-gap-tight) text-sm font-medium text-foreground-secondary">
+    <label className="flex items-center gap-(--fds-g-spacing-control-gap-tight) text-sm font-medium text-foreground-secondary">
       {zh}
     </label>
   )
@@ -149,7 +149,7 @@ function PgSeg({ active, disabled, isAll, label, title, onClick }: { active: boo
       title={title}
       disabled={disabled}
       onClick={onClick}
-      className={`min-h-(--fx-control-xs-height) rounded-xs px-(--fx-control-px-xs) py-1 text-sm font-medium transition-all ${
+      className={`min-h-(--fds-g-sizing-control-block-xs) rounded-xs px-(--fds-g-spacing-control-inline-xs) py-1 text-sm font-medium transition-all ${
         disabled
           ? "cursor-not-allowed text-foreground-disabled"
           :
@@ -363,12 +363,12 @@ export function ComponentPlayground({ config, lang, value, onValueChange }: { co
       data-slot="component-playground"
       data-story-source={config.storySource}
       data-story-count={config.stories?.length || undefined}
-      className="[--playground-gap:var(--fx-panel-gap)]"
+      className="[--playground-gap:var(--fds-g-spacing-panel-gap)]"
     >
       <div className="overflow-x-auto border-b border-border-subtle bg-card">
         <div className={workbenchActive ? "grid min-w-[1120px] grid-cols-[220px_minmax(360px,1fr)_minmax(320px,0.8fr)] gap-(--playground-gap) p-(--card-spacing)" : "grid grid-cols-[repeat(2,minmax(min-content,1fr))] gap-(--playground-gap) p-(--card-spacing) max-[900px]:grid-cols-1"}>
           {workbenchActive ? (
-            <div data-slot="component-playground-structure" className="flex flex-col gap-(--fx-control-gap)">
+            <div data-slot="component-playground-structure" className="flex flex-col gap-(--fds-g-spacing-control-gap)">
               <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Structure" : "组件结构"}</PlaygroundSectionTitle>
               <div className="flex flex-col gap-1" role="tree" aria-label={lang === "en" ? "Component structure" : "组件结构"}>
                 {visibleNodes.map((node, index) => (
@@ -392,7 +392,7 @@ export function ComponentPlayground({ config, lang, value, onValueChange }: { co
           ) : null}
           <div className="flex flex-col gap-(--playground-gap)">
             {showStories ? (
-              <div data-slot="component-playground-stories" className="flex flex-col gap-(--fx-control-gap-tight)">
+              <div data-slot="component-playground-stories" className="flex flex-col gap-(--fds-g-spacing-control-gap-tight)">
                 <PlaygroundPropLabel zh={lang === "en" ? (storyPresentation === "examples" ? "Examples" : "Presets") : (storyPresentation === "examples" ? "结构示例" : "场景预设")} />
                 <PlaygroundSegmentedControl
                   value={activeStoryId ?? ""}
@@ -403,13 +403,13 @@ export function ComponentPlayground({ config, lang, value, onValueChange }: { co
             ) : null}
             <PlaygroundSectionTitle dot="bg-primary">{lang === "en" ? "Interactive props" : "实时属性"}</PlaygroundSectionTitle>
             {config.leadingControls?.map((item) => (
-              <div key={item.key} className="flex flex-col gap-(--fx-control-gap-tight)" data-slot="component-playground-leading-control">
+              <div key={item.key} className="flex flex-col gap-(--fds-g-spacing-control-gap-tight)" data-slot="component-playground-leading-control">
                 <PlaygroundPropLabel zh={lang === "en" ? item.en : item.zh} />
-                <div className="flex flex-wrap items-center gap-(--fx-control-gap-tight)">{item.control}</div>
+                <div className="flex flex-wrap items-center gap-(--fds-g-spacing-control-gap-tight)">{item.control}</div>
               </div>
             ))}
             {workbenchActive && activeNode ? (
-              <div className="flex items-center gap-(--fx-control-gap-tight) text-sm text-muted-foreground">
+              <div className="flex items-center gap-(--fds-g-spacing-control-gap-tight) text-sm text-muted-foreground">
                 <span className="font-medium text-foreground">{lang === "en" ? activeNode.en : activeNode.zh}</span>
                 <span>{activeNode.component}</span>
               </div>
@@ -427,7 +427,7 @@ export function ComponentPlayground({ config, lang, value, onValueChange }: { co
                 ))}
               </div>
             ) : orderedVisibleProps.map((p) => (
-              <div key={p.key} className="flex flex-col gap-(--fx-control-gap-tight)">
+              <div key={p.key} className="flex flex-col gap-(--fds-g-spacing-control-gap-tight)">
                 <PlaygroundPropLabel zh={lang === "en" ? p.en : p.zh} />
                 {p.type === "text" ? (
                   <Input
@@ -471,13 +471,13 @@ export function ComponentPlayground({ config, lang, value, onValueChange }: { co
                 </div>
               ) : null}
               {workbenchActive && config.workbench ? (
-                <div data-slot="component-playground-validation" className="flex flex-col gap-(--fx-control-gap)">
+                <div data-slot="component-playground-validation" className="flex flex-col gap-(--fds-g-spacing-control-gap)">
                   <PlaygroundSectionTitle dot="bg-success">{lang === "en" ? "Effective state" : "生效确认"}</PlaygroundSectionTitle>
-                  <div className="flex flex-col gap-(--fx-control-gap-tight)">
+                  <div className="flex flex-col gap-(--fds-g-spacing-control-gap-tight)">
                     {config.workbench.checks.map((check) => {
                       const result = validations[check.key]
                       return (
-                        <div key={check.key} className="flex items-start gap-(--fx-control-gap-tight) text-sm">
+                        <div key={check.key} className="flex items-start gap-(--fds-g-spacing-control-gap-tight) text-sm">
                           <CheckCircleIcon className={result?.passed ? "mt-0.5 size-4 shrink-0 text-success" : "mt-0.5 size-4 shrink-0 text-destructive"} />
                           <div className="min-w-0">
                             <div className="font-medium text-foreground">{lang === "en" ? check.en : check.zh}</div>
@@ -487,7 +487,7 @@ export function ComponentPlayground({ config, lang, value, onValueChange }: { co
                       )
                     })}
                     {inspection ? (
-                      <div className="rounded-md border border-border-subtle bg-muted p-(--fx-control-px-xs) font-mono text-xs leading-relaxed text-muted-foreground">
+                      <div className="rounded-md border border-border-subtle bg-muted p-(--fds-g-spacing-control-inline-xs) font-mono text-xs leading-relaxed text-muted-foreground">
                         <div>data-slot=&quot;{inspection.slot}&quot;</div>
                         <div>height: {inspection.height}</div>
                         <div>background: {inspection.background}</div>
@@ -501,14 +501,14 @@ export function ComponentPlayground({ config, lang, value, onValueChange }: { co
           </div>
         </div>
       </div>
-      <div className="flex h-[calc(var(--fx-control-lg-height)+12px)] items-center justify-between bg-[var(--fx-neutrals-02)] px-(--card-spacing)">
+      <div className="flex h-[calc(var(--fds-g-sizing-control-block-lg)+12px)] items-center justify-between bg-[var(--fds-g-color-surface-subtle)] px-(--card-spacing)">
         <div className="flex h-full items-center gap-1">
           {tabs.map(({ value: t, icon, label }) => (
             <button
               key={t}
               type="button"
               onClick={() => setTab(t)}
-              className={`flex h-full items-center gap-2 border-b-2 px-(--fx-control-px-md) text-sm font-medium transition-colors ${
+              className={`flex h-full items-center gap-2 border-b-2 px-(--fds-g-spacing-control-inline-md) text-sm font-medium transition-colors ${
                 activeTab === t ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -517,7 +517,7 @@ export function ComponentPlayground({ config, lang, value, onValueChange }: { co
           ))}
         </div>
         {isMatrix ? null : (
-          <div className="flex items-center gap-(--fx-control-gap-tight)">
+          <div className="flex items-center gap-(--fds-g-spacing-control-gap-tight)">
             {config.workbench ? (
               <Button
                 variant={workbenchActive ? "secondary" : "outline"}

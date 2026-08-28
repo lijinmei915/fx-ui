@@ -1,7 +1,7 @@
 ---
 layer: governance
 type: spec
-last_verified: 2026-06-07
+last_verified: 2026-08-28
 teaches: "fx-ui 文档应该叫什么名字、放在哪里"
 use_when: "新建文档前，判断它该放根目录还是 docs/、该用什么命名风格"
 depends_on: []
@@ -12,6 +12,8 @@ depends_on: []
 > 用途：定义文档命名和放置位置，让 AI 和人快速判断"这个文件该叫什么、放哪里"。
 > 什么时候更新：新增文档类型、目录命名策略变化时。
 > 不要写什么：具体文档内容、组件设计本身。
+
+设计 Token 和 Styling Hooks 的命名不归本文管理，统一查看 `docs/TOKEN_NAMING.md`。
 
 ---
 
@@ -44,6 +46,7 @@ docs/ 放工程治理。
 |------|------------|
 | `docs/ARCHITECTURE.md` | 三层体系、模块职责、目录边界 |
 | `docs/TOKENS.md` | 设计 token 查询表 |
+| `docs/TOKEN_NAMING.md` | FDS Token 与 Styling Hooks 命名规范 |
 | `docs/LAYOUTS.md` | 布局规范（从真实页面沉淀） |
 | `docs/DECISIONS.md` | 决策及原因 |
 | `docs/CHANGELOG.md` | 结构性变更 |

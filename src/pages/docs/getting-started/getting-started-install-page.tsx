@@ -57,7 +57,7 @@ export function GettingStartedInstallPage({
 
       <section id="install-theme" className={docsSpacing.sectionStack}>
         <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Install Theme" : "接入主题"}</h2>
-        <p className="text-base text-muted-foreground">{lang === "en" ? "Use theme/fx-theme.css as the runtime token source. For distribution, publish registry/fx-theme.json as a shadcn registry theme." : "运行时使用 theme/fx-theme.css 作为 token 真相源；对外分发时使用 registry/fx-theme.json 作为 shadcn registry:theme。"}</p>
+        <p className="text-base text-muted-foreground">{lang === "en" ? "Import theme/fx-theme.css as the single runtime entry; it already includes the read-only Foundation. For distribution, publish registry/fx-theme.json as a shadcn registry theme." : "运行时只需引入 theme/fx-theme.css；它已固定包含只读 Foundation。对外分发使用 registry/fx-theme.json 作为 shadcn registry:theme。"}</p>
         <div className="grid gap-4 md:grid-cols-2">
           <CopyCodeBlock code={themeSetupCode} label="runtime theme" lang={lang} />
           <CopyCodeBlock code={themeDistributionCode} label="registry theme" lang={lang} />

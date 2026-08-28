@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url"
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 const contract = JSON.parse(fs.readFileSync(path.join(root, "docs/data/agent-components.manifest.json"), "utf8"))
+const themePresetContract = JSON.parse(fs.readFileSync(path.join(root, "docs/data/theme-presets.manifest.json"), "utf8"))
 const requiredPolicy = [
   "explainMatches",
   "componentBeforeToken",
@@ -67,8 +68,8 @@ if (componentImpact.truthSource?.file !== "src/components/ui/input.tsx" || !comp
 }
 
 const tokenImpact = JSON.parse(execFileSync(process.execPath, ["scripts/fx-agent.mjs", "impact", "token", "semantic.destructive", "--json"], { cwd: root, encoding: "utf8" }))
-if (tokenImpact.truthSource?.file !== "theme/fx-theme.css" || !tokenImpact.declaredReferences?.declaredConsumers?.includes("Input")) {
-  throw new Error("Token impact must report the CSS truth source and declared consumers")
+if (tokenImpact.truthSource?.file !== "tokens/source/semantic.tokens.json" || !tokenImpact.declaredReferences?.declaredConsumers?.includes("Input")) {
+  throw new Error("Token impact must report the Semantic truth source and declared consumers")
 }
 
 const emailRecipe = JSON.parse(execFileSync(process.execPath, ["scripts/fx-agent.mjs", "recipe", "邮箱字段校验", "--json"], { cwd: root, encoding: "utf8" }))
@@ -107,8 +108,8 @@ if (templateLayer.matches?.[0]?.status !== "ready" || templateLayer.matches[0].r
 }
 
 const theme = JSON.parse(execFileSync(process.execPath, ["scripts/fx-agent.mjs", "theme", "show", "--json"], { cwd: root, encoding: "utf8" }))
-if (theme.status !== "single-light-mode" || JSON.stringify(theme.supportedModes) !== JSON.stringify(["light"]) || !theme.protectedStructuralSources?.length) {
-  throw new Error("Theme query must expose the current single-light boundary and protected structural sources")
+if (theme.status !== "published" || theme.contractVersion !== themePresetContract.contractVersion || theme.semanticContract?.status !== "published-multi-mode" || JSON.stringify(theme.presetContract?.publication?.publishedModes) !== JSON.stringify(["light", "dark"]) || theme.presetContract?.publication?.qualityEvidence !== "docs/data/theme-audit.manifest.json" || !theme.semanticContract?.protectedStructuralSources?.length) {
+  throw new Error("Theme query must expose the governed preset contract, audited light/dark publication, and protected structural boundary")
 }
 
 console.log("agent query contract check passed")

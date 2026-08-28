@@ -121,7 +121,7 @@ function Signature({
           aria-disabled={disabled || undefined}
           tabIndex={disabled ? -1 : 0}
           data-slot="signature-canvas"
-          className="block h-full min-h-[var(--fx-control-lg-height)] w-full touch-none rounded-md outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed"
+          className="block h-full min-h-[var(--fds-g-sizing-control-block-lg)] w-full touch-none rounded-md outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed"
           style={{ height }}
         />
       </div>

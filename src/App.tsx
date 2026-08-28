@@ -16,6 +16,7 @@ import { createPageRegistry } from "@/lib/page-registry-config";
 import { PageTitleMetaContext } from "@/lib/page-title-meta";
 import {
   getLabel,
+  getThemeSolidForegroundStyle,
   getThemeRuntimeStyle,
   normalizeThemeConfig,
   type ThemeConfig,
@@ -28,16 +29,14 @@ import {
   topNav,
   docsNav,
   componentIndexSections,
-  tokenNavSections,
-  layoutNavSections,
   foundationNavSections,
   pageNavSections,
   governanceNavSections,
   footerNavItems,
 } from "@/lib/site-navigation";
 import { docsByPage, isDocPage, type DocPage } from "@/lib/document-sources";
+import { designTokensManifestRaw } from "@/lib/design-tokens-manifest-source";
 import { GettingStartedPageAdapter } from "@/pages/docs/getting-started/getting-started-page-adapter";
-import designTokensManifestRaw from "../docs/data/design-tokens.json?raw";
 
 type Lang = "zh" | "en";
 
@@ -50,6 +49,9 @@ type DesignTokenManifestEntry = {
 
 type DesignTokensManifest = {
   updatedAt: string;
+  foundation: {
+    groups: { id: string; label: string; count: number; tokens: string[] }[];
+  };
   primitive: DesignTokenManifestEntry[];
   semantic: DesignTokenManifestEntry[];
   componentUsage: unknown[];
@@ -62,6 +64,8 @@ type DesignTokensManifest = {
 const designTokensManifest = JSON.parse(designTokensManifestRaw) as DesignTokensManifest;
 
 type ViewMode = "page" | "markdown";
+const isFoundationPublication = import.meta.env.VITE_FX_DOCS_SCOPE === "foundation";
+const defaultPageHash = isFoundationPublication ? "#tokens" : "#intro";
 
 const pageRegistry = createPageRegistry(
   designTokensManifest,
@@ -74,8 +78,8 @@ function resolvePageSlug(hash: string): string {
 }
 
 function App() {
-  const [page, setPage] = useState(() => getPageFromHash(window.location.hash, resolvePageSlug));
-  const [activeHash, setActiveHash] = useState(() => window.location.hash || "#intro");
+  const [page, setPage] = useState(() => getPageFromHash(window.location.hash || defaultPageHash, resolvePageSlug));
+  const [activeHash, setActiveHash] = useState(() => window.location.hash || defaultPageHash);
   const [activeAnchor, setActiveAnchor] = useState("#overview");
   const [viewMode, setViewMode] = useState<ViewMode>("page");
   const [searchOpen, setSearchOpen] = useState(false);
@@ -105,9 +109,13 @@ function App() {
     Object.entries(runtimeStyle).forEach(([key, value]) => {
       root.style.setProperty(key, value);
     });
+    const foregroundStyle = getThemeSolidForegroundStyle(root);
+    Object.entries(foregroundStyle).forEach(([key, value]) => {
+      root.style.setProperty(key, value);
+    });
 
     return () => {
-      Object.keys(runtimeStyle).forEach((key) => {
+      [...Object.keys(runtimeStyle), ...Object.keys(foregroundStyle)].forEach((key) => {
         root.style.removeProperty(key);
       });
     };
@@ -152,13 +160,16 @@ function App() {
 
   useEffect(() => {
     const onHashChange = () => {
-      const nextHash = window.location.hash || "#intro";
+      const nextHash = window.location.hash || defaultPageHash;
 
       setActiveHash(nextHash);
       setPage(getPageFromHash(nextHash, resolvePageSlug));
       setViewMode("page");
     };
 
+    if (isFoundationPublication && !window.location.hash) {
+      window.history.replaceState(null, "", defaultPageHash);
+    }
     onHashChange();
     window.addEventListener("hashchange", onHashChange);
 
@@ -181,13 +192,9 @@ function App() {
   const isComponentsIndexPage = page === "components";
   const isGettingStartedPage = page === "intro" || page === "install" || page === "theme";
   const isGovernancePage = page === "governance-map" || page === "ai-rules" || page === "documentation" || page === "website-standards" || page === "checks";
-  const isTokenArea = page === "tokens" || tokenNavSections.some((section) =>
-  section.items.some((item) => getPageFromHash(item.href, resolvePageSlug) === page)
+  const isFoundationArea = foundationNavSections.some((section) =>
+    section.items.some((item) => getPageFromHash(item.href, resolvePageSlug) === page)
   );
-  const isLayoutArea = layoutNavSections.some((section) =>
-  section.items.some((item) => getPageFromHash(item.href, resolvePageSlug) === page)
-  );
-  const isFoundationArea = isTokenArea || isLayoutArea;
   const isPageArea = pageNavSections.some((section) =>
     section.items.some((item) => getPageFromHash(item.href, resolvePageSlug) === page)
   );
@@ -200,6 +207,12 @@ function App() {
   const sidebarSections = isFoundationArea ? foundationNavSections : isComponentArea ? componentIndexSections : isPageArea ? pageNavSections : isGovernancePage ? governanceNavSections : docsNav;
   // 当前页条目 = 唯一真相源 pageRegistry 查表
   const pageEntry = pageRegistry[page];
+
+  useEffect(() => {
+    if (isFoundationPublication && !pageEntry && window.location.hash !== defaultPageHash) {
+      window.location.replace(defaultPageHash);
+    }
+  }, [pageEntry]);
   const anchors = pageEntry?.anchors ?? [];
   const docKey: DocPage | null = isDocPage(page) ? page : null;
   const currentDoc = docKey ? docsByPage[docKey] : null;
@@ -333,7 +346,7 @@ function App() {
         isPageArea={isPageArea}
         isBuilderArea={isBuilderArea}
         isGovernancePage={isGovernancePage} />
-      <div className={isGettingStartedPage || isBuilderArea ? "grid h-[calc(100dvh-var(--fx-topbar-height))] min-h-0 grid-cols-1 overflow-hidden bg-background" : "grid h-[calc(100dvh-var(--fx-topbar-height))] min-h-0 overflow-hidden bg-background lg:grid-cols-[240px_minmax(0,1fr)]"}>
+      <div className={isGettingStartedPage || isBuilderArea ? "grid h-[calc(100dvh-var(--fds-g-sizing-navigation-topbar-block))] min-h-0 grid-cols-1 overflow-hidden bg-background" : "grid h-[calc(100dvh-var(--fds-g-sizing-navigation-topbar-block))] min-h-0 overflow-hidden bg-background lg:grid-cols-[240px_minmax(0,1fr)]"}>
         <DocsSidebar isHidden={isGettingStartedPage || isBuilderArea} sections={sidebarSections} activeHash={activeHash} lang={lang} onOpenSearch={() => setSearchOpen(true)} />
 
         <main ref={mainRef}

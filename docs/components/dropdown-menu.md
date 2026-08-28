@@ -138,6 +138,7 @@ import { DropdownMenu, DropdownMenuPortal, DropdownMenuTrigger, DropdownMenuCont
 | `--foreground` | 主要文字和图标 |
 | `--popover` | 浮层背景 |
 | `--popover-foreground` | 浮层文字和图标 |
+| `--fds-g-color-text-subtle` | 菜单分组标签的低强调文字；内部 Semantic |
 | `--muted` | 弱化背景、hover 背景或低强调区域 |
 | `--muted-foreground` | 辅助说明、placeholder 或弱化文字 |
 | `--accent` | 菜单项 hover/focus 背景 |

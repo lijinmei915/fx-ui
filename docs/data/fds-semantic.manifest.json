@@ -1,0 +1,2258 @@
+{
+  "schemaVersion": 1,
+  "format": "fds/semantic-contract",
+  "contractVersion": "1.0.0-draft.8",
+  "truthSource": "tokens/source/semantic.tokens.json",
+  "generatedRuntime": "theme/fds-semantic.css",
+  "layer": "semantic",
+  "owner": "fds-maintainers-with-approved-collaborators",
+  "authoring": "review-required",
+  "counts": {
+    "tokens": 149,
+    "publicGlobal": 101,
+    "internal": 48,
+    "darkOverrides": 60,
+    "compatibilityAliases": 157,
+    "rawMigrationExceptions": 13
+  },
+  "modes": [
+    "light",
+    "dark"
+  ],
+  "tokens": [
+    {
+      "id": "color.surface.page-base",
+      "type": "color",
+      "name": "--fds-g-color-surface-page-base",
+      "value": "#F5F6F7",
+      "modes": {},
+      "aliases": [
+        "--fx-page-background"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": "preserve-established-page-canvas-during-prefix-migration"
+    },
+    {
+      "id": "color.surface.page",
+      "type": "color",
+      "name": "--fds-g-color-surface-page",
+      "value": "var(--fds-g-color-surface-page-base)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.165 0.008 h)"
+      },
+      "aliases": [
+        "--background"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.surface.card",
+      "type": "color",
+      "name": "--fds-g-color-surface-raised",
+      "value": "var(--fds-g-color-neutral-base-10)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.205 0.008 h)"
+      },
+      "aliases": [
+        "--card"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.surface.control",
+      "type": "color",
+      "name": "--fds-g-color-surface-control",
+      "value": "var(--fds-g-color-neutral-base-10)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.205 0.008 h)"
+      },
+      "aliases": [
+        "--surface"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.surface.control-disabled",
+      "type": "color",
+      "name": "--fds-g-color-surface-control-disabled",
+      "value": "var(--fds-g-color-neutral-base-20)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.235 0.008 h)"
+      },
+      "aliases": [
+        "--surface-disabled"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.surface.popover",
+      "type": "color",
+      "name": "--fds-g-color-surface-floating",
+      "value": "var(--fds-g-color-neutral-base-10)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.225 0.008 h)"
+      },
+      "aliases": [
+        "--popover"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.surface.overlay",
+      "type": "color",
+      "name": "--fds-g-color-surface-overlay",
+      "value": "oklch(from var(--fds-g-color-neutral-base-200) l c h / 0.2)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-neutral-base-200) 0 0 h / 0.55)"
+      },
+      "aliases": [
+        "--overlay"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.surface.subtle",
+      "type": "color",
+      "name": "--fds-g-color-surface-subtle",
+      "value": "var(--fds-g-color-neutral-base-20)",
+      "modes": {},
+      "aliases": [],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "blur.overlay",
+      "type": "dimension",
+      "name": "--fds-g-blur-overlay",
+      "value": "var(--fds-g-blur-2)",
+      "modes": {},
+      "aliases": [
+        "--overlay-blur"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.text.primary",
+      "type": "color",
+      "name": "--fds-g-color-text-primary",
+      "value": "var(--fds-g-color-neutral-base-200)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.955 0.006 h)"
+      },
+      "aliases": [
+        "--foreground",
+        "--card-foreground",
+        "--popover-foreground"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.text.secondary",
+      "type": "color",
+      "name": "--fds-g-color-text-secondary",
+      "value": "var(--fds-g-color-neutral-base-150)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.72 0.006 h)"
+      },
+      "aliases": [
+        "--foreground-secondary"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.text.muted",
+      "type": "color",
+      "name": "--fds-g-color-text-muted",
+      "value": "var(--fds-g-color-neutral-base-120)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.64 0.006 h)"
+      },
+      "aliases": [
+        "--muted-foreground"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.text.subtle",
+      "type": "color",
+      "name": "--fds-g-color-text-subtle",
+      "value": "var(--fds-g-color-neutral-base-100)",
+      "modes": {},
+      "aliases": [],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.text.disabled",
+      "type": "color",
+      "name": "--fds-g-color-text-disabled",
+      "value": "var(--fds-g-color-neutral-base-60)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.45 0.006 h)"
+      },
+      "aliases": [
+        "--foreground-disabled"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.text.inverse",
+      "type": "color",
+      "name": "--fds-g-color-text-inverse",
+      "value": "var(--fds-g-color-neutral-base-10)",
+      "modes": {},
+      "aliases": [],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.text.on-vivid",
+      "type": "color",
+      "name": "--fds-g-color-text-on-vivid",
+      "value": "var(--fds-g-color-foreground-primary)",
+      "modes": {},
+      "aliases": [],
+      "visibility": "internal",
+      "stability": "deprecated",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.icon.primary",
+      "type": "color",
+      "name": "--fds-g-color-icon-primary",
+      "value": "var(--fds-g-color-neutral-base-200)",
+      "modes": {},
+      "aliases": [
+        "--fx-icon-dark"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.icon.muted",
+      "type": "color",
+      "name": "--fds-g-color-icon-muted",
+      "value": "var(--fds-g-color-neutral-base-110)",
+      "modes": {},
+      "aliases": [
+        "--fx-icon-gray"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.icon.inverse",
+      "type": "color",
+      "name": "--fds-g-color-icon-inverse",
+      "value": "var(--fds-g-color-neutral-base-10)",
+      "modes": {},
+      "aliases": [
+        "--fx-icon-light"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.brand.identity",
+      "type": "color",
+      "name": "--fds-g-color-brand-identity",
+      "value": "var(--fds-g-color-brand-base-90)",
+      "modes": {
+        "dark": "var(--fds-g-color-brand-base-80)"
+      },
+      "aliases": [],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.primary",
+      "type": "color",
+      "name": "--fds-g-color-action-primary",
+      "value": "var(--fds-g-color-brand-base-90)",
+      "modes": {},
+      "aliases": [
+        "--fx-primary",
+        "--primary"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.primary-hover",
+      "type": "color",
+      "name": "--fds-g-color-action-primary-hover",
+      "value": "var(--fds-g-color-brand-base-80)",
+      "modes": {},
+      "aliases": [
+        "--fx-primary-hover"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.primary-active",
+      "type": "color",
+      "name": "--fds-g-color-action-primary-active",
+      "value": "var(--fds-g-color-brand-base-100)",
+      "modes": {},
+      "aliases": [
+        "--fx-primary-active"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.foreground.primary",
+      "type": "color",
+      "name": "--fds-g-color-foreground-primary",
+      "value": "var(--fds-g-color-neutral-base-10)",
+      "modes": {},
+      "aliases": [
+        "--primary-foreground"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": "solid-foreground-primary",
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.primary-disabled",
+      "type": "color",
+      "name": "--fds-g-color-action-primary-disabled",
+      "value": "var(--fds-g-color-brand-base-50)",
+      "modes": {
+        "dark": "color-mix(in oklch, var(--fds-g-color-brand-vivid) 34%, var(--fds-g-color-surface-raised))"
+      },
+      "aliases": [
+        "--fx-primary-disabled"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.primary-subtle",
+      "type": "color",
+      "name": "--fds-g-color-action-primary-subtle",
+      "value": "var(--fds-g-color-brand-base-10)",
+      "modes": {
+        "dark": "color-mix(in oklch, var(--fds-g-color-brand-vivid) 16%, var(--fds-g-color-surface-raised))"
+      },
+      "aliases": [
+        "--fx-primary-light"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.primary-subtle-hover",
+      "type": "color",
+      "name": "--fds-g-color-action-primary-subtle-hover",
+      "value": "var(--fds-g-color-brand-base-20)",
+      "modes": {
+        "dark": "color-mix(in oklch, var(--fds-g-color-brand-vivid) 24%, var(--fds-g-color-surface-raised))"
+      },
+      "aliases": [
+        "--fx-primary-light-hover"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.primary-subtle-active",
+      "type": "color",
+      "name": "--fds-g-color-action-primary-subtle-active",
+      "value": "var(--fds-g-color-brand-base-30)",
+      "modes": {
+        "dark": "color-mix(in oklch, var(--fds-g-color-brand-vivid) 32%, var(--fds-g-color-surface-raised))"
+      },
+      "aliases": [
+        "--fx-primary-light-active"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.secondary",
+      "type": "color",
+      "name": "--fds-g-color-action-secondary",
+      "value": "var(--fds-g-color-neutral-base-30)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.255 0.008 h)"
+      },
+      "aliases": [
+        "--secondary"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.secondary-hover",
+      "type": "color",
+      "name": "--fds-g-color-action-secondary-hover",
+      "value": "var(--fds-g-color-neutral-base-40)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.295 0.008 h)"
+      },
+      "aliases": [
+        "--secondary-hover"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.secondary-active",
+      "type": "color",
+      "name": "--fds-g-color-action-secondary-active",
+      "value": "var(--fds-g-color-neutral-base-50)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.335 0.008 h)"
+      },
+      "aliases": [
+        "--secondary-active"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.muted",
+      "type": "color",
+      "name": "--fds-g-color-action-muted",
+      "value": "var(--fds-g-color-neutral-base-30)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.255 0.008 h)"
+      },
+      "aliases": [
+        "--muted"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.muted-hover",
+      "type": "color",
+      "name": "--fds-g-color-action-muted-hover",
+      "value": "var(--fds-g-color-neutral-base-40)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.295 0.008 h)"
+      },
+      "aliases": [
+        "--muted-hover"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.muted-active",
+      "type": "color",
+      "name": "--fds-g-color-action-muted-active",
+      "value": "var(--fds-g-color-neutral-base-50)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.335 0.008 h)"
+      },
+      "aliases": [
+        "--muted-active"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.fill.subtle",
+      "type": "color",
+      "name": "--fds-g-color-fill-subtle",
+      "value": "color-mix(in oklch, var(--fds-g-color-text-primary) 5%, transparent)",
+      "modes": {},
+      "aliases": [
+        "--fill-subtle"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.fill.subtle-hover",
+      "type": "color",
+      "name": "--fds-g-color-fill-subtle-hover",
+      "value": "color-mix(in oklch, var(--fds-g-color-text-primary) 8%, transparent)",
+      "modes": {},
+      "aliases": [
+        "--fill-hover"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.accent",
+      "type": "color",
+      "name": "--fds-g-color-action-accent",
+      "value": "var(--fds-g-color-orange-base-10)",
+      "modes": {
+        "dark": "var(--fds-g-color-orange-dark-20)"
+      },
+      "aliases": [
+        "--accent"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.accent-hover",
+      "type": "color",
+      "name": "--fds-g-color-action-accent-hover",
+      "value": "var(--fds-g-color-orange-base-20)",
+      "modes": {
+        "dark": "var(--fds-g-color-orange-dark-30)"
+      },
+      "aliases": [
+        "--accent-hover"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.destructive",
+      "type": "color",
+      "name": "--fds-g-color-action-destructive",
+      "value": "var(--fds-g-color-red-base-90)",
+      "modes": {},
+      "aliases": [
+        "--fx-danger",
+        "--destructive"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.destructive-hover",
+      "type": "color",
+      "name": "--fds-g-color-action-destructive-hover",
+      "value": "var(--fds-g-color-red-base-80)",
+      "modes": {},
+      "aliases": [
+        "--destructive-hover"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.destructive-active",
+      "type": "color",
+      "name": "--fds-g-color-action-destructive-active",
+      "value": "var(--fds-g-color-red-base-100)",
+      "modes": {},
+      "aliases": [
+        "--destructive-active"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.foreground.destructive",
+      "type": "color",
+      "name": "--fds-g-color-foreground-destructive",
+      "value": "var(--fds-g-color-neutral-base-10)",
+      "modes": {},
+      "aliases": [
+        "--destructive-foreground"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": "solid-foreground-destructive",
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.destructive-disabled",
+      "type": "color",
+      "name": "--fds-g-color-action-destructive-disabled",
+      "value": "var(--fds-g-color-red-base-50)",
+      "modes": {
+        "dark": "var(--fds-g-color-red-dark-50)"
+      },
+      "aliases": [
+        "--destructive-disabled"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.destructive-subtle",
+      "type": "color",
+      "name": "--fds-g-color-action-destructive-subtle",
+      "value": "var(--fds-g-color-red-base-10)",
+      "modes": {
+        "dark": "var(--fds-g-color-red-dark-20)"
+      },
+      "aliases": [
+        "--destructive-light"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.destructive-subtle-hover",
+      "type": "color",
+      "name": "--fds-g-color-action-destructive-subtle-hover",
+      "value": "var(--fds-g-color-red-base-20)",
+      "modes": {
+        "dark": "var(--fds-g-color-red-dark-30)"
+      },
+      "aliases": [
+        "--destructive-light-hover"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.action.destructive-subtle-active",
+      "type": "color",
+      "name": "--fds-g-color-action-destructive-subtle-active",
+      "value": "var(--fds-g-color-red-base-30)",
+      "modes": {
+        "dark": "var(--fds-g-color-red-dark-40)"
+      },
+      "aliases": [
+        "--destructive-light-active"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.error-subtle",
+      "type": "color",
+      "name": "--fds-g-color-status-error-subtle",
+      "value": "var(--fds-g-color-red-base-10)",
+      "modes": {
+        "dark": "var(--fds-g-color-red-dark-20)"
+      },
+      "aliases": [
+        "--fx-danger-light"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.error-subtle-hover",
+      "type": "color",
+      "name": "--fds-g-color-status-error-subtle-hover",
+      "value": "var(--fds-g-color-red-base-20)",
+      "modes": {
+        "dark": "var(--fds-g-color-red-dark-30)"
+      },
+      "aliases": [
+        "--fx-danger-light-hover"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.error-subtle-active",
+      "type": "color",
+      "name": "--fds-g-color-status-error-subtle-active",
+      "value": "var(--fds-g-color-red-base-30)",
+      "modes": {
+        "dark": "var(--fds-g-color-red-dark-40)"
+      },
+      "aliases": [
+        "--fx-danger-light-active"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.link.default",
+      "type": "color",
+      "name": "--fds-g-color-link",
+      "value": "var(--fds-g-color-blue-base-90)",
+      "modes": {
+        "dark": "var(--fds-g-color-blue-dark-110)"
+      },
+      "aliases": [
+        "--link"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.link.hover",
+      "type": "color",
+      "name": "--fds-g-color-link-hover",
+      "value": "var(--fds-g-color-blue-base-80)",
+      "modes": {
+        "dark": "var(--fds-g-color-blue-dark-120)"
+      },
+      "aliases": [
+        "--link-hover"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.link.active",
+      "type": "color",
+      "name": "--fds-g-color-link-active",
+      "value": "var(--fds-g-color-blue-base-100)",
+      "modes": {
+        "dark": "var(--fds-g-color-blue-dark-100)"
+      },
+      "aliases": [
+        "--link-active"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.link.disabled",
+      "type": "color",
+      "name": "--fds-g-color-link-disabled",
+      "value": "var(--fds-g-color-blue-base-40)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-blue-dark-110) l c h / 0.4)"
+      },
+      "aliases": [
+        "--link-disabled"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.border.chrome",
+      "type": "color",
+      "name": "--fds-g-color-border-chrome",
+      "value": "var(--fds-g-color-neutral-base-20)",
+      "modes": {
+        "dark": "oklch(1 0 0 / 0.04)"
+      },
+      "aliases": [
+        "--border-chrome"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.border.faint",
+      "type": "color",
+      "name": "--fds-g-color-border-faint",
+      "value": "var(--fds-g-color-neutral-base-30)",
+      "modes": {
+        "dark": "oklch(1 0 0 / 0.06)"
+      },
+      "aliases": [
+        "--border-faint"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.border.container",
+      "type": "color",
+      "name": "--fds-g-color-border-container",
+      "value": "color-mix(in oklch, var(--fds-g-color-neutral-base-40), var(--fds-g-color-neutral-base-10) 45%)",
+      "modes": {
+        "dark": "oklch(1 0 0 / 0.07)"
+      },
+      "aliases": [
+        "--border-container"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.border.subtle",
+      "type": "color",
+      "name": "--fds-g-color-border-subtle",
+      "value": "var(--fds-g-color-neutral-base-40)",
+      "modes": {
+        "dark": "oklch(1 0 0 / 0.10)"
+      },
+      "aliases": [
+        "--border-subtle"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.border.default",
+      "type": "color",
+      "name": "--fds-g-color-border-default",
+      "value": "var(--fds-g-color-neutral-base-50)",
+      "modes": {
+        "dark": "oklch(1 0 0 / 0.14)"
+      },
+      "aliases": [
+        "--border"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.border.strong",
+      "type": "color",
+      "name": "--fds-g-color-border-strong",
+      "value": "var(--fds-g-color-neutral-base-80)",
+      "modes": {
+        "dark": "oklch(1 0 0 / 0.26)"
+      },
+      "aliases": [
+        "--border-strong"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.border.interactive",
+      "type": "color",
+      "name": "--fds-g-color-border-interactive",
+      "value": "var(--fds-g-color-neutral-base-70)",
+      "modes": {
+        "dark": "oklch(1 0 0 / 0.18)"
+      },
+      "aliases": [
+        "--input"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.ring.focus",
+      "type": "color",
+      "name": "--fds-g-color-ring-focus",
+      "value": "oklch(from var(--fds-g-color-brand-base-90) l c h / 0.4)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-brand-base-80) l c h / 0.5)"
+      },
+      "aliases": [
+        "--ring"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.success",
+      "type": "color",
+      "name": "--fds-g-color-status-success",
+      "value": "var(--fds-g-color-green-base-90)",
+      "modes": {},
+      "aliases": [
+        "--fx-success",
+        "--success"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.success-hover",
+      "type": "color",
+      "name": "--fds-g-color-status-success-hover",
+      "value": "var(--fds-g-color-green-base-80)",
+      "modes": {},
+      "aliases": [
+        "--success-hover"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.success-active",
+      "type": "color",
+      "name": "--fds-g-color-status-success-active",
+      "value": "var(--fds-g-color-green-base-100)",
+      "modes": {},
+      "aliases": [
+        "--success-active"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.foreground.success",
+      "type": "color",
+      "name": "--fds-g-color-foreground-success",
+      "value": "var(--fds-g-color-neutral-base-10)",
+      "modes": {},
+      "aliases": [
+        "--success-foreground"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": "solid-foreground-success",
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.success-disabled",
+      "type": "color",
+      "name": "--fds-g-color-status-success-disabled",
+      "value": "var(--fds-g-color-green-base-50)",
+      "modes": {
+        "dark": "var(--fds-g-color-green-dark-50)"
+      },
+      "aliases": [
+        "--success-disabled"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.success-subtle",
+      "type": "color",
+      "name": "--fds-g-color-status-success-subtle",
+      "value": "var(--fds-g-color-green-base-10)",
+      "modes": {
+        "dark": "var(--fds-g-color-green-dark-20)"
+      },
+      "aliases": [
+        "--fx-success-light"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.success-subtle-hover",
+      "type": "color",
+      "name": "--fds-g-color-status-success-subtle-hover",
+      "value": "var(--fds-g-color-green-base-20)",
+      "modes": {
+        "dark": "var(--fds-g-color-green-dark-30)"
+      },
+      "aliases": [
+        "--fx-success-light-hover"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.success-subtle-active",
+      "type": "color",
+      "name": "--fds-g-color-status-success-subtle-active",
+      "value": "var(--fds-g-color-green-base-30)",
+      "modes": {
+        "dark": "var(--fds-g-color-green-dark-40)"
+      },
+      "aliases": [
+        "--fx-success-light-active"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.warning",
+      "type": "color",
+      "name": "--fds-g-color-status-warning",
+      "value": "var(--fds-g-color-amber-base-90)",
+      "modes": {},
+      "aliases": [
+        "--fx-warning",
+        "--warning"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.warning-hover",
+      "type": "color",
+      "name": "--fds-g-color-status-warning-hover",
+      "value": "var(--fds-g-color-amber-base-80)",
+      "modes": {},
+      "aliases": [
+        "--warning-hover"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.warning-active",
+      "type": "color",
+      "name": "--fds-g-color-status-warning-active",
+      "value": "var(--fds-g-color-amber-base-100)",
+      "modes": {},
+      "aliases": [
+        "--warning-active"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.foreground.warning",
+      "type": "color",
+      "name": "--fds-g-color-foreground-warning",
+      "value": "var(--fds-g-color-neutral-base-10)",
+      "modes": {},
+      "aliases": [
+        "--warning-foreground"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": "solid-foreground-warning",
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.warning-disabled",
+      "type": "color",
+      "name": "--fds-g-color-status-warning-disabled",
+      "value": "var(--fds-g-color-amber-base-50)",
+      "modes": {
+        "dark": "var(--fds-g-color-amber-dark-50)"
+      },
+      "aliases": [
+        "--warning-disabled"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.warning-subtle",
+      "type": "color",
+      "name": "--fds-g-color-status-warning-subtle",
+      "value": "var(--fds-g-color-amber-base-10)",
+      "modes": {
+        "dark": "var(--fds-g-color-amber-dark-20)"
+      },
+      "aliases": [
+        "--fx-warning-light"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.warning-subtle-hover",
+      "type": "color",
+      "name": "--fds-g-color-status-warning-subtle-hover",
+      "value": "var(--fds-g-color-amber-base-20)",
+      "modes": {
+        "dark": "var(--fds-g-color-amber-dark-30)"
+      },
+      "aliases": [
+        "--fx-warning-light-hover"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.warning-subtle-active",
+      "type": "color",
+      "name": "--fds-g-color-status-warning-subtle-active",
+      "value": "var(--fds-g-color-amber-base-30)",
+      "modes": {
+        "dark": "var(--fds-g-color-amber-dark-40)"
+      },
+      "aliases": [
+        "--fx-warning-light-active"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.info",
+      "type": "color",
+      "name": "--fds-g-color-status-info",
+      "value": "var(--fds-g-color-blue-base-90)",
+      "modes": {},
+      "aliases": [
+        "--fx-info",
+        "--info"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.info-hover",
+      "type": "color",
+      "name": "--fds-g-color-status-info-hover",
+      "value": "var(--fds-g-color-blue-base-80)",
+      "modes": {},
+      "aliases": [
+        "--info-hover"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.info-active",
+      "type": "color",
+      "name": "--fds-g-color-status-info-active",
+      "value": "var(--fds-g-color-blue-base-100)",
+      "modes": {},
+      "aliases": [
+        "--info-active"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.info-disabled",
+      "type": "color",
+      "name": "--fds-g-color-status-info-disabled",
+      "value": "var(--fds-g-color-blue-base-50)",
+      "modes": {
+        "dark": "var(--fds-g-color-blue-dark-50)"
+      },
+      "aliases": [
+        "--info-disabled"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.info-subtle",
+      "type": "color",
+      "name": "--fds-g-color-status-info-subtle",
+      "value": "var(--fds-g-color-blue-base-10)",
+      "modes": {
+        "dark": "var(--fds-g-color-blue-dark-20)"
+      },
+      "aliases": [
+        "--fx-info-light"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.info-subtle-hover",
+      "type": "color",
+      "name": "--fds-g-color-status-info-subtle-hover",
+      "value": "var(--fds-g-color-blue-base-20)",
+      "modes": {
+        "dark": "var(--fds-g-color-blue-dark-30)"
+      },
+      "aliases": [
+        "--fx-info-light-hover"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.status.info-subtle-active",
+      "type": "color",
+      "name": "--fds-g-color-status-info-subtle-active",
+      "value": "var(--fds-g-color-blue-base-30)",
+      "modes": {
+        "dark": "var(--fds-g-color-blue-dark-40)"
+      },
+      "aliases": [
+        "--fx-info-light-active"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.foreground.info",
+      "type": "color",
+      "name": "--fds-g-color-foreground-info",
+      "value": "var(--fds-g-color-neutral-base-10)",
+      "modes": {},
+      "aliases": [
+        "--info-foreground"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": "solid-foreground-info",
+      "rawValueReason": null
+    },
+    {
+      "id": "color.highlight.orange",
+      "type": "color",
+      "name": "--fds-g-color-highlight-orange",
+      "value": "var(--fds-g-color-orange-base-10)",
+      "modes": {
+        "dark": "var(--fds-g-color-orange-dark-20)"
+      },
+      "aliases": [
+        "--fx-list-orange"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.highlight.blue",
+      "type": "color",
+      "name": "--fds-g-color-highlight-blue",
+      "value": "var(--fds-g-color-blue-base-10)",
+      "modes": {
+        "dark": "var(--fds-g-color-blue-dark-20)"
+      },
+      "aliases": [
+        "--fx-list-blue"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.navigation.surface",
+      "type": "color",
+      "name": "--fds-g-color-navigation-surface",
+      "value": "var(--fds-g-color-neutral-base-10)",
+      "modes": {
+        "dark": "oklch(from var(--fds-g-color-brand-vivid) 0.19 0.008 h)"
+      },
+      "aliases": [
+        "--sidebar"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.navigation.accent",
+      "type": "color",
+      "name": "--fds-g-color-navigation-accent",
+      "value": "#F2F4FB",
+      "modes": {
+        "dark": "color-mix(in oklch, var(--fds-g-color-brand-vivid) 18%, var(--fds-g-color-surface-raised))"
+      },
+      "aliases": [
+        "--sidebar-accent"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": "preserve-established-navigation-accent-during-component-hook-pilot"
+    },
+    {
+      "id": "color.navigation.border",
+      "type": "color",
+      "name": "--fds-g-color-navigation-border",
+      "value": "#DEE1E8",
+      "modes": {
+        "dark": "oklch(1 0 0 / 0.10)"
+      },
+      "aliases": [
+        "--sidebar-border"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": "preserve-established-navigation-border-during-component-hook-pilot"
+    },
+    {
+      "id": "color.navigation.ring",
+      "type": "color",
+      "name": "--fds-g-color-navigation-ring",
+      "value": "var(--fds-g-color-seed-brand)",
+      "modes": {
+        "dark": "var(--fds-g-color-brand-base-80)"
+      },
+      "aliases": [
+        "--sidebar-ring"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "shadow.color.default",
+      "type": "color",
+      "name": "--fds-g-color-shadow-default",
+      "value": "oklch(from var(--fds-g-color-neutral-base-200) l c h / 0.08)",
+      "modes": {},
+      "aliases": [
+        "--fx-shadow-color"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "shadow.color.soft",
+      "type": "color",
+      "name": "--fds-g-color-shadow-soft",
+      "value": "oklch(from var(--fds-g-color-neutral-base-200) l c h / 0.05)",
+      "modes": {},
+      "aliases": [
+        "--fx-shadow-color-soft"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "shadow.color.faint",
+      "type": "color",
+      "name": "--fds-g-color-shadow-faint",
+      "value": "oklch(from var(--fds-g-color-neutral-base-200) l c h / 0.03)",
+      "modes": {},
+      "aliases": [
+        "--fx-shadow-color-faint"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "shadow.elevation.1",
+      "type": "shadow",
+      "name": "--fds-g-shadow-elevation-1",
+      "value": "0px 2px 6px -2px var(--fds-g-color-shadow-default), 0px 4px 10px -4px var(--fds-g-color-shadow-soft)",
+      "modes": {},
+      "aliases": [
+        "--fx-shadow-l1"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "shadow.elevation.2",
+      "type": "shadow",
+      "name": "--fds-g-shadow-elevation-2",
+      "value": "0px 4px 12px -4px var(--fds-g-color-shadow-default), 0px 8px 20px -2px var(--fds-g-color-shadow-soft), 0px 12px 28px 0px var(--fds-g-color-shadow-faint)",
+      "modes": {},
+      "aliases": [
+        "--fx-shadow-l2"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "shadow.elevation.3",
+      "type": "shadow",
+      "name": "--fds-g-shadow-elevation-3",
+      "value": "0px 6px 16px -8px var(--fds-g-color-shadow-default), 0px 9px 28px 0px var(--fds-g-color-shadow-soft), 0px 12px 48px 16px var(--fds-g-color-shadow-faint)",
+      "modes": {},
+      "aliases": [
+        "--fx-shadow-l3"
+      ],
+      "visibility": "public-global",
+      "stability": "stable",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "shadow.elevation.1-up",
+      "type": "shadow",
+      "name": "--fds-g-shadow-elevation-1-up",
+      "value": "0px -2px 6px -2px var(--fds-g-color-shadow-default), 0px -4px 10px -4px var(--fds-g-color-shadow-soft)",
+      "modes": {},
+      "aliases": [
+        "--fx-shadow-l1-up"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.size.xs",
+      "type": "dimension",
+      "name": "--fds-g-font-size-xs",
+      "value": "var(--fds-g-font-size-12)",
+      "modes": {},
+      "aliases": [
+        "--fx-text-xs"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.line-height.xs",
+      "type": "dimension",
+      "name": "--fds-g-font-line-height-xs",
+      "value": "var(--fds-g-font-line-height-18)",
+      "modes": {},
+      "aliases": [
+        "--fx-text-xs--line-height"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.size.control-sm",
+      "type": "dimension",
+      "name": "--fds-g-font-size-control-sm",
+      "value": "var(--fds-g-font-size-13)",
+      "modes": {},
+      "aliases": [
+        "--fx-text-control-sm"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.line-height.control-sm",
+      "type": "dimension",
+      "name": "--fds-g-font-line-height-control-sm",
+      "value": "var(--fds-g-font-line-height-18)",
+      "modes": {},
+      "aliases": [
+        "--fx-text-control-sm--line-height"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.size.sm",
+      "type": "dimension",
+      "name": "--fds-g-font-size-sm",
+      "value": "var(--fds-g-font-size-14)",
+      "modes": {},
+      "aliases": [
+        "--fx-text-sm"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.line-height.sm",
+      "type": "dimension",
+      "name": "--fds-g-font-line-height-sm",
+      "value": "var(--fds-g-font-line-height-20)",
+      "modes": {},
+      "aliases": [
+        "--fx-text-sm--line-height"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.size.base",
+      "type": "dimension",
+      "name": "--fds-g-font-size-base",
+      "value": "var(--fds-g-font-size-16)",
+      "modes": {},
+      "aliases": [
+        "--fx-text-base"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.line-height.base",
+      "type": "dimension",
+      "name": "--fds-g-font-line-height-base",
+      "value": "var(--fds-g-font-line-height-24)",
+      "modes": {},
+      "aliases": [
+        "--fx-text-base--line-height"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.size.lg",
+      "type": "dimension",
+      "name": "--fds-g-font-size-lg",
+      "value": "var(--fds-g-font-size-18)",
+      "modes": {},
+      "aliases": [
+        "--fx-text-lg"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.line-height.lg",
+      "type": "dimension",
+      "name": "--fds-g-font-line-height-lg",
+      "value": "var(--fds-g-font-line-height-28)",
+      "modes": {},
+      "aliases": [
+        "--fx-text-lg--line-height"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.size.xl",
+      "type": "dimension",
+      "name": "--fds-g-font-size-xl",
+      "value": "var(--fds-g-font-size-20)",
+      "modes": {},
+      "aliases": [
+        "--fx-text-xl"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.line-height.xl",
+      "type": "dimension",
+      "name": "--fds-g-font-line-height-xl",
+      "value": "var(--fds-g-font-line-height-30)",
+      "modes": {},
+      "aliases": [
+        "--fx-text-xl--line-height"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.size.2xl",
+      "type": "dimension",
+      "name": "--fds-g-font-size-2xl",
+      "value": "var(--fds-g-font-size-24)",
+      "modes": {},
+      "aliases": [
+        "--fx-text-2xl"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.line-height.2xl",
+      "type": "dimension",
+      "name": "--fds-g-font-line-height-2xl",
+      "value": "var(--fds-g-font-line-height-32)",
+      "modes": {},
+      "aliases": [
+        "--fx-text-2xl--line-height"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.size.3xl",
+      "type": "dimension",
+      "name": "--fds-g-font-size-3xl",
+      "value": "var(--fds-g-font-size-30)",
+      "modes": {},
+      "aliases": [
+        "--fx-text-3xl"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.line-height.3xl",
+      "type": "dimension",
+      "name": "--fds-g-font-line-height-3xl",
+      "value": "var(--fds-g-font-line-height-38)",
+      "modes": {},
+      "aliases": [
+        "--fx-text-3xl--line-height"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.size.4xl",
+      "type": "dimension",
+      "name": "--fds-g-font-size-4xl",
+      "value": "var(--fds-g-font-size-36)",
+      "modes": {},
+      "aliases": [
+        "--fx-text-4xl"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.line-height.4xl",
+      "type": "dimension",
+      "name": "--fds-g-font-line-height-4xl",
+      "value": "var(--fds-g-font-line-height-44)",
+      "modes": {},
+      "aliases": [
+        "--fx-text-4xl--line-height"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "sizing.control.block.xs",
+      "type": "dimension",
+      "name": "--fds-g-sizing-control-block-xs",
+      "value": "var(--fds-g-sizing-24)",
+      "modes": {},
+      "aliases": [
+        "--fx-control-xs-height"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "sizing.control.block.sm",
+      "type": "dimension",
+      "name": "--fds-g-sizing-control-block-sm",
+      "value": "var(--fds-g-sizing-28)",
+      "modes": {},
+      "aliases": [
+        "--fx-control-sm-height"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "sizing.control.block.md",
+      "type": "dimension",
+      "name": "--fds-g-sizing-control-block-md",
+      "value": "var(--fds-g-sizing-32)",
+      "modes": {},
+      "aliases": [
+        "--fx-control-md-height"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "sizing.control.block.lg",
+      "type": "dimension",
+      "name": "--fds-g-sizing-control-block-lg",
+      "value": "var(--fds-g-sizing-36)",
+      "modes": {},
+      "aliases": [
+        "--fx-control-lg-height"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "sizing.control.icon.xs",
+      "type": "dimension",
+      "name": "--fds-g-sizing-control-icon-xs",
+      "value": "var(--fds-g-sizing-24)",
+      "modes": {},
+      "aliases": [
+        "--fx-control-icon-xs"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "sizing.control.icon.sm",
+      "type": "dimension",
+      "name": "--fds-g-sizing-control-icon-sm",
+      "value": "var(--fds-g-sizing-28)",
+      "modes": {},
+      "aliases": [
+        "--fx-control-icon-sm"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "sizing.control.icon.md",
+      "type": "dimension",
+      "name": "--fds-g-sizing-control-icon-md",
+      "value": "var(--fds-g-sizing-32)",
+      "modes": {},
+      "aliases": [
+        "--fx-control-icon-md"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "sizing.control.icon.lg",
+      "type": "dimension",
+      "name": "--fds-g-sizing-control-icon-lg",
+      "value": "var(--fds-g-sizing-36)",
+      "modes": {},
+      "aliases": [
+        "--fx-control-icon-lg"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "spacing.control.inline.xs",
+      "type": "dimension",
+      "name": "--fds-g-spacing-control-inline-xs",
+      "value": "var(--fds-g-spacing-8)",
+      "modes": {},
+      "aliases": [
+        "--fx-control-px-xs"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "spacing.control.inline.sm",
+      "type": "dimension",
+      "name": "--fds-g-spacing-control-inline-sm",
+      "value": "var(--fds-g-spacing-10)",
+      "modes": {},
+      "aliases": [
+        "--fx-control-px-sm"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "spacing.control.inline.md",
+      "type": "dimension",
+      "name": "--fds-g-spacing-control-inline-md",
+      "value": "var(--fds-g-spacing-12)",
+      "modes": {},
+      "aliases": [
+        "--fx-control-px-md"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "spacing.control.inline.lg",
+      "type": "dimension",
+      "name": "--fds-g-spacing-control-inline-lg",
+      "value": "var(--fds-g-spacing-16)",
+      "modes": {},
+      "aliases": [
+        "--fx-control-px-lg"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "spacing.control.gap-tight",
+      "type": "dimension",
+      "name": "--fds-g-spacing-control-gap-tight",
+      "value": "var(--fds-g-spacing-4)",
+      "modes": {},
+      "aliases": [
+        "--fx-control-gap-tight"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "spacing.control.gap",
+      "type": "dimension",
+      "name": "--fds-g-spacing-control-gap",
+      "value": "var(--fds-g-spacing-6)",
+      "modes": {},
+      "aliases": [
+        "--fx-control-gap"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "spacing.panel.gap",
+      "type": "dimension",
+      "name": "--fds-g-spacing-panel-gap",
+      "value": "var(--fds-g-spacing-12)",
+      "modes": {},
+      "aliases": [
+        "--fx-panel-gap"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "spacing.panel.padding",
+      "type": "dimension",
+      "name": "--fds-g-spacing-panel-padding",
+      "value": "var(--fds-g-spacing-12)",
+      "modes": {},
+      "aliases": [
+        "--fx-panel-padding"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.size.menu",
+      "type": "dimension",
+      "name": "--fds-g-font-size-menu",
+      "value": "var(--fds-g-font-size-14)",
+      "modes": {},
+      "aliases": [
+        "--fx-menu-text"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "font.line-height.menu",
+      "type": "dimension",
+      "name": "--fds-g-font-line-height-menu",
+      "value": "var(--fds-g-font-line-height-20)",
+      "modes": {},
+      "aliases": [
+        "--fx-menu-text--line-height"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "sizing.navigation.item.block",
+      "type": "dimension",
+      "name": "--fds-g-sizing-navigation-item-block",
+      "value": "var(--fds-g-sizing-32)",
+      "modes": {},
+      "aliases": [
+        "--fx-sidebar-item-height"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "sizing.navigation.item.block-sm",
+      "type": "dimension",
+      "name": "--fds-g-sizing-navigation-item-block-sm",
+      "value": "var(--fds-g-sizing-28)",
+      "modes": {},
+      "aliases": [
+        "--fx-sidebar-item-height-sm"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "sizing.navigation.topbar.block",
+      "type": "dimension",
+      "name": "--fds-g-sizing-navigation-topbar-block",
+      "value": "var(--fds-g-sizing-56)",
+      "modes": {},
+      "aliases": [
+        "--fx-topbar-height"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "sizing.navigation.search.block",
+      "type": "dimension",
+      "name": "--fds-g-sizing-navigation-search-block",
+      "value": "var(--fds-g-sizing-32)",
+      "modes": {},
+      "aliases": [
+        "--fx-topbar-search-height"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "motion.duration.theme",
+      "type": "duration",
+      "name": "--fds-g-motion-duration-theme",
+      "value": "var(--fds-g-motion-duration-200)",
+      "modes": {},
+      "aliases": [
+        "--fx-theme-duration"
+      ],
+      "visibility": "internal",
+      "stability": "experimental",
+      "derivation": null,
+      "rawValueReason": null
+    },
+    {
+      "id": "color.data.categorical.1",
+      "type": "color",
+      "name": "--fds-g-color-data-categorical-1",
+      "value": "#FF7383",
+      "modes": {},
+      "aliases": [
+        "--chart-1"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "rawValueReason": "preserve-governed-bi-palette",
+      "derivation": null
+    },
+    {
+      "id": "color.data.categorical.2",
+      "type": "color",
+      "name": "--fds-g-color-data-categorical-2",
+      "value": "#FF7752",
+      "modes": {},
+      "aliases": [
+        "--chart-2"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "rawValueReason": "preserve-governed-bi-palette",
+      "derivation": null
+    },
+    {
+      "id": "color.data.categorical.3",
+      "type": "color",
+      "name": "--fds-g-color-data-categorical-3",
+      "value": "#FF9B29",
+      "modes": {},
+      "aliases": [
+        "--chart-3"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "rawValueReason": "preserve-governed-bi-palette",
+      "derivation": null
+    },
+    {
+      "id": "color.data.categorical.4",
+      "type": "color",
+      "name": "--fds-g-color-data-categorical-4",
+      "value": "#FFDA54",
+      "modes": {},
+      "aliases": [
+        "--chart-4"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "rawValueReason": "preserve-governed-bi-palette",
+      "derivation": null
+    },
+    {
+      "id": "color.data.categorical.5",
+      "type": "color",
+      "name": "--fds-g-color-data-categorical-5",
+      "value": "#DDF2BB",
+      "modes": {},
+      "aliases": [
+        "--chart-5"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "rawValueReason": "preserve-governed-bi-palette",
+      "derivation": null
+    },
+    {
+      "id": "color.data.categorical.6",
+      "type": "color",
+      "name": "--fds-g-color-data-categorical-6",
+      "value": "#55D48C",
+      "modes": {},
+      "aliases": [
+        "--chart-6"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "rawValueReason": "preserve-governed-bi-palette",
+      "derivation": null
+    },
+    {
+      "id": "color.data.categorical.7",
+      "type": "color",
+      "name": "--fds-g-color-data-categorical-7",
+      "value": "#5BCFC1",
+      "modes": {},
+      "aliases": [
+        "--chart-7"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "rawValueReason": "preserve-governed-bi-palette",
+      "derivation": null
+    },
+    {
+      "id": "color.data.categorical.8",
+      "type": "color",
+      "name": "--fds-g-color-data-categorical-8",
+      "value": "#40B6FF",
+      "modes": {},
+      "aliases": [
+        "--chart-8"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "rawValueReason": "preserve-governed-bi-palette",
+      "derivation": null
+    },
+    {
+      "id": "color.data.categorical.9",
+      "type": "color",
+      "name": "--fds-g-color-data-categorical-9",
+      "value": "#368DFF",
+      "modes": {},
+      "aliases": [
+        "--chart-9"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "rawValueReason": "preserve-governed-bi-palette",
+      "derivation": null
+    },
+    {
+      "id": "color.data.categorical.10",
+      "type": "color",
+      "name": "--fds-g-color-data-categorical-10",
+      "value": "#976AEB",
+      "modes": {},
+      "aliases": [
+        "--chart-10"
+      ],
+      "visibility": "public-global",
+      "stability": "experimental",
+      "rawValueReason": "preserve-governed-bi-palette",
+      "derivation": null
+    }
+  ],
+  "compatibility": {
+    "policy": "aliases-reference-fds-truth-no-duplicated-values",
+    "legacyPrefix": "--fx-",
+    "shadcnSlots": "unprefixed aliases remain implementation compatibility only",
+    "aliases": [
+      {
+        "name": "--secondary-foreground",
+        "target": "--fds-g-color-text-primary"
+      },
+      {
+        "name": "--accent-foreground",
+        "target": "--fds-g-color-text-primary"
+      },
+      {
+        "name": "--sidebar-foreground",
+        "target": "--fds-g-color-text-primary"
+      },
+      {
+        "name": "--sidebar-accent-foreground",
+        "target": "--fds-g-color-text-primary"
+      },
+      {
+        "name": "--sidebar-primary",
+        "target": "--fds-g-color-action-primary"
+      },
+      {
+        "name": "--sidebar-primary-foreground",
+        "target": "--fds-g-color-foreground-primary"
+      }
+    ]
+  }
+}

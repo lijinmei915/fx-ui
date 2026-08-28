@@ -68,9 +68,11 @@ import { TokensSpacingPage as TokensSpacingDocPage, tokenSpacingAnchors, spacing
 import { TokensShadowPage as TokensShadowDocPage, tokenShadowAnchors, shadowTokens } from "@/pages/docs/tokens/tokens-shadow-page"
 import { TokensMotionPage as TokensMotionDocPage, tokenMotionAnchors, motionTokens } from "@/pages/docs/tokens/tokens-motion-page"
 import { TokensLayerPage as TokensLayerDocPage, tokenLayerAnchors, layerTokens } from "@/pages/docs/tokens/tokens-layer-page"
+import { TokensIconsPage, tokenIconAnchors } from "@/pages/docs/tokens/tokens-icons-page"
 import { ComponentsIndexPage, componentsIndexAnchors, type ComponentsIndexSection } from "@/pages/docs/components/components-index-page"
 import { GridPage, gridAnchors } from "@/pages/docs/foundations/grid-page"
-import { TokensPage, tokenAnchors, tokenLayers } from "@/pages/docs/tokens/tokens-page"
+import { tokenAnchors } from "@/pages/docs/tokens/tokens-page"
+import { TokensPageAdapter } from "@/pages/docs/tokens/tokens-page-adapter"
 import { LayoutPage, layoutAnchors } from "@/pages/docs/foundations/layout-page"
 import { NavMenuPage, navMenuAnchors, navMenuDoDontRows, navMenuPropRows, navMenuSemanticDomRows } from "@/pages/docs/components/nav-menu-page"
 import { IconPage, iconAnchors } from "@/pages/docs/foundations/icon-page"
@@ -90,6 +92,9 @@ import componentPlaygroundsManifestRaw from "../../docs/data/component-playgroun
 type Lang = "zh" | "en"
 
 type DesignTokenManifest = {
+  foundation: {
+    groups: { id: string; label: string; count: number; tokens: string[] }[]
+  }
   typography: {
     roles: { id: string; utility: string; tailwind: [string, string]; usage: string; avoid: string }[]
     conventions: { id: string; rule: string; usage: string; tailwind?: string[]; prohibited?: string[]; examples?: string[] }[]
@@ -107,9 +112,10 @@ export function createPageRegistry(
 
   return finalizePageRegistry({
     components: { anchors: componentsIndexAnchors, render: (a, l) => <ComponentsIndexPage actions={a} lang={l} sections={componentIndexSections} /> },
-    tokens: { anchors: tokenAnchors, render: (a, l) => <TokensPage actions={a} lang={l} tokenLayers={tokenLayers} /> },
+    tokens: { anchors: tokenAnchors, render: (a, l) => <TokensPageAdapter actions={a} lang={l} foundationGroups={designTokensManifest.foundation.groups} /> },
     "tokens-colors": { anchors: tokenColorsAnchors, render: (a, l) => <TokensColorsDocPage actions={a} lang={l} SeedPreview={SeedPreview} ColorPaletteWithTabs={ColorPaletteWithTabs} semanticTokenGroups={semanticTokenGroups} getTokenExample={renderTokenExample} /> },
     "tokens-typography": { anchors: tokenTypographyAnchors, render: (a, l) => <TokensTypographyDocPage actions={a} lang={l} roles={designTokensManifest.typography.roles} conventions={designTokensManifest.typography.conventions} sizeTokens={typeSizeTokens} weightTokens={typeWeightTokens} familyTokens={typeFamilyTokens} /> },
+    "tokens-icons": { anchors: tokenIconAnchors, render: (a, l) => <TokensIconsPage actions={a} lang={l} /> },
     "tokens-radius": { anchors: tokenRadiusAnchors, render: (a, l) => <TokensRadiusDocPage actions={a} lang={l} radiusTokens={radiusTokens} /> },
     "tokens-spacing": { anchors: tokenSpacingAnchors, render: (a, l) => <TokensSpacingDocPage actions={a} lang={l} spacingTokens={spacingTokens} /> },
     "tokens-shadow": { anchors: tokenShadowAnchors, render: (a, l) => <TokensShadowDocPage actions={a} lang={l} shadowTokens={shadowTokens} /> },

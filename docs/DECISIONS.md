@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: log
-last_verified: 2026-08-26
+last_verified: 2026-08-28
 teaches: "fx-ui 重要的技术/协作决策记录：选了什么、放弃了什么、为什么"
 use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论"
 ---
@@ -828,11 +828,12 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **日期**：2026-08-26
 - **状态**：已决定
 - **决定**：fx-ui 的页面视觉采用“基础无语义层 → 全局语义层 → 页面类型语义层”。基础层只维护色板、字号/行高、间距、圆角、阴影、图标和边框基线；全局语义层维护跨页面共用的 `background`、`card`、`surface`、`muted`、`primary`、`destructive`、`border` 等槽位；页面类型只在 `docs/data/page-semantics.manifest.json` 声明区域角色，并映射到已有全局 semantic token。
+- **基础层治理补充（2026-08-27）**：Foundation 扩为 color、spacing、size、font family/size/line-height/weight、radius、border width、icon stroke、opacity、blur、duration、easing、z-index 共 15 类物理刻度。它是维护者专属写入面，协作者和 AI 只读；页面、Report、Dashboard、工作台和组件调用处不得直接消费。色相名称也必须无语义，历史 `orange-warning` 因混入状态意图改名为 `deep-orange`，色值不变。断点、栅格、运行时布局、组件状态和数据协议不进入 Foundation。
 - **页面类型边界**：列表页、详情页、编辑表单页和搭建器先作为 `ready` 页面类型；Dashboard、认证页、设置页先登记为 `planned`，必须先有真实 Block、数据契约和视觉证据才能升级。页面类型不得声明专属色值、字号、间距、圆角、阴影刻度或组件 API。
 - **放弃**：① 每个页面类型复制一套颜色/间距/字号；② 在调用处用 `className` 绕过页面角色覆盖组件视觉；③ 没有真实 Block 就把页面类型标成 ready；④ 为了页面语义批量制造组件 token。
 - **原因**：页面之间需要有不同的信息层级和交互意图，但视觉语言必须保持一致。角色映射提供页面差异，semantic token 保持换肤和组件契约稳定，基础层则避免被业务语义污染。
-- **影响**：新增或迁移页面先查 `page-semantics.manifest.json`，运行 `npm run check:page-semantics`；页面视觉变更必须同步 Block/模板引用和视觉回归，不能只改页面截图或局部样式。
-- **相关文件**：`docs/data/page-semantics.manifest.json`、`docs/data/page-build-kit.manifest.json`、`scripts/check-page-semantics.mjs`、`docs/{DESIGN_STANDARDS,PAGES}.md`
+- **影响**：新增或迁移页面先查 `page-semantics.manifest.json`，运行 `npm run check:page-semantics`；页面视觉变更必须同步 Block/模板引用和视觉回归，不能只改页面截图或局部样式。Foundation 的完整性、无语义命名和页面直引由 `check:foundation-tokens` 检查。
+- **相关文件**：`theme/{foundation,fx-theme}.css`、`docs/data/design-tokens.json`、`docs/data/{page-semantics,page-build-kit}.manifest.json`、`scripts/{check-foundation-tokens,check-page-semantics}.mjs`、`docs/{TOKENS,DESIGN_STANDARDS,PAGES}.md`
 
 ### DEC-074: 圆角采用固定 2/4/6/8/12/16 档位
 
@@ -843,6 +844,359 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **原因**：固定档位更容易记忆、审查和跨组件统一，同时保留组件层级差异；按钮尺寸映射解决紧凑按钮过扁或过圆的问题。
 - **影响**：`theme/fx-theme.css` 是真相源，`docs/TOKENS.md`、token manifest、圆角文档页和搭建器语义映射必须同步；圆角变更属于全局视觉变更，完成后必须运行 token sync、全量 check 和视觉回归。
 - **相关文件**：`theme/fx-theme.css`、`docs/data/design-tokens.json`、`src/components/recipes/business-component-builder.tsx`、`src/pages/docs/tokens/tokens-radius-page.tsx`
+
+### DEC-075: 跨框架共享语义契约，不共享组件运行时
+
+- **日期**：2026-08-26
+- **状态**：已决定
+- **决定**：fx-ui 拆为“框架无关核心契约 + 框架适配器”。核心从既有 Token、组件、Playground、图标、页面和 Agent UI 真相源派生，只包含语义身份、受治理选项、状态、意图、约束和数据协议；React 保持当前唯一 `ready` 参考适配器。Vue 2 只登记为 `planned` 并保留准入门，当前不新增 Vue 源码、依赖或能力声明。
+- **实现边界**：组件运行时、无头原语绑定、图标包绑定、render/ref/event 约定和 Blocks renderer 由各适配器独立实现。portable contract 不包含 JSX、框架源码路径或框架包名；缺少结构化事实的组件标为 `identity-only`，不虚报完整 API。Token 仍是 `Primitive -> Semantic -> Component Usage`，不新增组件 Token 命名空间。
+- **放弃**：① 将 React JSX 自动翻译为 Vue；② 用 Web Components 作为统一运行时底座；③ 复制一份 Vue Token 真相源；④ 先建空 Vue 目录或占位组件后补治理；⑤ 把 planned 写成已支持。
+- **原因**：设计语言和交互意图可以跨框架稳定复用，但组件生命周期、事件、受控值和无障碍原语具有框架差异。共享 contract 能防止两套实现语义漂移，同时避免为了代码复用制造最低公分母黑盒。
+- **影响**：新增 `framework-adapters` SSOT、派生 `framework-core` contract 和 `check:framework-core`；后续新框架必须先完成依赖评估、canonical ID 映射、API/交互/无障碍映射及独立构建和视觉验收，再升级适配器状态。
+- **相关文件**：`docs/FRAMEWORK_ADAPTERS.md`、`docs/data/{framework-adapters,framework-core}.manifest.json`、`scripts/build-framework-core.mjs`、`docs/{ARCHITECTURE,TECH_STACK}.md`
+
+### DEC-076: Foundation 物理独立，语义主题保持唯一公开入口
+
+- **日期**：2026-08-27
+- **状态**：已决定（CSS 真相源部分被 DEC-080 取代）
+- **决定**：将全部无语义物理 Token 迁入 `theme/foundation.css`，由 Foundation 维护者独占写权限；`theme/fx-theme.css` 固定导入它，只保存语义映射、Tailwind 映射和运行时样式，并继续作为应用与分发侧的唯一 CSS 入口。构建工具按 Foundation → Semantic 顺序读取两个真相源，统一派生 manifest，不复制值。
+- **主题输入边界**：接入方可以在运行时覆盖 `--fx-brand` 作为唯一主题色输入，让既有色阶继续派生；覆盖 CSS 变量不等于修改、上传或扩张 Foundation 刻度，也不会开放其他物理 Token。
+- **放弃**：① 继续把 Foundation 与语义变量混在一个大文件；② 要求应用分别导入两个 CSS 文件；③ 在 `fx-theme.css` 复制 Foundation 值；④ 为每个技术框架复制一份基础 Token。
+- **原因**：物理隔离让所有权、评审和跨框架消费边界可执行；保留单一公开入口则避免接入方承担导入顺序和内部文件结构，兼顾治理与易用性。
+- **影响**：Foundation 专项检查会阻止语义 Token 混入、重复定义和入口断链；Token 文档、构建脚本、页面语义来源和治理页面必须区分物理值真相源与语义公开入口。
+- **相关文件**：`theme/{foundation,fx-theme}.css`、`scripts/{build-design-tokens,check-foundation-tokens,check-tokens-sync}.mjs`、`docs/{TOKENS,MAP,ARCHITECTURE}.md`、`docs/data/design-tokens.json`
+
+### DEC-077: 主题生成以受治理 Preset Contract 为输入，适配器只注入受控 Seed
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：新增 `theme-presets.manifest.json` 统一管理主题默认值、可选维度、Foundation 引用、派生算法版本、发布状态、质量门与输出白名单。React 运行时从该 contract 读取选项，并通过框架无关纯函数只写 `--fx-brand` / `--fx-brand-vivid` seed 对；完整色阶继续由 Foundation CSS 派生，语义层自动消费。算法 v2 保留品牌原色，同时增加固定明度的浅色三态与白字实心操作阶。
+- **迁移结果**：字体、密度、圆角、阴影与动效均已从运行时裸值迁到 Foundation reference；CSS、contract JSON、shadcn registry 与 framework core 由同一 contract 生成，不再保留 `legacy-runtime-pending-foundation-migration` 副本。
+- **放弃**：① 每个框架维护一份主题配置和算法；② React 同时覆盖 `--fx-brand`、派生色阶和语义别名；③ 把运行时预览直接当作已发布 dark theme；④ 为迁移方便复制一份 Foundation 物理值到 manifest。
+- **原因**：适配器只输入 contract 白名单内的 Seed 可以利用 CSS 变量的原生继承和派生能力，消除运行时重复写入完整色阶与语义别名的漂移；结构化 contract 又为版本、审计、导出和未来框架适配提供稳定边界。
+- **影响**：主题选项和默认值的改动必须从 preset contract 发起，并通过 `check:theme-presets`；`framework-core` 直接投影同一 contract；`fx theme show/audit/build` 分别统一查询、审计和重建 Preset + Semantic + portable core 链路。未来主题导出器和框架适配器不得从 React 源码反向提取。
+- **相关文件**：`docs/data/{theme-presets,theme-audit,framework-adapters,framework-core}.manifest.json`、`src/lib/{theme-runtime,theme-derivation}.ts`、`scripts/{check-theme-presets,build-theme-artifacts,build-theme-audit,build-framework-core}.mjs`、`docs/{MAP,TOKENS,FRAMEWORK_ADAPTERS}.md`
+
+### DEC-078: 品牌展示色与白字实心操作色分离，light/dark 以浏览器审计为发布门
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：主题 seed 继续表达品牌原色；主操作与功能色的实心面改用 Foundation `solid / solid-hover / solid-active` 派生阶，固定保留白字，并以 WCAG 2 `4.5:1` 作为普通文字门槛。浅色 01/02/03 改为固定 OKLCH 明度，避免纯白和高亮自定义 seed 生成不可区分状态。`slate` 使用独立 `--fx-seed-slate`，禁止反向引用由品牌派生的 Neutrals。
+- **发布门**：`theme-presets.manifest.json#qualityGates` 是阈值与审计范围 SSOT；`build-theme-audit.mjs` 在 Chromium 中解析最终 CSS，对 7 个预设、7 个极端自定义样本、light/dark 的语义对比度和状态 Delta E 生成证据。不得降低阈值或改截图掩盖失败。只有审计通过的模式可进入 `publishedModes`；v1.1.0 起 light/dark 均已发布。
+- **放弃**：① 根据背景自动把 primary 文字切黑；② 直接把亮 seed 当按钮底并接受低对比；③ 只审默认橙色；④ 把 dark 预览直接写成发布支持；⑤ 手填第二份 shadcn theme JSON。
+- **原因**：品牌原色承担识别，实心操作面承担可读性，两者强行共用一个值会让亮黄、绿、橙在白字下系统性失败。真实浏览器审计还能捕获 CSS 变量循环、相对颜色和色域裁切，静态字符串检查无法替代。
+- **影响**：默认橙色按钮比品牌展示橙更深，但文字保持白色；`registry/fx-theme.json` 由发布生成器输出 light/dark，不再手工维护；算法或阈值变化必须升级 contract 版本并重跑审计、全量检查与视觉回归。
+- **相关文件**：`theme/{foundation,fx-theme}.css`、`docs/data/{theme-presets,theme-audit}.manifest.json`、`registry/fx-theme.{css,json}`、`scripts/{build-theme-artifacts,build-theme-audit,check-theme-presets}.mjs`
+
+### DEC-079: FDS 采用四层 Token 与受治理 Styling Hooks
+
+- **日期**：2026-08-27
+- **状态**：已决定（分阶段实施）
+- **决定**：设计系统正式命名为 FDS，目标 Token 架构为 `Primitive / Seed -> Map -> Semantic -> Component`。Global Styling Hooks 使用 `--fds-g-*`，经准入的 Component Styling Hooks 使用 `--fds-c-*`；命名语法、受控词典、公开性、稳定性和迁移阶段由 `token-naming.manifest.json` 统一声明，`TOKEN_NAMING.md` 只解释原因与评审方式。四层是依赖边界，不要求每个 Token 机械经过全部层级；结构性 Component Hook 可以引用 Primitive，视觉 Component Hook 默认引用 Semantic。
+- **组件准入**：默认仍由组件直接消费 Global Semantic。只有存在真实独立换肤需要、Global Semantic 无法准确表达、跨 variant/产品/框架复用，并绑定 owner、文档、合同测试和视觉证据时，才发布 `--fds-c-*`。组件开发者拥有提案与维护责任，不拥有自由造词权限；调用处继续禁止通过 `className` 或局部 CSS 覆盖组件外观。
+- **公开边界**：内部合同包含四层，对外只发布标为 `public-global` / `public-component` 的 Hook。接入方只在主题根或受治理 Theme Provider 覆盖公开 Hook；Primitive、Map 和未发布的内部映射不构成兼容承诺。页面类型只把场景角色映射到 Core Semantic，不增加第五层物理值。
+- **迁移**：按 `contract-only -> dual-write -> fds-primary -> legacy-removal` 推进。第一阶段仅冻结合同，不改变现有 React 运行时；后续由生成器输出 FDS 真相和 `--fx-*` 引用别名，禁止复制物理值。新增公开 Hook 发 Minor，删除/改名/改变含义发 Major，废弃别名至少保留一个 Major 窗口。
+- **取代范围**：本决策取代 DEC-037 与 DEC-075 中“当前不新增组件 Token 命名空间”的架构结论，但保留两者关于不批量生成 Component Token、不复制框架运行时、不开放原始视觉值和必须经过真实组件治理的限制。
+- **放弃**：① 只把 `--fx-*` 文本替换成 `--fds-*`；② 让所有内部变量自动成为公开 Hook；③ 为每个组件状态机械生成 `--fds-c-*`；④ 让功能色全部跟随品牌色改色相；⑤ 在命名合同和检查器之前先迁移运行时。
+- **原因**：FDS 需要同时服务内部组件治理和外部主题接入。四层合同能够隔离物理值、算法色阶、跨场景意图与组件稳定接口；Global/Component Styling Hooks 又能为跨框架消费者提供明确的公开面。机器词典和分阶段别名避免命名依赖个人习惯或一次性大迁移。
+- **影响**：新增 `TOKEN_NAMING.md`、`token-naming.manifest.json` 与 `check:token-naming`；后续 DTCG SSOT、FDS CSS/JSON 发布物、Button/Input/Table 试点和文档站命名页面均必须从该合同派生。React API 与当前视觉在 contract-only 阶段保持不变。
+- **相关文件**：`docs/{TOKEN_NAMING,TOKENS,MAP,DOCUMENTATION}.md`、`docs/data/{token-naming,doc-structure}.manifest.json`、`scripts/check-token-naming.mjs`、`AGENTS.md`
+
+### DEC-080: DTCG Primitive 与生成式 Map 成为 Foundation 真相源
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：`tokens/source/primitive.tokens.json` 以 DTCG 结构保存 155 个 Primitive/Seed，`tokens/source/map.tokens.json` 保存色板算法、12 阶彩色/20 阶中性范围、实心操作档和已审核例外；`build-fds-foundation.mjs` 展开 241 个 Map，生成 396 个当前运行时变量与 FDS portable contract。`theme/foundation.css` 从物理值 SSOT 降为生成产物，禁止手改；`theme/fx-theme.css` 继续是 Semantic 真相源和唯一公开 CSS 入口。
+- **迁移边界**：当前仍为 `contract-only`，生成的运行时变量保持 `--fx-*`，FDS 名称只进入 Token source 与 portable contract。生成器逐项证明迁移前后 396 个变量名称和值完全一致；下一阶段进入 dual-write 时才在运行时声明 `--fds-g-*` 并生成 `--fx-*` 引用别名。
+- **Map 规则**：Map 不保存手填的 241 项值副本，而由 family、step、公式和少量显式 exception 展开。功能语义不进入 Map family：危险、成功、警告、信息分别在 Semantic 映射到 `red`、`green`、`amber`、`blue`；品牌 Seed 只影响 brand 与轻染 neutral，不改变固定功能色色相。
+- **放弃**：① 继续手改大体量 Foundation CSS；② 在 DTCG 和 CSS 同时维护物理值；③ 把相对颜色公式伪装成 DTCG 原始 color value；④ 为了统一编号压缩现有 12/20 阶色板；⑤ 在 source 建立后仍让下游绕开统一构建入口。
+- **原因**：Primitive 原始事实适合标准结构化格式，Map 派生关系适合算法合同；将二者分开能让设计工具、Agent、框架适配器和 CSS 生成器共享同一来源，又不会把计算公式错误建模为原始色值。生成式 CSS 还能消除 396 项手改漂移。
+- **影响**：`build:tokens` 现在先生成 Foundation；`check:fds-foundation` 校验 CSS/portable contract 新鲜度，`check:token-naming` 校验全部 396 个 FDS 名称和 legacy 映射。Token 路由、AI 红线、架构、代码结构和文档站样式来源同步切换。
+- **相关文件**：`tokens/source/{primitive,map}.tokens.json`、`scripts/build-fds-foundation.mjs`、`theme/foundation.css`、`docs/data/fds-foundation.manifest.json`、`docs/{TOKENS,TOKEN_NAMING,MAP}.md`
+
+### DEC-081: Global Semantic 独立为 source，并由 FDS 真相生成兼容别名
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：`tokens/source/semantic.tokens.json` 成为 Global Semantic SSOT，显式登记稳定意图、light/dark 模式值、公开性、稳定性和兼容别名；`build-fds-semantic.mjs` 生成 `theme/fds-semantic.css` 与 portable contract。`theme/fx-theme.css` 不再保存语义值，只保留唯一公开入口、Tailwind/shadcn 装配和结构运行时映射。
+- **命名口径**：Semantic 使用 `category -> property -> role -> modifier -> state`，其中 `modifier` 仅允许 `subtle/raised/floating/interactive/categorical` 等稳定形态，state 始终置尾。Global 名称禁止组件实体词，因此旧 Card/Popover 插槽分别映射为 `surface-raised` / `surface-floating`。
+- **兼容与主题输入**：迁移阶段进入 `dual-write`。Foundation/Semantic runtime 先声明 `--fds-g-*` 真相，再生成 `--fx-*` 和 shadcn 无前缀引用别名；框架适配器只写 `--fds-g-color-seed-brand` / `--fds-g-color-brand-vivid`，禁止继续直接写 legacy seed。兼容别名至少保留一个 Major 窗口。
+- **迁移例外**：为保证已有视觉基线，页面画布、BI 分类色和 Sidebar 两个历史值暂以带 `rawValueReason` 的 experimental Semantic 记录；它们不是新增任意裸值的许可，后续需在不改变公开结果时归并到受治理 Foundation/Map。
+- **原因**：如果 Semantic 继续手写在公开入口，FDS、legacy、shadcn 和 dark override 会形成多个隐式真相；结构化 source + 生成别名可以让命名、权限、模式、跨框架发布和退役窗口被同一检查链管理。
+- **验证**：迁移前发布 CSS 与新运行时对 116 个兼容变量做 light/dark 浏览器渲染对比，结果逐项一致；生成检查、Token sync、主题审计和视觉回归共同作为发布门。
+- **取代范围**：本决策取代 DEC-076、DEC-077、DEC-080 中“Semantic 由 `theme/fx-theme.css` 手写”及“主题适配器写 `--fx-brand*`”的实现结论，其余治理边界保留。
+- **相关文件**：`tokens/source/semantic.tokens.json`、`scripts/build-fds-semantic.mjs`、`theme/{fds-semantic,fx-theme}.css`、`docs/data/{fds-semantic,token-naming}.manifest.json`、`src/lib/theme-derivation.ts`、`docs/{TOKEN_NAMING,TOKENS,MAP}.md`
+
+### DEC-082: Button、Input、Table 作为首批受准入 Component Hooks
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：新增 `tokens/source/component.tokens.json`，只登记通过 DEC-079 准入门的 Component Styling Hooks，并由 `build-fds-components.mjs` 生成 runtime 与 portable contract。首批开放 13 个 Hook：Button 默认主操作的 5 个表面状态、Input 的 5 个表面/边框状态、Table 的 3 个 density 行高。
+- **命名纠正**：Component Hook 必须与真实组件 API 对齐。Button 没有 `brand` variant，因此默认变体省略 variant 段；Table 使用 `compact / default / comfortable` density，因此不使用虚构 `md`，且默认 density 在名称中省略。
+- **准入边界**：Button 与 Input 的视觉 Hook 只引用 Global Semantic；Table 的结构 Hook 直接引用 Primitive sizing。每个组件必须登记 owner、独立换肤需要、Global Semantic 缺口、跨场景复用、文档、合同测试和视觉测试。未登记组件仍直接消费 Global Semantic，不自动生成 Hook。
+- **发布**：13 个 Hook 标记为 `public-component + experimental`，只能在主题根或受治理 Theme Provider 覆盖；单组件实例仍禁止局部覆写。新增公开接口按 SemVer 将主题合同升级为 v1.3.0，React API 和默认计算值不变。
+- **放弃**：① 为所有 variant/state/slot 批量生成 Hook；② 把 tone 当 variant 写进名称；③ 为 Table 强行套通用 `sm/md/lg`；④ 仅在 React 源码声明变量而不进入 portable core 与 release；⑤ 用组件 Hook 取代 variant/size/state API。
+- **相关文件**：`tokens/source/component.tokens.json`、`scripts/build-fds-components.mjs`、`theme/fds-components.css`、`docs/data/fds-components.manifest.json`、`src/components/ui/{button,input,table}.tsx`、`docs/components/{button,input,table}.md`
+
+### DEC-083: FDS 前缀阶段切换必须由迁移就绪审计放行
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：新增由真实仓库状态派生的 `fds-migration-audit`，分别扫描 runtime source、公开装配入口、生成兼容 runtime、发布物、文档、治理脚本和 Token source；从 Foundation/Semantic portable contract 生成唯一的 legacy-to-FDS replacement catalog，并用 `dual-write`、`fds-primary`、`legacy-removal` 三道机器门判断阶段是否就绪。
+- **当前证据**：`dual-write` 合规；runtime source 仍有 44 个文件、547 处 `--fx-*`，其中 341 处没有权威 replacement、9 处为动态拼接。公开装配入口只有 2/193 处是直接 FDS alias，因此当前明确不能切到 `fds-primary`。
+- **迁移规则**：先解决无 replacement 和动态名称，再按组件/页面/适配器等完整领域迁移已有映射；禁止全仓字符串替换。`fds-primary` 要求 runtime source 旧前缀归零、公开装配只保留直接 FDS alias、replacement 覆盖完整；legacy alias 从 v1.3.0 起至少保留到 v2.0.0，并且只有全发布链旧前缀归零后才能删除。
+- **放弃**：① 凭“看起来迁完了”手工改 phase；② 用 grep 总数代替可定位、可复现的清单；③ 把所有旧结构变量自动公开成 Component Hook；④ 达到 Major 版本后不看消费者就删除 alias。
+- **原因**：前缀迁移横跨源码、生成 CSS、发布 JSON、框架合同和文档。没有阶段门时，局部迁移容易造成两套真相、遗漏动态名称，或提前破坏外部消费者；派生审计能把兼容期变成可证明的工程状态。
+- **相关文件**：`docs/data/{token-naming,fds-migration-audit}.manifest.json`、`scripts/build-fds-migration-audit.mjs`、`docs/{TOKEN_NAMING,MAP,DOCUMENTATION,TESTING}.md`、`package.json`
+
+### DEC-084: 未映射旧变量先分类归属，再建立 FDS replacement
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：所有没有权威 replacement 或仍使用动态名称的 runtime `--fx-*`，必须先在 `token-naming.manifest.json#migration.legacyDispositions` 命中唯一去向，再允许改 source 或消费者。当前固定四类：运行时 profile 度量进入受评审的 internal Global Semantic；纯组件实现变量退出 FDS 保留前缀；组件视觉动态映射走 owner 的语义缺口与 Component Hook 准入；Foundation 文档展示直接消费 FDS contract。
+- **首批迁移**：Token 颜色、Seed、Map、间距、层级、阴影和动效文档已从旧展示名迁到 FDS Foundation/Semantic 名称；`time-picker` 的日历高度被确认没有跨组件设计含义，改为本地 `--date-time-picker-calendar-height`。剩余 Avatar 动态色映射保持不动，等待组件 owner 准入评审。
+- **机器门**：迁移审计新增 `runtime-action-items-have-governed-dispositions` 条件，当前 28/28 个未映射或动态 action item 已分类。审计从 44 个 runtime 文件、547 处旧引用下降为 37 个文件、365 处；未映射 exact 为 324 处，动态拼接从 9 处下降到 1 处。
+- **放弃**：① 把所有结构变量批量替换为 Primitive；② 把旧组件变量自动升级成公开 `--fds-c-*`；③ 只改文档显示、不更新审计；④ 为消除动态拼接而在组件内硬编码色值。
+- **原因**：旧前缀混合了设计意图、主题 profile、实现细节和文档标签。只按字符串形态迁移会扩大公开 API、丢失 profile 派生能力，或把非 Token 实现细节永久写进 FDS 合同；先分类能让每类进入正确治理路径。
+- **相关文件**：`docs/data/{token-naming,fds-migration-audit}.manifest.json`、`scripts/{build-fds-migration-audit,check-token-naming}.mjs`、`src/pages/docs/tokens/{color-seed-preview,color-palette-with-tabs,tokens-colors-page,tokens-motion-page}.tsx`、`src/components/fx/time-picker.tsx`、`docs/{TOKEN_NAMING,CHANGELOG}.md`
+
+### DEC-085: Theme profile 输出属于 internal Global Semantic
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：排版缩放、控件尺寸/间距、面板间距、导航尺寸和主题动效时长统一建模为 41 个 `internal` Global Semantic Token。`theme-presets.manifest.json` 只声明 `Semantic 输出 -> Foundation 引用`的 compact / standard / spacious 映射；React 运行时和组件消费 FDS Semantic 名称，不保存物理值副本。
+- **命名**：普通意图 Semantic 使用 `category -> property -> role -> modifier -> state`；内部 profile Semantic 使用 `category -> property -> role -> size`。例如 `--fds-g-font-size-control-sm`、`--fds-g-sizing-navigation-topbar-block`和 `--fds-g-motion-duration-theme`。Profile 末尾尺寸轴不是交互状态，且不自动公开为 Styling Hook。
+- **层级边界**：Theme Preset 是配置合同，不是第五层 Token。Profile 输出之所以不直接改为 Primitive，是因为它们的物理引用会随密度预设切换；之所以不改为 Component Hook，是因为它们是跨组件运行时角色，不存在单组件独立换肤缺口。
+- **兼容与证据**：`build-fds-semantic` 继续生成 41 个旧 profile 别名，因此组件 API、默认尺寸和视觉不变。迁移完成后 Semantic 总数为 141、兼容别名为 157；runtime 旧前缀从 37 个文件/365 处降到 6 个文件/41 处，未映射 fixed reference 归零，剩余 1 处 Avatar 动态名称单独评审。
+- **放弃**：①让组件直接选择固定 Primitive；②为每个控件生成同义 Component Hook；③继续让 Preset 向 `--fx-*` 写物理值；④把 Theme Preset 误画为新的 Token 层。
+- **相关文件**：`tokens/source/semantic.tokens.json`、`docs/data/{theme-presets,token-naming,fds-semantic,fds-migration-audit}.manifest.json`、`src/lib/theme-runtime.ts`、`theme/fx-theme.css`、`scripts/{build-fds-semantic,check-token-naming,check-theme-presets}.mjs`、`docs/{TOKEN_NAMING,TOKENS}.md`
+
+### DEC-086: Avatar 分类色使用组件内部静态 Map 查表
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：`AvatarFallback colorful` 保留按内容 hash 选择 brand/green/amber/red/blue/purple 六个色系的行为，但由动态 `--fx-${tone}-08` 改为组件内部 `AVATAR_TONE_BACKGROUNDS` 静态查表。六个背景精确引用 FDS Map 的 `base-80`，反白前景引用 Global Semantic `--fds-g-color-text-inverse`。
+- **分层判断**：六色只用于稳定分散身份，不表达跨组件的 success/warning 等意图，也没有单独主题化 Avatar 色盘的需求；因此不创建 Global Semantic，不准入 `--fds-c-avatar-*` 公开 Hook。Foundation Map 的引用只存在于受治理的组件实现内，不授权页面和产品代码直接消费 Map。
+- **兼容与证据**：`base-80` 与旧 `08` 是同一生成色阶，hash 顺序、组件 API 和计算颜色均不变；命名检查固定校验六项静态映射、inverse 前景及禁止动态 Token 名称。
+- **放弃**：① 为六个色系创建公开 Component Hook；② 创建跨组件 categorical Semantic 但没有复用证据；③ 继续动态拼接旧前缀；④ 在源码写死六个色值。
+- **相关文件**：`src/components/ui/avatar.tsx`、`docs/components/avatar.md`、`docs/data/{components,token-naming,fds-migration-audit}.manifest.json`、`scripts/check-token-naming.mjs`
+
+### DEC-087: 运行时源码完成 FDS 主名称迁移
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：将剩余 39 处有权威 replacement 的 runtime source 引用迁到 FDS 主名称。Table 固定列阴影使用已有 Global Semantic `color.shadow.default`；文档侧栏、DropdownMenu 分组标签和 ComponentPlayground 的低强调用途新增两个 `internal` Semantic：`color.text.subtle` 与 `color.surface.subtle`；Tag 分类色与 Avatar 相同，组件内部静态引用 FDS Map，不开放 Component Hook。
+- **分层边界**：页面和跨组件用途不得为清零审计而直接改用 Foundation Map；找不到等值语义时先建立受评审的 internal Semantic。Tag 的 `color` 是受控分类 API，Map 查表只存在于组件实现，调用方不能直接选色阶或局部覆写。两个 internal Semantic 保持既有值，不进入对外发布面。
+- **兼容与证据**：Semantic 从 141 增至 143，兼容 alias 仍为 157；runtime source 从 5 个文件/39 处降为 0。React API、Tag 分类色、Table 固定列阴影与文档站浅色/深色计算值保持不变；旧 `--fx-*` alias 仍按 v1.3.0 至 v2.0.0 的窗口存在于生成兼容层。
+- **放弃**：① 页面直接引用 FDS Map；② 为 Tag 32 个色阶映射创建公开 Hook；③ 把 `neutrals-02/10` 机械改成含义不符或数值不同的现有 Semantic；④ runtime 清零后立即删除兼容 alias。
+- **相关文件**：`tokens/source/semantic.tokens.json`、`src/{app/docs-sidebar,components/fx/component-playground,components/ui/{dropdown-menu,table,tag}}.tsx`、`docs/data/{components,fds-migration-audit}.manifest.json`、`docs/components/{component-playground,dropdown-menu,table,tag}.md`
+
+### DEC-088: FDS 进入 fds-primary，兼容别名继续受版本门保护
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：在迁移审计证明 runtime source 与公开装配入口旧前缀归零、replacement 完整且发布物包含全部 FDS 合同后，将命名合同阶段从 `dual-write` 切换到 `fds-primary`。阶段值只由 `token-naming.manifest.json` 声明，Foundation、设计数据、跨框架核心、迁移审计与 release 均从该来源派生。
+- **主名称边界**：`theme/fx-theme.css`、React runtime、`design-tokens.json`、Agent contract 与 portable core 使用 `--fds-g-*` / `--fds-c-*` 主名称；`--fx-*` 只允许存在于生成兼容 CSS、发布兼容层、Token source 的 `legacyName/aliases` 和迁移 replacement catalog。公开装配不得绕回兼容别名。
+- **兼容策略**：切换主名称不等于删除旧接口。v1.3.0 引入的 legacy alias 至少保留到 v2.0.0；`legacy-removal` 还必须同时满足合同显式切换、运行时/生成物/发布物旧前缀全部归零。达到版本号但仍有消费者时不得删除。
+- **证据**：`fds-primary` 当前阶段门全部通过，runtime source 与公开装配均为 0 个 legacy reference，13/13 Component Hook 已发布；下一阶段因版本仍为 v1.3.0 且兼容 alias 尚在而保持 not-ready。主题浏览器审计继续覆盖 14 个输入、light/dark 两种模式。
+- **放弃**：①只改 phase 字符串而保留生成器写死阶段；②进入主名称阶段就删除旧 alias；③让派生数据继续以旧名作为主字段；④用发布版本代替真实消费者审计。
+- **相关文件**：`docs/data/{token-naming,fds-migration-audit}.manifest.json`、`docs/data/design-tokens.json`、`theme/fx-theme.css`、`scripts/{build-fds-foundation,build-design-tokens,build-fds-migration-audit,check-token-naming}.mjs`、`docs/{TOKEN_NAMING,TOKENS,ARCHITECTURE,FRAMEWORK_ADAPTERS}.md`
+
+### DEC-089: 公共 Styling Hooks 由 Theme 与 Framework Core 同源发布
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：从 `fds-semantic.manifest.json` 的 `public-global` 和 `fds-components.manifest.json` 的 `public-component` 生成唯一公共 Hook 投影；同一生成规则分别写入 Theme contract 与 framework core，release 构建要求两份结构逐字段一致。公共合同版本升为 `1.0.0-draft.4`。
+- **公开边界**：公共投影只包含名称、类型、层级、稳定性、owner、组件归属和文档指针；默认值由统一 CSS 提供。Primitive、Map、internal Semantic、兼容 alias 和组件局部变量即使存在于发布 CSS，也不构成公开 API。框架适配器不得从内部合同自行扩大覆盖面。
+- **稳定性**：主题算法、light/dark 模式与 CSS 产物可以保持 stable，同时 Styling Hooks 合同继续为 experimental。只有所有公开 Hook 完成评审且没有 experimental 项时，Hook 合同才能升 stable；Component Hook 仍逐个走语义缺口和证据准入。
+- **证据**：当前公共投影为 97 个 Global + 13 个 Component，共 110 项；Theme contract、portable core 和 release manifest 绑定同一版本与计数。构建漂移会由 `check:theme-artifacts`、`check:framework-core` 或 `check:theme-release` 阻断。
+- **参考适配**：React 的 Button、Input、Table 映射显式绑定全部 13 个 Component Hook，构建检查组件归属、重复/未知名称和源码真实消费；release 公开绑定计数而不泄漏框架源码路径。planned 适配器不得提前声明绑定。
+- **放弃**：①把内部四层全量合同直接声明为公开；②由 React/Vue 适配器各自筛选 Hook；③因为主题产物 stable 就批量把 Hook 改为 stable；④复制第二份手填公共清单。
+- **相关文件**：`docs/data/token-naming.manifest.json`、`scripts/lib/fds-public-hooks.mjs`、`scripts/{build-theme-artifacts,build-framework-core,build-theme-release}.mjs`、`registry/fx-theme.{contract,release}.json`、`docs/data/framework-core.manifest.json`
+
+### DEC-090: 首批 Component Hooks 通过稳定门并以 v1.4.0 发布
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：Button、Input、Table 的 13 个 Component Hook 从 experimental 晋级 stable，Component contract 从 draft 升为 `1.0.0`，公共命名合同升为 `1.0.0-draft.5`，主题发布升为 `v1.4.0`。97 个 Global Hook 尚未逐项完成同等评审，继续保持 experimental，因此公共合同整体仍是 experimental。
+- **稳定门**：stable Component Hook 除原有 owner、独立换肤需求、语义缺口、跨场景复用、文档、合同测试和视觉测试外，还必须证明文档锚点、检查脚本、视觉用例真实存在，至少有一个 ready 参考适配器显式绑定，并由对应组件源码实际消费。任何证据漂移都会阻断命名或框架核心检查。
+- **版本策略**：晋级 stable 会增强公开兼容承诺，按 Minor 发布；不得改写已经发布的 v1.3.0 含义。未来删除、改名或改变 stable Hook 含义仍必须走 Major，新增 Hook 先以 experimental 进入。
+- **兼容与视觉**：默认引用和生成 CSS 值没有变化，React 组件源码只增加机器合同侧的绑定声明，没有新增 prop、variant 或 DOM 结构；Vue 2 保持 planned 和零绑定。light/dark 主题审计继续作为 release 门。
+- **放弃**：①把 110 个 Hook 一次性全部标 stable；②仅凭源码出现变量名就晋级；③不升版本覆盖 v1.3.0 release；④让 planned 适配器充当稳定证据。
+- **相关文件**：`tokens/source/component.tokens.json`、`docs/data/{token-naming,framework-adapters}.manifest.json`、`scripts/{check-token-naming,build-framework-core}.mjs`、`registry/fx-theme.release.json`、`docs/components/{button,input,table}.md`
+
+### DEC-091: Global Hook 只按 FDS 直接审计覆盖分组晋级
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：Theme Preset 的对比度与交互态质量门不再通过 `--fx-*` 或 shadcn alias 间接验证，全部改为直接引用 public-global `--fds-g-*`。首批被质量门覆盖的 34 个表面/文字、核心操作、状态和导航 Hook 晋级 stable，Semantic contract 升为 `1.0.0-draft.2`，公共命名合同升为 `1.0.0-draft.6`，主题以 `v1.5.0` 发布。
+- **Global 稳定门**：stable Global Hook 必须具有 public-global visibility、Semantic owner、生成 runtime、FDS 主名称质量门覆盖、ready Theme audit 和公开合同记录。质量门覆盖 7 个受治理主题与 7 个极端自定义 Seed的 light/dark 对比度和状态差异；检查禁止重新使用兼容别名作为审计输入。
+- **分组边界**：本轮只稳定直接进入对比度 pair 或交互 state group 的 34 项。未被当前审计证明的 disabled、border/ring、shadow、data categorical 以及其他表面/文字/导航用途继续 experimental；存在相同默认值或已有消费者不构成稳定证据。
+- **兼容与版本**：从 alias 审计切到 FDS Hook 审计不改变解析值，浏览器审计结果仍为 14 类输入 × 2 模式、零失败。稳定晋级增强兼容承诺，采用 Minor 发布；React API、组件源码和视觉不变。
+- **放弃**：①因为别名审计通过就宣称 FDS Hook 已被直接验证；②一次性稳定全部 97 个 Global Hook；③只按名称族推断未覆盖状态；④降低对比度或状态差异阈值换取通过。
+- **相关文件**：`tokens/source/semantic.tokens.json`、`docs/data/{theme-presets,token-naming,theme-audit}.manifest.json`、`scripts/{check-theme-presets,check-token-naming}.mjs`、`registry/fx-theme.release.json`
+
+### DEC-092: FDS 命名模板必须成为可执行字段合同
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：保留面向网页和文档的简洁 grammar 模板，同时在 `token-naming.manifest.json#grammar.definitions` 为 Primitive Seed、Primitive Scale、Color Map、Map Anchor、Semantic Intent、Semantic Profile、Component Visual 与 Component Structural 八类子语法登记 layer、namespace、字段顺序、必填/可选、权威来源和末位字段。每个真实 Token 必须且只能命中一种子语法。
+- **Map 边界**：连续 Map 使用 `family -> scale -> range`，scale 仅允许 `base` / `solid`；没有连续 range 的算法锚点必须以完整名称进入受控词典，当前只有 `brand-vivid` 与 `neutral-anchor-dark`。Map 不得混入交互 state 或组件意图。
+- **机器门**：命名检查会验证模板占位符与字段合同逐项一致、词典路径有效、复合 category 采用最长匹配、state 位于末尾、Component canonical ID 存在，并让全部 396 个 Foundation、143 个 Semantic 和 13 个 Component Token 通过真实语法分类。错误示例也必须被对应层语法拒绝。
+- **兼容与发布**：命名合同升为 `1.0.0-draft.7`，公开 Hook 名称、数量、stability、默认值和主题发布版本不变；React API、组件源码与视觉不变。Theme contract 和 framework core 继续从同一命名合同生成。
+- **放弃**：①只在 Markdown 写模板；②用一条万能长公式覆盖四层；③让检查器只看前缀与 kebab-case；④为适配现有特殊 Map 名称保留未登记例外。
+- **相关文件**：`docs/data/token-naming.manifest.json`、`scripts/check-token-naming.mjs`、`docs/{TOKEN_NAMING,DECISIONS,CHANGELOG}.md`、`PROJECT.md`
+
+### DEC-093: Global stable 只接受 Theme audit 的实际合格清单
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：Theme audit 从每个真实浏览器样本派生 `coverage.stableEligibleHooks`；Global Hook stable 门只认可这份实际通过清单，不再把“名称出现在 qualityGates 配置中且总体 audit ready”视为充分证据。候选门可以记录失败而不破坏已有 stable Hook 的发布，但候选 Hook 在全部样本通过前不得晋级。
+- **首组候选**：为 `border-strong` 对 page、`border-interactive` 对 control、`ring-focus` 对 page 建立合成透明度后的 WCAG 非文字 3:1 审计，覆盖 7 个受治理主题、7 个极端自定义 Seed、light/dark 共 28 个样本。通过率分别为 `0/28`、`0/28`、`5/28`，最差对比度为 `2.23`、`1.75`、`1.02`，三项继续 experimental。
+- **边界**：候选前景允许带 alpha，但审计必须先与相邻背景合成再计算对比度；背景仍必须解析为不透明颜色。chrome/faint/container/subtle/default 属于装饰与层级分隔角色，不用错误的 3:1 门槛强行稳定，后续需要独立的顺序与可辨识证据。
+- **兼容与视觉**：本轮没有修改 Semantic 值、组件样式、React API 或视觉基线，主题发布仍为 `v1.5.0`，公共合同仍为 `1.0.0-draft.7 / experimental`。新增证据只收紧晋级条件。
+- **放弃**：①降低 3:1 阈值；②把总体 audit ready 等同于每个 Hook 合格；③忽略 alpha 直接比较未合成色；④为了凑 stable 数量立即加深全局边框或改组件 focus 样式。
+- **相关文件**：`docs/data/{theme-presets,theme-audit}.manifest.json`、`scripts/{build-theme-audit,check-theme-presets,check-token-naming}.mjs`、`docs/TOKEN_NAMING.md`、`PROJECT.md`
+
+### DEC-094: 文字与图标按用途强制审计，链接按完整状态组评审
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：正常文字使用 4.5:1 强制门，有意义的非文字图标使用合成后 3:1 强制门；多状态文字交互必须在同一候选组中同时验证每个状态的文字对比度与相邻状态 ΔE，不能拆开稳定单个通过值。
+- **晋级结果**：`text-secondary` 最低 7.74:1，`icon-muted` 最低 4.12:1，`icon-inverse` 最低 4.64:1，均覆盖 7 个受治理主题、7 个极端自定义 Seed、light/dark 共 28 个样本，晋级 stable。Semantic contract 升为 `1.0.0-draft.3`，公共命名合同升为 `1.0.0-draft.8`，主题以 `v1.6.0` 发布。
+- **保留 experimental**：`icon-primary` 暗色最低 1.05:1，只通过 14/28；链接状态组只通过 14/28，浅色 default/hover 最低为 4.04/3.28，虽然 active 和状态 ΔE 合格，仍不得拆分晋级。disabled 颜色不使用普通文字阈值直接判定，后续必须联合状态可辨识与真实不可交互证据。
+- **兼容与视觉**：只改变 stability 与发布元数据，不改变任何 Token 值、dark 公式、组件源码、React API 或视觉基线。Theme 与 Framework 公共投影仍逐字段一致。
+- **相关文件**：`tokens/source/semantic.tokens.json`、`docs/data/{theme-presets,theme-audit,token-naming}.manifest.json`、`scripts/{build-theme-audit,check-theme-presets,check-token-naming}.mjs`、`registry/fx-theme.release.json`
+
+### DEC-095: Disabled Hook 必须使用视觉、行为与消费联合证据
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：disabled 不套用普通文字 4.5:1，也不因 CSS 名称带 `disabled` 就自动稳定。候选必须同时通过 enabled 与 disabled 的 OKLab `0.03` 差异、disabled 对相邻背景 `1.5:1` 的组织级可见度、真实组件 `disabled` / `aria-disabled` 行为断言，以及真实 runtime 消费证据。行为断言必须绑定现有 Playwright 测试标题和测试块内的具体断言，不能只写文件路径。
+- **晋级结果**：`text-disabled`、`action-destructive-disabled`、`status-info-disabled` 在 7 个预设、7 个极端自定义 Seed、light/dark 共 28 个样本中全部通过，并具有 Button/Input/Select/Tabs 的原生或语义禁用证据与真实消费链，晋级 stable。Semantic contract 升为 `1.0.0-draft.4`，公共命名合同升为 `1.0.0-draft.9`，主题以 `v1.7.0` 发布。
+- **保留 experimental**：`surface-control-disabled` 为 `0/28`，最低相邻对比度 `1.03`、最低 ΔE `0.018`；`action-primary-disabled` 为 `23/28`，最低相邻对比度 `1.46`；`link-disabled` 虽通过视觉和行为证据，但真实 Link 仍使用 opacity，缺少该 Hook 的 runtime 消费；success/warning disabled 只通过 `14/28` 且没有行为和消费证据。
+- **兼容与视觉**：本轮只改变三项 stability 与发布元数据，不改变 Token 值、组件源码、React API 或视觉基线。候选失败不破坏已发布主题，但禁止对应 Hook 晋级。
+- **放弃**：①把 disabled 按普通文字对比度一刀切；②只凭视觉或只凭 `disabled` 属性晋级；③把文件路径当作行为证据而不核对测试块断言；④为通过候选门降低阈值或修改现有颜色。
+- **相关文件**：`tokens/source/semantic.tokens.json`、`docs/data/{theme-presets,theme-audit,token-naming}.manifest.json`、`scripts/{build-theme-audit,check-theme-presets,check-token-naming}.mjs`、`registry/fx-theme.release.json`
+
+### DEC-096: Shadow Hook 按完整 elevation 系统与真实使用证据晋级
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：阴影不套用文字或边框对比度门，而以完整 elevation 系统审计。Theme audit 在 7 个预设、7 个极端自定义 Seed、light/dark 与 `none/low/medium/high` 四档组合下生成 112 个 profile 样本，验证 shadow color alpha 严格按 default > soft > faint、low < medium < high，L1 < L2 < L3 几何范围递增，L1-up 与 L1 几何镜像，并要求每个 elevation Hook 绑定真实 runtime 消费和已提交视觉基线。
+- **晋级结果**：`color-shadow-default/soft/faint` 与 `shadow-elevation-1/2/3` 通过全部 profile、Popover/Sheet/Dialog 消费和 WebsiteCard/Sheet/Dialog 视觉证据，晋级 stable。Semantic contract 升为 `1.0.0-draft.5`，公共命名合同升为 `1.0.0-draft.10`，主题以 `v1.8.0` 发布。
+- **保留 experimental**：`shadow-elevation-1-up` 的两层负 y 几何与 L1 镜像均通过，但仓库只有文档展示，没有真实向上浮层消费者或视觉基线，因此不得因结构正确而提前稳定。
+- **兼容与视觉**：本轮只改变六项 stability 与发布元数据，不改变 shadow 数值、主题 profile 值、组件源码、React API 或视觉基线。Tailwind `shadow-l1/l2/l3/l1-up` 继续作为 FDS Semantic Hook 的调用层映射。
+- **放弃**：①只检查 CSS 能解析就批量稳定；②只凭文档示例把 L1-up 当真实消费者；③用单张截图证明全部层级；④为了让 L1-up 晋级而临时给组件添加不需要的阴影。
+- **相关文件**：`tokens/source/semantic.tokens.json`、`docs/data/{theme-presets,theme-audit,token-naming}.manifest.json`、`scripts/{build-theme-audit,check-theme-presets,check-token-naming}.mjs`、`registry/fx-theme.release.json`
+
+### DEC-097: Foundation 以设计分类浏览、以 Token 层级筛选
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：不新增一套与现有颜色、排版、圆角、阴影、间距、层级和动效页面重复的 Foundation 浏览器。设计分类继续作为协作者的主浏览路径；`Seed / Primitive / Map` 作为概览中的筛选与治理维度，并提供搜索、只读详情、真相源和 Semantic 反向引用。
+- **数据边界**：页面不得手填第二份 Token 清单或引用关系。Foundation Token 来自 `fds-foundation.manifest.json`，Semantic 引用从 `fds-semantic.manifest.json` 的真实 CSS 依赖直接或递归派生；Seed 只是 Primitive 的独立查看视图，不新增第五层真相源。
+- **权限边界**：可视化与可查询不等于可编辑。Primitive/Seed 仍仅由 Foundation 维护者修改，Map 仍只允许生成器产出。后续 Seed 试算只能产生临时预览，写回和发布必须继续经过评审、构建与主题审计。
+- **放弃**：①按 Seed/Primitive/Map 重建一套重复导航；②让设计负责人直接阅读 JSON；③为了展示引用关系手填静态映射；④在详情面板开放 Foundation 写入。
+- **相关文件**：`src/pages/docs/tokens/{tokens-page,tokens-page-adapter}.tsx`、`docs/data/fds-{foundation,semantic}.manifest.json`、`PROJECT.md`
+
+### DEC-098: Map 基准档统一由 Seed 生成
+
+- **日期**：2026-08-27
+- **状态**：已决定
+- **决定**：彩色色阶的 90 档统一直接引用对应 Seed，不再为 `red.base.90` 保留单点人工覆盖。Map 继续由固定算法生成，Foundation 维护者只治理 Seed、算法和经过明确评审的结构性例外，不把逐档视觉微调当作常规能力。
+- **调整边界**：整条色相需要变化时调整 Seed；特定使用意图需要不同颜色时在 Semantic 层选择合适档位；实心危险操作继续使用独立 solid 色阶。不得为了单个组件或页面直接修改 Map 某一档。
+- **版本影响**：`--fds-g-color-red-base-90` 从 `#F04446` 回归 `color.seed.red` 的 `#EF4444`，主题以补丁版本 `v1.8.1` 发布；Token 名称、层级和组件 API 不变。
+- **取代范围**：本决策取代 DEC-080 中允许当前 Map 保留少量逐档显式 exception 的实现结论；生成器仍保留空的受治理扩展槽，但当前合同没有任何 Map 例外值。
+- **放弃**：①继续保留红色 90 档硬编码；②将硬编码转移到生成 CSS；③为保持旧视觉修改组件调用处；④把实心危险色与基础红色 90 档混为同一用途。
+- **相关文件**：`tokens/source/map.tokens.json`、`docs/data/theme-presets.manifest.json`、`docs/TOKENS.md`、`registry/fx-theme.release.json`
+
+### DEC-099: 圆角作为首个非颜色 Seed/Map 样板
+
+- **日期**：2026-08-28
+- **状态**：已决定
+- **决定**：将 `8px` 建模为内部 `radius.seed.base` Primitive，由生成器按 `0 / 1/4 / 1/2 / 3/4 / 1 / 3/2 / 2` 的受控比例生成 `0/2/4/6/8/12/16px` 七档 Dimension Map。8px 与常规控件/表面及 shadcn `--radius` 基准一致；`full = 9999px` 无法由基准值有意义地计算，继续作为固定 Primitive。
+- **兼容边界**：保留全部既有 `--fds-g-radius-*` 与 `--fx-radius-*` 名称、最终 px 值、Semantic/shadcn 映射和组件 API。计算只发生在构建期，浏览器运行时不做乘除；portable contract 额外记录 Seed、公式和比例，便于框架与 Agent 追溯。
+- **治理边界**：这是验证非颜色 Seed/Map 建模和生成链的首个样板，不代表所有 Primitive 都要机械 Seed 化。后续先评估间距的网格关系与例外档，确认关系稳定且不改变现值后再决定是否迁移。
+- **版本影响**：Foundation contract 升为 `1.0.0-draft.2`，命名合同升为 `1.0.0-draft.11`，主题合同以 `v1.9.0` 发布；Foundation 总数由 396 增为 397，结构变为 149 Primitive + 248 Map。
+- **放弃**：①继续手工维护七个圆角 Primitive；②把 `full` 硬套进比例算法；③在 CSS 或浏览器运行时动态计算；④为迁移改动组件外观或调用 API；⑤一次性把所有物理刻度算法化。
+- **相关文件**：`tokens/source/{primitive,map}.tokens.json`、`scripts/{build-fds-foundation,check-foundation-tokens,check-token-naming}.mjs`、`docs/{TOKEN_NAMING,TOKENS}.md`、`docs/data/fds-foundation.manifest.json`
+
+### DEC-100: 间距只保留真实消费的主网格与偶数补档
+
+- **日期**：2026-08-28
+- **状态**：已决定
+- **决定**：移除没有通用 spacing 消费者的 `1/3/5/7/9/11px` Primitive。间距继续以 4px 主网格为骨架，只保留已有 Semantic 和密度场景消费的 `2/6/10px` 偶数补档；1px 归边框宽度体系，组件内部的光学修正不自动升级为全局间距档。
+- **密度映射**：compact 的横向内距从 `7/9/11px` 收敛为 `6/8/10px`，gap 从 `3/5px` 收敛为 `2/4px`；spacious 的 tight gap 从 `5px` 收敛为 `6px`。standard 不变，compact < standard < spacious 的顺序保持成立。
+- **建模结论**：spacing 当前不复制圆角的 Seed/Map 模式。它包含主网格与少量受治理补档，直接 Primitive 更清楚；等未来出现需要统一缩放的跨框架真实需求后，再评估生成式 Map，不能为了层级形式强行算法化。
+- **版本影响**：Foundation contract 升为 `1.0.0-draft.3`，由 149 Primitive + 248 Map / 397 项收敛为 143 Primitive + 248 Map / 391 项；Theme Preset 以补丁版本 `v1.9.1` 发布。删除项均为 internal experimental，不改变公开 Styling Hook 名称或组件 API。
+- **组件边界**：Tabs 当前的 `p-[3px]` 是既有 shadcn 组件内部实现，不是 Foundation Token 消费；本次不借 Token 清理修改组件源码、外观或视觉基线，后续只能在明确调试 Tabs 时单独评审。
+- **放弃**：①为“看起来完整”保留无人使用的奇数档；②把 1px 描边混进 spacing；③删除 Token 后留下密度 Preset 悬空引用；④为了消灭 3px 同时越权修改 Tabs。
+- **相关文件**：`tokens/source/primitive.tokens.json`、`docs/data/theme-presets.manifest.json`、`src/pages/docs/tokens/tokens-spacing-page.tsx`、`docs/foundations/spacing.md`、`scripts/check-token-naming.mjs`
+
+### DEC-101: 固定色相建立独立 Dark Map，动态 Brand 保持主题派生
+
+- **日期**：2026-08-28
+- **状态**：已决定
+- **决定**：为 16 个固定有色色相生成 `dark` 12 阶 Map；10–80 从 OKLCH `L=0.18` 暗色锚点渐进到 Seed，90 等于 Seed，100–120 向高亮展开。`base`、`dark`、`solid` 成为 Map 受控 scale，Dark Map 只发布 FDS 名称，不制造新的 legacy 别名。
+- **语义边界**：固定功能色的暗色软底使用 Dark 20/30/40，链接使用 Dark 110/120/100；中性表面、文字和白色 alpha 边框保留专用 Semantic 公式。动态 Brand 不建立固定 Dark Map，因为纯黑或纯白合法输入无法同时满足“90 等于 Seed”和“12 阶严格递增”；它继续由 Theme v3 公式和全部极端 Seed 样本审计。
+- **质量门**：真实 Chromium 必须验证 16 个 Dark Map 均可解析、90 与 Seed 一致、明度严格递增且相邻 OKLab ΔE 至少 `0.025`。当前 16/16 通过，最小相邻 ΔE 为 `0.030`。
+- **版本影响**：Foundation contract 升为 `1.0.0-draft.4`，由 143 Primitive + 248 Map / 391 项扩为 143 Primitive + 440 Map / 583 项；Semantic contract 升为 `1.0.0-draft.6`，命名合同升为 `1.0.0-draft.12`，Theme 算法升为 v3 并以 `v1.10.0` 发布。Base 色值、公共 Hook 名称和组件 API 不变。
+- **放弃**：①只把色板画布换暗而继续展示 Base；②机械反转 Base 阶序；③给 Dark Map 新造 `--fx-*` 别名；④把暗色表面、文字和边框强行塞进彩色 Map；⑤对极端动态 Brand 伪称固定色板单调。
+- **相关文件**：`tokens/source/{map,semantic}.tokens.json`、`scripts/{build-fds-foundation,build-theme-audit,check-token-naming}.mjs`、`docs/data/{token-naming,theme-presets,theme-audit}.manifest.json`、`src/pages/docs/tokens/{color-palette-with-tabs,color-seed-preview}.tsx`
+
+### DEC-102: 同一仓库提供完整站与 Foundation 白名单构建
+
+- **日期**：2026-08-28
+- **状态**：已决定
+- **决定**：不复制项目或另建一套 Foundation 文档。完整维护站继续使用默认页面注册表、导航和 Markdown；Foundation 分享站在 Vite 构建期替换为 `docs/data/publication-profiles.manifest.json` 声明的白名单投影，独立输出 `dist-foundation/`。
+- **发布边界**：Foundation 站只发布 Token 概览、颜色、排版、图标、圆角、阴影、间距、层级、动效、栅格、布局及其同源 Markdown。图标基础页只读取 Foundation manifest 中的尺寸与线宽，不携带完整站的 Icon 组件 Playground。组件文档、Component Hook 准入名单、Playground、搭建器、页面模板、报告和治理数据不得进入其导航、路由、搜索数据或构建产物；非白名单 hash 回到 Token 概览，source map 关闭。
+- **治理边界**：白名单是结构事实 SSOT，`src/publications/foundation/` 只是构建投影。构建后必须扫描禁止内容并运行独立浏览器/视觉测试；给协作者的是静态站点，不是完整仓库权限。部署平台和域名在公司环境确定前保持待定。
+- **放弃**：①只隐藏组件导航；②复制 Token 和 Markdown 到独立项目；③发布完整 `dist/` 后依赖口头约定不访问组件；④把 Vue 2 适配与只读文档发布捆绑实施。
+- **相关文件**：`docs/data/publication-profiles.manifest.json`、`src/publications/foundation/`、`vite.config.ts`、`scripts/check-publication-profiles.mjs`、`playwright.foundation.config.ts`
+
+### DEC-103: 品牌识别色与实心操作色分开消费
+
+- **日期**：2026-08-28
+- **状态**：已决定
+- **决定**：新增内部 Semantic `--fds-g-color-brand-identity`，浅色模式映射动态 Brand Base 90，暗色模式映射动态 Brand Base 80。Logo、品牌文字、顶栏与侧栏当前项消费品牌识别色；固定白字的主按钮继续消费经过对比度审计的 `action-primary` Solid 阶。
+- **展示约束**：颜色文档的“值”与“示例”必须消费同一个 Semantic Token。Seed 试算器是临时预览，可接受 CSS 支持的 3/4/6/8 位 Hex；Theme Provider 的持久化自定义主题合同仍只接收规范化 6 位 Hex。
+- **边界**：不修改 Foundation Seed、Base/Dark/Solid Map、实心操作对比度、组件源码或组件 API；品牌识别色当前仅供系统内部消费，不作为公开 Styling Hook。
+- **放弃**：①继续用深色 `primary` 表示 Logo 与导航品牌高亮；②让白字按钮直接使用鲜亮 Seed；③在页面里直接引用 Foundation Base 90；④颜色表来源写 Base、示例却渲染 Semantic。
+- **相关文件**：`tokens/source/semantic.tokens.json`、`src/app/{site-navigation,docs-sidebar}.tsx`、`src/pages/docs/tokens/{color-seed-preview,tokens-colors-page}.tsx`、`docs/foundations/colors.md`
+
+### DEC-104: 实心交互只使用 Base 90/80/100/50
+
+- **日期**：2026-08-28
+- **状态**：已决定
+- **决定**：主色、危险、成功、警告和信息实心交互统一映射同一 Base Map：Default 90、Hover 80、Active 100、Disabled 50。删除独立 `solid-50/60/70` Map，禁止 Semantic 绕过既有 Map 再派生一套组件背景色。
+- **对比度边界**：背景色阶和前景色可读性分开治理。新增 stable `--fds-g-color-text-on-vivid` 承担鲜明实心表面的前景色；不得为了固定白字而暗改 90/80/100 的背景值。原 `text/icon-inverse` 的旧证据依赖已删除 Solid 背景，暂降为 experimental，等待真实深色表面重新取证。
+- **取代范围**：本决策取代 DEC-078、DEC-098、DEC-101 与 DEC-103 中关于独立 Solid Map、固定白字实心操作阶以及品牌按钮必须与 Base 90 分离的结论；这些决策的其他边界继续有效。
+- **版本影响**：Foundation Map 删除 15 个 internal experimental Solid Token，Theme 算法升为 v4、合同升为 `v1.11.0`；公开 action Hook 与 Button API 不变，但其视觉值恢复为既定 Base 阶梯。
+- **放弃**：①保留两套颜色阶梯并靠文档解释；②仅修网页示例而不改 Semantic 真相源；③把 Base 90 改暗以迁就白字；④在组件调用处覆盖按钮颜色。
+- **相关文件**：`tokens/source/{map,semantic,component}.tokens.json`、`docs/data/{theme-presets,token-naming}.manifest.json`、`scripts/{build-fds-foundation,check-theme-presets}.mjs`、`docs/{TOKENS,TOKEN_NAMING}.md`
+
+### DEC-105: 实心角色前景按完整状态组选择
+
+- **日期**：2026-08-28
+- **状态**：已决定
+- **决定**：Primary、Destructive、Success、Warning、Info 分别发布角色化 Semantic 前景 Hook。每组同时审计 Default/Hover/Active：优先使用白色，只有三态对白色都达到 FDS `2.0:1` 保护线时才整组使用白色；任一状态不足则整组回退近黑色，禁止 hover/active 单独切换字色。
+- **质量边界**：`2.0:1` 是 FDS 对彩色实心表面的视觉保护线，不是 WCAG 正常文字合格线。正文 `4.5:1`、有意义非文字 `3:1` 与 disabled 联合证据继续独立执行，不得用本决策降低。Theme audit 必须在 7 个预设、7 个自定义 Seed、light/dark 共 28 个样本中解析真实浏览器颜色并验证五组三态。
+- **架构边界**：框架适配器仍只写品牌 Seed；五个前景属于 `resolverWrites`，由共享派生器生成。组件、页面和文档示例只消费 Semantic 输出，不得直接选择白/黑或 Foundation 色阶。`--fds-g-color-text-on-vivid` 只保留为 internal deprecated 迁移别名。
+- **参考与取舍**：Ant 的彩色实心按钮固定使用白字，并用 6/5/7 色阶表达默认、悬浮和按下；FDS 保留相同的“整组前景稳定”体验，同时增加 `2.0:1` 最低保护线，以覆盖任意主题 Seed。放弃逐状态自动切字色、把背景色阶压暗迁就白字、以及让组件自行计算对比度。
+- **版本影响**：Semantic contract 升为 `1.0.0-draft.8`，命名合同升为 `1.0.0-draft.14`，Theme contract 升为 `1.12.0`，算法升为 v5。新增五个公开 Hook，不新增组件 API。
+- **取代范围**：取代 DEC-104 中由单个 `text-on-vivid` stable Semantic 承担全部鲜明表面前景的结论；DEC-104 的 Base 90/80/100/50 背景阶梯继续有效。
+- **相关文件**：`tokens/source/{semantic,component}.tokens.json`、`docs/data/{theme-presets,theme-audit,token-naming}.manifest.json`、`src/lib/{theme-derivation,theme-runtime}.ts`、`scripts/{build-theme-audit,check-theme-presets}.mjs`
+
+### DEC-108: Brand Base 与固定色相共用唯一 Map 公式
+
+- **日期**：2026-08-28
+- **状态**：已决定
+- **决定**：动态 Brand Base 不再维护品牌专属 `steps`，改由 `brand.base.stepsSource = palette.steps` 显式复用通用 Base 公式，并直接从 `color.seed.brand` 生成。相同 Seed 必须得到逐阶相同的 Brand Base 与固定色相 Base；`brand-vivid` 继续作为中性轴、暗色表面等算法的归一化锚点，但不再作为 Brand Base 输入。
+- **治理边界**：过浅、过暗或低色度 Seed 的可用性由 Theme audit、Semantic 前景解析与后续独立 Seed 质量门治理，不得通过第二套隐藏色阶公式改写 Brand Seed。生成器必须校验 `stepsSource`，页面预览只展示同一 Foundation 结果。
+- **取代范围**：取代 DEC-077/DEC-078 中“Brand Base 通过 vivid 或固定明度专属阶生成”的部分；适配器只注入 Brand Seed、`brand-vivid` 的其他消费者、Semantic 状态映射及发布审计边界保持不变。
+- **相关文件**：`tokens/source/map.tokens.json`、`scripts/build-fds-foundation.mjs`、`docs/foundations/colors.md`、`docs/TOKEN_NAMING.md`
 
 ## 相关文件
 

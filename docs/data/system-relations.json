@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/system-relations",
-  "updatedAt": "2026-06-13",
+  "updatedAt": "2026-08-27",
   "truthSource": "docs/data/system-relations.json",
   "humanDoc": "docs/DOC_SITE_DESIGN.md",
   "note": "工程运行图的机器事实表。页面只负责展示，文件之间的来源、作用方式、作用对象和结果在这里维护。",
@@ -63,11 +63,26 @@
     },
     {
       "group": "组件与主题",
+      "source": "tokens/source/primitive.tokens.json + map.tokens.json",
+      "action": "生成 Foundation",
+      "target": "theme/foundation.css",
+      "result": "无语义 Foundation 只由维护者修改；生成 CSS 同时输出 FDS 真相和 legacy 引用别名。",
+      "emphasis": true
+    },
+    {
+      "group": "组件与主题",
+      "source": "tokens/source/semantic.tokens.json",
+      "action": "生成语义层",
+      "target": "theme/fds-semantic.css + docs/data/fds-semantic.manifest.json",
+      "result": "Global Semantic、dark 覆盖和兼容别名从同一受治理 source 派生。",
+      "emphasis": true
+    },
+    {
+      "group": "组件与主题",
       "source": "theme/fx-theme.css",
       "action": "注入",
       "target": "src/components/ui/* + src/App.tsx",
-      "result": "公司视觉 token 通过 shadcn/Tailwind 语义类被组件和文档站消费；改这里会全局换肤。",
-      "emphasis": true
+      "result": "作为唯一公开入口导入 Foundation 与 Semantic runtime，并通过 shadcn/Tailwind 语义类供组件和文档站消费。"
     },
     {
       "group": "组件与主题",
@@ -116,8 +131,8 @@
       "group": "检查与产物",
       "source": "scripts/check-tokens-sync.sh",
       "action": "比对",
-      "target": "theme/fx-theme.css + docs/TOKENS.md",
-      "result": "检查 token 文档里的色值是否还存在于 CSS 真相源中。"
+      "target": "theme/foundation.css + theme/fds-semantic.css + theme/fx-theme.css + docs/TOKENS.md",
+      "result": "检查 Foundation、Semantic、兼容映射、派生 manifest 与 token 文档是否保持一致。"
     },
     {
       "group": "检查与产物",

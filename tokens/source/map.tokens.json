@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "format": "fds/map-token-contract",
+  "contractVersion": "1.0.0-draft.5",
+  "truthSource": "tokens/source/map.tokens.json",
+  "layer": "map",
+  "authoring": "generated-only",
+  "colorSpace": "oklch",
+  "palette": {
+    "families": [
+      "orange",
+      "deep-orange",
+      "amber",
+      "yellow",
+      "lime",
+      "yellow-green",
+      "green",
+      "teal",
+      "cyan",
+      "light-blue",
+      "blue",
+      "indigo",
+      "purple",
+      "pink",
+      "magenta",
+      "red"
+    ],
+    "steps": [
+      { "legacy": "01", "range": 10, "formula": "oklch(from {seed} calc(l + (1 - l) * 0.90) calc(c * 0.06) h)" },
+      { "legacy": "02", "range": 20, "formula": "oklch(from {seed} calc(l + (1 - l) * 0.84) calc(c * 0.10) h)" },
+      { "legacy": "03", "range": 30, "formula": "oklch(from {seed} calc(l + (1 - l) * 0.72) calc(c * 0.18) h)" },
+      { "legacy": "04", "range": 40, "formula": "oklch(from {seed} calc(l + (1 - l) * 0.58) calc(c * 0.30) h)" },
+      { "legacy": "05", "range": 50, "formula": "oklch(from {seed} calc(l + (1 - l) * 0.43) calc(c * 0.45) h)" },
+      { "legacy": "06", "range": 60, "formula": "oklch(from {seed} calc(l + (1 - l) * 0.28) calc(c * 0.62) h)" },
+      { "legacy": "07", "range": 70, "formula": "oklch(from {seed} calc(l + (1 - l) * 0.14) calc(c * 0.80) h)" },
+      { "legacy": "08", "range": 80, "formula": "oklch(from {seed} calc(l + (1 - l) * 0.12) calc(c * 0.94) h)" },
+      { "legacy": "09", "range": 90, "formula": "{seed}" },
+      { "legacy": "10", "range": 100, "formula": "oklch(from {seed} calc(l * 0.92) calc(c * 0.95) h)" },
+      { "legacy": "11", "range": 110, "formula": "oklch(from {seed} calc(l * 0.72) calc(c * 0.82) h)" },
+      { "legacy": "12", "range": 120, "formula": "oklch(from {seed} calc(l * 0.35) calc(c * 0.65) h)" }
+    ],
+    "exceptions": {
+      "amber.80": "oklch(from {color.seed.amber} calc(l + (1 - l) * 0.07) calc(c * 0.94) h)"
+    }
+  },
+  "darkPalette": {
+    "familiesSource": "palette.families",
+    "anchorLightness": 0.18,
+    "steps": [
+      { "range": 10, "formula": "oklch(from {seed} calc(0.18 + (l - 0.18) * 0.08) calc(c * 0.10) h)" },
+      { "range": 20, "formula": "oklch(from {seed} calc(0.18 + (l - 0.18) * 0.16) calc(c * 0.16) h)" },
+      { "range": 30, "formula": "oklch(from {seed} calc(0.18 + (l - 0.18) * 0.25) calc(c * 0.23) h)" },
+      { "range": 40, "formula": "oklch(from {seed} calc(0.18 + (l - 0.18) * 0.35) calc(c * 0.32) h)" },
+      { "range": 50, "formula": "oklch(from {seed} calc(0.18 + (l - 0.18) * 0.46) calc(c * 0.44) h)" },
+      { "range": 60, "formula": "oklch(from {seed} calc(0.18 + (l - 0.18) * 0.58) calc(c * 0.58) h)" },
+      { "range": 70, "formula": "oklch(from {seed} calc(0.18 + (l - 0.18) * 0.70) calc(c * 0.73) h)" },
+      { "range": 80, "formula": "oklch(from {seed} calc(0.18 + (l - 0.18) * 0.84) calc(c * 0.88) h)" },
+      { "range": 90, "formula": "{seed}" },
+      { "range": 100, "formula": "oklch(from {seed} calc(l + (1 - l) * 0.13) calc(c * 0.92) h)" },
+      { "range": 110, "formula": "oklch(from {seed} calc(l + (1 - l) * 0.27) calc(c * 0.76) h)" },
+      { "range": 120, "formula": "oklch(from {seed} calc(l + (1 - l) * 0.42) calc(c * 0.58) h)" }
+    ]
+  },
+  "brand": {
+    "vivid": "oklch(from {color.seed.brand} clamp(0.66, l, 0.72) max(c, 0.12) h)",
+    "base": {
+      "seed": "color.seed.brand",
+      "stepsSource": "palette.steps"
+    }
+  },
+  "neutral": {
+    "anchor": "oklch(from {color.brand.vivid} 0.12 0.008 h)",
+    "steps": [
+      { "legacy": "01", "range": 10, "formula": "white" },
+      { "legacy": "02", "range": 20, "mix": 2 },
+      { "legacy": "03", "range": 30, "mix": 5 },
+      { "legacy": "04", "range": 40, "mix": 9 },
+      { "legacy": "05", "range": 50, "mix": 14 },
+      { "legacy": "06", "range": 60, "mix": 19 },
+      { "legacy": "07", "range": 70, "mix": 25 },
+      { "legacy": "08", "range": 80, "mix": 31 },
+      { "legacy": "09", "range": 90, "mix": 37 },
+      { "legacy": "10", "range": 100, "mix": 43 },
+      { "legacy": "11", "range": 110, "mix": 49 },
+      { "legacy": "12", "range": 120, "mix": 55 },
+      { "legacy": "13", "range": 130, "mix": 61 },
+      { "legacy": "14", "range": 140, "mix": 67 },
+      { "legacy": "15", "range": 150, "mix": 73 },
+      { "legacy": "16", "range": 160, "mix": 79 },
+      { "legacy": "17", "range": 170, "mix": 85 },
+      { "legacy": "18", "range": 180, "mix": 90 },
+      { "legacy": "19", "range": 190, "mix": 95 },
+      { "legacy": "20", "range": 200, "formula": "{color.neutral.anchor.dark}" }
+    ]
+  },
+  "radius": {
+    "seed": "radius.seed.base",
+    "steps": [
+      { "range": 0, "numerator": 0, "denominator": 1 },
+      { "range": 2, "numerator": 1, "denominator": 4 },
+      { "range": 4, "numerator": 1, "denominator": 2 },
+      { "range": 6, "numerator": 3, "denominator": 4 },
+      { "range": 8, "numerator": 1, "denominator": 1 },
+      { "range": 12, "numerator": 3, "denominator": 2 },
+      { "range": 16, "numerator": 2, "denominator": 1 }
+    ]
+  },
+  "output": {
+    "runtime": "theme/foundation.css",
+    "portableContract": "docs/data/fds-foundation.manifest.json",
+    "runtimePrefix": "--fx-",
+    "targetGlobalPrefix": "--fds-g-"
+  }
+}

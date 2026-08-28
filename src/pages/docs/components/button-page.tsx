@@ -14,9 +14,10 @@ type DoDontRow = { do: string; doEn?: string; dont: string; dontEn?: string }
 export const buttonPropRows = [
   { prop: "variant", type: "'default' | 'outline' | 'secondary' | 'ghost' | 'destructive' | 'plain'", defaultValue: "'default'", desc: "来自 Button 源码的样式变体", descEn: "Style variant from the Button source" },
   { prop: "tone", type: "'default' | 'primary' | 'info' | 'danger'", defaultValue: "'default'", desc: "按按钮类型表达默认、主色、信息或危险语义；info 仅用于纯文字", descEn: "Semantic tone for default, primary, informational, or dangerous actions; info is only for plain" },
-  { prop: "size", type: "'xs' | 'sm' | 'md' | 'lg' | 'icon-xs' | 'icon-sm' | 'icon-md' | 'icon-lg'", defaultValue: "'sm'", desc: "来自 Button 源码的尺寸变体；不写 size 即 28px", descEn: "Size variant from the Button source; omitted size renders 28px" },
+  { prop: "size", type: "'xs' | 'sm' | 'md' | 'lg' | 'toolbar' | 'toolbar-icon' | 'icon-xs' | 'icon-sm' | 'icon-md' | 'icon-lg'", defaultValue: "'sm'", desc: "来自 Button 源码的尺寸变体；不写 size 即 28px", descEn: "Size variant from the Button source; omitted size renders 28px" },
   { prop: "disabled", type: "boolean", defaultValue: "false", desc: "是否禁用", descEn: "Whether the button is disabled" },
   { prop: "aria-invalid", type: "boolean", defaultValue: "false", desc: "错误态样式，继承 shadcn 语义 token", descEn: "Invalid state styling based on semantic tokens" },
+  { prop: "nativeButton", type: "boolean", defaultValue: "true", desc: "render 替换根元素时声明是否仍为原生 button；渲染链接时设为 false", descEn: "Whether a replaced root remains a native button; set false when rendering a link" },
   { prop: "render", type: "ReactElement | (props, state) => ReactElement", defaultValue: "undefined", desc: "把按钮样式渲染到自定义元素上（如 <a>），相当于 Base UI 版本的 asChild", descEn: "Render the button styling onto a custom element (e.g. <a>); Base UI's equivalent of asChild" },
 ]
 

@@ -125,7 +125,7 @@ function CopyPageAction({
           <CopyIcon data-icon="inline-start" />
           {copyLabel}
         </Button>
-        <ButtonGroupSeparator className="bg-white" />
+        <ButtonGroupSeparator />
         <DropdownMenuTrigger
           render={
             <Button

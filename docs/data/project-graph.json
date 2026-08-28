@@ -1,13 +1,13 @@
 {
   "schemaVersion": "project-graph.v0.3",
-  "generatedAt": "2026-06-17T02:17:17Z",
+  "generatedAt": "2026-08-27T02:44:49Z",
   "projectPath": "/Users/heqiao/Desktop/Claude练习/项目9-fx-ui组件库",
   "staleDays": 90,
   "summary": {
-    "nodeCount": 119,
-    "edgeCount": 695,
+    "nodeCount": 203,
+    "edgeCount": 1485,
     "staleCount": 0,
-    "systemRelationCount": 19,
+    "systemRelationCount": 20,
     "systemRelationGroupCount": 6
   },
   "nodes": [
@@ -176,7 +176,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "spec",
-      "lastVerified": "2026-06-07",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -188,7 +188,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "spec",
-      "lastVerified": "2026-06-07",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -200,7 +200,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "log",
-      "lastVerified": "2026-06-16",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -212,7 +212,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "spec",
-      "lastVerified": "2026-06-07",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -224,7 +224,7 @@
       "executable": false,
       "archLayer": "governance",
       "docType": "spec",
-      "lastVerified": "2026-06-16",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -236,7 +236,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "spec",
-      "lastVerified": "2026-06-08",
+      "lastVerified": "2026-06-17",
       "stale": false
     },
     {
@@ -260,7 +260,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "spec",
-      "lastVerified": "2026-06-06",
+      "lastVerified": "2026-06-30",
       "stale": false
     },
     {
@@ -284,7 +284,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "status",
-      "lastVerified": "2026-06-07",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -296,7 +296,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "guide",
-      "lastVerified": "2026-06-07",
+      "lastVerified": "2026-06-17",
       "stale": false
     },
     {
@@ -308,7 +308,7 @@
       "executable": false,
       "archLayer": "governance",
       "docType": "spec",
-      "lastVerified": "2026-06-16",
+      "lastVerified": "2026-08-23",
       "stale": false
     },
     {
@@ -320,7 +320,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "spec",
-      "lastVerified": "2026-06-07",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -332,7 +332,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "spec",
-      "lastVerified": "2026-06-07",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -344,11 +344,23 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "spec",
-      "lastVerified": "2026-06-16",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
       "id": ".claude/launch.json",
+      "kind": "json",
+      "layer": "claude-runtime",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": ".claude/settings.json",
       "kind": "json",
       "layer": "claude-runtime",
       "template": false,
@@ -380,7 +392,7 @@
       "executable": false,
       "archLayer": "governance",
       "docType": "spec",
-      "lastVerified": "2026-06-16",
+      "lastVerified": "2026-08-23",
       "stale": false
     },
     {
@@ -416,7 +428,19 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "status",
-      "lastVerified": "2026-06-07",
+      "lastVerified": "2026-08-26",
+      "stale": false
+    },
+    {
+      "id": "README.md",
+      "kind": "markdown",
+      "layer": "root-doc",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "entry",
+      "docType": "",
+      "lastVerified": "",
       "stale": false
     },
     {
@@ -428,7 +452,7 @@
       "executable": false,
       "archLayer": "governance",
       "docType": "spec",
-      "lastVerified": "2026-06-13",
+      "lastVerified": "2026-06-23",
       "stale": false
     },
     {
@@ -440,7 +464,7 @@
       "executable": false,
       "archLayer": "governance",
       "docType": "spec",
-      "lastVerified": "2026-06-13",
+      "lastVerified": "2026-07-07",
       "stale": false
     },
     {
@@ -452,7 +476,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "spec",
-      "lastVerified": "2026-06-07",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -464,7 +488,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "log",
-      "lastVerified": "2026-06-07",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -476,7 +500,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "spec",
-      "lastVerified": "2026-06-07",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -488,7 +512,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "log",
-      "lastVerified": "2026-06-16",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -500,7 +524,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "spec",
-      "lastVerified": "2026-06-07",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -512,7 +536,7 @@
       "executable": false,
       "archLayer": "governance",
       "docType": "spec",
-      "lastVerified": "2026-06-16",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -524,7 +548,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "spec",
-      "lastVerified": "2026-06-16",
+      "lastVerified": "2026-07-27",
       "stale": false
     },
     {
@@ -536,7 +560,19 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "spec",
-      "lastVerified": "2026-06-08",
+      "lastVerified": "2026-06-17",
+      "stale": false
+    },
+    {
+      "id": "docs/FRAMEWORK_ADAPTERS.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "knowledge",
+      "docType": "spec",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -560,7 +596,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "spec",
-      "lastVerified": "2026-06-06",
+      "lastVerified": "2026-06-30",
       "stale": false
     },
     {
@@ -576,6 +612,18 @@
       "stale": false
     },
     {
+      "id": "docs/MAP.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "governance",
+      "docType": "spec",
+      "lastVerified": "2026-08-26",
+      "stale": false
+    },
+    {
       "id": "docs/NAMING.md",
       "kind": "markdown",
       "layer": "docs",
@@ -585,6 +633,18 @@
       "archLayer": "governance",
       "docType": "spec",
       "lastVerified": "2026-06-07",
+      "stale": false
+    },
+    {
+      "id": "docs/PAGES.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "governance",
+      "docType": "spec",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -608,7 +668,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "guide",
-      "lastVerified": "2026-06-07",
+      "lastVerified": "2026-06-17",
       "stale": false
     },
     {
@@ -620,7 +680,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "spec",
-      "lastVerified": "2026-06-07",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -632,7 +692,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "spec",
-      "lastVerified": "2026-06-07",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -644,7 +704,7 @@
       "executable": false,
       "archLayer": "knowledge",
       "docType": "spec",
-      "lastVerified": "2026-06-16",
+      "lastVerified": "2026-08-26",
       "stale": false
     },
     {
@@ -661,6 +721,18 @@
     },
     {
       "id": "docs/components/alert-dialog.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/alert.md",
       "kind": "markdown",
       "layer": "docs",
       "template": false,
@@ -792,6 +864,42 @@
       "stale": false
     },
     {
+      "id": "docs/components/combobox.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/command.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/component-playground.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
       "id": "docs/components/dialog.md",
       "kind": "markdown",
       "layer": "docs",
@@ -805,6 +913,18 @@
     },
     {
       "id": "docs/components/dropdown-menu.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/empty.md",
       "kind": "markdown",
       "layer": "docs",
       "template": false,
@@ -840,7 +960,103 @@
       "stale": false
     },
     {
+      "id": "docs/components/fx-color-picker.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/fx-condition-builder.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
       "id": "docs/components/fx-confirm-danger-dialog.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/fx-date-picker.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/fx-date-time-picker.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/fx-icon-picker.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/fx-layout.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/fx-nav-menu.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/fx-page-actions.md",
       "kind": "markdown",
       "layer": "docs",
       "template": false,
@@ -864,6 +1080,18 @@
       "stale": false
     },
     {
+      "id": "docs/components/fx-page-lead.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
       "id": "docs/components/fx-page-shell.md",
       "kind": "markdown",
       "layer": "docs",
@@ -876,7 +1104,55 @@
       "stale": false
     },
     {
+      "id": "docs/components/fx-people-picker.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
       "id": "docs/components/fx-search-toolbar.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/fx-section-lead.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/fx-time-picker.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/fx-transfer.md",
       "kind": "markdown",
       "layer": "docs",
       "template": false,
@@ -924,7 +1200,55 @@
       "stale": false
     },
     {
+      "id": "docs/components/link.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/pagination.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
       "id": "docs/components/popover.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/radio-group.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/scroll-area.md",
       "kind": "markdown",
       "layer": "docs",
       "template": false,
@@ -984,7 +1308,31 @@
       "stale": false
     },
     {
+      "id": "docs/components/signature.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
       "id": "docs/components/skeleton.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/slider.md",
       "kind": "markdown",
       "layer": "docs",
       "template": false,
@@ -1044,7 +1392,31 @@
       "stale": false
     },
     {
+      "id": "docs/components/tag.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
       "id": "docs/components/textarea.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/toast.md",
       "kind": "markdown",
       "layer": "docs",
       "template": false,
@@ -1092,6 +1464,78 @@
       "stale": false
     },
     {
+      "id": "docs/components/top-bar.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/components/upload.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/data/agent-components.manifest.json",
+      "kind": "json",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/data/agent-context.md",
+      "kind": "markdown",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/data/agent-recipes.manifest.json",
+      "kind": "json",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/data/agent-tokens.manifest.json",
+      "kind": "json",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
       "id": "docs/data/agent-ui-visual.manifest.json",
       "kind": "json",
       "layer": "docs",
@@ -1105,6 +1549,42 @@
     },
     {
       "id": "docs/data/agent-ui.manifest.json",
+      "kind": "json",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/data/component-hygiene-baseline.json",
+      "kind": "json",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/data/component-playgrounds.manifest.json",
+      "kind": "json",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/data/component-quality.manifest.json",
       "kind": "json",
       "layer": "docs",
       "template": false,
@@ -1164,6 +1644,30 @@
       "stale": false
     },
     {
+      "id": "docs/data/framework-adapters.manifest.json",
+      "kind": "json",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/data/framework-core.manifest.json",
+      "kind": "json",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
       "id": "docs/data/governance-index.json",
       "kind": "json",
       "layer": "docs",
@@ -1176,7 +1680,91 @@
       "stale": false
     },
     {
+      "id": "docs/data/governance-pages.manifest.json",
+      "kind": "json",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
       "id": "docs/data/governance-status.json",
+      "kind": "json",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/data/governance-todo.json",
+      "kind": "json",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/data/icons.manifest.json",
+      "kind": "json",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/data/layered-assets.manifest.json",
+      "kind": "json",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/data/page-build-kit.manifest.json",
+      "kind": "json",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/data/page-builder.manifest.json",
+      "kind": "json",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "docs/data/page-semantics.manifest.json",
       "kind": "json",
       "layer": "docs",
       "template": false,
@@ -1212,6 +1800,18 @@
       "stale": false
     },
     {
+      "id": "docs/data/website-standards.manifest.json",
+      "kind": "json",
+      "layer": "docs",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
       "id": "docs/style-inbox.json",
       "kind": "json",
       "layer": "docs",
@@ -1236,7 +1836,91 @@
       "stale": false
     },
     {
+      "id": "scripts/build-agent-components.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/build-agent-context.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/build-agent-token-contract.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/build-component-quality.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
       "id": "scripts/build-design-tokens.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/build-framework-core.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/build-governance-pages.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/build-icons-manifest.mjs",
       "kind": "javascript",
       "layer": "scripts",
       "template": false,
@@ -1272,6 +1956,42 @@
       "stale": false
     },
     {
+      "id": "scripts/check-agent-examples.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/check-agent-query-contract.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/check-agent-recipes.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
       "id": "scripts/check-agent-ui-contract.mjs",
       "kind": "javascript",
       "layer": "scripts",
@@ -1290,6 +2010,30 @@
       "template": false,
       "ssot": false,
       "executable": true,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/check-component-docs.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/check-component-hygiene.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
       "archLayer": "skills",
       "docType": "",
       "lastVerified": "",
@@ -1368,6 +2112,18 @@
       "stale": false
     },
     {
+      "id": "scripts/check-foundation-tokens.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
       "id": "scripts/check-frontmatter.sh",
       "kind": "shell",
       "layer": "scripts",
@@ -1386,6 +2142,114 @@
       "template": false,
       "ssot": false,
       "executable": true,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/check-icons.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/check-imports.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/check-interaction-tokens.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/check-layered-assets.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/check-list-page-source.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/check-page-build-kit.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/check-page-builder.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/check-page-semantics.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/check-playground-contract.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
       "archLayer": "skills",
       "docType": "",
       "lastVerified": "",
@@ -1416,12 +2280,120 @@
       "stale": false
     },
     {
+      "id": "scripts/check-shadow-tokens.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/check-theme-contract.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/check-toc-anchors.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
       "id": "scripts/check-tokens-sync.sh",
       "kind": "shell",
       "layer": "scripts",
       "template": false,
       "ssot": false,
       "executable": true,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/check-website-card-contract.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/doctor.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/fx-agent.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/gen-detail-page.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/gen-edit-form-page.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/gen-list-page.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
       "archLayer": "skills",
       "docType": "",
       "lastVerified": "",
@@ -1435,6 +2407,42 @@
       "ssot": false,
       "executable": true,
       "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "scripts/token-agent.mjs",
+      "kind": "javascript",
+      "layer": "scripts",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "skills",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "tests/component-behavior.spec.ts",
+      "kind": "typescript",
+      "layer": "tests",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
+      "docType": "",
+      "lastVerified": "",
+      "stale": false
+    },
+    {
+      "id": "tests/visual.spec.ts",
+      "kind": "typescript",
+      "layer": "tests",
+      "template": false,
+      "ssot": false,
+      "executable": false,
+      "archLayer": "",
       "docType": "",
       "lastVerified": "",
       "stale": false
@@ -1478,6 +2486,11 @@
     },
     {
       "source": ".ai/rules/architecture.md",
+      "target": "AGENTS.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/architecture.md",
       "target": "PRODUCT.md",
       "type": "references"
     },
@@ -1503,6 +2516,11 @@
     },
     {
       "source": ".ai/rules/architecture.md",
+      "target": "docs/FRAMEWORK_ADAPTERS.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/architecture.md",
       "target": "docs/LAYOUTS.md",
       "type": "references"
     },
@@ -1519,6 +2537,21 @@
     {
       "source": ".ai/rules/architecture.md",
       "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/architecture.md",
+      "target": "docs/data/framework-adapters.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/architecture.md",
+      "target": "docs/data/framework-core.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/architecture.md",
+      "target": "docs/data/page-builder.manifest.json",
       "type": "references"
     },
     {
@@ -1549,6 +2582,16 @@
     {
       "source": ".ai/rules/code_structure.md",
       "target": "docs/NAMING.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/code_structure.md",
+      "target": "docs/data/framework-adapters.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/code_structure.md",
+      "target": "docs/data/framework-core.manifest.json",
       "type": "references"
     },
     {
@@ -1593,7 +2636,27 @@
     },
     {
       "source": ".ai/rules/decisions.md",
+      "target": "docs/FRAMEWORK_ADAPTERS.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/LAYOUTS.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
       "target": "docs/LESSONS.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/MAP.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/PAGES.md",
       "type": "references"
     },
     {
@@ -1604,6 +2667,86 @@
     {
       "source": ".ai/rules/decisions.md",
       "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/components/badge.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/components/button.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/components/card.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/components/component-playground.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/components/fx-color-picker.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/components/icon.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/components/input.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/components/signature.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/components/tag.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/components/upload.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/data/agent-components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/data/agent-context.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/data/agent-recipes.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/data/agent-tokens.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/data/component-quality.manifest.json",
       "type": "references"
     },
     {
@@ -1623,7 +2766,147 @@
     },
     {
       "source": ".ai/rules/decisions.md",
+      "target": "docs/data/icons.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/data/layered-assets.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/data/page-build-kit.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/data/page-builder.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "docs/data/page-semantics.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "package.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "scripts/build-agent-token-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "scripts/build-component-quality.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "scripts/build-framework-core.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "scripts/check-agent-query-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "scripts/check-components-manifest.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
       "target": "scripts/check-doc-site-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "scripts/check-icons.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "scripts/check-interaction-tokens.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "scripts/check-layered-assets.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "scripts/check-page-builder.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "scripts/check-playground-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "scripts/check-theme-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "scripts/doctor.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "scripts/fx-agent.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "scripts/gen-list-page.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "scripts/token-agent.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "src/lib/icons.ts",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "src/lib/page-registry.ts",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "src/lib/theme-runtime.ts",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "src/lib/utils.ts",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "tests/component-behavior.spec.ts",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "tests/visual.spec.ts",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/decisions.md",
+      "target": "vite.config.ts",
       "type": "references"
     },
     {
@@ -1662,6 +2945,16 @@
       "type": "references"
     },
     {
+      "source": ".ai/rules/design_standards.md",
+      "target": "docs/data/governance-status.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/design_standards.md",
+      "target": "docs/data/page-semantics.manifest.json",
+      "type": "references"
+    },
+    {
       "source": ".ai/rules/documentation.md",
       "target": "AGENTS.md",
       "type": "references"
@@ -1684,6 +2977,11 @@
     {
       "source": ".ai/rules/documentation.md",
       "target": "PROJECT.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/documentation.md",
+      "target": "README.md",
       "type": "references"
     },
     {
@@ -1738,6 +3036,11 @@
     },
     {
       "source": ".ai/rules/documentation.md",
+      "target": "docs/FRAMEWORK_ADAPTERS.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/documentation.md",
       "target": "docs/KNOWLEDGE_SCHEMA.md",
       "type": "references"
     },
@@ -1753,7 +3056,17 @@
     },
     {
       "source": ".ai/rules/documentation.md",
+      "target": "docs/MAP.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/documentation.md",
       "target": "docs/NAMING.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/documentation.md",
+      "target": "docs/PAGES.md",
       "type": "references"
     },
     {
@@ -1783,6 +3096,26 @@
     },
     {
       "source": ".ai/rules/documentation.md",
+      "target": "docs/data/agent-context.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/documentation.md",
+      "target": "docs/data/agent-recipes.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/documentation.md",
+      "target": "docs/data/agent-tokens.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/documentation.md",
+      "target": "docs/data/component-quality.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/documentation.md",
       "target": "docs/data/components.manifest.json",
       "type": "references"
     },
@@ -1803,6 +3136,26 @@
     },
     {
       "source": ".ai/rules/documentation.md",
+      "target": "docs/data/layered-assets.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/documentation.md",
+      "target": "docs/data/page-build-kit.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/documentation.md",
+      "target": "package.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/documentation.md",
+      "target": "scripts/build-agent-token-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/documentation.md",
       "target": "scripts/check-components-manifest.mjs",
       "type": "references"
     },
@@ -1819,6 +3172,16 @@
     {
       "source": ".ai/rules/documentation.md",
       "target": "scripts/check-docs-routing.sh",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/documentation.md",
+      "target": "scripts/check-layered-assets.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/documentation.md",
+      "target": "scripts/check-theme-contract.mjs",
       "type": "references"
     },
     {
@@ -1864,6 +3227,11 @@
     {
       "source": ".ai/rules/knowledge_schema.md",
       "target": "PROJECT.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/knowledge_schema.md",
+      "target": "README.md",
       "type": "references"
     },
     {
@@ -1938,6 +3306,11 @@
     },
     {
       "source": ".ai/rules/naming.md",
+      "target": "README.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/naming.md",
       "target": "docs/ARCHITECTURE.md",
       "type": "references"
     },
@@ -2083,12 +3456,57 @@
     },
     {
       "source": ".ai/rules/system-agents.md",
+      "target": "docs/LAYOUTS.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/system-agents.md",
+      "target": "docs/MAP.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/system-agents.md",
       "target": "docs/TOKENS.md",
       "type": "references"
     },
     {
       "source": ".ai/rules/system-agents.md",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/system-agents.md",
+      "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/system-agents.md",
+      "target": "docs/data/design-tokens.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/system-agents.md",
+      "target": "docs/data/doc-structure.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/system-agents.md",
+      "target": "scripts/check-all.sh",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/system-agents.md",
       "target": "scripts/check-shadcn-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/system-agents.md",
+      "target": "src/lib/icons.ts",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/system-agents.md",
+      "target": "tests/visual.spec.ts",
       "type": "references"
     },
     {
@@ -2099,6 +3517,11 @@
     {
       "source": ".ai/rules/tech_stack.md",
       "target": "docs/DECISIONS.md",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/tech_stack.md",
+      "target": "docs/FRAMEWORK_ADAPTERS.md",
       "type": "references"
     },
     {
@@ -2202,11 +3625,6 @@
       "type": "references"
     },
     {
-      "source": ".ai/rules/testing.md",
-      "target": "scripts/check-tokens-sync.sh",
-      "type": "references"
-    },
-    {
       "source": ".ai/rules/tokens.md",
       "target": "docs/TOKENS.md",
       "type": "maps_to"
@@ -2218,12 +3636,42 @@
     },
     {
       "source": ".ai/rules/tokens.md",
+      "target": "docs/data/agent-tokens.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/tokens.md",
+      "target": "docs/data/design-tokens.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/tokens.md",
+      "target": "docs/data/icons.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/tokens.md",
       "target": "registry/fx-theme.json",
       "type": "references"
     },
     {
       "source": ".ai/rules/tokens.md",
       "target": "scripts/check-tokens-sync.sh",
+      "type": "references"
+    },
+    {
+      "source": ".ai/rules/tokens.md",
+      "target": "src/lib/icons.ts",
+      "type": "references"
+    },
+    {
+      "source": ".claude/settings.json",
+      "target": "AGENTS.md",
+      "type": "references"
+    },
+    {
+      "source": ".claude/settings.local.json",
+      "target": "package.json",
       "type": "references"
     },
     {
@@ -2263,12 +3711,62 @@
     },
     {
       "source": "AGENTS.md",
+      "target": "docs/LAYOUTS.md",
+      "type": "references"
+    },
+    {
+      "source": "AGENTS.md",
+      "target": "docs/MAP.md",
+      "type": "references"
+    },
+    {
+      "source": "AGENTS.md",
       "target": "docs/TOKENS.md",
       "type": "references"
     },
     {
       "source": "AGENTS.md",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "AGENTS.md",
+      "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "AGENTS.md",
+      "target": "docs/data/design-tokens.json",
+      "type": "references"
+    },
+    {
+      "source": "AGENTS.md",
+      "target": "docs/data/doc-structure.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "AGENTS.md",
+      "target": "scripts/check-all.sh",
+      "type": "references"
+    },
+    {
+      "source": "AGENTS.md",
       "target": "scripts/check-shadcn-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "AGENTS.md",
+      "target": "src/lib/icons.ts",
+      "type": "references"
+    },
+    {
+      "source": "AGENTS.md",
+      "target": "tests/visual.spec.ts",
+      "type": "references"
+    },
+    {
+      "source": "HANDOFF.md",
+      "target": ".claude/settings.json",
       "type": "references"
     },
     {
@@ -2288,6 +3786,26 @@
     },
     {
       "source": "HANDOFF.md",
+      "target": "docs/DESIGN_STANDARDS.md",
+      "type": "references"
+    },
+    {
+      "source": "HANDOFF.md",
+      "target": "docs/DOC_SITE_DESIGN.md",
+      "type": "references"
+    },
+    {
+      "source": "HANDOFF.md",
+      "target": "docs/MAP.md",
+      "type": "references"
+    },
+    {
+      "source": "HANDOFF.md",
+      "target": "docs/PAGES.md",
+      "type": "references"
+    },
+    {
+      "source": "HANDOFF.md",
       "target": "docs/components/fx-agent-surface.md",
       "type": "references"
     },
@@ -2299,6 +3817,11 @@
     {
       "source": "HANDOFF.md",
       "target": "docs/data/agent-ui.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "HANDOFF.md",
+      "target": "docs/data/component-playgrounds.manifest.json",
       "type": "references"
     },
     {
@@ -2318,7 +3841,37 @@
     },
     {
       "source": "HANDOFF.md",
+      "target": "scripts/check-component-docs.mjs",
+      "type": "references"
+    },
+    {
+      "source": "HANDOFF.md",
+      "target": "scripts/check-component-hygiene.mjs",
+      "type": "references"
+    },
+    {
+      "source": "HANDOFF.md",
       "target": "scripts/check-frontmatter.sh",
+      "type": "references"
+    },
+    {
+      "source": "HANDOFF.md",
+      "target": "scripts/check-imports.mjs",
+      "type": "references"
+    },
+    {
+      "source": "HANDOFF.md",
+      "target": "scripts/check-secrets.sh",
+      "type": "references"
+    },
+    {
+      "source": "HANDOFF.md",
+      "target": "scripts/gen-list-page.mjs",
+      "type": "references"
+    },
+    {
+      "source": "HANDOFF.md",
+      "target": "tests/visual.spec.ts",
       "type": "references"
     },
     {
@@ -2372,6 +3925,41 @@
       "type": "references"
     },
     {
+      "source": "README.md",
+      "target": "AGENTS.md",
+      "type": "references"
+    },
+    {
+      "source": "README.md",
+      "target": "docs/CHANGELOG.md",
+      "type": "references"
+    },
+    {
+      "source": "README.md",
+      "target": "docs/DECISIONS.md",
+      "type": "references"
+    },
+    {
+      "source": "README.md",
+      "target": "docs/DOCUMENTATION.md",
+      "type": "references"
+    },
+    {
+      "source": "README.md",
+      "target": "docs/LAYOUTS.md",
+      "type": "references"
+    },
+    {
+      "source": "README.md",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "README.md",
+      "target": "src/lib/icons.ts",
+      "type": "references"
+    },
+    {
       "source": "docs/AGENT_UI.md",
       "target": "docs/components/fx-agent-surface.md",
       "type": "references"
@@ -2384,6 +3972,11 @@
     {
       "source": "docs/AGENT_UI_VISUAL.md",
       "target": "docs/AGENT_UI.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/ARCHITECTURE.md",
+      "target": "AGENTS.md",
       "type": "references"
     },
     {
@@ -2408,6 +4001,11 @@
     },
     {
       "source": "docs/ARCHITECTURE.md",
+      "target": "docs/FRAMEWORK_ADAPTERS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/ARCHITECTURE.md",
       "target": "docs/LAYOUTS.md",
       "type": "references"
     },
@@ -2424,6 +4022,21 @@
     {
       "source": "docs/ARCHITECTURE.md",
       "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/ARCHITECTURE.md",
+      "target": "docs/data/framework-adapters.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/ARCHITECTURE.md",
+      "target": "docs/data/framework-core.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/ARCHITECTURE.md",
+      "target": "docs/data/page-builder.manifest.json",
       "type": "references"
     },
     {
@@ -2458,7 +4071,17 @@
     },
     {
       "source": "docs/CHANGELOG.md",
+      "target": "docs/DECISIONS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/CHANGELOG.md",
       "target": "docs/DOCUMENTATION.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/CHANGELOG.md",
+      "target": "docs/FRAMEWORK_ADAPTERS.md",
       "type": "references"
     },
     {
@@ -2469,6 +4092,46 @@
     {
       "source": "docs/CHANGELOG.md",
       "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/CHANGELOG.md",
+      "target": "docs/data/agent-components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/CHANGELOG.md",
+      "target": "docs/data/agent-context.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/CHANGELOG.md",
+      "target": "docs/data/agent-recipes.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/CHANGELOG.md",
+      "target": "docs/data/agent-tokens.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/CHANGELOG.md",
+      "target": "docs/data/design-tokens.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/CHANGELOG.md",
+      "target": "docs/data/page-build-kit.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/CHANGELOG.md",
+      "target": "scripts/build-framework-core.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/CHANGELOG.md",
+      "target": "scripts/check-agent-query-contract.mjs",
       "type": "references"
     },
     {
@@ -2488,7 +4151,27 @@
     },
     {
       "source": "docs/CHANGELOG.md",
+      "target": "scripts/check-toc-anchors.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/CHANGELOG.md",
       "target": "scripts/check-tokens-sync.sh",
+      "type": "references"
+    },
+    {
+      "source": "docs/CHANGELOG.md",
+      "target": "scripts/fx-agent.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/CHANGELOG.md",
+      "target": "src/lib/icons.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/CHANGELOG.md",
+      "target": "src/lib/utils.ts",
       "type": "references"
     },
     {
@@ -2509,6 +4192,16 @@
     {
       "source": "docs/CODE_STRUCTURE.md",
       "target": "docs/NAMING.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/CODE_STRUCTURE.md",
+      "target": "docs/data/framework-adapters.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/CODE_STRUCTURE.md",
+      "target": "docs/data/framework-core.manifest.json",
       "type": "references"
     },
     {
@@ -2548,7 +4241,27 @@
     },
     {
       "source": "docs/DECISIONS.md",
+      "target": "docs/FRAMEWORK_ADAPTERS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/LAYOUTS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
       "target": "docs/LESSONS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/MAP.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/PAGES.md",
       "type": "references"
     },
     {
@@ -2559,6 +4272,86 @@
     {
       "source": "docs/DECISIONS.md",
       "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/components/badge.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/components/button.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/components/card.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/components/component-playground.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/components/fx-color-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/components/icon.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/components/input.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/components/signature.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/components/tag.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/components/upload.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/data/agent-components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/data/agent-context.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/data/agent-recipes.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/data/agent-tokens.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/data/component-quality.manifest.json",
       "type": "references"
     },
     {
@@ -2578,7 +4371,147 @@
     },
     {
       "source": "docs/DECISIONS.md",
+      "target": "docs/data/icons.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/data/layered-assets.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/data/page-build-kit.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/data/page-builder.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "docs/data/page-semantics.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "package.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "scripts/build-agent-token-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "scripts/build-component-quality.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "scripts/build-framework-core.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "scripts/check-agent-query-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "scripts/check-components-manifest.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
       "target": "scripts/check-doc-site-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "scripts/check-icons.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "scripts/check-interaction-tokens.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "scripts/check-layered-assets.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "scripts/check-page-builder.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "scripts/check-playground-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "scripts/check-theme-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "scripts/doctor.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "scripts/fx-agent.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "scripts/gen-list-page.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "scripts/token-agent.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "src/lib/icons.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "src/lib/page-registry.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "src/lib/theme-runtime.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "src/lib/utils.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "tests/component-behavior.spec.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "tests/visual.spec.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "target": "vite.config.ts",
       "type": "references"
     },
     {
@@ -2612,6 +4545,16 @@
       "type": "references"
     },
     {
+      "source": "docs/DESIGN_STANDARDS.md",
+      "target": "docs/data/governance-status.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/DESIGN_STANDARDS.md",
+      "target": "docs/data/page-semantics.manifest.json",
+      "type": "references"
+    },
+    {
       "source": "docs/DOCUMENTATION.md",
       "target": "AGENTS.md",
       "type": "references"
@@ -2634,6 +4577,11 @@
     {
       "source": "docs/DOCUMENTATION.md",
       "target": "PROJECT.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DOCUMENTATION.md",
+      "target": "README.md",
       "type": "references"
     },
     {
@@ -2683,6 +4631,11 @@
     },
     {
       "source": "docs/DOCUMENTATION.md",
+      "target": "docs/FRAMEWORK_ADAPTERS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DOCUMENTATION.md",
       "target": "docs/KNOWLEDGE_SCHEMA.md",
       "type": "references"
     },
@@ -2698,7 +4651,17 @@
     },
     {
       "source": "docs/DOCUMENTATION.md",
+      "target": "docs/MAP.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DOCUMENTATION.md",
       "target": "docs/NAMING.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DOCUMENTATION.md",
+      "target": "docs/PAGES.md",
       "type": "references"
     },
     {
@@ -2728,6 +4691,26 @@
     },
     {
       "source": "docs/DOCUMENTATION.md",
+      "target": "docs/data/agent-context.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/DOCUMENTATION.md",
+      "target": "docs/data/agent-recipes.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/DOCUMENTATION.md",
+      "target": "docs/data/agent-tokens.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/DOCUMENTATION.md",
+      "target": "docs/data/component-quality.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/DOCUMENTATION.md",
       "target": "docs/data/components.manifest.json",
       "type": "references"
     },
@@ -2748,6 +4731,26 @@
     },
     {
       "source": "docs/DOCUMENTATION.md",
+      "target": "docs/data/layered-assets.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/DOCUMENTATION.md",
+      "target": "docs/data/page-build-kit.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/DOCUMENTATION.md",
+      "target": "package.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/DOCUMENTATION.md",
+      "target": "scripts/build-agent-token-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DOCUMENTATION.md",
       "target": "scripts/check-components-manifest.mjs",
       "type": "references"
     },
@@ -2764,6 +4767,16 @@
     {
       "source": "docs/DOCUMENTATION.md",
       "target": "scripts/check-docs-routing.sh",
+      "type": "references"
+    },
+    {
+      "source": "docs/DOCUMENTATION.md",
+      "target": "scripts/check-layered-assets.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DOCUMENTATION.md",
+      "target": "scripts/check-theme-contract.mjs",
       "type": "references"
     },
     {
@@ -2843,7 +4856,17 @@
     },
     {
       "source": "docs/DOC_SITE_DESIGN.md",
+      "target": "scripts/check-component-docs.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DOC_SITE_DESIGN.md",
       "target": "scripts/check-doc-site-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/DOC_SITE_DESIGN.md",
+      "target": "scripts/check-shadcn-contract.mjs",
       "type": "references"
     },
     {
@@ -2867,6 +4890,31 @@
       "type": "references"
     },
     {
+      "source": "docs/FRAMEWORK_ADAPTERS.md",
+      "target": "docs/ARCHITECTURE.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/FRAMEWORK_ADAPTERS.md",
+      "target": "docs/DECISIONS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/FRAMEWORK_ADAPTERS.md",
+      "target": "docs/TECH_STACK.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/FRAMEWORK_ADAPTERS.md",
+      "target": "docs/data/framework-adapters.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/FRAMEWORK_ADAPTERS.md",
+      "target": "docs/data/framework-core.manifest.json",
+      "type": "references"
+    },
+    {
       "source": "docs/KNOWLEDGE_SCHEMA.md",
       "target": "AGENTS.md",
       "type": "references"
@@ -2884,6 +4932,11 @@
     {
       "source": "docs/KNOWLEDGE_SCHEMA.md",
       "target": "PROJECT.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/KNOWLEDGE_SCHEMA.md",
+      "target": "README.md",
       "type": "references"
     },
     {
@@ -2937,6 +4990,116 @@
       "type": "references"
     },
     {
+      "source": "docs/MAP.md",
+      "target": ".claude/settings.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "AGENTS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "docs/ARCHITECTURE.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "docs/DECISIONS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "docs/DOCUMENTATION.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "docs/PAGES.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "docs/data/agent-recipes.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "docs/data/agent-ui.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "docs/data/component-quality.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "docs/data/doc-structure.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "docs/data/framework-adapters.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "docs/data/framework-core.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "docs/data/icons.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "docs/data/layered-assets.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "docs/data/page-builder.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "docs/data/page-semantics.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "scripts/check-all.sh",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "src/lib/icons.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "src/lib/site-navigation.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/MAP.md",
+      "target": "tests/visual.spec.ts",
+      "type": "references"
+    },
+    {
       "source": "docs/NAMING.md",
       "target": "AGENTS.md",
       "type": "references"
@@ -2959,6 +5122,11 @@
     {
       "source": "docs/NAMING.md",
       "target": "PROJECT.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/NAMING.md",
+      "target": "README.md",
       "type": "references"
     },
     {
@@ -2999,6 +5167,51 @@
     {
       "source": "docs/NAMING.md",
       "target": "docs/components/button.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/PAGES.md",
+      "target": "AGENTS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/PAGES.md",
+      "target": "docs/ARCHITECTURE.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/PAGES.md",
+      "target": "docs/LAYOUTS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/PAGES.md",
+      "target": "docs/MAP.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/PAGES.md",
+      "target": "docs/data/page-builder.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/PAGES.md",
+      "target": "docs/data/page-semantics.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/PAGES.md",
+      "target": "scripts/check-all.sh",
+      "type": "references"
+    },
+    {
+      "source": "docs/PAGES.md",
+      "target": "scripts/check-list-page-source.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/PAGES.md",
+      "target": "src/lib/site-navigation.ts",
       "type": "references"
     },
     {
@@ -3068,6 +5281,11 @@
     },
     {
       "source": "docs/TECH_STACK.md",
+      "target": "docs/FRAMEWORK_ADAPTERS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/TECH_STACK.md",
       "target": "docs/LESSONS.md",
       "type": "references"
     },
@@ -3157,8 +5375,18 @@
       "type": "references"
     },
     {
-      "source": "docs/TESTING.md",
-      "target": "scripts/check-tokens-sync.sh",
+      "source": "docs/TOKENS.md",
+      "target": "docs/data/agent-tokens.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/TOKENS.md",
+      "target": "docs/data/design-tokens.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/TOKENS.md",
+      "target": "docs/data/icons.manifest.json",
       "type": "references"
     },
     {
@@ -3169,6 +5397,11 @@
     {
       "source": "docs/TOKENS.md",
       "target": "scripts/check-tokens-sync.sh",
+      "type": "references"
+    },
+    {
+      "source": "docs/TOKENS.md",
+      "target": "src/lib/icons.ts",
       "type": "references"
     },
     {
@@ -3184,11 +5417,6 @@
     {
       "source": "docs/components/badge.md",
       "target": "docs/TOKENS.md",
-      "type": "references"
-    },
-    {
-      "source": "docs/components/badge.md",
-      "target": "docs/data/components.manifest.json",
       "type": "references"
     },
     {
@@ -3232,6 +5460,21 @@
       "type": "references"
     },
     {
+      "source": "docs/components/command.md",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/components/component-playground.md",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/components/component-playground.md",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
       "source": "docs/components/dialog.md",
       "target": "docs/TOKENS.md",
       "type": "references"
@@ -3252,12 +5495,32 @@
       "type": "references"
     },
     {
+      "source": "docs/components/fx-color-picker.md",
+      "target": "docs/DECISIONS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/components/fx-color-picker.md",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
       "source": "docs/components/fx-confirm-danger-dialog.md",
       "target": "docs/TOKENS.md",
       "type": "references"
     },
     {
+      "source": "docs/components/fx-page-actions.md",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
       "source": "docs/components/fx-page-header.md",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/components/fx-page-lead.md",
       "target": "docs/TOKENS.md",
       "type": "references"
     },
@@ -3272,13 +5535,33 @@
       "type": "references"
     },
     {
+      "source": "docs/components/fx-section-lead.md",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/components/fx-time-picker.md",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
       "source": "docs/components/icon.md",
       "target": "components.json",
       "type": "references"
     },
     {
       "source": "docs/components/icon.md",
-      "target": "package.json",
+      "target": "docs/DECISIONS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/components/icon.md",
+      "target": "docs/data/icons.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/components/icon.md",
+      "target": "src/lib/icons.ts",
       "type": "references"
     },
     {
@@ -3287,12 +5570,32 @@
       "type": "references"
     },
     {
+      "source": "docs/components/input.md",
+      "target": "docs/data/design-tokens.json",
+      "type": "references"
+    },
+    {
       "source": "docs/components/label.md",
       "target": "docs/TOKENS.md",
       "type": "references"
     },
     {
+      "source": "docs/components/link.md",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/components/pagination.md",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
       "source": "docs/components/popover.md",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/components/radio-group.md",
       "target": "docs/TOKENS.md",
       "type": "references"
     },
@@ -3317,6 +5620,11 @@
       "type": "references"
     },
     {
+      "source": "docs/components/signature.md",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
       "source": "docs/components/skeleton.md",
       "target": "docs/TOKENS.md",
       "type": "references"
@@ -3337,12 +5645,27 @@
       "type": "references"
     },
     {
+      "source": "docs/components/table.md",
+      "target": "docs/data/design-tokens.json",
+      "type": "references"
+    },
+    {
       "source": "docs/components/tabs.md",
       "target": "docs/TOKENS.md",
       "type": "references"
     },
     {
+      "source": "docs/components/tag.md",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
       "source": "docs/components/textarea.md",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/components/toast.md",
       "target": "docs/TOKENS.md",
       "type": "references"
     },
@@ -3362,6 +5685,391 @@
       "type": "references"
     },
     {
+      "source": "docs/components/top-bar.md",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/LAYOUTS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/alert-dialog.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/alert.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/avatar.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/badge.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/breadcrumb.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/button-group.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/button.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/calendar.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/card.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/chart.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/checkbox.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/collapsible.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/combobox.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/command.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/component-playground.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/dialog.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/dropdown-menu.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/empty.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/field.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/fx-agent-surface.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/fx-color-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/fx-condition-builder.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/fx-confirm-danger-dialog.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/fx-date-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/fx-date-time-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/fx-icon-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/fx-layout.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/fx-nav-menu.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/fx-page-actions.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/fx-page-header.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/fx-page-lead.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/fx-page-shell.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/fx-people-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/fx-search-toolbar.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/fx-section-lead.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/fx-time-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/fx-transfer.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/input.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/label.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/link.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/pagination.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/popover.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/radio-group.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/scroll-area.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/select.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/separator.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/sheet.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/sidebar.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/signature.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/skeleton.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/slider.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/spinner.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/switch.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/table.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/tabs.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/tag.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/textarea.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/toast.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/toggle-group.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/toggle.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/tooltip.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/top-bar.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/components/upload.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-components.manifest.json",
+      "target": "docs/data/website-standards.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-context.md",
+      "target": "AGENTS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-context.md",
+      "target": "scripts/build-agent-context.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-recipes.manifest.json",
+      "target": "docs/components/fx-date-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-recipes.manifest.json",
+      "target": "docs/components/input.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-recipes.manifest.json",
+      "target": "docs/components/top-bar.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-recipes.manifest.json",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-recipes.manifest.json",
+      "target": "src/pages/docs/components/component-playground-manifest.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-tokens.manifest.json",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/agent-tokens.manifest.json",
+      "target": "docs/data/design-tokens.json",
+      "type": "references"
+    },
+    {
       "source": "docs/data/agent-ui-visual.manifest.json",
       "target": "docs/AGENT_UI_VISUAL.md",
       "type": "references"
@@ -3377,8 +6085,363 @@
       "type": "references"
     },
     {
+      "source": "docs/data/component-playgrounds.manifest.json",
+      "target": "docs/components/component-playground.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-playgrounds.manifest.json",
+      "target": "src/lib/icons.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/alert-dialog.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/alert.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/avatar.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/badge.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/breadcrumb.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/button-group.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/button.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/calendar.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/card.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/chart.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/checkbox.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/collapsible.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/combobox.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/command.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/component-playground.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/dialog.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/dropdown-menu.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/empty.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/field.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/fx-agent-surface.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/fx-color-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/fx-condition-builder.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/fx-confirm-danger-dialog.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/fx-date-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/fx-date-time-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/fx-icon-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/fx-layout.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/fx-nav-menu.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/fx-page-actions.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/fx-page-header.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/fx-page-lead.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/fx-page-shell.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/fx-people-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/fx-search-toolbar.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/fx-section-lead.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/fx-time-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/fx-transfer.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/input.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/label.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/link.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/pagination.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/popover.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/radio-group.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/scroll-area.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/select.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/separator.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/sheet.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/sidebar.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/signature.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/skeleton.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/slider.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/spinner.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/switch.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/table.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/tabs.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/tag.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/textarea.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/toast.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/toggle-group.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/toggle.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/tooltip.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/top-bar.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/components/upload.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "tests/component-behavior.spec.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/component-quality.manifest.json",
+      "target": "tests/visual.spec.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/LAYOUTS.md",
+      "type": "references"
+    },
+    {
       "source": "docs/data/components.manifest.json",
       "target": "docs/components/alert-dialog.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/alert.md",
       "type": "references"
     },
     {
@@ -3433,12 +6496,32 @@
     },
     {
       "source": "docs/data/components.manifest.json",
+      "target": "docs/components/combobox.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/command.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/component-playground.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
       "target": "docs/components/dialog.md",
       "type": "references"
     },
     {
       "source": "docs/data/components.manifest.json",
       "target": "docs/components/dropdown-menu.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/empty.md",
       "type": "references"
     },
     {
@@ -3453,7 +6536,47 @@
     },
     {
       "source": "docs/data/components.manifest.json",
+      "target": "docs/components/fx-color-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/fx-condition-builder.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
       "target": "docs/components/fx-confirm-danger-dialog.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/fx-date-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/fx-date-time-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/fx-icon-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/fx-layout.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/fx-nav-menu.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/fx-page-actions.md",
       "type": "references"
     },
     {
@@ -3463,12 +6586,37 @@
     },
     {
       "source": "docs/data/components.manifest.json",
+      "target": "docs/components/fx-page-lead.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
       "target": "docs/components/fx-page-shell.md",
       "type": "references"
     },
     {
       "source": "docs/data/components.manifest.json",
+      "target": "docs/components/fx-people-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
       "target": "docs/components/fx-search-toolbar.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/fx-section-lead.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/fx-time-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/fx-transfer.md",
       "type": "references"
     },
     {
@@ -3483,7 +6631,27 @@
     },
     {
       "source": "docs/data/components.manifest.json",
+      "target": "docs/components/link.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/pagination.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
       "target": "docs/components/popover.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/radio-group.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/scroll-area.md",
       "type": "references"
     },
     {
@@ -3508,7 +6676,17 @@
     },
     {
       "source": "docs/data/components.manifest.json",
+      "target": "docs/components/signature.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
       "target": "docs/components/skeleton.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/slider.md",
       "type": "references"
     },
     {
@@ -3533,7 +6711,17 @@
     },
     {
       "source": "docs/data/components.manifest.json",
+      "target": "docs/components/tag.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
       "target": "docs/components/textarea.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/toast.md",
       "type": "references"
     },
     {
@@ -3549,6 +6737,21 @@
     {
       "source": "docs/data/components.manifest.json",
       "target": "docs/components/tooltip.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/top-bar.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/components/upload.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/components.manifest.json",
+      "target": "docs/data/website-standards.manifest.json",
       "type": "references"
     },
     {
@@ -3588,6 +6791,11 @@
     },
     {
       "source": "docs/data/doc-site.manifest.json",
+      "target": "docs/data/governance-pages.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-site.manifest.json",
       "target": "docs/data/governance-status.json",
       "type": "references"
     },
@@ -3598,7 +6806,22 @@
     },
     {
       "source": "docs/data/doc-site.manifest.json",
+      "target": "docs/data/website-standards.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-site.manifest.json",
       "target": "scripts/check-doc-site-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-site.manifest.json",
+      "target": "src/lib/docs-spacing.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-site.manifest.json",
+      "target": "src/lib/site-navigation.ts",
       "type": "references"
     },
     {
@@ -3673,6 +6896,11 @@
     },
     {
       "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/FRAMEWORK_ADAPTERS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
       "target": "docs/KNOWLEDGE_SCHEMA.md",
       "type": "references"
     },
@@ -3688,7 +6916,17 @@
     },
     {
       "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/MAP.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
       "target": "docs/NAMING.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/doc-structure.manifest.json",
+      "target": "docs/PAGES.md",
       "type": "references"
     },
     {
@@ -3717,8 +6955,133 @@
       "type": "references"
     },
     {
+      "source": "docs/data/framework-adapters.manifest.json",
+      "target": "docs/FRAMEWORK_ADAPTERS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-adapters.manifest.json",
+      "target": "docs/data/agent-ui.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-adapters.manifest.json",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-adapters.manifest.json",
+      "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-adapters.manifest.json",
+      "target": "docs/data/design-tokens.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-adapters.manifest.json",
+      "target": "docs/data/framework-core.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-adapters.manifest.json",
+      "target": "docs/data/icons.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-adapters.manifest.json",
+      "target": "docs/data/page-build-kit.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-adapters.manifest.json",
+      "target": "docs/data/page-builder.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-adapters.manifest.json",
+      "target": "docs/data/page-semantics.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-core.manifest.json",
+      "target": "docs/LAYOUTS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-core.manifest.json",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-core.manifest.json",
+      "target": "docs/data/agent-ui.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-core.manifest.json",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-core.manifest.json",
+      "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-core.manifest.json",
+      "target": "docs/data/design-tokens.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-core.manifest.json",
+      "target": "docs/data/framework-adapters.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-core.manifest.json",
+      "target": "docs/data/icons.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-core.manifest.json",
+      "target": "docs/data/page-build-kit.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-core.manifest.json",
+      "target": "docs/data/page-builder.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-core.manifest.json",
+      "target": "docs/data/page-semantics.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/framework-core.manifest.json",
+      "target": "docs/data/website-standards.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
+      "target": "docs/DESIGN_STANDARDS.md",
+      "type": "references"
+    },
+    {
       "source": "docs/data/governance-index.json",
       "target": "docs/DOC_SITE_DESIGN.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
+      "target": "docs/FRAMEWORK_ADAPTERS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
+      "target": "docs/PAGES.md",
       "type": "references"
     },
     {
@@ -3753,7 +7116,42 @@
     },
     {
       "source": "docs/data/governance-index.json",
+      "target": "docs/data/framework-adapters.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
+      "target": "docs/data/framework-core.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
+      "target": "docs/data/governance-pages.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
       "target": "docs/data/governance-status.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
+      "target": "docs/data/governance-todo.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
+      "target": "docs/data/icons.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
+      "target": "docs/data/page-builder.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
+      "target": "docs/data/page-semantics.manifest.json",
       "type": "references"
     },
     {
@@ -3764,6 +7162,21 @@
     {
       "source": "docs/data/governance-index.json",
       "target": "docs/data/system-relations.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
+      "target": "docs/data/website-standards.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
+      "target": "scripts/build-framework-core.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
+      "target": "scripts/build-governance-pages.mjs",
       "type": "references"
     },
     {
@@ -3789,6 +7202,211 @@
     {
       "source": "docs/data/governance-index.json",
       "target": "scripts/check-doc-structure.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
+      "target": "scripts/check-icons.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
+      "target": "scripts/check-page-builder.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
+      "target": "scripts/check-page-semantics.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-index.json",
+      "target": "src/lib/icons.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "AGENTS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "HANDOFF.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "PROJECT.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "docs/DOCUMENTATION.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "docs/DOC_SITE_DESIGN.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "docs/LAYOUTS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "docs/data/design-tokens.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "docs/data/doc-site.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/build-governance-pages.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-agent-examples.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-agent-query-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-agent-recipes.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-agent-ui-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-component-docs.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-component-hygiene.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-components-manifest.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-doc-site-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-doc-structure.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-docs-routing.sh",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-foundation-tokens.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-icons.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-imports.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-interaction-tokens.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-layered-assets.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-list-page-source.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-page-build-kit.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-page-builder.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-page-semantics.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-playground-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-shadcn-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-shadow-tokens.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-theme-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-toc-anchors.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-tokens-sync.sh",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-pages.manifest.json",
+      "target": "scripts/check-website-card-contract.mjs",
       "type": "references"
     },
     {
@@ -3874,6 +7492,116 @@
     {
       "source": "docs/data/governance-status.json",
       "target": "scripts/check-tokens-sync.sh",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/governance-todo.json",
+      "target": "docs/DOC_SITE_DESIGN.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/icons.manifest.json",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/icons.manifest.json",
+      "target": "src/lib/icons.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/layered-assets.manifest.json",
+      "target": "docs/data/agent-recipes.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/layered-assets.manifest.json",
+      "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/layered-assets.manifest.json",
+      "target": "docs/data/page-build-kit.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/layered-assets.manifest.json",
+      "target": "docs/data/page-builder.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/layered-assets.manifest.json",
+      "target": "scripts/gen-list-page.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/layered-assets.manifest.json",
+      "target": "src/hooks/use-mobile.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/layered-assets.manifest.json",
+      "target": "src/reports/customer-briefing/mock-data.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/layered-assets.manifest.json",
+      "target": "src/reports/customer-briefing/types.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/layered-assets.manifest.json",
+      "target": "tests/visual.spec.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/page-build-kit.manifest.json",
+      "target": "scripts/gen-detail-page.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/page-build-kit.manifest.json",
+      "target": "scripts/gen-edit-form-page.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/page-build-kit.manifest.json",
+      "target": "scripts/gen-list-page.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/page-build-kit.manifest.json",
+      "target": "tests/visual.spec.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/page-builder.manifest.json",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/page-builder.manifest.json",
+      "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/page-builder.manifest.json",
+      "target": "tests/visual.spec.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/page-semantics.manifest.json",
+      "target": "docs/data/design-tokens.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/page-semantics.manifest.json",
+      "target": "docs/data/page-build-kit.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/page-semantics.manifest.json",
+      "target": "docs/data/page-builder.manifest.json",
       "type": "references"
     },
     {
@@ -4023,6 +7751,11 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": ".claude/settings.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": ".claude/settings.local.json",
       "type": "references"
     },
@@ -4059,6 +7792,11 @@
     {
       "source": "docs/data/project-graph.json",
       "target": "PROJECT.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "README.md",
       "type": "references"
     },
     {
@@ -4118,6 +7856,11 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "docs/FRAMEWORK_ADAPTERS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "docs/KNOWLEDGE_SCHEMA.md",
       "type": "references"
     },
@@ -4133,7 +7876,17 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "docs/MAP.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "docs/NAMING.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/PAGES.md",
       "type": "references"
     },
     {
@@ -4169,6 +7922,11 @@
     {
       "source": "docs/data/project-graph.json",
       "target": "docs/components/alert-dialog.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/alert.md",
       "type": "references"
     },
     {
@@ -4223,12 +7981,32 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "docs/components/combobox.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/command.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/component-playground.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "docs/components/dialog.md",
       "type": "references"
     },
     {
       "source": "docs/data/project-graph.json",
       "target": "docs/components/dropdown-menu.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/empty.md",
       "type": "references"
     },
     {
@@ -4243,7 +8021,47 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "docs/components/fx-color-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/fx-condition-builder.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "docs/components/fx-confirm-danger-dialog.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/fx-date-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/fx-date-time-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/fx-icon-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/fx-layout.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/fx-nav-menu.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/fx-page-actions.md",
       "type": "references"
     },
     {
@@ -4253,12 +8071,37 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "docs/components/fx-page-lead.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "docs/components/fx-page-shell.md",
       "type": "references"
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "docs/components/fx-people-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "docs/components/fx-search-toolbar.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/fx-section-lead.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/fx-time-picker.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/fx-transfer.md",
       "type": "references"
     },
     {
@@ -4278,7 +8121,27 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "docs/components/link.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/pagination.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "docs/components/popover.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/radio-group.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/scroll-area.md",
       "type": "references"
     },
     {
@@ -4303,7 +8166,17 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "docs/components/signature.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "docs/components/skeleton.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/slider.md",
       "type": "references"
     },
     {
@@ -4328,7 +8201,17 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "docs/components/tag.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "docs/components/textarea.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/toast.md",
       "type": "references"
     },
     {
@@ -4348,12 +8231,57 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "docs/components/top-bar.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/components/upload.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/data/agent-components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/data/agent-context.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/data/agent-recipes.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/data/agent-tokens.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "docs/data/agent-ui-visual.manifest.json",
       "type": "references"
     },
     {
       "source": "docs/data/project-graph.json",
       "target": "docs/data/agent-ui.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/data/component-hygiene-baseline.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/data/component-quality.manifest.json",
       "type": "references"
     },
     {
@@ -4373,7 +8301,27 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "docs/data/doc-structure.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/data/framework-adapters.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/data/framework-core.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "docs/data/governance-index.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/data/governance-pages.manifest.json",
       "type": "references"
     },
     {
@@ -4383,7 +8331,42 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "docs/data/governance-todo.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/data/icons.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/data/layered-assets.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/data/page-build-kit.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/data/page-builder.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/data/page-semantics.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "docs/data/system-relations.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "docs/data/website-standards.manifest.json",
       "type": "references"
     },
     {
@@ -4408,12 +8391,67 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "scripts/build-agent-components.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/build-agent-context.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/build-agent-token-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/build-component-quality.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "scripts/build-design-tokens.mjs",
       "type": "references"
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "scripts/build-framework-core.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/build-governance-pages.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/build-icons-manifest.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "scripts/build-project-graph.sh",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/bump-doc-dates.sh",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-agent-examples.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-agent-query-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-agent-recipes.mjs",
       "type": "references"
     },
     {
@@ -4424,6 +8462,16 @@
     {
       "source": "docs/data/project-graph.json",
       "target": "scripts/check-all.sh",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-component-docs.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-component-hygiene.mjs",
       "type": "references"
     },
     {
@@ -4443,12 +8491,22 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "scripts/check-doc-structure.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "scripts/check-docs-reminder.sh",
       "type": "references"
     },
     {
       "source": "docs/data/project-graph.json",
       "target": "scripts/check-docs-routing.sh",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-foundation-tokens.mjs",
       "type": "references"
     },
     {
@@ -4463,6 +8521,51 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "scripts/check-icons.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-imports.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-interaction-tokens.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-layered-assets.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-list-page-source.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-page-build-kit.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-page-builder.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-page-semantics.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-playground-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "scripts/check-secrets.sh",
       "type": "references"
     },
@@ -4473,12 +8576,107 @@
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "scripts/check-shadow-tokens.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-theme-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/check-toc-anchors.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "scripts/check-tokens-sync.sh",
       "type": "references"
     },
     {
       "source": "docs/data/project-graph.json",
+      "target": "scripts/check-website-card-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/doctor.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/fx-agent.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/gen-detail-page.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/gen-edit-form-page.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/gen-list-page.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
       "target": "scripts/install-git-hooks.sh",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "scripts/token-agent.mjs",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "src/hooks/use-mobile.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "src/lib/docs-spacing.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "src/lib/icons.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "src/lib/page-registry.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "src/lib/page-title-meta.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "src/lib/site-navigation.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "src/lib/theme-runtime.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "src/lib/utils.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "src/pages/docs/components/component-playground-manifest.ts",
       "type": "references"
     },
     {
@@ -4489,6 +8687,16 @@
     {
       "source": "docs/data/project-graph.json",
       "target": "src/reports/customer-briefing/types.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "tests/component-behavior.spec.ts",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/project-graph.json",
+      "target": "tests/visual.spec.ts",
       "type": "references"
     },
     {
@@ -4572,6 +8780,106 @@
       "type": "references"
     },
     {
+      "source": "docs/data/website-standards.manifest.json",
+      "target": "docs/DOC_SITE_DESIGN.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/website-standards.manifest.json",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/website-standards.manifest.json",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "docs/data/website-standards.manifest.json",
+      "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-agent-components.mjs",
+      "target": "docs/data/agent-components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-agent-components.mjs",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-agent-components.mjs",
+      "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-agent-context.mjs",
+      "target": "AGENTS.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-agent-context.mjs",
+      "target": "docs/data/agent-components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-agent-context.mjs",
+      "target": "docs/data/agent-context.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-agent-context.mjs",
+      "target": "docs/data/agent-recipes.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-agent-context.mjs",
+      "target": "docs/data/agent-tokens.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-agent-context.mjs",
+      "target": "docs/data/page-build-kit.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-agent-token-contract.mjs",
+      "target": "docs/data/agent-tokens.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-agent-token-contract.mjs",
+      "target": "docs/data/design-tokens.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-component-quality.mjs",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-component-quality.mjs",
+      "target": "docs/data/component-quality.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-component-quality.mjs",
+      "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-component-quality.mjs",
+      "target": "tests/component-behavior.spec.ts",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-component-quality.mjs",
+      "target": "tests/visual.spec.ts",
+      "type": "references"
+    },
+    {
       "source": "scripts/build-design-tokens.mjs",
       "target": "docs/data/design-tokens.json",
       "type": "references"
@@ -4579,6 +8887,86 @@
     {
       "source": "scripts/build-design-tokens.mjs",
       "target": "scripts/check-tokens-sync.sh",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-framework-core.mjs",
+      "target": "docs/data/agent-ui.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-framework-core.mjs",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-framework-core.mjs",
+      "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-framework-core.mjs",
+      "target": "docs/data/design-tokens.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-framework-core.mjs",
+      "target": "docs/data/framework-adapters.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-framework-core.mjs",
+      "target": "docs/data/framework-core.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-framework-core.mjs",
+      "target": "docs/data/icons.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-framework-core.mjs",
+      "target": "docs/data/page-build-kit.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-framework-core.mjs",
+      "target": "docs/data/page-builder.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-framework-core.mjs",
+      "target": "docs/data/page-semantics.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-governance-pages.mjs",
+      "target": "docs/data/governance-index.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-governance-pages.mjs",
+      "target": "docs/data/governance-pages.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-governance-pages.mjs",
+      "target": "package.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-governance-pages.mjs",
+      "target": "scripts/check-all.sh",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-icons-manifest.mjs",
+      "target": "docs/data/icons.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-icons-manifest.mjs",
+      "target": "src/lib/icons.ts",
       "type": "references"
     },
     {
@@ -4604,6 +8992,11 @@
     {
       "source": "scripts/build-project-graph.sh",
       "target": "PROJECT.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/build-project-graph.sh",
+      "target": "README.md",
       "type": "references"
     },
     {
@@ -4677,6 +9070,56 @@
       "type": "references"
     },
     {
+      "source": "scripts/check-agent-examples.mjs",
+      "target": "docs/data/agent-components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-agent-query-contract.mjs",
+      "target": "AGENTS.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-agent-query-contract.mjs",
+      "target": "docs/data/agent-components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-agent-query-contract.mjs",
+      "target": "docs/data/agent-recipes.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-agent-query-contract.mjs",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-agent-query-contract.mjs",
+      "target": "scripts/fx-agent.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-agent-query-contract.mjs",
+      "target": "src/hooks/use-mobile.ts",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-agent-recipes.mjs",
+      "target": "docs/data/agent-components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-agent-recipes.mjs",
+      "target": "docs/data/agent-recipes.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-agent-recipes.mjs",
+      "target": "docs/data/agent-tokens.manifest.json",
+      "type": "references"
+    },
+    {
       "source": "scripts/check-agent-ui-contract.mjs",
       "target": "docs/data/agent-ui-visual.manifest.json",
       "type": "references"
@@ -4693,7 +9136,62 @@
     },
     {
       "source": "scripts/check-all.sh",
+      "target": "scripts/build-agent-components.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/build-agent-context.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/build-agent-token-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/build-component-quality.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/build-framework-core.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/build-governance-pages.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/check-agent-examples.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/check-agent-query-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/check-agent-recipes.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
       "target": "scripts/check-agent-ui-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/check-component-docs.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/check-component-hygiene.mjs",
       "type": "references"
     },
     {
@@ -4728,12 +9226,62 @@
     },
     {
       "source": "scripts/check-all.sh",
+      "target": "scripts/check-foundation-tokens.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
       "target": "scripts/check-frontmatter.sh",
       "type": "references"
     },
     {
       "source": "scripts/check-all.sh",
       "target": "scripts/check-handoff-freshness.sh",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/check-icons.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/check-imports.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/check-interaction-tokens.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/check-layered-assets.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/check-list-page-source.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/check-page-build-kit.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/check-page-builder.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/check-page-semantics.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/check-playground-contract.mjs",
       "type": "references"
     },
     {
@@ -4748,7 +9296,52 @@
     },
     {
       "source": "scripts/check-all.sh",
+      "target": "scripts/check-shadow-tokens.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/check-theme-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/check-toc-anchors.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
       "target": "scripts/check-tokens-sync.sh",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-all.sh",
+      "target": "scripts/check-website-card-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-component-docs.mjs",
+      "target": "docs/DOC_SITE_DESIGN.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-component-hygiene.mjs",
+      "target": "docs/data/component-hygiene-baseline.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-component-hygiene.mjs",
+      "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-components-manifest.mjs",
+      "target": "docs/DECISIONS.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-components-manifest.mjs",
+      "target": "docs/data/component-playgrounds.manifest.json",
       "type": "references"
     },
     {
@@ -4798,7 +9391,17 @@
     },
     {
       "source": "scripts/check-doc-site-contract.mjs",
+      "target": "docs/data/governance-pages.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-doc-site-contract.mjs",
       "target": "docs/data/governance-status.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-doc-site-contract.mjs",
+      "target": "docs/data/governance-todo.json",
       "type": "references"
     },
     {
@@ -4813,7 +9416,17 @@
     },
     {
       "source": "scripts/check-doc-site-contract.mjs",
+      "target": "docs/data/website-standards.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-doc-site-contract.mjs",
       "target": "package.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-doc-site-contract.mjs",
+      "target": "src/lib/page-title-meta.ts",
       "type": "references"
     },
     {
@@ -4877,6 +9490,11 @@
       "type": "references"
     },
     {
+      "source": "scripts/check-foundation-tokens.mjs",
+      "target": "docs/data/design-tokens.json",
+      "type": "references"
+    },
+    {
       "source": "scripts/check-frontmatter.sh",
       "target": "AGENTS.md",
       "type": "references"
@@ -4897,6 +9515,86 @@
       "type": "references"
     },
     {
+      "source": "scripts/check-icons.mjs",
+      "target": "docs/data/icons.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-icons.mjs",
+      "target": "src/lib/icons.ts",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-imports.mjs",
+      "target": "src/lib/icons.ts",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-layered-assets.mjs",
+      "target": "docs/data/layered-assets.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-page-build-kit.mjs",
+      "target": "docs/data/layered-assets.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-page-build-kit.mjs",
+      "target": "docs/data/page-build-kit.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-page-builder.mjs",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-page-builder.mjs",
+      "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-page-builder.mjs",
+      "target": "docs/data/page-builder.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-page-semantics.mjs",
+      "target": "docs/data/design-tokens.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-page-semantics.mjs",
+      "target": "docs/data/page-build-kit.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-page-semantics.mjs",
+      "target": "docs/data/page-builder.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-page-semantics.mjs",
+      "target": "docs/data/page-semantics.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-playground-contract.mjs",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-playground-contract.mjs",
+      "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-playground-contract.mjs",
+      "target": "tests/visual.spec.ts",
+      "type": "references"
+    },
+    {
       "source": "scripts/check-secrets.sh",
       "target": "docs/ENVIRONMENT.md",
       "type": "references"
@@ -4904,6 +9602,56 @@
     {
       "source": "scripts/check-shadcn-contract.mjs",
       "target": "docs/components/button.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-shadcn-contract.mjs",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-shadow-tokens.mjs",
+      "target": "docs/DOC_SITE_DESIGN.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-shadow-tokens.mjs",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-theme-contract.mjs",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-theme-contract.mjs",
+      "target": "docs/data/agent-tokens.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-theme-contract.mjs",
+      "target": "docs/data/design-tokens.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-theme-contract.mjs",
+      "target": "registry/fx-theme.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-theme-contract.mjs",
+      "target": "scripts/build-agent-token-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-theme-contract.mjs",
+      "target": "scripts/check-interaction-tokens.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/check-theme-contract.mjs",
+      "target": "scripts/check-tokens-sync.sh",
       "type": "references"
     },
     {
@@ -4915,15 +9663,225 @@
       "source": "scripts/check-tokens-sync.sh",
       "target": "docs/data/design-tokens.json",
       "type": "references"
+    },
+    {
+      "source": "scripts/doctor.mjs",
+      "target": "docs/data/agent-components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/doctor.mjs",
+      "target": "docs/data/agent-context.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/doctor.mjs",
+      "target": "docs/data/agent-recipes.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/doctor.mjs",
+      "target": "docs/data/agent-tokens.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/doctor.mjs",
+      "target": "docs/data/page-build-kit.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/doctor.mjs",
+      "target": "scripts/build-agent-components.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/doctor.mjs",
+      "target": "scripts/build-agent-context.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/doctor.mjs",
+      "target": "scripts/build-agent-token-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/doctor.mjs",
+      "target": "scripts/check-agent-examples.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/doctor.mjs",
+      "target": "scripts/check-agent-query-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/doctor.mjs",
+      "target": "scripts/check-agent-recipes.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/doctor.mjs",
+      "target": "scripts/check-agent-ui-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/doctor.mjs",
+      "target": "scripts/check-component-docs.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/doctor.mjs",
+      "target": "scripts/check-components-manifest.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/doctor.mjs",
+      "target": "scripts/check-doc-site-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/doctor.mjs",
+      "target": "scripts/check-page-build-kit.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/doctor.mjs",
+      "target": "scripts/check-theme-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/doctor.mjs",
+      "target": "scripts/check-tokens-sync.sh",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "AGENTS.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "CLAUDE.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "docs/PAGES.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "docs/TOKENS.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "docs/data/agent-components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "docs/data/agent-context.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "docs/data/agent-recipes.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "docs/data/agent-tokens.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "docs/data/component-quality.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "docs/data/components.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "docs/data/design-tokens.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "docs/data/layered-assets.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "docs/data/page-build-kit.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "scripts/check-theme-contract.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "scripts/doctor.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "scripts/gen-detail-page.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "scripts/gen-edit-form-page.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/fx-agent.mjs",
+      "target": "scripts/gen-list-page.mjs",
+      "type": "references"
+    },
+    {
+      "source": "scripts/gen-list-page.mjs",
+      "target": "docs/PAGES.md",
+      "type": "references"
+    },
+    {
+      "source": "scripts/token-agent.mjs",
+      "target": "docs/data/agent-tokens.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "tests/component-behavior.spec.ts",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "tests/component-behavior.spec.ts",
+      "target": "docs/data/component-quality.manifest.json",
+      "type": "references"
+    },
+    {
+      "source": "tests/visual.spec.ts",
+      "target": "docs/data/component-playgrounds.manifest.json",
+      "type": "references"
     }
   ],
   "systemRelations": {
     "source": "docs/data/system-relations.json",
-    "updatedAt": "2026-06-13",
+    "updatedAt": "2026-08-27",
     "summary": {
       "siteRelationCount": 6,
-      "projectRelationCount": 13,
-      "relationCount": 19,
+      "projectRelationCount": 14,
+      "relationCount": 20,
       "groupCount": 6
     },
     "groups": [
@@ -4940,7 +9898,7 @@
       {
         "scope": "project",
         "group": "组件与主题",
-        "count": 3
+        "count": 4
       },
       {
         "scope": "project",
@@ -5034,14 +9992,24 @@
       "id": "project:2",
       "scope": "project",
       "group": "组件与主题",
-      "source": "theme/fx-theme.css",
-      "action": "注入",
-      "target": "src/components/ui/* + src/App.tsx",
-      "result": "公司视觉 token 通过 shadcn/Tailwind 语义类被组件和文档站消费；改这里会全局换肤。",
+      "source": "theme/foundation.css",
+      "action": "提供物理值",
+      "target": "theme/fx-theme.css",
+      "result": "无语义 Foundation 只由维护者修改；语义入口单向引用，不复制物理值。",
       "emphasis": true
     },
     {
       "id": "project:3",
+      "scope": "project",
+      "group": "组件与主题",
+      "source": "theme/fx-theme.css",
+      "action": "注入",
+      "target": "src/components/ui/* + src/App.tsx",
+      "result": "作为唯一公开入口导入 Foundation，并通过 shadcn/Tailwind 语义类供组件和文档站消费。",
+      "emphasis": false
+    },
+    {
+      "id": "project:4",
       "scope": "project",
       "group": "组件与主题",
       "source": "src/components/ui/*",
@@ -5051,7 +10019,7 @@
       "emphasis": false
     },
     {
-      "id": "project:4",
+      "id": "project:5",
       "scope": "project",
       "group": "规范与页面",
       "source": "docs/**/*.md",
@@ -5061,7 +10029,7 @@
       "emphasis": false
     },
     {
-      "id": "project:5",
+      "id": "project:6",
       "scope": "project",
       "group": "规范与页面",
       "source": "docs/data/components.manifest.json",
@@ -5071,7 +10039,7 @@
       "emphasis": false
     },
     {
-      "id": "project:6",
+      "id": "project:7",
       "scope": "project",
       "group": "规范与页面",
       "source": "docs/data/doc-site.manifest.json",
@@ -5081,7 +10049,7 @@
       "emphasis": false
     },
     {
-      "id": "project:7",
+      "id": "project:8",
       "scope": "project",
       "group": "检查与产物",
       "source": "package.json",
@@ -5091,7 +10059,7 @@
       "emphasis": true
     },
     {
-      "id": "project:8",
+      "id": "project:9",
       "scope": "project",
       "group": "检查与产物",
       "source": "scripts/check-doc-site-contract.mjs",
@@ -5101,17 +10069,17 @@
       "emphasis": false
     },
     {
-      "id": "project:9",
+      "id": "project:10",
       "scope": "project",
       "group": "检查与产物",
       "source": "scripts/check-tokens-sync.sh",
       "action": "比对",
-      "target": "theme/fx-theme.css + docs/TOKENS.md",
-      "result": "检查 token 文档里的色值是否还存在于 CSS 真相源中。",
+      "target": "theme/foundation.css + theme/fx-theme.css + docs/TOKENS.md",
+      "result": "检查 Foundation、语义映射、派生 manifest 与 token 文档是否保持一致。",
       "emphasis": false
     },
     {
-      "id": "project:10",
+      "id": "project:11",
       "scope": "project",
       "group": "检查与产物",
       "source": "scripts/build-project-graph.sh",
@@ -5121,7 +10089,7 @@
       "emphasis": false
     },
     {
-      "id": "project:11",
+      "id": "project:12",
       "scope": "project",
       "group": "AI 与分发",
       "source": "AGENTS.md / CLAUDE.md",
@@ -5131,7 +10099,7 @@
       "emphasis": false
     },
     {
-      "id": "project:12",
+      "id": "project:13",
       "scope": "project",
       "group": "AI 与分发",
       "source": "registry/fx-theme.json",
@@ -5141,7 +10109,7 @@
       "emphasis": false
     },
     {
-      "id": "project:13",
+      "id": "project:14",
       "scope": "project",
       "group": "AI 与分发",
       "source": "skills/fx-ui-report/*",

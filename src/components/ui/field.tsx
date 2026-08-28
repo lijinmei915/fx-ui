@@ -10,7 +10,7 @@ function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
     <fieldset
       data-slot="field-set"
       className={cn(
-        "flex w-full flex-col gap-(--fx-panel-gap) has-[>[data-slot=checkbox-group]]:gap-(--fx-control-gap) has-[>[data-slot=radio-group]]:gap-(--fx-control-gap)",
+        "flex w-full flex-col gap-(--fds-g-spacing-panel-gap) has-[>[data-slot=checkbox-group]]:gap-(--fds-g-spacing-control-gap) has-[>[data-slot=radio-group]]:gap-(--fds-g-spacing-control-gap)",
         className
       )}
       {...props}
@@ -46,10 +46,10 @@ function FieldGroup({ className, orientation = "vertical", ...props }: FieldGrou
       data-slot="field-group"
       data-orientation={orientation}
       className={cn(
-        "group/field-group @container/field-group flex data-[slot=checkbox-group]:gap-(--fx-control-gap) *:data-[slot=field-group]:gap-(--fx-panel-gap)",
+        "group/field-group @container/field-group flex data-[slot=checkbox-group]:gap-(--fds-g-spacing-control-gap) *:data-[slot=field-group]:gap-(--fds-g-spacing-panel-gap)",
         orientation === "horizontal"
           ? "w-full flex-row flex-wrap gap-x-4 gap-y-2 [&>[data-slot=field]]:!w-auto"
-          : "w-full flex-col gap-[calc(var(--fx-panel-gap)+0.25rem)]",
+          : "w-full flex-col gap-[calc(var(--fds-g-spacing-panel-gap)+0.25rem)]",
         className
       )}
       {...props}
@@ -58,7 +58,7 @@ function FieldGroup({ className, orientation = "vertical", ...props }: FieldGrou
 }
 
 const fieldVariants = cva(
-  "group/field flex w-full gap-(--fx-control-gap) data-[invalid=true]:text-destructive has-[>[data-slot=checkbox]]:gap-(--fx-control-gap-tight) has-[>[data-slot=checkbox]]:[&>[data-slot=field-content]]:flex-none has-[>[data-slot=checkbox]]:[&_[data-slot=field-label]]:whitespace-nowrap has-[>[data-slot=checkbox]]:[&_[data-slot=field-label]]:text-sm has-[>[data-slot=checkbox]]:[&_[data-slot=field-label]]:font-normal has-[>[data-slot=checkbox]]:[&_[data-slot=field-label]]:leading-5 has-[>[data-slot=checkbox][data-size=sm]]:[&_[data-slot=field-label]]:text-xs has-[>[data-slot=checkbox][data-size=sm]]:[&_[data-slot=field-label]]:leading-[var(--fx-text-xs--line-height)] has-[>[data-slot=checkbox][data-size=lg]]:[&_[data-slot=field-label]]:text-base has-[>[data-slot=checkbox][data-size=lg]]:[&_[data-slot=field-label]]:leading-6 has-[>[data-slot=radio-group-item]]:gap-(--fx-control-gap-tight) has-[>[data-slot=radio-group-item]]:[&>[data-slot=field-content]]:flex-none has-[>[data-slot=radio-group-item]]:[&_[data-slot=field-label]]:whitespace-nowrap has-[>[data-slot=radio-group-item]]:[&_[data-slot=field-label]]:text-sm has-[>[data-slot=radio-group-item]]:[&_[data-slot=field-label]]:font-normal has-[>[data-slot=radio-group-item]]:[&_[data-slot=field-label]]:leading-5 has-[>[data-slot=radio-group-item][data-size=sm]]:[&_[data-slot=field-label]]:text-xs has-[>[data-slot=radio-group-item][data-size=sm]]:[&_[data-slot=field-label]]:leading-[var(--fx-text-xs--line-height)] has-[>[data-slot=radio-group-item][data-size=lg]]:[&_[data-slot=field-label]]:text-base has-[>[data-slot=radio-group-item][data-size=lg]]:[&_[data-slot=field-label]]:leading-6",
+  "group/field flex w-full gap-(--fds-g-spacing-control-gap) data-[invalid=true]:text-destructive has-[>[data-slot=checkbox]]:gap-(--fds-g-spacing-control-gap-tight) has-[>[data-slot=checkbox]]:[&>[data-slot=field-content]]:flex-none has-[>[data-slot=checkbox]]:[&_[data-slot=field-label]]:whitespace-nowrap has-[>[data-slot=checkbox]]:[&_[data-slot=field-label]]:text-sm has-[>[data-slot=checkbox]]:[&_[data-slot=field-label]]:font-normal has-[>[data-slot=checkbox]]:[&_[data-slot=field-label]]:leading-5 has-[>[data-slot=checkbox][data-size=sm]]:[&_[data-slot=field-label]]:text-xs has-[>[data-slot=checkbox][data-size=sm]]:[&_[data-slot=field-label]]:leading-[var(--fds-g-font-line-height-xs)] has-[>[data-slot=checkbox][data-size=lg]]:[&_[data-slot=field-label]]:text-base has-[>[data-slot=checkbox][data-size=lg]]:[&_[data-slot=field-label]]:leading-6 has-[>[data-slot=radio-group-item]]:gap-(--fds-g-spacing-control-gap-tight) has-[>[data-slot=radio-group-item]]:[&>[data-slot=field-content]]:flex-none has-[>[data-slot=radio-group-item]]:[&_[data-slot=field-label]]:whitespace-nowrap has-[>[data-slot=radio-group-item]]:[&_[data-slot=field-label]]:text-sm has-[>[data-slot=radio-group-item]]:[&_[data-slot=field-label]]:font-normal has-[>[data-slot=radio-group-item]]:[&_[data-slot=field-label]]:leading-5 has-[>[data-slot=radio-group-item][data-size=sm]]:[&_[data-slot=field-label]]:text-xs has-[>[data-slot=radio-group-item][data-size=sm]]:[&_[data-slot=field-label]]:leading-[var(--fds-g-font-line-height-xs)] has-[>[data-slot=radio-group-item][data-size=lg]]:[&_[data-slot=field-label]]:text-base has-[>[data-slot=radio-group-item][data-size=lg]]:[&_[data-slot=field-label]]:leading-6",
   {
     variants: {
       orientation: {
@@ -112,7 +112,7 @@ function FieldLabel({
     <Label
       data-slot="field-label"
       className={cn(
-        "group/field-label peer/field-label flex w-fit gap-(--fx-control-gap) leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary has-data-checked:bg-accent has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-(--fx-panel-padding) dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10",
+        "group/field-label peer/field-label flex w-fit gap-(--fds-g-spacing-control-gap) leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary has-data-checked:bg-accent has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-(--fds-g-spacing-panel-padding) dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10",
         "has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col",
         className
       )}

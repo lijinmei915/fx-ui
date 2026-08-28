@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: spec
-last_verified: 2026-08-26
+last_verified: 2026-08-28
 teaches: "fx-ui 当前的 UI 规则、token 使用方式和设计边界"
 use_when: "做 UI/视觉相关改动前，判断该走哪条规则、参考哪份文档"
 ---
@@ -21,7 +21,7 @@ use_when: "做 UI/视觉相关改动前，判断该走哪条规则、参考哪�
 
 页面视觉统一采用三层，不为每种页面复制一套颜色、字号或间距：
 
-1. **基础无语义层**：色板阶梯、字号/行高、间距、圆角、阴影、图标和边框基线。真相源是 `theme/fx-theme.css`，它只回答“值是什么”。
+1. **基础无语义层**：色板阶梯、字号/行高、间距、圆角、阴影、图标和边框基线。真相源是 `tokens/source/{primitive,map}.tokens.json`，它只回答“值是什么”。
 2. **全局语义层**：`background`、`card`、`surface`、`muted`、`primary`、`destructive`、`border` 等，供所有组件和页面共享。它回答“通常表达什么”。
 3. **页面类型语义层**：列表页的筛选区/表头、详情页的身份区、表单页的校验区、搭建器的画布/选中态等角色，统一登记在 `docs/data/page-semantics.manifest.json`。它回答“当前页面中的区域承担什么职责”。
 
@@ -33,7 +33,7 @@ use_when: "做 UI/视觉相关改动前，判断该走哪条规则、参考哪�
 
 - 不手写基础组件，一律 `npx shadcn add` 拉取（见 `docs/DECISIONS.md` DEC-001）
 - 颜色、字号、间距、圆角、阴影一律走 token，不在组件层面单独定义视觉值
-- token 真相源是 `theme/fx-theme.css`，查表看 `docs/TOKENS.md`
+- 无语义物理值真相源是 `tokens/source/{primitive,map}.tokens.json`，语义映射真相源是 `tokens/source/semantic.tokens.json`，运行时入口是 `theme/fx-theme.css`；查表看 `docs/TOKENS.md`
 - 布局规则从真实页面沉淀，记在 `docs/LAYOUTS.md`，不凭空制定
 - `@theme inline` 不能用 `var()` 引用具体色值（Tailwind v4 编译期限制），必须直写色值——这条踩坑记录见 `HANDOFF.md`
 

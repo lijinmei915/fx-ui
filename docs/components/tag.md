@@ -48,7 +48,7 @@ import { Tag } from "@/components/ui/tag"
 - 语义 DOM：slot="tag"
 - 两条正交轴：`variant`（状态语义）/ `color`（分类打标多彩）
 - 变体：default / secondary / soft / destructive / success / warning / outline
-- 打标色：gray / red / amber / yellow / lime / green / teal / cyan / blue / purple / pink（软色 = 浅底 01/中性 03 + 彩字 07/中性前景 + 描边 03/中性 07）
+- 打标色：gray / red / amber / yellow / lime / green / teal / cyan / blue / purple / pink（彩色软色 = Map base-10 浅底 + base-80 彩字 + base-30 描边；gray 使用 neutral base-30/40）
 - 导出项：Tag、tagVariants
 
 ## 场景示例 {#examples}
@@ -106,8 +106,19 @@ Tag 默认渲染为 `span`，本身不是键盘交互控件，因此不创建 ta
 | `--secondary` | secondary 中性底 |
 | `--success` / `--warning` / `--destructive` | 状态语义配色 |
 | `--border` | outline 描边 |
+| `--fds-g-color-neutral-base-30` / `--fds-g-color-neutral-base-40` | gray 分类标签的浅底与描边；组件内部静态 Map 映射 |
+| `--fds-g-color-red-base-10` / `--fds-g-color-red-base-30` / `--fds-g-color-red-base-80` | red 分类标签的浅底、描边与文字 |
+| `--fds-g-color-amber-base-10` / `--fds-g-color-amber-base-30` / `--fds-g-color-amber-base-80` | amber 分类标签的浅底、描边与文字 |
+| `--fds-g-color-yellow-base-10` / `--fds-g-color-yellow-base-30` / `--fds-g-color-yellow-base-80` | yellow 分类标签的浅底、描边与文字 |
+| `--fds-g-color-lime-base-10` / `--fds-g-color-lime-base-30` / `--fds-g-color-lime-base-80` | lime 分类标签的浅底、描边与文字 |
+| `--fds-g-color-green-base-10` / `--fds-g-color-green-base-30` / `--fds-g-color-green-base-80` | green 分类标签的浅底、描边与文字 |
+| `--fds-g-color-teal-base-10` / `--fds-g-color-teal-base-30` / `--fds-g-color-teal-base-80` | teal 分类标签的浅底、描边与文字 |
+| `--fds-g-color-cyan-base-10` / `--fds-g-color-cyan-base-30` / `--fds-g-color-cyan-base-80` | cyan 分类标签的浅底、描边与文字 |
+| `--fds-g-color-blue-base-10` / `--fds-g-color-blue-base-30` / `--fds-g-color-blue-base-80` | blue 分类标签的浅底、描边与文字 |
+| `--fds-g-color-purple-base-10` / `--fds-g-color-purple-base-30` / `--fds-g-color-purple-base-80` | purple 分类标签的浅底、描边与文字 |
+| `--fds-g-color-pink-base-10` / `--fds-g-color-pink-base-30` / `--fds-g-color-pink-base-80` | pink 分类标签的浅底、描边与文字 |
 
-打标 `color` 取自 13 色板阶（`--fx-{color}-01/03/07`）。完整 token 规则见 `docs/TOKENS.md`。
+打标 `color` 由组件内部静态引用 FDS Map，不是公开 `--fds-c-tag-*` Hook；调用方只选择 `color` prop，不能覆盖单个实例。完整 token 规则见 `docs/TOKENS.md`。
 
 ## AI Rules {#ai-rules}
 

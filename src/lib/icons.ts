@@ -1,7 +1,7 @@
 // 全项目统一图标库：Tabler Icons（@tabler/icons-react）。
 // 选它的原因：线性图标的线宽可调（strokeWidth），且有成套的实心(*Filled)变体——
 // 兼顾"粗细可控"与"面型/实心"。线性默认线宽由全局 CSS（.tabler-icon { stroke-width }）统一控制，
-// 面型用对应的 *Filled 组件。详见 docs/TOKENS.md 图标小节、docs/DECISIONS.md DEC-009。
+// 面型用对应的 *Filled 组件。详见 docs/foundations/icons.md、docs/DECISIONS.md DEC-009。
 // 这里把项目里用到的名字映射到 Tabler 等价图标，业务/组件 JSX 不用改。
 export {
   IconAlertCircle as AlertCircleIcon,

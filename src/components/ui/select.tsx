@@ -50,7 +50,7 @@ type SelectMultiValueItem = {
 type SelectMultiValueOverflow = "collapse" | "scroll"
 
 const selectMultiValueTagClassName =
-  "max-w-full min-w-0 font-normal group-data-[size=xs]/select-trigger:h-4 group-data-[size=xs]/select-trigger:gap-0.5 group-data-[size=xs]/select-trigger:px-1 group-data-[size=xs]/select-trigger:text-xs group-data-[size=sm]/select-trigger:h-5 group-data-[size=sm]/select-trigger:px-1.5 group-data-[size=sm]/select-trigger:text-sm group-data-[size=md]/select-trigger:h-[calc(var(--fx-control-md-height)-8px)] group-data-[size=md]/select-trigger:px-2 group-data-[size=md]/select-trigger:text-base group-data-[size=xs]/date-picker:h-4 group-data-[size=xs]/date-picker:gap-0.5 group-data-[size=xs]/date-picker:px-1 group-data-[size=xs]/date-picker:text-xs group-data-[size=sm]/date-picker:h-5 group-data-[size=sm]/date-picker:px-1.5 group-data-[size=sm]/date-picker:text-sm group-data-[size=md]/date-picker:h-[calc(var(--fx-control-md-height)-8px)] group-data-[size=md]/date-picker:px-2 group-data-[size=md]/date-picker:text-base"
+  "max-w-full min-w-0 font-normal group-data-[size=xs]/select-trigger:h-4 group-data-[size=xs]/select-trigger:gap-0.5 group-data-[size=xs]/select-trigger:px-1 group-data-[size=xs]/select-trigger:text-xs group-data-[size=sm]/select-trigger:h-5 group-data-[size=sm]/select-trigger:px-1.5 group-data-[size=sm]/select-trigger:text-sm group-data-[size=md]/select-trigger:h-[calc(var(--fds-g-sizing-control-block-md)-8px)] group-data-[size=md]/select-trigger:px-2 group-data-[size=md]/select-trigger:text-base group-data-[size=xs]/date-picker:h-4 group-data-[size=xs]/date-picker:gap-0.5 group-data-[size=xs]/date-picker:px-1 group-data-[size=xs]/date-picker:text-xs group-data-[size=sm]/date-picker:h-5 group-data-[size=sm]/date-picker:px-1.5 group-data-[size=sm]/date-picker:text-sm group-data-[size=md]/date-picker:h-[calc(var(--fds-g-sizing-control-block-md)-8px)] group-data-[size=md]/date-picker:px-2 group-data-[size=md]/date-picker:text-base"
 
 const selectMultiValueRemoveClassName =
   "-mr-1 inline-flex items-center justify-center rounded-sm text-muted-foreground outline-none hover:text-foreground focus-visible:text-foreground group-data-[size=xs]/select-trigger:size-3.5 group-data-[size=sm]/select-trigger:size-4 group-data-[size=md]/select-trigger:size-5 group-data-[size=xs]/select-trigger:[&_svg]:size-2.5! group-data-[size=sm]/select-trigger:[&_svg]:size-3! group-data-[size=md]/select-trigger:[&_svg]:size-3.5! group-data-[size=xs]/date-picker:size-3.5 group-data-[size=sm]/date-picker:size-4 group-data-[size=md]/date-picker:size-5 group-data-[size=xs]/date-picker:[&_svg]:size-2.5! group-data-[size=sm]/date-picker:[&_svg]:size-3! group-data-[size=md]/date-picker:[&_svg]:size-3.5!"
@@ -153,7 +153,7 @@ function SelectMultiValue({
       data-slot="select-multi-value"
       data-overflow={overflow}
       className={cn(
-        "flex min-w-0 flex-1 items-center gap-(--fx-control-gap-tight)",
+        "flex min-w-0 flex-1 items-center gap-(--fds-g-spacing-control-gap-tight)",
         overflow === "scroll"
           ? "overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           : "overflow-hidden",
@@ -214,9 +214,9 @@ function SelectItemIndicator({ className, ...props }: SelectPrimitive.ItemIndica
 }
 
 const selectTriggerSizeClassName = {
-  xs: "h-(--fx-control-xs-height) rounded-md text-xs",
-  sm: "h-(--fx-control-sm-height) rounded-md text-sm",
-  md: "h-(--fx-control-md-height) rounded-lg text-base",
+  xs: "h-(--fds-g-sizing-control-block-xs) rounded-md text-xs",
+  sm: "h-(--fds-g-sizing-control-block-sm) rounded-md text-sm",
+  md: "h-(--fds-g-sizing-control-block-md) rounded-lg text-base",
 } as const
 
 const selectContentSizeClassName = {
@@ -253,7 +253,7 @@ function SelectTrigger({
       data-variant={variant}
       data-clearable={clearable ? true : undefined}
       className={cn(
-        "group/select-trigger flex w-fit items-center justify-between gap-2 border px-2 text-foreground whitespace-nowrap transition-colors outline-none select-none focus-visible:border-primary disabled:cursor-not-allowed disabled:border-border-subtle disabled:bg-surface-disabled disabled:text-foreground-disabled disabled:opacity-100 aria-invalid:border-destructive data-[state=hover]:border-primary data-[state=focus]:border-primary data-popup-open:border-primary data-popup-open:bg-surface data-placeholder:text-foreground-disabled data-[clearable=true]:[&_[data-slot=select-value]]:pr-5 has-[&_[data-slot=select-multi-value]]:pl-(--fx-control-gap-tight) *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 disabled:[&_svg]:text-foreground-disabled [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "group/select-trigger flex w-fit items-center justify-between gap-2 border px-2 text-foreground whitespace-nowrap transition-colors outline-none select-none focus-visible:border-primary disabled:cursor-not-allowed disabled:border-border-subtle disabled:bg-surface-disabled disabled:text-foreground-disabled disabled:opacity-100 aria-invalid:border-destructive data-[state=hover]:border-primary data-[state=focus]:border-primary data-popup-open:border-primary data-popup-open:bg-surface data-placeholder:text-foreground-disabled data-[clearable=true]:[&_[data-slot=select-value]]:pr-5 has-[&_[data-slot=select-multi-value]]:pl-(--fds-g-spacing-control-gap-tight) *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 disabled:[&_svg]:text-foreground-disabled [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         selectTriggerSizeClassName[size],
         selectTriggerVariantClassName[variant],
         className

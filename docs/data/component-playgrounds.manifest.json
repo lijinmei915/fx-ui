@@ -1657,6 +1657,16 @@
       "route": "#governance-map",
       "selector": "#governance-map-system",
       "test": "治理工程运行图"
+    },
+    "fds-token-architecture": {
+      "route": "#tokens",
+      "selector": "#tokens-architecture",
+      "test": "FDS Token 四层架构"
+    },
+    "foundation-icons": {
+      "route": "#tokens-icons",
+      "selector": "#tokens-icons",
+      "test": "Foundation 图标规范"
     }
   },
   "components": {

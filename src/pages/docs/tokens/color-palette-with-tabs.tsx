@@ -1,28 +1,31 @@
 import { useRef, useState } from "react"
 import { WebsiteCardContainer } from "@/components/fx/website-card-container"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { CheckIcon } from "@/lib/icons"
 import { ColorSwatch, NEUTRAL_STEPS, PALETTE_STEPS } from "./color-seed-preview"
 
 type Lang = "zh" | "en"
 
 export const seedColors = [
-{ name: "Orange", nameZh: "橙", tag: "", tagZh: "", cssVar: "--fx-seed-orange", hueOffset: "#FF8000", prefix: "--fx-orange" },
-{ name: "Amber", nameZh: "琥珀", tag: "Warning", tagZh: "警告", cssVar: "--fx-seed-amber", hueOffset: "#F59E0B", prefix: "--fx-amber" },
-{ name: "Yellow", nameZh: "黄", tag: "", tagZh: "", cssVar: "--fx-seed-yellow", hueOffset: "#EAB308", prefix: "--fx-yellow" },
-{ name: "Lime", nameZh: "嫩绿", tag: "", tagZh: "", cssVar: "--fx-seed-lime", hueOffset: "#84CC16", prefix: "--fx-lime" },
-{ name: "Chartreuse", nameZh: "黄绿", tag: "", tagZh: "", cssVar: "--fx-seed-yellow-green", hueOffset: "custom", prefix: "--fx-yellow-green" },
-{ name: "Green", nameZh: "绿", tag: "Success", tagZh: "成功", cssVar: "--fx-seed-green", hueOffset: "#22C55E", prefix: "--fx-green" },
-{ name: "Teal", nameZh: "青", tag: "", tagZh: "", cssVar: "--fx-seed-teal", hueOffset: "#14B8A6", prefix: "--fx-teal" },
-{ name: "Cyan", nameZh: "青蓝", tag: "", tagZh: "", cssVar: "--fx-seed-cyan", hueOffset: "#06B6D4", prefix: "--fx-cyan" },
-{ name: "Light Blue", nameZh: "亮蓝", tag: "", tagZh: "", cssVar: "--fx-seed-light-blue", hueOffset: "#38BDF8", prefix: "--fx-light-blue" },
-{ name: "Blue", nameZh: "蓝", tag: "Link/Info", tagZh: "链接/信息", cssVar: "--fx-seed-blue", hueOffset: "#3B73E8", prefix: "--fx-blue" },
-{ name: "Indigo", nameZh: "靛蓝", tag: "", tagZh: "", cssVar: "--fx-seed-indigo", hueOffset: "#6366F1", prefix: "--fx-indigo" },
-{ name: "Purple", nameZh: "紫", tag: "", tagZh: "", cssVar: "--fx-seed-purple", hueOffset: "#8B5CF6", prefix: "--fx-purple" },
-{ name: "Magenta", nameZh: "洋红", tag: "", tagZh: "", cssVar: "--fx-seed-magenta", hueOffset: "#D946EF", prefix: "--fx-magenta" },
-{ name: "Pink", nameZh: "粉", tag: "", tagZh: "", cssVar: "--fx-seed-pink", hueOffset: "#EC4899", prefix: "--fx-pink" },
-{ name: "Red", nameZh: "红", tag: "Error", tagZh: "错误", cssVar: "--fx-seed-red", hueOffset: "#EF4444", prefix: "--fx-red" }];
+{ name: "Orange", nameZh: "橙", tag: "", tagZh: "", cssVar: "--fds-g-color-seed-orange", hueOffset: "#FF8000", prefix: "--fds-g-color-orange-base" },
+{ name: "Amber", nameZh: "琥珀", tag: "Warning", tagZh: "警告", cssVar: "--fds-g-color-seed-amber", hueOffset: "#F59E0B", prefix: "--fds-g-color-amber-base" },
+{ name: "Yellow", nameZh: "黄", tag: "", tagZh: "", cssVar: "--fds-g-color-seed-yellow", hueOffset: "#EAB308", prefix: "--fds-g-color-yellow-base" },
+{ name: "Lime", nameZh: "嫩绿", tag: "", tagZh: "", cssVar: "--fds-g-color-seed-lime", hueOffset: "#84CC16", prefix: "--fds-g-color-lime-base" },
+{ name: "Chartreuse", nameZh: "黄绿", tag: "", tagZh: "", cssVar: "--fds-g-color-seed-yellow-green", hueOffset: "custom", prefix: "--fds-g-color-yellow-green-base" },
+{ name: "Green", nameZh: "绿", tag: "Success", tagZh: "成功", cssVar: "--fds-g-color-seed-green", hueOffset: "#22C55E", prefix: "--fds-g-color-green-base" },
+{ name: "Teal", nameZh: "青", tag: "", tagZh: "", cssVar: "--fds-g-color-seed-teal", hueOffset: "#14B8A6", prefix: "--fds-g-color-teal-base" },
+{ name: "Cyan", nameZh: "青蓝", tag: "", tagZh: "", cssVar: "--fds-g-color-seed-cyan", hueOffset: "#06B6D4", prefix: "--fds-g-color-cyan-base" },
+{ name: "Light Blue", nameZh: "亮蓝", tag: "", tagZh: "", cssVar: "--fds-g-color-seed-light-blue", hueOffset: "#38BDF8", prefix: "--fds-g-color-light-blue-base" },
+{ name: "Blue", nameZh: "蓝", tag: "Link/Info", tagZh: "链接/信息", cssVar: "--fds-g-color-seed-blue", hueOffset: "#3B73E8", prefix: "--fds-g-color-blue-base" },
+{ name: "Indigo", nameZh: "靛蓝", tag: "", tagZh: "", cssVar: "--fds-g-color-seed-indigo", hueOffset: "#6366F1", prefix: "--fds-g-color-indigo-base" },
+{ name: "Purple", nameZh: "紫", tag: "", tagZh: "", cssVar: "--fds-g-color-seed-purple", hueOffset: "#8B5CF6", prefix: "--fds-g-color-purple-base" },
+{ name: "Magenta", nameZh: "洋红", tag: "", tagZh: "", cssVar: "--fds-g-color-seed-magenta", hueOffset: "#D946EF", prefix: "--fds-g-color-magenta-base" },
+{ name: "Pink", nameZh: "粉", tag: "", tagZh: "", cssVar: "--fds-g-color-seed-pink", hueOffset: "#EC4899", prefix: "--fds-g-color-pink-base" },
+{ name: "Red", nameZh: "红", tag: "Error", tagZh: "错误", cssVar: "--fds-g-color-seed-red", hueOffset: "#EF4444", prefix: "--fds-g-color-red-base" }];
 export function ColorPaletteWithTabs({ lang }: {lang: Lang;}) {
   const customPrefix = null;
-  const [darkBg, setDarkBg] = useState(false);
+  const [paletteProfile, setPaletteProfile] = useState<"base" | "dark">("base");
+  const darkBg = paletteProfile === "dark";
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -37,7 +40,7 @@ export function ColorPaletteWithTabs({ lang }: {lang: Lang;}) {
       {/* Toast */}
       {toast &&
       <div className="fixed left-1/2 top-4 z-50 -translate-x-1/2 flex items-center gap-2.5 rounded-lg border border-border bg-popover px-4 py-2.5 shadow-l1">
-          <span className="text-green-500">✓</span>
+          <CheckIcon aria-hidden="true" className="size-4 shrink-0 text-success" />
           <span className="text-sm text-foreground">
             已复制 <code className="ml-1 rounded bg-muted px-1.5 py-0.5 text-xs font-mono">{toast}</code>
           </span>
@@ -50,30 +53,20 @@ export function ColorPaletteWithTabs({ lang }: {lang: Lang;}) {
           <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Chromatic Palette" : "彩色色板"}</h2>
           <p className="text-sm text-muted-foreground">
             {lang === "en" ?
-            "16 chromatic families × 12 steps, derived from a seed in oklch. 01–08 toward white: L += (1−L)×[.93 .84 .72 .58 .43 .28 .14 .12], C ×= [.04 .10 .18 .30 .45 .62 .80 .94]. 09 = seed. 10–12 toward black: L ×= [.87 .72 .35], C ×= [.95 .82 .65]. Steps 01–07 dark text, 08–12 white. Click a swatch to copy its variable." :
-            "16 个有色色系 × 12 阶（中性灰见下方中性色色板），由种子色在 oklch 空间推导。01–08 向白：L += (1−L)×[.93 .84 .72 .58 .43 .28 .14 .12]、C ×= [.04 .10 .18 .30 .45 .62 .80 .94]；09 = 种子色；10–12 向黑：L ×= [.87 .72 .35]、C ×= [.95 .82 .65]。01–07 深色字，08–12 白色字。点击色块复制变量名。"}
+            paletteProfile === "base"
+              ? "Base: 16 chromatic families × 12 steps. 10–80 move toward white, 90 is the seed, and 100–120 move toward black."
+              : "Dark: the same 16 seeds produce a separate 12-step profile. 10 starts near the dark-surface anchor, 90 preserves the seed, and 100–120 provide brighter accents."
+            : paletteProfile === "base"
+              ? "Base：16 个有色色系 × 12 阶。10–80 向白，90 为种子色，100–120 向黑。"
+              : "Dark：同一组 16 个 Seed 生成独立暗色色阶。10 从暗色表面锚点起步，90 保留 Seed，100–120 提供高亮色。"}
           </p>
         </div>
-        <div className="flex shrink-0 items-center rounded-md border border-border bg-muted/50 p-0.5 text-xs">
-          <button
-            onClick={() => setDarkBg(false)}
-            className={[
-            "rounded px-3 py-1 transition-colors",
-            !darkBg ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"].
-            join(" ")}>
-            
-            {lang === "en" ? "Light" : "浅色"}
-          </button>
-          <button
-            onClick={() => setDarkBg(true)}
-            className={[
-            "rounded px-3 py-1 transition-colors",
-            darkBg ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"].
-            join(" ")}>
-            
-            {lang === "en" ? "Dark" : "深色"}
-          </button>
-        </div>
+        <Tabs value={paletteProfile} onValueChange={(value) => setPaletteProfile(value as "base" | "dark")} className="shrink-0">
+          <TabsList size="sm">
+            <TabsTrigger value="base">Base</TabsTrigger>
+            <TabsTrigger value="dark">Dark</TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
 
       {/* 色板 */}
@@ -108,9 +101,9 @@ export function ColorPaletteWithTabs({ lang }: {lang: Lang;}) {
           <div key={s} className={[
           "flex-1 flex items-center justify-center py-1.5",
           darkBg ? "text-white/35" : "text-muted-foreground",
-          ["03", "06", "09", "11"].includes(s) ? darkBg ? "border-l border-white/20" : "border-l border-border-subtle" : ""].
+          ["30", "60", "90", "110"].includes(s) ? darkBg ? "border-l border-white/20" : "border-l border-border-subtle" : ""].
           join(" ")}>
-              {s}
+              {s === "90" ? "90 · Seed" : s}
             </div>
           )}
         </div>
@@ -118,6 +111,9 @@ export function ColorPaletteWithTabs({ lang }: {lang: Lang;}) {
         {/* 色板行 */}
         <div className="flex flex-col gap-[2px]">
         {seedColors.map((seed) =>
+          {
+          const palettePrefix = seed.prefix.replace("-base", `-${paletteProfile}`);
+          return (
           <div
             key={seed.name}
             className="flex items-stretch">
@@ -140,16 +136,18 @@ export function ColorPaletteWithTabs({ lang }: {lang: Lang;}) {
               {PALETTE_STEPS.map((step) =>
               <ColorSwatch
                 key={step}
-                varName={`${seed.prefix}-${step}`}
+                varName={`${palettePrefix}-${step}`}
                 step={step}
                 label={seed.name}
-                semanticTag={step === "09" && seed.tag ? seed.tag : undefined}
+                semanticTag={step === "90" && seed.tag ? seed.tag : undefined}
                 onCopy={handleCopy}
+                fixedTextDark={paletteProfile === "base" ? Number(step) <= 60 : Number(step) >= 110}
                 className="" />
 
               )}
             </div>
-          </div>
+          </div>)
+          }
           )}
         </div>
         </div>
@@ -164,10 +162,10 @@ export function ColorPaletteWithTabs({ lang }: {lang: Lang;}) {
           "全站唯一中性灰轴 — 20 阶，由 color-mix(white, neutral-dark N%) 推导，N = [0 2 5 9 14 19 25 31 37 43 49 55 61 67 73 79 85 90 95 100]。neutral-dark = oklch(L 0.12, C 0.008, 品牌色相)，极淡染色、肉眼近中性。页面底/卡片/文字/边框，以及中性交互面（secondary / muted / ghost）都取自这里。点击色块复制变量名。"}
         </p>
         <WebsiteCardContainer padding="none">
-          <div className={["overflow-hidden transition-colors", darkBg ? "bg-zinc-900" : "bg-card"].join(" ")}>
+          <div className="overflow-hidden bg-card">
           {/* 阶编号行 */}
-          <div className={["flex items-center border-b text-xs", darkBg ? "border-white/10" : "border-border-subtle"].join(" ")}>
-            <div className={["w-24 shrink-0 self-stretch border-r", darkBg ? "border-white/10" : "border-border-subtle"].join(" ")} />
+          <div className="flex items-center border-b border-border-subtle text-xs">
+            <div className="w-24 shrink-0 self-stretch border-r border-border-subtle" />
             {NEUTRAL_STEPS.map((s) =>
             <div key={s} className={["flex-1 flex items-center justify-center py-1.5", darkBg ? "text-white/35" : "text-muted-foreground"].join(" ")}>
                 {s}
@@ -176,8 +174,8 @@ export function ColorPaletteWithTabs({ lang }: {lang: Lang;}) {
           </div>
           {/* 色板行 */}
           <div className="flex items-stretch">
-            <div className={["w-24 shrink-0 flex flex-col justify-center px-3 py-2 border-r", darkBg ? "border-white/10" : "border-border-subtle"].join(" ")}>
-              <span className={`text-xs font-semibold leading-tight ${darkBg ? "text-white" : "text-foreground"}`}>
+            <div className="flex w-24 shrink-0 flex-col justify-center border-r border-border-subtle px-3 py-2">
+              <span className="text-xs font-semibold leading-tight text-foreground">
                 {lang === "en" ? "Neutral" : "中性灰"}
               </span>
             </div>
@@ -185,11 +183,10 @@ export function ColorPaletteWithTabs({ lang }: {lang: Lang;}) {
               {NEUTRAL_STEPS.map((step) =>
               <ColorSwatch
                 key={step}
-                varName={`--fx-neutrals-${step}`}
+                varName={`--fds-g-color-neutral-base-${step}`}
                 step={step}
                 label="N"
                 onCopy={handleCopy}
-                darkTextMax={11}
                 className="" />
 
               )}

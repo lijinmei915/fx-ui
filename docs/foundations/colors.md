@@ -48,11 +48,11 @@ shadcn/ui 和业务页面真正使用的语义槽。
 | 警告 warning | amber | Base 90 / 80 / 100 / 50 | Base 10 / 20 / 30 |
 | 信息 info | blue | Base 90 / 80 / 100 / 50 | Base 10 / 20 / 30 |
 
-- 实心：`bg-{success/warning/info/destructive}`、`-hover`、`-active`、`-disabled`；文字消费各角色的 `foreground-*` Semantic
-- 警告实心组固定使用浅色 `foreground-warning`；琳珀 Base 90/80/100 不参与品牌 Seed 的黑白前景自动回退
-- Amber Base 80 是受控 Map 例外：保留比 Base 90 更浅的 hover 关系，同时保证与浅色前景至少 `2.0:1`；禁用态 Base 50 仍使用深色文字
+- 实心：`bg-{success/warning/info/destructive}`、`-hover`、`-active`、`-disabled`；各角色保留 `foreground-*` Semantic 名称，但统一引用主按钮 `foreground-primary`
+- 只有主按钮 Default/Hover/Active 参与整组黑白前景解析；危险、成功、警告、信息不再独立做颜色对比度选择，默认、悬浮、按下和禁用均跟随主按钮前景
+- Amber Base 80 是受控 Map 例外：保留比 Base 90 更浅的 hover 关系；禁用态继续使用 Base 50 背景和统一主按钮前景
 - 浅色：`bg-{...}-light`、`-light-hover`、`-light-active`，文字取该色 09 阶
-- 实心操作色统一引用 Foundation Base 90/80/100/50；Map 不提供第二套 Solid 色阶。Primary、Destructive、Success、Warning、Info 各有一个生成式 `--fds-g-color-foreground-*`：Default/Hover/Active 三态对白色的对比度都达到 FDS `2.0:1` 保护线时整组使用白色，否则整组回退近黑色，hover/active 不单独换字色。正文 WCAG `4.5:1` 与非文字 `3:1` 仍是独立质量门，没有降低。
+- 实心操作色统一引用 Foundation Base 90/80/100/50；Map 不提供第二套 Solid 色阶。Theme Resolver 只解析 `--fds-g-color-foreground-primary`，其余四个角色前景 Hook 是对它的稳定别名，不建立第二套对比度逻辑。正文 WCAG `4.5:1` 与非文字 `3:1` 仍是独立质量门。
 - **中性 / 默认标签用 `secondary`（灰）**，不归入状态色：草稿、未开始、归档这类不带情绪的标签，用 secondary（neutrals 03/04/05），不要拿 info 假扮中性
 
 ## 链接色（Link）
@@ -231,7 +231,7 @@ Dark Map 只有 FDS 名称，不新增历史 `--fx-*` 别名。动态 Brand 没�
 
 ### 实心操作组
 
-适用：主色和状态色实心操作面。背景色严格走统一色阶；前景色是独立的 Semantic，不允许为了固定白字而另造或压暗背景色阶。
+适用：主色和状态色实心操作面。背景色严格走统一色阶；Primary 前景由 Theme Resolver 统一确定，四类功能色通过各自 Semantic Hook 跟随它，不允许为了迁就文字色而另造或压暗背景色阶。
 
 | 态 | 取阶 | 规律 |
 |------|------|------|

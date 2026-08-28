@@ -72,9 +72,32 @@ test("navigation: direct hash resolves the registered documentation page", async
   await expect(
     page.getByRole("heading", { name: "颜色", exact: true }),
   ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "主题色", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "色板", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "语义色", exact: true })).toBeVisible();
   await expect(page.getByText("90 · Seed", { exact: true })).toHaveCount(1);
-  await expect(page.getByText("90 · Base", { exact: true })).toHaveCount(1);
-  await expect(page.getByText("Brand 90", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("Brand 90", { exact: true })).toHaveCount(1);
+});
+
+test("foundation colors: Seed input updates the local Map preview", async ({ page }) => {
+  await page.goto("/#tokens-colors");
+  const previewSteps = page.locator("[data-token-step]");
+  const initialLightStep = await previewSteps.first().evaluate((element) =>
+    getComputedStyle(element).backgroundColor,
+  );
+
+  await page.getByLabel("主题种子色十六进制值").fill("457898");
+
+  await expect.poll(() => previewSteps.nth(8).evaluate((element) =>
+    getComputedStyle(element).backgroundColor,
+  )).toBe("rgb(69, 120, 152)");
+  await expect.poll(() => previewSteps.first().evaluate((element) =>
+    getComputedStyle(element).backgroundColor,
+  )).not.toBe(initialLightStep);
+
+  await page.getByLabel("主题种子色十六进制值").fill("FFF881");
+  await expect(previewSteps.nth(6)).toHaveAttribute("data-swatch-foreground", "fallback");
+  await expect(previewSteps.nth(10)).toHaveAttribute("data-swatch-foreground", "preferred");
 });
 
 test("theme: solid foreground keeps one role color and falls back for a bright seed", async ({
@@ -84,6 +107,23 @@ test("theme: solid foreground keeps one role color and falls back for a bright s
   await expect.poll(() => page.evaluate(() =>
     document.documentElement.style.getPropertyValue("--fds-g-color-foreground-primary"),
   )).toBe("var(--fds-g-color-neutral-base-10)");
+  for (const role of ["destructive", "success", "warning", "info"]) {
+    await expect.poll(() => page.evaluate((name) => {
+      const root = document.documentElement;
+      const primary = document.createElement("i");
+      const status = document.createElement("i");
+      primary.style.color = "var(--fds-g-color-foreground-primary)";
+      status.style.color = `var(--fds-g-color-foreground-${name})`;
+      root.append(primary, status);
+      const result = {
+        inlineOverride: root.style.getPropertyValue(`--fds-g-color-foreground-${name}`),
+        followsPrimary: getComputedStyle(primary).color === getComputedStyle(status).color,
+      };
+      primary.remove();
+      status.remove();
+      return result;
+    }, role)).toEqual({ inlineOverride: "", followsPrimary: true });
+  }
 
   await page.evaluate(() => {
     window.localStorage.setItem("fx-ui-theme-config", JSON.stringify({
@@ -98,6 +138,23 @@ test("theme: solid foreground keeps one role color and falls back for a bright s
   await expect.poll(() => page.evaluate(() =>
     document.documentElement.style.getPropertyValue("--fds-g-color-foreground-primary"),
   )).toBe("var(--fds-g-color-neutral-base-200)");
+  for (const role of ["destructive", "success", "warning", "info"]) {
+    await expect.poll(() => page.evaluate((name) => {
+      const root = document.documentElement;
+      const primary = document.createElement("i");
+      const status = document.createElement("i");
+      primary.style.color = "var(--fds-g-color-foreground-primary)";
+      status.style.color = `var(--fds-g-color-foreground-${name})`;
+      root.append(primary, status);
+      const result = {
+        inlineOverride: root.style.getPropertyValue(`--fds-g-color-foreground-${name}`),
+        followsPrimary: getComputedStyle(primary).color === getComputedStyle(status).color,
+      };
+      primary.remove();
+      status.remove();
+      return result;
+    }, role)).toEqual({ inlineOverride: "", followsPrimary: true });
+  }
 });
 
 test("foundation palette: base and dark use their fixed documentation foreground splits", async ({ page }) => {
@@ -114,7 +171,7 @@ test("foundation palette: base and dark use their fixed documentation foreground
     }
   }
 
-  await page.getByRole("tab", { name: "Dark", exact: true }).click();
+  await page.getByRole("tab", { name: "暗色", exact: true }).click();
   for (const family of ["orange", "yellow", "lime", "blue"]) {
     for (const step of ["10", "20", "30", "40", "50", "60", "70", "80", "90", "100"]) {
       await expect(page.locator(`[data-token-color="--fds-g-color-${family}-dark-${step}"]`))

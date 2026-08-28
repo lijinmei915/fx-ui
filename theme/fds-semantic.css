@@ -41,7 +41,7 @@
   --fds-g-color-action-destructive: var(--fds-g-color-red-base-90);
   --fds-g-color-action-destructive-hover: var(--fds-g-color-red-base-80);
   --fds-g-color-action-destructive-active: var(--fds-g-color-red-base-100);
-  --fds-g-color-foreground-destructive: var(--fds-g-color-neutral-base-10);
+  --fds-g-color-foreground-destructive: var(--fds-g-color-foreground-primary);
   --fds-g-color-action-destructive-disabled: var(--fds-g-color-red-base-50);
   --fds-g-color-action-destructive-subtle: var(--fds-g-color-red-base-10);
   --fds-g-color-action-destructive-subtle-hover: var(--fds-g-color-red-base-20);
@@ -64,7 +64,7 @@
   --fds-g-color-status-success: var(--fds-g-color-green-base-90);
   --fds-g-color-status-success-hover: var(--fds-g-color-green-base-80);
   --fds-g-color-status-success-active: var(--fds-g-color-green-base-100);
-  --fds-g-color-foreground-success: var(--fds-g-color-neutral-base-10);
+  --fds-g-color-foreground-success: var(--fds-g-color-foreground-primary);
   --fds-g-color-status-success-disabled: var(--fds-g-color-green-base-50);
   --fds-g-color-status-success-subtle: var(--fds-g-color-green-base-10);
   --fds-g-color-status-success-subtle-hover: var(--fds-g-color-green-base-20);
@@ -72,7 +72,7 @@
   --fds-g-color-status-warning: var(--fds-g-color-amber-base-90);
   --fds-g-color-status-warning-hover: var(--fds-g-color-amber-base-80);
   --fds-g-color-status-warning-active: var(--fds-g-color-amber-base-100);
-  --fds-g-color-foreground-warning: var(--fds-g-color-neutral-base-10);
+  --fds-g-color-foreground-warning: var(--fds-g-color-foreground-primary);
   --fds-g-color-status-warning-disabled: var(--fds-g-color-amber-base-50);
   --fds-g-color-status-warning-subtle: var(--fds-g-color-amber-base-10);
   --fds-g-color-status-warning-subtle-hover: var(--fds-g-color-amber-base-20);
@@ -84,7 +84,7 @@
   --fds-g-color-status-info-subtle: var(--fds-g-color-blue-base-10);
   --fds-g-color-status-info-subtle-hover: var(--fds-g-color-blue-base-20);
   --fds-g-color-status-info-subtle-active: var(--fds-g-color-blue-base-30);
-  --fds-g-color-foreground-info: var(--fds-g-color-neutral-base-10);
+  --fds-g-color-foreground-info: var(--fds-g-color-foreground-primary);
   --fds-g-color-highlight-orange: var(--fds-g-color-orange-base-10);
   --fds-g-color-highlight-blue: var(--fds-g-color-blue-base-10);
   --fds-g-color-navigation-surface: var(--fds-g-color-neutral-base-10);

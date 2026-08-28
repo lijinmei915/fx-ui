@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "format": "fx-ui/theme-artifact",
   "name": "fx-theme",
-  "version": "1.12.0",
+  "version": "1.14.0",
   "algorithm": {
     "id": "fx-theme-derivation",
     "version": 5,
@@ -412,11 +412,7 @@
       "--fds-g-color-seed-brand"
     ],
     "resolverWrites": [
-      "--fds-g-color-foreground-primary",
-      "--fds-g-color-foreground-destructive",
-      "--fds-g-color-foreground-success",
-      "--fds-g-color-foreground-warning",
-      "--fds-g-color-foreground-info"
+      "--fds-g-color-foreground-primary"
     ],
     "cssDerivedOutputs": [
       "--fds-g-color-brand-base-10",
@@ -1522,7 +1518,7 @@
   "artifacts": {
     "css": {
       "path": "registry/fx-theme.css",
-      "sha256": "d1b8876fbb79232be3a62be5fe308ecaf76082c139c12f290a17e6bcb91c934f"
+      "sha256": "3a1d5ed037931f6d84f4349d59bb3e2fefc3dbeffce57c693a58d91ca9d5e597"
     },
     "shadcnRegistry": {
       "path": "registry/fx-theme.json",
@@ -1542,12 +1538,12 @@
   ],
   "sourceIntegrity": {
     "foundation": "ccc4a54ec49a4941bbfcb3f5645f61223a134d307a5e98d9a681ef764f3c6e86",
-    "semantic": "60ea8816ef8460855a152c007dbab27b0506c465ad1091f15ea9948464319be8",
+    "semantic": "bc5df8e00b1f37dc6fc12b1d08935416b87df2cf00d3de412374ea74be8da1bc",
     "components": "5b1e10dc334b7835d3ef26222b6ea40eef79f8ce142203b71ff8ed60dae25ef8",
     "entry": "3a6124e09fb19802d681141dce94cc13969dba4dbac445d8c784d7e896c842a1",
-    "presets": "4e277c98db039565bee2b6444a7a3bd543dba8f58504befffbe63ffb8a3334ea",
+    "presets": "8b4814f0045017b7b218757bcfdf84a0014a8c43a94b7e1d3c07b4d9dbee4dcc",
     "naming": "20375ab1f54177c9b8c3c2443221eb2f0018c24274fc391103e85508624b0970",
-    "semanticContract": "2124790cc459f52fde7bf30fc6114536495c675a5c32d2e5e60883c67a8db8e5",
+    "semanticContract": "2d39c285325ba0314be051707aae0f18b3ce3b56154455e2dfa6eae9f1512a6e",
     "componentContract": "4b3ff26aa18f6797761503734a4e0476348a8829557b134b8c16e2c3179e78f7"
   }
 }

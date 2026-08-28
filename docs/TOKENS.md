@@ -74,15 +74,16 @@ Theme Preset / custom brand seed
               -> v5 适配器只写 --fds-g-color-seed-brand
               -> Foundation CSS 派生 Base/Dark 色阶
               -> Global Semantic 自动消费色阶
-              -> resolver 为五类实心角色整组三态选择白色或近黑色前景
+              -> resolver 为主按钮整组三态选择白色或近黑色前景
+              -> 四类功能色前景通过 Semantic 稳定别名跟随主按钮
               -> 同版本 CSS / contract JSON / shadcn light+dark registry
               -> React / 未来框架适配器渲染
 ```
 
 - Foundation 仍只允许 Foundation 维护者修改；主题生成不会写回或扩张物理刻度。
-- light/dark 与 7 个预设、7 个极端自定义 seed 样本必须通过 `docs/data/theme-audit.manifest.json` 的真实 Chromium 审计，才可进入 `publishedModes`。
+- light/dark 与 7 个预设、7 个常规品牌色自定义 seed 样本必须通过 `docs/data/theme-audit.manifest.json` 的真实 Chromium 审计，才可进入 `publishedModes`；纯黑、纯白及纯 RGB/CMY 极端输入暂不作为发布门禁。
 - 主色预设必须引用已存在的 Foundation seed；自定义色仅允许规范化的 6 位 Hex 输入。
-- v5 保留用户输入的品牌 seed；实心交互统一由 Semantic 映射 Base 90/80/100，禁用态映射 Base 50，不再另造一套 Solid 色阶。Resolver 对 Primary、Destructive、Success、Warning、Info 的 Default/Hover/Active 整组判断：白色全部达到 `2.0:1` 才整组用白色，否则整组用近黑色；该保护线不替代正文 `4.5:1` 和非文字 `3:1`。16 个固定基础色相保留独立 Dark 12 阶。
+- v5 保留用户输入的品牌 seed；实心交互统一由 Semantic 映射 Base 90/80/100，禁用态映射 Base 50，不再另造一套 Solid 色阶。Resolver 只对 Primary 的 Default/Hover/Active 整组判断：白色全部达到 `2.0:1` 才整组用白色，否则整组用近黑色；Destructive、Success、Warning、Info 的角色前景 Hook 统一引用 Primary 前景，不再分别校验。该保护线不替代正文 `4.5:1` 和非文字 `3:1`。16 个固定基础色相保留独立 Dark 12 阶。
 - 字体、密度、圆角、阴影和动效均已改为 Foundation 引用；框架运行时不再保存这些物理值副本。
 - 排版、控件、面板、导航和主题动效共有 41 个 profile 输出登记为 `internal` Global Semantic；Preset 把它们映射到 Foundation 引用，消费者只读 Semantic 名称。
 - 任何框架不得复制预设表或重写色阶公式。算法版本变化必须同步 contract、审计和发布版本。

@@ -3,7 +3,7 @@
     "fds": {
       "schemaVersion": 1,
       "format": "fds/semantic-token-source",
-      "contractVersion": "1.0.0-draft.8",
+      "contractVersion": "1.0.0-draft.9",
       "truthSource": "tokens/source/semantic.tokens.json",
       "layer": "semantic",
       "owner": "fds-maintainers-with-approved-collaborators",
@@ -262,8 +262,8 @@
     {
       "id": "color.foreground.destructive",
       "$type": "color",
-      "$value": "var(--fds-g-color-neutral-base-10)",
-      "$extensions": { "fds": { "cssName": "--fds-g-color-foreground-destructive", "aliases": ["--destructive-foreground"], "stability": "stable", "derivation": "solid-foreground-destructive" } }
+      "$value": "var(--fds-g-color-foreground-primary)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-foreground-destructive", "aliases": ["--destructive-foreground"], "stability": "stable", "derivation": "alias-primary-foreground" } }
     },
     {
       "id": "color.action.destructive-disabled",
@@ -400,8 +400,8 @@
     {
       "id": "color.foreground.success",
       "$type": "color",
-      "$value": "var(--fds-g-color-neutral-base-10)",
-      "$extensions": { "fds": { "cssName": "--fds-g-color-foreground-success", "aliases": ["--success-foreground"], "stability": "stable", "derivation": "solid-foreground-success" } }
+      "$value": "var(--fds-g-color-foreground-primary)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-foreground-success", "aliases": ["--success-foreground"], "stability": "stable", "derivation": "alias-primary-foreground" } }
     },
     {
       "id": "color.status.success-disabled",
@@ -448,8 +448,8 @@
     {
       "id": "color.foreground.warning",
       "$type": "color",
-      "$value": "var(--fds-g-color-neutral-base-10)",
-      "$extensions": { "fds": { "cssName": "--fds-g-color-foreground-warning", "aliases": ["--warning-foreground"], "stability": "stable", "derivation": "solid-foreground-warning" } }
+      "$value": "var(--fds-g-color-foreground-primary)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-foreground-warning", "aliases": ["--warning-foreground"], "stability": "stable", "derivation": "alias-primary-foreground" } }
     },
     {
       "id": "color.status.warning-disabled",
@@ -520,8 +520,8 @@
     {
       "id": "color.foreground.info",
       "$type": "color",
-      "$value": "var(--fds-g-color-neutral-base-10)",
-      "$extensions": { "fds": { "cssName": "--fds-g-color-foreground-info", "aliases": ["--info-foreground"], "stability": "stable", "derivation": "solid-foreground-info" } }
+      "$value": "var(--fds-g-color-foreground-primary)",
+      "$extensions": { "fds": { "cssName": "--fds-g-color-foreground-info", "aliases": ["--info-foreground"], "stability": "stable", "derivation": "alias-primary-foreground" } }
     },
     {
       "id": "color.highlight.orange",

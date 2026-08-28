@@ -2,12 +2,20 @@ import { useEffect, useRef, useState, type CSSProperties } from "react"
 import { DocSurfaceCard } from "@/components/fx/doc-surface"
 import { Input, InputAffix, InputGroup } from "@/components/ui/input"
 import { solidForegroundContract } from "@/lib/theme-runtime"
+import mapTokenContract from "../../../../tokens/source/map.tokens.json"
 
 export const PALETTE_STEPS = ["10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120"] as const;
 export const NEUTRAL_STEPS = ["10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200"] as const;
 type SwatchInfo = { ratio: string; hex: string; textDark: boolean };
 
 const HEX_COLOR_PATTERN = /^(?:[\da-f]{3,4}|[\da-f]{6}|[\da-f]{8})$/i
+
+const previewMapVariables = Object.fromEntries(
+  mapTokenContract.palette.steps.map((step) => [
+    `--fds-g-color-brand-base-${step.range}`,
+    step.formula.replace(/\{seed\}/g, "var(--fds-g-color-seed-brand)"),
+  ]),
+)
 
 function resolveColorToHex(color: string) {
   const probe = document.createElement("span")
@@ -63,7 +71,7 @@ export function SeedPreview({ lang }: { lang: "zh" | "en" }) {
       swatchRefs.current.forEach((el, i) => {
         if (!el) return;
         const step = PALETTE_STEPS[i];
-        const info = computeSwatchInfo(el, undefined, Number(step) <= 60);
+        const info = computeSwatchInfo(el);
         if (info.hex) map[step] = info;
       });
       setSwatchInfoMap(map);
@@ -80,9 +88,13 @@ export function SeedPreview({ lang }: { lang: "zh" | "en" }) {
 
   return (
     <DocSurfaceCard
-      className="flex flex-col gap-3 p-4"
-      style={{ "--fds-g-color-seed-brand": previewSeed } as CSSProperties}>
-      <div className="flex items-center gap-3">
+      className="flex flex-col gap-2 p-4"
+      style={{
+        "--fds-g-color-seed-brand": previewSeed,
+        ...previewMapVariables,
+      } as CSSProperties}>
+      <div>
+        <div className="flex items-center gap-3">
         <label className="relative flex h-8 aspect-[6/5] shrink-0 cursor-pointer items-center justify-center rounded-md outline-none focus-within:ring-3 focus-within:ring-ring/50">
           <span className="size-full rounded-sm" style={{ backgroundColor: previewSeed }} aria-hidden="true" />
           <input
@@ -107,12 +119,14 @@ export function SeedPreview({ lang }: { lang: "zh" | "en" }) {
             aria-label={lang === "en" ? "Brand seed hexadecimal value" : "主题种子色十六进制值"}
           />
         </InputGroup>
+        </div>
       </div>
       {input.length > 0 && !inputIsValid ?
       <p id="brand-seed-format" className="text-xs text-destructive">
           {lang === "en" ? "Enter a valid hexadecimal color." : "请输入有效的十六进制色值。"}
         </p> : null}
-      <div className="flex overflow-hidden rounded-md gap-[2px]">
+      <div>
+        <div className="flex overflow-hidden rounded-md gap-[2px]">
         {PALETTE_STEPS.map((step, i) => {
           const info = swatchInfoMap[step];
           const textDark = info?.textDark ?? i + 1 <= 6;
@@ -124,6 +138,7 @@ export function SeedPreview({ lang }: { lang: "zh" | "en" }) {
             <div
               key={step}
               data-token-step={step}
+              data-swatch-foreground={info ? (textDark ? "fallback" : "preferred") : undefined}
               ref={(el) => {swatchRefs.current[i] = el;}}
               className="group relative flex-1 cursor-pointer"
               style={{ minHeight: 72, backgroundColor: `var(--fds-g-color-brand-base-${step})` }}
@@ -149,6 +164,7 @@ export function SeedPreview({ lang }: { lang: "zh" | "en" }) {
             </div>);
 
         })}
+        </div>
       </div>
       {copied && <p className="text-xs text-muted-foreground text-center">已复制 {copied}</p>}
     </DocSurfaceCard>);

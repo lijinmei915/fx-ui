@@ -50,21 +50,21 @@ export function ColorPaletteWithTabs({ lang }: {lang: Lang;}) {
       {/* Keep the description with its heading so the mode control cannot stretch the text rhythm. */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
-          <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Chromatic Palette" : "彩色色板"}</h2>
+          <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Color Palettes" : "色板"}</h2>
           <p className="text-sm text-muted-foreground">
             {lang === "en" ?
             paletteProfile === "base"
-              ? "Base: 16 chromatic families × 12 steps. 10–80 move toward white, 90 is the seed, and 100–120 move toward black."
+              ? "Light: 16 chromatic families × 12 steps. 10–80 move toward white, 90 is the seed, and 100–120 move toward black."
               : "Dark: the same 16 seeds produce a separate 12-step profile. 10 starts near the dark-surface anchor, 90 preserves the seed, and 100–120 provide brighter accents."
             : paletteProfile === "base"
-              ? "Base：16 个有色色系 × 12 阶。10–80 向白，90 为种子色，100–120 向黑。"
-              : "Dark：同一组 16 个 Seed 生成独立暗色色阶。10 从暗色表面锚点起步，90 保留 Seed，100–120 提供高亮色。"}
+              ? "浅色：16 个有色色系 × 12 阶。10–80 向白，90 为种子色，100–120 向黑。"
+              : "暗色：同一组 16 个 Seed 生成独立暗色色阶。10 从暗色表面锚点起步，90 保留 Seed，100–120 提供高亮色。"}
           </p>
         </div>
         <Tabs value={paletteProfile} onValueChange={(value) => setPaletteProfile(value as "base" | "dark")} className="shrink-0">
           <TabsList size="sm">
-            <TabsTrigger value="base">Base</TabsTrigger>
-            <TabsTrigger value="dark">Dark</TabsTrigger>
+            <TabsTrigger value="base">{lang === "en" ? "Light" : "浅色"}</TabsTrigger>
+            <TabsTrigger value="dark">{lang === "en" ? "Dark" : "暗色"}</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>

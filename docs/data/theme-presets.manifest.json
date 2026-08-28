@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fx-ui/theme-preset-contract",
-  "contractVersion": "1.12.0",
+  "contractVersion": "1.14.0",
   "truthSource": "docs/data/theme-presets.manifest.json",
   "humanDoc": "docs/TOKENS.md#主题生成合同",
   "ownership": {
@@ -179,7 +179,7 @@
   },
   "runtimeOutputs": {
     "adapterWrites": ["--fds-g-color-seed-brand"],
-    "resolverWrites": ["--fds-g-color-foreground-primary", "--fds-g-color-foreground-destructive", "--fds-g-color-foreground-success", "--fds-g-color-foreground-warning", "--fds-g-color-foreground-info"],
+    "resolverWrites": ["--fds-g-color-foreground-primary"],
     "cssDerivedOutputs": ["--fds-g-color-brand-base-10", "--fds-g-color-brand-base-20", "--fds-g-color-brand-base-30", "--fds-g-color-brand-base-40", "--fds-g-color-brand-base-50", "--fds-g-color-brand-base-80", "--fds-g-color-brand-base-90", "--fds-g-color-brand-base-100"],
     "semanticConsumers": ["--fds-g-color-brand-identity", "--primary", "--color-primary", "--fx-primary-hover", "--fx-primary-active", "--fx-primary-disabled", "--fx-primary-light", "--fx-primary-light-hover", "--fx-primary-light-active", "--ring"]
   },
@@ -211,15 +211,11 @@
       "preferred": "--fds-g-color-neutral-base-10",
       "fallback": "--fds-g-color-neutral-base-200",
       "groups": [
-        { "id": "primary", "foreground": "--fds-g-color-foreground-primary", "backgrounds": ["--fds-g-color-action-primary", "--fds-g-color-action-primary-hover", "--fds-g-color-action-primary-active"] },
-        { "id": "destructive", "foreground": "--fds-g-color-foreground-destructive", "backgrounds": ["--fds-g-color-action-destructive", "--fds-g-color-action-destructive-hover", "--fds-g-color-action-destructive-active"] },
-        { "id": "success", "foreground": "--fds-g-color-foreground-success", "backgrounds": ["--fds-g-color-status-success", "--fds-g-color-status-success-hover", "--fds-g-color-status-success-active"] },
-        { "id": "warning", "foreground": "--fds-g-color-foreground-warning", "backgrounds": ["--fds-g-color-status-warning", "--fds-g-color-status-warning-hover", "--fds-g-color-status-warning-active"], "policy": "fixed-preferred" },
-        { "id": "info", "foreground": "--fds-g-color-foreground-info", "backgrounds": ["--fds-g-color-status-info", "--fds-g-color-status-info-hover", "--fds-g-color-status-info-active"] }
+        { "id": "primary", "foreground": "--fds-g-color-foreground-primary", "backgrounds": ["--fds-g-color-action-primary", "--fds-g-color-action-primary-hover", "--fds-g-color-action-primary-active"] }
       ]
     },
     "auditedModes": ["light", "dark"],
-    "customSeedSamples": ["#000000", "#FFFFFF", "#00FF00", "#FFFF00", "#0000FF", "#FF00FF", "#00FFFF"],
+    "customSeedSamples": ["#DC2626", "#EA580C", "#CA8A04", "#16A34A", "#0891B2", "#2563EB", "#7C3AED"],
     "darkPalette": {
       "profile": "dark",
       "families": ["orange", "deep-orange", "amber", "yellow", "lime", "yellow-green", "green", "teal", "cyan", "light-blue", "blue", "indigo", "purple", "pink", "magenta", "red"],

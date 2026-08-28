@@ -336,12 +336,22 @@ if (!fs.existsSync(semanticContractPath)) {
   const semanticRuntime = fs.readFileSync(semanticRuntimePath, "utf8")
   const auditedGlobalNames = new Set(themeAudit.coverage?.stableEligibleHooks ?? [])
   const publishedHookNames = new Set(publicThemeContract.stylingHooks?.hooks?.map((hook) => hook.name) ?? [])
+  const primaryForegroundName = "--fds-g-color-foreground-primary"
   for (const token of semanticContract.tokens ?? []) {
     if (token.stability !== "stable") continue
     if (token.visibility !== "public-global") errors.push(`${token.name} stable Global Hook 必须是 public-global`)
     if (!semanticContract.owner) errors.push(`${token.name} stable Global Hook 缺少 Semantic owner`)
     if (!semanticRuntime.includes(`${token.name}:`)) errors.push(`${token.name} stable Global Hook 缺少生成 runtime`)
-    if (!auditedGlobalNames.has(token.name)) errors.push(`${token.name} stable Global Hook 未进入 Theme audit 的实际合格 Hook 清单`)
+    if (token.derivation === "alias-primary-foreground") {
+      if (token.value !== `var(${primaryForegroundName})`) {
+        errors.push(`${token.name} 必须直接引用 ${primaryForegroundName}`)
+      }
+      if (!auditedGlobalNames.has(primaryForegroundName)) {
+        errors.push(`${token.name} 继承的 ${primaryForegroundName} 未进入 Theme audit 的实际合格 Hook 清单`)
+      }
+    } else if (!auditedGlobalNames.has(token.name)) {
+      errors.push(`${token.name} stable Global Hook 未进入 Theme audit 的实际合格 Hook 清单`)
+    }
     if (themeAudit.summary?.status !== "ready") errors.push(`${token.name} stable Global Hook 缺少 ready Theme audit`)
     if (!publishedHookNames.has(token.name)) errors.push(`${token.name} stable Global Hook 未进入公开 Theme contract`)
   }

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "format": "fx-ui/theme-release",
   "name": "fx-theme",
-  "version": "1.12.0",
+  "version": "1.14.0",
   "channel": "stable",
   "status": "released",
   "publishedModes": [
@@ -15,11 +15,11 @@
   },
   "sourceContract": {
     "path": "docs/data/theme-presets.manifest.json",
-    "sha256": "3ca912a30a9367256fcece9c209195820f05d761e2384857dbb47551129b89e0"
+    "sha256": "8b4814f0045017b7b218757bcfdf84a0014a8c43a94b7e1d3c07b4d9dbee4dcc"
   },
   "sourceContracts": {
     "docs/data/theme-presets.manifest.json": {
-      "sha256": "3ca912a30a9367256fcece9c209195820f05d761e2384857dbb47551129b89e0"
+      "sha256": "8b4814f0045017b7b218757bcfdf84a0014a8c43a94b7e1d3c07b4d9dbee4dcc"
     },
     "docs/data/token-naming.manifest.json": {
       "sha256": "20375ab1f54177c9b8c3c2443221eb2f0018c24274fc391103e85508624b0970"
@@ -28,10 +28,10 @@
       "sha256": "6569f85f3889ff16870bf2dd50dd6f2b4f42bcd6e60279ae695e05fbad6af806"
     },
     "tokens/source/map.tokens.json": {
-      "sha256": "76d033ec836434c7ee877a50d2f08dda12b56adcb9ff73501ede66c28ee34248"
+      "sha256": "439a0ab5fdd939a0702e8347830cba90b38fdf799b6b66d8d1ea5b681470b55c"
     },
     "tokens/source/semantic.tokens.json": {
-      "sha256": "09a183d167bf97b0a1ddc5987a95a301a6ce20643465305fe609c0fbb62905ca"
+      "sha256": "f385f178266d7f9feeff504e39f3d1174a7f35f796625397f478ec8ed5919d90"
     },
     "tokens/source/component.tokens.json": {
       "sha256": "499b6a761cc9edf26b7eed07110144936b59edeb254fd92326ae231b20e24f26"
@@ -39,31 +39,31 @@
   },
   "artifacts": {
     "docs/data/fds-foundation.manifest.json": {
-      "sha256": "86c34b2bf35d6cf217ef5b34ba8687e93e29480965600b9f0b93976d57f6d856"
+      "sha256": "afe003c50e80dc8d03b456047a5e21584cbd58445723d7f86173856984082245"
     },
     "docs/data/fds-semantic.manifest.json": {
-      "sha256": "2124790cc459f52fde7bf30fc6114536495c675a5c32d2e5e60883c67a8db8e5"
+      "sha256": "2d39c285325ba0314be051707aae0f18b3ce3b56154455e2dfa6eae9f1512a6e"
     },
     "docs/data/fds-components.manifest.json": {
       "sha256": "4b3ff26aa18f6797761503734a4e0476348a8829557b134b8c16e2c3179e78f7"
     },
     "docs/data/fds-migration-audit.manifest.json": {
-      "sha256": "b7cd1a4f185c10e7282db7d4b171d6eb30ea68a0d54385948f4fae8c39aba8cf"
+      "sha256": "7a6a90f1a28dd18a0d1a5c71985ea05dd56d9891977f984e51d161aca93e1521"
     },
     "registry/fx-theme.css": {
-      "sha256": "fdd18521bb5d15b9461ea7e814a865a6b20636c64e58ee5f85a46d22c8eec02c"
+      "sha256": "3a1d5ed037931f6d84f4349d59bb3e2fefc3dbeffce57c693a58d91ca9d5e597"
     },
     "registry/fx-theme.contract.json": {
-      "sha256": "f45027c8d1adb5a7a32710e8e41e84b766201792d2c6b76087580fd9062d1bbe"
+      "sha256": "e42b4655cc107d4b6c3735179cf118625e224aa74c403deb6b194d029ae05174"
     },
     "registry/fx-theme.json": {
-      "sha256": "6f4e7e12412856445e4035bbe82efdb922fb922d02dd39d9f2e25472ada779c9"
+      "sha256": "59eb8676336a50abbd3af041c3cc3cf6804f831f69618e3c7168777699e0a8d4"
     },
     "docs/data/theme-audit.manifest.json": {
-      "sha256": "0878b8d02eb29da3166e193a7d9b83232e2ef2167174dd4436af49b22fe0abb2"
+      "sha256": "83c61c968c1e4e4e771db7107bf7df3338ab9eeb5c31c56526401f95a3d21c64"
     },
     "docs/data/framework-core.manifest.json": {
-      "sha256": "7095666698d82b441f9c14591652cd1f34a28dfcfb74714a5cc788e91351b2c5"
+      "sha256": "319f89fde51c252a3b82096f46163c8f8de2e965318b7ab01a67968db7d59dca"
     }
   },
   "qualityEvidence": {

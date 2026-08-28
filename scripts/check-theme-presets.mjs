@@ -49,7 +49,7 @@ if (qualityGates?.normalTextMinimum !== 4.5 || qualityGates?.nonTextMinimum !== 
   errors.push("Theme qualityGates 阈值漂移；不得通过降低阈值隐藏可访问性问题")
 }
 const solidForeground = qualityGates?.solidForeground
-const requiredSolidForegroundIds = ["primary", "destructive", "success", "warning", "info"]
+const requiredSolidForegroundIds = ["primary"]
 if (solidForeground?.strategy !== "prefer-light-for-entire-state-group-with-dark-fallback" || solidForeground?.minimumContrast !== 2) {
   errors.push("实心色前景必须使用整组三态优先浅色、2.0:1 保护线与深色回退策略")
 }
@@ -58,15 +58,12 @@ if (!foundationNames.has(solidForeground?.preferred) || !foundationNames.has(sol
 }
 const solidForegroundIds = (solidForeground?.groups ?? []).map((group) => group.id)
 if (JSON.stringify(solidForegroundIds) !== JSON.stringify(requiredSolidForegroundIds)) {
-  errors.push("实心色前景必须按 Primary/Destructive/Success/Warning/Info 唯一登记五组")
+  errors.push("实心色前景解析器只允许登记 Primary；其余实心角色必须跟随 Primary 前景")
 }
 const solidForegroundHooks = []
 for (const group of solidForeground?.groups ?? []) {
   solidForegroundHooks.push(group.foreground)
-  if (group.id === "warning" && group.policy !== "fixed-preferred") {
-    errors.push("警告实心色必须固定使用浅色前景，不得被自动对比度回退覆盖")
-  }
-  if (group.id !== "warning" && group.policy && group.policy !== "auto-contrast") {
+  if (group.policy && group.policy !== "auto-contrast") {
     errors.push(`实心色前景组 ${group.id} 不得声明未批准的固定前景策略`)
   }
   if (!publicGlobalNames.has(group.foreground)) {
@@ -80,7 +77,7 @@ for (const group of solidForeground?.groups ?? []) {
   }
 }
 if (new Set(solidForegroundHooks).size !== requiredSolidForegroundIds.length) {
-  errors.push("五组实心色前景必须各自拥有唯一 Semantic 输出")
+  errors.push("Theme Resolver 只能写入唯一的 Primary 实心前景 Semantic 输出")
 }
 for (const mode of qualityGates?.auditedModes ?? []) {
   if (!previewModes.has(mode)) errors.push(`审计模式 ${mode} 未包含在 runtimePreviewModes`)
@@ -307,7 +304,7 @@ if (JSON.stringify(adapterWrites) !== JSON.stringify(["--fds-g-color-seed-brand"
   errors.push("框架适配器只允许写入 FDS brand seed；Brand Map 必须由 Foundation 统一派生")
 }
 if (JSON.stringify(manifest.runtimeOutputs?.resolverWrites ?? []) !== JSON.stringify(solidForegroundHooks)) {
-  errors.push("Theme resolverWrites 必须与五组实心色前景 Semantic 输出完全一致")
+  errors.push("Theme resolverWrites 必须只包含 Primary 实心前景 Semantic 输出")
 }
 for (const cssVar of manifest.runtimeOutputs?.cssDerivedOutputs ?? []) {
   if (!foundation.includes(`${cssVar}:`)) errors.push(`CSS 派生输出未在 Foundation 声明: ${cssVar}`)

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "format": "fds/semantic-contract",
-  "contractVersion": "1.0.0-draft.8",
+  "contractVersion": "1.0.0-draft.9",
   "truthSource": "tokens/source/semantic.tokens.json",
   "generatedRuntime": "theme/fds-semantic.css",
   "layer": "semantic",
@@ -638,14 +638,14 @@
       "id": "color.foreground.destructive",
       "type": "color",
       "name": "--fds-g-color-foreground-destructive",
-      "value": "var(--fds-g-color-neutral-base-10)",
+      "value": "var(--fds-g-color-foreground-primary)",
       "modes": {},
       "aliases": [
         "--destructive-foreground"
       ],
       "visibility": "public-global",
       "stability": "stable",
-      "derivation": "solid-foreground-destructive",
+      "derivation": "alias-primary-foreground",
       "rawValueReason": null
     },
     {
@@ -999,14 +999,14 @@
       "id": "color.foreground.success",
       "type": "color",
       "name": "--fds-g-color-foreground-success",
-      "value": "var(--fds-g-color-neutral-base-10)",
+      "value": "var(--fds-g-color-foreground-primary)",
       "modes": {},
       "aliases": [
         "--success-foreground"
       ],
       "visibility": "public-global",
       "stability": "stable",
-      "derivation": "solid-foreground-success",
+      "derivation": "alias-primary-foreground",
       "rawValueReason": null
     },
     {
@@ -1120,14 +1120,14 @@
       "id": "color.foreground.warning",
       "type": "color",
       "name": "--fds-g-color-foreground-warning",
-      "value": "var(--fds-g-color-neutral-base-10)",
+      "value": "var(--fds-g-color-foreground-primary)",
       "modes": {},
       "aliases": [
         "--warning-foreground"
       ],
       "visibility": "public-global",
       "stability": "stable",
-      "derivation": "solid-foreground-warning",
+      "derivation": "alias-primary-foreground",
       "rawValueReason": null
     },
     {
@@ -1305,14 +1305,14 @@
       "id": "color.foreground.info",
       "type": "color",
       "name": "--fds-g-color-foreground-info",
-      "value": "var(--fds-g-color-neutral-base-10)",
+      "value": "var(--fds-g-color-foreground-primary)",
       "modes": {},
       "aliases": [
         "--info-foreground"
       ],
       "visibility": "public-global",
       "stability": "stable",
-      "derivation": "solid-foreground-info",
+      "derivation": "alias-primary-foreground",
       "rawValueReason": null
     },
     {

@@ -1225,6 +1225,7 @@
       "category": "shadcn-semantic",
       "usage": "",
       "resolvesTo": [
+        "--fds-g-color-foreground-primary",
         "--fds-g-color-neutral-base-10"
       ],
       "consumers": []
@@ -1236,6 +1237,7 @@
       "usage": "危险背景上的文字",
       "resolvesTo": [
         "--fds-g-color-foreground-destructive",
+        "--fds-g-color-foreground-primary",
         "--fds-g-color-neutral-base-10"
       ],
       "consumers": []
@@ -1810,6 +1812,7 @@
       "category": "shadcn-semantic",
       "usage": "",
       "resolvesTo": [
+        "--fds-g-color-foreground-primary",
         "--fds-g-color-neutral-base-10"
       ],
       "consumers": []
@@ -1821,6 +1824,7 @@
       "usage": "成功背景上的文字",
       "resolvesTo": [
         "--fds-g-color-foreground-success",
+        "--fds-g-color-foreground-primary",
         "--fds-g-color-neutral-base-10"
       ],
       "consumers": []
@@ -2004,6 +2008,7 @@
       "category": "shadcn-semantic",
       "usage": "",
       "resolvesTo": [
+        "--fds-g-color-foreground-primary",
         "--fds-g-color-neutral-base-10"
       ],
       "consumers": []
@@ -2015,6 +2020,7 @@
       "usage": "警告背景上的文字",
       "resolvesTo": [
         "--fds-g-color-foreground-warning",
+        "--fds-g-color-foreground-primary",
         "--fds-g-color-neutral-base-10"
       ],
       "consumers": []
@@ -2290,6 +2296,7 @@
       "category": "shadcn-semantic",
       "usage": "",
       "resolvesTo": [
+        "--fds-g-color-foreground-primary",
         "--fds-g-color-neutral-base-10"
       ],
       "consumers": []
@@ -2301,6 +2308,7 @@
       "usage": "信息背景上的文字",
       "resolvesTo": [
         "--fds-g-color-foreground-info",
+        "--fds-g-color-foreground-primary",
         "--fds-g-color-neutral-base-10"
       ],
       "consumers": []

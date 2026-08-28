@@ -44,15 +44,15 @@ test("Foundation color preview accepts Hex input and semantic examples match the
   const derivedBase90 = await base90.evaluate(
     (element) => getComputedStyle(element).backgroundColor,
   )
-  expect(derivedBase90).not.toBe("rgb(51, 102, 153)")
-  expect(derivedBase90).not.toBe("rgba(0, 0, 0, 0)")
+  expect(derivedBase90).toBe("rgb(51, 102, 153)")
 
   await seedInput.fill("#AABBCC")
   await expect(seedInput).toHaveValue("AABBCC")
+  await expect(base90).toHaveCSS("background-color", "rgb(170, 187, 204)")
 
   await seedInput.fill("33")
   await expect(page.getByText("请输入有效的十六进制色值。")).toBeVisible()
-  await expect(base90).toHaveCSS("background-color", derivedBase90)
+  await expect(base90).toHaveCSS("background-color", "rgb(170, 187, 204)")
 
   const hoverRow = page.locator('[data-token-row="primary-hover"]')
   const sourceColor = await hoverRow.locator('[data-slot="semantic-source-swatch"]').evaluate((element) => getComputedStyle(element).backgroundColor)

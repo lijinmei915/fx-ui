@@ -12,7 +12,7 @@
   "generatedBy": "scripts/build-fds-migration-audit.mjs",
   "currentPhase": "fds-primary",
   "release": {
-    "version": "1.12.0",
+    "version": "1.14.0",
     "aliasIntroducedVersion": "1.3.0",
     "earliestRemovalVersion": "2.0.0"
   },
@@ -3235,7 +3235,7 @@
           "id": "generated-compatibility-window-is-preserved",
           "pass": true,
           "expected": "generated and published compatibility aliases remain available until at least 2.0.0",
-          "actual": "release=1.12.0; generatedLegacy=455; publishedLegacy=461"
+          "actual": "release=1.14.0; generatedLegacy=455; publishedLegacy=461"
         }
       ],
       "blockers": []
@@ -3248,7 +3248,7 @@
           "id": "major-deprecation-window-satisfied",
           "pass": false,
           "expected": "release >= 2.0.0",
-          "actual": "1.12.0"
+          "actual": "1.14.0"
         },
         {
           "id": "contract-declares-legacy-removal",
@@ -3277,7 +3277,7 @@
           "id": "major-deprecation-window-satisfied",
           "pass": false,
           "expected": "release >= 2.0.0",
-          "actual": "1.12.0"
+          "actual": "1.14.0"
         },
         {
           "id": "contract-declares-legacy-removal",

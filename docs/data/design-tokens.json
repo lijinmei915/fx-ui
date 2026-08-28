@@ -7462,7 +7462,7 @@
     },
     {
       "name": "--fds-g-color-foreground-destructive",
-      "value": "var(--fds-g-color-neutral-base-10)",
+      "value": "var(--fds-g-color-foreground-primary)",
       "category": "shadcn-semantic",
       "usage": "",
       "id": "color.foreground.destructive",
@@ -7931,7 +7931,7 @@
     },
     {
       "name": "--fds-g-color-foreground-success",
-      "value": "var(--fds-g-color-neutral-base-10)",
+      "value": "var(--fds-g-color-foreground-primary)",
       "category": "shadcn-semantic",
       "usage": "",
       "id": "color.foreground.success",
@@ -8100,7 +8100,7 @@
     },
     {
       "name": "--fds-g-color-foreground-warning",
-      "value": "var(--fds-g-color-neutral-base-10)",
+      "value": "var(--fds-g-color-foreground-primary)",
       "category": "shadcn-semantic",
       "usage": "",
       "id": "color.foreground.warning",
@@ -8349,7 +8349,7 @@
     },
     {
       "name": "--fds-g-color-foreground-info",
-      "value": "var(--fds-g-color-neutral-base-10)",
+      "value": "var(--fds-g-color-foreground-primary)",
       "category": "shadcn-semantic",
       "usage": "",
       "id": "color.foreground.info",

@@ -1198,6 +1198,24 @@ use_when: "讨论某个方案前，先查这里是否已经讨论过、有结论
 - **取代范围**：取代 DEC-077/DEC-078 中“Brand Base 通过 vivid 或固定明度专属阶生成”的部分；适配器只注入 Brand Seed、`brand-vivid` 的其他消费者、Semantic 状态映射及发布审计边界保持不变。
 - **相关文件**：`tokens/source/map.tokens.json`、`scripts/build-fds-foundation.mjs`、`docs/foundations/colors.md`、`docs/TOKEN_NAMING.md`
 
+### DEC-109: 功能色实心前景统一跟随主按钮
+
+- **日期**：2026-08-28
+- **状态**：已决定
+- **决定**：Theme Resolver 只根据主按钮 Default/Hover/Active 解析一次 `--fds-g-color-foreground-primary`。Destructive、Success、Warning、Info 保留各自公开的 `foreground-*` Semantic Hook 以维持组件合同稳定，但全部直接引用 Primary 前景；四类功能色不再分别运行黑白文字对比度选择。
+- **状态边界**：功能色 Default/Hover/Active/Disabled 全部消费同一个角色前景，禁用态只通过 Base 50 背景和不可交互行为表达，不在文档示例或组件调用处临时切换深色文字。正文 `4.5:1`、非文字 `3:1` 和其他 Theme 质量门不受影响。
+- **取代范围**：取代 DEC-105 中“五个前景都由 Resolver 独立生成并分别审计”的部分；主按钮整组三态的 `2.0:1` 选择逻辑、Base 90/80/100/50 背景阶梯、公开 Hook 名称及组件 API 保持不变。
+- **版本影响**：Semantic contract 升为 `1.0.0-draft.9`，Theme contract 升为 `1.13.0`；不新增或删除公开 Token，不新增组件 API。
+- **相关文件**：`tokens/source/semantic.tokens.json`、`docs/data/theme-presets.manifest.json`、`src/pages/docs/tokens/tokens-colors-page.tsx`、`scripts/check-theme-presets.mjs`、`docs/foundations/colors.md`
+
+### DEC-110: 自定义主题发布门暂以常规品牌色为审计范围
+
+- **日期**：2026-08-28
+- **状态**：已决定
+- **决定**：Theme audit 的 7 个自定义样本改为覆盖红、橙、黄、绿、青、蓝、紫的常规中等明度品牌色。纯黑、纯白与纯 RGB/CMY 极端 Seed 仍可输入，但暂不进入发布门禁，也不得宣称已通过状态可辨识审计。
+- **原因**：当前极端 Seed 会让部分 Default/Hover 色差被色域边界压缩；本阶段优先发布常规企业品牌色能力，极端色保护另行建设。
+- **相关文件**：`docs/data/theme-presets.manifest.json`、`docs/data/theme-audit.manifest.json`、`docs/TOKENS.md`
+
 ## 相关文件
 
 | 文件                   | 关系                   |

@@ -41,8 +41,7 @@ export function renderTokenExample(name: string): ReactNode {
     const { tokenRoot, foreground, label } = statusMap[statusBase];
     if (!name.includes("-light")) {
       const suffix = name.endsWith("-hover") ? "-hover" : name.endsWith("-active") ? "-active" : name.endsWith("-disabled") ? "-disabled" : "";
-      const solidForeground = suffix === "-disabled" ? "--fds-g-color-text-primary" : foreground;
-      return btn({ backgroundColor: `var(${tokenRoot}${suffix})`, color: `var(${solidForeground})` }, label);
+      return btn({ backgroundColor: `var(${tokenRoot}${suffix})`, color: `var(${foreground})` }, label);
     }
     const suffix = name.endsWith("-active") ? "-subtle-active" : name.endsWith("-hover") ? "-subtle-hover" : "-subtle";
     return btn(
@@ -147,8 +146,8 @@ export const semanticTokenGroups = [
 {
   role: "status-danger",
   label: "状态色 · 危险", labelEn: "Status · Danger",
-  desc: "危险/删除语义（红）。实心操作取 Base 90/80/100，浅色组取 10/20/30。",
-  descEn: "Danger / delete semantics (red). Solid actions use Base 90/80/100; light group = 10/20/30.",
+  desc: "危险/删除语义（红）。实心操作取 Base 90/80/100/50，文字跟随主按钮前景；浅色组取 10/20/30。",
+  descEn: "Danger / delete semantics (red). Solid actions use Base 90/80/100/50 and follow the primary foreground; light group = 10/20/30.",
   tokens: [
   { name: "destructive", value: "", sourceToken: "--fds-g-color-action-destructive", tailwind: "bg-destructive", usage: "实心默认 — 删除、危险、不可逆操作", usageEn: "Solid default — delete, dangerous, irreversible" },
   { name: "destructive-hover", value: "", sourceToken: "--fds-g-color-action-destructive-hover", tailwind: "bg-destructive-hover", usage: "实心悬浮", usageEn: "Solid hover" },
@@ -162,8 +161,8 @@ export const semanticTokenGroups = [
 {
   role: "status-success",
   label: "状态色 · 成功", labelEn: "Status · Success",
-  desc: "成功语义（绿）。实心操作取 Base 90/80/100，浅色组取 10/20/30。",
-  descEn: "Success semantics (green). Solid actions use Base 90/80/100; light group = 10/20/30.",
+  desc: "成功语义（绿）。实心操作取 Base 90/80/100/50，文字跟随主按钮前景；浅色组取 10/20/30。",
+  descEn: "Success semantics (green). Solid actions use Base 90/80/100/50 and follow the primary foreground; light group = 10/20/30.",
   tokens: [
   { name: "success", value: "", sourceToken: "--fds-g-color-status-success", tailwind: "bg-success", usage: "实心默认 — 成功状态", usageEn: "Solid default — success state" },
   { name: "success-hover", value: "", sourceToken: "--fds-g-color-status-success-hover", tailwind: "bg-success-hover", usage: "实心悬浮", usageEn: "Solid hover" },
@@ -177,8 +176,8 @@ export const semanticTokenGroups = [
 {
   role: "status-warning",
   label: "状态色 · 警告", labelEn: "Status · Warning",
-  desc: "警告语义（琥珀）。实心操作取 Base 90/80/100，浅色组取 10/20/30。",
-  descEn: "Warning semantics (amber). Solid actions use Base 90/80/100; light group = 10/20/30.",
+  desc: "警告语义（琥珀）。实心操作取 Base 90/80/100/50，文字跟随主按钮前景；浅色组取 10/20/30。",
+  descEn: "Warning semantics (amber). Solid actions use Base 90/80/100/50 and follow the primary foreground; light group = 10/20/30.",
   tokens: [
   { name: "warning", value: "", sourceToken: "--fds-g-color-status-warning", tailwind: "bg-warning", usage: "实心默认 — 警告状态", usageEn: "Solid default — warning state" },
   { name: "warning-hover", value: "", sourceToken: "--fds-g-color-status-warning-hover", tailwind: "bg-warning-hover", usage: "实心悬浮", usageEn: "Solid hover" },
@@ -192,8 +191,8 @@ export const semanticTokenGroups = [
 {
   role: "status-info",
   label: "状态色 · 信息", labelEn: "Status · Info",
-  desc: "信息语义（蓝）。实心操作取 Base 90/80/100，浅色组取 10/20/30。（中性/默认标签请用 secondary，不用 info）",
-  descEn: "Info semantics (blue). Solid actions use Base 90/80/100; light = 10/20/30. (For neutral/default tags use secondary, not info.)",
+  desc: "信息语义（蓝）。实心操作取 Base 90/80/100/50，文字跟随主按钮前景；浅色组取 10/20/30。（中性/默认标签请用 secondary，不用 info）",
+  descEn: "Info semantics (blue). Solid actions use Base 90/80/100/50 and follow the primary foreground; light = 10/20/30. (For neutral/default tags use secondary, not info.)",
   tokens: [
   { name: "info", value: "", sourceToken: "--fds-g-color-status-info", tailwind: "bg-info", usage: "实心默认 — 信息状态", usageEn: "Solid default — info state" },
   { name: "info-hover", value: "", sourceToken: "--fds-g-color-status-info-hover", tailwind: "bg-info-hover", usage: "实心悬浮", usageEn: "Solid hover" },
@@ -217,9 +216,9 @@ export const semanticTokenGroups = [
 
 }];
 export const tokenColorsAnchors = [
-  { label: "主题色", labelEn: "Brand Color", href: "#tokens-colors-seeds" },
-  { label: "彩色色板", labelEn: "Chromatic Palette", href: "#tokens-colors-palette" },
-  { label: "语义颜色", labelEn: "Semantic Colors", href: "#tokens-colors-semantic" },
+  { label: "主题色", labelEn: "Theme Color", href: "#tokens-colors-seeds" },
+  { label: "色板", labelEn: "Color Palettes", href: "#tokens-colors-palette" },
+  { label: "语义色", labelEn: "Semantic Colors", href: "#tokens-colors-semantic" },
 ]
 
 type Props = {
@@ -252,9 +251,9 @@ export function TokensColorsPage({
 
       <section id="tokens-colors-seeds" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-2">
-          <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Brand Color" : "主题色"}</h2>
+          <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Theme Color" : "主题色"}</h2>
           <p className="text-sm text-muted-foreground">
-            {lang === "en" ? "Input any color to preview its 12-step palette. Default is --fds-g-color-seed-brand. The derivation uses CSS oklch relative color syntax." : "输入任意色值，实时预览 12 阶推导色板。默认为 --fds-g-color-seed-brand，推导算法使用 CSS oklch 相对颜色语法。"}
+            {lang === "en" ? "Enter any theme color to preview its generated 12-step palette." : "输入任意主题色，实时预览由它生成的 12 阶色板。"}
           </p>
         </div>
         <SeedPreview lang={lang} />
@@ -266,9 +265,9 @@ export function TokensColorsPage({
 
       <section id="tokens-colors-semantic" className={docsSpacing.sectionStack}>
         <div className="flex flex-col gap-2">
-          <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Semantic Colors" : "语义颜色"}</h2>
+          <h2 className="text-xl font-bold tracking-tight">{lang === "en" ? "Semantic Colors" : "语义色"}</h2>
           <p className="text-base text-muted-foreground">
-            {lang === "en" ? "Each semantic token is derived from an FDS Primitive or Map token. The source shows its governed FDS mapping." : "每个语义 Token 都从 FDS Primitive 或 Map 派生；「来源」列显示经过治理的 FDS 映射。"}
+            {lang === "en" ? "Governed color roles for surfaces, text, borders, interactions, and status feedback." : "用于表面、文字、边框、交互与状态反馈的统一颜色角色。"}
           </p>
         </div>
         {semanticTokenGroups.map((group) => (

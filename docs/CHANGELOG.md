@@ -23,6 +23,12 @@ use_when: "需要回溯某次跨层改动的原因和影响范围时"
 - **影响**：相同 Seed 的 Brand Base 与固定色相 Base 现在逐阶一致；后续 Base 公式只需维护一处，页面预览与 Foundation Map 不再漂移。
 - **相关文件**：`tokens/source/map.tokens.json`、`scripts/build-fds-foundation.mjs`、`docs/foundations/colors.md`、`docs/TOKEN_NAMING.md`、`docs/DECISIONS.md`
 
+## 2026-08-28 — 功能色实心前景收口到主按钮
+
+- **改动**：Theme Resolver 从分别写入五类实心前景收口为只解析 `foreground-primary`；Destructive、Success、Warning、Info 保留原公开 Hook，但改为稳定引用主按钮前景。禁用示例不再切换深色文字。
+- **影响**：功能色 Default/Hover/Active/Disabled 的文字统一跟随主按钮，不再参与各颜色独立对比度选择；公开 Token 名称和组件 API 不变。Semantic contract 升为 `1.0.0-draft.9`，Theme contract 升为 `1.13.0`。
+- **相关文件**：`tokens/source/semantic.tokens.json`、`docs/data/theme-presets.manifest.json`、`src/pages/docs/tokens/tokens-colors-page.tsx`、`scripts/check-theme-presets.mjs`、`docs/{TOKENS,DECISIONS}.md`、`docs/foundations/colors.md`
+
 ## 2026-08-28 — 五类实心角色使用整组三态前景解析
 
 - **改动**：新增 Primary、Destructive、Success、Warning、Info 五个公开 Semantic 前景 Hook。Theme v5 对每个角色的 Default/Hover/Active 整组计算：优先白色，三态对白色均达到 FDS `2.0:1` 保护线时整组使用白色，否则整组回退近黑色；旧 `text-on-vivid` 降为内部弃用兼容。

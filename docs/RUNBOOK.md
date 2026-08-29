@@ -1,7 +1,7 @@
 ---
 layer: knowledge
 type: guide
-last_verified: 2026-08-28
+last_verified: 2026-08-29
 teaches: "fx-ui 的常用命令、提交前检查和常见故障处理（运行环境/依赖见 ENVIRONMENT）"
 use_when: "要查命令、跑检查、或本地启动/构建出问题时"
 ---
@@ -45,7 +45,7 @@ bash scripts/install-git-hooks.sh
 
 ## 发布流程
 
-当前已经有两个静态构建出口，但托管平台仍待公司环境确认：
+当前有两个静态构建出口。公司 Foundation 的唯一发布目标为 `https://git.firstshare.cn/bigfe/sharecrm-design-system`；旧的个人命名空间仓库 `lijm9767/fds` 仅保留历史版本，不再更新。
 
 ```bash
 npm run build                 # 完整维护站 → dist/
@@ -54,6 +54,8 @@ npm run test:visual:foundation
 ```
 
 `dist-foundation/` 可以部署到 GitLab Pages、内部 Nginx 或其他静态托管。它按 `docs/data/publication-profiles.manifest.json` 的白名单只包含 Token、栅格、布局和对应 Markdown；构建结束会扫描产物，发现组件文档、Playground、搭建器、页面模板、报告或治理数据时直接失败。不要把仓库权限或完整 `dist/` 当成 Foundation 交付物。
+
+发布时只把 `dist-foundation/` 同步为公司仓库的 `public/`，并同步白名单内的 11 份 Markdown 与人读 `README.md`。不得把完整 fx-ui 源码、组件文档或主项目 Git 历史推入公司 Foundation 仓库。
 
 Foundation 构建使用相对资源路径，因此既可部署在域名根目录，也可部署在 GitLab Pages 的项目子路径（例如 `/fds/`）；同时禁用完整站 `public/` 目录的默认复制，避免把未被 Foundation 引用的业务图片带入分享包。完整维护站仍使用根路径资源并保留原有公开资源。
 
